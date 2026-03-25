@@ -163,13 +163,74 @@ Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| — | — | — |
+| ARCH-01 | Phase 1 | Pending |
+| ARCH-02 | Phase 1 | Pending |
+| ARCH-03 | Phase 1 | Pending |
+| ARCH-04 | Phase 1 | Pending |
+| PERS-01 | Phase 1 | Pending |
+| CMBT-01 | Phase 2 | Pending |
+| CMBT-02 | Phase 2 | Pending |
+| CMBT-03 | Phase 2 | Pending |
+| CMBT-04 | Phase 2 | Pending |
+| CMBT-05 | Phase 2 | Pending |
+| CMBT-06 | Phase 2 | Pending |
+| CMBT-07 | Phase 2 | Pending |
+| CMBT-08 | Phase 2 | Pending |
+| CMBT-09 | Phase 2 | Pending |
+| CMBT-10 | Phase 2 | Pending |
+| CMBT-11 | Phase 2 | Pending |
+| CMBT-12 | Phase 2 | Pending |
+| DECK-01 | Phase 2 | Pending |
+| DECK-02 | Phase 2 | Pending |
+| DECK-03 | Phase 2 | Pending |
+| DECK-04 | Phase 2 | Pending |
+| DECK-05 | Phase 2 | Pending |
+| DECK-06 | Phase 2 | Pending |
+| DECK-07 | Phase 2 | Pending |
+| DECK-08 | Phase 2 | Pending |
+| HERO-01 | Phase 2 | Pending |
+| HERO-02 | Phase 2 | Pending |
+| HERO-03 | Phase 2 | Pending |
+| HERO-04 | Phase 2 | Pending |
+| PLSH-01 | Phase 2 | Pending |
+| LOOP-01 | Phase 3 | Pending |
+| LOOP-02 | Phase 3 | Pending |
+| LOOP-03 | Phase 3 | Pending |
+| LOOP-04 | Phase 3 | Pending |
+| LOOP-05 | Phase 3 | Pending |
+| LOOP-06 | Phase 3 | Pending |
+| LOOP-07 | Phase 3 | Pending |
+| LOOP-08 | Phase 3 | Pending |
+| TILE-01 | Phase 3 | Pending |
+| TILE-02 | Phase 3 | Pending |
+| TILE-03 | Phase 3 | Pending |
+| TILE-04 | Phase 3 | Pending |
+| TILE-05 | Phase 3 | Pending |
+| SPEC-01 | Phase 3 | Pending |
+| SPEC-02 | Phase 3 | Pending |
+| SPEC-03 | Phase 3 | Pending |
+| SPEC-04 | Phase 3 | Pending |
+| SPEC-05 | Phase 3 | Pending |
+| RELC-01 | Phase 4 | Pending |
+| RELC-02 | Phase 4 | Pending |
+| RELC-03 | Phase 4 | Pending |
+| RELC-04 | Phase 4 | Pending |
+| META-01 | Phase 4 | Pending |
+| META-02 | Phase 4 | Pending |
+| META-03 | Phase 4 | Pending |
+| META-04 | Phase 4 | Pending |
+| CONT-01 | Phase 4 | Pending |
+| CONT-02 | Phase 4 | Pending |
+| CONT-03 | Phase 4 | Pending |
+| CONT-04 | Phase 4 | Pending |
+| PERS-02 | Phase 4 | Pending |
+| PERS-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 51 total
-- Mapped to phases: 0
-- Unmapped: 51
+- v1 requirements: 62 total
+- Mapped to phases: 62
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation*
