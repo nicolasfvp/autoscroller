@@ -1,0 +1,17 @@
+{
+  "percentPerLoop": 0.10,
+  "bossMultiplier": 2.0,
+  "basicTileCombatChance": 0.10,
+  "baseSpeed": 60,
+  "speedScalePerLoop": 1.02,
+  "bossEveryNLoops": 5,
+  "baseLoopLength": 15,
+  "loopGrowthOnBossKill": 3,
+  "baseTilePointsPerLoop": 3,
+  "tilePointScalePerLoop": 0.5,
+  "metaLootPerCombat": { "min": 1, "max": 2 },
+  "metaLootPerLoop": 5,
+  "metaLootPerBoss": 10,
+  "deathMetaLootPercent": 0.25,
+  "deathXpPercent": 0
+}

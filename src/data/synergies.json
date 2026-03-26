@@ -1,0 +1,8 @@
+[
+  { "pair": ["forest", "forest"], "buff": { "type": "goldDropBonus", "value": 0.15 } },
+  { "pair": ["rest", "shop"], "buff": { "type": "hpRecoveryBonus", "value": 0.10 } },
+  { "pair": ["graveyard", "swamp"], "buff": { "type": "damageBonus", "value": 0.20 } },
+  { "pair": ["forest", "swamp"], "buff": { "type": "tileDropBonus", "value": 0.15 } },
+  { "pair": ["graveyard", "graveyard"], "buff": { "type": "xpBonus", "value": 0.20 } },
+  { "pair": ["rest", "event"], "buff": { "type": "eventBonus", "value": 0.15 } }
+]
