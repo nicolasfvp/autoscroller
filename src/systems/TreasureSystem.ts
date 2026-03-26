@@ -1,4 +1,4 @@
-import { rollTreasureLoot, type LootResult, type LootItem } from './LootGenerator';
+import { rollTreasureLoot, type LootResult, type LootItem, type UnlockState } from './LootGenerator';
 
 export interface TreasureItem {
   type: string;
@@ -18,8 +18,8 @@ interface RunState {
   relics: string[];
 }
 
-export function openTreasure(runState: RunState, loopCount: number): TreasureResult {
-  const loot: LootResult = rollTreasureLoot(loopCount);
+export function openTreasure(runState: RunState, loopCount: number, unlockState?: UnlockState): TreasureResult {
+  const loot: LootResult = rollTreasureLoot(loopCount, undefined, unlockState);
   const treasureItems: TreasureItem[] = [];
 
   for (const item of loot.items) {

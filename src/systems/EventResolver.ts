@@ -1,4 +1,10 @@
 import eventsData from '../data/events.json';
+import { getAvailableCards, getAvailableRelics } from './UnlockManager';
+
+export interface EventUnlockState {
+  unlockedCards: string[];
+  unlockedRelics: string[];
+}
 
 export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse';
 
@@ -51,7 +57,7 @@ export function isChoiceAvailable(choice: EventChoice, runState: RunState): bool
   return true;
 }
 
-export function resolveEventChoice(eventId: string, choiceIndex: number, runState: RunState): EventOutcome {
+export function resolveEventChoice(eventId: string, choiceIndex: number, runState: RunState, unlockState?: EventUnlockState): EventOutcome {
   const event = getEvent(eventId);
   if (!event) {
     return { description: 'Unknown event.', effects: [] };
@@ -104,8 +110,19 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
       }
       case 'add_card': {
         const cardId = typeof val === 'string' ? val : 'strike';
-        // Placeholder: random_rare maps to 'fury'
-        const resolvedId = cardId === 'random_rare' ? 'fury' : cardId;
+        let resolvedId = cardId;
+        if (cardId === 'random_rare' || cardId === 'random') {
+          // Filter by unlock state when available, pick from available pool
+          const availableCards = getAvailableCards(unlockState?.unlockedCards ?? []);
+          const rareCards = cardId === 'random_rare'
+            ? availableCards.filter(c => c.rarity === 'rare' || c.rarity === 'uncommon')
+            : availableCards;
+          if (rareCards.length > 0) {
+            resolvedId = rareCards[Math.floor(Math.random() * rareCards.length)].id;
+          } else {
+            resolvedId = 'strike';
+          }
+        }
         runState.deck.order.push(resolvedId);
         descriptions.push(`Added card: ${resolvedId}`);
         appliedEffects.push({ type: 'add_card', value: resolvedId, applied: true });
@@ -132,8 +149,19 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
       }
       case 'gain_relic': {
         const relicId = typeof val === 'string' ? val : 'random';
-        // Placeholder: random/rare map to placeholder relic ids
-        const resolvedId = relicId === 'random' ? 'mysterious_amulet' : relicId === 'rare' ? 'ancient_relic' : relicId;
+        let resolvedId = relicId;
+        if (relicId === 'random' || relicId === 'rare') {
+          // Filter by unlock state when available, pick from available pool
+          const availableRelics = getAvailableRelics(unlockState?.unlockedRelics ?? []);
+          const filtered = relicId === 'rare'
+            ? availableRelics.filter(r => r.rarity === 'rare' || r.rarity === 'epic' || r.rarity === 'legendary')
+            : availableRelics;
+          if (filtered.length > 0) {
+            resolvedId = filtered[Math.floor(Math.random() * filtered.length)].id;
+          } else {
+            resolvedId = 'bronze_scale';
+          }
+        }
         runState.relics.push(resolvedId);
         descriptions.push(`Gained relic: ${resolvedId}`);
         appliedEffects.push({ type: 'gain_relic', value: resolvedId, applied: true });

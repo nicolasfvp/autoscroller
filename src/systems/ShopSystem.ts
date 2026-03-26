@@ -1,4 +1,5 @@
 import { getTileConfig } from './TileRegistry';
+import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 
 export interface ShopCard {
   cardId: string;
@@ -69,6 +70,14 @@ export class ShopSystem {
     runState.economy.gold -= price;
     runState.relics.push(relicId);
     return true;
+  }
+
+  static buildAvailableCardIds(metaUnlockedCards: string[]): string[] {
+    return getAvailableCards(metaUnlockedCards).map(c => c.id);
+  }
+
+  static buildAvailableRelicIds(metaUnlockedRelics: string[]): string[] {
+    return getAvailableRelics(metaUnlockedRelics).map(r => r.id);
   }
 
   static sellTile(runState: RunState, tileType: string): boolean {

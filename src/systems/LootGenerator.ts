@@ -1,6 +1,12 @@
 import terrainEnemiesData from '../data/terrain-enemies.json';
 import difficultyConfig from '../data/difficulty.json';
 import { getAllPlaceableTiles, type TileInventoryEntry } from './TileRegistry';
+import { getAvailableCards, getAvailableRelics } from './UnlockManager';
+
+export interface UnlockState {
+  unlockedCards: string[];
+  unlockedRelics: string[];
+}
 
 export interface LootItem {
   type: 'gold' | 'card' | 'relic' | 'tile';
@@ -42,7 +48,7 @@ export function resetRNG(): void {
   activeRNG = defaultRNG;
 }
 
-export function rollTreasureLoot(loopCount: number, rng: RNG = activeRNG): LootResult {
+export function rollTreasureLoot(loopCount: number, rng: RNG = activeRNG, unlockState?: UnlockState): LootResult {
   const itemCount = 1 + Math.floor(rng.next() * 3); // 1-3 items
   const items: LootItem[] = [];
 
@@ -54,6 +60,10 @@ export function rollTreasureLoot(loopCount: number, rng: RNG = activeRNG): LootR
     { type: 'relic' as const, weight: 0.10, cumulative: 1.00 },
   ];
 
+  // Filter card/relic pools by MetaState unlock lists
+  const availableCards = getAvailableCards(unlockState?.unlockedCards ?? []);
+  const availableRelics = getAvailableRelics(unlockState?.unlockedRelics ?? []);
+
   for (let i = 0; i < itemCount; i++) {
     const roll = rng.next();
     const entry = weights.find(w => roll < w.cumulative)!;
@@ -64,12 +74,24 @@ export function rollTreasureLoot(loopCount: number, rng: RNG = activeRNG): LootR
         items.push({ type: 'gold', amount });
         break;
       }
-      case 'card':
-        items.push({ type: 'card', id: 'random' });
+      case 'card': {
+        if (availableCards.length > 0) {
+          const idx = Math.floor(rng.next() * availableCards.length);
+          items.push({ type: 'card', id: availableCards[idx].id });
+        } else {
+          items.push({ type: 'card', id: 'random' });
+        }
         break;
-      case 'relic':
-        items.push({ type: 'relic', id: 'random' });
+      }
+      case 'relic': {
+        if (availableRelics.length > 0) {
+          const idx = Math.floor(rng.next() * availableRelics.length);
+          items.push({ type: 'relic', id: availableRelics[idx].id });
+        } else {
+          items.push({ type: 'relic', id: 'random' });
+        }
         break;
+      }
       case 'tile': {
         const placeable = getAllPlaceableTiles();
         const idx = Math.floor(rng.next() * placeable.length);
