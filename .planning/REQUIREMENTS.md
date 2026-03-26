@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Architecture
 
-- [ ] **ARCH-01**: Game logic (combat, loop, tiles) runs as pure TypeScript systems, decoupled from Phaser scenes
+- [x] **ARCH-01**: Game logic (combat, loop, tiles) runs as pure TypeScript systems, decoupled from Phaser scenes
 - [x] **ARCH-02**: Single centralized RunState object owns all mutable run data (HP, gold, deck, relics, tile inventory)
 - [x] **ARCH-03**: Typed EventBus decouples cross-system communication (no direct scene-to-scene coupling)
 - [x] **ARCH-04**: Object pooling and cleanup conventions prevent memory leaks over 1h+ runs
@@ -97,7 +97,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Persistence
 
-- [ ] **PERS-01**: Run progress saved to IndexedDB (idb-keyval) — survives browser refresh
+- [x] **PERS-01**: Run progress saved to IndexedDB (idb-keyval) — survives browser refresh
 - [ ] **PERS-02**: Meta-progression data persists across sessions (unlocks, XP, hub state)
 - [ ] **PERS-03**: Seeded RNG for reproducible runs (shareable seeds)
 
@@ -163,11 +163,11 @@ Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ARCH-01 | Phase 1 | Pending |
+| ARCH-01 | Phase 1 | Complete |
 | ARCH-02 | Phase 1 | Complete |
 | ARCH-03 | Phase 1 | Complete |
 | ARCH-04 | Phase 1 | Complete |
-| PERS-01 | Phase 1 | Pending |
+| PERS-01 | Phase 1 | Complete |
 | CMBT-01 | Phase 2 | Pending |
 | CMBT-02 | Phase 2 | Pending |
 | CMBT-03 | Phase 2 | Pending |

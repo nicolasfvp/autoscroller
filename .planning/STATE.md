@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-26T18:49:47Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-26T19:01:06Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 12
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -24,26 +24,26 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 01 (architecture-foundation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
-- Average duration: 7min
-- Total execution time: 0.12 hours
+- Total plans completed: 2
+- Average duration: 7.5min
+- Total execution time: 0.25 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-architecture-foundation | 1 | 7min | 7min |
+| 01-architecture-foundation | 2 | 15min | 7.5min |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-01 (7min)
-- Trend: baseline
+- Last 5 plans: 01-01 (7min), 01-02 (8min)
+- Trend: stable
 
 *Updated after each plan completion*
 
@@ -62,6 +62,9 @@ Recent decisions affecting current work:
 - [01-01]: Record<string,number> over Map for RunState JSON serialization
 - [01-01]: Relic effects as declarative JSON params (data-driven, serializable)
 - [01-01]: Vite static JSON import for DataLoader (bundled, no runtime fetch)
+- [01-02]: Phaser registry used to pass savedRun from Preloader to MainMenu (avoids RunState mutation before user choice)
+- [01-02]: Overlay scenes use placeholder content marked for Phase 2 (clean architecture/gameplay separation)
+- [01-02]: SettingsScene has no RunState dependency (settings are global, not per-run)
 
 ### Pending Todos
 
@@ -75,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T18:49:47Z
-Stopped at: Completed 01-01-PLAN.md
-Resume file: .planning/phases/01-architecture-foundation/01-02-PLAN.md
+Last session: 2026-03-26T19:01:06Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: .planning/phases/01-architecture-foundation/01-03-PLAN.md
