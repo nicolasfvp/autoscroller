@@ -16,6 +16,7 @@
     "vitest": "^4.1.2"
   },
   "dependencies": {
+    "idb-keyval": "^6.2.2",
     "phaser": "^3.80.0"
   }
 }
