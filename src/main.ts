@@ -20,6 +20,11 @@ import { DeathScene } from './scenes/DeathScene'
 import { PostCombatScene } from './scenes/PostCombatScene'
 import { DeckViewScene } from './scenes/DeckViewScene'
 import { ShopDeckEditor } from './scenes/ShopDeckEditor'
+import { GameScene } from './scenes/GameScene'
+import { PlanningOverlay } from './scenes/PlanningOverlay'
+import { RestSiteScene } from './scenes/RestSiteScene'
+import { TreasureScene } from './scenes/TreasureScene'
+import { BossExitScene } from './scenes/BossExitScene'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -39,10 +44,12 @@ const config: Phaser.Types.Core.GameConfig = {
         MainMenu,
         TutorialScene,
         Game,
+        GameScene,
         CombatScene,
         RewardScene,
         ShopScene,
         RestScene,
+        RestSiteScene,
         EventScene,
         PauseScene,
         SettingsScene,
@@ -53,7 +60,10 @@ const config: Phaser.Types.Core.GameConfig = {
         DeathScene,
         PostCombatScene,
         DeckViewScene,
-        ShopDeckEditor
+        ShopDeckEditor,
+        PlanningOverlay,
+        TreasureScene,
+        BossExitScene
     ]
 }
 
