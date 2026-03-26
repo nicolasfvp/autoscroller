@@ -1,0 +1,10 @@
+{
+  "hpRecoveryPercent": 0.30,
+  "trainDamageBonus": 2,
+  "meditateBonusAmount": 5,
+  "choices": [
+    { "id": "rest", "name": "Rest", "description": "Recover 30% of max HP." },
+    { "id": "train", "name": "Train", "description": "Boost a random card's damage by +2." },
+    { "id": "meditate", "name": "Meditate", "description": "Increase max stamina or mana by +5." }
+  ]
+}
