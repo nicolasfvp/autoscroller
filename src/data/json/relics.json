@@ -4,113 +4,108 @@
     "name": "Bronze Scale",
     "description": "+15 Max HP",
     "rarity": "common",
+    "trigger": "passive",
+    "effectType": "stat_bonus",
+    "stat": "maxHP",
+    "value": 15,
     "icon": "\u25ca",
-    "color": 13467442,
-    "effects": [{
-      "trigger": "passive",
-      "description": "+15 Max HP",
-      "params": { "stat": "maxHP", "delta": 15 }
-    }]
+    "color": 13467442
   },
   {
     "id": "energy_potion",
     "name": "Energy Potion",
     "description": "+10 Max Stamina",
     "rarity": "common",
+    "trigger": "passive",
+    "effectType": "stat_bonus",
+    "stat": "maxStamina",
+    "value": 10,
     "icon": "\u26a1",
-    "color": 16776960,
-    "effects": [{
-      "trigger": "passive",
-      "description": "+10 Max Stamina",
-      "params": { "stat": "maxStamina", "delta": 10 }
-    }]
-  },
-  {
-    "id": "warrior_spirit",
-    "name": "Warrior Spirit",
-    "description": "Attack cards cost 1 less Stamina",
-    "rarity": "rare",
-    "icon": "\u2694",
-    "color": 16737095,
-    "unlockSource": "shrine",
-    "unlockTier": 1,
-    "effects": [{
-      "trigger": "card_played",
-      "description": "Reduce stamina cost by 1",
-      "params": { "category": "attack", "staminaReduction": 1 }
-    }]
-  },
-  {
-    "id": "iron_will",
-    "name": "Iron Will",
-    "description": "When you take damage, gain 2 Defense",
-    "rarity": "rare",
-    "icon": "\ud83d\udee1",
-    "color": 12632256,
-    "unlockSource": "shrine",
-    "unlockTier": 1,
-    "effects": [{
-      "trigger": "damage_taken",
-      "description": "Gain 2 Defense",
-      "params": { "defenseGain": 2 }
-    }]
+    "color": 16776960
   },
   {
     "id": "arcane_crystal",
     "name": "Arcane Crystal",
     "description": "+15 Max Mana",
     "rarity": "common",
+    "trigger": "passive",
+    "effectType": "stat_bonus",
+    "stat": "maxMana",
+    "value": 15,
     "icon": "\u2666",
-    "color": 9662683,
-    "effects": [{
-      "trigger": "passive",
-      "description": "+15 Max Mana",
-      "params": { "stat": "maxMana", "delta": 15 }
-    }]
+    "color": 9662683
+  },
+  {
+    "id": "warrior_spirit",
+    "name": "Warrior Spirit",
+    "description": "Attack cards cost 1 less Stamina",
+    "rarity": "rare",
+    "trigger": "card_played",
+    "effectType": "refund_resource",
+    "condition": "card_category_attack",
+    "stat": "stamina",
+    "value": 1,
+    "icon": "\u2694",
+    "color": 16737095,
+    "unlockSource": "shrine",
+    "unlockTier": 1
+  },
+  {
+    "id": "iron_will",
+    "name": "Iron Will",
+    "description": "When you take damage, gain 2 Defense",
+    "rarity": "rare",
+    "trigger": "damage_taken",
+    "effectType": "stat_bonus_temp",
+    "condition": "damage_positive",
+    "stat": "defense",
+    "value": 2,
+    "icon": "\ud83d\udee1",
+    "color": 12632256,
+    "unlockSource": "shrine",
+    "unlockTier": 1
   },
   {
     "id": "berserker_ring",
     "name": "Berserker Ring",
     "description": "+50% Strength, -20% Max HP",
     "rarity": "epic",
+    "trigger": "passive",
+    "effectType": "stat_multiplier",
+    "stats": { "strength": 1.5, "maxHP": 0.8 },
     "icon": "\ud83d\udc8d",
     "color": 14423100,
     "unlockSource": "shrine",
-    "unlockTier": 2,
-    "effects": [{
-      "trigger": "passive",
-      "description": "+50% Strength, -20% Max HP",
-      "params": { "strengthMultiplier": 1.5, "hpMultiplier": 0.8 }
-    }]
+    "unlockTier": 2
   },
   {
     "id": "demon_heart",
     "name": "Demon Heart",
     "description": "First turn: Double all card damage",
     "rarity": "legendary",
+    "trigger": "turn_start",
+    "effectType": "damage_multiplier",
+    "condition": "turn_number_1",
+    "value": 2.0,
+    "duration": "turn",
     "icon": "\u2665",
     "color": 9109504,
     "unlockSource": "shrine",
-    "unlockTier": 3,
-    "effects": [{
-      "trigger": "turn_start",
-      "description": "First turn double damage",
-      "params": { "turnRequired": 1, "damageMultiplier": 2 }
-    }]
+    "unlockTier": 3
   },
   {
     "id": "phoenix_feather",
     "name": "Phoenix Feather",
     "description": "When HP drops to 0, heal to 50% once per combat",
     "rarity": "legendary",
+    "trigger": "damage_taken",
+    "effectType": "heal_percent",
+    "condition": "hp_zero",
+    "value": 50,
+    "once_per": "combat",
     "icon": "\ud83e\udeb6",
     "color": 16728320,
     "unlockSource": "shrine",
-    "unlockTier": 3,
-    "effects": [{
-      "trigger": "damage_taken",
-      "description": "Revive at 50% HP",
-      "params": { "revivePercentage": 0.5, "usesPerCombat": 1 }
-    }]
+    "unlockTier": 3
   }
 ]

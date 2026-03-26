@@ -1,48 +1,133 @@
 {
   "forge": {
     "name": "Forge",
+    "description": "Unlock new cards into the loot pool",
     "maxLevel": 4,
     "tiers": [
-      { "level": 1, "cost": 50, "unlocks": { "cards": ["counter-strike", "shield-wall"] } },
-      { "level": 2, "cost": 100, "unlocks": { "cards": ["fury", "iron-skin"] } },
-      { "level": 3, "cost": 200, "unlocks": { "cards": ["berserker", "fortify"] } },
-      { "level": 4, "cost": 400, "unlocks": { "cards": ["weaken"] } }
+      {
+        "level": 1,
+        "cost": 50,
+        "unlocks": { "cards": ["counter-strike", "shield-wall"] },
+        "description": "Unlock Counter Strike and Shield Wall"
+      },
+      {
+        "level": 2,
+        "cost": 120,
+        "unlocks": { "cards": ["fury", "iron-skin"] },
+        "description": "Unlock Fury and Iron Skin"
+      },
+      {
+        "level": 3,
+        "cost": 250,
+        "unlocks": { "cards": ["fortify", "arcane-shield"] },
+        "description": "Unlock Fortify and Arcane Shield"
+      },
+      {
+        "level": 4,
+        "cost": 500,
+        "unlocks": { "cards": ["berserker", "rejuvenate", "mana-drain", "weaken"] },
+        "description": "Unlock Berserker, Rejuvenate, Mana Drain, and Weaken"
+      }
     ]
   },
   "library": {
     "name": "Library",
+    "description": "Learn passive skills to strengthen the Warrior",
     "maxLevel": 3,
     "tiers": [
-      { "level": 1, "cost": 50, "unlocks": { "cards": ["arcane-shield", "fireball"] } },
-      { "level": 2, "cost": 100, "unlocks": { "cards": ["heal", "mana-drain"] } },
-      { "level": 3, "cost": 200, "unlocks": { "cards": ["rejuvenate"] } }
+      {
+        "level": 1,
+        "cost": 80,
+        "unlocks": { "passives": ["passive_attack_up"] },
+        "description": "Unlock Battle Hardened passive"
+      },
+      {
+        "level": 2,
+        "cost": 200,
+        "unlocks": { "passives": ["passive_defense_up", "passive_regen"] },
+        "description": "Unlock Iron Constitution and Second Wind passives"
+      },
+      {
+        "level": 3,
+        "cost": 400,
+        "unlocks": { "passives": ["passive_combo_master", "passive_endurance"] },
+        "description": "Unlock Combo Master and Endurance passives"
+      }
     ]
   },
   "tavern": {
     "name": "Tavern",
+    "description": "Start new runs and gain starting bonuses",
     "maxLevel": 3,
     "tiers": [
-      { "level": 1, "cost": 40, "unlocks": {} },
-      { "level": 2, "cost": 80, "unlocks": {} },
-      { "level": 3, "cost": 160, "unlocks": {} }
+      {
+        "level": 1,
+        "cost": 60,
+        "effect": { "startingGoldBonus": 20 },
+        "description": "Start runs with +20 Gold"
+      },
+      {
+        "level": 2,
+        "cost": 150,
+        "effect": { "startingGoldBonus": 50, "runHistoryVisible": true },
+        "description": "Start with +50 Gold, view run history"
+      },
+      {
+        "level": 3,
+        "cost": 350,
+        "effect": { "startingGoldBonus": 100, "seedInputEnabled": true },
+        "description": "Start with +100 Gold, enter custom seeds"
+      }
     ]
   },
   "workshop": {
     "name": "Workshop",
+    "description": "Unlock new tile types for the loop",
     "maxLevel": 3,
     "tiers": [
-      { "level": 1, "cost": 60, "unlocks": { "tiles": ["graveyard"] } },
-      { "level": 2, "cost": 120, "unlocks": { "tiles": ["swamp"] } },
-      { "level": 3, "cost": 240, "unlocks": { "tiles": ["volcano"] } }
+      {
+        "level": 1,
+        "cost": 100,
+        "unlocks": { "tiles": ["graveyard"] },
+        "description": "Unlock Graveyard tiles"
+      },
+      {
+        "level": 2,
+        "cost": 250,
+        "unlocks": { "tiles": ["swamp"] },
+        "description": "Unlock Swamp tiles"
+      },
+      {
+        "level": 3,
+        "cost": 500,
+        "unlocks": { "tiles": ["volcano"] },
+        "description": "Unlock Volcano tiles"
+      }
     ]
   },
   "shrine": {
     "name": "Shrine",
+    "description": "Unlock powerful relics into the loot pool",
     "maxLevel": 3,
     "tiers": [
-      { "level": 1, "cost": 75, "unlocks": { "relics": ["warrior_spirit", "iron_will"] } },
-      { "level": 2, "cost": 150, "unlocks": { "relics": ["berserker_ring"] } },
-      { "level": 3, "cost": 300, "unlocks": { "relics": ["demon_heart", "phoenix_feather"] } }
+      {
+        "level": 1,
+        "cost": 80,
+        "unlocks": { "relics": ["warrior_spirit", "iron_will"] },
+        "description": "Unlock Warrior Spirit and Iron Will relics"
+      },
+      {
+        "level": 2,
+        "cost": 200,
+        "unlocks": { "relics": ["berserker_ring"] },
+        "description": "Unlock Berserker Ring relic"
+      },
+      {
+        "level": 3,
+        "cost": 450,
+        "unlocks": { "relics": ["demon_heart", "phoenix_feather"] },
+        "description": "Unlock Demon Heart and Phoenix Feather relics"
+      }
     ]
   }
 }

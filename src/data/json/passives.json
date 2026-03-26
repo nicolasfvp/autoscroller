@@ -3,20 +3,57 @@
     {
       "id": "passive_attack_up",
       "name": "Battle Hardened",
+      "description": "+3 base attack damage",
       "xpCost": 100,
-      "effect": { "type": "stat_bonus", "stat": "attack", "value": 5 }
+      "effect": {
+        "type": "stat_modifier",
+        "stat": "attackDamage",
+        "value": 3
+      }
     },
     {
       "id": "passive_defense_up",
       "name": "Iron Constitution",
-      "xpCost": 250,
-      "effect": { "type": "stat_bonus", "stat": "defense", "value": 5 }
+      "description": "+5 base defense",
+      "xpCost": 200,
+      "effect": {
+        "type": "stat_modifier",
+        "stat": "defense",
+        "value": 5
+      }
     },
     {
-      "id": "passive_hp_up",
-      "name": "Vitality",
+      "id": "passive_regen",
+      "name": "Second Wind",
+      "description": "+2 stamina regen per turn",
+      "xpCost": 300,
+      "effect": {
+        "type": "stat_modifier",
+        "stat": "staminaRegen",
+        "value": 2
+      }
+    },
+    {
+      "id": "passive_combo_master",
+      "name": "Combo Master",
+      "description": "+25% synergy damage bonus",
       "xpCost": 500,
-      "effect": { "type": "stat_bonus", "stat": "maxHP", "value": 25 }
+      "effect": {
+        "type": "stat_modifier",
+        "stat": "synergyDamageBonus",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "passive_endurance",
+      "name": "Endurance",
+      "description": "+20 max stamina",
+      "xpCost": 800,
+      "effect": {
+        "type": "stat_modifier",
+        "stat": "maxStamina",
+        "value": 20
+      }
     }
   ]
 }
