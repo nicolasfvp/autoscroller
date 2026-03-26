@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-26T19:13:30.767Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-26T19:23:28.619Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 12
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -47,6 +47,7 @@ Plan: 2 of 3
 - Trend: improving
 
 *Updated after each plan completion*
+| Phase 02-01 P01 | 8min | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ Recent decisions affecting current work:
 - [02-02]: LootSystem uses injectable RNG interface { next(): number } for deterministic testing
 - [02-02]: HeroState extended with optional runXP/totalXP/className for backward compat
 - [02-02]: Passive skills loaded from JSON data, resolved purely against totalXP threshold
+- [Phase 02-01]: heroStunned flag on CombatState for stun special effect (skip next card)
+- [Phase 02-01]: cost_waive synergy bonus type for Fortified Fury (Fury plays free after Shield Wall)
+- [Phase 02-01]: Tick-driven combat: CombatEngine.tick(deltaMs) drives all combat without Phaser dependency
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T19:18:15Z
-Stopped at: Completed 02-02-PLAN.md
-Resume file: .planning/phases/02-combat-deck-engine/02-03-PLAN.md
+Last session: 2026-03-26T19:23:28.616Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None

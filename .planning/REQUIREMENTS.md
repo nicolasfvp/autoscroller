@@ -16,27 +16,27 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Combat
 
-- [ ] **CMBT-01**: Combat is fully automatic — hero plays cards from the top of the deck without player intervention
-- [ ] **CMBT-02**: Each card has its own cooldown (light cards are fast, heavy cards are slow)
-- [ ] **CMBT-03**: Card queue is visible during combat — player sees entire deck order and upcoming cards
-- [ ] **CMBT-04**: Synergy triggers are visually highlighted during combat (combo indicator)
+- [x] **CMBT-01**: Combat is fully automatic — hero plays cards from the top of the deck without player intervention
+- [x] **CMBT-02**: Each card has its own cooldown (light cards are fast, heavy cards are slow)
+- [x] **CMBT-03**: Card queue is visible during combat — player sees entire deck order and upcoming cards
+- [x] **CMBT-04**: Synergy triggers are visually highlighted during combat (combo indicator)
 - [ ] **CMBT-05**: Post-combat summary screen shows damage dealt/received, cards played, combos triggered
-- [ ] **CMBT-06**: When deck is exhausted, it reshuffles and restarts
-- [ ] **CMBT-07**: Cards are typed: attacks, defenses, and spells
-- [ ] **CMBT-08**: Attacks and defenses cost stamina; spells cost mana
-- [ ] **CMBT-09**: Cards and natural regeneration generate stamina/mana during combat
-- [ ] **CMBT-10**: Stamina and mana reset between combats; HP persists across combats
-- [ ] **CMBT-11**: Card targeting is defined per card (single target, AoE, lowest HP, random, etc)
-- [ ] **CMBT-12**: Enemies use simple AI with fixed stats and attack patterns (no card system)
+- [x] **CMBT-06**: When deck is exhausted, it reshuffles and restarts
+- [x] **CMBT-07**: Cards are typed: attacks, defenses, and spells
+- [x] **CMBT-08**: Attacks and defenses cost stamina; spells cost mana
+- [x] **CMBT-09**: Cards and natural regeneration generate stamina/mana during combat
+- [x] **CMBT-10**: Stamina and mana reset between combats; HP persists across combats
+- [x] **CMBT-11**: Card targeting is defined per card (single target, AoE, lowest HP, random, etc)
+- [x] **CMBT-12**: Enemies use simple AI with fixed stats and attack patterns (no card system)
 
 ### Deck Management
 
 - [x] **DECK-01**: Player can add cards to deck for free (accept or discard when earned)
 - [x] **DECK-02**: Player can remove cards at the shop with escalating gold cost (smaller deck = more expensive)
 - [x] **DECK-03**: Player can reorder deck at the shop for a gold cost
-- [ ] **DECK-04**: Sequential card synergies exist (e.g., Shield followed by Counter-Attack = double damage)
-- [ ] **DECK-05**: Not all cards have synergies — synergy presence is a balancing factor
-- [ ] **DECK-06**: Class-exclusive combos exist (warrior-specific synergy chains)
+- [x] **DECK-04**: Sequential card synergies exist (e.g., Shield followed by Counter-Attack = double damage)
+- [x] **DECK-05**: Not all cards have synergies — synergy presence is a balancing factor
+- [x] **DECK-06**: Class-exclusive combos exist (warrior-specific synergy chains)
 - [x] **DECK-07**: Player can view entire deck order at any time
 - [x] **DECK-08**: Card reward choices: pick 1 of 3 cards after eligible combats (chance, not guaranteed)
 
@@ -168,24 +168,24 @@ Updated during roadmap creation.
 | ARCH-03 | Phase 1 | Complete |
 | ARCH-04 | Phase 1 | Complete |
 | PERS-01 | Phase 1 | Complete |
-| CMBT-01 | Phase 2 | Pending |
-| CMBT-02 | Phase 2 | Pending |
-| CMBT-03 | Phase 2 | Pending |
-| CMBT-04 | Phase 2 | Pending |
+| CMBT-01 | Phase 2 | Complete |
+| CMBT-02 | Phase 2 | Complete |
+| CMBT-03 | Phase 2 | Complete |
+| CMBT-04 | Phase 2 | Complete |
 | CMBT-05 | Phase 2 | Pending |
-| CMBT-06 | Phase 2 | Pending |
-| CMBT-07 | Phase 2 | Pending |
-| CMBT-08 | Phase 2 | Pending |
-| CMBT-09 | Phase 2 | Pending |
-| CMBT-10 | Phase 2 | Pending |
-| CMBT-11 | Phase 2 | Pending |
-| CMBT-12 | Phase 2 | Pending |
+| CMBT-06 | Phase 2 | Complete |
+| CMBT-07 | Phase 2 | Complete |
+| CMBT-08 | Phase 2 | Complete |
+| CMBT-09 | Phase 2 | Complete |
+| CMBT-10 | Phase 2 | Complete |
+| CMBT-11 | Phase 2 | Complete |
+| CMBT-12 | Phase 2 | Complete |
 | DECK-01 | Phase 2 | Complete |
 | DECK-02 | Phase 2 | Complete |
 | DECK-03 | Phase 2 | Complete |
-| DECK-04 | Phase 2 | Pending |
-| DECK-05 | Phase 2 | Pending |
-| DECK-06 | Phase 2 | Pending |
+| DECK-04 | Phase 2 | Complete |
+| DECK-05 | Phase 2 | Complete |
+| DECK-06 | Phase 2 | Complete |
 | DECK-07 | Phase 2 | Complete |
 | DECK-08 | Phase 2 | Complete |
 | HERO-01 | Phase 2 | Complete |
