@@ -1,0 +1,14 @@
+{
+  "minItems": 1,
+  "maxItems": 3,
+  "weights": {
+    "gold": 40,
+    "card": 30,
+    "relic": 10,
+    "tile": 20
+  },
+  "goldRange": { "base": 20, "max": 50, "loopScale": "sqrt" },
+  "cardPool": "all_available",
+  "relicPool": "all_available",
+  "tilePool": "all_placeable"
+}
