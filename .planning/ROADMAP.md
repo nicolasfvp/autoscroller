@@ -96,5 +96,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Architecture Foundation | 0/3 | Not started | - |
 | 2. Combat + Deck Engine | 1/3 | In Progress|  |
-| 3. Loop + Tile World | 1/3 | In Progress|  |
+| 3. Loop + Tile World | 3/3 | Complete | 2026-03-26 |
 | 4. Content, Meta-Progression + Persistence | 0/3 | Not started | - |
