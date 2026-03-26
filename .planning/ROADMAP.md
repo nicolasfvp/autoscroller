@@ -80,12 +80,12 @@ Plans:
   3. Player visits a visual hub (camp/village) between runs that shows unlocks and progression; new cards and tile types unlock permanently into the loot pool
   4. 2-3 boss types and ~5 narrative events with choices provide encounter variety across runs
   5. Meta-progression data (unlocks, class XP, passive tree) persists across browser sessions, and runs use seeded RNG for reproducibility
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Relic system + content population (cards, relics, bosses, events)
-- [ ] 04-02: Meta-progression hub + permanent unlocks + seeded RNG
-- [ ] 04-03: Persistence (meta-progression IndexedDB) + integration polish
+- [ ] 04-01-PLAN.md — JSON content data (cards, relics, enemies, events, buildings, passives) + MetaState type + SeededRNG + MetaPersistence + content tests (Wave 1)
+- [ ] 04-02-PLAN.md — UnlockManager + MetaProgressionSystem + CollectionRegistry + unit tests (Wave 1)
+- [ ] 04-03-PLAN.md — CityHubScene + BuildingPanel + TavernPanel + CollectionScene + RelicHUD + SeedDisplay + run-end extensions + visual checkpoint (Wave 2)
 
 ## Progress
 
