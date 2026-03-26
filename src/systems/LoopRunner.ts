@@ -132,7 +132,7 @@ export class LoopRunner {
         this.state = 'tile-interaction';
         const sceneMap: Record<string, string> = {
           shop: 'ShopScene',
-          rest: 'RestScene',
+          rest: 'RestSiteScene',
           event: 'EventScene',
           treasure: 'TreasureScene',
         };
