@@ -1,0 +1,65 @@
+[
+  {
+    "id": "vigor",
+    "name": "Vigor",
+    "description": "+10 Max HP",
+    "xpThreshold": 100,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "maxHP",
+      "value": 10
+    }
+  },
+  {
+    "id": "endurance",
+    "name": "Endurance",
+    "description": "+5 Max Stamina",
+    "xpThreshold": 250,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "maxStamina",
+      "value": 5
+    }
+  },
+  {
+    "id": "iron_body",
+    "name": "Iron Body",
+    "description": "+10% defense efficiency",
+    "xpThreshold": 450,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "defenseMultiplier",
+      "value": 0.1
+    }
+  },
+  {
+    "id": "battle_rage",
+    "name": "Battle Rage",
+    "description": "+15% damage after 2 consecutive attacks",
+    "xpThreshold": 700,
+    "effect": {
+      "type": "conditional_trigger",
+      "condition": "consecutive_attacks_2",
+      "triggerEffect": {
+        "type": "damage_bonus_percent",
+        "value": 15,
+        "target": "self"
+      }
+    }
+  },
+  {
+    "id": "second_wind",
+    "name": "Second Wind",
+    "description": "Recover 5 Stamina on deck reshuffle",
+    "xpThreshold": 1000,
+    "effect": {
+      "type": "conditional_trigger",
+      "condition": "deck_reshuffled",
+      "triggerEffect": {
+        "type": "stamina",
+        "value": 5,
+        "target": "self"
+      }
+    }
+  }
+]

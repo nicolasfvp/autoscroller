@@ -17,6 +17,12 @@ export interface HeroState {
   strength: number;
   defenseMultiplier: number;
   moveSpeed: number;
+  /** XP earned in current run (lost on death) */
+  runXP?: number;
+  /** Lifetime XP banked across runs (persists on safe exit) */
+  totalXP?: number;
+  /** Hero class name */
+  className?: string;
 }
 
 export interface DeckState {
