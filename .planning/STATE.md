@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-26T19:01:06Z"
+status: unknown
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-26T19:13:30.767Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 12
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,19 +19,19 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** Strategic deckbuilding where every card decision determines survival -- the player is an architect, not a fighter
-**Current focus:** Phase 01 — architecture-foundation
+**Current focus:** Phase 02 — combat-deck-engine
 
 ## Current Position
 
-Phase: 01 (architecture-foundation) — EXECUTING
-Plan: 3 of 3
+Phase: 02 (combat-deck-engine) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 2
-- Average duration: 7.5min
+- Total plans completed: 3
+- Average duration: 6.3min
 - Total execution time: 0.25 hours
 
 **By Phase:**
@@ -39,11 +39,12 @@ Plan: 3 of 3
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-architecture-foundation | 2 | 15min | 7.5min |
+| 02-combat-deck-engine | 1 | 4min | 4min |
 
 **Recent Trend:**
 
-- Last 5 plans: 01-01 (7min), 01-02 (8min)
-- Trend: stable
+- Last 5 plans: 01-01 (7min), 01-02 (8min), 02-02 (4min)
+- Trend: improving
 
 *Updated after each plan completion*
 
@@ -65,6 +66,10 @@ Recent decisions affecting current work:
 - [01-02]: Phaser registry used to pass savedRun from Preloader to MainMenu (avoids RunState mutation before user choice)
 - [01-02]: Overlay scenes use placeholder content marked for Phase 2 (clean architecture/gameplay separation)
 - [01-02]: SettingsScene has no RunState dependency (settings are global, not per-run)
+- [02-02]: DeckSystem operates on RunState.deck.active directly (pure functions, not legacy DeckManager class)
+- [02-02]: LootSystem uses injectable RNG interface { next(): number } for deterministic testing
+- [02-02]: HeroState extended with optional runXP/totalXP/className for backward compat
+- [02-02]: Passive skills loaded from JSON data, resolved purely against totalXP threshold
 
 ### Pending Todos
 
@@ -78,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T19:01:06Z
-Stopped at: Completed 01-02-PLAN.md
-Resume file: .planning/phases/01-architecture-foundation/01-03-PLAN.md
+Last session: 2026-03-26T19:18:15Z
+Stopped at: Completed 02-02-PLAN.md
+Resume file: .planning/phases/02-combat-deck-engine/02-03-PLAN.md

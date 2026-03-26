@@ -31,14 +31,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deck Management
 
-- [ ] **DECK-01**: Player can add cards to deck for free (accept or discard when earned)
-- [ ] **DECK-02**: Player can remove cards at the shop with escalating gold cost (smaller deck = more expensive)
-- [ ] **DECK-03**: Player can reorder deck at the shop for a gold cost
+- [x] **DECK-01**: Player can add cards to deck for free (accept or discard when earned)
+- [x] **DECK-02**: Player can remove cards at the shop with escalating gold cost (smaller deck = more expensive)
+- [x] **DECK-03**: Player can reorder deck at the shop for a gold cost
 - [ ] **DECK-04**: Sequential card synergies exist (e.g., Shield followed by Counter-Attack = double damage)
 - [ ] **DECK-05**: Not all cards have synergies — synergy presence is a balancing factor
 - [ ] **DECK-06**: Class-exclusive combos exist (warrior-specific synergy chains)
-- [ ] **DECK-07**: Player can view entire deck order at any time
-- [ ] **DECK-08**: Card reward choices: pick 1 of 3 cards after eligible combats (chance, not guaranteed)
+- [x] **DECK-07**: Player can view entire deck order at any time
+- [x] **DECK-08**: Card reward choices: pick 1 of 3 cards after eligible combats (chance, not guaranteed)
 
 ### Loop System
 
@@ -61,10 +61,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Hero and Class
 
-- [ ] **HERO-01**: Warrior is the playable class with defined base stats (HP, stamina, mana)
-- [ ] **HERO-02**: Class XP earned per run persists between runs
-- [ ] **HERO-03**: Passive skills unlocked via class XP (e.g., +damage after 2 consecutive attacks)
-- [ ] **HERO-04**: Class-exclusive card synergies (warrior-specific sequential combos)
+- [x] **HERO-01**: Warrior is the playable class with defined base stats (HP, stamina, mana)
+- [x] **HERO-02**: Class XP earned per run persists between runs
+- [x] **HERO-03**: Passive skills unlocked via class XP (e.g., +damage after 2 consecutive attacks)
+- [x] **HERO-04**: Class-exclusive card synergies (warrior-specific sequential combos)
 
 ### Relics
 
@@ -180,18 +180,18 @@ Updated during roadmap creation.
 | CMBT-10 | Phase 2 | Pending |
 | CMBT-11 | Phase 2 | Pending |
 | CMBT-12 | Phase 2 | Pending |
-| DECK-01 | Phase 2 | Pending |
-| DECK-02 | Phase 2 | Pending |
-| DECK-03 | Phase 2 | Pending |
+| DECK-01 | Phase 2 | Complete |
+| DECK-02 | Phase 2 | Complete |
+| DECK-03 | Phase 2 | Complete |
 | DECK-04 | Phase 2 | Pending |
 | DECK-05 | Phase 2 | Pending |
 | DECK-06 | Phase 2 | Pending |
-| DECK-07 | Phase 2 | Pending |
-| DECK-08 | Phase 2 | Pending |
-| HERO-01 | Phase 2 | Pending |
-| HERO-02 | Phase 2 | Pending |
-| HERO-03 | Phase 2 | Pending |
-| HERO-04 | Phase 2 | Pending |
+| DECK-07 | Phase 2 | Complete |
+| DECK-08 | Phase 2 | Complete |
+| HERO-01 | Phase 2 | Complete |
+| HERO-02 | Phase 2 | Complete |
+| HERO-03 | Phase 2 | Complete |
+| HERO-04 | Phase 2 | Complete |
 | PLSH-01 | Phase 2 | Pending |
 | LOOP-01 | Phase 3 | Pending |
 | LOOP-02 | Phase 3 | Pending |
