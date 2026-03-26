@@ -42,21 +42,21 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Loop System
 
-- [ ] **LOOP-01**: Hero traverses tiles in an infinite loop (side-view, autoscroll)
+- [x] **LOOP-01**: Hero traverses tiles in an infinite loop (side-view, autoscroll)
 - [ ] **LOOP-02**: Player places terrain tiles on the path during the run
-- [ ] **LOOP-03**: Adjacent tiles interact with each other (synergy/combo effects)
-- [ ] **LOOP-04**: Terrains spawn specific enemies and provide resources/buffs
-- [ ] **LOOP-05**: Difficulty scales each loop (enemy stats increase)
-- [ ] **LOOP-06**: Boss appears every X loops completed
-- [ ] **LOOP-07**: Defeating a boss gives the option to exit with 100% of rewards
-- [ ] **LOOP-08**: Dying mid-run returns 25% of rewards
+- [x] **LOOP-03**: Adjacent tiles interact with each other (synergy/combo effects)
+- [x] **LOOP-04**: Terrains spawn specific enemies and provide resources/buffs
+- [x] **LOOP-05**: Difficulty scales each loop (enemy stats increase)
+- [x] **LOOP-06**: Boss appears every X loops completed
+- [x] **LOOP-07**: Defeating a boss gives the option to exit with 100% of rewards
+- [x] **LOOP-08**: Dying mid-run returns 25% of rewards
 
 ### Tile System
 
-- [ ] **TILE-01**: Player earns tile points each loop completed (accumulable for better tiles)
-- [ ] **TILE-02**: Rare tile drops from enemies (free, inserted at end of loop)
+- [x] **TILE-01**: Player earns tile points each loop completed (accumulable for better tiles)
+- [x] **TILE-02**: Rare tile drops from enemies (free, inserted at end of loop)
 - [ ] **TILE-03**: Tile drops can be sold for tile points (at reduced rate)
-- [ ] **TILE-04**: 6+ functional tile types: combat terrain, shop, rest, treasure, event, boss
+- [x] **TILE-04**: 6+ functional tile types: combat terrain, shop, rest, treasure, event, boss
 - [ ] **TILE-05**: Tile placement UI allows positioning tiles during the run
 
 ### Hero and Class
@@ -193,18 +193,18 @@ Updated during roadmap creation.
 | HERO-03 | Phase 2 | Complete |
 | HERO-04 | Phase 2 | Complete |
 | PLSH-01 | Phase 2 | Pending |
-| LOOP-01 | Phase 3 | Pending |
+| LOOP-01 | Phase 3 | Complete |
 | LOOP-02 | Phase 3 | Pending |
-| LOOP-03 | Phase 3 | Pending |
-| LOOP-04 | Phase 3 | Pending |
-| LOOP-05 | Phase 3 | Pending |
-| LOOP-06 | Phase 3 | Pending |
-| LOOP-07 | Phase 3 | Pending |
-| LOOP-08 | Phase 3 | Pending |
-| TILE-01 | Phase 3 | Pending |
-| TILE-02 | Phase 3 | Pending |
+| LOOP-03 | Phase 3 | Complete |
+| LOOP-04 | Phase 3 | Complete |
+| LOOP-05 | Phase 3 | Complete |
+| LOOP-06 | Phase 3 | Complete |
+| LOOP-07 | Phase 3 | Complete |
+| LOOP-08 | Phase 3 | Complete |
+| TILE-01 | Phase 3 | Complete |
+| TILE-02 | Phase 3 | Complete |
 | TILE-03 | Phase 3 | Pending |
-| TILE-04 | Phase 3 | Pending |
+| TILE-04 | Phase 3 | Complete |
 | TILE-05 | Phase 3 | Pending |
 | SPEC-01 | Phase 3 | Pending |
 | SPEC-02 | Phase 3 | Pending |

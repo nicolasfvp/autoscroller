@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-26T19:23:28.619Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-26T20:26:51.318Z"
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 12
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** Strategic deckbuilding where every card decision determines survival -- the player is an architect, not a fighter
-**Current focus:** Phase 02 — combat-deck-engine
+**Current focus:** Phase 03 — loop-tile-world
 
 ## Current Position
 
-Phase: 02 (combat-deck-engine) — EXECUTING
+Phase: 03 (loop-tile-world) — EXECUTING
 Plan: 2 of 3
 
 ## Performance Metrics
@@ -48,6 +48,7 @@ Plan: 2 of 3
 
 *Updated after each plan completion*
 | Phase 02-01 P01 | 8min | 2 tasks | 18 files |
+| Phase 03-01 P01 | 5min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [Phase 02-01]: heroStunned flag on CombatState for stun special effect (skip next card)
 - [Phase 02-01]: cost_waive synergy bonus type for Fortified Fury (Fury plays free after Shield Wall)
 - [Phase 02-01]: Tick-driven combat: CombatEngine.tick(deltaMs) drives all combat without Phaser dependency
+- [Phase 03-01]: New tiles.json at src/data/ (not src/data/json/) to separate Phase 3 tile world configs from legacy data
+- [Phase 03-01]: LoopRunner uses injectable RNG + emit callback for pure testing (same DI pattern as CombatEngine)
+- [Phase 03-01]: TILE_SIZE=80 constant exported from LoopRunner matching existing MapManager
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T19:23:28.616Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-26T20:26:51.315Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None
