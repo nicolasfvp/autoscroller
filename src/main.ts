@@ -17,6 +17,9 @@ import { DeckCustomizationScene } from './scenes/DeckCustomizationScene'
 import { RelicViewerScene } from './scenes/RelicViewerScene'
 import { SelectionScene } from './scenes/SelectionScene'
 import { DeathScene } from './scenes/DeathScene'
+import { PostCombatScene } from './scenes/PostCombatScene'
+import { DeckViewScene } from './scenes/DeckViewScene'
+import { ShopDeckEditor } from './scenes/ShopDeckEditor'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -47,7 +50,10 @@ const config: Phaser.Types.Core.GameConfig = {
         DeckCustomizationScene,
         RelicViewerScene,
         SelectionScene,
-        DeathScene
+        DeathScene,
+        PostCombatScene,
+        DeckViewScene,
+        ShopDeckEditor
     ]
 }
 
