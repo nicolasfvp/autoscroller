@@ -198,4 +198,19 @@ export class CombatEngine {
   isComplete(): boolean {
     return this.isFinished;
   }
+
+  getDeckPointer(): number {
+    return this.deckPointer;
+  }
+
+  getHeroCooldownTimer(): number {
+    return this.heroCooldownTimer;
+  }
+
+  getHeroMaxCooldown(): number {
+    const cardId = this.state.deckOrder[this.deckPointer];
+    if (!cardId) return 1000;
+    const card = getCardById(cardId);
+    return card ? card.cooldown * 1000 : 1000;
+  }
 }
