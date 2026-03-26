@@ -63,12 +63,12 @@ Plans:
   3. Adjacent tiles interact with each other (synergy/combo effects are visible), and terrains spawn specific enemies and provide resources/buffs
   4. Boss appears every X loops -- defeating it gives the option to exit with 100% rewards; dying mid-run returns 25% of rewards
   5. All special tile types function: shop (buy/remove/reorder cards, buy relics), event (narrative choices), rest (recover HP), treasure (loot), boss (special combat)
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: LoopRunner + tile placement + difficulty scaling
-- [ ] 03-02: Special tiles (shop, rest, treasure, boss, event) + tile economy
-- [ ] 03-03: Loop integration testing + boss encounters
+- [ ] 03-01-PLAN.md — LoopRunner state machine + TileRegistry + SynergyResolver + DifficultyScaler + LootGenerator + RunEndResolver + JSON data configs + vitest + unit tests (Wave 1)
+- [ ] 03-02-PLAN.md — ShopSystem + RestSiteSystem + EventResolver + TreasureSystem + BossSystem + JSON data (events, treasure, rest) + unit tests (Wave 2)
+- [ ] 03-03-PLAN.md — GameScene + PlanningOverlay + 5 special tile overlay scenes + BossExitScene + HUD + UI components + visual checkpoint (Wave 3)
 
 ### Phase 4: Content, Meta-Progression + Persistence
 **Goal**: The game has enough content for varied runs, permanent progression between runs, and reliable save/load across sessions
