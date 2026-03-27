@@ -14,7 +14,11 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 
 <!-- Shipped and confirmed valuable. -->
 
-(None yet — ship to validate)
+- [x] Multi-material economy (7 types) replacing single metaLoot — Validated in Phase 5: Balance & Economy Overhaul
+- [x] Combat rebalanced for 5-8s fights with 50% stamina/mana recovery — Validated in Phase 5
+- [x] Scaling gold prices with caps, Storehouse building, diminishing loop growth — Validated in Phase 5
+- [x] MetaState v1→v2 migration for save compatibility — Validated in Phase 5
+- [x] Seeded deck shuffle for varied combat openings — Validated in Phase 5
 
 ### Active
 
@@ -145,4 +149,4 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 | GDD em português brasileiro | Documentação do game design acompanha os docs de planejamento | — Pending |
 
 ---
-*Last updated: 2025-03-25 after initialization*
+*Last updated: 2026-03-27 — Phase 5 (Balance & Economy Overhaul) complete*
