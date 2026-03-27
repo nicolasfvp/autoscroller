@@ -15,17 +15,32 @@ interface DifficultyConfig {
   speedScalePerLoop: number;
   bossEveryNLoops: number;
   baseLoopLength: number;
-  loopGrowthOnBossKill: number;
   baseTilePointsPerLoop: number;
   tilePointScalePerLoop: number;
-  metaLootPerCombat: { min: number; max: number };
-  metaLootPerLoop: number;
-  metaLootPerBoss: number;
-  deathMetaLootPercent: number;
+  deathMaterialPercent: number;
   deathXpPercent: number;
+  resourceResetPercent: number;
+  loopGrowth: {
+    schedule: number[];
+    maxTileLength: number;
+  };
+  pricing: {
+    cardBasePrice: number;
+    cardPricePerLoop: number;
+    cardPriceCap: number;
+    removeBasePrice: number;
+    removeEscalation: number;
+    removeCap: number;
+    reorderBasePrice: number;
+    reorderEscalation: number;
+    reorderCap: number;
+    relicPriceByRarity: Record<string, number>;
+    relicPricePerLoop: number;
+    relicPriceCap: Record<string, number>;
+  };
 }
 
-const config = difficultyConfig as DifficultyConfig;
+const config = difficultyConfig as unknown as DifficultyConfig;
 
 export function scaleEnemyForLoop(
   baseEnemy: {
@@ -56,4 +71,20 @@ export function getLoopSpeed(loopCount: number): number {
 
 export function getDifficultyConfig(): DifficultyConfig {
   return config;
+}
+
+// ── Loop growth (diminishing schedule with cap) ────────────
+
+export function getLoopGrowth(bossKillCount: number): number {
+  const schedule = config.loopGrowth.schedule;
+  const idx = Math.min(bossKillCount, schedule.length - 1);
+  return schedule[idx];
+}
+
+export function getLoopLength(baseTileLength: number, bossKillCount: number): number {
+  let length = baseTileLength;
+  for (let i = 0; i < bossKillCount; i++) {
+    length += getLoopGrowth(i);
+  }
+  return Math.min(length, config.loopGrowth.maxTileLength);
 }
