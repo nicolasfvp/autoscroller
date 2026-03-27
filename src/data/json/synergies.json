@@ -2,7 +2,7 @@
   {
     "cardA": "defend",
     "cardB": "strike",
-    "bonus": { "type": "damage", "value": 6, "target": "enemy" },
+    "bonus": { "type": "damage", "value": 15, "target": "enemy" },
     "classRestriction": "warrior",
     "displayName": "Counter Attack!"
   },
@@ -16,26 +16,26 @@
   {
     "cardA": "heavy-hit",
     "cardB": "heavy-hit",
-    "bonus": { "type": "damage", "value": 16, "target": "enemy" },
+    "bonus": { "type": "damage", "value": 40, "target": "enemy" },
     "classRestriction": "warrior",
     "displayName": "Berserker Rage!"
   },
   {
     "cardA": "heal",
     "cardB": "fireball",
-    "bonus": { "type": "damage", "value": 8, "target": "enemy" },
+    "bonus": { "type": "damage", "value": 20, "target": "enemy" },
     "displayName": "Channeled Fire!"
   },
   {
     "cardA": "mana-drain",
     "cardB": "arcane-shield",
-    "bonus": { "type": "armor", "value": 5, "target": "self" },
+    "bonus": { "type": "armor", "value": 12, "target": "self" },
     "displayName": "Arcane Conversion!"
   },
   {
     "cardA": "fortify",
     "cardB": "strike",
-    "bonus": { "type": "damage", "value": 10, "target": "enemy" },
+    "bonus": { "type": "damage", "value": 25, "target": "enemy" },
     "displayName": "Iron Fist!"
   }
 ]

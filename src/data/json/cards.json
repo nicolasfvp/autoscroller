@@ -3,9 +3,9 @@
     {
       "id": "strike",
       "name": "Strike",
-      "description": "Deal 8 damage.",
+      "description": "Deal 20 damage.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 8, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 20, "target": "enemy" }],
       "cooldown": 1.0,
       "targeting": "single",
       "rarity": "common"
@@ -13,9 +13,9 @@
     {
       "id": "heavy-hit",
       "name": "Heavy Hit",
-      "description": "Deal 16 damage. Lose 5 Stamina.",
+      "description": "Deal 40 damage. Lose 5 Stamina.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 16, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 40, "target": "enemy" }],
       "cost": { "stamina": 5 },
       "cooldown": 1.5,
       "targeting": "single",
@@ -24,9 +24,9 @@
     {
       "id": "fury",
       "name": "Fury",
-      "description": "Deal 24 damage. Lose 10 Defense.",
+      "description": "Deal 60 damage. Lose 10 Defense.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 24, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 60, "target": "enemy" }],
       "cost": { "defense": 10 },
       "cooldown": 2.0,
       "targeting": "single",
@@ -37,9 +37,9 @@
     {
       "id": "berserker",
       "name": "Berserker",
-      "description": "Deal 32 damage. Lose 15 Stamina and 5 Defense.",
+      "description": "Deal 80 damage. Lose 15 Stamina and 5 Defense.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 32, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 80, "target": "enemy" }],
       "cost": { "stamina": 15, "defense": 5 },
       "cooldown": 2.5,
       "targeting": "single",
@@ -50,9 +50,9 @@
     {
       "id": "counter-strike",
       "name": "Counter Strike",
-      "description": "Deal 10 damage. If enemy attacked last turn, deal 20 instead.",
+      "description": "Deal 25 damage. If enemy attacked last turn, deal 50 instead.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 10, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 25, "target": "enemy" }],
       "cooldown": 1.5,
       "targeting": "single",
       "rarity": "uncommon",
@@ -111,9 +111,9 @@
     {
       "id": "fireball",
       "name": "Fireball",
-      "description": "Deal 12 damage. Costs 5 Mana.",
+      "description": "Deal 30 damage. Costs 5 Mana.",
       "category": "magic",
-      "effects": [{ "type": "damage", "value": 12, "target": "enemy" }],
+      "effects": [{ "type": "damage", "value": 30, "target": "enemy" }],
       "cost": { "mana": 5 },
       "cooldown": 1.5,
       "targeting": "single",
@@ -161,10 +161,10 @@
     {
       "id": "mana-drain",
       "name": "Mana Drain",
-      "description": "Deal 6 damage. Restore 5 Mana.",
+      "description": "Deal 15 damage. Restore 5 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 6, "target": "enemy" },
+        { "type": "damage", "value": 15, "target": "enemy" },
         { "type": "mana", "value": 5, "target": "self" }
       ],
       "cooldown": 2.0,
@@ -176,10 +176,10 @@
     {
       "id": "weaken",
       "name": "Weaken",
-      "description": "Deal 4 damage. Enemy loses 5 Defense next turn. Costs 7 Mana.",
+      "description": "Deal 10 damage. Enemy loses 5 Defense next turn. Costs 7 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 4, "target": "enemy" },
+        { "type": "damage", "value": 10, "target": "enemy" },
         { "type": "debuff", "value": 5, "target": "enemy" }
       ],
       "cost": { "mana": 7 },

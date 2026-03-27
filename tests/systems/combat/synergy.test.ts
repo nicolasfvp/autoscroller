@@ -9,7 +9,7 @@ describe('SynergySystem', () => {
     expect(result).not.toBeNull();
     expect(result!.displayName).toBe('Counter Attack!');
     expect(result!.bonus.type).toBe('damage');
-    expect(result!.bonus.value).toBe(8);
+    expect(result!.bonus.value).toBe(15);
   });
 
   it('check("defend","strike") returns null for non-warrior class (class-restricted)', () => {
@@ -41,7 +41,7 @@ describe('SynergySystem', () => {
     const result = system.check('heavy-hit', 'heavy-hit', 'warrior');
     expect(result).not.toBeNull();
     expect(result!.displayName).toBe('Berserker Rage!');
-    expect(result!.bonus.value).toBe(20);
+    expect(result!.bonus.value).toBe(40);
   });
 
   it('returns null when lastPlayedCardId is null', () => {
@@ -54,6 +54,6 @@ describe('SynergySystem', () => {
     expect(result).not.toBeNull();
     expect(result!.displayName).toBe('Arcane Conversion!');
     expect(result!.bonus.type).toBe('armor');
-    expect(result!.bonus.value).toBe(5);
+    expect(result!.bonus.value).toBe(12);
   });
 });
