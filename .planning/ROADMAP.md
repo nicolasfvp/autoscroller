@@ -108,8 +108,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 **Plans:** 4 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — MetaState v2 types + materials.json + rebalanced cards/enemies/buildings/difficulty JSON (Wave 1)
-- [ ] 05-02-PLAN.md — 50% resource recovery in CombatState + combat balance validation tests (Wave 1)
+- [ ] 05-01-PLAN.md — MetaState v2 types + materials.json + rebalanced JSON + migration tests (Wave 1)
+- [ ] 05-02-PLAN.md — 50% resource recovery in CombatState + combat balance validation tests (Wave 2)
 - [ ] 05-03-PLAN.md — ShopSystem scaling prices + LootGenerator materials + MetaProgressionSystem multi-material + RunEndResolver death penalty + DifficultyScaler loop growth (Wave 2)
 - [ ] 05-04-PLAN.md — Wire materials into all scenes/HUD/LoopRunner/persistence + MetaState migration + visual checkpoint (Wave 3)
 
