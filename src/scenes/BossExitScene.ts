@@ -1,7 +1,9 @@
 import { Scene } from 'phaser';
-import { getRun } from '../state/RunState';
+import { getRun, clearRun } from '../state/RunState';
 import { getBossExitChoiceData } from '../systems/BossSystem';
 import { LoopRunner, type LoopRunState } from '../systems/LoopRunner';
+import { bankRunRewards } from '../systems/MetaProgressionSystem';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 
 /**
  * BossExitScene -- boss exit choice overlay with two-panel layout.
@@ -141,15 +143,34 @@ export class BossExitScene extends Scene {
     this.confirmBtn!.setVisible(true);
   }
 
-  private confirmSelection(): void {
+  private async confirmSelection(): Promise<void> {
     if (!this.selectedChoice) return;
 
     if (this.selectedChoice === 'exit') {
       this.loopRunner.onBossChoice('exit');
-      // Transition to GameOverScene
+
+      // Bank 100% meta-loot and XP for safe exit
+      const run = getRun();
+      const metaLootEarned = Math.max(1, run.loop.count * 5 + ((run.economy as any).metaLoot ?? 0));
+      const xpEarned = run.hero.runXP ?? 0;
+      const metaState = await loadMetaState();
+      const updatedState = bankRunRewards(
+        metaLootEarned,
+        xpEarned,
+        'safe',
+        {
+          seed: (run as any).seed ?? 'unknown',
+          loopsCompleted: run.loop.count,
+          bossesDefeated: (run as any).bossesDefeated ?? 1,
+        },
+        metaState
+      );
+      await saveMetaState(updatedState);
+
+      clearRun();
       this.scene.stop();
       this.scene.stop('GameScene');
-      this.scene.start('GameOverScene');
+      this.scene.start('CityHub');
     } else {
       this.loopRunner.onBossChoice('continue');
       // Resume GameScene -- LoopRunner is now in 'planning' state
