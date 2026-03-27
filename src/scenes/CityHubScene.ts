@@ -162,6 +162,9 @@ export class CityHubScene extends Scene {
 
     // Click handler
     rect.on('pointerdown', () => {
+      // Disable CityHub input while overlay is open to prevent click-through
+      this.input.enabled = false;
+
       if (key === 'tavern') {
         this.scene.launch('TavernPanelScene', { metaState: this.metaState });
       } else {

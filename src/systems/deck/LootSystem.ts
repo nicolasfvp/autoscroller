@@ -43,17 +43,37 @@ export function shouldOfferReward(
 /**
  * Generate a set of card reward options with weighted rarity.
  * Common 60%, Uncommon 30%, Rare 10%.
+ *
+ * @param availableCardIds - If provided, only cards whose id is in this list
+ *   (or that have no unlockSource) will be considered. This integrates with
+ *   the meta-progression unlock system so locked cards never appear as rewards.
  */
 export function generateCardReward(
   rng: RNG,
   count: number = 3,
   excludeIds: string[] = [],
+  availableCardIds?: string[],
 ): string[] {
-  const allCards = getAllCards().filter(
+  let basePool = getAllCards();
+
+  // If an unlock list is provided, filter to only available cards
+  if (availableCardIds) {
+    basePool = basePool.filter(
+      (c: CardDefinition) => {
+        const def = c as CardDefinition & { unlockSource?: string };
+        return !def.unlockSource || availableCardIds.includes(c.id);
+      },
+    );
+  }
+
+  // Remove cards already in the deck from the pool
+  const allCards = basePool.filter(
     (c: CardDefinition) => !excludeIds.includes(c.id),
   );
 
   const result: string[] = [];
+  const usedIds = new Set<string>();
+
   for (let i = 0; i < count; i++) {
     const roll = rng.next() * 100;
     let targetRarity = 'common';
@@ -63,11 +83,23 @@ export function generateCardReward(
         break;
       }
     }
-    const pool = allCards.filter(
-      (c: CardDefinition) => (c as CardDefinition & { rarity?: string }).rarity === targetRarity,
+
+    // Filter pool by target rarity, excluding already-picked cards
+    let pool = allCards.filter(
+      (c: CardDefinition) =>
+        (c as CardDefinition & { rarity?: string }).rarity === targetRarity &&
+        !usedIds.has(c.id),
     );
+
+    // Fallback: if target rarity pool is empty, use any available rarity
+    if (pool.length === 0) {
+      pool = allCards.filter((c: CardDefinition) => !usedIds.has(c.id));
+    }
+
     if (pool.length > 0) {
-      result.push(pool[Math.floor(rng.next() * pool.length)].id);
+      const picked = pool[Math.floor(rng.next() * pool.length)];
+      result.push(picked.id);
+      usedIds.add(picked.id);
     }
   }
   return result;

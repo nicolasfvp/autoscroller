@@ -17,10 +17,12 @@ export class TavernPanelScene extends Scene {
 
     const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
 
-    // Semi-transparent backdrop
+    // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5);
-    backdrop.setInteractive();
-    backdrop.on('pointerdown', () => this.closePanel());
+    this.time.delayedCall(100, () => {
+      backdrop.setInteractive();
+      backdrop.on('pointerdown', () => this.closePanel());
+    });
 
     // Panel
     const panel = this.add.rectangle(400, 300, 500, 420, 0x222222, 0.95);
@@ -150,6 +152,11 @@ export class TavernPanelScene extends Scene {
   }
 
   private closePanel(): void {
+    // Re-enable CityHub input and stop this overlay
+    const cityHub = this.scene.get('CityHub');
+    if (cityHub && cityHub.input) {
+      cityHub.input.enabled = true;
+    }
     this.scene.stop();
   }
 }

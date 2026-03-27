@@ -40,10 +40,12 @@ export class BuildingPanelScene extends Scene {
 
     const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
 
-    // Semi-transparent backdrop
+    // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5);
-    backdrop.setInteractive();
-    backdrop.on('pointerdown', () => this.closePanel());
+    this.time.delayedCall(100, () => {
+      backdrop.setInteractive();
+      backdrop.on('pointerdown', () => this.closePanel());
+    });
 
     // Panel
     const panel = this.add.rectangle(400, 300, 500, 420, 0x222222, 0.95);
@@ -213,8 +215,11 @@ export class BuildingPanelScene extends Scene {
   }
 
   private closePanel(): void {
-    // Refresh CityHub with updated metaState
-    this.scene.stop();
-    this.scene.start('CityHub');
+    // Stop this overlay first, then restart CityHub to refresh its display
+    // Use scene manager from the game to avoid calling start on a stopped scene
+    const sceneManager = this.scene;
+    sceneManager.stop('BuildingPanelScene');
+    sceneManager.stop('CityHub');
+    sceneManager.start('CityHub');
   }
 }
