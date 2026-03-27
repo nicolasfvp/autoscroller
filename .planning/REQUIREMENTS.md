@@ -83,7 +83,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Meta-Progression
 
-- [ ] **META-01**: Visual hub (camp/village) between runs displaying unlocks and progression
+- [x] **META-01**: Visual hub (camp/village) between runs displaying unlocks and progression
 - [x] **META-02**: Permanent unlock of new cards into the loot pool
 - [x] **META-03**: Permanent unlock of new tile types
 - [x] **META-04**: Class XP and passive skill tree persist across runs
@@ -215,7 +215,7 @@ Updated during roadmap creation.
 | RELC-02 | Phase 4 | Complete |
 | RELC-03 | Phase 4 | Complete |
 | RELC-04 | Phase 4 | Complete |
-| META-01 | Phase 4 | Pending |
+| META-01 | Phase 4 | Complete |
 | META-02 | Phase 4 | Complete |
 | META-03 | Phase 4 | Complete |
 | META-04 | Phase 4 | Complete |
