@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-03-27T19:39:24.000Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-03-27T19:42:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 2
   total_plans: 17
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 05 (balance-economy-overhaul) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 3 of 4
 | Phase 04 P03 | 4min | 4 tasks | 15 files |
 | Phase 04 P04 | 3min | 3 tasks | 6 files |
 | Phase 05 P01 | 11min | 3 tasks | 22 files |
+| Phase 05 P03 | 7min | 2 tasks | 14 files |
 | Phase 05 P02 | 5min | 2 tasks | 6 files |
 
 ## Accumulated Context
@@ -115,6 +116,9 @@ Recent decisions affecting current work:
 - [Phase 05-01]: Compound balance: ~20% damage nerf + ~30% HP buff = ~2x TTK increase (5-8s target)
 - [Phase 05-01]: Storehouse building has 8 tiers mixing gathering boost and death retention
 - [Phase 05-01]: Death penalty reduced from 25% to 10% (materials harder to earn individually)
+- [Phase 05-03]: ShopSystem keeps local RunState interface for backward compat with scene callers
+- [Phase 05-03]: getStorehouseEffects takes latest value per tier (not additive), matching buildings.json
+- [Phase 05-03]: LoopRunner tracks bossKillCount internally for diminishing growth schedule
 - [Phase 05-02]: Card damage increased ~2.5x from Plan 01 values to achieve 5-8s fight target with 40% non-damage starter deck
 - [Phase 05-02]: Synergy bonuses scaled proportionally to new card damage levels
 - [Phase 05-02]: Balance validation uses real CombatEngine tick simulation, not mocked math
@@ -137,6 +141,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-27T19:39:24Z
-Stopped at: Completed 05-02-PLAN.md
-Resume file: .planning/phases/05-balance-economy-overhaul/05-02-SUMMARY.md
+Last session: 2026-03-27T19:42:00Z
+Stopped at: Completed 05-03-PLAN.md
+Resume file: .planning/phases/05-balance-economy-overhaul/05-03-SUMMARY.md
