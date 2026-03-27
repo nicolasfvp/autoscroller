@@ -7,7 +7,7 @@ function makeRunState() {
     hero: { hp: 100, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 },
     deck: { cards: [], order: ['strike', 'defend'] },
     loop: { count: 1, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.0 },
-    economy: { gold: 50, tilePoints: 5, metaLoot: 0 },
+    economy: { gold: 50, tilePoints: 5, materials: {} },
     tileInventory: [],
     relics: [],
   };
