@@ -3,21 +3,31 @@ import { createCombatState, CombatState } from '../../../src/systems/combat/Comb
 import type { RunState } from '../../../src/state/RunState';
 import type { EnemyDefinition } from '../../../src/data/types';
 
-function makeMockRun(): RunState {
+function makeMockRun(overrides?: Partial<{
+  currentHP: number;
+  maxHP: number;
+  currentStamina: number;
+  maxStamina: number;
+  currentMana: number;
+  maxMana: number;
+  currentDefense: number;
+  strength: number;
+  defenseMultiplier: number;
+}>): RunState {
   return {
     runId: 'test-run',
     generation: 1,
     startedAt: Date.now(),
     hero: {
-      maxHP: 100,
-      currentHP: 80, // intentionally not full
-      maxStamina: 50,
-      currentStamina: 30, // intentionally not full
-      maxMana: 30,
-      currentMana: 10, // intentionally not full
-      currentDefense: 15, // has some defense
-      strength: 2,
-      defenseMultiplier: 1.5,
+      maxHP: overrides?.maxHP ?? 100,
+      currentHP: overrides?.currentHP ?? 80,
+      maxStamina: overrides?.maxStamina ?? 50,
+      currentStamina: overrides?.currentStamina ?? 30,
+      maxMana: overrides?.maxMana ?? 30,
+      currentMana: overrides?.currentMana ?? 10,
+      currentDefense: overrides?.currentDefense ?? 15,
+      strength: overrides?.strength ?? 2,
+      defenseMultiplier: overrides?.defenseMultiplier ?? 1.5,
       moveSpeed: 2,
     },
     deck: {
@@ -40,6 +50,7 @@ function makeMockEnemy(): EnemyDefinition {
     baseHP: 100,
     baseDefense: 0,
     attack: { damage: 8, pattern: 'fixed' },
+    attackCooldown: 2500,
     goldReward: { min: 10, max: 20 },
     color: 0x00ff00,
   };
@@ -55,19 +66,8 @@ describe('CombatState', () => {
     expect(state.heroMaxHP).toBe(100);
   });
 
-  it('createCombatState resets stamina and mana to max', () => {
-    const run = makeMockRun();
-    const enemy = makeMockEnemy();
-    const state = createCombatState(run, enemy);
-
-    expect(state.heroStamina).toBe(50); // reset to maxStamina
-    expect(state.heroMaxStamina).toBe(50);
-    expect(state.heroMana).toBe(30); // reset to maxMana
-    expect(state.heroMaxMana).toBe(30);
-  });
-
   it('createCombatState resets defense to 0', () => {
-    const run = makeMockRun();
+    const run = makeMockRun({ currentDefense: 15 });
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
 
@@ -103,5 +103,72 @@ describe('CombatState', () => {
     expect(state.enemyDefense).toBe(0);
     expect(state.enemyDamage).toBe(8);
     expect(state.enemyPattern).toBe('fixed');
+  });
+
+  // ── 50% Resource Recovery Tests ──────────────────────────────
+
+  describe('50% resource recovery between combats', () => {
+    it('stamina recovers 50% of deficit: 20/50 -> 35', () => {
+      const run = makeMockRun({ currentStamina: 20, maxStamina: 50 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      // 20 + floor((50 - 20) * 0.5) = 20 + 15 = 35
+      expect(state.heroStamina).toBe(35);
+      expect(state.heroMaxStamina).toBe(50);
+    });
+
+    it('stamina stays at max when already full: 50/50 -> 50', () => {
+      const run = makeMockRun({ currentStamina: 50, maxStamina: 50 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      expect(state.heroStamina).toBe(50);
+    });
+
+    it('stamina recovers from zero: 0/50 -> 25', () => {
+      const run = makeMockRun({ currentStamina: 0, maxStamina: 50 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      // 0 + floor((50 - 0) * 0.5) = 25
+      expect(state.heroStamina).toBe(25);
+    });
+
+    it('mana recovers 50% of deficit: 10/30 -> 20', () => {
+      const run = makeMockRun({ currentMana: 10, maxMana: 30 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      // 10 + floor((30 - 10) * 0.5) = 10 + 10 = 20
+      expect(state.heroMana).toBe(20);
+      expect(state.heroMaxMana).toBe(30);
+    });
+
+    it('mana stays at max when already full: 30/30 -> 30', () => {
+      const run = makeMockRun({ currentMana: 30, maxMana: 30 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      expect(state.heroMana).toBe(30);
+    });
+
+    it('HP persists from run (no recovery applied)', () => {
+      const run = makeMockRun({ currentHP: 40, maxHP: 100 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      // HP is NOT recovered -- it persists as-is
+      expect(state.heroHP).toBe(40);
+      expect(state.heroMaxHP).toBe(100);
+    });
+
+    it('defense still resets to 0 (not recovered)', () => {
+      const run = makeMockRun({ currentDefense: 25 });
+      const enemy = makeMockEnemy();
+      const state = createCombatState(run, enemy);
+
+      expect(state.heroDefense).toBe(0);
+    });
   });
 });
