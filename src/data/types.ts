@@ -93,21 +93,23 @@ export interface TileTypeConfig {
 export type RelicRarity = 'common' | 'rare' | 'epic' | 'legendary';
 export type RelicTrigger = 'combat_start' | 'turn_start' | 'card_played' | 'damage_taken' | 'heal' | 'passive';
 
-export interface RelicEffectDefinition {
-  trigger: RelicTrigger;
-  description: string;
-  /** Effect parameters as JSON-serializable data (logic lives in systems, not in data) */
-  params?: Record<string, number | string | boolean>;
-}
-
 export interface RelicDefinition {
   id: string;
   name: string;
   description: string;
   rarity: RelicRarity;
-  effects: RelicEffectDefinition[];
+  trigger: RelicTrigger;
+  effectType: string;
+  stat?: string;
+  stats?: Record<string, number>;
+  value?: number;
+  condition?: string;
+  duration?: string;
+  once_per?: string;
   icon: string;
   color: number;
+  unlockSource?: string;
+  unlockTier?: number;
 }
 
 // ── Event Types ─────────────────────────────────────────────
