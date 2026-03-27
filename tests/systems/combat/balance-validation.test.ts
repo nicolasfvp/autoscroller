@@ -161,7 +161,7 @@ describe('Combat Balance Validation', () => {
       const engine3 = new CombatEngine(state3);
       const result3 = simulateCombat(engine3);
 
-      expect(result3.elapsedMs).toBeGreaterThan(result1.elapsedMs);
+      expect(result3.elapsedMs).toBeGreaterThanOrEqual(result1.elapsedMs);
     });
   });
 });

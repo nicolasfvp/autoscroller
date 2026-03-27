@@ -71,6 +71,8 @@ describe('CombatEngine', () => {
     const run = makeMockRun();
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
+    // Pin deck order for deterministic engine tests
+    state.deckOrder = ['strike', 'defend', 'fireball'];
     engine = new CombatEngine(state);
   });
 
@@ -90,16 +92,16 @@ describe('CombatEngine', () => {
     // First tick plays card immediately (cooldown was 0)
     engine.tick(100);
 
-    // strike has cooldown 1.2s = 1200ms
-    // After playing, next card should NOT play until 1200ms passes
-    engine.tick(1000); // only 1000ms
+    // strike has cooldown 1.0s = 1000ms
+    // After playing, next card should NOT play until 1000ms passes
+    engine.tick(800); // only 800ms
     const cardPlayedCalls = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
     expect(cardPlayedCalls.length).toBe(1); // still only 1 card played
 
     // Now complete the cooldown
-    engine.tick(200); // total 1200ms since last play
+    engine.tick(200); // total 1000ms since last play
     const cardPlayedCalls2 = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
@@ -112,6 +114,8 @@ describe('CombatEngine', () => {
     run.hero.currentDefense = 0; // can't afford berserker (needs defense)
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
+    // Pin order: berserker first so it gets skipped, then strike plays
+    state.deckOrder = ['berserker', 'strike'];
     const eng = new CombatEngine(state);
 
     eng.tick(100);
@@ -225,6 +229,8 @@ describe('CombatEngine', () => {
     const enemy = makeMockEnemy();
     enemy.baseHP = 500;
     const state = createCombatState(run, enemy);
+    // Pin order so defend plays first, then strike triggers synergy
+    state.deckOrder = ['defend', 'strike'];
     const eng = new CombatEngine(state);
 
     // Play defend (first card)

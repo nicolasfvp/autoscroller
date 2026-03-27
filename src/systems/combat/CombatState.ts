@@ -3,6 +3,7 @@
 
 import type { RunState } from '../../state/RunState';
 import type { EnemyDefinition } from '../../data/types';
+import { SeededRNG } from '../SeededRNG';
 
 export interface CombatState {
   heroHP: number;
@@ -52,7 +53,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     heroDefenseMultiplier: run.hero.defenseMultiplier,
     heroClass: 'warrior',                // default class; extended in later plans
 
-    deckOrder: [...run.deck.active],
+    deckOrder: new SeededRNG(`${run.runId}-combat-${enemy.id}`).shuffle([...run.deck.active]),
 
     enemyId: enemy.id,
     enemyName: enemy.name,
