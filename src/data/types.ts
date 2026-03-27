@@ -152,6 +152,48 @@ export interface CurseDefinition {
   color: number;
 }
 
+// ── Pricing & Economy Types ─────────────────────────────────
+
+export interface PricingConfig {
+  cardBasePrice: number;
+  cardPricePerLoop: number;
+  cardPriceCap: number;
+  removeBasePrice: number;
+  removeEscalation: number;
+  removeCap: number;
+  reorderBasePrice: number;
+  reorderEscalation: number;
+  reorderCap: number;
+  relicPriceByRarity: Record<string, number>;
+  relicPricePerLoop: number;
+  relicPriceCap: Record<string, number>;
+}
+
+export interface LoopGrowthConfig {
+  schedule: number[];
+  maxTileLength: number;
+}
+
+import type { MaterialDefinition } from '../state/MetaState';
+
+export interface MaterialDropConfig {
+  materials: MaterialDefinition[];
+  terrainDrops: Record<string, {
+    primary: string;
+    secondary?: string;
+    baseAmount: { min: number; max: number };
+    secondaryChance: number;
+  }>;
+  enemyBonusDrops: Record<string, {
+    material: string;
+    amount: { min: number; max: number };
+    chance: number;
+  }>;
+  bossDrops: {
+    materials: Record<string, { min: number; max: number }>;
+  };
+}
+
 // ── Difficulty Types ────────────────────────────────────────
 
 export interface DifficultyConfig {

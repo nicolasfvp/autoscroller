@@ -1,3 +1,10 @@
+export interface MaterialDefinition {
+  id: string;
+  name: string;
+  description: string;
+  rarity: 'common' | 'uncommon' | 'rare';
+}
+
 export interface MetaState {
   buildings: {
     forge: { level: number };
@@ -5,8 +12,9 @@ export interface MetaState {
     tavern: { level: number };
     workshop: { level: number };
     shrine: { level: number };
+    storehouse: { level: number };
   };
-  metaLoot: number;
+  materials: Record<string, number>;
   classXP: { warrior: number };
   passivesUnlocked: string[];
   unlockedCards: string[];
@@ -22,7 +30,7 @@ export interface RunHistoryEntry {
   loopsCompleted: number;
   bossesDefeated: number;
   exitType: 'safe' | 'death';
-  metaLootEarned: number;
+  materialsEarned: Record<string, number>;
   xpEarned: number;
   timestamp: number;
 }
@@ -35,8 +43,9 @@ export function createDefaultMetaState(): MetaState {
       tavern: { level: 0 },
       workshop: { level: 0 },
       shrine: { level: 0 },
+      storehouse: { level: 0 },
     },
-    metaLoot: 0,
+    materials: {},
     classXP: { warrior: 0 },
     passivesUnlocked: [],
     unlockedCards: [],
@@ -44,6 +53,34 @@ export function createDefaultMetaState(): MetaState {
     unlockedTiles: [],
     runHistory: [],
     totalRuns: 0,
-    version: 1,
+    version: 2,
   };
+}
+
+export function migrateMetaState(raw: any): MetaState {
+  if (!raw || !raw.version || raw.version < 2) {
+    const materials: Record<string, number> = {};
+    if (typeof raw?.metaLoot === 'number' && raw.metaLoot > 0) {
+      materials['essence'] = raw.metaLoot;
+    }
+    const buildings = raw?.buildings ?? createDefaultMetaState().buildings;
+    if (!buildings.storehouse) {
+      buildings.storehouse = { level: 0 };
+    }
+    const history = (raw?.runHistory ?? []).map((entry: any) => ({
+      ...entry,
+      materialsEarned: typeof entry.metaLootEarned === 'number'
+        ? { essence: entry.metaLootEarned }
+        : (entry.materialsEarned ?? {}),
+    }));
+    return {
+      ...createDefaultMetaState(),
+      ...raw,
+      materials,
+      buildings,
+      runHistory: history,
+      version: 2,
+    };
+  }
+  return raw as MetaState;
 }

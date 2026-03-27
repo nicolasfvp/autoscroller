@@ -18,7 +18,7 @@ describe('MetaPersistence', () => {
 
   it('saveMetaState then loadMetaState returns the saved state with matching fields', async () => {
     const state = createDefaultMetaState();
-    state.metaLoot = 150;
+    state.materials = { essence: 150, wood: 30 };
     state.classXP.warrior = 500;
     state.buildings.forge.level = 2;
     state.unlockedCards = ['fury', 'iron-skin'];
@@ -27,12 +27,12 @@ describe('MetaPersistence', () => {
     await saveMetaState(state);
     const loaded = await loadMetaState();
 
-    expect(loaded.metaLoot).toBe(150);
+    expect(loaded.materials).toEqual({ essence: 150, wood: 30 });
     expect(loaded.classXP.warrior).toBe(500);
     expect(loaded.buildings.forge.level).toBe(2);
     expect(loaded.unlockedCards).toEqual(['fury', 'iron-skin']);
     expect(loaded.totalRuns).toBe(5);
-    expect(loaded.version).toBe(1);
+    expect(loaded.version).toBe(2);
   });
 
   it('uses a separate store name from run state (autoscroller-meta)', async () => {

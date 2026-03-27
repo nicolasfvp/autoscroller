@@ -23,7 +23,7 @@ function makeRun(overrides?: { runXP?: number; totalXP?: number }): RunState {
     },
     deck: { active: [], inventory: {} },
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
-    economy: { gold: 0, tilePoints: 0, tileInventory: {} },
+    economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
     isInCombat: false,
     currentScene: 'Game',

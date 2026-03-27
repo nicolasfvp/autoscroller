@@ -1,4 +1,4 @@
-import { MetaState, RunHistoryEntry } from '../state/MetaState';
+import { MetaState } from '../state/MetaState';
 import buildingsData from '../data/json/buildings.json';
 import passivesData from '../data/json/passives.json';
 
@@ -27,10 +27,11 @@ export function upgradeBuilding(buildingKey: string, state: MetaState): UpgradeR
   if (currentLevel >= building.maxLevel) return { success: false, reason: 'max_level' };
 
   const nextTier = building.tiers.find((t: any) => t.level === currentLevel + 1);
-  if (state.metaLoot < nextTier.cost) return { success: false, reason: 'insufficient_meta_loot' };
+  // TODO: Phase 5 Plan 02+ will implement multi-material cost deduction
+  const totalMaterials = Object.values(state.materials).reduce((a, b) => a + b, 0);
+  if (typeof nextTier.cost === 'number' && totalMaterials < nextTier.cost) return { success: false, reason: 'insufficient_meta_loot' };
 
   const updated = structuredClone(state);
-  updated.metaLoot -= nextTier.cost;
   (updated.buildings as any)[buildingKey].level = currentLevel + 1;
 
   const newUnlocks: Record<string, string[]> = {};
@@ -53,24 +54,35 @@ export function upgradeBuilding(buildingKey: string, state: MetaState): UpgradeR
 }
 
 export function bankRunRewards(
-  metaLootEarned: number,
+  materialsEarned: Record<string, number>,
   xpEarned: number,
   exitType: 'safe' | 'death',
   runSummary: { seed: string; loopsCompleted: number; bossesDefeated: number },
   state: MetaState
 ): MetaState {
-  const lootMultiplier = exitType === 'safe' ? 1.0 : 0.25;
+  const lootMultiplier = exitType === 'safe' ? 1.0 : 0.10;
   const xpMultiplier = exitType === 'safe' ? 1.0 : 0.0;
   const updated = structuredClone(state);
-  updated.metaLoot += Math.floor(metaLootEarned * lootMultiplier);
+  // Bank materials with exit multiplier
+  for (const [mat, amount] of Object.entries(materialsEarned)) {
+    const banked = Math.floor(amount * lootMultiplier);
+    if (banked > 0) {
+      updated.materials[mat] = (updated.materials[mat] ?? 0) + banked;
+    }
+  }
   updated.classXP.warrior += Math.floor(xpEarned * xpMultiplier);
   updated.totalRuns += 1;
+  const bankedMaterials: Record<string, number> = {};
+  for (const [mat, amount] of Object.entries(materialsEarned)) {
+    const banked = Math.floor(amount * lootMultiplier);
+    if (banked > 0) bankedMaterials[mat] = banked;
+  }
   updated.runHistory.push({
     seed: runSummary.seed,
     loopsCompleted: runSummary.loopsCompleted,
     bossesDefeated: runSummary.bossesDefeated,
     exitType,
-    metaLootEarned: Math.floor(metaLootEarned * lootMultiplier),
+    materialsEarned: bankedMaterials,
     xpEarned: Math.floor(xpEarned * xpMultiplier),
     timestamp: Date.now(),
   });

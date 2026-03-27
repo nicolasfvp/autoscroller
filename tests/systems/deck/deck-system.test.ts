@@ -33,6 +33,7 @@ function makeRun(overrides?: {
       gold: overrides?.gold ?? 100,
       tilePoints: 0,
       tileInventory: {},
+      materials: {},
     },
     relics: [],
     isInCombat: false,

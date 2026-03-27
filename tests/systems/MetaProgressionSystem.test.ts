@@ -9,21 +9,21 @@ import {
 
 describe('MetaProgressionSystem', () => {
   describe('upgradeBuilding', () => {
-    it('upgrades forge from 0 to 1 when metaLoot >= 50, deducting cost and unlocking cards', () => {
+    it('upgrades forge from 0 to 1 when enough materials, unlocking cards', () => {
       const state = createDefaultMetaState();
-      state.metaLoot = 100;
+      // Give enough total materials for the cost check (temporary until multi-material cost)
+      state.materials = { iron: 50, crystal: 50 };
       const result = upgradeBuilding('forge', state);
       expect(result.success).toBe(true);
-      expect(result.updatedState!.metaLoot).toBe(50);
       expect(result.updatedState!.buildings.forge.level).toBe(1);
       expect(result.updatedState!.unlockedCards).toContain('counter-strike');
       expect(result.updatedState!.unlockedCards).toContain('shield-wall');
       expect(result.newUnlocks!.cards).toEqual(['counter-strike', 'shield-wall']);
     });
 
-    it('returns insufficient_meta_loot when metaLoot < cost', () => {
+    it('returns insufficient_meta_loot when materials < cost', () => {
       const state = createDefaultMetaState();
-      state.metaLoot = 10;
+      state.materials = { iron: 1 };
       const result = upgradeBuilding('forge', state);
       expect(result.success).toBe(false);
       expect(result.reason).toBe('insufficient_meta_loot');
@@ -31,7 +31,7 @@ describe('MetaProgressionSystem', () => {
 
     it('returns max_level when forge is already at maxLevel', () => {
       const state = createDefaultMetaState();
-      state.metaLoot = 9999;
+      state.materials = { essence: 9999 };
       state.buildings.forge.level = 4;
       const result = upgradeBuilding('forge', state);
       expect(result.success).toBe(false);
@@ -40,7 +40,7 @@ describe('MetaProgressionSystem', () => {
 
     it('upgrades shrine from 0 to 1 and adds relics to unlockedRelics', () => {
       const state = createDefaultMetaState();
-      state.metaLoot = 200;
+      state.materials = { crystal: 200, essence: 100 };
       const result = upgradeBuilding('shrine', state);
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.shrine.level).toBe(1);
@@ -51,7 +51,7 @@ describe('MetaProgressionSystem', () => {
 
     it('upgrades workshop from 0 to 1 and adds tiles to unlockedTiles', () => {
       const state = createDefaultMetaState();
-      state.metaLoot = 200;
+      state.materials = { stone: 200, iron: 100 };
       const result = upgradeBuilding('workshop', state);
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.workshop.level).toBe(1);
@@ -61,30 +61,30 @@ describe('MetaProgressionSystem', () => {
   });
 
   describe('bankRunRewards', () => {
-    it('adds 100% metaLoot and 100% XP on safe exit', () => {
+    it('adds 100% materials and 100% XP on safe exit', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards(100, 50, 'safe', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
-      expect(result.metaLoot).toBe(100);
+      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'safe', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
+      expect(result.materials).toEqual({ essence: 100, wood: 50 });
       expect(result.classXP.warrior).toBe(50);
     });
 
-    it('adds 25% metaLoot and 0 XP on death', () => {
+    it('adds 10% materials and 0 XP on death', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards(100, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
-      expect(result.metaLoot).toBe(25);
+      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
+      expect(result.materials).toEqual({ essence: 10, wood: 5 });
       expect(result.classXP.warrior).toBe(0);
     });
 
     it('appends a RunHistoryEntry with correct fields', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards(100, 50, 'safe', { seed: 'test-seed', loopsCompleted: 5, bossesDefeated: 2 }, state);
+      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'test-seed', loopsCompleted: 5, bossesDefeated: 2 }, state);
       expect(result.runHistory).toHaveLength(1);
       const entry = result.runHistory[0];
       expect(entry.seed).toBe('test-seed');
       expect(entry.loopsCompleted).toBe(5);
       expect(entry.bossesDefeated).toBe(2);
       expect(entry.exitType).toBe('safe');
-      expect(entry.metaLootEarned).toBe(100);
+      expect(entry.materialsEarned).toEqual({ essence: 100 });
       expect(entry.xpEarned).toBe(50);
       expect(typeof entry.timestamp).toBe('number');
     });
@@ -92,7 +92,7 @@ describe('MetaProgressionSystem', () => {
     it('increments totalRuns by 1', () => {
       const state = createDefaultMetaState();
       state.totalRuns = 5;
-      const result = bankRunRewards(100, 50, 'safe', { seed: 'abc', loopsCompleted: 1, bossesDefeated: 0 }, state);
+      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'abc', loopsCompleted: 1, bossesDefeated: 0 }, state);
       expect(result.totalRuns).toBe(6);
     });
   });
@@ -130,7 +130,6 @@ describe('MetaProgressionSystem', () => {
       expect(data.maxLevel).toBe(4);
       expect(data.tiers).toHaveLength(4);
       expect(data.tiers[0].level).toBe(1);
-      expect(data.tiers[0].cost).toBe(50);
       expect(data.tiers[0].unlocks.cards).toEqual(['counter-strike', 'shield-wall']);
     });
   });

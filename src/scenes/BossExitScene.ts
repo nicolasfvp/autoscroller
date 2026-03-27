@@ -151,11 +151,16 @@ export class BossExitScene extends Scene {
 
       // Bank 100% meta-loot and XP for safe exit
       const run = getRun();
-      const metaLootEarned = Math.max(1, run.loop.count * 5 + ((run.economy as any).metaLoot ?? 0));
+      // Convert legacy metaLoot to materials for backward compat
+      const runMaterials = (run.economy as any).materials ?? {};
+      const legacyLoot = (run.economy as any).metaLoot ?? 0;
+      const materialsEarned: Record<string, number> = { ...runMaterials };
+      if (legacyLoot > 0 && !materialsEarned.essence) materialsEarned.essence = legacyLoot;
+      if (Object.keys(materialsEarned).length === 0) materialsEarned.essence = Math.max(1, run.loop.count * 5);
       const xpEarned = run.hero.runXP ?? 0;
       const metaState = await loadMetaState();
       const updatedState = bankRunRewards(
-        metaLootEarned,
+        materialsEarned,
         xpEarned,
         'safe',
         {

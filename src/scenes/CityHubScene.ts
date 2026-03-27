@@ -57,7 +57,7 @@ export class CityHubScene extends Scene {
     const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
 
     // Top bar: meta-loot balance (top-left)
-    this.add.text(24, 24, `\u2605 ${this.metaState.metaLoot} Meta-Loot`, {
+    this.add.text(24, 24, `\u2605 ${Object.values(this.metaState.materials).reduce((a, b) => a + b, 0)} Materials`, {
       fontSize: '16px',
       color: '#e040fb',
       fontFamily,

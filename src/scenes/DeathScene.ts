@@ -46,8 +46,13 @@ export class DeathScene extends Scene {
     const labelX = 240;
     const valueX = 560;
 
-    // Calculate meta-loot earned (estimate from loops and economy)
-    const metaLootEarned = Math.max(1, run.loop.count * 5 + ((run.economy as any).metaLoot ?? 0));
+    // Calculate materials earned from run economy
+    const runMaterials = (run.economy as any).materials ?? {};
+    const legacyLoot = (run.economy as any).metaLoot ?? 0;
+    const materialsEarned: Record<string, number> = { ...runMaterials };
+    if (legacyLoot > 0 && !materialsEarned.essence) materialsEarned.essence = legacyLoot;
+    if (Object.keys(materialsEarned).length === 0) materialsEarned.essence = Math.max(1, run.loop.count * 5);
+    const totalMaterialsEarned = Object.values(materialsEarned).reduce((a, b) => a + b, 0);
     const xpEarned = run.hero.runXP ?? 0;
 
     const statRows: Array<{ label: string; value: string; color: string }> = [
@@ -55,7 +60,7 @@ export class DeathScene extends Scene {
       { label: 'Total Damage Dealt', value: `${stats?.damageDealt ?? 0}`, color: '#ffffff' },
       { label: 'Total Cards Played', value: `${stats?.cardsPlayed ?? 0}`, color: '#ffffff' },
       { label: 'Total Combos', value: `${stats?.synergiesTriggered ?? 0}`, color: '#ff00ff' },
-      { label: 'Meta-Loot Earned', value: `+${Math.floor(metaLootEarned * 0.25)} (25%)`, color: '#e040fb' },
+      { label: 'Materials Earned', value: `+${Math.floor(totalMaterialsEarned * 0.10)} (10%)`, color: '#e040fb' },
     ];
 
     for (let i = 0; i < statRows.length; i++) {
@@ -87,7 +92,7 @@ export class DeathScene extends Scene {
     // Bank run rewards to meta state
     const metaState = await loadMetaState();
     const updatedState = bankRunRewards(
-      metaLootEarned,
+      materialsEarned,
       xpEarned,
       'death',
       {

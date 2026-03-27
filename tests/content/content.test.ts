@@ -158,7 +158,7 @@ describe('MetaState', () => {
   it('createDefaultMetaState returns object with all required fields', () => {
     const state = createDefaultMetaState();
     expect(state).toHaveProperty('buildings');
-    expect(state).toHaveProperty('metaLoot');
+    expect(state).toHaveProperty('materials');
     expect(state).toHaveProperty('classXP');
     expect(state).toHaveProperty('unlockedCards');
     expect(state).toHaveProperty('unlockedRelics');
@@ -169,14 +169,14 @@ describe('MetaState', () => {
 
   it('default state has correct initial values', () => {
     const state = createDefaultMetaState();
-    expect(state.metaLoot).toBe(0);
+    expect(state.materials).toEqual({});
     expect(state.classXP.warrior).toBe(0);
     expect(state.unlockedCards).toEqual([]);
     expect(state.unlockedRelics).toEqual([]);
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    expect(state.version).toBe(1);
+    expect(state.version).toBe(2);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);

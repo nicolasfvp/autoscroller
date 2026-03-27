@@ -52,6 +52,8 @@ export interface EconomyState {
   tilePoints: number;
   /** Tile type -> quantity owned */
   tileInventory: Record<string, number>;
+  /** Materials accumulated during the current run (banked at run end) */
+  materials: Record<string, number>;
 }
 
 export interface RunState {
@@ -107,6 +109,7 @@ export function createNewRun(generation: number = 1): RunState {
       gold: 0,
       tilePoints: 10,
       tileInventory: {},
+      materials: {},
     },
     relics: [],
     isInCombat: false,

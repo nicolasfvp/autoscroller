@@ -147,7 +147,9 @@ export class BuildingPanelScene extends Scene {
     } else {
       const nextTier = tierData.tiers.find((t: any) => t.level === currentLevel + 1);
       const cost = nextTier?.cost ?? 0;
-      const canAfford = this.metaState.metaLoot >= cost;
+      // TODO: Phase 5 Plan 02+ will implement multi-material cost checking
+      const totalMaterials = Object.values(this.metaState.materials).reduce((a, b) => a + b, 0);
+      const canAfford = typeof cost === 'number' ? totalMaterials >= cost : true;
 
       const upgradeBtn = this.add.text(400, 370, 'Upgrade Building', {
         fontSize: '24px',
