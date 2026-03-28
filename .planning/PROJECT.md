@@ -24,6 +24,14 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 - [x] 6 boss types with behavioral patterns: enrage, shield, multi-hit, drain (CONT-07) — Validated in Phase 6: Content Expansion
 - [x] 15 narrative events with material integration and weighted selection (CONT-08) — Validated in Phase 6: Content Expansion
 - [x] 11 synergy pairs enabling diverse deck builds — Validated in Phase 6: Content Expansion
+- [x] Web Audio API sound effects (8 SFX events) replacing placeholder AudioManager — Validated in Phase 7: Polish & Release
+- [x] Tutorial rewrite with 6 accurate screens, first-run gate, skip button — Validated in Phase 7: Polish & Release
+- [x] StyleConstants + createButton shared UI foundation across all scenes — Validated in Phase 7: Polish & Release
+- [x] Camera fade transitions (400ms) on all full scene changes — Validated in Phase 7: Polish & Release
+- [x] Settings expansion: SFX volume, game speed 2x, auto-save, save management — Validated in Phase 7: Polish & Release
+- [x] MetaState v3 migration with tutorialSeen, audioPrefs, gameSpeed, autoSave — Validated in Phase 7: Polish & Release
+- [x] Tweened number counters on HUD stat changes (300ms) — Validated in Phase 7: Polish & Release
+- [x] CMBT-05 (post-combat summary) and PLSH-01 (death screen stats) confirmed complete — Validated in Phase 7
 
 ### Active
 
@@ -154,4 +162,4 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 | GDD em português brasileiro | Documentação do game design acompanha os docs de planejamento | — Pending |
 
 ---
-*Last updated: 2026-03-28 — Phase 6 (Content Expansion) complete*
+*Last updated: 2026-03-28 — Phase 7 (Polish & Release) complete — all v1 phases done*
