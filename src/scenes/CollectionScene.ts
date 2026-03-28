@@ -63,21 +63,21 @@ export class CollectionScene extends Scene {
     this.add.text(24, 24, 'Collection', {
       fontSize: '24px',
       fontStyle: 'bold',
-      color: '#ffffff',
+      color: COLORS.textPrimary,
       fontFamily,
     });
 
     // Completion percentage
     this.add.text(180, 30, `${percent}% Complete`, {
       fontSize: '14px',
-      color: '#ffd700',
+      color: COLORS.accent,
       fontFamily,
     });
 
     // Close button
     const closeBtn = this.add.text(776, 24, 'X', {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
       fontFamily,
     }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
 
@@ -103,7 +103,7 @@ export class CollectionScene extends Scene {
       const label = `${tabName} (${status.unlocked}/${status.total})`;
       const text = this.add.text(tabX + 60, 56, label, {
         fontSize: '14px',
-        color: isActive ? '#ffffff' : '#aaaaaa',
+        color: isActive ? COLORS.textPrimary : COLORS.textSecondary,
         fontFamily,
       }).setOrigin(0.5);
       this.tabTexts.push(text);
@@ -129,7 +129,7 @@ export class CollectionScene extends Scene {
       const isActive = tabName === this.activeTab;
       const color = isActive ? TAB_COLORS[tabName] : 0x333333;
       this.tabObjects[i].setFillStyle(color);
-      this.tabTexts[i].setColor(isActive ? '#ffffff' : '#aaaaaa');
+      this.tabTexts[i].setColor(isActive ? COLORS.textPrimary : COLORS.textSecondary);
     }
   }
 
@@ -159,7 +159,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderCardsGrid(status: CategoryStatus): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = FONTS.family;
     const cols = 6;
     const itemW = 72;
     const itemH = 96;
@@ -180,7 +180,7 @@ export class CollectionScene extends Scene {
 
         const name = this.add.text(x, y + 10, item.name, {
           fontSize: '12px',
-          color: '#ffffff',
+          color: COLORS.textPrimary,
           fontFamily,
           wordWrap: { width: itemW - 8 },
           align: 'center',
@@ -192,7 +192,7 @@ export class CollectionScene extends Scene {
 
         const locked = this.add.text(x, y - 10, '???', {
           fontSize: '16px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
@@ -200,7 +200,7 @@ export class CollectionScene extends Scene {
         if (item.unlockHint) {
           const hint = this.add.text(x, y + 20, item.unlockHint, {
             fontSize: '10px',
-            color: '#aaaaaa',
+            color: COLORS.textSecondary,
             fontFamily,
             wordWrap: { width: itemW - 4 },
             align: 'center',
@@ -212,7 +212,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderRelicsGrid(status: CategoryStatus): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = FONTS.family;
     const cols = 4;
     const itemSize = 80;
     const gap = 16;
@@ -226,13 +226,13 @@ export class CollectionScene extends Scene {
       const y = startY + row * (itemSize + gap) + itemSize / 2;
 
       if (item.isUnlocked) {
-        const relic = this.add.rectangle(x, y, itemSize, itemSize, 0x222222);
+        const relic = this.add.rectangle(x, y, itemSize, itemSize, COLORS.panel);
         relic.setStrokeStyle(2, 0x9370db);
         this.gridContainer.add(relic);
 
         const name = this.add.text(x, y, item.name, {
           fontSize: '14px',
-          color: '#ffffff',
+          color: COLORS.textPrimary,
           fontFamily,
           wordWrap: { width: itemSize - 8 },
           align: 'center',
@@ -244,7 +244,7 @@ export class CollectionScene extends Scene {
 
         const locked = this.add.text(x, y - 10, '???', {
           fontSize: '16px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
@@ -252,7 +252,7 @@ export class CollectionScene extends Scene {
         if (item.unlockHint) {
           const hint = this.add.text(x, y + 16, item.unlockHint, {
             fontSize: '10px',
-            color: '#aaaaaa',
+            color: COLORS.textSecondary,
             fontFamily,
             wordWrap: { width: itemSize - 4 },
             align: 'center',
@@ -264,7 +264,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderTilesGrid(status: CategoryStatus): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = FONTS.family;
     const cols = 5;
     const itemSize = 80;
     const gap = 16;
@@ -284,7 +284,7 @@ export class CollectionScene extends Scene {
 
         const name = this.add.text(x, y, item.name, {
           fontSize: '12px',
-          color: '#ffffff',
+          color: COLORS.textPrimary,
           fontFamily,
           wordWrap: { width: itemSize - 8 },
           align: 'center',
@@ -296,7 +296,7 @@ export class CollectionScene extends Scene {
 
         const locked = this.add.text(x, y - 10, '???', {
           fontSize: '16px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
@@ -304,7 +304,7 @@ export class CollectionScene extends Scene {
         if (item.unlockHint) {
           const hint = this.add.text(x, y + 16, item.unlockHint, {
             fontSize: '10px',
-            color: '#aaaaaa',
+            color: COLORS.textSecondary,
             fontFamily,
             wordWrap: { width: itemSize - 4 },
             align: 'center',
@@ -316,7 +316,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderEventsList(status: CategoryStatus): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = FONTS.family;
     const startY = 100;
 
     status.items.forEach((item, index) => {
@@ -328,28 +328,28 @@ export class CollectionScene extends Scene {
       if (item.isUnlocked) {
         const title = this.add.text(80, y + 18, item.name, {
           fontSize: '16px',
-          color: '#ffffff',
+          color: COLORS.textPrimary,
           fontFamily,
         });
         this.gridContainer.add(title);
 
         const desc = this.add.text(80, y + 38, 'Random event encounter', {
           fontSize: '14px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         });
         this.gridContainer.add(desc);
       } else {
         const locked = this.add.text(80, y + 18, '???', {
           fontSize: '16px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         });
         this.gridContainer.add(locked);
 
         const hint = this.add.text(80, y + 38, 'Discover during a run', {
           fontSize: '14px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         });
         this.gridContainer.add(hint);
@@ -358,7 +358,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderBossesRow(status: CategoryStatus): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = FONTS.family;
     const itemW = 160;
     const itemH = 120;
     const gap = 16;
@@ -377,14 +377,14 @@ export class CollectionScene extends Scene {
         const name = this.add.text(x, y - 20, item.name, {
           fontSize: '20px',
           fontStyle: 'bold',
-          color: '#ffffff',
+          color: COLORS.textPrimary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(name);
 
         const type = this.add.text(x, y + 10, 'Boss', {
           fontSize: '14px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(type);
@@ -394,7 +394,7 @@ export class CollectionScene extends Scene {
 
         const locked = this.add.text(x, y, '???', {
           fontSize: '24px',
-          color: '#aaaaaa',
+          color: COLORS.textSecondary,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);

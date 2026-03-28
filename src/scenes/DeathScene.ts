@@ -42,19 +42,19 @@ export class DeathScene extends Scene {
     this.add.text(400, 60, 'Run Over', {
       fontSize: '32px',
       fontStyle: 'bold',
-      color: '#ff0000',
+      color: COLORS.danger,
       fontFamily,
     }).setOrigin(0.5);
 
     // Cause of death
     this.add.text(400, 95, `Defeated by ${enemyName}`, {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
       fontFamily,
     }).setOrigin(0.5);
 
     // Stats panel
-    this.add.rectangle(400, 270, 400, 320, 0x222222, 0.85);
+    this.add.rectangle(400, 270, 400, 320, COLORS.panel, LAYOUT.panelAlpha);
 
     // Stats
     const startY = 145;
@@ -77,11 +77,11 @@ export class DeathScene extends Scene {
       .join(', ') || 'None';
 
     const statRows: Array<{ label: string; value: string; color: string }> = [
-      { label: 'Loops Completed', value: `${run.loop.count}`, color: '#ffffff' },
-      { label: 'Total Damage Dealt', value: `${stats?.damageDealt ?? 0}`, color: '#ffffff' },
-      { label: 'Total Cards Played', value: `${stats?.cardsPlayed ?? 0}`, color: '#ffffff' },
-      { label: 'Total Combos', value: `${stats?.synergiesTriggered ?? 0}`, color: '#ff00ff' },
-      { label: `Retained (${retentionPct}%)`, value: retainedLines, color: '#e040fb' },
+      { label: 'Loops Completed', value: `${run.loop.count}`, color: COLORS.textPrimary },
+      { label: 'Total Damage Dealt', value: `${stats?.damageDealt ?? 0}`, color: COLORS.textPrimary },
+      { label: 'Total Cards Played', value: `${stats?.cardsPlayed ?? 0}`, color: COLORS.textPrimary },
+      { label: 'Total Combos', value: `${stats?.synergiesTriggered ?? 0}`, color: COLORS.synergy },
+      { label: `Retained (${retentionPct}%)`, value: retainedLines, color: COLORS.material },
     ];
 
     for (let i = 0; i < statRows.length; i++) {
@@ -91,7 +91,7 @@ export class DeathScene extends Scene {
       // Label
       this.add.text(labelX, y, row.label, {
         fontSize: '16px',
-        color: '#aaaaaa',
+        color: COLORS.textSecondary,
         fontFamily,
       }).setOrigin(0, 0.5);
 
@@ -106,7 +106,7 @@ export class DeathScene extends Scene {
     // XP warning
     this.add.text(400, startY + statRows.length * gap + 10, 'All unbanked XP has been lost.', {
       fontSize: '16px',
-      color: '#ff0000',
+      color: COLORS.danger,
       fontFamily,
     }).setOrigin(0.5);
 
@@ -128,7 +128,7 @@ export class DeathScene extends Scene {
     const unlockY = startY + statRows.length * gap + 45;
     const unlockNotice = this.add.text(400, unlockY, 'New unlocks available! Return to the city.', {
       fontSize: '16px',
-      color: '#ffd700',
+      color: COLORS.accent,
       fontFamily,
     }).setOrigin(0.5);
 

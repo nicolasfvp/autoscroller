@@ -34,19 +34,22 @@ export class SelectionScene extends Scene {
     this.add.text(400, 100, 'Selection', {
       fontSize: '32px',
       fontStyle: 'bold',
-      color: '#ffd700',
+      color: COLORS.accent,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // Context
     this.add.text(400, 180, `Generation: ${run.generation}`, {
       fontSize: '16px',
-      color: '#ffffff',
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // Placeholder
     this.add.text(400, 300, 'Selection system: Phase 2', {
       fontSize: '14px',
-      color: '#888888',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
       fontStyle: 'italic',
     }).setOrigin(0.5);
 

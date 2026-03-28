@@ -40,7 +40,7 @@ export class RewardScene extends Scene {
     this.cameras.main.setBackgroundColor(COLORS.background);
 
     // Overlay panel
-    this.add.rectangle(400, 300, 600, 400, 0x222222, 0.9);
+    this.add.rectangle(400, 300, 600, 400, COLORS.panel, LAYOUT.panelAlpha);
 
     // Generate 3 card options
     const run = getRun();
@@ -51,12 +51,14 @@ export class RewardScene extends Scene {
       this.add.text(400, 260, 'No Reward', {
         fontSize: '24px',
         fontStyle: 'bold',
-        color: '#ffffff',
+        color: COLORS.textPrimary,
+        fontFamily: FONTS.family,
       }).setOrigin(0.5);
 
       this.add.text(400, 300, 'No cards were offered this time. Continue onward.', {
         fontSize: '16px',
-        color: '#aaaaaa',
+        color: COLORS.textSecondary,
+        fontFamily: FONTS.family,
         wordWrap: { width: 400 },
         align: 'center',
       }).setOrigin(0.5);
@@ -71,13 +73,15 @@ export class RewardScene extends Scene {
     this.add.text(400, 130, 'Choose a Card', {
       fontSize: '24px',
       fontStyle: 'bold',
-      color: '#ffffff',
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // Instruction
     this.add.text(400, 160, 'Pick one card to add to your deck, or skip.', {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // Display 3 enlarged cards horizontally centered
@@ -96,30 +100,16 @@ export class RewardScene extends Scene {
     }
 
     // "Take Card" button -- hidden until selection
-    this.takeBtn = this.add.text(400, 380, 'Take Card', {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: '#ffd700',
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setVisible(false);
-
-    this.takeBtn.on('pointerover', () => this.takeBtn?.setColor('#ffffff'));
-    this.takeBtn.on('pointerout', () => this.takeBtn?.setColor('#ffd700'));
-    this.takeBtn.on('pointerdown', () => {
+    this.takeBtn = createButton(this, 400, 380, 'Take Card', () => {
       if (this.selectedCardId) {
         addCard(this.selectedCardId, getRun());
         this.close();
       }
-    });
+    }, 'primary');
+    this.takeBtn.setVisible(false);
 
     // "Skip" button
-    const skipBtn = this.add.text(580, 450, 'Skip', {
-      fontSize: '16px',
-      color: '#aaaaaa',
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-    skipBtn.on('pointerover', () => skipBtn.setColor('#ffffff'));
-    skipBtn.on('pointerout', () => skipBtn.setColor('#aaaaaa'));
-    skipBtn.on('pointerdown', () => this.close());
+    createButton(this, 580, 450, 'Skip', () => this.close(), 'secondary');
 
     this.events.on('shutdown', this.cleanup, this);
   }

@@ -42,11 +42,11 @@ export class BossExitScene extends Scene {
     const fontFamily = FONTS.family;
 
     // Overlay panel
-    this.add.rectangle(400, 300, 600, 400, 0x222222, 0.9).setInteractive();
+    this.add.rectangle(400, 300, 600, 400, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
 
     // Title
     this.add.text(400, 125, 'Boss Defeated!', {
-      fontSize: '32px', fontStyle: 'bold', color: '#ffd700', fontFamily,
+      fontSize: '32px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
     }).setOrigin(0.5);
 
     // Get choice data
@@ -73,7 +73,7 @@ export class BossExitScene extends Scene {
     }).setOrigin(0.5));
 
     this.exitPanel.add(this.add.text(0, -35, 'Bank all materials\nand XP safely.', {
-      fontSize: '16px', color: '#ffffff', fontFamily, align: 'center',
+      fontSize: '16px', color: COLORS.textPrimary, fontFamily, align: 'center',
       wordWrap: { width: 200 },
     }).setOrigin(0.5));
 
@@ -114,12 +114,12 @@ export class BossExitScene extends Scene {
     }).setOrigin(0.5));
 
     this.continuePanel.add(this.add.text(0, -35, 'The loop grows by 3 tiles.\nRisk everything.', {
-      fontSize: '16px', color: '#ffffff', fontFamily, align: 'center',
+      fontSize: '16px', color: COLORS.textPrimary, fontFamily, align: 'center',
       wordWrap: { width: 200 },
     }).setOrigin(0.5));
 
     this.continuePanel.add(this.add.text(0, 30, 'Death means 10%\nmaterials, zero XP.', {
-      fontSize: '14px', color: '#ff0000', fontFamily, align: 'center',
+      fontSize: '14px', color: COLORS.danger, fontFamily, align: 'center',
     }).setOrigin(0.5));
 
     // Hover
@@ -137,7 +137,7 @@ export class BossExitScene extends Scene {
 
     // Confirm button (hidden until selection)
     this.confirmBtn = this.add.text(400, 430, 'Confirm', {
-      fontSize: '24px', fontStyle: 'bold', color: '#ffd700', fontFamily,
+      fontSize: '24px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setVisible(false);
 
     this.confirmBtn.on('pointerdown', () => this.confirmSelection());

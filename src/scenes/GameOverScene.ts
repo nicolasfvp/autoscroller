@@ -35,34 +35,40 @@ export class GameOverScene extends Scene {
     this.add.text(400, 80, 'GAME OVER', {
       fontSize: '32px',
       fontStyle: 'bold',
-      color: '#ff8888',
+      color: COLORS.danger,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // Run statistics
     this.add.text(400, 160, 'Run Statistics', {
       fontSize: '24px',
       fontStyle: 'bold',
-      color: '#ffffff',
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     this.add.text(400, 210, `Loops Completed: ${run.loop.count}`, {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     this.add.text(400, 240, `Gold Earned: ${run.economy.gold}`, {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     this.add.text(400, 270, `Cards in Deck: ${run.deck.active.length}`, {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     this.add.text(400, 300, `Relics: ${run.relics.length}`, {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     // New Run button

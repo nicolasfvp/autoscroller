@@ -81,21 +81,21 @@ export class CityHubScene extends Scene {
       : 'No materials';
     this.add.text(24, 24, matDisplay, {
       fontSize: '14px',
-      color: '#e040fb',
+      color: COLORS.material,
       fontFamily,
     });
 
     // Top bar: class XP display (top-right)
     this.add.text(776, 24, `Warrior Lv.${this.metaState.classXP.warrior}`, {
       fontSize: '16px',
-      color: '#00ccff',
+      color: COLORS.xp,
       fontFamily,
     }).setOrigin(1, 0);
 
     // Hover label (reused across buildings)
     this.hoverLabel = this.add.text(0, 0, '', {
       fontSize: '16px',
-      color: '#ffffff',
+      color: COLORS.textPrimary,
       fontFamily,
     }).setOrigin(0.5, 1).setDepth(200).setVisible(false);
 
@@ -113,7 +113,7 @@ export class CityHubScene extends Scene {
     // Navigation hint
     this.add.text(400, 560, 'Click a building to interact', {
       fontSize: '16px',
-      color: '#aaaaaa',
+      color: COLORS.textSecondary,
       fontFamily,
     }).setOrigin(0.5, 1);
   }
@@ -124,10 +124,10 @@ export class CityHubScene extends Scene {
     const isTierZero = level === 0;
     const color = isTierZero ? 0x444444 : BUILDING_COLORS[key];
     const icon = isTierZero ? '?' : BUILDING_ICONS[key];
-    const iconColor = isTierZero ? '#aaaaaa' : '#ffffff';
+    const iconColor = isTierZero ? COLORS.textSecondary : COLORS.textPrimary;
 
     // Building rectangle
-    const rect = this.add.rectangle(x, y, 100, 100, color, 0.9);
+    const rect = this.add.rectangle(x, y, 100, 100, color, LAYOUT.panelAlpha);
     rect.setInteractive({ useHandCursor: true });
 
     // Dashed border for tier 0
@@ -147,7 +147,7 @@ export class CityHubScene extends Scene {
     const tierColorHex = '#' + BUILDING_COLORS[key].toString(16).padStart(6, '0');
     this.add.text(x, y + 64, `Lv.${level}`, {
       fontSize: '14px',
-      color: isTierZero ? '#aaaaaa' : tierColorHex,
+      color: isTierZero ? COLORS.textSecondary : tierColorHex,
       fontFamily,
     }).setOrigin(0.5, 0);
 
