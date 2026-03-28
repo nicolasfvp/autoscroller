@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 07-01-PLAN.md
+stopped_at: Completed 07-02-PLAN.md
 last_updated: "2026-03-28T05:11:43.928Z"
 progress:
   total_phases: 7
   completed_phases: 4
   total_plans: 23
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-25)
 ## Current Position
 
 Phase: 07 (polish-release) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Plan: 2 of 3
 | Phase 06 P02 | 5min | 2 tasks | 11 files |
 | Phase 06 P03 | 2min | 2 tasks | 3 files |
 | Phase 07 P01 | 4min | 2 tasks | 8 files |
+| Phase 07 P02 | 5min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -141,6 +142,9 @@ Recent decisions affecting current work:
 - [Phase 07]: [Phase 07-01]: AudioManager uses lazy AudioContext creation with autoplay policy resume
 - [Phase 07]: [Phase 07-01]: SoundDefinitions uses envelope-based tone configs (attack/decay) for distinct SFX
 - [Phase 07]: [Phase 07-01]: MetaState migration chains v1->v2->v3 sequentially preserving existing v1->v2 logic
+- [Phase 07]: [Phase 07-02]: Tutorial uses in-place setText instead of scene.restart per step for smoother UX
+- [Phase 07]: [Phase 07-02]: Game speed loaded from MetaState in async create() rather than passed as scene data
+- [Phase 07]: [Phase 07-02]: Tweened counters use addCounter with stop-before-start guard to prevent stacking
 
 ### Pending Todos
 
@@ -160,6 +164,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T05:11:43.925Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-28T05:17:44Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
