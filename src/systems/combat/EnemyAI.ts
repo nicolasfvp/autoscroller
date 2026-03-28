@@ -1,12 +1,14 @@
-// Enemy attack logic with independent cooldown.
+// Enemy attack logic with independent cooldown and boss behavioral patterns.
 // Zero Phaser imports.
 
 import { eventBus } from '../../core/EventBus';
 import type { CombatState } from './CombatState';
 import type { CombatStats } from './CombatStats';
+import type { BossBehavior } from '../../data/types';
 
 export class EnemyAI {
   private cooldownTimer: number;
+  private shieldTimer: number = 0;
 
   constructor(state: CombatState) {
     this.cooldownTimer = state.enemyAttackCooldown;
@@ -17,7 +19,39 @@ export class EnemyAI {
 
     if (this.cooldownTimer <= 0) {
       this.attack(state, stats);
-      this.cooldownTimer += state.enemyAttackCooldown;
+      this.cooldownTimer += this.getEffectiveCooldown(state);
+    }
+
+    // Apply periodic behaviors
+    this.applyPeriodicBehaviors(deltaMs, state);
+  }
+
+  private getEffectiveCooldown(state: CombatState): number {
+    let cooldown = state.enemyAttackCooldown;
+    // Enrage: reduce cooldown when below HP threshold
+    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+    const enrage = behaviors?.find(b => b.type === 'enrage');
+    if (enrage && enrage.hpThreshold && enrage.attackSpeedMultiplier) {
+      if (state.enemyHP / state.enemyMaxHP <= enrage.hpThreshold) {
+        cooldown = cooldown / enrage.attackSpeedMultiplier;
+      }
+    }
+    return cooldown;
+  }
+
+  private applyPeriodicBehaviors(deltaMs: number, state: CombatState): void {
+    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+    if (!behaviors || behaviors.length === 0) return;
+
+    // Shield behavior: periodic armor gain
+    const shield = behaviors.find(b => b.type === 'shield');
+    if (shield && shield.interval && shield.shieldAmount) {
+      this.shieldTimer += deltaMs;
+      if (this.shieldTimer >= shield.interval) {
+        this.shieldTimer -= shield.interval;
+        state.enemyDefense += shield.shieldAmount;
+        eventBus.emit('combat:boss-behavior', { type: 'shield', value: shield.shieldAmount });
+      }
     }
   }
 
@@ -45,7 +79,36 @@ export class EnemyAI {
       }
     }
 
-    // Apply damage considering hero defense
+    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+
+    // Multi-hit behavior
+    const multiHit = behaviors?.find(b => b.type === 'multi_hit');
+    if (multiHit && multiHit.hitCount && multiHit.damageMultiplier) {
+      let totalDamage = 0;
+      const perHitDamage = Math.floor(damage * multiHit.damageMultiplier);
+      for (let i = 0; i < multiHit.hitCount; i++) {
+        const actualDmg = this.applyDamage(perHitDamage, state);
+        totalDamage += actualDmg;
+      }
+      stats.damageReceived += totalDamage;
+
+      // Drain behavior (heal from total damage)
+      const drain = behaviors?.find(b => b.type === 'drain');
+      if (drain && drain.healPercent) {
+        const healAmount = Math.floor(totalDamage * drain.healPercent / 100);
+        state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
+      }
+
+      // Post-damage effects
+      if (state.enemySpecialEffect === 'debuff') {
+        state.heroDefense = Math.max(0, state.heroDefense - 3);
+      }
+
+      eventBus.emit('combat:enemy-attack', { damage: totalDamage, specialEffect, multiHit: true, hitCount: multiHit.hitCount });
+      return;
+    }
+
+    // Single hit (existing logic)
     const actualDamage = this.applyDamage(damage, state);
     stats.damageReceived += actualDamage;
 
@@ -56,6 +119,13 @@ export class EnemyAI {
 
     if (state.enemySpecialEffect === 'lifesteal') {
       const healAmount = Math.floor(actualDamage * 0.5);
+      state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
+    }
+
+    // Drain behavior (for single-hit bosses without multi_hit)
+    const drain = behaviors?.find(b => b.type === 'drain');
+    if (drain && drain.healPercent && state.enemySpecialEffect !== 'lifesteal') {
+      const healAmount = Math.floor(actualDamage * drain.healPercent / 100);
       state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
     }
 

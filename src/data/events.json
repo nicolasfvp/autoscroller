@@ -110,5 +110,31 @@
         "effects": []
       }
     ]
+  },
+  {
+    "id": "crystal_cave",
+    "title": "Crystal Cave",
+    "description": "Glittering crystals line the walls of a hidden cave.",
+    "weight": 0.8,
+    "choices": [
+      {
+        "text": "Mine the crystals (Gain 3 stone)",
+        "effects": [
+          { "type": "gain_material", "value": 3, "material": "stone" }
+        ]
+      },
+      {
+        "text": "Trade crystals for an upgrade",
+        "effects": [
+          { "type": "lose_material", "value": 2, "material": "stone" },
+          { "type": "upgrade_card", "value": "random" }
+        ],
+        "requirement": { "minMaterial": { "stone": 2 } }
+      },
+      {
+        "text": "Leave the cave",
+        "effects": []
+      }
+    ]
   }
 ]

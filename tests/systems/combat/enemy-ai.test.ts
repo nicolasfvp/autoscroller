@@ -144,4 +144,89 @@ describe('EnemyAI', () => {
     // 10 damage to hero, enemy heals 5
     expect(state.enemyHP).toBe(85);
   });
+
+  // ── Boss Behaviors ──────────────────────────────────────────
+  describe('boss behaviors', () => {
+    it('enrage reduces effective cooldown below HP threshold', () => {
+      state = makeState({
+        enemyHP: 20, enemyMaxHP: 100, enemyDamage: 10,
+        enemyAttackCooldown: 2000,
+        behaviors: [{ type: 'enrage', hpThreshold: 0.3, attackSpeedMultiplier: 2.0 }],
+      } as any);
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      // At 20/100 = 20% < 30% threshold, cooldown should be halved
+      // First attack at 2000ms, then next at 1000ms (halved cooldown)
+      ai.tick(2000, state, stats); // first attack
+      expect(state.heroHP).toBe(90); // 100 - 10
+      ai.tick(1000, state, stats); // second attack at halved cooldown
+      expect(state.heroHP).toBe(80); // 90 - 10
+    });
+
+    it('enrage does not affect cooldown above HP threshold', () => {
+      state = makeState({
+        enemyHP: 80, enemyMaxHP: 100, enemyDamage: 10,
+        enemyAttackCooldown: 2000,
+        behaviors: [{ type: 'enrage', hpThreshold: 0.3, attackSpeedMultiplier: 2.0 }],
+      } as any);
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats); // first attack
+      expect(state.heroHP).toBe(90);
+      ai.tick(1000, state, stats); // NOT enough for normal cooldown
+      expect(state.heroHP).toBe(90); // no second attack
+    });
+
+    it('shield adds defense at interval', () => {
+      state = makeState({
+        enemyDefense: 0, enemyDamage: 10,
+        enemyAttackCooldown: 5000, // long cooldown so no attack during test
+        behaviors: [{ type: 'shield', interval: 3000, shieldAmount: 60 }],
+      } as any);
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      ai.tick(3000, state, stats); // shield fires at 3000ms
+      expect(state.enemyDefense).toBe(60);
+    });
+
+    it('multi_hit splits damage into multiple hits', () => {
+      state = makeState({
+        enemyDamage: 10, heroDefense: 0, heroHP: 100,
+        enemyAttackCooldown: 2000,
+        behaviors: [{ type: 'multi_hit', hitCount: 3, damageMultiplier: 0.5 }],
+      } as any);
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+      // 10 * 0.5 = 5 per hit, 3 hits = 15 total
+      expect(state.heroHP).toBe(85);
+      expect(stats.damageReceived).toBe(15);
+    });
+
+    it('drain heals boss based on damage dealt', () => {
+      state = makeState({
+        enemyDamage: 10, heroDefense: 0, heroHP: 100,
+        enemyHP: 50, enemyMaxHP: 100,
+        enemyAttackCooldown: 2000,
+        behaviors: [{ type: 'drain', healPercent: 50 }],
+      } as any);
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+      // 10 damage dealt, drain heals 50% = 5
+      expect(state.enemyHP).toBe(55);
+    });
+
+    it('no behaviors preserves existing attack pattern', () => {
+      state = makeState({
+        enemyDamage: 10, heroDefense: 0, heroHP: 100,
+        enemyAttackCooldown: 2000,
+      });
+      stats = createEmptyCombatStats('slime', 'Slime');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+      expect(state.heroHP).toBe(90);
+      expect(stats.damageReceived).toBe(10);
+    });
+  });
 });

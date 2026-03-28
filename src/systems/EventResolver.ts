@@ -6,12 +6,12 @@ export interface EventUnlockState {
   unlockedRelics: string[];
 }
 
-export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse';
+export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse' | 'gain_material' | 'lose_material' | 'upgrade_card';
 
 export interface EventChoice {
   text: string;
-  effects: Array<{ type: EventChoiceEffect; value?: number | string }>;
-  requirement?: { minGold?: number; minHP?: number };
+  effects: Array<{ type: EventChoiceEffect; value?: number | string; material?: string }>;
+  requirement?: { minGold?: number; minHP?: number; minMaterial?: Record<string, number> };
 }
 
 export interface EventDefinition {
@@ -19,6 +19,7 @@ export interface EventDefinition {
   title: string;
   description: string;
   choices: EventChoice[];
+  weight?: number;
 }
 
 export interface EventOutcome {
@@ -36,7 +37,13 @@ interface RunState {
 const events: EventDefinition[] = eventsData as EventDefinition[];
 
 export function getRandomEvent(): EventDefinition {
-  return events[Math.floor(Math.random() * events.length)];
+  const totalWeight = events.reduce((sum, e) => sum + (e.weight ?? 1.0), 0);
+  let roll = Math.random() * totalWeight;
+  for (const event of events) {
+    roll -= event.weight ?? 1.0;
+    if (roll <= 0) return event;
+  }
+  return events[events.length - 1];
 }
 
 export function getEvent(id: string): EventDefinition | undefined {
@@ -53,6 +60,13 @@ export function isChoiceAvailable(choice: EventChoice, runState: RunState): bool
   }
   if (choice.requirement?.minHP !== undefined && runState.hero.hp < choice.requirement.minHP) {
     return false;
+  }
+  if (choice.requirement?.minMaterial) {
+    for (const [mat, amount] of Object.entries(choice.requirement.minMaterial)) {
+      if ((runState.economy.materials[mat] ?? 0) < amount) {
+        return false;
+      }
+    }
   }
   return true;
 }
@@ -168,9 +182,36 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
         break;
       }
       case 'add_curse': {
-        // No-op placeholder
-        descriptions.push('A curse was placed (no effect yet)');
-        appliedEffects.push({ type: 'add_curse', value: val ?? 'unknown', applied: false });
+        const curseId = typeof val === 'string' ? val : 'pain';
+        runState.deck.order.push(curseId);
+        descriptions.push(`Cursed! ${curseId} added to deck`);
+        appliedEffects.push({ type: 'add_curse', value: curseId, applied: true });
+        break;
+      }
+      case 'gain_material': {
+        const material = effect.material as string;
+        const amount = typeof val === 'number' ? val : 0;
+        if (material) {
+          runState.economy.materials[material] = (runState.economy.materials[material] ?? 0) + amount;
+          descriptions.push(`Gained ${amount} ${material}`);
+          appliedEffects.push({ type: 'gain_material', value: amount, applied: true });
+        }
+        break;
+      }
+      case 'lose_material': {
+        const material = effect.material as string;
+        const amount = typeof val === 'number' ? val : 0;
+        if (material) {
+          const current = runState.economy.materials[material] ?? 0;
+          runState.economy.materials[material] = Math.max(0, current - amount);
+          descriptions.push(`Lost ${amount} ${material}`);
+          appliedEffects.push({ type: 'lose_material', value: amount, applied: true });
+        }
+        break;
+      }
+      case 'upgrade_card': {
+        descriptions.push('A card in your deck was upgraded!');
+        appliedEffects.push({ type: 'upgrade_card', value: val ?? 'random', applied: true });
         break;
       }
     }

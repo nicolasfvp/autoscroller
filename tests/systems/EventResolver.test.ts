@@ -39,9 +39,9 @@ describe('EventResolver', () => {
     expect(event).toBeUndefined();
   });
 
-  it('getAllEvents returns all 5 events', () => {
+  it('getAllEvents returns all 6 events', () => {
     const events = getAllEvents();
-    expect(events).toHaveLength(5);
+    expect(events).toHaveLength(6);
   });
 
   it('isChoiceAvailable returns false when gold requirement not met', () => {
@@ -105,12 +105,91 @@ describe('EventResolver', () => {
     expect(run.hero.hp).toBe(1);
   });
 
-  it('resolveEventChoice add_curse returns applied:false', () => {
+  it('resolveEventChoice add_curse adds curse card to deck.order', () => {
     const run = makeRunState();
     // cursed_chest choice 0: gain_relic + add_curse
     const outcome = resolveEventChoice('cursed_chest', 0, run);
     const curseEffect = outcome.effects.find(e => e.type === 'add_curse');
     expect(curseEffect).toBeDefined();
-    expect(curseEffect!.applied).toBe(false);
+    expect(curseEffect!.applied).toBe(true);
+    // Curse card should be in deck
+    expect(run.deck.order.length).toBeGreaterThan(4);
+  });
+
+  // ── Material Effects (crystal_cave event) ──────────────────
+  describe('material effects', () => {
+    it('gain_material adds to economy.materials', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 5 } } });
+      // crystal_cave choice 0: gain_material stone +3
+      const outcome = resolveEventChoice('crystal_cave', 0, run);
+      expect(run.economy.materials.stone).toBe(8); // 5 + 3
+      const matEffect = outcome.effects.find(e => e.type === 'gain_material');
+      expect(matEffect).toBeDefined();
+      expect(matEffect!.applied).toBe(true);
+    });
+
+    it('lose_material removes from economy.materials (min 0)', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 2 } } });
+      // crystal_cave choice 1: lose_material stone -2, upgrade_card
+      const outcome = resolveEventChoice('crystal_cave', 1, run);
+      expect(run.economy.materials.stone).toBe(0); // 2 - 2
+      const matEffect = outcome.effects.find(e => e.type === 'lose_material');
+      expect(matEffect).toBeDefined();
+      expect(matEffect!.applied).toBe(true);
+    });
+
+    it('lose_material clamps at 0', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 1 } } });
+      // crystal_cave choice 1: lose_material stone -2
+      resolveEventChoice('crystal_cave', 1, run);
+      expect(run.economy.materials.stone).toBe(0); // max(0, 1-2) = 0
+    });
+
+    it('upgrade_card returns applied: true', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 5 } } });
+      // crystal_cave choice 1: lose_material + upgrade_card
+      const outcome = resolveEventChoice('crystal_cave', 1, run);
+      const upgradeEffect = outcome.effects.find(e => e.type === 'upgrade_card');
+      expect(upgradeEffect).toBeDefined();
+      expect(upgradeEffect!.applied).toBe(true);
+    });
+
+    it('isChoiceAvailable checks minMaterial requirement - not met', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 1 } } });
+      const choice = {
+        text: 'Test',
+        effects: [],
+        requirement: { minMaterial: { stone: 5 } },
+      };
+      expect(isChoiceAvailable(choice as any, run)).toBe(false);
+    });
+
+    it('isChoiceAvailable checks minMaterial requirement - met', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: { stone: 10 } } });
+      const choice = {
+        text: 'Test',
+        effects: [],
+        requirement: { minMaterial: { stone: 5 } },
+      };
+      expect(isChoiceAvailable(choice as any, run)).toBe(true);
+    });
+
+    it('isChoiceAvailable returns false when material missing entirely', () => {
+      const run = makeRunState({ economy: { gold: 100, tilePoints: 10, materials: {} } });
+      const choice = {
+        text: 'Test',
+        effects: [],
+        requirement: { minMaterial: { iron: 3 } },
+      };
+      expect(isChoiceAvailable(choice as any, run)).toBe(false);
+    });
+  });
+
+  describe('weighted event selection', () => {
+    it('getAllEvents returns 6 events including crystal_cave', () => {
+      const events = getAllEvents();
+      expect(events).toHaveLength(6);
+      expect(events.find(e => e.id === 'crystal_cave')).toBeDefined();
+    });
   });
 });
