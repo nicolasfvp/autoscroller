@@ -19,6 +19,11 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 - [x] Scaling gold prices with caps, Storehouse building, diminishing loop growth — Validated in Phase 5
 - [x] MetaState v1→v2 migration for save compatibility — Validated in Phase 5
 - [x] Seeded deck shuffle for varied combat openings — Validated in Phase 5
+- [x] 30 cards with epic tier and card upgrade system (CONT-05, CONT-09) — Validated in Phase 6: Content Expansion
+- [x] 15 relics with build-around types (CONT-06) — Validated in Phase 6: Content Expansion
+- [x] 6 boss types with behavioral patterns: enrage, shield, multi-hit, drain (CONT-07) — Validated in Phase 6: Content Expansion
+- [x] 15 narrative events with material integration and weighted selection (CONT-08) — Validated in Phase 6: Content Expansion
+- [x] 11 synergy pairs enabling diverse deck builds — Validated in Phase 6: Content Expansion
 
 ### Active
 
@@ -149,4 +154,4 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 | GDD em português brasileiro | Documentação do game design acompanha os docs de planejamento | — Pending |
 
 ---
-*Last updated: 2026-03-27 — Phase 5 (Balance & Economy Overhaul) complete*
+*Last updated: 2026-03-28 — Phase 6 (Content Expansion) complete*
