@@ -46,15 +46,17 @@ export class GameScene extends Scene {
     });
   }
 
-  async create(): Promise<void> {
+  create(): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
     const run = getRun();
 
-    // Load game speed from settings
-    const metaState = await loadMetaState();
-    this.gameSpeed = metaState.gameSpeed ?? 1;
+    // Load game speed from settings (non-blocking — update() guards against uninitialized state)
+    this.gameSpeed = 1;
+    loadMetaState().then((metaState) => {
+      this.gameSpeed = metaState.gameSpeed ?? 1;
+    });
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);

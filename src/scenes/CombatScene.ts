@@ -53,16 +53,18 @@ export class CombatScene extends Scene {
     });
   }
 
-  async create(data: { enemyId: string }): Promise<void> {
+  create(data: { enemyId: string }): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
     const run = getRun();
     run.isInCombat = true;
 
-    // Load game speed from settings
-    const metaState = await loadMetaState();
-    this.gameSpeed = metaState.gameSpeed ?? 1;
+    // Load game speed from settings (non-blocking)
+    this.gameSpeed = 1;
+    loadMetaState().then((metaState) => {
+      this.gameSpeed = metaState.gameSpeed ?? 1;
+    });
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
