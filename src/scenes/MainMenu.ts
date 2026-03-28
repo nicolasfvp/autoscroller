@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
+import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 
 export class MainMenu extends Scene {
   private savedRun: RunState | null = null;
@@ -16,47 +17,24 @@ export class MainMenu extends Scene {
     this.confirmOverlay = null;
 
     // Background
-    this.cameras.main.setBackgroundColor(0x1a1a2e);
+    this.cameras.main.setBackgroundColor(COLORS.background);
 
     // Title
-    this.add.text(400, 150, 'Rogue Scroll', {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#ffffff',
+    this.add.text(LAYOUT.centerX, 150, 'Rogue Scroll', {
+      ...FONTS.title,
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     if (this.savedRun) {
       // Continue Run button (primary, accent)
-      const continueBtn = this.add.text(400, 300, 'Continue Run', {
-        fontSize: '24px',
-        fontStyle: 'bold',
-        color: '#ffd700',
-      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-      continueBtn.on('pointerover', () => continueBtn.setColor('#ffffff'));
-      continueBtn.on('pointerout', () => continueBtn.setColor('#ffd700'));
-      continueBtn.on('pointerdown', () => this.continueRun());
+      createButton(this, LAYOUT.centerX, 300, 'Continue Run', () => this.continueRun(), 'primary');
 
       // New Run button (secondary, below)
-      const newRunBtn = this.add.text(400, 360, 'New Run', {
-        fontSize: '16px',
-        color: '#ffd700',
-      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-      newRunBtn.on('pointerover', () => newRunBtn.setColor('#ffffff'));
-      newRunBtn.on('pointerout', () => newRunBtn.setColor('#ffd700'));
-      newRunBtn.on('pointerdown', () => this.showDeleteConfirmation());
+      createButton(this, LAYOUT.centerX, 360, 'New Run', () => this.showDeleteConfirmation(), 'secondary');
     } else {
       // No saved run -- show only New Run as primary
-      const newRunBtn = this.add.text(400, 300, 'New Run', {
-        fontSize: '24px',
-        fontStyle: 'bold',
-        color: '#ffd700',
-      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-      newRunBtn.on('pointerover', () => newRunBtn.setColor('#ffffff'));
-      newRunBtn.on('pointerout', () => newRunBtn.setColor('#ffd700'));
-      newRunBtn.on('pointerdown', () => this.startNewRun());
+      createButton(this, LAYOUT.centerX, 300, 'New Run', () => this.startNewRun(), 'primary');
     }
 
     this.events.on('shutdown', this.cleanup, this);
@@ -75,40 +53,35 @@ export class MainMenu extends Scene {
     this.confirmOverlay = this.add.container(0, 0);
 
     // Dim background
-    const dimBg = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+    const dimBg = this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.7);
     dimBg.setInteractive(); // block click-through
     this.confirmOverlay.add(dimBg);
 
     // Confirmation panel
-    const panel = this.add.rectangle(400, 300, 500, 200, 0x222222, 0.95);
+    const panel = this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 500, 200, COLORS.panel, 0.95);
     this.confirmOverlay.add(panel);
 
-    const msg = this.add.text(400, 260, 'This will permanently erase your current run. Continue?', {
-      fontSize: '16px',
-      color: '#ffffff',
+    const msg = this.add.text(LAYOUT.centerX, 260, 'This will permanently erase your current run. Continue?', {
+      ...FONTS.body,
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
       align: 'center',
       wordWrap: { width: 440 },
     }).setOrigin(0.5);
     this.confirmOverlay.add(msg);
 
-    // Yes, Delete button (accent)
-    const yesBtn = this.add.text(320, 330, 'Yes, Delete', {
-      fontSize: '16px',
-      fontStyle: 'bold',
-      color: '#ffd700',
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    yesBtn.on('pointerover', () => yesBtn.setColor('#ffffff'));
-    yesBtn.on('pointerout', () => yesBtn.setColor('#ffd700'));
-    yesBtn.on('pointerdown', () => this.startNewRun());
+    // Yes, Delete button
+    const yesBtn = createButton(this, 320, 330, 'Yes, Delete', () => this.startNewRun(), 'secondary');
     this.confirmOverlay.add(yesBtn);
 
-    // Keep My Run button (muted)
+    // Keep My Run button
     const noBtn = this.add.text(480, 330, 'Keep My Run', {
-      fontSize: '16px',
-      color: '#aaaaaa',
+      ...FONTS.body,
+      color: COLORS.textSecondary,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    noBtn.on('pointerover', () => noBtn.setColor('#ffffff'));
-    noBtn.on('pointerout', () => noBtn.setColor('#aaaaaa'));
+    noBtn.on('pointerover', () => noBtn.setColor(COLORS.accentHover));
+    noBtn.on('pointerout', () => noBtn.setColor(COLORS.textSecondary));
     noBtn.on('pointerdown', () => this.hideConfirmation());
     this.confirmOverlay.add(noBtn);
   }
@@ -124,7 +97,7 @@ export class MainMenu extends Scene {
     await saveManager.clear();
     setRun(createNewRun());
     await saveManager.save(getRun());
-    this.scene.start('CityHub');
+    this.scene.start('TutorialScene');
   }
 
   private cleanup(): void {
