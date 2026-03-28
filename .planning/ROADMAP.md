@@ -135,4 +135,4 @@ Plans:
 Plans:
 - [ ] 07-01-PLAN.md — StyleConstants + SoundDefinitions + AudioManager Web Audio rewrite + MetaState v3 migration (Wave 1)
 - [ ] 07-02-PLAN.md — Tutorial rewrite + SettingsScene expansion + game speed wiring + CMBT-05/PLSH-01 status updates (Wave 2)
-- [ ] 07-03-PLAN.md — Camera fade transitions + visual consistency pass across all ~25 scenes + human verification checkpoint (Wave 2)
+- [ ] 07-03-PLAN.md — Camera fade transitions + visual consistency pass across all ~25 scenes + human verification checkpoint (Wave 3)
