@@ -5,13 +5,14 @@ import enemiesData from '../../src/data/json/enemies.json';
 import eventsData from '../../src/data/json/events.json';
 import buildingsData from '../../src/data/json/buildings.json';
 import passivesData from '../../src/data/json/passives.json';
+import synergiesData from '../../src/data/json/synergies.json';
 import { MetaState, RunHistoryEntry, createDefaultMetaState } from '../../src/state/MetaState';
 
 describe('cards.json', () => {
   const cards = cardsData.cards;
 
-  it('has >= 15 entries', () => {
-    expect(cards.length).toBeGreaterThanOrEqual(15);
+  it('has >= 30 entries', () => {
+    expect(cards.length).toBeGreaterThanOrEqual(30);
   });
 
   it('each card has id, name, category, cooldown (number), rarity (string), effects (array)', () => {
@@ -38,13 +39,27 @@ describe('cards.json', () => {
     expect(Array.isArray(cardsData.starterDeckIds)).toBe(true);
     expect(cardsData.starterDeckIds.length).toBe(10);
   });
+
+  it('has at least 3 epic rarity cards', () => {
+    const epics = cards.filter((c: any) => c.rarity === 'epic');
+    expect(epics.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('upgraded cards have valid upgrade object with effects or cost or cooldown', () => {
+    const upgraded = cards.filter((c: any) => c.upgraded);
+    expect(upgraded.length).toBeGreaterThanOrEqual(10);
+    for (const card of upgraded) {
+      const u = (card as any).upgraded;
+      expect(u.effects || u.cost || u.cooldown || u.description).toBeTruthy();
+    }
+  });
 });
 
 describe('relics.json', () => {
   const relics = relicsData as any[];
 
-  it('has exactly 8 entries', () => {
-    expect(relics.length).toBe(8);
+  it('has >= 15 entries', () => {
+    expect(relics.length).toBeGreaterThanOrEqual(15);
   });
 
   it('each relic has id, name, rarity, trigger, effectType, and icon', () => {
@@ -86,17 +101,23 @@ describe('enemies.json', () => {
 
   it('boss variants have bossType field', () => {
     const bossVariants = enemies.filter((e: any) => e.bossType);
-    expect(bossVariants.length).toBe(3);
-    const bossTypes = bossVariants.map((e: any) => e.bossType).sort();
-    expect(bossTypes).toEqual(['berserker', 'mage', 'tank']);
+    expect(bossVariants.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('boss enemies with bossType have behaviors array', () => {
+    const bossesWithType = enemies.filter((e: any) => e.bossType);
+    for (const boss of bossesWithType) {
+      expect(Array.isArray(boss.behaviors)).toBe(true);
+      expect(boss.behaviors.length).toBeGreaterThanOrEqual(1);
+    }
   });
 });
 
 describe('events.json', () => {
   const events = eventsData as any[];
 
-  it('has >= 5 entries', () => {
-    expect(events.length).toBeGreaterThanOrEqual(5);
+  it('has >= 15 entries', () => {
+    expect(events.length).toBeGreaterThanOrEqual(15);
   });
 
   it('each event has id, title, description, choices (array with >= 2 items)', () => {
@@ -107,6 +128,15 @@ describe('events.json', () => {
       expect(Array.isArray(event.choices)).toBe(true);
       expect(event.choices.length).toBeGreaterThanOrEqual(2);
     }
+  });
+
+  it('at least 3 events reference materials', () => {
+    const materialEvents = events.filter((e: any) =>
+      e.choices.some((c: any) =>
+        c.effects.some((eff: any) => eff.type === 'gain_material' || eff.type === 'lose_material')
+      )
+    );
+    expect(materialEvents.length).toBeGreaterThanOrEqual(3);
   });
 });
 
@@ -124,17 +154,27 @@ describe('buildings.json', () => {
     expect(keys.length).toBe(6);
   });
 
-  it('each building has tiers array of length 3-8', () => {
+  it('each building has tiers array of length 3-10', () => {
     for (const key of Object.keys(buildings)) {
       const b = buildings[key];
       expect(Array.isArray(b.tiers)).toBe(true);
       expect(b.tiers.length).toBeGreaterThanOrEqual(3);
-      expect(b.tiers.length).toBeLessThanOrEqual(8);
+      expect(b.tiers.length).toBeLessThanOrEqual(10);
     }
   });
 
-  it('shrine has maxLevel 3', () => {
-    expect(buildings.shrine.maxLevel).toBe(3);
+  it('shrine has maxLevel >= 4', () => {
+    expect(buildings.shrine.maxLevel).toBeGreaterThanOrEqual(4);
+  });
+
+  it('forge has maxLevel >= 5', () => {
+    expect(buildings.forge.maxLevel).toBeGreaterThanOrEqual(5);
+  });
+});
+
+describe('synergies.json', () => {
+  it('has >= 10 synergy pairs', () => {
+    expect((synergiesData as any[]).length).toBeGreaterThanOrEqual(10);
   });
 });
 

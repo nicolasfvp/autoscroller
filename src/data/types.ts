@@ -17,6 +17,13 @@ export interface CardEffect {
   target: 'enemy' | 'self';
 }
 
+export interface CardUpgrade {
+  effects?: CardEffect[];
+  cost?: CardCost;
+  cooldown?: number;
+  description?: string;
+}
+
 export interface CardDefinition {
   id: string;
   name: string;
@@ -24,19 +31,17 @@ export interface CardDefinition {
   category: CardCategory;
   effects: CardEffect[];
   cost?: CardCost;
-  upgraded?: boolean;
-  upgradeBonus?: {
-    damageBonus?: number;
-    healBonus?: number;
-    armorBonus?: number;
-    costReduction?: Partial<CardCost>;
-  };
+  /** Optional upgrade data overlay -- only changed fields */
+  upgraded?: CardUpgrade;
+  /** Unlock gating for meta-progression */
+  unlockSource?: string;
+  unlockTier?: number;
   /** Cooldown in seconds before card can be played again */
   cooldown: number;
   /** Targeting mode for this card */
   targeting: 'single' | 'aoe' | 'lowest-hp' | 'random' | 'self';
   /** Card rarity tier */
-  rarity: 'common' | 'uncommon' | 'rare';
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic';
 }
 
 // ── Enemy Types ─────────────────────────────────────────────
@@ -50,6 +55,20 @@ export interface EnemyAttack {
   specialEffect?: 'double' | 'stun' | 'debuff' | 'lifesteal';
 }
 
+export type BossBehaviorType = 'enrage' | 'shield' | 'multi_hit' | 'drain' | 'summon';
+
+export interface BossBehavior {
+  type: BossBehaviorType;
+  hpThreshold?: number;
+  attackSpeedMultiplier?: number;
+  interval?: number;
+  shieldAmount?: number;
+  hitCount?: number;
+  damageMultiplier?: number;
+  healPercent?: number;
+  summonId?: string;
+}
+
 export interface EnemyDefinition {
   id: string;
   name: string;
@@ -61,6 +80,13 @@ export interface EnemyDefinition {
   attackCooldown: number;
   goldReward: { min: number; max: number };
   color: number;
+  bossType?: string;
+  behaviors?: BossBehavior[];
+  materialReward?: {
+    chance: number;
+    bonusMaterial: string;
+    bonusAmount: { min: number; max: number };
+  };
 }
 
 // ── Synergy Types ──────────────────────────────────────────
@@ -114,11 +140,12 @@ export interface RelicDefinition {
 
 // ── Event Types ─────────────────────────────────────────────
 
-export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse';
+export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse' | 'gain_material' | 'lose_material' | 'upgrade_card';
 
 export interface EventChoiceEffectEntry {
   type: EventChoiceEffect;
   value?: number | string;
+  material?: string;
 }
 
 export interface EventChoice {
@@ -127,6 +154,7 @@ export interface EventChoice {
   requirement?: {
     minGold?: number;
     minHP?: number;
+    minMaterial?: Record<string, number>;
   };
 }
 
@@ -135,6 +163,7 @@ export interface EventDefinition {
   title: string;
   description: string;
   choices: EventChoice[];
+  weight?: number;
 }
 
 // ── Curse Types ─────────────────────────────────────────────
