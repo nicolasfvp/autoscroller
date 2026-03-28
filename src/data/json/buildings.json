@@ -2,31 +2,43 @@
   "forge": {
     "name": "Forge",
     "description": "Unlock new cards into the loot pool",
-    "maxLevel": 4,
+    "maxLevel": 6,
     "tiers": [
       {
         "level": 1,
         "cost": { "iron": 8, "crystal": 3 },
-        "unlocks": { "cards": ["counter-strike", "shield-wall"] },
-        "description": "Unlock Counter Strike and Shield Wall"
+        "unlocks": { "cards": ["counter-strike", "shield-wall", "heal", "parry"] },
+        "description": "Unlock Counter Strike, Shield Wall, Heal, and Parry"
       },
       {
         "level": 2,
         "cost": { "iron": 20, "crystal": 10 },
-        "unlocks": { "cards": ["fury", "iron-skin"] },
-        "description": "Unlock Fury and Iron Skin"
+        "unlocks": { "cards": ["fury", "iron-skin", "reckless-charge", "vampiric-touch", "haste"] },
+        "description": "Unlock Fury, Iron Skin, Reckless Charge, Vampiric Touch, and Haste"
       },
       {
         "level": 3,
         "cost": { "iron": 45, "crystal": 25, "essence": 5 },
-        "unlocks": { "cards": ["fortify", "arcane-shield"] },
-        "description": "Unlock Fortify and Arcane Shield"
+        "unlocks": { "cards": ["fortify", "arcane-shield", "execute", "bulwark", "energy-surge"] },
+        "description": "Unlock Fortify, Arcane Shield, Execute, Bulwark, and Energy Surge"
       },
       {
         "level": 4,
         "cost": { "iron": 80, "crystal": 50, "essence": 15 },
-        "unlocks": { "cards": ["berserker", "rejuvenate", "mana-drain", "weaken"] },
-        "description": "Unlock Berserker, Rejuvenate, Mana Drain, and Weaken"
+        "unlocks": { "cards": ["berserker", "rejuvenate", "mana-drain", "weaken", "chain-lightning", "poison-cloud"] },
+        "description": "Unlock Berserker, Rejuvenate, Mana Drain, Weaken, Chain Lightning, and Poison Cloud"
+      },
+      {
+        "level": 5,
+        "cost": { "iron": 120, "crystal": 80, "essence": 30 },
+        "unlocks": { "cards": ["doom-blade", "last-stand", "soul-rend"] },
+        "description": "Unlock Doom Blade, Last Stand, and Soul Rend"
+      },
+      {
+        "level": 6,
+        "cost": { "iron": 180, "crystal": 120, "essence": 50, "bone": 30 },
+        "unlocks": { "cards": ["sacrifice"] },
+        "description": "Unlock Sacrifice"
       }
     ]
   },
@@ -108,7 +120,7 @@
   "shrine": {
     "name": "Shrine",
     "description": "Unlock powerful relics into the loot pool",
-    "maxLevel": 3,
+    "maxLevel": 4,
     "tiers": [
       {
         "level": 1,
@@ -119,14 +131,20 @@
       {
         "level": 2,
         "cost": { "crystal": 20, "essence": 10 },
-        "unlocks": { "relics": ["berserker_ring"] },
-        "description": "Unlock Berserker Ring relic"
+        "unlocks": { "relics": ["berserker_ring", "swift_boots", "thin_deck_charm"] },
+        "description": "Unlock Berserker Ring, Swift Boots, and Thin Deck Charm relics"
       },
       {
         "level": 3,
         "cost": { "crystal": 45, "essence": 25 },
-        "unlocks": { "relics": ["demon_heart", "phoenix_feather"] },
-        "description": "Unlock Demon Heart and Phoenix Feather relics"
+        "unlocks": { "relics": ["demon_heart", "phoenix_feather", "spell_focus", "first_strike_amulet"] },
+        "description": "Unlock Demon Heart, Phoenix Feather, Spell Focus, and First Strike Amulet relics"
+      },
+      {
+        "level": 4,
+        "cost": { "crystal": 80, "essence": 50, "iron": 20 },
+        "unlocks": { "relics": ["blood_pact"] },
+        "description": "Unlock Blood Pact relic"
       }
     ]
   },

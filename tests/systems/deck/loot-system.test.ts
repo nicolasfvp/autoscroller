@@ -12,10 +12,13 @@ vi.mock('../../../src/data/DataLoader', () => ({
   getAllCards: () => [
     { id: 'strike', name: 'Strike', rarity: 'common', category: 'attack', effects: [], cooldown: 1, targeting: 'single' },
     { id: 'defend', name: 'Defend', rarity: 'common', category: 'defense', effects: [], cooldown: 1, targeting: 'self' },
+    { id: 'cleave', name: 'Cleave', rarity: 'common', category: 'attack', effects: [], cooldown: 1, targeting: 'aoe' },
+    { id: 'heavy-hit', name: 'Heavy Hit', rarity: 'common', category: 'attack', effects: [], cooldown: 1, targeting: 'single' },
     { id: 'fury', name: 'Fury', rarity: 'uncommon', category: 'attack', effects: [], cooldown: 1, targeting: 'single' },
     { id: 'shield-wall', name: 'Shield Wall', rarity: 'uncommon', category: 'defense', effects: [], cooldown: 1, targeting: 'self' },
     { id: 'berserker', name: 'Berserker', rarity: 'rare', category: 'attack', effects: [], cooldown: 1, targeting: 'single' },
     { id: 'heal', name: 'Heal', rarity: 'rare', category: 'magic', effects: [], cooldown: 1, targeting: 'self' },
+    { id: 'doom-blade', name: 'Doom Blade', rarity: 'epic', category: 'attack', effects: [], cooldown: 1, targeting: 'single' },
   ],
 }));
 
@@ -54,14 +57,18 @@ describe('LootSystem', () => {
     it('with rng returning 0.0, all cards are common rarity', () => {
       // 0.0 * 100 = 0 < 60 (common), 0.0 * pool.length = 0 (first common)
       const result = generateCardReward(makeRng([0.0]), 3);
-      // All should be common cards: strike or defend
-      result.forEach((id) => expect(['strike', 'defend']).toContain(id));
+      // All should be common cards from mock pool
+      const commonIds = ['strike', 'defend', 'cleave', 'heavy-hit'];
+      result.forEach((id) => expect(commonIds).toContain(id));
     });
 
-    it('with rng returning 0.95, all cards are rare rarity', () => {
-      // 0.95 * 100 = 95 >= 90 (rare), 0.95 * pool.length picks from rare pool
+    it('with rng returning 0.95, cards are rare or fallback rarity', () => {
+      // 0.95 * 100 = 95 >= 90 (rare), picks from rare pool first then falls back
       const result = generateCardReward(makeRng([0.95]), 3);
-      result.forEach((id) => expect(['berserker', 'heal']).toContain(id));
+      // First 2 should be rare (berserker, heal), 3rd falls back to any available
+      expect(result).toHaveLength(3);
+      expect(result).toContain('berserker');
+      expect(result).toContain('heal');
     });
   });
 

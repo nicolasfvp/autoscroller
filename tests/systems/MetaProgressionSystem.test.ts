@@ -21,7 +21,9 @@ describe('MetaProgressionSystem', () => {
       expect(result.updatedState!.buildings.forge.level).toBe(1);
       expect(result.updatedState!.unlockedCards).toContain('counter-strike');
       expect(result.updatedState!.unlockedCards).toContain('shield-wall');
-      expect(result.newUnlocks!.cards).toEqual(['counter-strike', 'shield-wall']);
+      expect(result.updatedState!.unlockedCards).toContain('heal');
+      expect(result.updatedState!.unlockedCards).toContain('parry');
+      expect(result.newUnlocks!.cards).toEqual(['counter-strike', 'shield-wall', 'heal', 'parry']);
     });
 
     it('returns insufficient_materials when materials < cost', () => {
@@ -35,7 +37,7 @@ describe('MetaProgressionSystem', () => {
     it('returns max_level when forge is already at maxLevel', () => {
       const state = createDefaultMetaState();
       state.materials = { essence: 9999 };
-      state.buildings.forge.level = 4;
+      state.buildings.forge.level = 6;
       const result = upgradeBuilding('forge', state);
       expect(result.success).toBe(false);
       expect(result.reason).toBe('max_level');
@@ -163,11 +165,11 @@ describe('MetaProgressionSystem', () => {
     it('returns forge tier data with name, maxLevel, and tiers', () => {
       const data = getBuildingTierData('forge');
       expect(data.name).toBe('Forge');
-      expect(data.maxLevel).toBe(4);
-      expect(data.tiers).toHaveLength(4);
+      expect(data.maxLevel).toBe(6);
+      expect(data.tiers).toHaveLength(6);
       expect(data.tiers[0].level).toBe(1);
       expect(data.tiers[0].cost).toEqual({ iron: 8, crystal: 3 });
-      expect(data.tiers[0].unlocks.cards).toEqual(['counter-strike', 'shield-wall']);
+      expect(data.tiers[0].unlocks.cards).toEqual(['counter-strike', 'shield-wall', 'heal', 'parry']);
     });
   });
 });

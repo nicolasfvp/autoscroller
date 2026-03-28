@@ -8,44 +8,46 @@ import {
 
 describe('CollectionRegistry', () => {
   describe('getCollectionStatus', () => {
-    it('returns cards total=15 and unlocked count matching cards with no unlockSource', () => {
+    it('returns cards total=30 and unlocked count matching cards with no unlockSource', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.cards.total).toBe(15);
-      // Starter cards (no unlockSource): strike, heavy-hit, defend, fireball = 4
-      expect(status.cards.unlocked).toBe(4);
+      expect(status.cards.total).toBe(30);
+      // Starter cards (no unlockSource): strike, heavy-hit, defend, fireball, cleave, meditate = 6
+      expect(status.cards.unlocked).toBe(6);
     });
 
-    it('returns cards total=15 and unlocked=15 when all cards are unlocked', () => {
+    it('returns cards total=30 and unlocked=30 when all cards are unlocked', () => {
       const state = createDefaultMetaState();
       state.unlockedCards = [
         'fury', 'berserker', 'shield-wall', 'fortify', 'iron-skin',
         'heal', 'arcane-shield', 'rejuvenate', 'mana-drain', 'weaken',
-        'counter-strike',
+        'counter-strike', 'reckless-charge', 'execute', 'chain-lightning',
+        'doom-blade', 'parry', 'bulwark', 'last-stand', 'vampiric-touch',
+        'haste', 'energy-surge', 'poison-cloud', 'soul-rend', 'sacrifice',
       ];
       const status = getCollectionStatus(state);
-      expect(status.cards.total).toBe(15);
-      expect(status.cards.unlocked).toBe(15);
+      expect(status.cards.total).toBe(30);
+      expect(status.cards.unlocked).toBe(30);
     });
 
-    it('returns relics total=8 and unlocked=3 for default state (3 commons always available)', () => {
+    it('returns relics total=15 and unlocked=5 for default state (5 commons always available)', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.relics.total).toBe(8);
-      expect(status.relics.unlocked).toBe(3);
+      expect(status.relics.total).toBe(15);
+      expect(status.relics.unlocked).toBe(5);
     });
 
     it('returns bosses total matching boss-type enemies in data', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      // enemies.json has 4 bosses: boss_demon, boss_tank, boss_berserker, boss_mage
-      expect(status.bosses.total).toBe(4);
+      // enemies.json has 6 bosses: boss_demon, boss_tank, boss_berserker, boss_mage, boss_dragon, boss_hydra
+      expect(status.bosses.total).toBe(6);
     });
 
-    it('returns events total=5', () => {
+    it('returns events total=15', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.events.total).toBe(5);
+      expect(status.events.total).toBe(15);
     });
 
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {

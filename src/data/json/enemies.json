@@ -82,6 +82,7 @@
     "id": "boss_demon",
     "name": "Demon Lord",
     "type": "boss",
+    "bossType": "demon",
     "baseHP": 480,
     "baseDefense": 20,
     "attack": {
@@ -91,6 +92,9 @@
       "specialEffect": "lifesteal"
     },
     "attackCooldown": 2500,
+    "behaviors": [
+      { "type": "drain", "healPercent": 50 }
+    ],
     "goldReward": { "min": 100, "max": 150 },
     "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
     "color": 9109504
@@ -108,6 +112,9 @@
       "pattern": "scaling"
     },
     "attackCooldown": 3000,
+    "behaviors": [
+      { "type": "shield", "interval": 10000, "shieldAmount": 60 }
+    ],
     "goldReward": { "min": 120, "max": 180 },
     "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
     "color": 8421504
@@ -125,6 +132,9 @@
       "specialEffect": "double"
     },
     "attackCooldown": 1800,
+    "behaviors": [
+      { "type": "enrage", "hpThreshold": 0.3, "attackSpeedMultiplier": 2.0 }
+    ],
     "goldReward": { "min": 100, "max": 160 },
     "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
     "color": 11141120
@@ -142,8 +152,53 @@
       "specialEffect": "debuff"
     },
     "attackCooldown": 2200,
+    "behaviors": [
+      { "type": "summon", "summonId": "mage", "interval": 15000 }
+    ],
     "goldReward": { "min": 110, "max": 170 },
     "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
     "color": 6684927
+  },
+  {
+    "id": "boss_dragon",
+    "name": "Ancient Dragon",
+    "type": "boss",
+    "bossType": "dragon",
+    "baseHP": 1100,
+    "baseDefense": 20,
+    "attack": {
+      "damage": 28,
+      "pattern": "scaling",
+      "specialEffect": "double"
+    },
+    "attackCooldown": 2200,
+    "behaviors": [
+      { "type": "enrage", "hpThreshold": 0.25, "attackSpeedMultiplier": 1.8 },
+      { "type": "multi_hit", "hitCount": 2, "damageMultiplier": 0.6 }
+    ],
+    "goldReward": { "min": 140, "max": 220 },
+    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 5, "max": 10 } },
+    "color": 16744448
+  },
+  {
+    "id": "boss_hydra",
+    "name": "Swamp Hydra",
+    "type": "boss",
+    "bossType": "hydra",
+    "baseHP": 900,
+    "baseDefense": 10,
+    "attack": {
+      "damage": 18,
+      "pattern": "random",
+      "specialEffect": "debuff"
+    },
+    "attackCooldown": 1800,
+    "behaviors": [
+      { "type": "multi_hit", "hitCount": 3, "damageMultiplier": 0.45 },
+      { "type": "drain", "healPercent": 30 }
+    ],
+    "goldReward": { "min": 120, "max": 190 },
+    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 4, "max": 8 } },
+    "color": 3381555
   }
 ]

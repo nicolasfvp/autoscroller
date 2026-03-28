@@ -3,6 +3,7 @@
     "id": "mysterious_merchant",
     "title": "Mysterious Merchant",
     "description": "A hooded figure offers you a strange deal...",
+    "weight": 1.0,
     "choices": [
       {
         "text": "Trade 30 Gold for a random rare card",
@@ -29,6 +30,7 @@
     "id": "cursed_chest",
     "title": "Cursed Chest",
     "description": "A glowing chest radiates dark energy. Open it?",
+    "weight": 1.0,
     "choices": [
       {
         "text": "Open it (Gain relic + curse)",
@@ -47,6 +49,7 @@
     "id": "healing_fountain",
     "title": "Healing Fountain",
     "description": "A magical fountain offers healing, but at what cost?",
+    "weight": 1.0,
     "choices": [
       {
         "text": "Drink deeply (Heal 40 HP, lose 10 Max Stamina)",
@@ -71,6 +74,7 @@
     "id": "ancient_shrine",
     "title": "Ancient Shrine",
     "description": "An old shrine glows with power. Make an offering?",
+    "weight": 1.0,
     "choices": [
       {
         "text": "Offer 20 HP for a powerful relic",
@@ -96,6 +100,7 @@
     "id": "traveling_salesman",
     "title": "Traveling Salesman",
     "description": "A friendly merchant with questionable goods.",
+    "weight": 1.0,
     "choices": [
       {
         "text": "Buy healing potion (40 Gold, Heal 30 HP)",
@@ -115,6 +120,245 @@
       {
         "text": "Move on",
         "effects": []
+      }
+    ]
+  },
+  {
+    "id": "wandering_blacksmith",
+    "title": "Wandering Blacksmith",
+    "description": "A master smith offers rare services for the right materials.",
+    "weight": 1.5,
+    "choices": [
+      {
+        "text": "Pay 5 Iron for +10 Max HP this run",
+        "effects": [
+          { "type": "lose_material", "material": "iron", "value": 5 },
+          { "type": "gain_hp", "value": 10 }
+        ],
+        "requirement": { "minMaterial": { "iron": 5 } }
+      },
+      {
+        "text": "Pay 3 Crystal to upgrade a random card",
+        "effects": [
+          { "type": "lose_material", "material": "crystal", "value": 3 },
+          { "type": "upgrade_card", "value": "random" }
+        ],
+        "requirement": { "minMaterial": { "crystal": 3 } }
+      },
+      {
+        "text": "Decline",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "ancient_library",
+    "title": "Ancient Library",
+    "description": "Dusty tomes fill the shelves of this forgotten library.",
+    "weight": 1.0,
+    "choices": [
+      {
+        "text": "Pay 20 Gold to gain a random card",
+        "effects": [
+          { "type": "lose_gold", "value": 20 },
+          { "type": "add_card", "value": "random" }
+        ],
+        "requirement": { "minGold": 20 }
+      },
+      {
+        "text": "Spend 3 Herbs to heal 30 HP",
+        "effects": [
+          { "type": "lose_material", "material": "herbs", "value": 3 },
+          { "type": "gain_hp", "value": 30 }
+        ],
+        "requirement": { "minMaterial": { "herbs": 3 } }
+      },
+      {
+        "text": "Leave quietly",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "dark_ritual",
+    "title": "Dark Ritual",
+    "description": "A circle of dark runes pulses with forbidden power.",
+    "weight": 0.5,
+    "choices": [
+      {
+        "text": "Trade 15 HP for +50 Gold",
+        "effects": [
+          { "type": "lose_hp", "value": 15 },
+          { "type": "gain_gold", "value": 50 }
+        ],
+        "requirement": { "minHP": 16 }
+      },
+      {
+        "text": "Embrace the darkness (Gain relic + curse)",
+        "effects": [
+          { "type": "gain_relic", "value": "random" },
+          { "type": "add_curse", "value": "wound" }
+        ]
+      },
+      {
+        "text": "Walk away",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "merchants_gamble",
+    "title": "Merchant's Gamble",
+    "description": "A shady dealer offers a game of chance.",
+    "weight": 1.5,
+    "choices": [
+      {
+        "text": "Pay 50 Gold for a chance at a rare relic",
+        "effects": [
+          { "type": "lose_gold", "value": 50 },
+          { "type": "gain_relic", "value": "random" }
+        ],
+        "requirement": { "minGold": 50 }
+      },
+      {
+        "text": "Skip the gamble",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "abandoned_mine",
+    "title": "Abandoned Mine",
+    "description": "An old mine shaft leads into darkness. Sounds echo within.",
+    "weight": 1.0,
+    "choices": [
+      {
+        "text": "Explore the mine (Lose 5 HP, gain 8 Iron + 3 Crystal)",
+        "effects": [
+          { "type": "lose_hp", "value": 5 },
+          { "type": "gain_material", "material": "iron", "value": 8 },
+          { "type": "gain_material", "material": "crystal", "value": 3 }
+        ]
+      },
+      {
+        "text": "Leave it be",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "fairy_circle",
+    "title": "Fairy Circle",
+    "description": "A ring of mushrooms glows softly in a forest clearing.",
+    "weight": 0.8,
+    "choices": [
+      {
+        "text": "Step inside (Heal 15 HP, gain 5 Herbs)",
+        "effects": [
+          { "type": "gain_hp", "value": 15 },
+          { "type": "gain_material", "material": "herbs", "value": 5 }
+        ]
+      },
+      {
+        "text": "Sacrifice 10 HP to remove a curse",
+        "effects": [
+          { "type": "lose_hp", "value": 10 },
+          { "type": "remove_card", "value": "curse" }
+        ],
+        "requirement": { "minHP": 11 }
+      },
+      {
+        "text": "Leave",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "war_memorial",
+    "title": "War Memorial",
+    "description": "A monument to fallen warriors stands weathered but proud.",
+    "weight": 1.0,
+    "choices": [
+      {
+        "text": "Pay respects (+30 Gold)",
+        "effects": [
+          { "type": "gain_gold", "value": 30 }
+        ]
+      },
+      {
+        "text": "Search the grounds (Gain random uncommon card)",
+        "effects": [
+          { "type": "add_card", "value": "random_uncommon" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crystal_cave",
+    "title": "Crystal Cave",
+    "description": "Glittering crystals line the walls of a hidden cavern.",
+    "weight": 0.7,
+    "choices": [
+      {
+        "text": "Trade 5 Iron for 10 Crystal",
+        "effects": [
+          { "type": "lose_material", "material": "iron", "value": 5 },
+          { "type": "gain_material", "material": "crystal", "value": 10 }
+        ],
+        "requirement": { "minMaterial": { "iron": 5 } }
+      },
+      {
+        "text": "Mine the walls (Lose 10 HP, gain 5 Iron + 5 Stone)",
+        "effects": [
+          { "type": "lose_hp", "value": 10 },
+          { "type": "gain_material", "material": "iron", "value": 5 },
+          { "type": "gain_material", "material": "stone", "value": 5 }
+        ]
+      },
+      {
+        "text": "Leave",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "cursed_mirror",
+    "title": "Cursed Mirror",
+    "description": "A cracked mirror reflects a twisted version of yourself.",
+    "weight": 0.5,
+    "choices": [
+      {
+        "text": "Gaze into it (Gain random card + curse)",
+        "effects": [
+          { "type": "add_card", "value": "random" },
+          { "type": "add_curse", "value": "weakness" }
+        ]
+      },
+      {
+        "text": "Smash the mirror (+20 Gold)",
+        "effects": [
+          { "type": "gain_gold", "value": 20 }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hermits_hut",
+    "title": "Hermit's Hut",
+    "description": "A wise hermit offers you a choice of blessings.",
+    "weight": 1.2,
+    "choices": [
+      {
+        "text": "Ask for knowledge (Upgrade a random card)",
+        "effects": [
+          { "type": "upgrade_card", "value": "random" }
+        ]
+      },
+      {
+        "text": "Ask for healing (Heal 25 HP)",
+        "effects": [
+          { "type": "gain_hp", "value": 25 }
+        ]
       }
     ]
   }

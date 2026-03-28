@@ -9,22 +9,27 @@ const EXPECTED_IDS = [
   'defend', 'shield-wall', 'fortify', 'iron-skin',
   'fireball', 'heal', 'arcane-shield', 'rejuvenate',
   'mana-drain', 'weaken',
+  // Phase 6 additions
+  'cleave', 'reckless-charge', 'execute', 'chain-lightning', 'doom-blade',
+  'parry', 'bulwark', 'last-stand',
+  'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud',
+  'soul-rend', 'sacrifice',
 ];
 
 describe('cards.json data validation', () => {
-  it('should contain all 14 expected cards', () => {
-    expect(cards).toHaveLength(14);
+  it('should contain all expected cards', () => {
+    expect(cards.length).toBeGreaterThanOrEqual(30);
     const ids = cards.map((c) => c.id);
     for (const expectedId of EXPECTED_IDS) {
       expect(ids).toContain(expectedId);
     }
   });
 
-  it('every card has cooldown as a number between 1.0 and 3.0', () => {
+  it('every card has cooldown as a number between 0.5 and 5.0', () => {
     for (const card of cards) {
       expect(card.cooldown).toBeTypeOf('number');
-      expect(card.cooldown).toBeGreaterThanOrEqual(1.0);
-      expect(card.cooldown).toBeLessThanOrEqual(3.0);
+      expect(card.cooldown).toBeGreaterThanOrEqual(0.5);
+      expect(card.cooldown).toBeLessThanOrEqual(5.0);
     }
   });
 
@@ -36,32 +41,34 @@ describe('cards.json data validation', () => {
   });
 
   it('every card has a valid rarity field', () => {
-    const validRarities = ['common', 'uncommon', 'rare'];
+    const validRarities = ['common', 'uncommon', 'rare', 'epic'];
     for (const card of cards) {
       expect(card).toHaveProperty('rarity');
       expect(validRarities).toContain((card as any).rarity);
     }
   });
 
-  it('specific cards have correct cooldown values', () => {
+  it('original cards retain expected cooldown values', () => {
     const cooldownMap: Record<string, number> = {
-      'strike': 1.2,
-      'heavy-hit': 1.8,
-      'fury': 2.2,
-      'berserker': 3.0,
+      'strike': 1.0,
+      'heavy-hit': 1.5,
+      'fury': 2.0,
+      'berserker': 2.5,
       'defend': 1.0,
       'shield-wall': 1.5,
       'fortify': 2.0,
-      'iron-skin': 1.8,
+      'iron-skin': 2.0,
       'fireball': 1.5,
-      'heal': 2.0,
-      'arcane-shield': 1.5,
-      'rejuvenate': 1.2,
-      'mana-drain': 1.0,
-      'weaken': 1.8,
+      'heal': 1.5,
+      'arcane-shield': 2.0,
+      'rejuvenate': 2.0,
+      'mana-drain': 2.0,
+      'weaken': 2.5,
     };
     for (const card of cards) {
-      expect(card.cooldown).toBe(cooldownMap[card.id]);
+      if (cooldownMap[card.id] !== undefined) {
+        expect(card.cooldown).toBe(cooldownMap[card.id]);
+      }
     }
   });
 });

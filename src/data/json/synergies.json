@@ -37,5 +37,35 @@
     "cardB": "strike",
     "bonus": { "type": "damage", "value": 25, "target": "enemy" },
     "displayName": "Iron Fist!"
+  },
+  {
+    "cardA": "cleave",
+    "cardB": "strike",
+    "bonus": { "type": "damage", "value": 20, "target": "enemy" },
+    "displayName": "Momentum!"
+  },
+  {
+    "cardA": "parry",
+    "cardB": "counter-strike",
+    "bonus": { "type": "damage", "value": 30, "target": "enemy" },
+    "displayName": "Perfect Counter!"
+  },
+  {
+    "cardA": "meditate",
+    "cardB": "fireball",
+    "bonus": { "type": "damage", "value": 25, "target": "enemy" },
+    "displayName": "Focused Flame!"
+  },
+  {
+    "cardA": "vampiric-touch",
+    "cardB": "heal",
+    "bonus": { "type": "heal", "value": 8, "target": "self" },
+    "displayName": "Life Mastery!"
+  },
+  {
+    "cardA": "defend",
+    "cardB": "defend",
+    "bonus": { "type": "armor", "value": 10, "target": "self" },
+    "displayName": "Fortress!"
   }
 ]
