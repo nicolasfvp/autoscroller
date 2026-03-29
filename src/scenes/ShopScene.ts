@@ -129,24 +129,19 @@ export class ShopScene extends Scene {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary, fontFamily,
     });
 
-    const reorderCost = ShopSystem.getReorderPrice(0);
-    const reorderBtn = this.add.text(320, 270, `Pay ${reorderCost} Gold`, {
+    const reorderBtn = this.add.text(320, 270, 'Open Deck Editor', {
       fontSize: '14px', color: COLORS.accent, fontFamily,
     }).setInteractive({ useHandCursor: true });
 
+    reorderBtn.on('pointerover', () => reorderBtn.setColor(COLORS.accentHover));
+    reorderBtn.on('pointerout', () => reorderBtn.setColor(COLORS.accent));
     reorderBtn.on('pointerdown', () => {
-      const adapter = this.getRunAdapter();
-      if (ShopSystem.startReorderSession(adapter)) {
-        this.syncFromAdapter(adapter);
+      this.scene.pause();
+      this.scene.launch('ShopDeckEditor');
+      // When ShopDeckEditor stops, ShopScene resumes — refresh balances
+      this.events.once('resume', () => {
         this.refreshBalances();
-        reorderBtn.setText('Reordering...');
-        reorderBtn.removeInteractive();
-        // Simplified reorder: swap first two cards as demo
-        if (adapter.deck.order.length >= 2) {
-          ShopSystem.reorderCard(adapter, 0, 1);
-          this.syncFromAdapter(adapter);
-        }
-      }
+      });
     });
   }
 
