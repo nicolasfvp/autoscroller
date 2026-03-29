@@ -282,8 +282,16 @@ export class GameScene extends Scene {
       const tileSlot = tiles[tileDataIndex];
       if (!tileSlot) continue;
 
+      // Get neighbors for Wang tile edge matching
+      const leftIndex = ((tileDataIndex - 1) + loopLength) % loopLength;
+      const rightIndex = (tileDataIndex + 1) % loopLength;
+      const neighbors = {
+        left: tiles[leftIndex],
+        right: tiles[rightIndex],
+      };
+
       const worldX = gi * TILE_SIZE + 100; // +100 to match hero offset
-      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex);
+      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex, false, neighbors);
       tv.setDepth(10);
       this.tilePool.set(gi, tv);
     }
