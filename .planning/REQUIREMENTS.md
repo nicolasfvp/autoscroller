@@ -112,7 +112,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **ART-03**: 5 special tile types have distinct 64x64 pixel art icon sprites (shop, rest, event, treasure, boss)
 - [x] **ART-04**: Monster animation frames are composited into horizontal-strip spritesheets compatible with Phaser's spritesheet loader
 - [x] **ART-05**: Preloader loads all monster spritesheets and special tile sprites; TileVisual renders special tiles as sprites instead of text icons
-- [ ] **ART-06**: CombatScene renders enemies as animated Phaser Sprites (idle loop + attack animation) instead of colored rectangles
+- [x] **ART-06**: CombatScene renders enemies as animated Phaser Sprites (idle loop + attack animation) instead of colored rectangles
 
 ## v2 Requirements
 
