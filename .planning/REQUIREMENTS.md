@@ -107,9 +107,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Art / Visual Assets
 
-- [ ] **ART-01**: 6 enemy types have PixelLab-generated 64x64 pixel art characters (slime, goblin, orc, mage, elite_knight, boss_demon)
-- [ ] **ART-02**: Each enemy has idle (breathing-idle) and attack animation frames (minimum 3 frames per animation)
-- [ ] **ART-03**: 5 special tile types have distinct 64x64 pixel art icon sprites (shop, rest, event, treasure, boss)
+- [x] **ART-01**: 6 enemy types have PixelLab-generated 64x64 pixel art characters (slime, goblin, orc, mage, elite_knight, boss_demon)
+- [x] **ART-02**: Each enemy has idle (breathing-idle) and attack animation frames (minimum 3 frames per animation)
+- [x] **ART-03**: 5 special tile types have distinct 64x64 pixel art icon sprites (shop, rest, event, treasure, boss)
 - [ ] **ART-04**: Monster animation frames are composited into horizontal-strip spritesheets compatible with Phaser's spritesheet loader
 - [ ] **ART-05**: Preloader loads all monster spritesheets and special tile sprites; TileVisual renders special tiles as sprites instead of text icons
 - [ ] **ART-06**: CombatScene renders enemies as animated Phaser Sprites (idle loop + attack animation) instead of colored rectangles
