@@ -1,12 +1,12 @@
 {
   "character": {
-    "id": "68891540-71bb-4dd5-a234-b057e3a76442",
-    "name": "Mage Hero",
-    "prompt": "chibi female mage hero, big head with long purple hair, pointed wizard hat, flowing blue and purple robes, holding a glowing magic staff with crystal orb, fantasy RPG heroine",
+    "id": "877ee4db-6df8-40b0-9e15-48e26ce1788b",
+    "name": "Mage Adventurer",
+    "prompt": "A stunning female adventurer casting a spell. Cool fantasy dungeon scene. chubby drawing style (bigger head, smaller torso and limbs).",
     "size": { "width": 64, "height": 64 },
     "directions": 8,
-    "view": "side",
-    "created_at": "2026-03-30T04:11:00.000Z"
+    "view": "low top-down",
+    "created_at": "2026-03-30T04:21:00.000Z"
   },
   "frames": {
     "rotations": {
