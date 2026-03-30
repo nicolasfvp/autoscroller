@@ -71,11 +71,10 @@ export class GameOverScene extends Scene {
       fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
-    // New Run button
+    // New Run button — go to character select instead of directly creating a run
     createButton(this, 300, 420, 'New Run', async () => {
       await saveManager.clear();
-      setRun(createNewRun());
-      this.fadeToScene('CityHub');
+      this.fadeToScene('CharacterSelectScene');
     }, 'primary');
 
     // Main Menu button
