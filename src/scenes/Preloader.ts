@@ -34,6 +34,14 @@ export class Preloader extends Scene {
       this.load.spritesheet(`${id}_death`, `assets/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
     }
 
+    // Scene backgrounds (400x400, scaled to fill 800x600)
+    this.load.image('bg_city', 'assets/backgrounds/bg_city.png');
+    this.load.image('bg_run', 'assets/backgrounds/bg_run.png');
+    this.load.image('bg_battle_basic', 'assets/backgrounds/bg_battle_basic.png');
+    this.load.image('bg_battle_forest', 'assets/backgrounds/bg_battle_forest.png');
+    this.load.image('bg_battle_graveyard', 'assets/backgrounds/bg_battle_graveyard.png');
+    this.load.image('bg_battle_swamp', 'assets/backgrounds/bg_battle_swamp.png');
+
     // Special tile icons (64x64)
     this.load.image('tile_shop', 'assets/tiles/tile_shop.png');
     this.load.image('tile_rest', 'assets/tiles/tile_rest.png');

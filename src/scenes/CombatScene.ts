@@ -56,7 +56,7 @@ export class CombatScene extends Scene {
     });
   }
 
-  create(data: { enemyId: string }): void {
+  create(data: { enemyId: string; terrain?: string }): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
@@ -69,8 +69,13 @@ export class CombatScene extends Scene {
       this.gameSpeed = metaState.gameSpeed ?? 1;
     });
 
-    // Background
+    // Background — terrain-based battle background
     this.cameras.main.setBackgroundColor(COLORS.background);
+    const terrain = data.terrain ?? 'basic';
+    const battleBgKey = `bg_battle_${terrain}`;
+    if (this.textures.exists(battleBgKey)) {
+      this.add.image(400, 300, battleBgKey).setDisplaySize(800, 600).setDepth(0);
+    }
 
     // Look up and scale enemy
     const enemyDef = getEnemyById(data.enemyId);

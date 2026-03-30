@@ -71,6 +71,9 @@ export class CityHubScene extends Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
+    if (this.textures.exists('bg_city')) {
+      this.add.image(400, 300, 'bg_city').setDisplaySize(800, 600).setDepth(-10);
+    }
 
     const fontFamily = FONTS.family;
 

@@ -60,6 +60,10 @@ export class GameScene extends Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
+    if (this.textures.exists('bg_run')) {
+      const bgImg = this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10);
+      bgImg.setDisplaySize(800, 600);
+    }
 
     // Build LoopRunState adapter from global RunState
     this.loopRunState = {
@@ -210,7 +214,7 @@ export class GameScene extends Scene {
     switch (event) {
       case 'combat-start': {
         this.scene.pause();
-        this.scene.launch('CombatScene', { enemyId: data.enemyId, isBoss: data.isBoss });
+        this.scene.launch('CombatScene', { enemyId: data.enemyId, isBoss: data.isBoss, terrain: data.terrain ?? 'basic' });
         break;
       }
       case 'open-scene': {
