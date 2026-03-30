@@ -24,13 +24,14 @@ export class Preloader extends Scene {
     this.load.spritesheet('hero_walk', 'assets/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hero_idle', 'assets/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hero_attack', 'assets/hero/spritesheets/hero_attack.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_defend', 'assets/hero/spritesheets/hero_defend.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_death', 'assets/hero/spritesheets/hero_death.png', { frameWidth: 64, frameHeight: 64 });
 
     // Monster spritesheets (64x64 per frame, horizontal strips)
     const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
     for (const id of monsterIds) {
       this.load.spritesheet(`${id}_idle`, `assets/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
       this.load.spritesheet(`${id}_attack`, `assets/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_death`, `assets/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
     }
 
     // Special tile icons (64x64)

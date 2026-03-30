@@ -18,7 +18,7 @@ import { COLORS, LAYOUT } from '../ui/StyleConstants';
 export class GameScene extends Scene {
   private loopRunner!: LoopRunner;
   private loopRunState!: LoopRunState;
-  private heroSprite!: Phaser.GameObjects.Rectangle;
+  private heroSprite!: Phaser.GameObjects.Sprite;
   private hud!: LoopHUD;
   private celebration = new LoopCelebration();
 
@@ -88,9 +88,18 @@ export class GameScene extends Scene {
     this.worldOffset = 0;
     this.celebrationPlaying = false;
 
-    // Hero sprite: simple colored rectangle
-    this.heroSprite = this.add.rectangle(100, 410, 32, 48, 0x00aaff);
+    // Hero animations
+    if (!this.anims.exists('hero_walk')) {
+      this.anims.create({ key: 'hero_walk', frames: this.anims.generateFrameNumbers('hero_walk', {}), frameRate: 8, repeat: -1 });
+      this.anims.create({ key: 'hero_idle', frames: this.anims.generateFrameNumbers('hero_idle', {}), frameRate: 4, repeat: -1 });
+      this.anims.create({ key: 'hero_attack', frames: this.anims.generateFrameNumbers('hero_attack', {}), frameRate: 10, repeat: 0 });
+      this.anims.create({ key: 'hero_death', frames: this.anims.generateFrameNumbers('hero_death', {}), frameRate: 8, repeat: 0 });
+    }
+
+    // Hero sprite
+    this.heroSprite = this.add.sprite(100, 410, 'hero_idle');
     this.heroSprite.setDepth(50);
+    this.heroSprite.play('hero_walk');
 
     // Camera follow
     this.cameras.main.startFollow(this.heroSprite, true, 0.1, 0.1);
@@ -282,16 +291,8 @@ export class GameScene extends Scene {
       const tileSlot = tiles[tileDataIndex];
       if (!tileSlot) continue;
 
-      // Get neighbors for Wang tile edge matching
-      const leftIndex = ((tileDataIndex - 1) + loopLength) % loopLength;
-      const rightIndex = (tileDataIndex + 1) % loopLength;
-      const neighbors = {
-        left: tiles[leftIndex],
-        right: tiles[rightIndex],
-      };
-
       const worldX = gi * TILE_SIZE + 100; // +100 to match hero offset
-      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex, false, neighbors);
+      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex);
       tv.setDepth(10);
       this.tilePool.set(gi, tv);
     }

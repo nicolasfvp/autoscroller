@@ -27,6 +27,7 @@ export class CombatScene extends Scene {
   private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
   private enemyIdleKey = '';
   private enemyAttackKey = '';
+  private enemyDeathKey = '';
   private heroLabel!: Phaser.GameObjects.Text;
   private enemyLabel!: Phaser.GameObjects.Text;
 
@@ -94,18 +95,24 @@ export class CombatScene extends Scene {
     this.engine = new CombatEngine(combatState);
 
     // ── Hero & Enemy visual representations ──────────────
-    // Hero (left side) - animated sprite
-    this.heroSprite = this.add.sprite(200, 350, 'hero_idle').setDepth(10);
+    // Hero (left side) - animated sprite at 4x scale (64x64 -> 256x256)
+    this.heroSprite = this.add.sprite(200, 350, 'hero_idle').setDepth(10).setScale(4);
     this.heroSprite.play('hero_idle');
-    this.heroLabel = this.add.text(200, 300, 'Hero', {
+    // Create hero_death animation lazily
+    if (!this.anims.exists('hero_death') && this.textures.exists('hero_death')) {
+      this.anims.create({ key: 'hero_death', frames: this.anims.generateFrameNumbers('hero_death', {}), frameRate: 8, repeat: 0 });
+    }
+    this.heroLabel = this.add.text(200, 200, 'Hero', {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
 
     // Enemy (right side) - animated sprite or colored square fallback
     this.enemyIdleKey = `${enemyDef.id}_idle`;
     this.enemyAttackKey = `${enemyDef.id}_attack`;
+    this.enemyDeathKey = `${enemyDef.id}_death`;
     const idleKey = this.enemyIdleKey;
     const attackKey = this.enemyAttackKey;
+    const deathKey = this.enemyDeathKey;
 
     if (this.textures.exists(idleKey)) {
       if (!this.anims.exists(idleKey)) {
@@ -114,7 +121,10 @@ export class CombatScene extends Scene {
       if (!this.anims.exists(attackKey) && this.textures.exists(attackKey)) {
         this.anims.create({ key: attackKey, frames: this.anims.generateFrameNumbers(attackKey, {}), frameRate: 10, repeat: 0 });
       }
-      this.enemySprite = this.add.sprite(550, 350, idleKey).setDepth(10);
+      if (!this.anims.exists(deathKey) && this.textures.exists(deathKey)) {
+        this.anims.create({ key: deathKey, frames: this.anims.generateFrameNumbers(deathKey, {}), frameRate: 8, repeat: 0 });
+      }
+      this.enemySprite = this.add.sprite(550, 350, idleKey).setDepth(10).setScale(4);
       (this.enemySprite as Phaser.GameObjects.Sprite).play(idleKey);
     } else {
       // Fallback: colored rectangle when sprite assets are missing
@@ -194,13 +204,11 @@ export class CombatScene extends Scene {
       // Floating damage number on hero side
       this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
       this.combatEffects.screenShake(3, 150);
-      // Flash hero red briefly and play defend animation
+      // Flash hero red briefly on hit (no defend animation; return to idle after flash)
       this.heroSprite.setTint(0xff0000);
-      this.heroSprite.play('hero_defend');
-      this.heroSprite.once('animationcomplete', () => {
+      this.time.delayedCall(300, () => {
         if (this.heroSprite) {
           this.heroSprite.clearTint();
-          this.heroSprite.play('hero_idle');
         }
       });
       // Play enemy attack animation
@@ -219,13 +227,26 @@ export class CombatScene extends Scene {
       const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
       const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
 
+      // Play death animation for the losing side
+      if (eventData.result === 'victory') {
+        // Enemy dies - play enemy death animation
+        if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyDeathKey)) {
+          this.enemySprite.play(this.enemyDeathKey);
+        }
+      } else {
+        // Hero dies - play hero death animation
+        if (this.anims.exists('hero_death')) {
+          this.heroSprite.play('hero_death');
+        }
+      }
+
       const displayText = this.add.text(400, 300, resultText, {
         fontSize: '32px',
         fontStyle: 'bold',
         color: resultColor,
       }).setOrigin(0.5).setDepth(600);
 
-      // Hold 1s then transition
+      // Hold 1s then transition (enough time for death anim at 8fps with 7 frames = ~875ms)
       this.time.delayedCall(1000, () => {
         displayText.destroy();
         const currentRun = getRun();
