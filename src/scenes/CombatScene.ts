@@ -23,8 +23,8 @@ export class CombatScene extends Scene {
   private combatEffects!: CombatEffects;
 
   // Visual representations
-  private heroSprite!: Phaser.GameObjects.Rectangle;
-  private enemySprite!: Phaser.GameObjects.Rectangle;
+  private heroSprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
+  private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
   private heroLabel!: Phaser.GameObjects.Text;
   private enemyLabel!: Phaser.GameObjects.Text;
 
@@ -92,15 +92,20 @@ export class CombatScene extends Scene {
     this.engine = new CombatEngine(combatState);
 
     // ── Hero & Enemy visual representations ──────────────
-    // Hero (left side) - blue square with label
-    this.heroSprite = this.add.rectangle(200, 350, 64, 64, 0x4488ff).setDepth(10);
+    // Hero (left side) - Using knight idle animation/sprite
+    this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
     this.heroLabel = this.add.text(200, 300, 'Hero', {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
 
-    // Enemy (right side) - colored square with name
+    // Enemy (right side) - Check if spriteKey is available, else use fallback
     const enemyColor = enemyDef.color ?? 0xff0000;
-    this.enemySprite = this.add.rectangle(550, 350, 64, 64, enemyColor).setDepth(10);
+    const spriteKey = (enemyDef as any).spriteKey;
+    if (spriteKey) {
+      this.enemySprite = this.add.sprite(550, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
+    } else {
+      this.enemySprite = this.add.rectangle(550, 350, 64, 64, enemyColor).setDepth(10);
+    }
     this.enemyLabel = this.add.text(550, 300, enemyDef.name, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
@@ -124,9 +129,16 @@ export class CombatScene extends Scene {
       // Flash enemy white on hit
       if (eventData.damage > 0) {
         this.combatEffects.floatingNumber(550, 320, eventData.damage, '#ffffff', '-');
-        this.enemySprite.setFillStyle(0xffffff);
+        if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) {
+          this.enemySprite.setFillStyle(0xffffff);
+        } else {
+          this.enemySprite.setTint(0xffffff);
+        }
         this.time.delayedCall(200, () => {
-          if (this.enemySprite) this.enemySprite.setFillStyle(enemyColor);
+          if (this.enemySprite) {
+            if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) this.enemySprite.setFillStyle(enemyColor);
+            else this.enemySprite.clearTint();
+          }
         });
       }
       // Update HUD and queue after a short delay for animation
@@ -163,9 +175,16 @@ export class CombatScene extends Scene {
       this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
       this.combatEffects.screenShake(3, 150);
       // Flash hero red briefly
-      this.heroSprite.setFillStyle(0xff0000);
+      if (this.heroSprite instanceof Phaser.GameObjects.Rectangle) {
+        this.heroSprite.setFillStyle(0xff0000);
+      } else {
+        this.heroSprite.setTint(0xff0000);
+      }
       this.time.delayedCall(200, () => {
-        if (this.heroSprite) this.heroSprite.setFillStyle(0x4488ff);
+        if (this.heroSprite) {
+          if (this.heroSprite instanceof Phaser.GameObjects.Rectangle) this.heroSprite.setFillStyle(0x4488ff);
+          else this.heroSprite.clearTint();
+        }
       });
     };
     eventBus.on('combat:enemy-attack', this.onEnemyAttack);

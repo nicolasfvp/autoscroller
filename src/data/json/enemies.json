@@ -10,9 +10,20 @@
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
-    "goldReward": { "min": 10, "max": 20 },
-    "materialReward": { "chance": 0.3, "bonusMaterial": "herbs", "bonusAmount": { "min": 1, "max": 2 } },
-    "color": 65280
+    "goldReward": {
+      "min": 10,
+      "max": 20
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "herbs",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 65280,
+    "spriteKey": "slime_sprite"
   },
   {
     "id": "goblin",
@@ -26,9 +37,20 @@
       "specialEffect": "double"
     },
     "attackCooldown": 1500,
-    "goldReward": { "min": 15, "max": 25 },
-    "materialReward": { "chance": 0.25, "bonusMaterial": "iron", "bonusAmount": { "min": 1, "max": 2 } },
-    "color": 9127187
+    "goldReward": {
+      "min": 15,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.25,
+      "bonusMaterial": "iron",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 9127187,
+    "spriteKey": "goblin_sprite"
   },
   {
     "id": "orc",
@@ -42,9 +64,20 @@
       "pattern": "fixed"
     },
     "attackCooldown": 3000,
-    "goldReward": { "min": 20, "max": 30 },
-    "materialReward": { "chance": 0.35, "bonusMaterial": "iron", "bonusAmount": { "min": 1, "max": 3 } },
-    "color": 5597999
+    "goldReward": {
+      "min": 20,
+      "max": 30
+    },
+    "materialReward": {
+      "chance": 0.35,
+      "bonusMaterial": "iron",
+      "bonusAmount": {
+        "min": 1,
+        "max": 3
+      }
+    },
+    "color": 5597999,
+    "spriteKey": "orc_sprite"
   },
   {
     "id": "mage",
@@ -58,8 +91,18 @@
       "specialEffect": "debuff"
     },
     "attackCooldown": 2000,
-    "goldReward": { "min": 25, "max": 35 },
-    "materialReward": { "chance": 0.3, "bonusMaterial": "crystal", "bonusAmount": { "min": 1, "max": 2 } },
+    "goldReward": {
+      "min": 25,
+      "max": 35
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "crystal",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
     "color": 9662683
   },
   {
@@ -74,9 +117,20 @@
       "pattern": "scaling"
     },
     "attackCooldown": 2000,
-    "goldReward": { "min": 50, "max": 80 },
-    "materialReward": { "chance": 0.4, "bonusMaterial": "essence", "bonusAmount": { "min": 1, "max": 2 } },
-    "color": 12632256
+    "goldReward": {
+      "min": 50,
+      "max": 80
+    },
+    "materialReward": {
+      "chance": 0.4,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 12632256,
+    "spriteKey": "judge_sprite"
   },
   {
     "id": "boss_demon",
@@ -93,11 +147,25 @@
     },
     "attackCooldown": 2500,
     "behaviors": [
-      { "type": "drain", "healPercent": 50 }
+      {
+        "type": "drain",
+        "healPercent": 50
+      }
     ],
-    "goldReward": { "min": 100, "max": 150 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
-    "color": 9109504
+    "goldReward": {
+      "min": 100,
+      "max": 150
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 3,
+        "max": 6
+      }
+    },
+    "color": 9109504,
+    "spriteKey": "dragon_sprite"
   },
   {
     "id": "boss_tank",
@@ -113,11 +181,26 @@
     },
     "attackCooldown": 3000,
     "behaviors": [
-      { "type": "shield", "interval": 10000, "shieldAmount": 60 }
+      {
+        "type": "shield",
+        "interval": 10000,
+        "shieldAmount": 60
+      }
     ],
-    "goldReward": { "min": 120, "max": 180 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
-    "color": 8421504
+    "goldReward": {
+      "min": 120,
+      "max": 180
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 3,
+        "max": 6
+      }
+    },
+    "color": 8421504,
+    "spriteKey": "snake_sprite"
   },
   {
     "id": "boss_berserker",
@@ -133,10 +216,24 @@
     },
     "attackCooldown": 1800,
     "behaviors": [
-      { "type": "enrage", "hpThreshold": 0.3, "attackSpeedMultiplier": 2.0 }
+      {
+        "type": "enrage",
+        "hpThreshold": 0.3,
+        "attackSpeedMultiplier": 2
+      }
     ],
-    "goldReward": { "min": 100, "max": 160 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
+    "goldReward": {
+      "min": 100,
+      "max": 160
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 3,
+        "max": 6
+      }
+    },
     "color": 11141120
   },
   {
@@ -153,10 +250,24 @@
     },
     "attackCooldown": 2200,
     "behaviors": [
-      { "type": "summon", "summonId": "mage", "interval": 15000 }
+      {
+        "type": "summon",
+        "summonId": "mage",
+        "interval": 15000
+      }
     ],
-    "goldReward": { "min": 110, "max": 170 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 3, "max": 6 } },
+    "goldReward": {
+      "min": 110,
+      "max": 170
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 3,
+        "max": 6
+      }
+    },
     "color": 6684927
   },
   {
@@ -173,11 +284,29 @@
     },
     "attackCooldown": 2200,
     "behaviors": [
-      { "type": "enrage", "hpThreshold": 0.25, "attackSpeedMultiplier": 1.8 },
-      { "type": "multi_hit", "hitCount": 2, "damageMultiplier": 0.6 }
+      {
+        "type": "enrage",
+        "hpThreshold": 0.25,
+        "attackSpeedMultiplier": 1.8
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
+      }
     ],
-    "goldReward": { "min": 140, "max": 220 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 5, "max": 10 } },
+    "goldReward": {
+      "min": 140,
+      "max": 220
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 5,
+        "max": 10
+      }
+    },
     "color": 16744448
   },
   {
@@ -194,11 +323,28 @@
     },
     "attackCooldown": 1800,
     "behaviors": [
-      { "type": "multi_hit", "hitCount": 3, "damageMultiplier": 0.45 },
-      { "type": "drain", "healPercent": 30 }
+      {
+        "type": "multi_hit",
+        "hitCount": 3,
+        "damageMultiplier": 0.45
+      },
+      {
+        "type": "drain",
+        "healPercent": 30
+      }
     ],
-    "goldReward": { "min": 120, "max": 190 },
-    "materialReward": { "chance": 1.0, "bonusMaterial": "essence", "bonusAmount": { "min": 4, "max": 8 } },
+    "goldReward": {
+      "min": 120,
+      "max": 190
+    },
+    "materialReward": {
+      "chance": 1,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 4,
+        "max": 8
+      }
+    },
     "color": 3381555
   }
 ]

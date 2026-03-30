@@ -19,6 +19,23 @@ export class Preloader extends Scene {
     this.load.image('bg_forest', 'assets/tiles/bg_forest.png');
     this.load.image('bg_graveyard', 'assets/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/tiles/bg_swamp.png');
+
+    // Carregando os monstros e herois em batch (IA gerado)
+    this.load.image('archer_preview', 'assets/sprites/archer_generated.png');
+    this.load.image('archer_reference', 'assets/sprites/archer.png');
+    
+    this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
+    this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
+    this.load.image('goblin_sprite', 'assets/sprites/goblin_generated.png');
+    this.load.image('dragon_sprite', 'assets/sprites/dragon_generated.png');
+    this.load.image('snake_sprite', 'assets/sprites/snake_generated.png');
+    this.load.image('judge_sprite', 'assets/sprites/judge_generated.png');
+
+    // Carregando a SpriteSheet do Cavaleiro (Idle)
+    this.load.spritesheet('knight_idle', 'assets/sprites/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png', {
+      frameWidth: 120,
+      frameHeight: 80
+    });
   }
 
   async create(): Promise<void> {
