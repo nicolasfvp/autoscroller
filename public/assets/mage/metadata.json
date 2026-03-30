@@ -1,0 +1,30 @@
+{
+  "character": {
+    "id": "68891540-71bb-4dd5-a234-b057e3a76442",
+    "name": "Mage Hero",
+    "prompt": "chibi female mage hero, big head with long purple hair, pointed wizard hat, flowing blue and purple robes, holding a glowing magic staff with crystal orb, fantasy RPG heroine",
+    "size": { "width": 64, "height": 64 },
+    "directions": 8,
+    "view": "side",
+    "created_at": "2026-03-30T04:11:00.000Z"
+  },
+  "frames": {
+    "rotations": {
+      "south-east": "rotations/south-east.png"
+    },
+    "animations": {
+      "breathing-idle": {
+        "south-east": ["animations/breathing-idle/south-east/frame_000.png", "animations/breathing-idle/south-east/frame_001.png", "animations/breathing-idle/south-east/frame_002.png", "animations/breathing-idle/south-east/frame_003.png"]
+      },
+      "walking": {
+        "south-east": ["animations/walking/south-east/frame_000.png", "animations/walking/south-east/frame_001.png", "animations/walking/south-east/frame_002.png", "animations/walking/south-east/frame_003.png", "animations/walking/south-east/frame_004.png", "animations/walking/south-east/frame_005.png"]
+      },
+      "fireball": {
+        "south-east": ["animations/fireball/south-east/frame_000.png", "animations/fireball/south-east/frame_001.png", "animations/fireball/south-east/frame_002.png", "animations/fireball/south-east/frame_003.png", "animations/fireball/south-east/frame_004.png", "animations/fireball/south-east/frame_005.png"]
+      },
+      "falling-back-death": {
+        "south-east": ["animations/falling-back-death/south-east/frame_000.png", "animations/falling-back-death/south-east/frame_001.png", "animations/falling-back-death/south-east/frame_002.png", "animations/falling-back-death/south-east/frame_003.png", "animations/falling-back-death/south-east/frame_004.png", "animations/falling-back-death/south-east/frame_005.png", "animations/falling-back-death/south-east/frame_006.png"]
+      }
+    }
+  }
+}

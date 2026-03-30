@@ -13,6 +13,17 @@ const heroAnimations = [
   { name: 'hero_death', src: 'animations/falling-back-death/east', baseDir: HERO_DIR, outDir: HERO_OUT_DIR },
 ];
 
+// --- Mage Hero config ---
+const MAGE_DIR = 'public/assets/mage';
+const MAGE_OUT_DIR = 'public/assets/mage/spritesheets';
+
+const mageAnimations = [
+  { name: 'mage_idle', src: 'animations/breathing-idle/south-east', baseDir: MAGE_DIR, outDir: MAGE_OUT_DIR },
+  { name: 'mage_walk', src: 'animations/walking/south-east', baseDir: MAGE_DIR, outDir: MAGE_OUT_DIR },
+  { name: 'mage_attack', src: 'animations/fireball/south-east', baseDir: MAGE_DIR, outDir: MAGE_OUT_DIR },
+  { name: 'mage_death', src: 'animations/falling-back-death/south-east', baseDir: MAGE_DIR, outDir: MAGE_OUT_DIR },
+];
+
 // --- Monster config ---
 const MONSTER_IDS = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
 
@@ -75,6 +86,11 @@ let skipped = 0;
 
 console.log('Building hero spritesheets...');
 for (const anim of heroAnimations) {
+  (await buildSpritesheet(anim)) ? built++ : skipped++;
+}
+
+console.log('Building mage hero spritesheets...');
+for (const anim of mageAnimations) {
   (await buildSpritesheet(anim)) ? built++ : skipped++;
 }
 
