@@ -8,11 +8,11 @@ export class Preloader extends Scene {
   }
 
   preload(): void {
-    // Ground tilesets (4x4 Wang tilesets, 32x32 per tile, 128x128 spritesheet)
-    this.load.spritesheet('tileset_basic', 'assets/tiles/tileset_path.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('tileset_forest', 'assets/tiles/tileset_forest.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('tileset_graveyard', 'assets/tiles/tileset_graveyard.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('tileset_swamp', 'assets/tiles/tileset_swamp.png', { frameWidth: 32, frameHeight: 32 });
+    // Ground tiles (64x64, seamless, extracted from tilesets)
+    this.load.image('tile_basic', 'assets/tiles/tile_basic.png');
+    this.load.image('tile_forest', 'assets/tiles/tile_forest.png');
+    this.load.image('tile_graveyard', 'assets/tiles/tile_graveyard.png');
+    this.load.image('tile_swamp', 'assets/tiles/tile_swamp.png');
 
     // Background objects (64x64, transparent)
     this.load.image('bg_basic', 'assets/tiles/bg_path.png');
@@ -36,6 +36,41 @@ export class Preloader extends Scene {
       frameWidth: 120,
       frameHeight: 80
     });
+
+    // Hero spritesheets (64x64 per frame, horizontal strips)
+    this.load.spritesheet('hero_walk', 'assets/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_idle', 'assets/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_attack', 'assets/hero/spritesheets/hero_attack.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_death', 'assets/hero/spritesheets/hero_death.png', { frameWidth: 64, frameHeight: 64 });
+
+    // Mage hero spritesheets (64x64 per frame, horizontal strips)
+    this.load.spritesheet('mage_walk', 'assets/mage/spritesheets/mage_walk.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_idle', 'assets/mage/spritesheets/mage_idle.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_attack', 'assets/mage/spritesheets/mage_attack.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_death', 'assets/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
+
+    // Monster spritesheets (64x64 per frame, horizontal strips)
+    const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
+    for (const id of monsterIds) {
+      this.load.spritesheet(`${id}_idle`, `assets/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_attack`, `assets/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_death`, `assets/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
+    }
+
+    // Scene backgrounds (400x400, scaled to fill 800x600)
+    this.load.image('bg_city', 'assets/backgrounds/bg_city.png');
+    this.load.image('bg_run', 'assets/backgrounds/bg_run.png');
+    this.load.image('bg_battle_basic', 'assets/backgrounds/bg_battle_basic.png');
+    this.load.image('bg_battle_forest', 'assets/backgrounds/bg_battle_forest.png');
+    this.load.image('bg_battle_graveyard', 'assets/backgrounds/bg_battle_graveyard.png');
+    this.load.image('bg_battle_swamp', 'assets/backgrounds/bg_battle_swamp.png');
+
+    // Special tile icons (64x64)
+    this.load.image('tile_shop', 'assets/tiles/tile_shop.png');
+    this.load.image('tile_rest', 'assets/tiles/tile_rest.png');
+    this.load.image('tile_event', 'assets/tiles/tile_event.png');
+    this.load.image('tile_treasure', 'assets/tiles/tile_treasure.png');
+    this.load.image('tile_boss', 'assets/tiles/tile_boss.png');
   }
 
   async create(): Promise<void> {

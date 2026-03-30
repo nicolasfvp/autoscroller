@@ -108,9 +108,7 @@ export class MainMenu extends Scene {
 
   private async startNewRun(): Promise<void> {
     await saveManager.clear();
-    setRun(createNewRun());
-    await saveManager.save(getRun());
-    this.fadeToScene('TutorialScene');
+    this.fadeToScene('CharacterSelectScene');
   }
 
   private cleanup(): void {

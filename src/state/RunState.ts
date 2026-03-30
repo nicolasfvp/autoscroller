@@ -3,7 +3,7 @@
 // Fully JSON-serializable: no Map, no class instances, no functions.
 
 import { nanoid } from 'nanoid';
-import { WARRIOR_STARTER_DECK } from '../systems/hero/WarriorClass';
+import { getClassDef } from '../systems/hero/ClassRegistry';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -80,25 +80,28 @@ export interface RunState {
 
 // ── Factory ─────────────────────────────────────────────────
 
-export function createNewRun(generation: number = 1): RunState {
+export function createNewRun(generation: number = 1, className: string = 'warrior'): RunState {
+  const classDef = getClassDef(className);
+  const stats = classDef.baseStats;
   return {
     runId: nanoid(),
     generation,
     startedAt: Date.now(),
     hero: {
-      maxHP: 100,
-      currentHP: 100,
-      maxStamina: 50,
-      currentStamina: 50,
-      maxMana: 30,
-      currentMana: 30,
+      maxHP: stats.maxHP,
+      currentHP: stats.maxHP,
+      maxStamina: stats.maxStamina,
+      currentStamina: stats.maxStamina,
+      maxMana: stats.maxMana,
+      currentMana: stats.maxMana,
       currentDefense: 0,
-      strength: 1,
-      defenseMultiplier: 1,
+      strength: stats.strength,
+      defenseMultiplier: stats.defenseMultiplier,
       moveSpeed: 2,
+      className: stats.className,
     },
     deck: {
-      active: [...WARRIOR_STARTER_DECK],
+      active: [...classDef.starterDeck],
       inventory: {},
       upgradedCards: [],
     },

@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { MetaState } from '../state/MetaState';
 import { SeededRNG } from '../systems/SeededRNG';
-import { createNewRun, setRun } from '../state/RunState';
+import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 
 export class TavernPanelScene extends Scene {
@@ -78,8 +78,9 @@ export class TavernPanelScene extends Scene {
       const seedValue = this.seedInputValue.trim() || undefined;
       const rng = new SeededRNG(seedValue);
 
-      // Create a new run and set it active
-      const run = createNewRun();
+      // Create a new run preserving the chosen class
+      const chosenClass = hasActiveRun() ? (getRun().hero.className ?? 'warrior') : 'warrior';
+      const run = createNewRun(1, chosenClass);
       setRun(run);
 
       // Stop this overlay and CityHub, start GameScene

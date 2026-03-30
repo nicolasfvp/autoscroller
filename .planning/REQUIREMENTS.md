@@ -105,6 +105,15 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **PLSH-01**: Death screen with comprehensive run statistics (loops completed, damage dealt, cards played, cause of death)
 
+### Art / Visual Assets
+
+- [x] **ART-01**: 6 enemy types have PixelLab-generated 64x64 pixel art characters (slime, goblin, orc, mage, elite_knight, boss_demon)
+- [x] **ART-02**: Each enemy has idle (breathing-idle) and attack animation frames (minimum 3 frames per animation)
+- [x] **ART-03**: 5 special tile types have distinct 64x64 pixel art icon sprites (shop, rest, event, treasure, boss)
+- [x] **ART-04**: Monster animation frames are composited into horizontal-strip spritesheets compatible with Phaser's spritesheet loader
+- [x] **ART-05**: Preloader loads all monster spritesheets and special tile sprites; TileVisual renders special tiles as sprites instead of text icons
+- [x] **ART-06**: CombatScene renders enemies as animated Phaser Sprites (idle loop + attack animation) instead of colored rectangles
+
 ## v2 Requirements
 
 ### Multiplayer
@@ -225,12 +234,18 @@ Updated during roadmap creation.
 | CONT-04 | Phase 4 | Complete |
 | PERS-02 | Phase 4 | Complete |
 | PERS-03 | Phase 4 | Complete |
+| ART-01 | Phase 8 | Planned |
+| ART-02 | Phase 8 | Planned |
+| ART-03 | Phase 8 | Planned |
+| ART-04 | Phase 8 | Planned |
+| ART-05 | Phase 8 | Planned |
+| ART-06 | Phase 8 | Planned |
 
 **Coverage:**
-- v1 requirements: 62 total
-- Mapped to phases: 62
+- v1 requirements: 68 total
+- Mapped to phases: 68
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after roadmap creation*
+*Last updated: 2026-03-29 after Phase 8 ART requirements added*

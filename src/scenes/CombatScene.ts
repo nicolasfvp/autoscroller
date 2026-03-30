@@ -15,6 +15,7 @@ import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
 import { scaleEnemy } from '../data/EnemyDefinitions';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
+import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -23,8 +24,11 @@ export class CombatScene extends Scene {
   private combatEffects!: CombatEffects;
 
   // Visual representations
-  private heroSprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
+  private heroSprite!: Phaser.GameObjects.Sprite;
   private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
+  private enemyIdleKey = '';
+  private enemyAttackKey = '';
+  private enemyDeathKey = '';
   private heroLabel!: Phaser.GameObjects.Text;
   private enemyLabel!: Phaser.GameObjects.Text;
 
@@ -53,7 +57,7 @@ export class CombatScene extends Scene {
     });
   }
 
-  create(data: { enemyId: string }): void {
+  create(data: { enemyId: string; terrain?: string }): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
@@ -66,8 +70,13 @@ export class CombatScene extends Scene {
       this.gameSpeed = metaState.gameSpeed ?? 1;
     });
 
-    // Background
+    // Background — terrain-based battle background
     this.cameras.main.setBackgroundColor(COLORS.background);
+    const terrain = data.terrain ?? 'basic';
+    const battleBgKey = `bg_battle_${terrain}`;
+    if (this.textures.exists(battleBgKey)) {
+      this.add.image(400, 300, battleBgKey).setDisplaySize(800, 600).setDepth(0);
+    }
 
     // Look up and scale enemy
     const enemyDef = getEnemyById(data.enemyId);
@@ -92,18 +101,60 @@ export class CombatScene extends Scene {
     this.engine = new CombatEngine(combatState);
 
     // ── Hero & Enemy visual representations ──────────────
-    // Hero (left side) - Using knight idle animation/sprite
-    this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
-    this.heroLabel = this.add.text(200, 300, 'Hero', {
+    // Hero (left side) - animated sprite at 4x scale (64x64 -> 256x256)
+    const sp = getSpritePrefix(run.hero.className ?? 'warrior');
+    const heroIdleKey = `${sp}_idle`;
+    const heroAttackKey = `${sp}_attack`;
+    const heroDeathKey = `${sp}_death`;
+    if (!this.anims.exists(heroIdleKey) && this.textures.exists(heroIdleKey)) {
+      this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
+    }
+    if (!this.anims.exists(heroAttackKey) && this.textures.exists(heroAttackKey)) {
+      this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
+    }
+    if (!this.anims.exists(heroDeathKey) && this.textures.exists(heroDeathKey)) {
+      this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
+    }
+    
+    // Check if texture exists, else fallback to knight_idle
+    if (this.textures.exists(heroIdleKey)) {
+      this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
+      this.heroSprite.play(heroIdleKey);
+    } else {
+      this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
+    }
+    
+    this.heroLabel = this.add.text(200, 200, 'Hero', {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
 
-    // Enemy (right side) - Check if spriteKey is available, else use fallback
-    const enemyColor = enemyDef.color ?? 0xff0000;
+    // Enemy (right side) - animated sprite or colored square fallback
+    this.enemyIdleKey = `${enemyDef.id}_idle`;
+    this.enemyAttackKey = `${enemyDef.id}_attack`;
+    this.enemyDeathKey = `${enemyDef.id}_death`;
+    const idleKey = this.enemyIdleKey;
+    const attackKey = this.enemyAttackKey;
+    const deathKey = this.enemyDeathKey;
+
     const spriteKey = (enemyDef as any).spriteKey;
-    if (spriteKey) {
+    const enemyColor = enemyDef.color ?? 0xff0000;
+
+    if (this.textures.exists(idleKey)) {
+      if (!this.anims.exists(idleKey)) {
+        this.anims.create({ key: idleKey, frames: this.anims.generateFrameNumbers(idleKey, {}), frameRate: 4, repeat: -1 });
+      }
+      if (!this.anims.exists(attackKey) && this.textures.exists(attackKey)) {
+        this.anims.create({ key: attackKey, frames: this.anims.generateFrameNumbers(attackKey, {}), frameRate: 10, repeat: 0 });
+      }
+      if (!this.anims.exists(deathKey) && this.textures.exists(deathKey)) {
+        this.anims.create({ key: deathKey, frames: this.anims.generateFrameNumbers(deathKey, {}), frameRate: 8, repeat: 0 });
+      }
+      this.enemySprite = this.add.sprite(550, 350, idleKey).setDepth(10).setScale(4);
+      (this.enemySprite as Phaser.GameObjects.Sprite).play(idleKey);
+    } else if (spriteKey && this.textures.exists(spriteKey)) {
       this.enemySprite = this.add.sprite(550, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
     } else {
+      // Fallback: colored rectangle when sprite assets are missing
       this.enemySprite = this.add.rectangle(550, 350, 64, 64, enemyColor).setDepth(10);
     }
     this.enemyLabel = this.add.text(550, 300, enemyDef.name, {
@@ -126,20 +177,31 @@ export class CombatScene extends Scene {
     // Subscribe to EventBus events
     this.onCardPlayed = (eventData) => {
       this.cardQueue.onCardPlayed(0);
-      // Flash enemy white on hit
+      // Play hero attack animation and flash enemy on hit
       if (eventData.damage > 0) {
-        this.combatEffects.floatingNumber(550, 320, eventData.damage, '#ffffff', '-');
-        if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) {
-          this.enemySprite.setFillStyle(0xffffff);
-        } else {
-          this.enemySprite.setTint(0xffffff);
+        // Play hero attack animation if possible
+        const sp = getSpritePrefix((getRun() as any).hero?.className ?? 'warrior');
+        const heroAttackKey = `${sp}_attack`;
+        const heroIdleKey = `${sp}_idle`;
+        if (this.anims.exists(heroAttackKey)) {
+          this.heroSprite.play(heroAttackKey);
+          this.heroSprite.once('animationcomplete', () => {
+             if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey);
+          });
         }
-        this.time.delayedCall(200, () => {
-          if (this.enemySprite) {
-            if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) this.enemySprite.setFillStyle(enemyColor);
-            else this.enemySprite.clearTint();
-          }
-        });
+        this.combatEffects.floatingNumber(550, 320, eventData.damage, '#ffffff', '-');
+        if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
+          this.enemySprite.setTint(0xffffff);
+          this.time.delayedCall(200, () => {
+            if (this.enemySprite instanceof Phaser.GameObjects.Sprite) this.enemySprite.clearTint();
+          });
+        } else if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) {
+          this.enemySprite.setFillStyle(0xffffff);
+          const savedColor = enemyDef.color ?? 0xff0000;
+          this.time.delayedCall(200, () => {
+            if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) this.enemySprite.setFillStyle(savedColor);
+          });
+        }
       }
       // Update HUD and queue after a short delay for animation
       this.time.delayedCall(350, () => {
@@ -174,18 +236,22 @@ export class CombatScene extends Scene {
       // Floating damage number on hero side
       this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
       this.combatEffects.screenShake(3, 150);
-      // Flash hero red briefly
-      if (this.heroSprite instanceof Phaser.GameObjects.Rectangle) {
-        this.heroSprite.setFillStyle(0xff0000);
-      } else {
-        this.heroSprite.setTint(0xff0000);
-      }
-      this.time.delayedCall(200, () => {
+      // Flash hero red briefly on hit
+      this.heroSprite.setTint(0xff0000);
+      this.time.delayedCall(300, () => {
         if (this.heroSprite) {
-          if (this.heroSprite instanceof Phaser.GameObjects.Rectangle) this.heroSprite.setFillStyle(0x4488ff);
-          else this.heroSprite.clearTint();
+          this.heroSprite.clearTint();
         }
       });
+      // Play enemy attack animation
+      if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyAttackKey)) {
+        this.enemySprite.play(this.enemyAttackKey);
+        this.enemySprite.once('animationcomplete', () => {
+          if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyIdleKey)) {
+            this.enemySprite.play(this.enemyIdleKey);
+          }
+        });
+      }
     };
     eventBus.on('combat:enemy-attack', this.onEnemyAttack);
 
@@ -193,13 +259,26 @@ export class CombatScene extends Scene {
       const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
       const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
 
+      // Play death animation for the losing side
+      if (eventData.result === 'victory') {
+        // Enemy dies - play enemy death animation
+        if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyDeathKey)) {
+          this.enemySprite.play(this.enemyDeathKey);
+        }
+      } else {
+        // Hero dies - play hero death animation
+        if (this.anims.exists(heroDeathKey)) {
+          this.heroSprite.play(heroDeathKey);
+        }
+      }
+
       const displayText = this.add.text(400, 300, resultText, {
         fontSize: '32px',
         fontStyle: 'bold',
         color: resultColor,
       }).setOrigin(0.5).setDepth(600);
 
-      // Hold 1s then transition
+      // Hold 1s then transition (enough time for death anim at 8fps with 7 frames = ~875ms)
       this.time.delayedCall(1000, () => {
         displayText.destroy();
         const currentRun = getRun();

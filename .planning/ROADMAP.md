@@ -136,3 +136,15 @@ Plans:
 - [ ] 07-01-PLAN.md — StyleConstants + SoundDefinitions + AudioManager Web Audio rewrite + MetaState v3 migration (Wave 1)
 - [ ] 07-02-PLAN.md — Tutorial rewrite + SettingsScene expansion + game speed wiring + CMBT-05/PLSH-01 status updates (Wave 2)
 - [ ] 07-03-PLAN.md — Camera fade transitions + visual consistency pass across all ~25 scenes + human verification checkpoint (Wave 3)
+
+### Phase 8: Pixel Art Sprites - Monsters & Special Tiles
+
+**Goal:** Create all pixel art assets using PixelLab MCP tools: 6 monster characters with idle+attack animations, 5 special tile icon sprites. Build spritesheet pipeline for monsters. Replace colored rectangles in CombatScene with animated monster sprites and text icons in TileVisual with real tile art.
+**Requirements**: ART-01, ART-02, ART-03, ART-04, ART-05, ART-06
+**Depends on:** Phase 7
+**Plans:** 3 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Generate 6 monster characters + animations via PixelLab + 5 special tile sprites (Wave 1)
+- [ ] 08-02-PLAN.md — Build monster spritesheets + update Preloader + wire special tiles into TileVisual (Wave 2)
+- [ ] 08-03-PLAN.md — Wire monster sprites into CombatScene (replace rectangles) + visual verification checkpoint (Wave 3)

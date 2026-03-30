@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 07-03-PLAN.md
-last_updated: "2026-03-28T05:42:28.407Z"
+stopped_at: Completed 08-03-PLAN.md
+last_updated: "2026-03-29T13:43:10.578Z"
 progress:
-  total_phases: 7
-  completed_phases: 5
-  total_plans: 23
-  completed_plans: 21
+  total_phases: 8
+  completed_phases: 6
+  total_plans: 26
+  completed_plans: 24
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** Strategic deckbuilding where every card decision determines survival -- the player is an architect, not a fighter
-**Current focus:** Phase 07 — polish-release
+**Current focus:** Phase 08 — plan-for-the-creation-of-all-sprites-monsters-with-animations-and-all-terrains
 
 ## Current Position
 
-Phase: 07 (polish-release) — COMPLETE
-Plan: 3 of 3 (ALL COMPLETE)
+Phase: 08 (plan-for-the-creation-of-all-sprites-monsters-with-animations-and-all-terrains) — COMPLETE
+Plan: 3 of 3 (all complete)
 
 ## Performance Metrics
 
@@ -66,6 +66,9 @@ Plan: 3 of 3 (ALL COMPLETE)
 | Phase 07 P01 | 4min | 2 tasks | 8 files |
 | Phase 07 P02 | 5min | 3 tasks | 9 files |
 | Phase 07 P03 | 15min | 4 tasks | 25 files |
+| Phase 08 P01 | 44min | 2 tasks | 88 files |
+| Phase 08 P02 | 2min | 2 tasks | 15 files |
+| Phase 08 P03 | 1min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -149,6 +152,11 @@ Recent decisions affecting current work:
 - [Phase 07]: [Phase 07-03]: fadeToScene helper uses private transitioning flag to prevent double-transition race conditions
 - [Phase 07]: [Phase 07-03]: Boot/Preloader get fadeIn only; overlay scenes keep instant show/hide without camera fades
 - [Phase 07]: [Phase 07-03]: Game-mechanic-specific colors left as-is; only standard palette replaced with COLORS constants
+- [Phase 08-01]: 8-direction characters for south-east animation compatibility with hero pipeline
+- [Phase 08-01]: Template animations (breathing-idle, cross-punch, fireball, jumping-1) for cost-efficient generation
+- [Phase 08-01]: Tile icons batched as n_tiles=6 via create_tiles_pro (API requires specific counts)
+- [Phase 08]: Refactored buildSpritesheet to accept baseDir/outDir for hero/monster reuse
+- [Phase 08]: Union type Sprite | Rectangle with instanceof guards for type-safe fallback when sprite assets missing
 
 ### Pending Todos
 
@@ -159,6 +167,7 @@ None yet.
 - Phase 5 added: Balance & Economy Overhaul
 - Phase 6 added: Content Expansion
 - Phase 7 added: Polish & Release
+- Phase 8 added: plan for the creation of all sprites - monsters with animations and all terrains
 
 ### Blockers/Concerns
 
@@ -168,6 +177,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T05:35:00Z
-Stopped at: Completed 07-03-PLAN.md
+Last session: 2026-03-29T13:38:24.073Z
+Stopped at: Completed 08-03-PLAN.md
 Resume file: None

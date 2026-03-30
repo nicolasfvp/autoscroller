@@ -16,6 +16,7 @@ import { GameOverScene } from './scenes/GameOverScene'
 import { DeckCustomizationScene } from './scenes/DeckCustomizationScene'
 import { RelicViewerScene } from './scenes/RelicViewerScene'
 import { SelectionScene } from './scenes/SelectionScene'
+import { CharacterSelectScene } from './scenes/CharacterSelectScene'
 import { DeathScene } from './scenes/DeathScene'
 import { PostCombatScene } from './scenes/PostCombatScene'
 import { DeckViewScene } from './scenes/DeckViewScene'
@@ -64,6 +65,7 @@ const config: Phaser.Types.Core.GameConfig = {
         DeckCustomizationScene,
         RelicViewerScene,
         SelectionScene,
+        CharacterSelectScene,
         DeathScene,
         PostCombatScene,
         DeckViewScene,
