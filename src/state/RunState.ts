@@ -4,6 +4,7 @@
 
 import { nanoid } from 'nanoid';
 import { getClassDef } from '../systems/hero/ClassRegistry';
+import { SeededRNG } from '../systems/SeededRNG';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -33,6 +34,8 @@ export interface DeckState {
   inventory: Record<string, number>;
   /** Card IDs that have been upgraded (display as CardName+) */
   upgradedCards: string[];
+  /** Card IDs obtained from loot drops, waiting to be added to active deck */
+  droppedCards: string[];
 }
 
 export interface TileData {
@@ -76,6 +79,10 @@ export interface RunState {
   isInCombat: boolean;
   /** Current scene key (for restoring position on load) */
   currentScene: string;
+  /** Whether to stop at shop tiles (toggle in HUD) */
+  stopAtShop: boolean;
+  /** Combat speed multiplier (0.5x - 3x, default 1x) */
+  combatSpeed: number;
 }
 
 // ── Factory ─────────────────────────────────────────────────
@@ -83,8 +90,9 @@ export interface RunState {
 export function createNewRun(generation: number = 1, className: string = 'warrior'): RunState {
   const classDef = getClassDef(className);
   const stats = classDef.baseStats;
+  const runId = nanoid();
   return {
-    runId: nanoid(),
+    runId,
     generation,
     startedAt: Date.now(),
     hero: {
@@ -101,9 +109,10 @@ export function createNewRun(generation: number = 1, className: string = 'warrio
       className: stats.className,
     },
     deck: {
-      active: [...classDef.starterDeck],
+      active: new SeededRNG(`${runId}-initial-deck`).shuffle([...classDef.starterDeck]),
       inventory: {},
       upgradedCards: [],
+      droppedCards: [],
     },
     loop: {
       count: 0,
@@ -113,13 +122,15 @@ export function createNewRun(generation: number = 1, className: string = 'warrio
     },
     economy: {
       gold: 0,
-      tilePoints: 10,
+      tilePoints: 2,
       tileInventory: {},
       materials: {},
     },
     relics: [],
     isInCombat: false,
     currentScene: 'Game',
+    stopAtShop: true,
+    combatSpeed: 1,
   };
 }
 

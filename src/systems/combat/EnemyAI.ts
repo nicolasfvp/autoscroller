@@ -101,7 +101,7 @@ export class EnemyAI {
 
       // Post-damage effects
       if (state.enemySpecialEffect === 'debuff') {
-        state.heroDefense = Math.max(0, state.heroDefense - 3);
+        state.heroDefense = Math.max(0, state.heroDefense - 1);
       }
 
       eventBus.emit('combat:enemy-attack', { damage: totalDamage, specialEffect, multiHit: true, hitCount: multiHit.hitCount });
@@ -114,7 +114,7 @@ export class EnemyAI {
 
     // Post-damage special effects
     if (state.enemySpecialEffect === 'debuff') {
-      state.heroDefense = Math.max(0, state.heroDefense - 3);
+      state.heroDefense = Math.max(0, state.heroDefense - 1);
     }
 
     if (state.enemySpecialEffect === 'lifesteal') {

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import type { RunState } from '../state/RunState';
+import { getRun, type RunState } from '../state/RunState';
 import { COLORS, FONTS } from './StyleConstants';
 
 /**
@@ -16,6 +16,8 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private hpText: Phaser.GameObjects.Text;
   private tpText: Phaser.GameObjects.Text;
   private materialsText: Phaser.GameObjects.Text;
+  private shopToggleText: Phaser.GameObjects.Text;
+  private shopToggleBg: Phaser.GameObjects.Rectangle;
 
   // Tweened counter tracking
   private displayedGold: number = 0;
@@ -90,6 +92,23 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     });
     this.add(this.materialsText);
 
+    // Shop toggle button
+    this.shopToggleBg = scene.add.rectangle(710, 76, 80, 22, 0x005500, 0.8)
+      .setStrokeStyle(1, 0x00aa00)
+      .setInteractive({ useHandCursor: true });
+    this.add(this.shopToggleBg);
+
+    this.shopToggleText = scene.add.text(710, 76, 'Shop: ON', {
+      fontSize: '12px', color: '#00ff00', fontFamily: FONTS.family, fontStyle: 'bold',
+    }).setOrigin(0.5);
+    this.add(this.shopToggleText);
+
+    this.shopToggleBg.on('pointerdown', () => {
+      const run = getRun();
+      run.stopAtShop = !run.stopAtShop;
+      this.updateShopToggle(run.stopAtShop);
+    });
+
     scene.add.existing(this);
   }
 
@@ -140,6 +159,23 @@ export class LoopHUD extends Phaser.GameObjects.Container {
       ? matEntries.slice(0, 4).map(([k, v]) => `${ABBREV[k] ?? k[0].toUpperCase()}:${v}`).join(' ')
       : '';
     this.materialsText.setText(matStr);
+
+    // Shop toggle visual sync
+    this.updateShopToggle(runState.stopAtShop);
+  }
+
+  private updateShopToggle(enabled: boolean): void {
+    if (enabled) {
+      this.shopToggleText.setText('Shop: ON');
+      this.shopToggleText.setColor('#00ff00');
+      this.shopToggleBg.setFillStyle(0x005500, 0.8);
+      this.shopToggleBg.setStrokeStyle(1, 0x00aa00);
+    } else {
+      this.shopToggleText.setText('Shop: OFF');
+      this.shopToggleText.setColor('#ff4444');
+      this.shopToggleBg.setFillStyle(0x550000, 0.8);
+      this.shopToggleBg.setStrokeStyle(1, 0xaa0000);
+    }
   }
 
   /**

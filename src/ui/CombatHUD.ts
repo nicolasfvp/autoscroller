@@ -259,6 +259,9 @@ export class CombatHUD {
     };
     if (tweenMap[key]) tweenMap[key]!.stop();
 
+    // Mark the target value immediately so we don't restart the tween every frame
+    onComplete();
+
     const tween = this.scene.tweens.addCounter({
       from,
       to,
@@ -276,7 +279,6 @@ export class CombatHUD {
         bar.width = barMaxWidth * ratio;
         bar.setFillStyle(getColor(ratio));
         text.setText(`${to}/${max}`);
-        onComplete();
       },
     });
 
