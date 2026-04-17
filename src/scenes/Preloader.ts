@@ -20,6 +20,23 @@ export class Preloader extends Scene {
     this.load.image('bg_graveyard', 'assets/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/tiles/bg_swamp.png');
 
+    // Carregando os monstros e herois em batch (IA gerado)
+    this.load.image('archer_preview', 'assets/sprites/archer_generated.png');
+    this.load.image('archer_reference', 'assets/sprites/archer.png');
+    
+    this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
+    this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
+    this.load.image('goblin_sprite', 'assets/sprites/goblin_generated.png');
+    this.load.image('dragon_sprite', 'assets/sprites/dragon_generated.png');
+    this.load.image('snake_sprite', 'assets/sprites/snake_generated.png');
+    this.load.image('judge_sprite', 'assets/sprites/judge_generated.png');
+
+    // Carregando a SpriteSheet do Cavaleiro (Idle)
+    this.load.spritesheet('knight_idle', 'assets/sprites/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png', {
+      frameWidth: 120,
+      frameHeight: 80
+    });
+
     // Hero spritesheets (64x64 per frame, horizontal strips)
     this.load.spritesheet('hero_walk', 'assets/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hero_idle', 'assets/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
@@ -54,6 +71,26 @@ export class Preloader extends Scene {
     this.load.image('tile_event', 'assets/tiles/tile_event.png');
     this.load.image('tile_treasure', 'assets/tiles/tile_treasure.png');
     this.load.image('tile_boss', 'assets/tiles/tile_boss.png');
+
+    // Card Illustrations
+    const cardIds = [
+      'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall', 
+      'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain', 
+      'weaken', 'cleave', 'reckless-charge', 'execute', 'doom-blade', 'parry', 'bulwark', 
+      'last-stand', 'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud', 
+      'soul-rend', 'sacrifice', 'chain-lightning'
+    ];
+
+    const jpgCards = new Set([
+      'chain-lightning', 'energy-surge', 'haste', 'poison-cloud', 'sacrifice', 'soul-rend',
+      'berserker', 'bulwark', 'doom-blade', 'heavy-hit', 'last-stand', 'mana-drain',
+      'meditate', 'parry', 'strike', 'vampiric-touch', 'weaken'
+    ]);
+
+    for (const id of cardIds) {
+      const ext = jpgCards.has(id) ? '.jpg' : '.png';
+      this.load.image(`card_${id}`, `assets/cards/${id}${ext}`);
+    }
   }
 
   async create(): Promise<void> {

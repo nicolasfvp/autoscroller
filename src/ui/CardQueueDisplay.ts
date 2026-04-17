@@ -4,12 +4,12 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
-const QUEUE_X = 728; // 800 - 72
-const CARD_WIDTH = 72;
+const QUEUE_X = 740;
+const CARD_WIDTH = 60;
 const CARD_HEIGHT = 96;
 const GAP = 8;
 const VISIBLE_COUNT = 5;
-const SLOT_HEIGHT = CARD_HEIGHT + GAP; // 104
+const SLOT_HEIGHT = CARD_HEIGHT + GAP;
 const START_Y = 44; // top padding
 
 export class CardQueueDisplay {
@@ -58,7 +58,7 @@ export class CardQueueDisplay {
       const deckIdx = (this.currentPointer + i) % deck.length;
       const cardId = deck[deckIdx];
       const y = START_Y + i * SLOT_HEIGHT + CARD_HEIGHT / 2;
-      const cardVis = createCardVisual(this.scene, QUEUE_X, y, cardId);
+      const cardVis = createCardVisual(this.scene, QUEUE_X, y, cardId, { scale: 0.4 });
       this.container.add(cardVis);
       this.cardContainers.push(cardVis);
 

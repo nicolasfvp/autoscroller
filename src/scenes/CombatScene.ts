@@ -112,8 +112,15 @@ export class CombatScene extends Scene {
     if (!this.anims.exists(heroDeathKey) && this.textures.exists(heroDeathKey)) {
       this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
     }
-    this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
-    this.heroSprite.play(heroIdleKey);
+    
+    // Check if texture exists, else fallback to knight_idle
+    if (this.textures.exists(heroIdleKey)) {
+      this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
+      this.heroSprite.play(heroIdleKey);
+    } else {
+      this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
+    }
+    
     this.heroLabel = this.add.text(200, 200, 'Hero', {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
@@ -125,6 +132,9 @@ export class CombatScene extends Scene {
     const idleKey = this.enemyIdleKey;
     const attackKey = this.enemyAttackKey;
     const deathKey = this.enemyDeathKey;
+
+    const spriteKey = (enemyDef as any).spriteKey;
+    const enemyColor = enemyDef.color ?? 0xff0000;
 
     if (this.textures.exists(idleKey)) {
       if (!this.anims.exists(idleKey)) {
@@ -138,9 +148,10 @@ export class CombatScene extends Scene {
       }
       this.enemySprite = this.add.sprite(550, 350, idleKey).setDepth(10).setScale(4);
       (this.enemySprite as Phaser.GameObjects.Sprite).play(idleKey);
+    } else if (spriteKey && this.textures.exists(spriteKey)) {
+      this.enemySprite = this.add.sprite(550, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
     } else {
       // Fallback: colored rectangle when sprite assets are missing
-      const enemyColor = enemyDef.color ?? 0xff0000;
       this.enemySprite = this.add.rectangle(550, 350, 64, 64, enemyColor).setDepth(10);
     }
     this.enemyLabel = this.add.text(550, 300, enemyDef.name, {
@@ -168,10 +179,16 @@ export class CombatScene extends Scene {
       this.cardQueue.onCardPlayed(0);
       // Play hero attack animation and flash enemy on hit
       if (eventData.damage > 0) {
-        this.heroSprite.play(heroAttackKey);
-        this.heroSprite.once('animationcomplete', () => {
-          if (this.heroSprite) this.heroSprite.play(heroIdleKey);
-        });
+        // Play hero attack animation if possible
+        const sp = getSpritePrefix((getRun() as any).hero?.className ?? 'warrior');
+        const heroAttackKey = `${sp}_attack`;
+        const heroIdleKey = `${sp}_idle`;
+        if (this.anims.exists(heroAttackKey)) {
+          this.heroSprite.play(heroAttackKey);
+          this.heroSprite.once('animationcomplete', () => {
+             if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey);
+          });
+        }
         this.combatEffects.floatingNumber(550, 320, eventData.damage, '#ffffff', '-');
         if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
           this.enemySprite.setTint(0xffffff);
@@ -219,7 +236,7 @@ export class CombatScene extends Scene {
       // Floating damage number on hero side
       this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
       this.combatEffects.screenShake(3, 150);
-      // Flash hero red briefly on hit (no defend animation; return to idle after flash)
+      // Flash hero red briefly on hit
       this.heroSprite.setTint(0xff0000);
       this.time.delayedCall(300, () => {
         if (this.heroSprite) {

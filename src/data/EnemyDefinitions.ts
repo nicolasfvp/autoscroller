@@ -15,7 +15,9 @@ export interface EnemyDefinition {
     baseDefense: number;
     attack: EnemyAttack;
     goldReward: { min: number; max: number };
+    materialReward?: { chance: number; bonusMaterial: string; bonusAmount: { min: number; max: number } };
     color: number;
+    spriteKey?: string;
 }
 
 const ENEMIES: Record<string, EnemyDefinition> = {
