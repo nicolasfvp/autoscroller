@@ -65,6 +65,7 @@ export class LoopRunner {
     this.lastTileIndex = -1;
     this.activeBuffs = [];
     this.bossKillCount = 0;
+    this.assignEnemies();
     this.state = 'traversing';
   }
 
@@ -100,13 +101,11 @@ export class LoopRunner {
 
     switch (tile.type) {
       case 'basic': {
-        // 10% chance of combat
-        if (this.rng() < diffConfig.basicTileCombatChance) {
+        // Combat only if enemy was pre-assigned
+        if (tile.enemyId) {
           tile.defeatedThisLoop = true;
           this.state = 'tile-interaction';
-          const pool = getEnemyPoolForTerrain('basic', this.runState.loop.count);
-          const enemyId = pool[Math.floor(this.rng() * pool.length)];
-          this.emit('combat-start', { enemyId, isBoss: false, tileIndex });
+          this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex });
         }
         break;
       }
@@ -114,15 +113,13 @@ export class LoopRunner {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const terrainKey = tile.terrain!;
-        const pool = getEnemyPoolForTerrain(terrainKey, this.runState.loop.count);
-        const enemyId = pool[Math.floor(this.rng() * pool.length)];
-        this.emit('combat-start', { enemyId, isBoss: false, tileIndex, terrain: terrainKey });
+        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain: terrainKey });
         break;
       }
       case 'boss': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
-        this.emit('combat-start', { enemyId: 'boss_demon', isBoss: true, tileIndex });
+        this.emit('combat-start', { enemyId: tile.enemyId ?? 'boss_demon', isBoss: true, tileIndex });
         break;
       }
       case 'shop':
@@ -147,7 +144,7 @@ export class LoopRunner {
     const loop = this.runState.loop;
     loop.count++;
 
-    // Award tile points: baseTilePointsPerLoop + floor(count * tilePointScalePerLoop)
+    // Award tile points: +2 per loop (accumulates with unspent balance)
     const diffConfig = getDifficultyConfig();
     this.runState.economy.tilePoints += diffConfig.baseTilePointsPerLoop + Math.floor(loop.count * diffConfig.tilePointScalePerLoop);
 
@@ -165,6 +162,7 @@ export class LoopRunner {
     }
 
     this.lastTileIndex = -1;
+    this.assignEnemies();
     this.emit('loop-completed', { loopCount: loop.count });
     this.state = 'planning';
     this.emit('planning-phase-started', { loopCount: loop.count });
@@ -177,8 +175,38 @@ export class LoopRunner {
   confirmPlanning(): void {
     if (this.state !== 'planning') return;
     this.activeBuffs = resolveAdjacencySynergies(this.runState.loop.tiles);
+    this.assignEnemies();
     this.state = 'traversing';
     this.emit('loop-started', { loopCount: this.runState.loop.count, buffs: this.activeBuffs });
+  }
+
+  /** Pre-assign enemies to combat/terrain/boss/basic tiles for world-map display */
+  private assignEnemies(): void {
+    const loop = this.runState.loop;
+    const diffConfig = getDifficultyConfig();
+    for (const tile of loop.tiles) {
+      tile.enemyId = undefined;
+      if (tile.defeatedThisLoop) continue;
+
+      switch (tile.type) {
+        case 'basic': {
+          if (this.rng() < diffConfig.basicTileCombatChance) {
+            const pool = getEnemyPoolForTerrain('basic', loop.count);
+            tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+          }
+          break;
+        }
+        case 'terrain': {
+          const pool = getEnemyPoolForTerrain(tile.terrain!, loop.count);
+          tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+          break;
+        }
+        case 'boss': {
+          tile.enemyId = 'boss_demon';
+          break;
+        }
+      }
+    }
   }
 
   onBossDefeated(): void {

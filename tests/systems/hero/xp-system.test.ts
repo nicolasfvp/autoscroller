@@ -21,7 +21,7 @@ function makeRun(overrides?: { runXP?: number; totalXP?: number }): RunState {
       runXP: overrides?.runXP ?? 0,
       totalXP: overrides?.totalXP ?? 0,
     },
-    deck: { active: [], inventory: {} },
+    deck: { active: [], inventory: {}, upgradedCards: [], droppedCards: [] },
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],

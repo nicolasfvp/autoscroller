@@ -4,7 +4,8 @@ import {
   removeCard,
   reorderDeck,
   getRemovalCost,
-  REMOVAL_BASE_COST,
+  REMOVAL_MIN_COST,
+  REMOVAL_MAX_COST,
   REORDER_SESSION_COST,
 } from '../../../src/systems/deck/DeckSystem';
 import type { RunState } from '../../../src/state/RunState';
@@ -27,10 +28,12 @@ function makeRun(overrides?: {
     deck: {
       active: overrides?.active ?? [],
       inventory: {},
+      upgradedCards: [],
+      droppedCards: [],
     },
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
     economy: {
-      gold: overrides?.gold ?? 100,
+      gold: overrides?.gold ?? 500,
       tilePoints: 0,
       tileInventory: {},
       materials: {},
@@ -57,45 +60,47 @@ describe('DeckSystem', () => {
   });
 
   describe('getRemovalCost', () => {
-    it('with 10-card deck returns 23', () => {
-      const run = makeRun({ active: Array(10).fill('strike') });
-      // Math.ceil(10 * (1 + 0.25 * Math.max(0, 15 - 10))) = Math.ceil(10 * 2.25) = 23
-      expect(getRemovalCost(run)).toBe(23);
+    it('with 15+ cards returns min cost 30', () => {
+      const run = makeRun({ active: Array(15).fill('strike') });
+      expect(getRemovalCost(run)).toBe(30);
     });
 
-    it('with 5-card deck returns 35', () => {
-      const run = makeRun({ active: Array(5).fill('strike') });
-      // Math.ceil(10 * (1 + 0.25 * Math.max(0, 15 - 5))) = Math.ceil(10 * 3.5) = 35
-      expect(getRemovalCost(run)).toBe(35);
-    });
-
-    it('with 20-card deck returns 10 (no penalty above 15)', () => {
+    it('with 20 cards returns min cost 30 (clamped)', () => {
       const run = makeRun({ active: Array(20).fill('strike') });
-      // Math.ceil(10 * (1 + 0.25 * Math.max(0, 15 - 20))) = Math.ceil(10 * 1) = 10
-      expect(getRemovalCost(run)).toBe(10);
+      expect(getRemovalCost(run)).toBe(30);
+    });
+
+    it('with 3 cards returns max cost 200', () => {
+      const run = makeRun({ active: Array(3).fill('strike') });
+      expect(getRemovalCost(run)).toBe(200);
+    });
+
+    it('with 9 cards returns interpolated value (100)', () => {
+      const run = makeRun({ active: Array(9).fill('strike') });
+      // t = (9-3)/12 = 0.5, cost = 200 + 0.5*(30-200) = 200 - 85 = 115
+      expect(getRemovalCost(run)).toBe(115);
     });
   });
 
   describe('removeCard', () => {
     it('removes first occurrence from deck.active and deducts gold', () => {
-      const run = makeRun({ active: ['strike', 'fury', 'strike'], gold: 100 });
+      const run = makeRun({ active: ['strike', 'fury', 'strike'], gold: 500 });
       const cost = getRemovalCost(run);
       const result = removeCard('strike', run);
       expect(result).toBe(true);
       expect(run.deck.active).toEqual(['fury', 'strike']);
-      expect(run.economy.gold).toBe(100 - cost);
+      expect(run.economy.gold).toBe(500 - cost);
     });
 
     it('returns false if gold < cost', () => {
       const run = makeRun({ active: Array(5).fill('strike'), gold: 10 });
-      // cost is 35 > 10
       const result = removeCard('strike', run);
       expect(result).toBe(false);
       expect(run.deck.active).toHaveLength(5);
     });
 
     it('returns false if card not in deck', () => {
-      const run = makeRun({ active: ['strike'], gold: 100 });
+      const run = makeRun({ active: ['strike'], gold: 500 });
       expect(removeCard('fury', run)).toBe(false);
     });
   });
@@ -124,8 +129,12 @@ describe('DeckSystem', () => {
   });
 
   describe('constants', () => {
-    it('REMOVAL_BASE_COST is 10', () => {
-      expect(REMOVAL_BASE_COST).toBe(10);
+    it('REMOVAL_MIN_COST is 30', () => {
+      expect(REMOVAL_MIN_COST).toBe(30);
+    });
+
+    it('REMOVAL_MAX_COST is 200', () => {
+      expect(REMOVAL_MAX_COST).toBe(200);
     });
 
     it('REORDER_SESSION_COST is 30', () => {

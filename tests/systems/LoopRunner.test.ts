@@ -101,8 +101,9 @@ describe('LoopRunner', () => {
     expect(events.some(e => e.event === 'loop-completed')).toBe(true);
   });
 
-  it('loop completion awards tile points (loop 2: 3+1=4)', () => {
+  it('loop completion adds 2 tile points to existing balance', () => {
     runner.startRun(runState);
+    // Start with 0 TP, after loop completion should have 2
     for (const t of runState.loop.tiles) {
       t.defeatedThisLoop = true;
     }
@@ -110,9 +111,8 @@ describe('LoopRunner', () => {
       if (runner.getState() !== 'traversing') break;
       runner.tick(1000);
     }
-    // After completing loop 1, count becomes 2
-    // tilePoints = 3 + floor(2 * 0.5) = 3 + 1 = 4
-    expect(runState.economy.tilePoints).toBe(4);
+    // baseTilePointsPerLoop=2, tilePointScalePerLoop=0 → +2
+    expect(runState.economy.tilePoints).toBe(2);
   });
 
   it('loop completion resets defeatedThisLoop flags', () => {
@@ -244,8 +244,8 @@ describe('LoopRunner', () => {
     // Use rng=0 so it picks first enemy from pool
     runner = new LoopRunner(emit, () => 0);
     runner.startRun(runState);
-    // Place a forest tile at position 1
-    runState.loop.tiles[1] = { type: 'terrain', terrain: 'forest', defeatedThisLoop: false };
+    // Place a forest tile at position 1 with pre-assigned enemy
+    runState.loop.tiles[1] = { type: 'terrain', terrain: 'forest', defeatedThisLoop: false, enemyId: 'slime' };
     // Skip tile 0 by marking it defeated
     runState.loop.tiles[0].defeatedThisLoop = true;
     // Tick to reach tile 1
