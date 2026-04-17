@@ -5,7 +5,8 @@ import type { RunState } from '../../state/RunState';
 
 // ── Constants ───────────────────────────────────────────────
 
-export const REMOVAL_BASE_COST = 10;
+export const REMOVAL_MIN_COST = 30;
+export const REMOVAL_MAX_COST = 200;
 export const REORDER_SESSION_COST = 30;
 
 // ── Add Card ────────────────────────────────────────────────
@@ -22,12 +23,14 @@ export function addCard(cardId: string, run: RunState): void {
 
 /**
  * Calculate gold cost to remove a card.
- * Cost scales inversely with deck size: smaller decks cost more to shrink.
- * Formula: ceil(baseCost * (1 + 0.25 * max(0, 15 - deckSize)))
+ * Linear interpolation: 30g at 15+ cards, 200g at 3 cards.
  */
 export function getRemovalCost(run: RunState): number {
   const deckSize = run.deck.active.length;
-  return Math.ceil(REMOVAL_BASE_COST * (1 + 0.25 * Math.max(0, 15 - deckSize)));
+  const clamped = Math.max(3, Math.min(15, deckSize));
+  // t=0 at 3 cards (max cost), t=1 at 15 cards (min cost)
+  const t = (clamped - 3) / 12;
+  return Math.round(REMOVAL_MAX_COST + t * (REMOVAL_MIN_COST - REMOVAL_MAX_COST));
 }
 
 // ── Remove Card ─────────────────────────────────────────────

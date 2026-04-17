@@ -18,6 +18,8 @@ export interface TileSlot {
   type: TileSlotType;
   terrain?: TerrainType;
   defeatedThisLoop: boolean;
+  /** Pre-assigned enemy ID for combat tiles (visible on the world map) */
+  enemyId?: string;
 }
 
 export interface TileInventoryEntry {

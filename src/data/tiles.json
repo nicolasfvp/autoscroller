@@ -3,7 +3,7 @@
   "forest": { "type": "terrain", "terrain": "forest", "name": "Forest", "color": 2263842, "canPlaceManually": true, "tilePointCost": 3, "icon": "T", "combatChance": 1.0 },
   "graveyard": { "type": "terrain", "terrain": "graveyard", "name": "Graveyard", "color": 4915330, "canPlaceManually": true, "tilePointCost": 3, "icon": "+", "combatChance": 1.0 },
   "swamp": { "type": "terrain", "terrain": "swamp", "name": "Swamp", "color": 5597999, "canPlaceManually": true, "tilePointCost": 3, "icon": "~", "combatChance": 1.0 },
-  "shop": { "type": "shop", "name": "Shop", "color": 16766720, "canPlaceManually": true, "tilePointCost": 5, "icon": "$" },
+  "shop": { "type": "shop", "name": "Shop", "color": 16766720, "canPlaceManually": true, "tilePointCost": 4, "icon": "$" },
   "rest": { "type": "rest", "name": "Rest Site", "color": 4286945, "canPlaceManually": true, "tilePointCost": 4, "icon": "R" },
   "event": { "type": "event", "name": "Event", "color": 9662683, "canPlaceManually": true, "tilePointCost": 2, "icon": "?" },
   "treasure": { "type": "treasure", "name": "Treasure", "color": 16748800, "canPlaceManually": true, "tilePointCost": 6, "icon": "!" },

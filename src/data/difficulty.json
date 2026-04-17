@@ -10,8 +10,8 @@
     "schedule": [3, 2, 2, 1, 1],
     "maxTileLength": 40
   },
-  "baseTilePointsPerLoop": 3,
-  "tilePointScalePerLoop": 0.5,
+  "baseTilePointsPerLoop": 2,
+  "tilePointScalePerLoop": 0,
   "deathMaterialPercent": 0.10,
   "deathXpPercent": 0,
   "resourceResetPercent": 0.5,

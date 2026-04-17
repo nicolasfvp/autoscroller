@@ -6,7 +6,7 @@
     "baseHP": 130,
     "baseDefense": 0,
     "attack": {
-      "damage": 8,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -22,8 +22,7 @@
         "max": 2
       }
     },
-    "color": 65280,
-    "spriteKey": "slime_sprite"
+    "color": 65280
   },
   {
     "id": "goblin",
@@ -32,7 +31,7 @@
     "baseHP": 100,
     "baseDefense": 0,
     "attack": {
-      "damage": 6,
+      "damage": 2,
       "pattern": "random",
       "specialEffect": "double"
     },
@@ -49,18 +48,17 @@
         "max": 2
       }
     },
-    "color": 9127187,
-    "spriteKey": "goblin_sprite"
+    "color": 9127187
   },
   {
     "id": "orc",
     "name": "Orc",
     "type": "normal",
-    "baseHP": 230,
-    "baseDefense": 10,
+    "baseHP": 184,
+    "baseDefense": 3,
     "attack": {
-      "damage": 12,
-      "defense": 5,
+      "damage": 3,
+      "defense": 2,
       "pattern": "fixed"
     },
     "attackCooldown": 3000,
@@ -76,21 +74,20 @@
         "max": 3
       }
     },
-    "color": 5597999,
-    "spriteKey": "orc_sprite"
+    "color": 5597999
   },
   {
     "id": "mage",
     "name": "Dark Mage",
     "type": "normal",
-    "baseHP": 110,
+    "baseHP": 90,
     "baseDefense": 0,
     "attack": {
-      "damage": 7,
+      "damage": 5,
       "pattern": "conditional",
       "specialEffect": "debuff"
     },
-    "attackCooldown": 2000,
+    "attackCooldown": 2200,
     "goldReward": {
       "min": 25,
       "max": 35
@@ -109,14 +106,14 @@
     "id": "elite_knight",
     "name": "Elite Knight",
     "type": "elite",
-    "baseHP": 260,
-    "baseDefense": 15,
+    "baseHP": 240,
+    "baseDefense": 5,
     "attack": {
-      "damage": 15,
-      "defense": 8,
+      "damage": 2,
+      "defense": 2,
       "pattern": "scaling"
     },
-    "attackCooldown": 2000,
+    "attackCooldown": 2800,
     "goldReward": {
       "min": 50,
       "max": 80
@@ -129,27 +126,25 @@
         "max": 2
       }
     },
-    "color": 12632256,
-    "spriteKey": "judge_sprite"
+    "color": 12632256
   },
   {
     "id": "boss_demon",
     "name": "Demon Lord",
     "type": "boss",
     "bossType": "demon",
-    "baseHP": 480,
-    "baseDefense": 20,
+    "baseHP": 250,
+    "baseDefense": 1,
     "attack": {
-      "damage": 20,
-      "defense": 10,
-      "pattern": "scaling",
-      "specialEffect": "lifesteal"
+      "damage": 5,
+      "defense": 0,
+      "pattern": "scaling"
     },
     "attackCooldown": 2500,
     "behaviors": [
       {
         "type": "drain",
-        "healPercent": 50
+        "healPercent": 4
       }
     ],
     "goldReward": {
@@ -164,8 +159,7 @@
         "max": 6
       }
     },
-    "color": 9109504,
-    "spriteKey": "dragon_sprite"
+    "color": 9109504
   },
   {
     "id": "boss_tank",
@@ -173,10 +167,10 @@
     "type": "boss",
     "bossType": "tank",
     "baseHP": 1440,
-    "baseDefense": 30,
+    "baseDefense": 10,
     "attack": {
-      "damage": 16,
-      "defense": 15,
+      "damage": 5,
+      "defense": 5,
       "pattern": "scaling"
     },
     "attackCooldown": 3000,
@@ -184,7 +178,7 @@
       {
         "type": "shield",
         "interval": 10000,
-        "shieldAmount": 60
+        "shieldAmount": 20
       }
     ],
     "goldReward": {
@@ -199,8 +193,7 @@
         "max": 6
       }
     },
-    "color": 8421504,
-    "spriteKey": "snake_sprite"
+    "color": 8421504
   },
   {
     "id": "boss_berserker",
@@ -208,9 +201,9 @@
     "type": "boss",
     "bossType": "berserker",
     "baseHP": 720,
-    "baseDefense": 10,
+    "baseDefense": 3,
     "attack": {
-      "damage": 40,
+      "damage": 13,
       "pattern": "random",
       "specialEffect": "double"
     },
@@ -242,9 +235,9 @@
     "type": "boss",
     "bossType": "mage",
     "baseHP": 960,
-    "baseDefense": 15,
+    "baseDefense": 5,
     "attack": {
-      "damage": 24,
+      "damage": 8,
       "pattern": "conditional",
       "specialEffect": "debuff"
     },
@@ -276,9 +269,9 @@
     "type": "boss",
     "bossType": "dragon",
     "baseHP": 1100,
-    "baseDefense": 20,
+    "baseDefense": 7,
     "attack": {
-      "damage": 28,
+      "damage": 9,
       "pattern": "scaling",
       "specialEffect": "double"
     },
@@ -315,9 +308,9 @@
     "type": "boss",
     "bossType": "hydra",
     "baseHP": 900,
-    "baseDefense": 10,
+    "baseDefense": 3,
     "attack": {
-      "damage": 18,
+      "damage": 6,
       "pattern": "random",
       "specialEffect": "debuff"
     },

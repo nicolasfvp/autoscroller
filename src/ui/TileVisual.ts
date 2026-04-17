@@ -35,6 +35,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Rectangle;
   private sprite: Phaser.GameObjects.Image | null = null;
   private bgObject: Phaser.GameObjects.Image | null = null;
+  private enemySprite: Phaser.GameObjects.Sprite | null = null;
   private iconText: Phaser.GameObjects.Text;
   private leftSynergy: Phaser.GameObjects.Rectangle | null = null;
   private rightSynergy: Phaser.GameObjects.Rectangle | null = null;
@@ -96,6 +97,11 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
     this.add(this.iconText);
 
+    // Enemy sprite (pre-assigned combat tiles)
+    if (tileSlot.enemyId && !tileSlot.defeatedThisLoop) {
+      this.addEnemySprite(scene, tileSlot.enemyId, size);
+    }
+
     // Only enable hover/click in planning mode
     if (interactive) {
       this.bg.setStrokeStyle(2, 0x000000, 0);
@@ -111,6 +117,29 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
 
     scene.add.existing(this);
+  }
+
+  private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number): void {
+    const idleKey = `${enemyId}_idle`;
+    if (scene.textures.exists(idleKey)) {
+      // Create idle animation if it doesn't exist
+      if (!scene.anims.exists(idleKey)) {
+        scene.anims.create({
+          key: idleKey,
+          frames: scene.anims.generateFrameNumbers(idleKey, {}),
+          frameRate: 4,
+          repeat: -1,
+        });
+      }
+      this.enemySprite = scene.add.sprite(0, -tileSize * 0.15, idleKey);
+      this.enemySprite.setScale(tileSize / 32); // scale to fit tile
+      this.enemySprite.play(idleKey);
+      this.add(this.enemySprite);
+    } else {
+      // Fallback: small colored circle
+      const dot = scene.add.circle(0, -tileSize * 0.1, tileSize * 0.15, 0xff0000, 0.8);
+      this.add(dot);
+    }
   }
 
   onClick(callback: () => void): void {

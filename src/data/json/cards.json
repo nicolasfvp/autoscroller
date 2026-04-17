@@ -3,198 +3,363 @@
     {
       "id": "strike",
       "name": "Strike",
-      "description": "Deal 20 damage.",
+      "description": "Deal 7 damage.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 20, "target": "enemy" }],
-      "cooldown": 1.0,
+      "effects": [
+        {
+          "type": "damage",
+          "value": 7,
+          "target": "enemy"
+        }
+      ],
+      "cooldown": 1,
       "targeting": "single",
       "rarity": "common",
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 25, "target": "enemy" }],
-        "description": "Deal 25 damage."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 8,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 8 damage."
       }
     },
     {
       "id": "heavy-hit",
       "name": "Heavy Hit",
-      "description": "Deal 40 damage. Lose 5 Stamina.",
+      "description": "Deal 13 damage. Costs 5 Stamina.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 40, "target": "enemy" }],
-      "cost": { "stamina": 5 },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 13,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "stamina": 5
+      },
       "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common",
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 50, "target": "enemy" }],
-        "description": "Deal 50 damage. Lose 5 Stamina."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 17,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 17 damage. Costs 5 Stamina."
       }
     },
     {
       "id": "fury",
       "name": "Fury",
-      "description": "Deal 60 damage. Lose 10 Defense.",
+      "description": "Deal 20 damage. Costs 10 Defense.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 60, "target": "enemy" }],
-      "cost": { "defense": 10 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "damage",
+          "value": 20,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "defense": 10
+      },
+      "cooldown": 2,
       "targeting": "single",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 2,
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 81, "target": "enemy" }],
-        "description": "Deal 81 damage. Lose 10 Defense."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 27,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 27 damage. Costs 10 Defense."
       }
     },
     {
       "id": "berserker",
       "name": "Berserker",
-      "description": "Deal 80 damage. Lose 15 Stamina and 5 Defense.",
+      "description": "Deal 27 damage. Costs 15 Stamina and 5 Defense.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 80, "target": "enemy" }],
-      "cost": { "stamina": 15, "defense": 5 },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 27,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "stamina": 15,
+        "defense": 5
+      },
       "cooldown": 2.5,
       "targeting": "single",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 4,
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 108, "target": "enemy" }],
-        "description": "Deal 108 damage. Lose 15 Stamina and 5 Defense."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 36,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 36 damage. Costs 15 Stamina and 5 Defense."
       }
     },
     {
       "id": "counter-strike",
       "name": "Counter Strike",
-      "description": "Deal 25 damage. If enemy attacked last turn, deal 50 instead.",
+      "description": "Deal 8 damage.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 25, "target": "enemy" }],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 8,
+          "target": "enemy"
+        }
+      ],
       "cooldown": 1.5,
       "targeting": "single",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 1,
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 33, "target": "enemy" }],
-        "cooldown": 1.0,
-        "description": "Deal 33 damage. If enemy attacked last turn, deal 65 instead."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 11,
+            "target": "enemy"
+          }
+        ],
+        "cooldown": 1,
+        "description": "Deal 11 damage."
       }
     },
     {
       "id": "defend",
       "name": "Defend",
-      "description": "Gain 5 Armor.",
+      "description": "Gain 2 Armor.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 5, "target": "self" }],
-      "cooldown": 1.0,
+      "effects": [
+        {
+          "type": "armor",
+          "value": 2,
+          "target": "self"
+        }
+      ],
+      "cooldown": 1,
       "targeting": "self",
       "rarity": "common",
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 7, "target": "self" }],
-        "description": "Gain 7 Armor."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 2,
+            "target": "self"
+          }
+        ],
+        "description": "Gain 2 Armor."
       }
     },
     {
       "id": "shield-wall",
       "name": "Shield Wall",
-      "description": "Gain 15 Armor. Lose 5 Stamina.",
+      "description": "Gain 5 Armor. Costs 5 Stamina.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 15, "target": "self" }],
-      "cost": { "stamina": 5 },
+      "effects": [
+        {
+          "type": "armor",
+          "value": 5,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "stamina": 5
+      },
       "cooldown": 1.5,
       "targeting": "self",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 1,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 20, "target": "self" }],
-        "cooldown": 1.0,
-        "description": "Gain 20 Armor. Lose 5 Stamina."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 7,
+            "target": "self"
+          }
+        ],
+        "cooldown": 1,
+        "description": "Gain 7 Armor. Costs 5 Stamina."
       }
     },
     {
       "id": "fortify",
       "name": "Fortify",
-      "description": "Gain 25 Armor. Lose 10 Stamina.",
+      "description": "Gain 8 Armor. Costs 10 Stamina.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 25, "target": "self" }],
-      "cost": { "stamina": 10 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "armor",
+          "value": 8,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "stamina": 10
+      },
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 3,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 33, "target": "self" }],
+        "effects": [
+          {
+            "type": "armor",
+            "value": 11,
+            "target": "self"
+          }
+        ],
         "cooldown": 1.5,
-        "description": "Gain 33 Armor. Lose 10 Stamina."
+        "description": "Gain 11 Armor. Costs 10 Stamina."
       }
     },
     {
       "id": "iron-skin",
       "name": "Iron Skin",
-      "description": "Gain 20 Armor. Lose 5 Mana.",
+      "description": "Gain 7 Armor. Costs 5 Mana.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 20, "target": "self" }],
-      "cost": { "mana": 5 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "armor",
+          "value": 7,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "mana": 5
+      },
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 2,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 27, "target": "self" }],
-        "description": "Gain 27 Armor. Lose 5 Mana."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 9,
+            "target": "self"
+          }
+        ],
+        "description": "Gain 9 Armor. Costs 5 Mana."
       }
     },
     {
       "id": "fireball",
       "name": "Fireball",
-      "description": "Deal 30 damage. Costs 5 Mana.",
+      "description": "Deal 10 damage. Costs 5 Mana.",
       "category": "magic",
-      "effects": [{ "type": "damage", "value": 30, "target": "enemy" }],
-      "cost": { "mana": 5 },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 10,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "mana": 5
+      },
       "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common",
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 38, "target": "enemy" }],
-        "description": "Deal 38 damage. Costs 5 Mana."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 13,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 13 damage. Costs 5 Mana."
       }
     },
     {
       "id": "heal",
       "name": "Heal",
-      "description": "Restore 12 HP. Costs 8 Mana.",
+      "description": "Restore 4 HP. Costs 8 Mana.",
       "category": "magic",
-      "effects": [{ "type": "heal", "value": 12, "target": "self" }],
-      "cost": { "mana": 8 },
+      "effects": [
+        {
+          "type": "heal",
+          "value": 4,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "mana": 8
+      },
       "cooldown": 1.5,
       "targeting": "self",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 1,
       "upgraded": {
-        "effects": [{ "type": "heal", "value": 16, "target": "self" }],
-        "cost": { "mana": 7 },
-        "description": "Restore 16 HP. Costs 7 Mana."
+        "effects": [
+          {
+            "type": "heal",
+            "value": 5,
+            "target": "self"
+          }
+        ],
+        "cost": {
+          "mana": 7
+        },
+        "description": "Restore 5 HP. Costs 7 Mana."
       }
     },
     {
       "id": "arcane-shield",
       "name": "Arcane Shield",
-      "description": "Gain 10 Armor. Costs 6 Mana.",
+      "description": "Gain 3 Armor. Costs 6 Mana.",
       "category": "magic",
-      "effects": [{ "type": "armor", "value": 10, "target": "self" }],
-      "cost": { "mana": 6 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "armor",
+          "value": 3,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "mana": 6
+      },
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 3,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 14, "target": "self" }],
-        "description": "Gain 14 Armor. Costs 6 Mana."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 5,
+            "target": "self"
+          }
+        ],
+        "description": "Gain 5 Armor. Costs 6 Mana."
       }
     },
     {
@@ -202,51 +367,93 @@
       "name": "Rejuvenate",
       "description": "Restore 10 Stamina. Costs 5 Mana.",
       "category": "magic",
-      "effects": [{ "type": "stamina", "value": 10, "target": "self" }],
-      "cost": { "mana": 5 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "stamina",
+          "value": 10,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "mana": 5
+      },
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 4,
       "upgraded": {
-        "effects": [{ "type": "stamina", "value": 13, "target": "self" }],
-        "cost": { "mana": 4 },
+        "effects": [
+          {
+            "type": "stamina",
+            "value": 13,
+            "target": "self"
+          }
+        ],
+        "cost": {
+          "mana": 4
+        },
         "description": "Restore 13 Stamina. Costs 4 Mana."
       }
     },
     {
       "id": "mana-drain",
       "name": "Mana Drain",
-      "description": "Deal 15 damage. Restore 5 Mana.",
+      "description": "Deal 5 damage. Restore 5 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 15, "target": "enemy" },
-        { "type": "mana", "value": 5, "target": "self" }
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy"
+        },
+        {
+          "type": "mana",
+          "value": 5,
+          "target": "self"
+        }
       ],
-      "cooldown": 2.0,
+      "cooldown": 2,
       "targeting": "single",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 4,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 20, "target": "enemy" },
-          { "type": "mana", "value": 7, "target": "self" }
+          {
+            "type": "damage",
+            "value": 7,
+            "target": "enemy"
+          },
+          {
+            "type": "mana",
+            "value": 7,
+            "target": "self"
+          }
         ],
-        "description": "Deal 20 damage. Restore 7 Mana."
+        "description": "Deal 7 damage. Restore 7 Mana."
       }
     },
     {
       "id": "weaken",
       "name": "Weaken",
-      "description": "Deal 10 damage. Enemy loses 5 Defense next turn. Costs 7 Mana.",
+      "description": "Deal 3 damage. Enemy loses 2 Defense. Costs 7 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 10, "target": "enemy" },
-        { "type": "debuff", "value": 5, "target": "enemy" }
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "enemy"
+        },
+        {
+          "type": "debuff",
+          "value": 2,
+          "target": "enemy"
+        }
       ],
-      "cost": { "mana": 7 },
+      "cost": {
+        "mana": 7
+      },
       "cooldown": 2.5,
       "targeting": "single",
       "rarity": "rare",
@@ -254,35 +461,65 @@
       "unlockTier": 4,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 14, "target": "enemy" },
-          { "type": "debuff", "value": 7, "target": "enemy" }
+          {
+            "type": "damage",
+            "value": 5,
+            "target": "enemy"
+          },
+          {
+            "type": "debuff",
+            "value": 2,
+            "target": "enemy"
+          }
         ],
-        "description": "Deal 14 damage. Enemy loses 7 Defense next turn. Costs 7 Mana."
+        "description": "Deal 5 damage. Enemy loses 2 Defense. Costs 7 Mana."
       }
     },
     {
       "id": "cleave",
       "name": "Cleave",
-      "description": "Deal 15 damage to all enemies. Costs 4 Stamina.",
+      "description": "Deal 5 damage. Costs 4 Stamina.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 15, "target": "enemy" }],
-      "cost": { "stamina": 4 },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "stamina": 4
+      },
       "cooldown": 1.5,
       "targeting": "aoe",
       "rarity": "common",
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 19, "target": "enemy" }],
-        "description": "Deal 19 damage to all enemies. Costs 4 Stamina."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 6,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 6 damage. Costs 4 Stamina."
       }
     },
     {
       "id": "reckless-charge",
       "name": "Reckless Charge",
-      "description": "Deal 55 damage. Lose 8 HP.",
+      "description": "Deal 18 damage. Lose 3 HP.",
       "category": "attack",
       "effects": [
-        { "type": "damage", "value": 55, "target": "enemy" },
-        { "type": "damage", "value": 8, "target": "self" }
+        {
+          "type": "damage",
+          "value": 18,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "self"
+        }
       ],
       "cooldown": 1.5,
       "targeting": "single",
@@ -291,228 +528,407 @@
       "unlockTier": 2,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 72, "target": "enemy" },
-          { "type": "damage", "value": 8, "target": "self" }
+          {
+            "type": "damage",
+            "value": 24,
+            "target": "enemy"
+          },
+          {
+            "type": "damage",
+            "value": 3,
+            "target": "self"
+          }
         ],
-        "cooldown": 1.0,
-        "description": "Deal 72 damage. Lose 8 HP."
+        "cooldown": 1,
+        "description": "Deal 24 damage. Lose 3 HP."
       }
     },
     {
       "id": "execute",
       "name": "Execute",
-      "description": "Deal 90 damage to lowest HP enemy. Costs 12 Stamina.",
+      "description": "Deal 30 damage. Costs 12 Stamina.",
       "category": "attack",
-      "effects": [{ "type": "damage", "value": 90, "target": "enemy" }],
-      "cost": { "stamina": 12 },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 30,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "stamina": 12
+      },
       "cooldown": 2.5,
       "targeting": "lowest-hp",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 3,
       "upgraded": {
-        "effects": [{ "type": "damage", "value": 122, "target": "enemy" }],
-        "description": "Deal 122 damage to lowest HP enemy. Costs 12 Stamina."
+        "effects": [
+          {
+            "type": "damage",
+            "value": 41,
+            "target": "enemy"
+          }
+        ],
+        "description": "Deal 41 damage. Costs 12 Stamina."
       }
     },
     {
       "id": "chain-lightning",
       "name": "Chain Lightning",
-      "description": "Deal 35 damage to target and 18 AoE. Costs 10 Mana.",
+      "description": "Deal 12 damage. Deal 6 damage. Costs 10 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 35, "target": "enemy" },
-        { "type": "damage", "value": 18, "target": "enemy" }
+        {
+          "type": "damage",
+          "value": 12,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy"
+        }
       ],
-      "cost": { "mana": 10 },
-      "cooldown": 2.0,
+      "cost": {
+        "mana": 10
+      },
+      "cooldown": 2,
       "targeting": "aoe",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 4,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 47, "target": "enemy" },
-          { "type": "damage", "value": 24, "target": "enemy" }
+          {
+            "type": "damage",
+            "value": 16,
+            "target": "enemy"
+          },
+          {
+            "type": "damage",
+            "value": 8,
+            "target": "enemy"
+          }
         ],
-        "description": "Deal 47 damage to target and 24 AoE. Costs 10 Mana."
+        "description": "Deal 16 damage. Deal 8 damage. Costs 10 Mana."
       }
     },
     {
       "id": "doom-blade",
       "name": "Doom Blade",
-      "description": "Deal 120 damage. Lose 10 Defense and 10 HP.",
+      "description": "Deal 40 damage. Lose 3 HP. Costs 10 Defense.",
       "category": "attack",
       "effects": [
-        { "type": "damage", "value": 120, "target": "enemy" },
-        { "type": "damage", "value": 10, "target": "self" }
+        {
+          "type": "damage",
+          "value": 40,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "self"
+        }
       ],
-      "cost": { "defense": 10 },
-      "cooldown": 3.0,
+      "cost": {
+        "defense": 10
+      },
+      "cooldown": 3,
       "targeting": "single",
       "rarity": "epic",
       "unlockSource": "forge",
       "unlockTier": 5,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 144, "target": "enemy" },
-          { "type": "damage", "value": 10, "target": "self" }
+          {
+            "type": "damage",
+            "value": 48,
+            "target": "enemy"
+          },
+          {
+            "type": "damage",
+            "value": 3,
+            "target": "self"
+          }
         ],
-        "description": "Deal 144 damage. Lose 10 Defense and 10 HP."
+        "description": "Deal 48 damage. Lose 3 HP. Costs 10 Defense."
       }
     },
     {
       "id": "parry",
       "name": "Parry",
-      "description": "Gain 8 Armor. Deal 5 damage. Costs 3 Stamina.",
+      "description": "Gain 3 Armor. Deal 2 damage. Costs 3 Stamina.",
       "category": "defense",
       "effects": [
-        { "type": "armor", "value": 8, "target": "self" },
-        { "type": "damage", "value": 5, "target": "enemy" }
+        {
+          "type": "armor",
+          "value": 3,
+          "target": "self"
+        },
+        {
+          "type": "damage",
+          "value": 2,
+          "target": "enemy"
+        }
       ],
-      "cost": { "stamina": 3 },
-      "cooldown": 1.0,
+      "cost": {
+        "stamina": 3
+      },
+      "cooldown": 1,
       "targeting": "self",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 1,
       "upgraded": {
         "effects": [
-          { "type": "armor", "value": 10, "target": "self" },
-          { "type": "damage", "value": 7, "target": "enemy" }
+          {
+            "type": "armor",
+            "value": 3,
+            "target": "self"
+          },
+          {
+            "type": "damage",
+            "value": 2,
+            "target": "enemy"
+          }
         ],
         "cooldown": 0.8,
-        "description": "Gain 10 Armor. Deal 7 damage. Costs 3 Stamina."
+        "description": "Gain 3 Armor. Deal 2 damage. Costs 3 Stamina."
       }
     },
     {
       "id": "bulwark",
       "name": "Bulwark",
-      "description": "Gain 35 Armor. Costs 8 Stamina.",
+      "description": "Gain 12 Armor. Costs 8 Stamina.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 35, "target": "self" }],
-      "cost": { "stamina": 8 },
+      "effects": [
+        {
+          "type": "armor",
+          "value": 12,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "stamina": 8
+      },
       "cooldown": 2.5,
       "targeting": "self",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 3,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 47, "target": "self" }],
-        "description": "Gain 47 Armor. Costs 8 Stamina."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 16,
+            "target": "self"
+          }
+        ],
+        "description": "Gain 16 Armor. Costs 8 Stamina."
       }
     },
     {
       "id": "last-stand",
       "name": "Last Stand",
-      "description": "Gain 50 Armor. Costs 5 Mana and 5 Stamina. Only below 50% HP.",
+      "description": "Gain 17 Armor. Costs 5 Stamina and 5 Mana.",
       "category": "defense",
-      "effects": [{ "type": "armor", "value": 50, "target": "self" }],
-      "cost": { "mana": 5, "stamina": 5 },
-      "cooldown": 3.0,
+      "effects": [
+        {
+          "type": "armor",
+          "value": 17,
+          "target": "self"
+        }
+      ],
+      "cost": {
+        "mana": 5,
+        "stamina": 5
+      },
+      "cooldown": 3,
       "targeting": "self",
       "rarity": "epic",
       "unlockSource": "forge",
       "unlockTier": 5,
       "upgraded": {
-        "effects": [{ "type": "armor", "value": 60, "target": "self" }],
-        "description": "Gain 60 Armor. Costs 5 Mana and 5 Stamina. Only below 50% HP."
+        "effects": [
+          {
+            "type": "armor",
+            "value": 20,
+            "target": "self"
+          }
+        ],
+        "description": "Gain 20 Armor. Costs 5 Stamina and 5 Mana."
       }
     },
     {
       "id": "meditate",
       "name": "Meditate",
-      "description": "Restore 5 Stamina and 5 Mana.",
+      "description": "Restore 5 Stamina. Restore 5 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "stamina", "value": 5, "target": "self" },
-        { "type": "mana", "value": 5, "target": "self" }
+        {
+          "type": "stamina",
+          "value": 5,
+          "target": "self"
+        },
+        {
+          "type": "mana",
+          "value": 5,
+          "target": "self"
+        }
       ],
-      "cooldown": 3.0,
+      "cooldown": 3,
       "targeting": "self",
       "rarity": "common",
       "upgraded": {
         "effects": [
-          { "type": "stamina", "value": 7, "target": "self" },
-          { "type": "mana", "value": 7, "target": "self" }
+          {
+            "type": "stamina",
+            "value": 7,
+            "target": "self"
+          },
+          {
+            "type": "mana",
+            "value": 7,
+            "target": "self"
+          }
         ],
-        "description": "Restore 7 Stamina and 7 Mana."
+        "description": "Restore 7 Stamina. Restore 7 Mana."
       }
     },
     {
       "id": "vampiric-touch",
       "name": "Vampiric Touch",
-      "description": "Deal 20 damage. Heal 10 HP. Costs 6 Mana.",
+      "description": "Deal 7 damage. Restore 3 HP. Costs 6 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 20, "target": "enemy" },
-        { "type": "heal", "value": 10, "target": "self" }
+        {
+          "type": "damage",
+          "value": 7,
+          "target": "enemy"
+        },
+        {
+          "type": "heal",
+          "value": 3,
+          "target": "self"
+        }
       ],
-      "cost": { "mana": 6 },
-      "cooldown": 2.0,
+      "cost": {
+        "mana": 6
+      },
+      "cooldown": 2,
       "targeting": "single",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 2,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 26, "target": "enemy" },
-          { "type": "heal", "value": 13, "target": "self" }
+          {
+            "type": "damage",
+            "value": 9,
+            "target": "enemy"
+          },
+          {
+            "type": "heal",
+            "value": 4,
+            "target": "self"
+          }
         ],
         "cooldown": 1.5,
-        "description": "Deal 26 damage. Heal 13 HP. Costs 6 Mana."
+        "description": "Deal 9 damage. Restore 4 HP. Costs 6 Mana."
       }
     },
     {
       "id": "haste",
       "name": "Haste",
-      "description": "Reduce enemy defense by 8. Costs 4 Mana.",
+      "description": "Enemy loses 3 Defense. Costs 4 Mana.",
       "category": "magic",
-      "effects": [{ "type": "debuff", "value": 8, "target": "enemy" }],
-      "cost": { "mana": 4 },
-      "cooldown": 2.0,
+      "effects": [
+        {
+          "type": "debuff",
+          "value": 3,
+          "target": "enemy"
+        }
+      ],
+      "cost": {
+        "mana": 4
+      },
+      "cooldown": 2,
       "targeting": "single",
       "rarity": "uncommon",
       "unlockSource": "forge",
       "unlockTier": 2,
       "upgraded": {
-        "effects": [{ "type": "debuff", "value": 10, "target": "enemy" }],
+        "effects": [
+          {
+            "type": "debuff",
+            "value": 3,
+            "target": "enemy"
+          }
+        ],
         "cooldown": 1.5,
-        "description": "Reduce enemy defense by 10. Costs 4 Mana."
+        "description": "Enemy loses 3 Defense. Costs 4 Mana."
       }
     },
     {
       "id": "energy-surge",
       "name": "Energy Surge",
-      "description": "Restore 12 Stamina and 10 Mana.",
+      "description": "Restore 12 Stamina. Restore 10 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "stamina", "value": 12, "target": "self" },
-        { "type": "mana", "value": 10, "target": "self" }
+        {
+          "type": "stamina",
+          "value": 12,
+          "target": "self"
+        },
+        {
+          "type": "mana",
+          "value": 10,
+          "target": "self"
+        }
       ],
-      "cooldown": 4.0,
+      "cooldown": 4,
       "targeting": "self",
       "rarity": "rare",
       "unlockSource": "forge",
       "unlockTier": 3,
       "upgraded": {
         "effects": [
-          { "type": "stamina", "value": 16, "target": "self" },
-          { "type": "mana", "value": 14, "target": "self" }
+          {
+            "type": "stamina",
+            "value": 16,
+            "target": "self"
+          },
+          {
+            "type": "mana",
+            "value": 14,
+            "target": "self"
+          }
         ],
-        "description": "Restore 16 Stamina and 14 Mana."
+        "description": "Restore 16 Stamina. Restore 14 Mana."
       }
     },
     {
       "id": "poison-cloud",
       "name": "Poison Cloud",
-      "description": "Deal 25 damage to all. Apply 5 debuff. Costs 8 Mana.",
+      "description": "Deal 8 damage. Enemy loses 2 Defense. Costs 8 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 25, "target": "enemy" },
-        { "type": "debuff", "value": 5, "target": "enemy" }
+        {
+          "type": "damage",
+          "value": 8,
+          "target": "enemy"
+        },
+        {
+          "type": "debuff",
+          "value": 2,
+          "target": "enemy"
+        }
       ],
-      "cost": { "mana": 8 },
+      "cost": {
+        "mana": 8
+      },
       "cooldown": 2.5,
       "targeting": "aoe",
       "rarity": "rare",
@@ -520,63 +936,120 @@
       "unlockTier": 4,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 34, "target": "enemy" },
-          { "type": "debuff", "value": 7, "target": "enemy" }
+          {
+            "type": "damage",
+            "value": 11,
+            "target": "enemy"
+          },
+          {
+            "type": "debuff",
+            "value": 2,
+            "target": "enemy"
+          }
         ],
-        "description": "Deal 34 damage to all. Apply 7 debuff. Costs 8 Mana."
+        "description": "Deal 11 damage. Enemy loses 2 Defense. Costs 8 Mana."
       }
     },
     {
       "id": "soul-rend",
       "name": "Soul Rend",
-      "description": "Deal 70 damage. Heal 15 HP. Restore 8 Mana. Costs 15 Mana.",
+      "description": "Deal 23 damage. Restore 5 HP. Restore 8 Mana. Costs 15 Mana.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 70, "target": "enemy" },
-        { "type": "heal", "value": 15, "target": "self" },
-        { "type": "mana", "value": 8, "target": "self" }
+        {
+          "type": "damage",
+          "value": 23,
+          "target": "enemy"
+        },
+        {
+          "type": "heal",
+          "value": 5,
+          "target": "self"
+        },
+        {
+          "type": "mana",
+          "value": 8,
+          "target": "self"
+        }
       ],
-      "cost": { "mana": 15 },
-      "cooldown": 3.0,
+      "cost": {
+        "mana": 15
+      },
+      "cooldown": 3,
       "targeting": "single",
       "rarity": "epic",
       "unlockSource": "forge",
       "unlockTier": 5,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 84, "target": "enemy" },
-          { "type": "heal", "value": 18, "target": "self" },
-          { "type": "mana", "value": 10, "target": "self" }
+          {
+            "type": "damage",
+            "value": 28,
+            "target": "enemy"
+          },
+          {
+            "type": "heal",
+            "value": 6,
+            "target": "self"
+          },
+          {
+            "type": "mana",
+            "value": 10,
+            "target": "self"
+          }
         ],
-        "description": "Deal 84 damage. Heal 18 HP. Restore 10 Mana. Costs 15 Mana."
+        "description": "Deal 28 damage. Restore 6 HP. Restore 10 Mana. Costs 15 Mana."
       }
     },
     {
       "id": "sacrifice",
       "name": "Sacrifice",
-      "description": "Lose 20% current HP. Deal 3x that as damage to all enemies.",
+      "description": "Deal 20 damage. Lose 7 HP.",
       "category": "magic",
       "effects": [
-        { "type": "damage", "value": 60, "target": "enemy" },
-        { "type": "damage", "value": 20, "target": "self" }
+        {
+          "type": "damage",
+          "value": 20,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 7,
+          "target": "self"
+        }
       ],
-      "cooldown": 4.0,
+      "cooldown": 4,
       "targeting": "aoe",
       "rarity": "epic",
       "unlockSource": "forge",
       "unlockTier": 6,
       "upgraded": {
         "effects": [
-          { "type": "damage", "value": 72, "target": "enemy" },
-          { "type": "damage", "value": 20, "target": "self" }
+          {
+            "type": "damage",
+            "value": 24,
+            "target": "enemy"
+          },
+          {
+            "type": "damage",
+            "value": 7,
+            "target": "self"
+          }
         ],
-        "description": "Lose 20% current HP. Deal 3.6x that as damage to all enemies."
+        "description": "Deal 24 damage. Lose 7 HP."
       }
     }
   ],
   "starterDeckIds": [
-    "strike", "strike", "strike", "strike",
-    "defend", "defend", "defend", "defend",
-    "heavy-hit", "fireball"
+    "strike",
+    "strike",
+    "strike",
+    "strike",
+    "defend",
+    "defend",
+    "defend",
+    "defend",
+    "heavy-hit",
+    "fireball"
   ]
 }

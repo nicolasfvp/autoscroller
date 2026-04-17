@@ -13,9 +13,9 @@ import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
 import { scaleEnemy } from '../data/EnemyDefinitions';
-import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
+import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -64,11 +64,8 @@ export class CombatScene extends Scene {
     const run = getRun();
     run.isInCombat = true;
 
-    // Load game speed from settings (non-blocking)
-    this.gameSpeed = 1;
-    loadMetaState().then((metaState) => {
-      this.gameSpeed = metaState.gameSpeed ?? 1;
-    });
+    // Use combat speed from RunState (persists between battles)
+    this.gameSpeed = run.combatSpeed ?? 1;
 
     // Background — terrain-based battle background
     this.cameras.main.setBackgroundColor(COLORS.background);
@@ -87,7 +84,7 @@ export class CombatScene extends Scene {
       return;
     }
 
-    const scaled = scaleEnemy(enemyDef, run.loop.difficulty);
+    const scaled = scaleEnemy(enemyDef, run.loop.count);
     // Create a scaled enemy definition for CombatState
     const scaledEnemy = {
       ...enemyDef,
@@ -170,6 +167,9 @@ export class CombatScene extends Scene {
     this.hud = new CombatHUD(this);
     this.cardQueue = new CardQueueDisplay(this);
     this.combatEffects = new CombatEffects(this);
+
+    // ── Combat speed controls ──
+    this.createSpeedControls(run);
 
     // Initial queue display
     this.cardQueue.update(combatState, 0);
@@ -286,7 +286,8 @@ export class CombatScene extends Scene {
 
         if (eventData.result === 'victory') {
           // Award XP
-          earnXP(currentRun, getXPForEnemy(enemyDef.type));
+          const xpEarned = getXPForEnemy(enemyDef.type);
+          earnXP(currentRun, xpEarned);
           // Write HP, stamina, and mana back to RunState for 50% recovery between fights
           const finalState = this.engine.getState();
           currentRun.hero.currentHP = finalState.heroHP;
@@ -297,13 +298,14 @@ export class CombatScene extends Scene {
             (currentRun as any)._lastBossDefeated = true;
           }
 
-          // Transition to PostCombatScene
-          const stats = this.engine.getStats();
-          this.fadeToScene('PostCombatScene', {
-            stats,
-            enemyType: enemyDef.type,
-            xpEarned: getXPForEnemy(enemyDef.type),
-          });
+          // Generate loot (gold + cards + materials) and queue notifications
+          const scaled = scaleEnemy(enemyDef, currentRun.loop.count);
+          const combatTerrain = data.terrain ?? 'basic';
+          generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, combatTerrain, scaled.gold, xpEarned);
+
+          // Resume GameScene directly (no PostCombatScene/RewardScene)
+          this.scene.stop();
+          this.scene.resume('GameScene');
         } else {
           // Defeat
           loseAllRunXP(currentRun);
@@ -318,6 +320,45 @@ export class CombatScene extends Scene {
 
     // Register cleanup
     this.events.on('shutdown', this.cleanup, this);
+  }
+
+  private speedText!: Phaser.GameObjects.Text;
+
+  private createSpeedControls(run: ReturnType<typeof getRun>): void {
+    const SPEEDS = [0.5, 1, 1.5, 2, 3];
+    const y = 580;
+    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+
+    // Slow button
+    const slowBtn = this.add.text(330, y, '<<', {
+      fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
+    slowBtn.on('pointerdown', () => {
+      const idx = SPEEDS.indexOf(this.gameSpeed);
+      if (idx > 0) {
+        this.gameSpeed = SPEEDS[idx - 1];
+        run.combatSpeed = this.gameSpeed;
+        this.speedText.setText(`${this.gameSpeed}x`);
+      }
+    });
+
+    // Speed label
+    this.speedText = this.add.text(375, y, `${this.gameSpeed}x`, {
+      fontSize: '16px', color: COLORS.accent, fontFamily, fontStyle: 'bold',
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(200);
+
+    // Fast button
+    const fastBtn = this.add.text(420, y, '>>', {
+      fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
+    fastBtn.on('pointerdown', () => {
+      const idx = SPEEDS.indexOf(this.gameSpeed);
+      if (idx < SPEEDS.length - 1) {
+        this.gameSpeed = SPEEDS[idx + 1];
+        run.combatSpeed = this.gameSpeed;
+        this.speedText.setText(`${this.gameSpeed}x`);
+      }
+    });
   }
 
   update(_time: number, delta: number): void {

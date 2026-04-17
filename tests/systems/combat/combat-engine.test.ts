@@ -36,6 +36,8 @@ function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): R
     deck: {
       active: deckActive,
       inventory: {},
+      upgradedCards: [],
+      droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 50, tilePoints: 0, tileInventory: {}, materials: {} },

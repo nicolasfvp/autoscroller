@@ -112,10 +112,7 @@ export class PlanningOverlay extends Scene {
 
     for (let i = 0; i < tiles.length; i++) {
       const x = startX + i * (tileSize + gap) + this.scrollOffset;
-      const leftIndex = ((i - 1) + tiles.length) % tiles.length;
-      const rightIndex = (i + 1) % tiles.length;
-      const neighbors = { left: tiles[leftIndex], right: tiles[rightIndex] };
-      const tv = new TileVisual(this, x, y, tiles[i], scale, i, true, neighbors);
+      const tv = new TileVisual(this, x, y, tiles[i], scale, i, true);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
 

@@ -42,6 +42,8 @@ function makeStarterRun(): RunState {
     deck: {
       active: [...STARTER_DECK],
       inventory: {},
+      upgradedCards: [],
+      droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
@@ -58,7 +60,7 @@ function makeSlimeEnemy(): EnemyDefinition {
     type: 'normal',
     baseHP: 130,
     baseDefense: 0,
-    attack: { damage: 8, pattern: 'fixed' },
+    attack: { damage: 3, pattern: 'fixed' },
     attackCooldown: 2500,
     goldReward: { min: 10, max: 20 },
     color: 0x00ff00,
@@ -72,7 +74,7 @@ function makeGoblinEnemy(): EnemyDefinition {
     type: 'normal',
     baseHP: 100,
     baseDefense: 0,
-    attack: { damage: 6, pattern: 'random', specialEffect: 'double' },
+    attack: { damage: 2, pattern: 'random', specialEffect: 'double' },
     attackCooldown: 1500,
     goldReward: { min: 15, max: 25 },
     color: 0x8b4513,
@@ -102,7 +104,7 @@ describe('Combat Balance Validation', () => {
   });
 
   describe('fight duration with starter deck', () => {
-    it('starter deck vs loop 1 Slime (130 HP) finishes in 5-12s', () => {
+    it('starter deck vs loop 1 Slime (130 HP) finishes in 15-36s', () => {
       const run = makeStarterRun();
       const enemy = makeSlimeEnemy();
       const state = createCombatState(run, enemy);
@@ -110,11 +112,11 @@ describe('Combat Balance Validation', () => {
 
       const result = simulateCombat(engine);
 
-      expect(result.elapsedMs).toBeGreaterThanOrEqual(5000);
-      expect(result.elapsedMs).toBeLessThanOrEqual(12000);
+      expect(result.elapsedMs).toBeGreaterThanOrEqual(15000);
+      expect(result.elapsedMs).toBeLessThanOrEqual(36000);
     });
 
-    it('starter deck vs loop 1 Goblin (100 HP) finishes in 4-10s', () => {
+    it('starter deck vs loop 1 Goblin (100 HP) finishes in 12-30s', () => {
       const run = makeStarterRun();
       const enemy = makeGoblinEnemy();
       const state = createCombatState(run, enemy);
@@ -122,8 +124,8 @@ describe('Combat Balance Validation', () => {
 
       const result = simulateCombat(engine);
 
-      expect(result.elapsedMs).toBeGreaterThanOrEqual(4000);
-      expect(result.elapsedMs).toBeLessThanOrEqual(10000);
+      expect(result.elapsedMs).toBeGreaterThanOrEqual(12000);
+      expect(result.elapsedMs).toBeLessThanOrEqual(30000);
     });
 
     it('starter deck vs loop 1 Slime -- hero survives', () => {

@@ -9,18 +9,18 @@
     { "id": "essence", "name": "Essence", "description": "Rare magical energy from powerful foes", "rarity": "rare" }
   ],
   "terrainDrops": {
-    "forest": { "primary": "wood", "secondary": "herbs", "baseAmount": { "min": 2, "max": 4 }, "secondaryChance": 0.2 },
-    "graveyard": { "primary": "bone", "secondary": "essence", "baseAmount": { "min": 2, "max": 4 }, "secondaryChance": 0.15 },
-    "swamp": { "primary": "herbs", "secondary": "bone", "baseAmount": { "min": 2, "max": 3 }, "secondaryChance": 0.2 },
-    "basic": { "primary": "stone", "baseAmount": { "min": 1, "max": 2 }, "secondaryChance": 0 },
+    "forest": { "primary": "wood", "secondary": "herbs", "baseAmount": { "min": 2, "max": 5 }, "secondaryChance": 0.25 },
+    "graveyard": { "primary": "bone", "secondary": "essence", "baseAmount": { "min": 2, "max": 5 }, "secondaryChance": 0.15 },
+    "swamp": { "primary": "herbs", "secondary": "bone", "baseAmount": { "min": 2, "max": 5 }, "secondaryChance": 0.25 },
+    "basic": { "primary": "stone", "baseAmount": { "min": 1, "max": 3 }, "secondaryChance": 0 },
     "volcano": { "primary": "crystal", "secondary": "iron", "baseAmount": { "min": 1, "max": 3 }, "secondaryChance": 0.25 }
   },
   "enemyBonusDrops": {
-    "slime": { "material": "herbs", "amount": { "min": 1, "max": 2 }, "chance": 0.3 },
-    "goblin": { "material": "iron", "amount": { "min": 1, "max": 2 }, "chance": 0.25 },
-    "orc": { "material": "iron", "amount": { "min": 1, "max": 3 }, "chance": 0.35 },
-    "mage": { "material": "crystal", "amount": { "min": 1, "max": 2 }, "chance": 0.3 },
-    "elite_knight": { "material": "essence", "amount": { "min": 1, "max": 2 }, "chance": 0.4 }
+    "slime": { "material": "herbs", "amount": { "min": 1, "max": 3 }, "chance": 0.4 },
+    "goblin": { "material": "iron", "amount": { "min": 1, "max": 2 }, "chance": 0.35 },
+    "orc": { "material": "iron", "amount": { "min": 1, "max": 3 }, "chance": 0.45 },
+    "mage": { "material": "crystal", "amount": { "min": 1, "max": 2 }, "chance": 0.4 },
+    "elite_knight": { "material": "essence", "amount": { "min": 1, "max": 2 }, "chance": 0.5 }
   },
   "bossDrops": {
     "materials": {

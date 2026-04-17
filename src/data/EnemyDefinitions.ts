@@ -25,10 +25,10 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'slime',
         name: 'Slime',
         type: 'normal',
-        baseHP: 100,
+        baseHP: 130,
         baseDefense: 0,
         attack: {
-            damage: 8,
+            damage: 3,
             pattern: 'fixed'
         },
         goldReward: { min: 10, max: 20 },
@@ -38,10 +38,10 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'goblin',
         name: 'Goblin',
         type: 'normal',
-        baseHP: 75,
+        baseHP: 100,
         baseDefense: 0,
         attack: {
-            damage: 6,
+            damage: 2,
             pattern: 'random',
             specialEffect: 'double'
         },
@@ -52,11 +52,11 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'orc',
         name: 'Orc',
         type: 'normal',
-        baseHP: 175,
-        baseDefense: 10,
+        baseHP: 184,
+        baseDefense: 3,
         attack: {
-            damage: 12,
-            defense: 5,
+            damage: 3,
+            defense: 2,
             pattern: 'fixed'
         },
         goldReward: { min: 20, max: 30 },
@@ -66,10 +66,10 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'mage',
         name: 'Dark Mage',
         type: 'normal',
-        baseHP: 85,
+        baseHP: 90,
         baseDefense: 0,
         attack: {
-            damage: 7,
+            damage: 5,
             pattern: 'conditional',
             specialEffect: 'debuff'
         },
@@ -80,11 +80,11 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'elite_knight',
         name: 'Elite Knight',
         type: 'elite',
-        baseHP: 200,
-        baseDefense: 15,
+        baseHP: 240,
+        baseDefense: 5,
         attack: {
-            damage: 15,
-            defense: 8,
+            damage: 2,
+            defense: 2,
             pattern: 'scaling'
         },
         goldReward: { min: 50, max: 80 },
@@ -94,13 +94,11 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'boss_demon',
         name: 'Demon Lord',
         type: 'boss',
-        baseHP: 20,
-        baseDefense: 0,
+        baseHP: 250,
+        baseDefense: 1,
         attack: {
-            damage: 20,
-            defense: 10,
-            pattern: 'scaling',
-            specialEffect: 'lifesteal'
+            damage: 5,
+            pattern: 'scaling'
         },
         goldReward: { min: 100, max: 150 },
         color: 0x8b0000
@@ -116,13 +114,17 @@ export function getRandomEnemy(type: 'normal' | 'elite' | 'boss' = 'normal'): En
     return filtered[Math.floor(Math.random() * filtered.length)];
 }
 
-export function scaleEnemy(enemy: EnemyDefinition, generation: number): {
+export function scaleEnemy(enemy: EnemyDefinition, loopCount: number): {
     hp: number;
     defense: number;
     damage: number;
     gold: number;
 } {
-    const multiplier = generation === 1 ? 0.5 : 1 + Math.log2(generation); // Weaken enemies in the first loop
+    // Start at 50%, +10% per loop until 100% (loop 6), then +1.5% per loop
+    const loop = Math.max(1, loopCount);
+    const multiplier = loop <= 6
+        ? 0.5 + (loop - 1) * 0.1
+        : 1.0 + (loop - 6) * 0.015;
     return {
         hp: Math.floor(enemy.baseHP * multiplier),
         defense: Math.floor(enemy.baseDefense * multiplier),

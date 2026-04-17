@@ -8,6 +8,10 @@ import { TileVisual } from '../ui/TileVisual';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
+import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
+import { showLootNotifications } from '../ui/LootNotification';
+import { generateTreasureLoot } from '../systems/TreasureLoot';
+import { resolveInlineEvent } from '../systems/InlineEvents';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -33,6 +37,9 @@ export class GameScene extends Scene {
   // Game speed multiplier (1x or 2x from settings)
   private gameSpeed: number = 1;
   private transitioning = false;
+
+  // Temporary slow debuff from events
+  private slowTimer: number = 0;
 
   constructor() {
     super('GameScene');
@@ -157,6 +164,12 @@ export class GameScene extends Scene {
         this.loopRunState.economy.materials[mat] = amount;
       }
 
+      // Show pending loot notifications above hero
+      if (hasPendingLoot()) {
+        const items = drainPendingLoot();
+        showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
+      }
+
       // Flush tile pool so world tiles re-render with updated data
       for (const [, tv] of this.tilePool) {
         tv.destroy();
@@ -187,8 +200,15 @@ export class GameScene extends Scene {
   update(_time: number, delta: number): void {
     if (this.scene.isPaused() || this.celebrationPlaying) return;
 
+    // Apply slow debuff
+    let speedMult = this.gameSpeed;
+    if (this.slowTimer > 0) {
+      this.slowTimer -= delta;
+      speedMult *= 0.4;
+    }
+
     // Tick the loop runner (game speed multiplier from settings)
-    this.loopRunner.tick(delta * this.gameSpeed);
+    this.loopRunner.tick(delta * speedMult);
 
     // Update hero world position
     const heroWorldX = this.worldOffset + this.loopRunState.loop.positionInLoop;
@@ -216,6 +236,20 @@ export class GameScene extends Scene {
     }
   }
 
+  /** Sync RunState economy back to LoopRunState */
+  private syncEconomyToLoopState(run: ReturnType<typeof getRun>): void {
+    this.loopRunState.economy.gold = run.economy.gold;
+    this.loopRunState.economy.tilePoints = run.economy.tilePoints;
+  }
+
+  /** Drain pending loot and show floating notifications above hero */
+  private showPendingNotifications(): void {
+    if (hasPendingLoot()) {
+      const items = drainPendingLoot();
+      showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
+    }
+  }
+
   private handleLoopEvent(event: string, data: any): void {
     switch (event) {
       case 'combat-start': {
@@ -224,6 +258,55 @@ export class GameScene extends Scene {
         break;
       }
       case 'open-scene': {
+        const run = getRun();
+
+        // ── Rest: heal 30% inline ──
+        if (data.scene === 'RestSiteScene') {
+          const heal = Math.floor(run.hero.maxHP * 0.3);
+          run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
+          run.hero.currentStamina = run.hero.maxStamina;
+          run.hero.currentMana = run.hero.maxMana;
+          addPendingLoot([{ label: `+${heal} HP, full STA/MP (rest)`, color: '#00ff00' }]);
+          this.showPendingNotifications();
+          this.loopRunner.resumeTraversal();
+          break;
+        }
+
+        // ── Event: inline random effect ──
+        if (data.scene === 'EventScene') {
+          const result = resolveInlineEvent(run);
+          this.syncEconomyToLoopState(run);
+          this.showPendingNotifications();
+          // If the event triggers combat, launch it
+          if (result.combatEnemyId) {
+            this.scene.pause();
+            this.scene.launch('CombatScene', { enemyId: result.combatEnemyId, isBoss: false });
+          } else {
+            // Apply slow debuff if any
+            if (result.slowDurationMs) {
+              this.slowTimer = result.slowDurationMs;
+            }
+            this.loopRunner.resumeTraversal();
+          }
+          break;
+        }
+
+        // ── Treasure: inline loot ──
+        if (data.scene === 'TreasureScene') {
+          generateTreasureLoot(run);
+          this.syncEconomyToLoopState(run);
+          this.showPendingNotifications();
+          this.loopRunner.resumeTraversal();
+          break;
+        }
+
+        // ── Shop: check toggle ──
+        if (data.scene === 'ShopScene' && !run.stopAtShop) {
+          this.loopRunner.resumeTraversal();
+          break;
+        }
+
+        // Default: open scene (shop when enabled, or any future scenes)
         this.scene.pause();
         this.scene.launch(data.scene);
         break;

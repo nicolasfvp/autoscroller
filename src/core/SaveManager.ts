@@ -24,6 +24,18 @@ export class SaveManager {
   async load(): Promise<RunState | null> {
     try {
       const saved = await get<RunState>(SAVE_KEY, gameStore);
+      if (saved) {
+        // Migrate old saves
+        if (!saved.deck.droppedCards) {
+          saved.deck.droppedCards = [];
+        }
+        if (saved.stopAtShop === undefined) {
+          saved.stopAtShop = true;
+        }
+        if (saved.combatSpeed === undefined) {
+          saved.combatSpeed = 1;
+        }
+      }
       return saved ?? null;
     } catch (err) {
       console.error('Load failed:', err);

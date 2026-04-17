@@ -26,26 +26,26 @@ describe('LootGenerator', () => {
   });
 
   describe('rollMaterialDrops', () => {
-    it('terrain forest returns wood between 2-4', () => {
+    it('terrain forest returns wood between 2-5', () => {
       // rng.next()=0 -> min + floor(0 * range) = 2; boostMult=1
       const rng = createDeterministicRNG([0, 0.99]); // first for amount, second for secondary chance
       const drops = rollMaterialDrops('terrain', 'forest', 1, rng);
       expect(drops.wood).toBeGreaterThanOrEqual(2);
-      expect(drops.wood).toBeLessThanOrEqual(4);
+      expect(drops.wood).toBeLessThanOrEqual(5);
     });
 
     it('terrain forest can drop secondary herbs on low roll', () => {
-      // amount roll=0.5 -> 2+floor(0.5*3)=3; secondary roll=0.1 < 0.2 -> herbs
+      // amount roll=0.5 -> 2+floor(0.5*4)=4; secondary roll=0.1 < 0.25 -> herbs
       const rng = createDeterministicRNG([0.5, 0.1]);
       const drops = rollMaterialDrops('terrain', 'forest', 1, rng);
-      expect(drops.wood).toBe(3);
+      expect(drops.wood).toBe(4);
       expect(drops.herbs).toBe(1);
     });
 
     it('terrain forest no secondary herbs on high roll', () => {
-      const rng = createDeterministicRNG([0.5, 0.5]); // 0.5 >= 0.2
+      const rng = createDeterministicRNG([0.5, 0.5]); // 0.5 >= 0.25
       const drops = rollMaterialDrops('terrain', 'forest', 1, rng);
-      expect(drops.wood).toBe(3);
+      expect(drops.wood).toBe(4);
       expect(drops.herbs).toBeUndefined();
     });
 
@@ -72,12 +72,10 @@ describe('LootGenerator', () => {
     });
 
     it('gatheringBoost increases material amounts', () => {
-      // With 20% boost: wood = floor(2 * 1.2) = 2 (min roll)
-      // With 20% boost and roll=0.99: wood = floor(4 * 1.2) = 4
+      // With 20% boost and roll=0.99: wood = 2+floor(0.99*4)=5, then floor(5*1.2)=6
       const rng = createDeterministicRNG([0.99, 0.99]); // high roll, no secondary
       const drops = rollMaterialDrops('terrain', 'forest', 1, rng, 0.20);
-      // 2+floor(0.99*3)=4, then floor(4*1.2)=4
-      expect(drops.wood).toBe(4);
+      expect(drops.wood).toBe(6);
     });
 
     it('unknown terrain returns empty', () => {
