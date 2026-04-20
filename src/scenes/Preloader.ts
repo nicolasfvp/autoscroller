@@ -65,6 +65,10 @@ export class Preloader extends Scene {
     this.load.image('bg_battle_graveyard', 'assets/backgrounds/bg_battle_graveyard.png');
     this.load.image('bg_battle_swamp', 'assets/backgrounds/bg_battle_swamp.png');
 
+    // Desert Parallax backgrounds
+    this.load.image('bg_desert', 'assets/backgrounds/desert.png');
+    this.load.image('bg_desert_sky', 'assets/backgrounds/desert-background.jpg');
+
     // Special tile icons (64x64)
     this.load.image('tile_shop', 'assets/tiles/tile_shop.png');
     this.load.image('tile_rest', 'assets/tiles/tile_rest.png');
