@@ -40,6 +40,10 @@ export class GameScene extends Scene {
 
   // Temporary slow debuff from events
   private slowTimer: number = 0;
+  
+  // Parallax Backgrounds
+  private bgSky?: Phaser.GameObjects.TileSprite;
+  private bgDesert?: Phaser.GameObjects.TileSprite;
 
   constructor() {
     super('GameScene');
@@ -68,7 +72,19 @@ export class GameScene extends Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
-    if (this.textures.exists('bg_run')) {
+    
+    // Create Parallax Backgrounds
+    if (this.textures.exists('bg_desert_sky')) {
+      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_desert_sky')
+        .setScrollFactor(0)
+        .setDepth(-11);
+    }
+    if (this.textures.exists('bg_desert')) {
+      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert')
+        .setScrollFactor(0)
+        .setDepth(-10);
+    } else if (this.textures.exists('bg_run')) {
+      // Fallback
       const bgImg = this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10);
       bgImg.setDisplaySize(800, 600);
     }
@@ -118,8 +134,8 @@ export class GameScene extends Scene {
     this.heroSprite.setDepth(50);
     this.heroSprite.play(walkKey);
 
-    // Camera follow
-    this.cameras.main.startFollow(this.heroSprite, true, 0.1, 0.1);
+    // Camera follow (push target lower on screen via offsetY)
+    this.cameras.main.startFollow(this.heroSprite, true, 0.1, 0.1, 0, 22);
     this.cameras.main.setDeadzone(100, 100);
 
     // HUD
@@ -213,6 +229,14 @@ export class GameScene extends Scene {
     // Update hero world position
     const heroWorldX = this.worldOffset + this.loopRunState.loop.positionInLoop;
     this.heroSprite.x = heroWorldX + 100; // +100 offset so hero starts visible
+
+    // Parallax update
+    if (this.bgSky) {
+      this.bgSky.tilePositionX = heroWorldX * 0.1; // Slower sky
+    }
+    if (this.bgDesert) {
+      this.bgDesert.tilePositionX = heroWorldX * 0.5; // Faster foreground
+    }
 
     // Update tile visuals
     this.updateTilePool();
