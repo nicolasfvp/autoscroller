@@ -130,13 +130,15 @@ export class GameScene extends Scene {
     }
 
     // Hero sprite
-    this.heroSprite = this.add.sprite(100, 410, idleKey);
+    this.heroSprite = this.add.sprite(100, 455, idleKey); // Afunda mais para o centro do bloco (que fica em Y=450)
+    this.heroSprite.setOrigin(0.5, 1.0); // Senta o pé exatamente na coordenada y inferior
+    this.heroSprite.setScale(1.5); // Baixou novamente para caber proporcional às tendas
     this.heroSprite.setDepth(50);
     this.heroSprite.play(walkKey);
 
     // Camera follow (push target lower on screen via offsetY)
-    this.cameras.main.startFollow(this.heroSprite, true, 0.1, 0.1, 0, 22);
-    this.cameras.main.setDeadzone(100, 100);
+    // Lerp set to 1 to avoid camera lagging behind the moving hero
+    this.cameras.main.startFollow(this.heroSprite, true, 1.0, 1.0, 0, 280);
 
     // HUD
     this.hud = new LoopHUD(this);

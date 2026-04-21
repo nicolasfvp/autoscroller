@@ -45,8 +45,8 @@ export class Game extends Scene {
     this.mapManager = new MapManager(this);
     this.player = new Player(this, 100, 410);
 
-    // Camera follows player
-    this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+    // Camera follows player with slight delay
+    this.cameras.main.startFollow(this.player, true, 0.1, 0.1, 0, -160);
     this.cameras.main.setDeadzone(100, 100);
 
     // Track current loop

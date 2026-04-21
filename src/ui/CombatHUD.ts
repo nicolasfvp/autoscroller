@@ -60,97 +60,78 @@ export class CombatHUD {
   }
 
   private createHeroSection(): void {
-    const x = 8;
-    let y = 8;
+    const x = 16;
+    let y = 24;
 
-    // HP label
-    const hpLabel = this.scene.add.text(x, y, 'HP', {
-      ...FONTS.small, color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '18px', stroke: '#000000', strokeThickness: 3 };
+    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 2 };
+
+    // HP
+    const hpLabel = this.scene.add.text(x, y, 'HP', { ...labelStyle, color: '#00ff00' }).setOrigin(0, 0.5);
     this.container.add(hpLabel);
+    
+    const hpBars = this.createBar(x + 40, y, 160, 16, 0x00ff00);
+    this.hpBarBg = hpBars.bg;
+    this.hpBar = hpBars.fill;
 
-    // HP bar background
-    this.hpBarBg = this.scene.add.rectangle(x + 30 + 80, y + 6, 160, 12, 0x333333).setOrigin(0.5);
-    this.container.add(this.hpBarBg);
-
-    // HP bar fill
-    this.hpBar = this.scene.add.rectangle(x + 30, y + 6, 160, 12, 0x00ff00).setOrigin(0, 0.5);
-    this.container.add(this.hpBar);
-
-    // HP text
-    this.hpText = this.scene.add.text(x + 30 + 164, y, '', {
-      ...FONTS.small, color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    this.hpText = this.scene.add.text(x + 40 + 80, y + 1, '', valStyle).setOrigin(0.5, 0.5);
     this.container.add(this.hpText);
+
+    y += 24;
+
+    // Stamina
+    const staLabel = this.scene.add.text(x, y, 'STA', { ...labelStyle, color: '#ff8c00' }).setOrigin(0, 0.5);
+    this.container.add(staLabel);
+    
+    const staBars = this.createBar(x + 40, y, 120, 14, 0xff8c00);
+    this.staminaBarBg = staBars.bg;
+    this.staminaBar = staBars.fill;
+
+    this.staminaText = this.scene.add.text(x + 40 + 60, y + 1, '', { ...valStyle, fontSize: '14px' }).setOrigin(0.5, 0.5);
+    this.container.add(this.staminaText);
 
     y += 20;
 
-    // Stamina label
-    const staLabel = this.scene.add.text(x, y, 'STA', {
-      ...FONTS.small, color: '#ff8c00', fontFamily: FONTS.family,
-    });
-    this.container.add(staLabel);
-
-    // Stamina bar bg
-    this.staminaBarBg = this.scene.add.rectangle(x + 30 + 60, y + 4, 120, 8, 0x333333).setOrigin(0.5);
-    this.container.add(this.staminaBarBg);
-
-    // Stamina bar fill
-    this.staminaBar = this.scene.add.rectangle(x + 30, y + 4, 120, 8, 0xff8c00).setOrigin(0, 0.5);
-    this.container.add(this.staminaBar);
-
-    // Stamina text
-    this.staminaText = this.scene.add.text(x + 30 + 124, y, '', {
-      ...FONTS.small, color: '#ff8c00', fontFamily: FONTS.family,
-    });
-    this.container.add(this.staminaText);
-
-    y += 16;
-
-    // Mana label
-    const manaLabel = this.scene.add.text(x, y, 'MP', {
-      ...FONTS.small, color: '#6a5acd', fontFamily: FONTS.family,
-    });
+    // Mana
+    const manaLabel = this.scene.add.text(x, y, 'MP', { ...labelStyle, color: '#6a5acd' }).setOrigin(0, 0.5);
     this.container.add(manaLabel);
 
-    // Mana bar bg
-    this.manaBarBg = this.scene.add.rectangle(x + 30 + 60, y + 4, 120, 8, 0x333333).setOrigin(0.5);
-    this.container.add(this.manaBarBg);
+    const manaBars = this.createBar(x + 40, y, 120, 14, 0x6a5acd);
+    this.manaBarBg = manaBars.bg;
+    this.manaBar = manaBars.fill;
 
-    // Mana bar fill
-    this.manaBar = this.scene.add.rectangle(x + 30, y + 4, 120, 8, 0x6a5acd).setOrigin(0, 0.5);
-    this.container.add(this.manaBar);
-
-    // Mana text
-    this.manaText = this.scene.add.text(x + 30 + 124, y, '', {
-      ...FONTS.small, color: '#6a5acd', fontFamily: FONTS.family,
-    });
+    this.manaText = this.scene.add.text(x + 40 + 60, y + 1, '', { ...valStyle, fontSize: '14px' }).setOrigin(0.5, 0.5);
     this.container.add(this.manaText);
   }
 
   private createEnemySection(): void {
-    const x = 520;
-    const y = 8;
+    const barWidth = 200;
+    const x = 780 - barWidth; // Pushed to the right edge
+    const y = 24;
+
+    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '22px', color: '#ff4444', stroke: '#000000', strokeThickness: 4 };
+    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 2 };
 
     // Enemy name
-    this.enemyNameText = this.scene.add.text(x, y, '', {
-      ...FONTS.body, color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    this.enemyNameText = this.scene.add.text(780, y, '', labelStyle).setOrigin(1, 0.5);
     this.container.add(this.enemyNameText);
 
-    // Enemy HP bar bg
-    this.enemyHpBarBg = this.scene.add.rectangle(x + 80, y + 24, 160, 12, 0x333333).setOrigin(0.5);
-    this.container.add(this.enemyHpBarBg);
+    // Enemy HP bar
+    const enemyBars = this.createBar(x, y + 26, barWidth, 18, 0xff0000);
+    this.enemyHpBarBg = enemyBars.bg;
+    this.enemyHpBar = enemyBars.fill;
 
-    // Enemy HP bar fill
-    this.enemyHpBar = this.scene.add.rectangle(x, y + 24, 160, 12, 0xff0000).setOrigin(0, 0.5);
-    this.container.add(this.enemyHpBar);
-
-    // Enemy HP text
-    this.enemyHpText = this.scene.add.text(x + 164, y + 18, '', {
-      ...FONTS.small, color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    this.enemyHpText = this.scene.add.text(x + barWidth / 2, y + 27, '', valStyle).setOrigin(0.5, 0.5);
     this.container.add(this.enemyHpText);
+  }
+
+  private createBar(x: number, y: number, width: number, height: number, color: number): { bg: Phaser.GameObjects.Rectangle, fill: Phaser.GameObjects.Rectangle } {
+    const shadow = this.scene.add.rectangle(x + 4, y + 4, width, height, 0x000000, 0.5).setOrigin(0, 0.5);
+    const bg = this.scene.add.rectangle(x, y, width, height, 0x222222).setOrigin(0, 0.5);
+    const fill = this.scene.add.rectangle(x, y, width, height, color).setOrigin(0, 0.5);
+    const frame = this.scene.add.rectangle(x, y, width, height).setOrigin(0, 0.5).setStrokeStyle(3, 0x000000);
+    this.container.add([shadow, bg, fill, frame]);
+    return { bg, fill };
   }
 
   private createCooldownArc(): void {

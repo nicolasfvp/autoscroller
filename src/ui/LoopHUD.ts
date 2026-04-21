@@ -37,69 +37,56 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.setDepth(100);
 
     // Left panel background
-    const panelBg = scene.add.rectangle(10, 10, 260, 90, 0x000000, 0.5)
-      .setOrigin(0, 0);
+    const panelBg = scene.add.rectangle(12, 12, 260, 80, 0x000000, 0.6).setOrigin(0, 0);
     this.add(panelBg);
 
-    // Row 1 (y=20): Gold icon + amount
-    const goldIcon = scene.add.text(20, 20, '\u25C6', {
-      fontSize: '20px', color: COLORS.accent, fontFamily: FONTS.family,
-    });
+    // Row 1 (y=24): Gold & Loop
+    const labelStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textSecondary, fontStyle: 'bold' };
+    const valStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textPrimary, fontStyle: 'bold' };
+
+    const goldIcon = scene.add.text(24, 24, '\u25C6', { ...valStyle, color: COLORS.accent });
     this.add(goldIcon);
 
-    this.goldText = scene.add.text(44, 22, '0', {
-      fontSize: '16px', color: COLORS.accent, fontFamily: FONTS.family,
-    });
+    this.goldText = scene.add.text(48, 24, '0', { ...valStyle, color: COLORS.accent });
     this.add(this.goldText);
 
-    // Row 2 (y=42): Loop counter + difficulty
-    this.loopText = scene.add.text(20, 42, 'Loop 1', {
-      fontSize: '16px', color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    this.loopText = scene.add.text(140, 24, 'Loop 1', { ...labelStyle, color: '#ffffff' });
     this.add(this.loopText);
 
-    this.difficultyText = scene.add.text(250, 42, 'x1.0', {
-      fontSize: '14px', color: COLORS.textSecondary, fontFamily: FONTS.family,
-    }).setOrigin(1, 0);
+    this.difficultyText = scene.add.text(255, 26, 'x1.0', { fontFamily: FONTS.family, fontSize: '14px', color: COLORS.textSecondary }).setOrigin(1, 0);
     this.add(this.difficultyText);
 
-    // Row 3 (y=62): HP bar
-    this.hpBg = scene.add.rectangle(20, 64, 160, 12, 0x333333).setOrigin(0, 0);
-    this.add(this.hpBg);
+    // Row 2 (y=64): HP bar
+    const hpBars = this.createBar(scene, 24, 64, 236, 16, 0x00cc44);
+    this.hpBg = hpBars.bg;
+    this.hpBar = hpBars.fill;
 
-    this.hpBar = scene.add.rectangle(20, 64, 160, 12, 0x00ff00).setOrigin(0, 0);
-    this.add(this.hpBar);
-
-    this.hpText = scene.add.text(190, 62, '100/100', {
-      fontSize: '14px', color: COLORS.textPrimary, fontFamily: FONTS.family,
-    });
+    this.hpText = scene.add.text(24 + 118, 64, '100/100', { fontFamily: FONTS.family, fontSize: '12px', color: '#ffffff', fontStyle: 'bold', stroke: '#000000', strokeThickness: 2 }).setOrigin(0.5, 0.5);
     this.add(this.hpText);
 
-    // Right-side: Tile Points
-    const tpIcon = scene.add.text(600, 14, 'TP', {
-      fontSize: '14px', color: '#00e5ff', fontFamily: FONTS.family, fontStyle: 'bold',
-    });
+    // Right-side panel
+    const rightPanelBg = scene.add.rectangle(570, 12, 218, 80, 0x000000, 0.6).setOrigin(0, 0);
+    this.add(rightPanelBg);
+
+    const tpIcon = scene.add.text(585, 24, 'TP:', { ...labelStyle, color: '#00e5ff' });
     this.add(tpIcon);
 
-    this.tpText = scene.add.text(625, 14, '0 TP', {
-      fontSize: '16px', color: '#00e5ff', fontFamily: FONTS.family,
-    });
+    this.tpText = scene.add.text(620, 24, '0', { ...valStyle, color: '#00e5ff' });
     this.add(this.tpText);
 
-    // Right-side: Materials
-    this.materialsText = scene.add.text(600, 36, '', {
-      fontSize: '12px', color: COLORS.material, fontFamily: FONTS.family,
+    this.materialsText = scene.add.text(585, 52, '', {
+      fontFamily: FONTS.family, fontSize: '12px', color: COLORS.textSecondary
     });
     this.add(this.materialsText);
 
     // Shop toggle button
-    this.shopToggleBg = scene.add.rectangle(710, 76, 80, 22, 0x005500, 0.8)
+    this.shopToggleBg = scene.add.rectangle(680, 70, 80, 20, 0x004400, 0.8)
       .setStrokeStyle(1, 0x00aa00)
       .setInteractive({ useHandCursor: true });
     this.add(this.shopToggleBg);
 
-    this.shopToggleText = scene.add.text(710, 76, 'Shop: ON', {
-      fontSize: '12px', color: '#00ff00', fontFamily: FONTS.family, fontStyle: 'bold',
+    this.shopToggleText = scene.add.text(680, 70, 'Shop: ON', {
+      fontFamily: FONTS.family, fontSize: '12px', color: '#00ff00', fontStyle: 'bold'
     }).setOrigin(0.5);
     this.add(this.shopToggleText);
 
@@ -110,6 +97,14 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     });
 
     scene.add.existing(this);
+  }
+
+  private createBar(scene: Phaser.Scene, x: number, y: number, width: number, height: number, color: number): { bg: Phaser.GameObjects.Rectangle, fill: Phaser.GameObjects.Rectangle } {
+    const bg = scene.add.rectangle(x, y, width, height, 0x333333).setOrigin(0, 0.5);
+    const fill = scene.add.rectangle(x, y, width, height, color).setOrigin(0, 0.5);
+    const frame = scene.add.rectangle(x, y, width, height).setOrigin(0, 0.5).setStrokeStyle(1, 0x555555);
+    this.add([bg, fill, frame]);
+    return { bg, fill };
   }
 
   update(runState: RunState): void {
@@ -168,12 +163,12 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     if (enabled) {
       this.shopToggleText.setText('Shop: ON');
       this.shopToggleText.setColor('#00ff00');
-      this.shopToggleBg.setFillStyle(0x005500, 0.8);
+      this.shopToggleBg.setFillStyle(0x004400, 0.8);
       this.shopToggleBg.setStrokeStyle(1, 0x00aa00);
     } else {
       this.shopToggleText.setText('Shop: OFF');
       this.shopToggleText.setColor('#ff4444');
-      this.shopToggleBg.setFillStyle(0x550000, 0.8);
+      this.shopToggleBg.setFillStyle(0x440000, 0.8);
       this.shopToggleBg.setStrokeStyle(1, 0xaa0000);
     }
   }
