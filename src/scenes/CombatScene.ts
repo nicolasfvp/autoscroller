@@ -146,22 +146,27 @@ export class CombatScene extends Scene {
       if (!this.anims.exists(deathKey) && this.textures.exists(deathKey)) {
         this.anims.create({ key: deathKey, frames: this.anims.generateFrameNumbers(deathKey, {}), frameRate: 8, repeat: 0 });
       }
-      this.enemySprite = this.add.sprite(550, 350, idleKey).setDepth(10).setScale(4);
+      this.enemySprite = this.add.sprite(600, 350, idleKey).setDepth(10).setScale(4);
       (this.enemySprite as Phaser.GameObjects.Sprite).play(idleKey);
     } else if (spriteKey && this.textures.exists(spriteKey)) {
-      this.enemySprite = this.add.sprite(550, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
+      this.enemySprite = this.add.sprite(600, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
     } else {
       // Fallback: colored rectangle when sprite assets are missing
-      this.enemySprite = this.add.rectangle(550, 350, 64, 64, enemyColor).setDepth(10);
+      this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyColor).setDepth(10);
     }
-    this.enemyLabel = this.add.text(550, 300, enemyDef.name, {
+    this.enemyLabel = this.add.text(600, 300, enemyDef.name, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
     }).setOrigin(0.5).setDepth(10);
 
     // "VS" divider
-    this.add.text(375, 350, 'VS', {
-      fontSize: '24px', fontStyle: 'bold', color: COLORS.accent,
-    }).setOrigin(0.5).setDepth(10).setAlpha(0.6);
+    this.add.text(400, 350, 'VS', {
+      fontSize: '28px',
+      fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+      fontStyle: 'bold',
+      color: COLORS.accent,
+      stroke: '#000000',
+      strokeThickness: 2,
+    }).setOrigin(0.5).setDepth(10).setAlpha(0.5);
 
     // Create UI components
     this.hud = new CombatHUD(this);
@@ -189,7 +194,7 @@ export class CombatScene extends Scene {
              if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey);
           });
         }
-        this.combatEffects.floatingNumber(550, 320, eventData.damage, '#ffffff', '-');
+        this.combatEffects.floatingNumber(600, 320, eventData.damage, '#ffffff', '-');
         if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
           this.enemySprite.setTint(0xffffff);
           this.time.delayedCall(200, () => {
@@ -273,9 +278,13 @@ export class CombatScene extends Scene {
       }
 
       const displayText = this.add.text(400, 300, resultText, {
-        fontSize: '32px',
+        fontSize: '56px',
+        fontFamily: '"Impact", "Arial Black", sans-serif',
         fontStyle: 'bold',
         color: resultColor,
+        stroke: '#000000',
+        strokeThickness: 6,
+        shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true }
       }).setOrigin(0.5).setDepth(600);
 
       // Hold 1s then transition (enough time for death anim at 8fps with 7 frames = ~875ms)

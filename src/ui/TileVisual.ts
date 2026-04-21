@@ -1,25 +1,29 @@
 import Phaser from 'phaser';
 import { getTileConfig, type TileSlot } from '../systems/TileRegistry';
+import { TILE_SIZE } from '../systems/LoopRunner';
 
 /** Maps tile keys to their sprite texture keys */
 const TILE_SPRITE_MAP: Record<string, string> = {
-  basic: 'tile_basic',
-  forest: 'tile_forest',
-  graveyard: 'tile_graveyard',
-  swamp: 'tile_swamp',
-  shop: 'tile_shop',
-  rest: 'tile_rest',
-  event: 'tile_event',
-  treasure: 'tile_treasure',
-  boss: 'tile_boss',
+  basic: 'tile_sand',
+  forest: 'tile_sand',
+  graveyard: 'tile_sand',
+  swamp: 'tile_sand',
+  shop: 'tile_sand',
+  rest: 'tile_sand',
+  event: 'tile_sand',
+  treasure: 'tile_sand',
+  boss: 'tile_sand',
 };
 
 /** Maps tile keys to their background object texture keys */
 const BG_SPRITE_MAP: Record<string, string> = {
-  basic: 'bg_basic',
   forest: 'bg_forest',
   graveyard: 'bg_graveyard',
   swamp: 'bg_swamp',
+  shop: 'bg_shop',
+  rest: 'bg_rest',
+  event: 'bg_event',
+  treasure: 'bg_treasure',
 };
 
 /** Get the terrain key for a tile slot */
@@ -48,12 +52,13 @@ export class TileVisual extends Phaser.GameObjects.Container {
     tileSlot: TileSlot,
     scale: number = 1,
     index: number = 0,
-    interactive: boolean = false
+    interactive: boolean = false,
+    isInventory: boolean = false
   ) {
     super(scene, x, y);
 
     this.tileScale = scale;
-    const size = 80 * scale;
+    const size = TILE_SIZE * scale;
 
     const key = getTileTerrainKey(tileSlot);
     let fillColor: number;
@@ -76,11 +81,19 @@ export class TileVisual extends Phaser.GameObjects.Container {
       this.add(this.sprite);
     }
 
-    // Background object (trees, tombstones, etc.)
+    // Background object (trees, tombstones, tents, chests, etc.)
     const bgKey = BG_SPRITE_MAP[key];
     if (bgKey && scene.textures.exists(bgKey)) {
-      this.bgObject = scene.add.image(0, -size * 0.3, bgKey);
-      this.bgObject.setDisplaySize(size, size);
+      // Escala conservadora para evitar overlap contínuo
+      const objectMultipler = isInventory ? 1.0 : 1.15;
+      
+      this.bgObject = scene.add.image(0, 0, bgKey);
+      // Foca a âncora de todo item na base dele (0.5, 1.0) para "ficar em pé" sobre a areia sem ter que advinhar offets loucos
+      this.bgObject.setOrigin(0.5, 1.0);
+      // Retorna os objetos para cima do topo do bloco (pois a base dupla foi desativada)
+      this.bgObject.y = isInventory ? size * 0.1 : size * 0.1;
+      
+      this.bgObject.setDisplaySize(size * objectMultipler, size * objectMultipler);
       this.add(this.bgObject);
     }
 
@@ -132,7 +145,9 @@ export class TileVisual extends Phaser.GameObjects.Container {
         });
       }
       this.enemySprite = scene.add.sprite(0, -tileSize * 0.15, idleKey);
-      this.enemySprite.setScale(tileSize / 32); // scale to fit tile
+      this.enemySprite.setOrigin(0.5, 1.0);
+      this.enemySprite.y = tileSize * 0.2; // Sobe os monstros novamente para parear com a nova altura dos itens
+      this.enemySprite.setScale(tileSize / 26); // reduzido a ~75% de tileSize / 20 
       this.enemySprite.play(idleKey);
       this.add(this.enemySprite);
     } else {
@@ -155,7 +170,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
   }
 
   setSynergyEdge(side: 'left' | 'right' | 'both' | 'none'): void {
-    const size = 80 * this.tileScale;
+    const size = TILE_SIZE * this.tileScale;
     const stripW = 4 * this.tileScale;
 
     if (this.leftSynergy) { this.leftSynergy.destroy(); this.leftSynergy = null; }
@@ -208,5 +223,10 @@ export class TileVisual extends Phaser.GameObjects.Container {
     const config = getTileConfig(key);
     this.iconText.setText(config.icon);
     this.setSynergyEdge('none');
+  }
+
+  hideFloor(): void {
+    if (this.bg) this.bg.setVisible(false);
+    if (this.sprite) this.sprite.setVisible(false);
   }
 }

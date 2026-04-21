@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
-import { LoopRunner, type LoopRunState } from '../systems/LoopRunner';
-import { getAllPlaceableTiles, getTileConfig } from '../systems/TileRegistry';
+import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
+import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
 import { resolveAdjacencySynergies } from '../systems/SynergyResolver';
 import { TileVisual } from '../ui/TileVisual';
 
@@ -186,10 +186,11 @@ export class PlanningOverlay extends Scene {
     this.tpBalanceText.setText(`${this.loopRunState.economy.tilePoints} TP`);
 
     const placeableTiles = getAllPlaceableTiles();
-    const startX = 80;
     const cardWidth = 80;
-    const cardHeight = 120;
-    const gap = 8;
+    const cardHeight = 140;
+    const gap = 12;
+    const totalContentWidth = placeableTiles.length * cardWidth + (placeableTiles.length - 1) * gap;
+    const startX = 400 - (totalContentWidth / 2) + (cardWidth / 2);
     const y = 400;
 
     placeableTiles.forEach((tileConfig, idx) => {
@@ -201,27 +202,41 @@ export class PlanningOverlay extends Scene {
       container.add(bg);
 
       // Tile color preview (40x40)
-      const preview = this.add.rectangle(0, -30, 40, 40, tileConfig.color);
+      const tileKey = (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase();
+      const pseudoSlot: TileSlot = {
+        type: tileConfig.type,
+        terrain: tileConfig.terrain,
+        defeatedThisLoop: false
+      };
+      
+      // Use the actual visual representation of the tile (scaled to fit)
+      const scale = 60 / TILE_SIZE;
+      // Ajustando o offset Y para acomodar a imagem maior (de -20 para -10)
+      const preview = new TileVisual(this, 0, -10, pseudoSlot, scale, 0, false, true);
+      
+      // se for um bloco especial ou de terreno, esconde a areia/bloco para deixar só o item
+      if (['shop', 'rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
+        preview.hideFloor();
+      }
       container.add(preview);
 
       // Name
-      const nameText = this.add.text(0, 10, tileConfig.name, {
+      const nameText = this.add.text(0, 25, tileConfig.name, {
         fontSize: '14px', color: '#ffffff', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
       // Cost
-      const costText = this.add.text(0, 28, `${tileConfig.tilePointCost} TP`, {
+      const costText = this.add.text(0, 45, `${tileConfig.tilePointCost} TP`, {
         fontSize: '14px', color: '#00e5ff', fontFamily,
       }).setOrigin(0.5);
       container.add(costText);
 
       // Check inventory for free copies
-      const tileKey = (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase();
       const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileKey);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const countText = this.add.text(0, 44, `x${freeCount}`, {
+        const countText = this.add.text(0, 60, `x${freeCount}`, {
           fontSize: '14px', color: '#aaaaaa', fontFamily,
         }).setOrigin(0.5);
         container.add(countText);

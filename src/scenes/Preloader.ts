@@ -10,6 +10,7 @@ export class Preloader extends Scene {
   preload(): void {
     // Ground tiles (64x64, seamless, extracted from tilesets)
     this.load.image('tile_basic', 'assets/tiles/tile_basic.png');
+    this.load.image('tile_sand', 'assets/tiles/sand_tile.jpg');
     this.load.image('tile_forest', 'assets/tiles/tile_forest.png');
     this.load.image('tile_graveyard', 'assets/tiles/tile_graveyard.png');
     this.load.image('tile_swamp', 'assets/tiles/tile_swamp.png');
@@ -19,6 +20,12 @@ export class Preloader extends Scene {
     this.load.image('bg_forest', 'assets/tiles/bg_forest.png');
     this.load.image('bg_graveyard', 'assets/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/tiles/bg_swamp.png');
+
+    // Special Floating/Resting objects
+    this.load.image('bg_event', 'assets/objects/event_icon.png');
+    this.load.image('bg_treasure', 'assets/objects/treasure_chest.png');
+    this.load.image('bg_rest', 'assets/objects/rest_tent.png');
+    this.load.image('bg_shop', 'assets/objects/shop_stall.png');
 
     // Carregando os monstros e herois em batch (IA gerado)
     this.load.image('archer_preview', 'assets/sprites/archer_generated.png');

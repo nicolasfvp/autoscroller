@@ -4,7 +4,7 @@ import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultySc
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
 
-const TILE_SIZE = 80;
+const TILE_SIZE = 64;
 
 export type LoopState = 'idle' | 'traversing' | 'tile-interaction' | 'planning' | 'boss-choice' | 'run-ended';
 

@@ -5,12 +5,11 @@ import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
 const QUEUE_X = 740;
-const CARD_WIDTH = 60;
-const CARD_HEIGHT = 96;
-const GAP = 8;
-const VISIBLE_COUNT = 5;
-const SLOT_HEIGHT = CARD_HEIGHT + GAP;
-const START_Y = 44; // top padding
+const CARD_WIDTH = 75; // 150 * 0.5
+const CARD_HEIGHT = 120; // 240 * 0.5
+const GAP = 15; // Espaço confortável
+const VISIBLE_COUNT = 3; // Menos cartas visíveis por vez para limpar a área central
+const START_Y = 110; // Cobre exatamente do limite final da barra de HP do inimigo e desce
 
 export class CardQueueDisplay {
   private scene: Phaser.Scene;
@@ -30,10 +29,29 @@ export class CardQueueDisplay {
   /**
    * Refresh the queue display from current combat state.
    */
-  update(state: CombatState, deckPointer: number): void {
+  public update(state: CombatState, deckPointer: number): void {
+    // Evita reconstrução na mesmíssima alteração se quisermos gerenciar animações de forma assíncrona
     this.currentDeckOrder = state.deckOrder;
     this.currentPointer = deckPointer;
     this.rebuild();
+  }
+
+  /**
+   * Helpers matemáticos para o Carrossel 
+   * Retorna a coordenada Y perfeita dado o slot index (0 = topo gigante, etc.)
+   */
+  private getSlotY(slotIndex: number): number {
+    let yCursor = START_Y;
+    for (let i = 0; i <= slotIndex; i++) {
+       const isTop = (i === 0);
+       const cardScale = isTop ? 0.65 : 0.45;
+       const currentCardHeight = 240 * cardScale;
+       if (i === slotIndex) {
+         return yCursor + currentCardHeight / 2;
+       }
+       yCursor += currentCardHeight + GAP;
+    }
+    return START_Y;
   }
 
   private rebuild(): void {
@@ -57,22 +75,26 @@ export class CardQueueDisplay {
     for (let i = 0; i < VISIBLE_COUNT && i < deck.length; i++) {
       const deckIdx = (this.currentPointer + i) % deck.length;
       const cardId = deck[deckIdx];
-      const y = START_Y + i * SLOT_HEIGHT + CARD_HEIGHT / 2;
-      const cardVis = createCardVisual(this.scene, QUEUE_X, y, cardId, { scale: 0.4 });
+      
+      const isTop = (i === 0);
+      const cardScale = isTop ? 0.65 : 0.45; 
+      
+      const y = this.getSlotY(i);
+      const cardVis = createCardVisual(this.scene, QUEUE_X, y, cardId, { scale: cardScale });
       this.container.add(cardVis);
       this.cardContainers.push(cardVis);
 
-      if (i === 0) {
+      if (isTop) {
         // Current card: full opacity, accent pulse glow
         cardVis.setAlpha(1);
         // Gold stroke on current card background
         const bg = cardVis.getAt(0) as Phaser.GameObjects.Rectangle;
-        if (bg) bg.setStrokeStyle(2, 0xffd700);
+        if (bg) bg.setStrokeStyle(3, 0xffd700);
         // Pulse tween
         this.pulseTween = this.scene.tweens.add({
           targets: cardVis,
-          scaleX: 1.05,
-          scaleY: 1.05,
+          scaleX: cardScale * 1.05, 
+          scaleY: cardScale * 1.05,
           duration: 800,
           yoyo: true,
           repeat: -1,
@@ -85,9 +107,10 @@ export class CardQueueDisplay {
     }
 
     // Triangle arrow indicator left of current card
-    const arrowY = START_Y + CARD_HEIGHT / 2;
+    const firstCardHeight = 240 * 0.65;
+    const arrowY = START_Y + firstCardHeight / 2;
     this.arrowIndicator = this.scene.add.triangle(
-      QUEUE_X - CARD_WIDTH / 2 - 12,
+      QUEUE_X - (150 * 0.65) / 2 - 14,
       arrowY,
       0, -6, 0, 6, 10, 0,
       0xffd700,
@@ -102,25 +125,51 @@ export class CardQueueDisplay {
     if (this.cardContainers.length === 0) return;
     const topCard = this.cardContainers[0];
 
-    // Slide left and fade out
+    // "Explodes" in place and fade out effect - more dramatic
     this.scene.tweens.add({
       targets: topCard,
-      x: topCard.x - 100,
+      scaleX: 1.4, // Huge scale burst
+      scaleY: 1.4,
       alpha: 0,
-      duration: 300,
-      ease: 'Sine.easeIn',
+      duration: 400, // Slightly longer so the explosion is visible
+      ease: 'Quad.easeOut', // Fast start, slowing down as it fades
       onComplete: () => {
         topCard.destroy();
       },
     });
 
-    // Remaining cards slide up
-    for (let i = 1; i < this.cardContainers.length; i++) {
+    // Smooth incoming ghost card fading in from below the visible slots
+    const incomingIdx = (this.currentPointer + VISIBLE_COUNT) % this.currentDeckOrder.length;
+    const incomingCardId = this.currentDeckOrder[incomingIdx];
+    
+    // Spawn it at the 4th slot position (which is off-screen visually)
+    const spawnY = this.getSlotY(VISIBLE_COUNT);
+    const incomingCard = createCardVisual(this.scene, QUEUE_X, spawnY, incomingCardId, { scale: 0.45 });
+    incomingCard.setAlpha(0); // starts invisible and fades in
+    this.container.add(incomingCard);
+
+    // Slide up existing cards AND ghost bottom card, smoothly scaling them into their new slots!
+    const slideTargets = [...this.cardContainers.slice(1), incomingCard];
+    
+    for (let newIdx = 0; newIdx < slideTargets.length; newIdx++) {
+      const card = slideTargets[newIdx];
+      const isBecomingTop = (newIdx === 0);
+      
+      const targetY = this.getSlotY(newIdx);
+      const targetScale = isBecomingTop ? 0.65 : 0.45;
+      const targetAlpha = isBecomingTop ? 1 : 0.8;
+
       this.scene.tweens.add({
-        targets: this.cardContainers[i],
-        y: this.cardContainers[i].y - SLOT_HEIGHT,
-        duration: 200,
-        ease: 'Sine.easeOut',
+        targets: card,
+        y: targetY,
+        scaleX: targetScale,
+        scaleY: targetScale,
+        alpha: targetAlpha,
+        duration: 350,
+        ease: 'Cubic.easeOut',
+        onComplete: () => {
+          if (card === incomingCard) incomingCard.destroy(); // Will be replaced exactly by rebuild()
+        }
       });
     }
   }
@@ -149,8 +198,8 @@ export class CardQueueDisplay {
    * Flash "Deck Reset" label at the bottom of the queue.
    */
   onDeckReshuffled(): void {
-    const y = START_Y + VISIBLE_COUNT * SLOT_HEIGHT + 8;
-    const resetText = this.scene.add.text(QUEUE_X, y, 'Deck Reset', {
+    const yReset = this.getSlotY(VISIBLE_COUNT) + 10;
+    const resetText = this.scene.add.text(QUEUE_X, yReset, 'Deck Reset', {
       fontSize: '14px',
       color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
