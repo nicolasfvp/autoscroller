@@ -40,6 +40,10 @@ export class GameScene extends Scene {
 
   // Temporary slow debuff from events
   private slowTimer: number = 0;
+  
+  // Parallax Backgrounds
+  private bgSky?: Phaser.GameObjects.TileSprite;
+  private bgDesert?: Phaser.GameObjects.TileSprite;
 
   constructor() {
     super('GameScene');
@@ -68,7 +72,19 @@ export class GameScene extends Scene {
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
-    if (this.textures.exists('bg_run')) {
+    
+    // Create Parallax Backgrounds
+    if (this.textures.exists('bg_desert_sky')) {
+      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_desert_sky')
+        .setScrollFactor(0)
+        .setDepth(-11);
+    }
+    if (this.textures.exists('bg_desert')) {
+      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert')
+        .setScrollFactor(0)
+        .setDepth(-10);
+    } else if (this.textures.exists('bg_run')) {
+      // Fallback
       const bgImg = this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10);
       bgImg.setDisplaySize(800, 600);
     }
@@ -114,13 +130,15 @@ export class GameScene extends Scene {
     }
 
     // Hero sprite
-    this.heroSprite = this.add.sprite(100, 410, idleKey);
+    this.heroSprite = this.add.sprite(100, 455, idleKey); // Afunda mais para o centro do bloco (que fica em Y=450)
+    this.heroSprite.setOrigin(0.5, 1.0); // Senta o pé exatamente na coordenada y inferior
+    this.heroSprite.setScale(1.5); // Baixou novamente para caber proporcional às tendas
     this.heroSprite.setDepth(50);
     this.heroSprite.play(walkKey);
 
-    // Camera follow
-    this.cameras.main.startFollow(this.heroSprite, true, 0.1, 0.1);
-    this.cameras.main.setDeadzone(100, 100);
+    // Camera follow (push target lower on screen via offsetY)
+    // Lerp set to 1 to avoid camera lagging behind the moving hero
+    this.cameras.main.startFollow(this.heroSprite, true, 1.0, 1.0, 0, 280);
 
     // HUD
     this.hud = new LoopHUD(this);
@@ -213,6 +231,14 @@ export class GameScene extends Scene {
     // Update hero world position
     const heroWorldX = this.worldOffset + this.loopRunState.loop.positionInLoop;
     this.heroSprite.x = heroWorldX + 100; // +100 offset so hero starts visible
+
+    // Parallax update
+    if (this.bgSky) {
+      this.bgSky.tilePositionX = heroWorldX * 0.1; // Slower sky
+    }
+    if (this.bgDesert) {
+      this.bgDesert.tilePositionX = heroWorldX * 0.5; // Faster foreground
+    }
 
     // Update tile visuals
     this.updateTilePool();

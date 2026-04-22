@@ -10,18 +10,22 @@ export function showSynergyFlash(
   bonusValue: number,
   displayName: string,
 ): void {
-  // "COMBO!" text at center
-  const comboText = scene.add.text(400, 300, 'COMBO!', {
-    fontSize: '32px',
+  // "COMBO!" text at center-top
+  const comboText = scene.add.text(400, 120, 'COMBO!', {
+    fontSize: '36px',
+    fontFamily: '"Impact", "Arial Black", sans-serif',
     fontStyle: 'bold',
-    color: '#ff00ff',
+    color: '#ffff00',
+    stroke: '#000000',
+    strokeThickness: 4,
+    shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
   }).setOrigin(0.5).setDepth(500).setScale(0);
 
   // Scale in with overshoot
   scene.tweens.add({
     targets: comboText,
-    scaleX: 1.3,
-    scaleY: 1.3,
+    scaleX: 1.05,
+    scaleY: 1.05,
     duration: 200,
     ease: 'Back.easeOut',
     onComplete: () => {
@@ -39,9 +43,14 @@ export function showSynergyFlash(
 
   // Bonus text below COMBO
   const bonusLabel = `${displayName} +${bonusValue} ${bonusType}`;
-  const bonusText = scene.add.text(400, 340, bonusLabel, {
-    fontSize: '16px',
-    color: '#ff00ff',
+  const bonusText = scene.add.text(400, 160, bonusLabel, {
+    fontSize: '20px',
+    fontFamily: '"Impact", "Arial Black", sans-serif',
+    fontStyle: 'bold',
+    color: '#00ffff',
+    stroke: '#000000',
+    strokeThickness: 3,
+    shadow: { offsetX: 1, offsetY: 1, color: '#000000', fill: true }
   }).setOrigin(0.5).setDepth(500).setAlpha(0);
 
   // Fade in after 100ms, then float up and fade

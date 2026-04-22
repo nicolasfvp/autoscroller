@@ -3,6 +3,7 @@ import { saveTileLoop, loadTileLoop } from '../data/TileLoopPersistence';
 import type { TileData } from '../data/TileData';
 import { generateTileLayout, getTileConfig } from '../data/TileTypes';
 import type { TileType } from '../data/TileTypes';
+import { TILE_SIZE } from '../systems/LoopRunner';
 
 export type { TileData };
 
@@ -10,7 +11,7 @@ export class MapManager {
     private scene: Scene;
     private tiles: Phaser.GameObjects.Rectangle[];
     private baseTiles: TileData[];
-    private tileSize: number = 80;
+    private tileSize: number = TILE_SIZE;
     private currentX: number = 0;
     private loopLength: number = 20;
 
@@ -109,7 +110,6 @@ export class MapManager {
         } else {
             // Loops 1-99: Escalating combat
             data.type = 'combat';
-            // Darker red as loops progress
             const intensity = Math.min(255, 136 + Math.floor(currentLoop * 1.2));
             data.color = (intensity << 16) | 0x0000; // RGB: (intensity, 0, 0)
         }
