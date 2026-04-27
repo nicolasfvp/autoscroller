@@ -29,8 +29,6 @@ export class CombatScene extends Scene {
   private enemyIdleKey = '';
   private enemyAttackKey = '';
   private enemyDeathKey = '';
-  private heroLabel!: Phaser.GameObjects.Text;
-  private enemyLabel!: Phaser.GameObjects.Text;
 
   // Game speed multiplier (1x or 2x from settings)
   private gameSpeed: number = 1;
@@ -121,10 +119,6 @@ export class CombatScene extends Scene {
       this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
     }
     
-    this.heroLabel = this.add.text(200, 200, 'Hero', {
-      fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
-    }).setOrigin(0.5).setDepth(10);
-
     // Enemy (right side) - animated sprite or colored square fallback
     this.enemyIdleKey = `${enemyDef.id}_idle`;
     this.enemyAttackKey = `${enemyDef.id}_attack`;
@@ -154,10 +148,11 @@ export class CombatScene extends Scene {
       // Fallback: colored rectangle when sprite assets are missing
       this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyColor).setDepth(10);
     }
-    this.enemyLabel = this.add.text(600, 300, enemyDef.name, {
-      fontSize: '16px', fontStyle: 'bold', color: COLORS.textPrimary,
-    }).setOrigin(0.5).setDepth(10);
-
+    // Flip dark mage sprite that is inverted (feedback #27)
+    if (this.enemySprite instanceof Phaser.GameObjects.Sprite && enemyDef.id.includes('dark_mage')) {
+      this.enemySprite.setFlipX(true);
+    }
+    
     // "VS" divider
     this.add.text(400, 350, 'VS', {
       fontSize: '28px',
@@ -339,7 +334,7 @@ export class CombatScene extends Scene {
     const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
 
     // Slow button
-    const slowBtn = this.add.text(330, y, '<<', {
+    const slowBtn = this.add.text(370, y, '<<', {
       fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
     }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
     slowBtn.on('pointerdown', () => {
@@ -352,12 +347,12 @@ export class CombatScene extends Scene {
     });
 
     // Speed label
-    this.speedText = this.add.text(375, y, `${this.gameSpeed}x`, {
+    this.speedText = this.add.text(400, y, `${this.gameSpeed}x`, {
       fontSize: '16px', color: COLORS.accent, fontFamily, fontStyle: 'bold',
     }).setOrigin(0.5).setScrollFactor(0).setDepth(200);
 
     // Fast button
-    const fastBtn = this.add.text(420, y, '>>', {
+    const fastBtn = this.add.text(430, y, '>>', {
       fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
     }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
     fastBtn.on('pointerdown', () => {

@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
-import { getCollectionStatus, getCompletionPercent, type CollectionStatus, type CategoryStatus } from '../systems/CollectionRegistry';
+import { getCollectionStatus, getCompletionPercent, getItemDetails, type CollectionStatus, type CategoryStatus } from '../systems/CollectionRegistry';
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 
@@ -31,6 +31,7 @@ export class CollectionScene extends Scene {
   private tabObjects: Phaser.GameObjects.Rectangle[] = [];
   private tabTexts: Phaser.GameObjects.Text[] = [];
   private transitioning = false;
+  private detailPopup: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super('CollectionScene');
@@ -59,20 +60,20 @@ export class CollectionScene extends Scene {
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
 
-    // Title
-    this.add.text(24, 24, 'Collection', {
+    // Title and completion on same line, properly spaced
+    this.add.text(400, 24, 'Collection', {
       fontSize: '24px',
       fontStyle: 'bold',
       color: COLORS.textPrimary,
       fontFamily,
-    });
+    }).setOrigin(0.5, 0);
 
-    // Completion percentage
-    this.add.text(180, 30, `${percent}% Complete`, {
+    // Completion percentage (below title, centered)
+    this.add.text(400, 52, `${percent}% Complete`, {
       fontSize: '14px',
       color: COLORS.accent,
       fontFamily,
-    });
+    }).setOrigin(0.5, 0);
 
     // Close button
     const closeBtn = this.add.text(776, 24, 'X', {
@@ -117,10 +118,39 @@ export class CollectionScene extends Scene {
       tabX += 124; // 120 + 4px gap
     }
 
-    // Grid container
+    // Grid container with scroll support (feedback #6)
     this.gridContainer = this.add.container(0, 0);
 
+    // Scroll mask
+    const maskGfx = this.make.graphics({ x: 0, y: 0 });
+    maskGfx.fillStyle(0xffffff);
+    maskGfx.fillRect(0, 80, 800, 500);
+    this.gridContainer.setMask(maskGfx.createGeometryMask());
+
+    // Mouse wheel scroll for grid
+    let scrollY = 0;
+    this.input.on('wheel', (_p: any, _go: any, _dx: number, dy: number) => {
+      const maxScroll = Math.max(0, this.getGridHeight() - 480);
+      scrollY = Math.max(0, Math.min(maxScroll, scrollY + dy * 0.5));
+      this.gridContainer.y = -scrollY;
+    });
+
     this.renderGrid();
+  }
+
+  /** Estimate total grid height based on active tab */
+  private getGridHeight(): number {
+    const tabKey = TAB_KEYS[this.activeTab];
+    const status = this.collectionStatus[tabKey];
+    const itemCount = status.items.length;
+    switch (this.activeTab) {
+      case 'Cards': return Math.ceil(itemCount / 6) * 104;
+      case 'Relics': return Math.ceil(itemCount / 4) * 96;
+      case 'Tiles': return Math.ceil(itemCount / 5) * 96;
+      case 'Events': return itemCount * 68;
+      case 'Bosses': return 300;
+      default: return 600;
+    }
   }
 
   private updateTabs(): void {
@@ -176,6 +206,7 @@ export class CollectionScene extends Scene {
       if (item.isUnlocked) {
         const card = this.add.rectangle(x, y, itemW, itemH, 0xcc3333, 0.8);
         card.setStrokeStyle(2, 0xcccccc);
+        card.setInteractive({ useHandCursor: true });
         this.gridContainer.add(card);
 
         const name = this.add.text(x, y + 10, item.name, {
@@ -186,6 +217,9 @@ export class CollectionScene extends Scene {
           align: 'center',
         }).setOrigin(0.5);
         this.gridContainer.add(name);
+
+        // Click for details (feedback #7)
+        card.on('pointerdown', () => this.showDetailPopup(item.id));
       } else {
         const card = this.add.rectangle(x, y, itemW, itemH, 0x444444);
         this.gridContainer.add(card);
@@ -228,6 +262,7 @@ export class CollectionScene extends Scene {
       if (item.isUnlocked) {
         const relic = this.add.rectangle(x, y, itemSize, itemSize, COLORS.panel);
         relic.setStrokeStyle(2, 0x9370db);
+        relic.setInteractive({ useHandCursor: true });
         this.gridContainer.add(relic);
 
         const name = this.add.text(x, y, item.name, {
@@ -238,6 +273,9 @@ export class CollectionScene extends Scene {
           align: 'center',
         }).setOrigin(0.5);
         this.gridContainer.add(name);
+
+        // Click for details (feedback #7)
+        relic.on('pointerdown', () => this.showDetailPopup(item.id));
       } else {
         const relic = this.add.rectangle(x, y, itemSize, itemSize, 0x444444);
         this.gridContainer.add(relic);
@@ -399,6 +437,102 @@ export class CollectionScene extends Scene {
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
       }
+    });
+  }
+
+  // ── Detail popup (feedback #7) ──
+
+  private showDetailPopup(itemId: string): void {
+    this.closeDetailPopup();
+
+    const details = getItemDetails(itemId, this.metaState);
+    if (!details) return;
+
+    const fontFamily = FONTS.family;
+    const container = this.add.container(400, 300).setDepth(500);
+
+    // Dark overlay (click to close)
+    const overlay = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.6)
+      .setInteractive();
+    overlay.on('pointerdown', () => this.closeDetailPopup());
+    container.add(overlay);
+
+    // Panel
+    const panelW = 360;
+    const panelH = 280;
+    const panel = this.add.rectangle(0, 0, panelW, panelH, 0x1a1a2e, 0.95)
+      .setStrokeStyle(2, 0xffd700);
+    container.add(panel);
+
+    // Title
+    container.add(this.add.text(0, -panelH / 2 + 24, details.name, {
+      fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
+    }).setOrigin(0.5));
+
+    // Description / stats
+    let yOff = -panelH / 2 + 60;
+    const data = details.data;
+
+    if (data.description) {
+      container.add(this.add.text(0, yOff, data.description, {
+        fontSize: '14px', color: COLORS.textPrimary, fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center', lineSpacing: 3,
+      }).setOrigin(0.5, 0));
+      yOff += 60;
+    }
+
+    // Card-specific stats
+    if (data.category) {
+      const stats: string[] = [];
+      stats.push(`Category: ${data.category}`);
+      stats.push(`Rarity: ${data.rarity ?? 'common'}`);
+      stats.push(`Cooldown: ${data.cooldown ?? 0}s`);
+      if (data.cost?.stamina) stats.push(`Stamina: ${data.cost.stamina}`);
+      if (data.cost?.mana) stats.push(`Mana: ${data.cost.mana}`);
+      if (data.targeting) stats.push(`Target: ${data.targeting}`);
+
+      container.add(this.add.text(0, yOff, stats.join('  \u2022  '), {
+        fontSize: '12px', color: COLORS.textSecondary, fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center',
+      }).setOrigin(0.5, 0));
+      yOff += 40;
+    }
+
+    // Relic-specific effect
+    if (data.effect) {
+      container.add(this.add.text(0, yOff, `Effect: ${data.effect}`, {
+        fontSize: '13px', color: '#00ccff', fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center',
+      }).setOrigin(0.5, 0));
+      yOff += 40;
+    }
+
+    // Close hint
+    container.add(this.add.text(0, panelH / 2 - 24, 'Click anywhere to close', {
+      fontSize: '11px', color: COLORS.textSecondary, fontFamily,
+    }).setOrigin(0.5));
+
+    // Scale-in animation
+    container.setScale(0.8);
+    container.setAlpha(0);
+    this.tweens.add({
+      targets: container,
+      scaleX: 1, scaleY: 1, alpha: 1,
+      duration: 200, ease: 'Back.easeOut',
+    });
+
+    this.detailPopup = container;
+  }
+
+  private closeDetailPopup(): void {
+    if (!this.detailPopup) return;
+    const popup = this.detailPopup;
+    this.detailPopup = null;
+    this.tweens.add({
+      targets: popup,
+      alpha: 0, scaleX: 0.9, scaleY: 0.9,
+      duration: 150,
+      onComplete: () => popup.destroy(true),
     });
   }
 }

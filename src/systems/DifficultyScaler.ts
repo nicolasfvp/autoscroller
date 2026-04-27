@@ -61,12 +61,14 @@ export function scaleEnemyForLoop(
     hp: Math.floor(baseEnemy.baseHP * loopMult),
     damage: Math.floor(baseEnemy.attack.damage * loopMult),
     defense: Math.floor(baseEnemy.baseDefense * loopMult),
-    goldReward: Math.floor(avgGold * Math.sqrt(loopMult)),
+    // Use log2 scaling to prevent gold hyperinflation (feedback #23)
+    goldReward: Math.floor(avgGold * Math.log2(loopMult + 1)),
   };
 }
 
-export function getLoopSpeed(loopCount: number): number {
-  return config.baseSpeed * Math.pow(config.speedScalePerLoop, loopCount - 1);
+// Map speed is now player-controlled via RunState.mapSpeed (feedback #28)
+export function getLoopSpeed(_loopCount: number): number {
+  return config.baseSpeed;
 }
 
 export function getDifficultyConfig(): DifficultyConfig {

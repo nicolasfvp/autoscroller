@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
+import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 
 interface ClassOption {
@@ -236,7 +237,8 @@ export class CharacterSelectScene extends Scene {
 
   private async confirmSelection(): Promise<void> {
     const selected = CLASSES[this.selectedIndex];
-    setRun(createNewRun(1, selected.id));
+    const meta = await loadMetaState();
+    setRun(createNewRun(meta, 1, selected.id));
     await saveManager.save(getRun());
     this.fadeToScene('TutorialScene');
   }

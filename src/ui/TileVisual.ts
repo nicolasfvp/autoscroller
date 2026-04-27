@@ -177,11 +177,11 @@ export class TileVisual extends Phaser.GameObjects.Container {
     if (this.rightSynergy) { this.rightSynergy.destroy(); this.rightSynergy = null; }
 
     if (side === 'left' || side === 'both') {
-      this.leftSynergy = this.scene.add.rectangle(-size / 2 + stripW / 2, 0, stripW, size, 0xff00ff);
+      this.leftSynergy = this.scene.add.rectangle(-size / 2 + stripW / 2, 0, stripW, size, 0x00ffcc);
       this.add(this.leftSynergy);
     }
     if (side === 'right' || side === 'both') {
-      this.rightSynergy = this.scene.add.rectangle(size / 2 - stripW / 2, 0, stripW, size, 0xff00ff);
+      this.rightSynergy = this.scene.add.rectangle(size / 2 - stripW / 2, 0, stripW, size, 0x00ffcc);
       this.add(this.rightSynergy);
     }
   }

@@ -26,7 +26,7 @@ export class TavernPanelScene extends Scene {
     });
 
     // Panel
-    const panel = this.add.rectangle(400, 300, 500, 420, COLORS.panel, 0.95);
+    const panel = this.add.image(400, 300, 'wood_texture').setDisplaySize(500, 420);
     panel.setInteractive(); // absorb clicks
 
     // Title
@@ -80,7 +80,7 @@ export class TavernPanelScene extends Scene {
 
       // Create a new run preserving the chosen class
       const chosenClass = hasActiveRun() ? (getRun().hero.className ?? 'warrior') : 'warrior';
-      const run = createNewRun(1, chosenClass);
+      const run = createNewRun(this.metaState, 1, chosenClass);
       setRun(run);
 
       // Stop this overlay and CityHub, start GameScene

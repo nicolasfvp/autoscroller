@@ -70,18 +70,17 @@ export class DeathScene extends Scene {
     const { deathRetention } = getStorehouseEffects(storehouseLevel);
     const retentionPct = Math.round(deathRetention * 100);
 
-    // Build per-material retention display
-    const retainedLines = Object.entries(materialsEarned)
+    const retainedEntries = Object.entries(materialsEarned)
       .filter(([, v]) => v > 0)
-      .map(([k, v]) => `${k}: ${Math.floor(v * deathRetention)}`)
-      .join(', ') || 'None';
+      .map(([k, v]) => `${k}: ${Math.floor(v * deathRetention)}`);
+    const retainedLines = retainedEntries.length > 0 ? retainedEntries.join(', ') : 'None';
 
     const statRows: Array<{ label: string; value: string; color: string }> = [
       { label: 'Loops Completed', value: `${run.loop.count}`, color: COLORS.textPrimary },
       { label: 'Total Damage Dealt', value: `${stats?.damageDealt ?? 0}`, color: COLORS.textPrimary },
       { label: 'Total Cards Played', value: `${stats?.cardsPlayed ?? 0}`, color: COLORS.textPrimary },
       { label: 'Total Combos', value: `${stats?.synergiesTriggered ?? 0}`, color: COLORS.synergy },
-      { label: `Retained (${retentionPct}%)`, value: retainedLines, color: COLORS.material },
+      { label: `\u2705 You Keep (${retentionPct}%)`, value: retainedLines, color: '#00ff00' },
     ];
 
     for (let i = 0; i < statRows.length; i++) {

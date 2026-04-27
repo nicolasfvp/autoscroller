@@ -135,11 +135,7 @@ export class Game extends Scene {
       new SeedDisplay(this, data.seed);
     }
 
-    // ── Controls hint ──────────────────────────────────────
-    this.add.text(10, 550, '[D] Deck | [R] Relics | [ESC] Pause', {
-      fontSize: '12px',
-      color: '#aaccff',
-    }).setScrollFactor(0).setDepth(100);
+
 
     // ── Keyboard shortcuts ─────────────────────────────────
     this.input.keyboard?.on('keydown-D', () => {

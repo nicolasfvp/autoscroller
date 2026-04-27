@@ -2,6 +2,9 @@ import Phaser from 'phaser';
 import { getRun, type RunState } from '../state/RunState';
 import { COLORS, FONTS } from './StyleConstants';
 
+/** Stroke style applied to every text for readability over bright biomes */
+const TEXT_STROKE = { stroke: '#000000', strokeThickness: 3 };
+
 /**
  * LoopHUD -- fixed HUD overlay for GameScene.
  * Displays: gold, loop counter, difficulty, HP bar, tile points, materials.
@@ -18,6 +21,10 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private materialsText: Phaser.GameObjects.Text;
   private shopToggleText: Phaser.GameObjects.Text;
   private shopToggleBg: Phaser.GameObjects.Rectangle;
+
+
+  // Pending cards badge
+  private pendingBadge!: Phaser.GameObjects.Text;
 
   // Tweened counter tracking
   private displayedGold: number = 0;
@@ -37,12 +44,12 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.setDepth(100);
 
     // Left panel background
-    const panelBg = scene.add.rectangle(12, 12, 260, 80, 0x000000, 0.6).setOrigin(0, 0);
+    const panelBg = scene.add.image(12, 12, 'wood_texture').setOrigin(0, 0).setDisplaySize(260, 80);
     this.add(panelBg);
 
     // Row 1 (y=24): Gold & Loop
-    const labelStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textSecondary, fontStyle: 'bold' };
-    const valStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textPrimary, fontStyle: 'bold' };
+    const labelStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textSecondary, fontStyle: 'bold', ...TEXT_STROKE };
+    const valStyle = { fontFamily: FONTS.family, fontSize: '18px', color: COLORS.textPrimary, fontStyle: 'bold', ...TEXT_STROKE };
 
     const goldIcon = scene.add.text(24, 24, '\u25C6', { ...valStyle, color: COLORS.accent });
     this.add(goldIcon);
@@ -53,7 +60,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.loopText = scene.add.text(140, 24, 'Loop 1', { ...labelStyle, color: '#ffffff' });
     this.add(this.loopText);
 
-    this.difficultyText = scene.add.text(255, 26, 'x1.0', { fontFamily: FONTS.family, fontSize: '14px', color: COLORS.textSecondary }).setOrigin(1, 0);
+    this.difficultyText = scene.add.text(255, 26, 'x1.0', { fontFamily: FONTS.family, fontSize: '14px', color: COLORS.textSecondary, ...TEXT_STROKE }).setOrigin(1, 0);
     this.add(this.difficultyText);
 
     // Row 2 (y=64): HP bar
@@ -64,29 +71,29 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.hpText = scene.add.text(24 + 118, 64, '100/100', { fontFamily: FONTS.family, fontSize: '12px', color: '#ffffff', fontStyle: 'bold', stroke: '#000000', strokeThickness: 2 }).setOrigin(0.5, 0.5);
     this.add(this.hpText);
 
-    // Right-side panel
-    const rightPanelBg = scene.add.rectangle(570, 12, 218, 80, 0x000000, 0.6).setOrigin(0, 0);
+    // Right panel background (TP, Shop toggle)
+    const rightPanelBg = scene.add.image(528, 12, 'wood_texture').setOrigin(0, 0).setDisplaySize(260, 80);
     this.add(rightPanelBg);
 
-    const tpIcon = scene.add.text(585, 24, 'TP:', { ...labelStyle, color: '#00e5ff' });
+    const tpIcon = scene.add.text(540, 24, 'TP:', { ...labelStyle, color: '#00e5ff' });
     this.add(tpIcon);
 
-    this.tpText = scene.add.text(620, 24, '0', { ...valStyle, color: '#00e5ff' });
+    this.tpText = scene.add.text(575, 24, '0', { ...valStyle, color: '#00e5ff' });
     this.add(this.tpText);
 
-    this.materialsText = scene.add.text(585, 52, '', {
-      fontFamily: FONTS.family, fontSize: '12px', color: COLORS.textSecondary
+    this.materialsText = scene.add.text(540, 52, '', {
+      fontFamily: FONTS.family, fontSize: '12px', color: COLORS.textSecondary, ...TEXT_STROKE
     });
     this.add(this.materialsText);
 
-    // Shop toggle button
-    this.shopToggleBg = scene.add.rectangle(680, 70, 80, 20, 0x004400, 0.8)
+    // Shop toggle button — renamed for clarity (feedback #8)
+    this.shopToggleBg = scene.add.rectangle(720, 24, 56, 20, 0x004400, 0.8)
       .setStrokeStyle(1, 0x00aa00)
       .setInteractive({ useHandCursor: true });
     this.add(this.shopToggleBg);
 
-    this.shopToggleText = scene.add.text(680, 70, 'Shop: ON', {
-      fontFamily: FONTS.family, fontSize: '12px', color: '#00ff00', fontStyle: 'bold'
+    this.shopToggleText = scene.add.text(720, 24, 'Shop \u2714', {
+      fontFamily: FONTS.family, fontSize: '11px', color: '#00ff00', fontStyle: 'bold', ...TEXT_STROKE
     }).setOrigin(0.5);
     this.add(this.shopToggleText);
 
@@ -95,6 +102,14 @@ export class LoopHUD extends Phaser.GameObjects.Container {
       run.stopAtShop = !run.stopAtShop;
       this.updateShopToggle(run.stopAtShop);
     });
+
+
+
+    // ── Pending cards badge (feedback #11) ──
+    this.pendingBadge = scene.add.text(255, 72, '', {
+      fontFamily: FONTS.family, fontSize: '13px', color: '#ff8800', fontStyle: 'bold', ...TEXT_STROKE
+    });
+    this.add(this.pendingBadge);
 
     scene.add.existing(this);
   }
@@ -147,26 +162,36 @@ export class LoopHUD extends Phaser.GameObjects.Container {
       });
     }
 
-    // Materials display: compact format with first letter abbreviation
-    const ABBREV: Record<string, string> = { wood: 'W', stone: 'S', iron: 'I', crystal: 'C', bone: 'B', herbs: 'H', essence: 'E' };
+    // Materials display: emoji icons for clarity (feedback #14)
+    const MAT_ICONS: Record<string, string> = { wood: '\uD83E\uDEB5', stone: '\uD83E\uDEA8', iron: '\u2699', crystal: '\uD83D\uDC8E', bone: '\uD83E\uDDB4', herbs: '\uD83C\uDF3F', essence: '\u2728' };
     const matEntries = Object.entries(runState.economy.materials ?? {}).filter(([, v]) => v > 0);
     const matStr = matEntries.length > 0
-      ? matEntries.slice(0, 4).map(([k, v]) => `${ABBREV[k] ?? k[0].toUpperCase()}:${v}`).join(' ')
+      ? matEntries.slice(0, 4).map(([k, v]) => `${MAT_ICONS[k] ?? k[0].toUpperCase()}${v}`).join(' ')
       : '';
     this.materialsText.setText(matStr);
 
     // Shop toggle visual sync
     this.updateShopToggle(runState.stopAtShop);
+
+
+    // Pending cards badge (feedback #11)
+    const pendingCount = runState.deck.droppedCards?.length ?? 0;
+    if (pendingCount > 0) {
+      this.pendingBadge.setText(`\uD83D\uDCE6 ${pendingCount} new`);
+      this.pendingBadge.setVisible(true);
+    } else {
+      this.pendingBadge.setVisible(false);
+    }
   }
 
   private updateShopToggle(enabled: boolean): void {
     if (enabled) {
-      this.shopToggleText.setText('Shop: ON');
+      this.shopToggleText.setText('Shop \u2714');
       this.shopToggleText.setColor('#00ff00');
       this.shopToggleBg.setFillStyle(0x004400, 0.8);
       this.shopToggleBg.setStrokeStyle(1, 0x00aa00);
     } else {
-      this.shopToggleText.setText('Shop: OFF');
+      this.shopToggleText.setText('Shop \u2718');
       this.shopToggleText.setColor('#ff4444');
       this.shopToggleBg.setFillStyle(0x440000, 0.8);
       this.shopToggleBg.setStrokeStyle(1, 0xaa0000);
