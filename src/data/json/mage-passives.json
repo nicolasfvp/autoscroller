@@ -1,0 +1,65 @@
+[
+  {
+    "id": "mage_arcane_affinity",
+    "name": "Arcane Affinity",
+    "description": "+8 Max Mana",
+    "xpThreshold": 100,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "maxMana",
+      "value": 8
+    }
+  },
+  {
+    "id": "mage_spell_echo",
+    "name": "Spell Echo",
+    "description": "+15% spell damage",
+    "xpThreshold": 250,
+    "effect": {
+      "type": "conditional_trigger",
+      "condition": "consecutive_attacks_2",
+      "triggerEffect": {
+        "type": "damage_bonus_percent",
+        "value": 15,
+        "target": "self"
+      }
+    }
+  },
+  {
+    "id": "mage_mana_shield",
+    "name": "Mana Shield",
+    "description": "+5 Max Mana, +5 Max HP",
+    "xpThreshold": 450,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "maxMana",
+      "value": 5
+    }
+  },
+  {
+    "id": "mage_overload",
+    "name": "Overload",
+    "description": "Recover 3 Mana on deck reshuffle",
+    "xpThreshold": 700,
+    "effect": {
+      "type": "conditional_trigger",
+      "condition": "deck_reshuffled",
+      "triggerEffect": {
+        "type": "mana",
+        "value": 3,
+        "target": "self"
+      }
+    }
+  },
+  {
+    "id": "mage_ascendance",
+    "name": "Ascendance",
+    "description": "+10 Max Mana, +1 Strength",
+    "xpThreshold": 1000,
+    "effect": {
+      "type": "stat_modifier",
+      "stat": "maxMana",
+      "value": 10
+    }
+  }
+]

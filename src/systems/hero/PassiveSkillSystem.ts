@@ -1,7 +1,8 @@
 // Passive skill resolution from XP and class data.
 // No Phaser dependency. Pure functions operating on RunState + passive data.
 
-import passiveData from '../../data/json/warrior-passives.json';
+import warriorPassiveData from '../../data/json/warrior-passives.json';
+import magePassiveData from '../../data/json/mage-passives.json';
 import type { RunState, HeroState } from '../../state/RunState';
 
 // ── Types ───────────────────────────────────────────────────
@@ -33,7 +34,11 @@ export interface TriggerContext {
  */
 export function resolvePassives(run: RunState): PassiveSkill[] {
   const totalXP = run.hero.totalXP ?? 0;
-  return (passiveData as PassiveSkill[])
+  const className = run.hero.className ?? 'warrior';
+  const passiveData = className === 'mage'
+    ? (magePassiveData as PassiveSkill[])
+    : (warriorPassiveData as PassiveSkill[]);
+  return passiveData
     .filter((p) => totalXP >= p.xpThreshold)
     .sort((a, b) => a.xpThreshold - b.xpThreshold);
 }

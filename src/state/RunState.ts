@@ -5,6 +5,8 @@
 import { nanoid } from 'nanoid';
 import { getClassDef } from '../systems/hero/ClassRegistry';
 import { SeededRNG } from '../systems/SeededRNG';
+import { MetaState, createDefaultMetaState } from './MetaState';
+import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../systems/UnlockManager';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -83,11 +85,21 @@ export interface RunState {
   stopAtShop: boolean;
   /** Combat speed multiplier (0.5x - 3x, default 1x) */
   combatSpeed: number;
+  /** Map traversal speed multiplier (0.5x - 3x, default 1x) */
+  mapSpeed: number;
+
+  /** Unlocked items valid for this run (populated from MetaState at run start) */
+  pool: {
+    cards: string[];
+    relics: string[];
+    tiles: string[];
+  };
 }
 
 // ── Factory ─────────────────────────────────────────────────
 
-export function createNewRun(generation: number = 1, className: string = 'warrior'): RunState {
+export function createNewRun(metaState?: MetaState, generation: number = 1, className: string = 'warrior'): RunState {
+  const meta = metaState ?? createDefaultMetaState();
   const classDef = getClassDef(className);
   const stats = classDef.baseStats;
   const runId = nanoid();
@@ -131,6 +143,12 @@ export function createNewRun(generation: number = 1, className: string = 'warrio
     currentScene: 'Game',
     stopAtShop: true,
     combatSpeed: 1,
+    mapSpeed: 1,
+    pool: {
+      cards: getAvailableCards(meta.unlockedCards).map(c => c.id),
+      relics: getAvailableRelics(meta.unlockedRelics).map(r => r.id),
+      tiles: getAvailableTiles(meta.unlockedTiles).map(t => t.id),
+    },
   };
 }
 

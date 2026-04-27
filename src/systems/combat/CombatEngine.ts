@@ -9,6 +9,8 @@ import { createEmptyCombatStats, type CombatStats } from './CombatStats';
 import { CardResolver } from './CardResolver';
 import { EnemyAI } from './EnemyAI';
 import { SynergySystem } from './SynergySystem';
+import { resolveCardPlayedRelicBonus } from './RelicSystem';
+import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 
 /** Passive regen interval in milliseconds */
 const REGEN_INTERVAL = 3000;
@@ -26,6 +28,7 @@ export class CombatEngine {
   private enemyAI: EnemyAI;
   private synergies: SynergySystem;
 
+  private consecutiveAttacks = 0;
   private heroCooldownTimer = 0; // starts at 0 so first card plays immediately
   private deckPointer = 0;
   private lastPlayedCardId: string | null = null;
@@ -119,15 +122,49 @@ export class CombatEngine {
       this.stats.synergiesTriggered++;
     }
 
-    // Resolve card
-    const result = this.cardResolver.resolve(card, this.state, synergy);
+    // Relic bonuses for this card
+    const relicBonus = resolveCardPlayedRelicBonus(
+      this.state.activeRelicIds,
+      card,
+      this.state,
+    );
+
+    // Apply blood_pact temp strength bonus
+    if (this.state._bloodPactBonus > 0) {
+      this.state.heroStrength += this.state._bloodPactBonus;
+    }
+
+    // Resolve card (with damage multiplier from relics)
+    const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier);
+
+    // Restore blood_pact temp strength
+    if (this.state._bloodPactBonus > 0) {
+      this.state.heroStrength -= this.state._bloodPactBonus;
+      this.state._bloodPactBonus = 0;
+    }
+
+    // Apply relic resource refunds post-resolve
+    if (relicBonus.staminaRefund > 0) {
+      this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + relicBonus.staminaRefund);
+    }
 
     // Update stats
     this.stats.cardsPlayed++;
     this.stats.damageDealt += result.totalDamage;
+    this.consecutiveAttacks++;
 
-    // Set cooldown for next card
-    this.heroCooldownTimer = card.cooldown * 1000;
+    // Check battle_rage passive (consecutive attacks)
+    const activePassives = this.state.activePassives as any[];
+    const passiveBonus = checkConditionalTrigger('consecutive_attacks_2', { consecutiveAttacks: this.consecutiveAttacks }, activePassives);
+    if (passiveBonus && passiveBonus.type === 'damage_bonus_percent') {
+      // Apply bonus as extra damage to enemy
+      const bonusDmg = Math.floor(result.totalDamage * (passiveBonus.value / 100));
+      this.state.enemyHP -= bonusDmg;
+      this.stats.damageDealt += bonusDmg;
+    }
+
+    // Set cooldown for next card (with relic multiplier)
+    this.heroCooldownTimer = card.cooldown * 1000 * (this.state.cooldownMultiplier ?? 1.0);
 
     // Emit event
     eventBus.emit('combat:card-played', {
@@ -147,7 +184,15 @@ export class CombatEngine {
     if (this.deckPointer >= this.state.deckOrder.length) {
       this.deckPointer = 0;
       this.stats.reshuffles++;
+      this.consecutiveAttacks = 0; // reset on reshuffle
       eventBus.emit('combat:deck-reshuffled', { reshuffleCount: this.stats.reshuffles });
+
+      // second_wind passive: recover 5 stamina on reshuffle
+      const activePassives = this.state.activePassives as any[];
+      const windBonus = checkConditionalTrigger('deck_reshuffled', { deckReshuffled: true }, activePassives);
+      if (windBonus && windBonus.type === 'stamina') {
+        this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + windBonus.value);
+      }
     }
   }
 

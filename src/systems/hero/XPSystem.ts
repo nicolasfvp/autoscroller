@@ -11,6 +11,42 @@ const XP_PER_ENEMY_TYPE: Record<string, number> = {
   boss: 80,
 };
 
+// ── XP Level Curve (feedback #18) ───────────────────────────
+// Exponential cost: each level requires ~15% more XP than the last.
+const XP_BASE_PER_LEVEL = 50;
+const XP_GROWTH_RATE = 1.15;
+
+/**
+ * XP required to go from `level` to `level+1`.
+ */
+export function getXPForNextLevel(level: number): number {
+  return Math.floor(XP_BASE_PER_LEVEL * Math.pow(XP_GROWTH_RATE, level));
+}
+
+/**
+ * Total cumulative XP required to reach a given level from 0.
+ */
+function cumulativeXPForLevel(level: number): number {
+  let total = 0;
+  for (let i = 0; i < level; i++) {
+    total += getXPForNextLevel(i);
+  }
+  return total;
+}
+
+/**
+ * Calculate the level for a given total XP amount.
+ */
+export function getLevel(totalXP: number): number {
+  let level = 0;
+  let remaining = totalXP;
+  while (remaining >= getXPForNextLevel(level)) {
+    remaining -= getXPForNextLevel(level);
+    level++;
+  }
+  return level;
+}
+
 // ── Functions ───────────────────────────────────────────────
 
 /**

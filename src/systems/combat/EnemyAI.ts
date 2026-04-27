@@ -5,6 +5,7 @@ import { eventBus } from '../../core/EventBus';
 import type { CombatState } from './CombatState';
 import type { CombatStats } from './CombatStats';
 import type { BossBehavior } from '../../data/types';
+import { applyDamageTakenRelics } from './RelicSystem';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -166,6 +167,10 @@ export class EnemyAI {
     const remaining = damage - state.heroDefense;
     state.heroDefense = 0;
     state.heroHP -= remaining;
+
+    // Apply damage_taken relics (iron_will, phoenix_feather)
+    applyDamageTakenRelics(state.activeRelicIds, remaining, state);
+
     return remaining;
   }
 }

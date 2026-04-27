@@ -37,15 +37,7 @@ export class PlanningOverlay extends Scene {
     // Semi-transparent overlay
     this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
 
-    // Title
-    this.add.text(400, 30, 'Planning Phase', {
-      fontSize: '24px', fontStyle: 'bold', color: '#ffffff', fontFamily,
-    }).setOrigin(0.5);
 
-    // Instruction
-    this.add.text(400, 58, 'Place tiles on empty slots to shape your loop.', {
-      fontSize: '16px', color: '#aaaaaa', fontFamily,
-    }).setOrigin(0.5);
 
     // Loop layout strip at y=160
     this.gridContainer = this.add.container(0, 0);
@@ -54,14 +46,41 @@ export class PlanningOverlay extends Scene {
     // Tile inventory panel at y=300
     this.buildInventoryPanel(fontFamily);
 
-    // "Start Loop" button at y=540
+    // Deck / Relic viewer shortcuts (feedback #3)
+    const deckBtn = this.add.text(60, 30, '[D] Deck', {
+      fontSize: '14px', color: '#aaccff', fontFamily,
+    }).setInteractive({ useHandCursor: true });
+    deckBtn.on('pointerdown', () => {
+      this.scene.pause();
+      this.scene.launch('DeckCustomizationScene');
+    });
+
+    const relicBtn = this.add.text(60, 50, '[R] Relics', {
+      fontSize: '14px', color: '#aaccff', fontFamily,
+    }).setInteractive({ useHandCursor: true });
+    relicBtn.on('pointerdown', () => {
+      this.scene.pause();
+      this.scene.launch('RelicViewerScene');
+    });
+
+    this.input.keyboard?.on('keydown-D', () => {
+      this.scene.pause();
+      this.scene.launch('DeckCustomizationScene');
+    });
+    this.input.keyboard?.on('keydown-R', () => {
+      this.scene.pause();
+      this.scene.launch('RelicViewerScene');
+    });
+
+    // "Start Loop" button at y=540 — LEFT CLICK ONLY (feedback #30)
     const startBtn = this.add.text(400, 540, 'Start Loop', {
       fontSize: '24px', fontStyle: 'bold', color: '#ffd700', fontFamily,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
     startBtn.on('pointerover', () => startBtn.setColor('#ffffff'));
     startBtn.on('pointerout', () => startBtn.setColor('#ffd700'));
-    startBtn.on('pointerdown', () => {
+    startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      if (pointer.button !== 0) return; // Left click only (feedback #30)
       this.loopRunner.confirmPlanning();
       this.tweens.add({
         targets: this.cameras.main,
@@ -145,11 +164,17 @@ export class PlanningOverlay extends Scene {
       } else {
         this.loopRunState.economy.tilePoints -= config.tilePointCost;
       }
-      // Refresh grid and inventory
+      // Refresh grid and inventory — keep tile selected for multi-placement (feedback #4)
       this.buildLoopGrid();
       this.refreshInventory();
-      this.selectedTileKey = null;
-      this.selectedCardIndex = -1;
+      // Only deselect if we can no longer afford or have copies
+      const config2 = getTileConfig(this.selectedTileKey!);
+      const invEntry2 = this.loopRunState.tileInventory.find(t => t.tileType === this.selectedTileKey);
+      const canStillPlace = (invEntry2 && invEntry2.count > 0) || this.loopRunState.economy.tilePoints >= config2.tilePointCost;
+      if (!canStillPlace) {
+        this.selectedTileKey = null;
+        this.selectedCardIndex = -1;
+      }
     } else {
       // Toast: slot occupied
       this.showToast('This slot already has a tile.');
@@ -158,7 +183,7 @@ export class PlanningOverlay extends Scene {
 
   private buildInventoryPanel(fontFamily: string): void {
     // Panel background
-    this.add.rectangle(400, 390, 700, 200, 0x222222, 0.85);
+    this.add.image(400, 390, 'wood_texture').setDisplaySize(700, 200);
 
     // Title
     this.add.text(66, 300, 'Tile Inventory', {

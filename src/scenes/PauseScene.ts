@@ -16,7 +16,7 @@ export class PauseScene extends Scene {
     getRun();
 
     // Overlay panel
-    this.add.rectangle(400, 300, 400, 500, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
+    this.add.image(400, 300, 'wood_texture').setDisplaySize(400, 500).setInteractive();
 
     // Title
     this.add.text(400, 120, 'PAUSED', {
@@ -32,7 +32,7 @@ export class PauseScene extends Scene {
     // View Deck button
     createButton(this, 400, 280, 'View Deck', () => {
       this.scene.pause();
-      this.scene.launch('DeckCustomizationScene');
+      this.scene.launch('DeckCustomizationScene', { parentScene: 'PauseScene' });
     }, 'secondary');
 
     // Settings button
