@@ -40,6 +40,22 @@ export class Preloader extends Scene {
     this.load.image('archer_reference', 'assets/sprites/archer.png');
     this.load.image('bar_wood', 'assets/objects/bar-wood.png');
     this.load.image('wood_texture', 'assets/objects/wood-texture.png');
+    this.load.image('wood_texture_big', 'assets/objects/wood-texture-big.png');
+    this.load.image('bg_character_selection', 'assets/objects/background-character-selection.jpg');
+    this.load.image('icon_table', 'assets/objects/icon-table.png');
+    this.load.image('library_table', 'assets/objects/library-table.png');
+    this.load.image('wood_board_collection', 'assets/objects/wood-board-collection.png');
+
+    // Material Icons
+    this.load.image('mat_iron', 'assets/icons/iron.png');
+    this.load.image('mat_crystal', 'assets/icons/crystal.png');
+    this.load.image('mat_scroll', 'assets/icons/scroll.png');
+    this.load.image('mat_wood', 'assets/icons/wood.png');
+    this.load.image('mat_stone', 'assets/icons/stone.png');
+    this.load.image('mat_bone', 'assets/icons/stone.png'); // fallback/alias just in case
+    
+    // UI Elements
+    this.load.image('collection_headline', 'assets/ui/collection-headline.png');
     
     this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
     this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
