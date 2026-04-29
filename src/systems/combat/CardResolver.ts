@@ -32,6 +32,7 @@ export class CardResolver {
     card: CardDefinition,
     state: CombatState,
     synergyBonus: SynergyDefinition | null,
+    extraDamageMultiplier: number = 1.0,
   ): ResolveResult {
     const result: ResolveResult = { totalDamage: 0, healed: 0, armorGained: 0 };
 
@@ -50,7 +51,7 @@ export class CardResolver {
 
     // Apply each card effect
     for (const effect of effectiveEffects) {
-      this.applyEffect(effect.type, effect.value, effect.target, state, result);
+      this.applyEffect(effect.type, effect.value, effect.target, state, result, extraDamageMultiplier);
     }
 
     // Apply synergy bonus effect (if not cost_waive)
@@ -61,6 +62,7 @@ export class CardResolver {
         synergyBonus.bonus.target as 'enemy' | 'self',
         state,
         result,
+        extraDamageMultiplier,
       );
     }
 
@@ -73,10 +75,11 @@ export class CardResolver {
     target: string,
     state: CombatState,
     result: ResolveResult,
+    damageMultiplier: number = 1.0,
   ): void {
     switch (type) {
       case 'damage': {
-        const raw = Math.max(0, (value * state.heroStrength) - state.enemyDefense);
+        const raw = Math.max(0, Math.floor((value * state.heroStrength * damageMultiplier) - state.enemyDefense));
         state.enemyHP -= raw;
         result.totalDamage += raw;
         break;

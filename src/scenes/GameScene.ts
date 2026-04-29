@@ -5,7 +5,6 @@ import { getDifficultyConfig } from '../systems/DifficultyScaler';
 import { LoopHUD } from '../ui/LoopHUD';
 import { LoopCelebration } from '../ui/LoopCelebration';
 import { TileVisual } from '../ui/TileVisual';
-import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
@@ -64,11 +63,8 @@ export class GameScene extends Scene {
 
     const run = getRun();
 
-    // Load game speed from settings (non-blocking — update() guards against uninitialized state)
-    this.gameSpeed = 1;
-    loadMetaState().then((metaState) => {
-      this.gameSpeed = metaState.gameSpeed ?? 1;
-    });
+    // Load map speed from RunState (independent of combat speed)
+    this.gameSpeed = run.mapSpeed ?? 1;
 
     // Background
     this.cameras.main.setBackgroundColor(COLORS.background);
@@ -143,11 +139,7 @@ export class GameScene extends Scene {
     // HUD
     this.hud = new LoopHUD(this);
 
-    // Controls hint
-    this.add.text(10, 550, '[D] Deck | [R] Relics | [ESC] Pause', {
-      fontSize: '12px',
-      color: '#aaccff',
-    }).setScrollFactor(0).setDepth(100);
+
 
     // Keyboard shortcuts
     this.input.keyboard?.on('keydown-D', () => {
@@ -194,6 +186,9 @@ export class GameScene extends Scene {
       }
       this.tilePool.clear();
 
+      // Force HUD update to keep gold/HP synced after scene transitions (feedback #32)
+      this.hud.update(run);
+
       // If LoopRunner is in tile-interaction state, check if boss was defeated
       if (this.loopRunner.getState() === 'tile-interaction') {
         if ((run as any)._lastBossDefeated) {
@@ -218,8 +213,9 @@ export class GameScene extends Scene {
   update(_time: number, delta: number): void {
     if (this.scene.isPaused() || this.celebrationPlaying) return;
 
-    // Apply slow debuff
-    let speedMult = this.gameSpeed;
+    // Apply slow debuff — use map speed from RunState (feedback #10, #28)
+    const currentRun = getRun();
+    let speedMult = currentRun.mapSpeed ?? this.gameSpeed;
     if (this.slowTimer > 0) {
       this.slowTimer -= delta;
       speedMult *= 0.4;
@@ -294,6 +290,9 @@ export class GameScene extends Scene {
           run.hero.currentMana = run.hero.maxMana;
           addPendingLoot([{ label: `+${heal} HP, full STA/MP (rest)`, color: '#00ff00' }]);
           this.showPendingNotifications();
+          // Force immediate HUD update so HP bar reflects heal (feedback #31)
+          this.syncRunState();
+          this.hud.update(run);
           this.loopRunner.resumeTraversal();
           break;
         }

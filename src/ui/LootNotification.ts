@@ -4,9 +4,9 @@
 import { Scene } from 'phaser';
 import type { LootEntry } from '../systems/PendingLoot';
 
-const RISE_DISTANCE = 50;
-const DURATION = 1500;
-const STAGGER_DELAY = 400;
+const RISE_DISTANCE = 60;
+const DURATION = 3000;
+const STAGGER_DELAY = 500;
 
 /**
  * Show sequential floating loot notifications above a world position.
@@ -21,11 +21,11 @@ export function showLootNotifications(
   items.forEach((item, i) => {
     scene.time.delayedCall(i * STAGGER_DELAY, () => {
       const text = scene.add.text(worldX, worldY - 40, item.label, {
-        fontSize: '16px',
+        fontSize: '20px',
         fontStyle: 'bold',
         color: item.color,
         stroke: '#000000',
-        strokeThickness: 3,
+        strokeThickness: 4,
       }).setOrigin(0.5).setDepth(200);
 
       scene.tweens.add({

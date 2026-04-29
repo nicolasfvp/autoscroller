@@ -12,14 +12,7 @@ const BUILDING_COLORS: Record<string, number> = {
   storehouse: 0x8B6914,
 };
 
-const BUILDING_ICONS: Record<string, string> = {
-  forge: 'F',
-  library: 'L',
-  tavern: 'T',
-  workshop: 'W',
-  shrine: 'S',
-  storehouse: 'H',
-};
+
 
 const BUILDING_NAMES: Record<string, string> = {
   forge: 'Forge',
@@ -113,6 +106,12 @@ export class CityHubScene extends Scene {
     }, 'primary');
     collectionBtn.setOrigin(0, 1);
 
+    // Change Hero button (feedback #36)
+    const changeHeroBtn = createButton(this, 752, 560, 'Change Hero', () => {
+      this.fadeToScene('CharacterSelectScene');
+    }, 'secondary');
+    changeHeroBtn.setOrigin(1, 1);
+
     // Navigation hint
     this.add.text(400, 560, 'Click a building to interact', {
       fontSize: '16px',
@@ -126,8 +125,6 @@ export class CityHubScene extends Scene {
     const level = (this.metaState.buildings as any)[key].level as number;
     const isTierZero = level === 0;
     const color = isTierZero ? 0x444444 : BUILDING_COLORS[key];
-    const icon = isTierZero ? '?' : BUILDING_ICONS[key];
-    const iconColor = isTierZero ? COLORS.textSecondary : COLORS.textPrimary;
 
     // Building rectangle
     const rect = this.add.rectangle(x, y, 100, 100, color, LAYOUT.panelAlpha);
@@ -138,13 +135,8 @@ export class CityHubScene extends Scene {
       rect.setStrokeStyle(2, 0xaaaaaa);
     }
 
-    // Building icon
-    this.add.text(x, y, icon, {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: iconColor,
-      fontFamily,
-    }).setOrigin(0.5);
+    // Building icon image
+    const iconImage = this.add.image(x, y, `icon_${key}`).setDisplaySize(80, 80);
 
     // Tier indicator below building
     const tierColorHex = '#' + BUILDING_COLORS[key].toString(16).padStart(6, '0');

@@ -156,13 +156,22 @@ export class LoopRunner {
     // Update difficulty multiplier
     loop.difficultyMultiplier = 1 + (loop.count - 1) * diffConfig.percentPerLoop;
 
-    // Check if boss loop: inject boss at last position
+    // Check if boss loop: add boss as extra tile (feedback #25 — don't overwrite existing)
     if (loop.count % diffConfig.bossEveryNLoops === 0) {
-      loop.tiles[loop.length - 1] = createTileSlot('boss');
+      loop.tiles.push(createTileSlot('boss'));
+      loop.length = loop.tiles.length;
     }
 
+    // Reset position to beginning of loop (feedback #33, #34)
+    this.runState.loop.positionInLoop = 0;
     this.lastTileIndex = -1;
-    this.assignEnemies();
+
+    // Assign enemies AFTER planning confirmation, not here — moved to confirmPlanning
+    // but still assign for boss loops since they skip planning
+    if (loop.count % diffConfig.bossEveryNLoops === 0) {
+      this.assignEnemies();
+    }
+
     this.emit('loop-completed', { loopCount: loop.count });
     this.state = 'planning';
     this.emit('planning-phase-started', { loopCount: loop.count });
@@ -252,7 +261,23 @@ export class LoopRunner {
     if (this.state !== 'planning') return false;
 
     const tile = this.runState.loop.tiles[slotIndex];
-    if (!tile || tile.type !== 'basic') return false;
+    if (!tile) return false;
+
+    // Prevent placing tiles on slots with pre-assigned enemies (feedback #16)
+    if (tile.enemyId) return false;
+
+    // Prevent placing on boss tiles
+    if (tile.type === 'boss') return false;
+
+    // If slot is occupied by a non-basic tile, return it to inventory (feedback #24)
+    if (tile.type !== 'basic') {
+      const existing = this.runState.tileInventory.find(t => t.tileType === tile.type);
+      if (existing) {
+        existing.count++;
+      } else {
+        this.runState.tileInventory.push({ tileType: tile.type, count: 1 });
+      }
+    }
 
     const newTile = createTileSlot(tileKey);
     this.runState.loop.tiles[slotIndex] = newTile;

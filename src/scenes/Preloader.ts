@@ -17,7 +17,7 @@ export class Preloader extends Scene {
 
     // Background objects (64x64, transparent)
     this.load.image('bg_basic', 'assets/tiles/bg_path.png');
-    this.load.image('bg_forest', 'assets/tiles/bg_forest.png');
+    this.load.image('bg_forest', 'assets/tiles/tile_forest.png');
     this.load.image('bg_graveyard', 'assets/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/tiles/bg_swamp.png');
 
@@ -27,9 +27,35 @@ export class Preloader extends Scene {
     this.load.image('bg_rest', 'assets/objects/rest_tent.png');
     this.load.image('bg_shop', 'assets/objects/shop_stall.png');
 
+    // Building Icons
+    this.load.image('icon_forge', 'assets/buildings/icon_forge.png');
+    this.load.image('icon_library', 'assets/buildings/icon_library.png');
+    this.load.image('icon_tavern', 'assets/buildings/icon_tavern.png');
+    this.load.image('icon_workshop', 'assets/buildings/icon_workshop.png');
+    this.load.image('icon_shrine', 'assets/buildings/icon_shrine.png');
+    this.load.image('icon_storehouse', 'assets/buildings/icon_storehouse.png');
+
     // Carregando os monstros e herois em batch (IA gerado)
     this.load.image('archer_preview', 'assets/sprites/archer_generated.png');
     this.load.image('archer_reference', 'assets/sprites/archer.png');
+    this.load.image('bar_wood', 'assets/objects/bar-wood.png');
+    this.load.image('wood_texture', 'assets/objects/wood-texture.png');
+    this.load.image('wood_texture_big', 'assets/objects/wood-texture-big.png');
+    this.load.image('bg_character_selection', 'assets/objects/background-character-selection.jpg');
+    this.load.image('icon_table', 'assets/objects/icon-table.png');
+    this.load.image('library_table', 'assets/objects/library-table.png');
+    this.load.image('wood_board_collection', 'assets/objects/wood-board-collection.png');
+
+    // Material Icons
+    this.load.image('mat_iron', 'assets/icons/iron.png');
+    this.load.image('mat_crystal', 'assets/icons/crystal.png');
+    this.load.image('mat_scroll', 'assets/icons/scroll.png');
+    this.load.image('mat_wood', 'assets/icons/wood.png');
+    this.load.image('mat_stone', 'assets/icons/stone.png');
+    this.load.image('mat_bone', 'assets/icons/stone.png'); // fallback/alias just in case
+    
+    // UI Elements
+    this.load.image('collection_headline', 'assets/ui/collection-headline.png');
     
     this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
     this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
@@ -102,6 +128,9 @@ export class Preloader extends Scene {
       const ext = jpgCards.has(id) ? '.jpg' : '.png';
       this.load.image(`card_${id}`, `assets/cards/${id}${ext}`);
     }
+
+    // Audio
+    this.load.audio('walk_forward', 'assets/songs/walk-forward.mp3');
   }
 
   async create(): Promise<void> {

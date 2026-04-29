@@ -15,18 +15,28 @@ export function generateTreasureLoot(run: RunState): void {
   const entries: LootEntry[] = [];
   const loopCount = run.loop.count || 1;
 
-  // Gold: 20-50 scaled by loop
-  const goldAmount = Math.floor((20 + Math.random() * 30) * Math.sqrt(loopCount));
+  // Gold: reduced scaling via log2 to prevent hyperinflation (feedback #26)
+  const goldAmount = Math.floor((15 + Math.random() * 20) * Math.log2(loopCount + 1));
   if (goldAmount > 0) {
     run.economy.gold += goldAmount;
     entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700' });
   }
 
-  // Card drop: 40% chance
-  if (Math.random() < 0.4) {
+  // Material drop: 30% chance (diversifies loot beyond gold)
+  if (Math.random() < 0.3) {
+    const mats = ['wood', 'stone', 'iron', 'crystal', 'herbs'];
+    const mat = mats[Math.floor(Math.random() * mats.length)];
+    const amount = 1 + Math.floor(Math.random() * 2);
+    if (!run.economy.materials) run.economy.materials = {};
+    run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
+    entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
+  }
+
+  // Card drop: 50% chance (increased from 40%)
+  if (Math.random() < 0.5) {
     const allCards = getAllCards();
     const pool = allCards.filter((c: CardDefinition & { rarity?: string }) =>
-      c.rarity === 'common' || c.rarity === 'uncommon'
+      run.pool.cards.includes(c.id) && (c.rarity === 'common' || c.rarity === 'uncommon')
     );
     if (pool.length > 0) {
       const card = pool[Math.floor(Math.random() * pool.length)];

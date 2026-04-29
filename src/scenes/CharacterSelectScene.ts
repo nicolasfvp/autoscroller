@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
+import { loadMetaState } from '../systems/MetaPersistence';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 
 interface ClassOption {
@@ -54,13 +55,18 @@ export class CharacterSelectScene extends Scene {
     this.selectedIndex = 0;
     this.classCards = [];
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
-    this.cameras.main.setBackgroundColor(COLORS.background);
+
+    // Background Image
+    this.add.image(400, 300, 'bg_character_selection').setDisplaySize(800, 600);
 
     // Title
     this.add.text(LAYOUT.centerX, 50, 'Choose Your Hero', {
-      ...FONTS.title,
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontSize: '40px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 6,
+      fontFamily: '"Impact", sans-serif',
+      resolution: 3,
     }).setOrigin(0.5);
 
     // Render class cards side by side
@@ -97,9 +103,10 @@ export class CharacterSelectScene extends Scene {
 
     // Hint
     this.add.text(LAYOUT.centerX, 570, 'Arrow keys to browse, Enter to select', {
-      ...FONTS.small,
-      color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
+      fontSize: '16px',
+      color: '#ffffff',
+      fontFamily: '"Impact", sans-serif',
+      resolution: 3,
     }).setOrigin(0.5);
   }
 
@@ -109,9 +116,13 @@ export class CharacterSelectScene extends Scene {
   ): Phaser.GameObjects.Container {
     const container = this.add.container(x, y);
 
-    // Card background
-    const bg = this.add.rectangle(0, 0, w, h, COLORS.panel, 0.9);
-    bg.setStrokeStyle(2, 0x444444);
+    // Frame (outer thick border)
+    const frame = this.add.rectangle(0, 0, w, h, 0x5a5e6b);
+    frame.setStrokeStyle(6, 0x8a8e9b);
+    container.add(frame);
+
+    // Inner panel
+    const bg = this.add.rectangle(0, 0, w - 24, h - 24, 0x4a4e5b);
     bg.setInteractive({ useHandCursor: true });
     container.add(bg);
 
@@ -140,29 +151,24 @@ export class CharacterSelectScene extends Scene {
           repeat: -1,
         });
       }
-      const sprite = this.add.sprite(0, -100, cls.spriteKey).setScale(3);
+      const sprite = this.add.sprite(0, -90, cls.spriteKey).setScale(3);
       sprite.play(animKey);
       container.add(sprite);
     } else {
       // Fallback colored square
-      const fallback = this.add.rectangle(0, -100, 64, 64, cls.id === 'warrior' ? 0x4488ff : 0x9944ff);
+      const fallback = this.add.rectangle(0, -90, 64, 64, cls.id === 'warrior' ? 0x4488ff : 0x9944ff);
       container.add(fallback);
     }
 
-    // Class name
-    this.add.text(0, -30, cls.name, {
-      ...FONTS.heading,
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-    container.add(container.list[container.list.length - 1]);
-
     // Description
-    const desc = this.add.text(0, 10, cls.description, {
-      ...FONTS.body,
-      color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+    const desc = this.add.text(0, -5, cls.description, {
+      fontSize: '18px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3,
+      fontFamily: '"Impact", sans-serif',
       align: 'center',
+      resolution: 3,
     }).setOrigin(0.5);
     container.add(desc);
 
@@ -174,11 +180,14 @@ export class CharacterSelectScene extends Scene {
 
     // Deck hint
     const deckLabel = this.add.text(0, 140, `Deck: ${cls.deckHint}`, {
-      ...FONTS.small,
-      color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
+      fontSize: '15px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3,
+      fontFamily: '"Impact", sans-serif',
       align: 'center',
       wordWrap: { width: w - 30 },
+      resolution: 3,
     }).setOrigin(0.5);
     container.add(deckLabel);
 
@@ -191,18 +200,25 @@ export class CharacterSelectScene extends Scene {
     color: number, yOffset: number,
   ): void {
     const barWidth = 160;
-    const barHeight = 14;
+    const barHeight = 16;
     const labelW = 36;
 
     // Label
     const txt = this.add.text(-barWidth / 2 - labelW, yOffset, label, {
-      fontSize: '12px',
-      color: '#aaaaaa',
-      fontFamily: FONTS.family,
+      fontSize: '16px',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3,
+      fontFamily: '"Impact", sans-serif',
+      resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(txt);
 
-    // Background bar
+    // Black outline
+    const outline = this.add.rectangle(0, yOffset, barWidth + 4, barHeight + 4, 0x000000);
+    container.add(outline);
+
+    // Dark grey bg
     const bgBar = this.add.rectangle(0, yOffset, barWidth, barHeight, 0x333333);
     container.add(bgBar);
 
@@ -215,28 +231,37 @@ export class CharacterSelectScene extends Scene {
     container.add(fillBar);
 
     // Value text
-    const valTxt = this.add.text(barWidth / 2 + 8, yOffset, `${value}`, {
-      fontSize: '12px',
+    const valTxt = this.add.text(barWidth / 2 + 10, yOffset, `${value}`, {
+      fontSize: '16px',
       color: '#ffffff',
-      fontFamily: FONTS.family,
+      stroke: '#000000',
+      strokeThickness: 3,
+      fontFamily: '"Impact", sans-serif',
+      resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(valTxt);
   }
 
   private highlightSelected(): void {
     this.classCards.forEach((card, i) => {
-      const bg = card.list[0] as Phaser.GameObjects.Rectangle;
+      const frame = card.list[0] as Phaser.GameObjects.Rectangle;
+      const inner = card.list[1] as Phaser.GameObjects.Rectangle;
       if (i === this.selectedIndex) {
-        bg.setStrokeStyle(3, 0xffd700);
+        frame.setFillStyle(0x3388ff);
+        frame.setStrokeStyle(6, 0x00ccff);
+        inner.setFillStyle(0x2a446b);
       } else {
-        bg.setStrokeStyle(2, 0x444444);
+        frame.setFillStyle(0x5a5e6b);
+        frame.setStrokeStyle(6, 0x8a8e9b);
+        inner.setFillStyle(0x4a4e5b);
       }
     });
   }
 
   private async confirmSelection(): Promise<void> {
     const selected = CLASSES[this.selectedIndex];
-    setRun(createNewRun(1, selected.id));
+    const meta = await loadMetaState();
+    setRun(createNewRun(meta, 1, selected.id));
     await saveManager.save(getRun());
     this.fadeToScene('TutorialScene');
   }
