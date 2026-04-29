@@ -48,15 +48,17 @@ export class DeckCustomizationScene extends Scene {
 
   private scrollY = 0;
   private maxScroll = 0;
+  private parentScene: string = 'GameScene';
 
   constructor() {
     super('DeckCustomizationScene');
   }
 
-  create(): void {
+  create(data?: { parentScene?: string }): void {
     const run = getRun();
     this.deckOrder = [...run.deck.active];
     this.scrollY = 0;
+    this.parentScene = data?.parentScene ?? 'GameScene';
 
     this.cameras.main.setBackgroundColor(COLORS.background);
     const fontFamily = FONTS.family;
@@ -419,7 +421,7 @@ export class DeckCustomizationScene extends Scene {
 
   private close(): void {
     this.scene.stop();
-    this.scene.resume('GameScene');
+    this.scene.resume(this.parentScene);
   }
 
   private cleanup(): void {

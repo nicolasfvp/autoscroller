@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
-import { getCollectionStatus, getCompletionPercent, type CollectionStatus, type CategoryStatus } from '../systems/CollectionRegistry';
+import { getCollectionStatus, getCompletionPercent, getItemDetails, type CollectionStatus, type CategoryStatus } from '../systems/CollectionRegistry';
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 
@@ -31,6 +31,7 @@ export class CollectionScene extends Scene {
   private tabObjects: Phaser.GameObjects.Rectangle[] = [];
   private tabTexts: Phaser.GameObjects.Text[] = [];
   private transitioning = false;
+  private detailPopup: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super('CollectionScene');
@@ -54,82 +55,137 @@ export class CollectionScene extends Scene {
     const percent = getCompletionPercent(this.metaState);
     this.activeTab = 'Cards';
 
-    const fontFamily = FONTS.family;
+    const fontFamily = '"Impact", "Arial Black", sans-serif';
 
-    // Background
-    this.cameras.main.setBackgroundColor(COLORS.background);
+    // Background (Dark dim)
+    this.add.rectangle(0, 0, 800, 600, 0x111111, 0.8).setOrigin(0);
 
-    // Title
-    this.add.text(24, 24, 'Collection', {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: COLORS.textPrimary,
-      fontFamily,
-    });
+    // Main Wood Panel
+    const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(760, 560);
+    const shape = this.make.graphics();
+    shape.fillStyle(0xffffff);
+    shape.fillRoundedRect(20, 20, 760, 560, 16);
+    panel.setMask(shape.createGeometryMask());
 
-    // Completion percentage
-    this.add.text(180, 30, `${percent}% Complete`, {
-      fontSize: '14px',
-      color: COLORS.accent,
-      fontFamily,
-    });
+    // Title (Top Center Headline Image)
+    this.add.image(400, 55, 'collection_headline').setOrigin(0.5);
 
-    // Close button
-    const closeBtn = this.add.text(776, 24, 'X', {
+    // Completion percentage (Top right corner of panel)
+    this.add.text(40, 55, `${percent}% Complete`, {
       fontSize: '16px',
-      color: COLORS.textSecondary,
+      fontStyle: 'bold',
+      color: '#dab988',
+      stroke: '#000000',
+      strokeThickness: 3,
       fontFamily,
-    }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
+    }).setOrigin(0, 0.5);
 
-    closeBtn.on('pointerdown', () => {
-      this.fadeToScene('CityHub');
-    });
+    // Nice Red Close Button
+    const closeBtnBg = this.add.circle(750, 55, 16, 0xcc0000).setStrokeStyle(2, 0x3e2723).setInteractive({ useHandCursor: true });
+    const closeBtnTxt = this.add.text(750, 55, 'X', {
+      fontSize: '18px',
+      fontStyle: 'bold',
+      color: '#ffffff',
+      fontFamily,
+    }).setOrigin(0.5);
+
+    closeBtnBg.on('pointerover', () => closeBtnBg.setFillStyle(0xff3333));
+    closeBtnBg.on('pointerout', () => closeBtnBg.setFillStyle(0xcc0000));
+    closeBtnBg.on('pointerdown', () => this.fadeToScene('CityHub'));
 
     // Tab bar
     this.tabObjects = [];
     this.tabTexts = [];
     let tabX = 40;
+    
+    // Total width available is ~750. We have 5 tabs.
+    const tabW = 148;
+    const tabH = 50;
+    const tabY = 110;
+    const tabGap = -2; // Negative gap to compensate for PNG transparent padding
+    const startTabX = 400 - ((TAB_NAMES.length * tabW) + ((TAB_NAMES.length - 1) * tabGap)) / 2;
+
     for (let i = 0; i < TAB_NAMES.length; i++) {
       const tabName = TAB_NAMES[i];
       const tabKey = TAB_KEYS[tabName];
       const status = this.collectionStatus[tabKey];
       const isActive = tabName === this.activeTab;
-      const color = isActive ? TAB_COLORS[tabName] : 0x333333;
-
-      const rect = this.add.rectangle(tabX + 60, 56, 120, 32, color);
-      rect.setInteractive({ useHandCursor: true });
-      this.tabObjects.push(rect);
+      
+      const img = this.add.image(startTabX + i * (tabW + tabGap) + tabW/2, tabY, 'wood_board_collection').setDisplaySize(tabW, tabH);
+      img.setInteractive({ useHandCursor: true });
+      if (isActive) {
+        img.setTint(0xff9999);
+      }
+      this.tabObjects.push(img);
 
       const label = `${tabName} (${status.unlocked}/${status.total})`;
-      const text = this.add.text(tabX + 60, 56, label, {
-        fontSize: '14px',
-        color: isActive ? COLORS.textPrimary : COLORS.textSecondary,
-        fontFamily,
+      const text = this.add.text(startTabX + i * (tabW + tabGap) + tabW/2, tabY, label, {
+        fontSize: '18px',
+        fontStyle: 'bold',
+        color: isActive ? '#ffffff' : '#fdf6e3',
+        stroke: '#000000',
+        strokeThickness: 3,
+        fontFamily: '"Impact", "Arial Black", sans-serif',
       }).setOrigin(0.5);
       this.tabTexts.push(text);
 
-      rect.on('pointerdown', () => {
+      img.on('pointerdown', () => {
         this.activeTab = tabName;
         this.updateTabs();
         this.renderGrid();
       });
-
-      tabX += 124; // 120 + 4px gap
     }
 
-    // Grid container
+    // Inner dark background for the grid area (simulating the indented board)
+    this.add.rectangle(400, 355, 720, 430, 0x1a0f0a, 0.8).setStrokeStyle(2, 0x3e2723);
+
+    // Grid container with scroll support
     this.gridContainer = this.add.container(0, 0);
 
+    // Scroll mask
+    const maskGfx = this.make.graphics({ x: 0, y: 0 });
+    maskGfx.fillStyle(0xffffff);
+    maskGfx.fillRect(40, 140, 720, 430);
+    this.gridContainer.setMask(maskGfx.createGeometryMask());
+
+    // Mouse wheel scroll for grid
+    let scrollY = 0;
+    this.input.on('wheel', (_p: any, _go: any, _dx: number, dy: number) => {
+      const maxScroll = Math.max(0, this.getGridHeight() - 430);
+      scrollY = Math.max(0, Math.min(maxScroll, scrollY + dy * 0.5));
+      this.gridContainer.y = -scrollY;
+    });
+
     this.renderGrid();
+  }
+
+  /** Estimate total grid height based on active tab */
+  private getGridHeight(): number {
+    const tabKey = TAB_KEYS[this.activeTab];
+    const status = this.collectionStatus[tabKey];
+    const itemCount = status.items.length;
+    switch (this.activeTab) {
+      case 'Cards': return Math.ceil(itemCount / 6) * 136 + 80;
+      case 'Relics': return Math.ceil(itemCount / 6) * 136 + 80;
+      case 'Tiles': return Math.ceil(itemCount / 6) * 136 + 80;
+      case 'Events': return itemCount * 68 + 80;
+      case 'Bosses': return 350;
+      default: return 600;
+    }
   }
 
   private updateTabs(): void {
     for (let i = 0; i < TAB_NAMES.length; i++) {
       const tabName = TAB_NAMES[i];
       const isActive = tabName === this.activeTab;
-      const color = isActive ? TAB_COLORS[tabName] : 0x333333;
-      this.tabObjects[i].setFillStyle(color);
-      this.tabTexts[i].setColor(isActive ? COLORS.textPrimary : COLORS.textSecondary);
+      
+      const img = this.tabObjects[i] as Phaser.GameObjects.Image;
+      if (isActive) {
+        img.setTint(0xff9999);
+      } else {
+        img.clearTint();
+      }
+      this.tabTexts[i].setColor(isActive ? '#ffffff' : '#fdf6e3');
     }
   }
 
@@ -159,40 +215,82 @@ export class CollectionScene extends Scene {
   }
 
   private renderCardsGrid(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
+    const fontFamily = '"Impact", "Arial Black", sans-serif';
     const cols = 6;
-    const itemW = 72;
-    const itemH = 96;
-    const gap = 8;
-    const startX = 80;
-    const startY = 100;
+    const itemW = 90;
+    const itemH = 100;
+    const gapX = 12;
+    const gapY = 36; // Extra vertical gap for names below cards
+    
+    const totalWidth = cols * itemW + (cols - 1) * gapX;
+    const startX = 400 - (totalWidth / 2) + (itemW / 2);
+    const startY = 200;
 
     status.items.forEach((item, index) => {
       const col = index % cols;
       const row = Math.floor(index / cols);
-      const x = startX + col * (itemW + gap) + itemW / 2;
-      const y = startY + row * (itemH + gap) + itemH / 2;
+      const x = startX + col * (itemW + gapX);
+      const y = startY + row * (itemH + gapY);
 
       if (item.isUnlocked) {
-        const card = this.add.rectangle(x, y, itemW, itemH, 0xcc3333, 0.8);
-        card.setStrokeStyle(2, 0xcccccc);
-        this.gridContainer.add(card);
+        const isCard = this.activeTab === 'Cards';
+        let interactableObj;
 
-        const name = this.add.text(x, y + 10, item.name, {
-          fontSize: '12px',
-          color: COLORS.textPrimary,
-          fontFamily,
-          wordWrap: { width: itemW - 8 },
-          align: 'center',
-        }).setOrigin(0.5);
-        this.gridContainer.add(name);
+        if (isCard) {
+          // Render Card Illustration
+          const img = this.add.image(x, y, `card_${item.id}`).setDisplaySize(itemW, itemH);
+          img.setInteractive({ useHandCursor: true });
+          this.gridContainer.add(img);
+          interactableObj = img;
+
+          // Red Frame
+          const frame = this.add.rectangle(x, y, itemW, itemH).setStrokeStyle(3, 0xcc0000);
+          this.gridContainer.add(frame);
+
+          // Name at the bottom OUTSIDE the card
+          const textY = y + (itemH / 2) + 6;
+          const name = this.add.text(x, textY, item.name, {
+            fontSize: '16px',
+            fontStyle: 'bold',
+            color: '#fdf6e3',
+            stroke: '#000000',
+            strokeThickness: 3,
+            shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 0, fill: true },
+            fontFamily,
+            align: 'center',
+            wordWrap: { width: itemW + gapX }
+          }).setOrigin(0.5, 0); // Top-center alignment
+          this.gridContainer.add(name);
+        } else {
+          // Plain Red Box for Relics / Tiles
+          const card = this.add.rectangle(x, y, itemW, itemH, 0xcc0000).setStrokeStyle(3, 0x3e2723);
+          card.setInteractive({ useHandCursor: true });
+          this.gridContainer.add(card);
+          interactableObj = card;
+
+          const name = this.add.text(x, y, item.name, {
+            fontSize: '18px',
+            fontStyle: 'bold',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3,
+            shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 0, fill: true },
+            fontFamily,
+            wordWrap: { width: itemW - 10 },
+            align: 'center',
+          }).setOrigin(0.5);
+          this.gridContainer.add(name);
+        }
+
+        interactableObj.on('pointerdown', () => this.showDetailPopup(item.id));
       } else {
-        const card = this.add.rectangle(x, y, itemW, itemH, 0x444444);
+        const card = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(2, 0x111111);
         this.gridContainer.add(card);
 
-        const locked = this.add.text(x, y - 10, '???', {
-          fontSize: '16px',
-          color: COLORS.textSecondary,
+        const locked = this.add.text(x, y - 15, '???', {
+          fontSize: '20px',
+          fontStyle: 'bold',
+          color: '#aaaaaa',
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
@@ -200,8 +298,8 @@ export class CollectionScene extends Scene {
         if (item.unlockHint) {
           const hint = this.add.text(x, y + 20, item.unlockHint, {
             fontSize: '10px',
-            color: COLORS.textSecondary,
-            fontFamily,
+            color: '#888888',
+            fontFamily: 'Arial, sans-serif',
             wordWrap: { width: itemW - 4 },
             align: 'center',
           }).setOrigin(0.5);
@@ -212,145 +310,52 @@ export class CollectionScene extends Scene {
   }
 
   private renderRelicsGrid(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
-    const cols = 4;
-    const itemSize = 80;
-    const gap = 16;
-    const startX = 140;
-    const startY = 100;
-
-    status.items.forEach((item, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const x = startX + col * (itemSize + gap) + itemSize / 2;
-      const y = startY + row * (itemSize + gap) + itemSize / 2;
-
-      if (item.isUnlocked) {
-        const relic = this.add.rectangle(x, y, itemSize, itemSize, COLORS.panel);
-        relic.setStrokeStyle(2, 0x9370db);
-        this.gridContainer.add(relic);
-
-        const name = this.add.text(x, y, item.name, {
-          fontSize: '14px',
-          color: COLORS.textPrimary,
-          fontFamily,
-          wordWrap: { width: itemSize - 8 },
-          align: 'center',
-        }).setOrigin(0.5);
-        this.gridContainer.add(name);
-      } else {
-        const relic = this.add.rectangle(x, y, itemSize, itemSize, 0x444444);
-        this.gridContainer.add(relic);
-
-        const locked = this.add.text(x, y - 10, '???', {
-          fontSize: '16px',
-          color: COLORS.textSecondary,
-          fontFamily,
-        }).setOrigin(0.5);
-        this.gridContainer.add(locked);
-
-        if (item.unlockHint) {
-          const hint = this.add.text(x, y + 16, item.unlockHint, {
-            fontSize: '10px',
-            color: COLORS.textSecondary,
-            fontFamily,
-            wordWrap: { width: itemSize - 4 },
-            align: 'center',
-          }).setOrigin(0.5);
-          this.gridContainer.add(hint);
-        }
-      }
-    });
+    // Reusing the same beautiful grid layout for consistency
+    this.renderCardsGrid(status);
   }
 
   private renderTilesGrid(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
-    const cols = 5;
-    const itemSize = 80;
-    const gap = 16;
-    const startX = 100;
-    const startY = 100;
-
-    status.items.forEach((item, index) => {
-      const col = index % cols;
-      const row = Math.floor(index / cols);
-      const x = startX + col * (itemSize + gap) + itemSize / 2;
-      const y = startY + row * (itemSize + gap) + itemSize / 2;
-
-      if (item.isUnlocked) {
-        const tile = this.add.rectangle(x, y, itemSize, itemSize, 0x228B22, 0.8);
-        tile.setStrokeStyle(1, 0x33cc33);
-        this.gridContainer.add(tile);
-
-        const name = this.add.text(x, y, item.name, {
-          fontSize: '12px',
-          color: COLORS.textPrimary,
-          fontFamily,
-          wordWrap: { width: itemSize - 8 },
-          align: 'center',
-        }).setOrigin(0.5);
-        this.gridContainer.add(name);
-      } else {
-        const tile = this.add.rectangle(x, y, itemSize, itemSize, 0x444444);
-        this.gridContainer.add(tile);
-
-        const locked = this.add.text(x, y - 10, '???', {
-          fontSize: '16px',
-          color: COLORS.textSecondary,
-          fontFamily,
-        }).setOrigin(0.5);
-        this.gridContainer.add(locked);
-
-        if (item.unlockHint) {
-          const hint = this.add.text(x, y + 16, item.unlockHint, {
-            fontSize: '10px',
-            color: COLORS.textSecondary,
-            fontFamily,
-            wordWrap: { width: itemSize - 4 },
-            align: 'center',
-          }).setOrigin(0.5);
-          this.gridContainer.add(hint);
-        }
-      }
-    });
+    this.renderCardsGrid(status);
   }
 
   private renderEventsList(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
-    const startY = 100;
+    const fontFamily = '"Impact", "Arial Black", sans-serif';
+    const startY = 160;
 
     status.items.forEach((item, index) => {
       const y = startY + index * 68;
 
-      const bg = this.add.rectangle(400, y + 30, 700, 60, 0x333333, 0.8);
+      const bg = this.add.rectangle(400, y + 30, 700, 60, 0x2a1a10).setStrokeStyle(2, 0x3e2723);
       this.gridContainer.add(bg);
 
       if (item.isUnlocked) {
         const title = this.add.text(80, y + 18, item.name, {
-          fontSize: '16px',
-          color: COLORS.textPrimary,
+          fontSize: '20px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 3,
           fontFamily,
         });
         this.gridContainer.add(title);
 
-        const desc = this.add.text(80, y + 38, 'Random event encounter', {
+        const desc = this.add.text(80, y + 42, 'Random event encounter', {
           fontSize: '14px',
-          color: COLORS.textSecondary,
-          fontFamily,
+          color: '#dab988',
+          fontFamily: 'Arial, sans-serif',
         });
         this.gridContainer.add(desc);
       } else {
         const locked = this.add.text(80, y + 18, '???', {
-          fontSize: '16px',
-          color: COLORS.textSecondary,
+          fontSize: '20px',
+          color: '#aaaaaa',
           fontFamily,
         });
         this.gridContainer.add(locked);
 
-        const hint = this.add.text(80, y + 38, 'Discover during a run', {
+        const hint = this.add.text(80, y + 42, item.unlockHint || 'Discover during a run', {
           fontSize: '14px',
-          color: COLORS.textSecondary,
-          fontFamily,
+          color: '#888888',
+          fontFamily: 'Arial, sans-serif',
         });
         this.gridContainer.add(hint);
       }
@@ -358,47 +363,145 @@ export class CollectionScene extends Scene {
   }
 
   private renderBossesRow(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
+    const fontFamily = '"Impact", "Arial Black", sans-serif';
     const itemW = 160;
     const itemH = 120;
     const gap = 16;
     const totalWidth = status.items.length * itemW + (status.items.length - 1) * gap;
-    const startX = (800 - totalWidth) / 2;
+    const startX = 400 - (totalWidth / 2) + (itemW / 2);
 
     status.items.forEach((item, index) => {
-      const x = startX + index * (itemW + gap) + itemW / 2;
-      const y = 200;
+      const x = startX + index * (itemW + gap);
+      const y = 250;
 
       if (item.isUnlocked) {
-        const bg = this.add.rectangle(x, y, itemW, itemH, 0x333333, 0.8);
-        bg.setStrokeStyle(1, 0x6a5acd);
+        const bg = this.add.rectangle(x, y, itemW, itemH, 0xcc0000).setStrokeStyle(3, 0x3e2723);
         this.gridContainer.add(bg);
 
         const name = this.add.text(x, y - 20, item.name, {
-          fontSize: '20px',
+          fontSize: '24px',
           fontStyle: 'bold',
-          color: COLORS.textPrimary,
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 3,
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(name);
 
-        const type = this.add.text(x, y + 10, 'Boss', {
-          fontSize: '14px',
-          color: COLORS.textSecondary,
-          fontFamily,
+        const type = this.add.text(x, y + 20, 'Boss', {
+          fontSize: '16px',
+          color: '#dab988',
+          fontFamily: 'Arial, sans-serif',
         }).setOrigin(0.5);
         this.gridContainer.add(type);
       } else {
-        const bg = this.add.rectangle(x, y, itemW, itemH, 0x444444);
+        const bg = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(2, 0x111111);
         this.gridContainer.add(bg);
 
         const locked = this.add.text(x, y, '???', {
-          fontSize: '24px',
-          color: COLORS.textSecondary,
+          fontSize: '32px',
+          fontStyle: 'bold',
+          color: '#aaaaaa',
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(locked);
       }
+    });
+  }
+
+  // ── Detail popup (feedback #7) ──
+
+  private showDetailPopup(itemId: string): void {
+    this.closeDetailPopup();
+
+    const details = getItemDetails(itemId, this.metaState);
+    if (!details) return;
+
+    const fontFamily = FONTS.family;
+    const container = this.add.container(400, 300).setDepth(500);
+
+    // Dark overlay (click to close)
+    const overlay = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.6)
+      .setInteractive();
+    overlay.on('pointerdown', () => this.closeDetailPopup());
+    container.add(overlay);
+
+    // Panel
+    const panelW = 360;
+    const panelH = 280;
+    const panel = this.add.rectangle(0, 0, panelW, panelH, 0x1a1a2e, 0.95)
+      .setStrokeStyle(2, 0xffd700);
+    container.add(panel);
+
+    // Title
+    container.add(this.add.text(0, -panelH / 2 + 24, details.name, {
+      fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
+    }).setOrigin(0.5));
+
+    // Description / stats
+    let yOff = -panelH / 2 + 60;
+    const data = details.data;
+
+    if (data.description) {
+      container.add(this.add.text(0, yOff, data.description, {
+        fontSize: '14px', color: COLORS.textPrimary, fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center', lineSpacing: 3,
+      }).setOrigin(0.5, 0));
+      yOff += 60;
+    }
+
+    // Card-specific stats
+    if (data.category) {
+      const stats: string[] = [];
+      stats.push(`Category: ${data.category}`);
+      stats.push(`Rarity: ${data.rarity ?? 'common'}`);
+      stats.push(`Cooldown: ${data.cooldown ?? 0}s`);
+      if (data.cost?.stamina) stats.push(`Stamina: ${data.cost.stamina}`);
+      if (data.cost?.mana) stats.push(`Mana: ${data.cost.mana}`);
+      if (data.targeting) stats.push(`Target: ${data.targeting}`);
+
+      container.add(this.add.text(0, yOff, stats.join('  \u2022  '), {
+        fontSize: '12px', color: COLORS.textSecondary, fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center',
+      }).setOrigin(0.5, 0));
+      yOff += 40;
+    }
+
+    // Relic-specific effect
+    if (data.effect) {
+      container.add(this.add.text(0, yOff, `Effect: ${data.effect}`, {
+        fontSize: '13px', color: '#00ccff', fontFamily,
+        wordWrap: { width: panelW - 32 }, align: 'center',
+      }).setOrigin(0.5, 0));
+      yOff += 40;
+    }
+
+    // Close hint
+    container.add(this.add.text(0, panelH / 2 - 24, 'Click anywhere to close', {
+      fontSize: '11px', color: COLORS.textSecondary, fontFamily,
+    }).setOrigin(0.5));
+
+    // Scale-in animation
+    container.setScale(0.8);
+    container.setAlpha(0);
+    this.tweens.add({
+      targets: container,
+      scaleX: 1, scaleY: 1, alpha: 1,
+      duration: 200, ease: 'Back.easeOut',
+    });
+
+    this.detailPopup = container;
+  }
+
+  private closeDetailPopup(): void {
+    if (!this.detailPopup) return;
+    const popup = this.detailPopup;
+    this.detailPopup = null;
+    this.tweens.add({
+      targets: popup,
+      alpha: 0, scaleX: 0.9, scaleY: 0.9,
+      duration: 150,
+      onComplete: () => popup.destroy(true),
     });
   }
 }

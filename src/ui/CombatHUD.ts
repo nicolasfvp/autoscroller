@@ -63,14 +63,18 @@ export class CombatHUD {
     const x = 16;
     let y = 24;
 
-    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '18px', stroke: '#000000', strokeThickness: 3 };
-    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 2 };
+    // Fundo centralizado ao redor das barras
+    const bgImage = this.scene.add.image(6, 8, 'wood_texture').setOrigin(0, 0).setDisplaySize(220, 76);
+    this.container.add(bgImage);
 
-    // HP
-    const hpLabel = this.scene.add.text(x, y, 'HP', { ...labelStyle, color: '#00ff00' }).setOrigin(0, 0.5);
+    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '18px', stroke: '#000000', strokeThickness: 3, resolution: 3 };
+    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '16px', color: '#cccccc', stroke: '#000000', strokeThickness: 2, resolution: 3 };
+
+    // HP (darker green)
+    const hpLabel = this.scene.add.text(x, y, 'HP', { ...labelStyle, color: '#118811' }).setOrigin(0, 0.5);
     this.container.add(hpLabel);
     
-    const hpBars = this.createBar(x + 40, y, 160, 16, 0x00ff00);
+    const hpBars = this.createBar(x + 40, y, 160, 16, 0x118811);
     this.hpBarBg = hpBars.bg;
     this.hpBar = hpBars.fill;
 
@@ -79,11 +83,11 @@ export class CombatHUD {
 
     y += 24;
 
-    // Stamina
-    const staLabel = this.scene.add.text(x, y, 'STA', { ...labelStyle, color: '#ff8c00' }).setOrigin(0, 0.5);
+    // Stamina (softer orange)
+    const staLabel = this.scene.add.text(x, y, 'STA', { ...labelStyle, color: '#e68a00' }).setOrigin(0, 0.5);
     this.container.add(staLabel);
     
-    const staBars = this.createBar(x + 40, y, 120, 14, 0xff8c00);
+    const staBars = this.createBar(x + 40, y, 120, 14, 0xe68a00);
     this.staminaBarBg = staBars.bg;
     this.staminaBar = staBars.fill;
 
@@ -92,11 +96,11 @@ export class CombatHUD {
 
     y += 20;
 
-    // Mana
-    const manaLabel = this.scene.add.text(x, y, 'MP', { ...labelStyle, color: '#6a5acd' }).setOrigin(0, 0.5);
+    // Mana (softer purple)
+    const manaLabel = this.scene.add.text(x, y, 'MP', { ...labelStyle, color: '#8c73d9' }).setOrigin(0, 0.5);
     this.container.add(manaLabel);
 
-    const manaBars = this.createBar(x + 40, y, 120, 14, 0x6a5acd);
+    const manaBars = this.createBar(x + 40, y, 120, 14, 0x8c73d9);
     this.manaBarBg = manaBars.bg;
     this.manaBar = manaBars.fill;
 
@@ -109,15 +113,15 @@ export class CombatHUD {
     const x = 780 - barWidth; // Pushed to the right edge
     const y = 24;
 
-    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '22px', color: '#ff4444', stroke: '#000000', strokeThickness: 4 };
-    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 2 };
+    const labelStyle = { fontFamily: 'Impact, sans-serif', fontSize: '22px', color: '#cc3333', stroke: '#000000', strokeThickness: 4, resolution: 3 };
+    const valStyle = { fontFamily: 'Impact, sans-serif', fontSize: '18px', color: '#ffffff', stroke: '#000000', strokeThickness: 3, resolution: 3 };
 
     // Enemy name
     this.enemyNameText = this.scene.add.text(780, y, '', labelStyle).setOrigin(1, 0.5);
     this.container.add(this.enemyNameText);
 
-    // Enemy HP bar
-    const enemyBars = this.createBar(x, y + 26, barWidth, 18, 0xff0000);
+    // Enemy HP bar (softer red)
+    const enemyBars = this.createBar(x, y + 26, barWidth, 18, 0xcc3333);
     this.enemyHpBarBg = enemyBars.bg;
     this.enemyHpBar = enemyBars.fill;
 
@@ -167,7 +171,7 @@ export class CombatHUD {
     const newStamina = Math.ceil(state.heroStamina);
     if (newStamina !== this.displayedStamina) {
       this.tweenBar('stamina', this.displayedStamina, newStamina, state.heroMaxStamina, 120,
-        this.staminaBar, this.staminaText, () => 0xff8c00,
+        this.staminaBar, this.staminaText, () => 0xe68a00,
         () => { this.displayedStamina = newStamina; });
     }
 
@@ -175,7 +179,7 @@ export class CombatHUD {
     const newMana = Math.ceil(state.heroMana);
     if (newMana !== this.displayedMana) {
       this.tweenBar('mana', this.displayedMana, newMana, state.heroMaxMana, 120,
-        this.manaBar, this.manaText, () => 0x6a5acd,
+        this.manaBar, this.manaText, () => 0x8c73d9,
         () => { this.displayedMana = newMana; });
     }
 
@@ -184,7 +188,7 @@ export class CombatHUD {
     const newEnemyHp = Math.ceil(state.enemyHP);
     if (newEnemyHp !== this.displayedEnemyHp) {
       this.tweenBar('enemyHp', this.displayedEnemyHp, newEnemyHp, state.enemyMaxHP, 160,
-        this.enemyHpBar, this.enemyHpText, () => 0xff0000,
+        this.enemyHpBar, this.enemyHpText, () => 0xcc3333,
         () => { this.displayedEnemyHp = newEnemyHp; });
     }
 
@@ -270,9 +274,9 @@ export class CombatHUD {
   }
 
   private getHpColor(ratio: number): number {
-    if (ratio > 0.5) return 0x00ff00;
-    if (ratio > 0.25) return 0xffaa00;
-    return 0xff0000;
+    if (ratio > 0.5) return 0x118811; // Escuro: #118811
+    if (ratio > 0.25) return 0x996600; // Escuro: laranja/mostarda
+    return 0x991111; // Escuro: vermelho
   }
 
   destroy(): void {

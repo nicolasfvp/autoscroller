@@ -84,7 +84,8 @@ export function bankRunRewards(
   xpEarned: number,
   exitType: 'safe' | 'death',
   runSummary: { seed: string; loopsCompleted: number; bossesDefeated: number },
-  state: MetaState
+  state: MetaState,
+  className: string = 'warrior',
 ): MetaState {
   const storehouseEffects = getStorehouseEffects(state.buildings.storehouse.level);
   const materialMultiplier = exitType === 'safe' ? 1.0 : storehouseEffects.deathRetention;
@@ -99,7 +100,14 @@ export function bankRunRewards(
     }
     bankedMaterials[mat] = banked;
   }
-  updated.classXP.warrior += Math.floor(xpEarned * xpMultiplier);
+
+  const xpGained = Math.floor(xpEarned * xpMultiplier);
+  if (className === 'mage') {
+    updated.classXP.mage = (updated.classXP.mage ?? 0) + xpGained;
+  } else {
+    updated.classXP.warrior += xpGained;
+  }
+
   updated.totalRuns += 1;
   updated.runHistory.push({
     seed: runSummary.seed,
@@ -107,7 +115,7 @@ export function bankRunRewards(
     bossesDefeated: runSummary.bossesDefeated,
     exitType,
     materialsEarned: bankedMaterials,
-    xpEarned: Math.floor(xpEarned * xpMultiplier),
+    xpEarned: xpGained,
     timestamp: Date.now(),
   });
   return updated;

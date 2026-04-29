@@ -44,77 +44,98 @@ export class BuildingPanelScene extends Scene {
     const fontFamily = FONTS.family;
 
     // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
-    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5);
+    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75);
     this.time.delayedCall(100, () => {
       backdrop.setInteractive();
       backdrop.on('pointerdown', () => this.closePanel());
     });
 
-    // Panel
-    const panel = this.add.rectangle(400, 300, 500, 420, COLORS.panel, 0.95);
-    panel.setInteractive(); // absorb clicks
-
     const tierData = getBuildingTierData(this.buildingKey);
     if (!tierData) return;
+
+    // Fixed panel centered on screen
+    const panelHeight = 540;
+    const panelY = 300;
+
+    // Panel (wood texture with rounded corners)
+    const bgKey = this.buildingKey === 'library' ? 'library_table' : 'wood_texture_big';
+    const panel = this.add.image(400, panelY, bgKey).setDisplaySize(500, panelHeight);
+    panel.setInteractive(); // absorb clicks
+
+    const shape = this.make.graphics();
+    shape.fillStyle(0xffffff);
+    shape.fillRoundedRect(150, 300 - (panelHeight/2), 500, panelHeight, 24);
+    panel.setMask(shape.createGeometryMask());
 
     const currentLevel = (this.metaState.buildings as any)[this.buildingKey].level as number;
     const maxLevel = tierData.maxLevel;
     const color = BUILDING_COLORS[this.buildingKey] ?? 0xffffff;
     const colorHex = '#' + color.toString(16).padStart(6, '0');
 
-    // Title
-    this.add.text(400, 115, tierData.name, {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: colorHex,
-      fontFamily,
-    }).setOrigin(0.5);
+    // Title (Medieval Style)
+    if (this.buildingKey !== 'library') {
+      this.add.text(400, 75, tierData.name, {
+        fontSize: '48px',
+        fontStyle: 'bold',
+        color: '#fdf6e3', // cream
+        stroke: '#3e2723',
+        strokeThickness: 6,
+        fontFamily: '"Impact", "Arial Black", sans-serif',
+        shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
+      }).setOrigin(0.5);
+    }
+
+    const descY = this.buildingKey === 'library' ? 165 : 120;
 
     // Description
-    this.add.text(400, 143, BUILDING_DESCRIPTIONS[this.buildingKey] ?? '', {
+    this.add.text(400, descY, BUILDING_DESCRIPTIONS[this.buildingKey] ?? '', {
       fontSize: '16px',
-      color: COLORS.textSecondary,
+      color: '#ffeebb', // pale cream
       fontFamily,
     }).setOrigin(0.5);
 
     // Current tier
-    this.add.text(400, 167, `Level ${currentLevel} / ${maxLevel}`, {
+    this.add.text(400, descY + 25, `Level ${currentLevel} / ${maxLevel}`, {
       fontSize: '16px',
-      color: COLORS.textPrimary,
+      color: '#ffeebb',
       fontFamily,
     }).setOrigin(0.5);
 
-    // Progress bar background
-    this.add.rectangle(400, 187, 400, 8, 0x444444);
+    // Progress bar background (dark wood/brown inset)
+    this.add.rectangle(400, descY + 45, 400, 14, 0x1a0f0a).setStrokeStyle(2, 0x3e2723);
 
-    // Progress bar fill
-    const fillWidth = maxLevel > 0 ? (currentLevel / maxLevel) * 400 : 0;
+    // Progress bar fill (parchment/light wood color to match mockup)
+    const fillWidth = maxLevel > 0 ? (currentLevel / maxLevel) * 396 : 0;
     if (fillWidth > 0) {
-      this.add.rectangle(400 - (400 - fillWidth) / 2, 187, fillWidth, 8, color);
+      this.add.rectangle(400 - (396 - fillWidth) / 2, descY + 45, fillWidth, 10, 0xdab988); // pale parchment fill
     }
 
     // Upgrade preview section
-    this.add.text(200, 210, 'Unlocks:', {
-      fontSize: '24px',
+    this.add.text(400, descY + 80, 'Unlocks:', {
+      fontSize: '22px',
       fontStyle: 'bold',
-      color: COLORS.textPrimary,
+      color: '#fdf6e3', // clean cream text, no stroke
       fontFamily,
-    });
+    }).setOrigin(0.5);
 
-    let itemY = 245;
+    let itemY = descY + 110;
+    const tierSpacing = tierData.tiers.length > 6 ? 25 : 28; // Compress slightly if there are many tiers
+
     for (const tier of tierData.tiers) {
       const isUnlocked = tier.level <= currentLevel;
       const isNext = tier.level === currentLevel + 1;
-      const alpha = isUnlocked ? 0.5 : isNext ? 1.0 : 0.4;
+
+      // Solid Parchment background strip (Narrower)
+      this.add.rectangle(400, itemY, 340, 24, 0xeee8d5, 1.0).setStrokeStyle(1, 0xdab988);
 
       // Tier label
       const prefix = isUnlocked ? '\u2713 ' : '';
       const tierLabel = `${prefix}Tier ${tier.level}:`;
-      this.add.text(210, itemY, tierLabel, {
-        fontSize: '14px',
-        color: isUnlocked ? COLORS.textSecondary : COLORS.textPrimary,
+      this.add.text(240, itemY, tierLabel, {
+        fontSize: '13px',
+        color: isUnlocked || isNext ? '#3e2723' : '#888888', // grey if locked
         fontFamily,
-      }).setAlpha(alpha);
+      }).setOrigin(0, 0.5);
 
       // List unlock items
       const unlocks = tier.unlocks || {};
@@ -129,23 +150,28 @@ export class BuildingPanelScene extends Scene {
         const itemText = isUnlocked || isNext
           ? allItems.join(', ')
           : '???';
-        this.add.text(300, itemY, itemText, {
-          fontSize: '14px',
-          color: isNext ? colorHex : isUnlocked ? COLORS.textSecondary : '#666666',
+        this.add.text(310, itemY, itemText, {
+          fontSize: '12px',
+          fontStyle: 'bold',
+          color: isNext ? colorHex : isUnlocked ? '#5d4037' : '#888888',
           fontFamily,
-        }).setAlpha(alpha);
+        }).setOrigin(0, 0.5);
       }
 
-      itemY += 28;
+      itemY += tierSpacing;
     }
+
+    const buttonY = Math.max(430, itemY + 10);
 
     // Upgrade button or "Fully Upgraded"
     if (currentLevel >= maxLevel) {
-      this.add.text(400, 370, 'Fully Upgraded', {
-        fontSize: '24px',
+      this.add.text(400, buttonY, 'Fully Upgraded', {
+        fontSize: '28px',
         fontStyle: 'bold',
-        color: COLORS.textSecondary,
-        fontFamily,
+        color: '#fdf6e3',
+        stroke: '#3e2723',
+        strokeThickness: 3,
+        fontFamily: '"Impact", "Arial Black", sans-serif',
       }).setOrigin(0.5);
     } else {
       const nextTier = tierData.tiers.find((t: any) => t.level === currentLevel + 1);
@@ -159,64 +185,106 @@ export class BuildingPanelScene extends Scene {
       }
       const canAfford = missingMats.length === 0;
 
-      const upgradeBtn = createButton(this, 400, 370, 'Upgrade Building', async () => {
-        if (!canAfford) return;
-        const result = upgradeBuilding(this.buildingKey, this.metaState);
-        if (result.success && result.updatedState) {
-          this.metaState = result.updatedState;
-          await saveMetaState(this.metaState);
+      // Custom Button (No background rectangle, just floating styled text)
+      const btnText = this.add.text(400, buttonY, 'Upgrade Building', {
+        fontSize: '32px',
+        fontStyle: 'bold',
+        color: canAfford ? '#fdf6e3' : '#8a7369', // better contrast for disabled state
+        stroke: canAfford ? '#3e2723' : '#2d1e18',
+        strokeThickness: 5,
+        fontFamily: '"Impact", "Arial Black", sans-serif',
+        shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
+      }).setOrigin(0.5).setInteractive({ useHandCursor: canAfford });
 
-          // Play unlock celebration for new items
-          const newUnlocks = result.newUnlocks;
-          if (newUnlocks) {
-            const allNewItems = [
-              ...(newUnlocks.cards ?? []),
-              ...(newUnlocks.relics ?? []),
-              ...(newUnlocks.tiles ?? []),
-              ...(newUnlocks.passives ?? []),
-            ];
-            if (allNewItems.length > 0) {
-              playUnlockCelebration(this, allNewItems[0], BUILDING_COLORS[this.buildingKey]);
+      if (canAfford) {
+        btnText.on('pointerover', () => btnText.setColor('#ffffff'));
+        btnText.on('pointerout', () => btnText.setColor('#fdf6e3'));
+        btnText.on('pointerdown', async () => {
+          const result = upgradeBuilding(this.buildingKey, this.metaState);
+          if (result.success && result.updatedState) {
+            this.metaState = result.updatedState;
+            await saveMetaState(this.metaState);
+
+            const newUnlocks = result.newUnlocks;
+            if (newUnlocks) {
+              const allNewItems = [
+                ...(newUnlocks.cards ?? []),
+                ...(newUnlocks.relics ?? []),
+                ...(newUnlocks.tiles ?? []),
+                ...(newUnlocks.passives ?? []),
+              ];
+              if (allNewItems.length > 0) {
+                playUnlockCelebration(this, allNewItems[0], BUILDING_COLORS[this.buildingKey]);
+              }
             }
+
+            this.time.delayedCall(1600, () => {
+              this.renderPanel();
+            });
           }
-
-          // Re-render panel with updated state
-          this.time.delayedCall(1600, () => {
-            this.renderPanel();
-          });
-        }
-      }, 'primary');
-
-      if (!canAfford) {
-        upgradeBtn.setAlpha(0.4);
+        });
       }
 
-      // Multi-material cost display
+      // Multi-material cost display (under the button, moved up slightly)
       const costEntries = Object.entries(cost);
-      const costParts = costEntries.map(([mat, required]) => {
-        const owned = this.metaState.materials[mat] ?? 0;
-        const costColor = owned >= required ? '#00ff00' : COLORS.danger;
-        return { text: `${mat}: ${required}`, color: costColor };
-      });
-      let costY = 400;
-      for (const part of costParts) {
-        this.add.text(400, costY, part.text, {
-          fontSize: '13px',
-          color: part.color,
-          fontFamily,
-        }).setOrigin(0.5);
-        costY += 18;
+      
+      const itemWidth = 110;
+      const totalCostWidth = costEntries.length * itemWidth;
+      let costX = 400 - (totalCostWidth / 2) + (itemWidth / 2);
+      
+      const costY = buttonY + 50; 
+
+      // Render a SINGLE board background for all costs
+      // Offset X slightly because the icon_table PNG might have asymmetrical empty space
+      if (costEntries.length > 0) {
+        this.add.image(406, costY, 'icon_table').setDisplaySize(totalCostWidth + 90, 64);
       }
+
+      costEntries.forEach(([mat, required]) => {
+        const owned = this.metaState.materials[mat] ?? 0;
+        const hasEnough = owned >= required;
+        const color = hasEnough ? '#ffffff' : '#ff5555';
+        
+        // Render icon if available
+        const hasIcon = ['iron', 'crystal', 'scroll', 'wood', 'stone', 'bone'].includes(mat.toLowerCase());
+        if (hasIcon) {
+          this.add.image(costX - 12, costY, `mat_${mat.toLowerCase()}`).setDisplaySize(24, 24);
+          this.add.text(costX + 12, costY + 2, `${required}`, {
+            fontSize: '16px',
+            fontStyle: 'bold',
+            color,
+            stroke: '#000000',
+            strokeThickness: 3,
+            fontFamily,
+          }).setOrigin(0.5);
+        } else {
+          // Text only
+          this.add.text(costX, costY, `${mat}: ${required}`, {
+            fontSize: '14px',
+            fontStyle: 'bold',
+            color,
+            stroke: '#000000',
+            strokeThickness: 3,
+            fontFamily,
+          }).setOrigin(0.5);
+        }
+        
+        costX += itemWidth;
+      });
     }
 
-    // Close button
-    const closeBtn = this.add.text(630, 100, 'X', {
-      fontSize: '16px',
-      color: COLORS.textSecondary,
+    // Nice Red Close Button
+    const closeBtnBg = this.add.circle(620, 50, 16, 0xcc0000).setStrokeStyle(2, 0x3e2723).setInteractive({ useHandCursor: true });
+    const closeBtnTxt = this.add.text(620, 50, 'X', {
+      fontSize: '18px',
+      fontStyle: 'bold',
+      color: '#ffffff',
       fontFamily,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    }).setOrigin(0.5);
 
-    closeBtn.on('pointerdown', () => this.closePanel());
+    closeBtnBg.on('pointerover', () => closeBtnBg.setFillStyle(0xff3333));
+    closeBtnBg.on('pointerout', () => closeBtnBg.setFillStyle(0xcc0000));
+    closeBtnBg.on('pointerdown', () => this.closePanel());
   }
 
   private closePanel(): void {

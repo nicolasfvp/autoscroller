@@ -15,7 +15,7 @@ export interface MetaState {
     storehouse: { level: number };
   };
   materials: Record<string, number>;
-  classXP: { warrior: number };
+  classXP: { warrior: number; mage: number };
   passivesUnlocked: string[];
   unlockedCards: string[];
   unlockedRelics: string[];
@@ -53,7 +53,7 @@ export function createDefaultMetaState(): MetaState {
       storehouse: { level: 0 },
     },
     materials: {},
-    classXP: { warrior: 0 },
+    classXP: { warrior: 0, mage: 0 },
     passivesUnlocked: [],
     unlockedCards: [],
     unlockedRelics: [],
@@ -64,7 +64,7 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 3,
+    version: 4,
   };
 }
 
@@ -104,6 +104,18 @@ export function migrateMetaState(raw: any): MetaState {
       gameSpeed: raw.gameSpeed ?? 1,
       autoSave: raw.autoSave ?? true,
       version: 3,
+    };
+  }
+
+  // v3 -> v4 migration: add classXP.mage
+  if (raw.version === 3) {
+    raw = {
+      ...raw,
+      classXP: {
+        warrior: raw.classXP?.warrior ?? 0,
+        mage: raw.classXP?.mage ?? 0,
+      },
+      version: 4,
     };
   }
 
