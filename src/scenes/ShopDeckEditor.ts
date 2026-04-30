@@ -4,10 +4,10 @@
 
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { reorderDeck, REORDER_SESSION_COST } from '../systems/deck/DeckSystem';
+import { REORDER_SESSION_COST } from '../systems/deck/DeckSystem';
 import { getCardById } from '../data/DataLoader';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
-import type { CardDefinition, CardCategory } from '../data/types';
+import type { CardCategory } from '../data/types';
 
 const COLS = 6;
 const CARD_W = 80;
@@ -367,10 +367,10 @@ export class ShopDeckEditor extends Scene {
   }
 
   private close(): void {
-    // Apply the reorder if paid
+    // Apply the reorder if paid. Gold was already deducted when the first drag started.
     if (this.paid) {
       const run = getRun();
-      reorderDeck(this.deckOrder, run);
+      run.deck.active = [...this.deckOrder];
     }
     this.scene.stop();
     this.scene.resume('ShopScene');

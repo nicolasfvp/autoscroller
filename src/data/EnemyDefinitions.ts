@@ -25,10 +25,10 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'slime',
         name: 'Slime',
         type: 'normal',
-        baseHP: 130,
+        baseHP: 13000,
         baseDefense: 0,
         attack: {
-            damage: 3,
+            damage: 300,
             pattern: 'fixed'
         },
         goldReward: { min: 10, max: 20 },
@@ -80,7 +80,7 @@ const ENEMIES: Record<string, EnemyDefinition> = {
         id: 'elite_knight',
         name: 'Elite Knight',
         type: 'elite',
-        baseHP: 240,
+        baseHP: 240000,
         baseDefense: 5,
         attack: {
             damage: 2,
