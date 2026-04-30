@@ -5,14 +5,14 @@ import { TILE_SIZE } from '../systems/LoopRunner';
 /** Maps tile keys to their sprite texture keys */
 const TILE_SPRITE_MAP: Record<string, string> = {
   basic: 'tile_sand',
-  forest: 'tile_sand',
-  graveyard: 'tile_sand',
-  swamp: 'tile_sand',
-  shop: 'tile_sand',
-  rest: 'tile_sand',
-  event: 'tile_sand',
-  treasure: 'tile_sand',
-  boss: 'tile_sand',
+  forest: 'tile_forest',
+  graveyard: 'tile_graveyard',
+  swamp: 'tile_swamp',
+  shop: 'tile_shop',
+  rest: 'tile_rest',
+  event: 'tile_event',
+  treasure: 'tile_treasure',
+  boss: 'tile_boss',
 };
 
 /** Maps tile keys to their background object texture keys */

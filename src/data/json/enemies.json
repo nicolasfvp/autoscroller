@@ -106,12 +106,12 @@
     "id": "elite_knight",
     "name": "Elite Knight",
     "type": "elite",
-    "baseHP": 240,
+    "baseHP": 180,
     "baseDefense": 5,
     "attack": {
       "damage": 2,
-      "defense": 2,
-      "pattern": "scaling"
+      "defense": 3,
+      "pattern": "fixed"
     },
     "attackCooldown": 2800,
     "goldReward": {
