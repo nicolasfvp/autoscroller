@@ -55,10 +55,10 @@ export class CollectionScene extends Scene {
     const percent = getCompletionPercent(this.metaState);
     this.activeTab = 'Cards';
 
-    const fontFamily = '"Impact", "Arial Black", sans-serif';
+    const fontFamily = FONTS.family;
 
-    // Background (Dark dim)
-    this.add.rectangle(0, 0, 800, 600, 0x111111, 0.8).setOrigin(0);
+    // Background
+    this.add.image(400, 300, 'bg_character_selection').setDisplaySize(800, 600);
 
     // Main Wood Panel
     const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(760, 560);
@@ -122,10 +122,11 @@ export class CollectionScene extends Scene {
       const text = this.add.text(startTabX + i * (tabW + tabGap) + tabW/2, tabY, label, {
         fontSize: '18px',
         fontStyle: 'bold',
-        color: isActive ? '#ffffff' : '#fdf6e3',
-        stroke: '#000000',
-        strokeThickness: 3,
-        fontFamily: '"Impact", "Arial Black", sans-serif',
+        color: isActive ? '#ffffff' : '#e6c88a',
+        stroke: '#2e1b0f',
+        strokeThickness: 2,
+        shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
+        fontFamily,
       }).setOrigin(0.5);
       this.tabTexts.push(text);
 
@@ -215,7 +216,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderCardsGrid(status: CategoryStatus): void {
-    const fontFamily = '"Impact", "Arial Black", sans-serif';
+    const fontFamily = FONTS.family;
     const cols = 6;
     const itemW = 90;
     const itemH = 100;
@@ -252,10 +253,10 @@ export class CollectionScene extends Scene {
           const name = this.add.text(x, textY, item.name, {
             fontSize: '16px',
             fontStyle: 'bold',
-            color: '#fdf6e3',
-            stroke: '#000000',
-            strokeThickness: 3,
-            shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 0, fill: true },
+            color: '#e6c88a',
+            stroke: '#2e1b0f',
+            strokeThickness: 2,
+            shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
             fontFamily,
             align: 'center',
             wordWrap: { width: itemW + gapX }
@@ -271,10 +272,10 @@ export class CollectionScene extends Scene {
           const name = this.add.text(x, y, item.name, {
             fontSize: '18px',
             fontStyle: 'bold',
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 3,
-            shadow: { offsetX: 2, offsetY: 2, color: '#000000', blur: 0, fill: true },
+            color: '#e6c88a',
+            stroke: '#2e1b0f',
+            strokeThickness: 2,
+            shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
             fontFamily,
             wordWrap: { width: itemW - 10 },
             align: 'center',
@@ -319,7 +320,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderEventsList(status: CategoryStatus): void {
-    const fontFamily = '"Impact", "Arial Black", sans-serif';
+    const fontFamily = FONTS.family;
     const startY = 160;
 
     status.items.forEach((item, index) => {
@@ -331,9 +332,11 @@ export class CollectionScene extends Scene {
       if (item.isUnlocked) {
         const title = this.add.text(80, y + 18, item.name, {
           fontSize: '20px',
-          color: '#ffffff',
-          stroke: '#000000',
-          strokeThickness: 3,
+          fontStyle: 'bold',
+          color: '#e6c88a',
+          stroke: '#2e1b0f',
+          strokeThickness: 2,
+          shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
           fontFamily,
         });
         this.gridContainer.add(title);
@@ -363,7 +366,7 @@ export class CollectionScene extends Scene {
   }
 
   private renderBossesRow(status: CategoryStatus): void {
-    const fontFamily = '"Impact", "Arial Black", sans-serif';
+    const fontFamily = FONTS.family;
     const itemW = 160;
     const itemH = 120;
     const gap = 16;
@@ -381,9 +384,10 @@ export class CollectionScene extends Scene {
         const name = this.add.text(x, y - 20, item.name, {
           fontSize: '24px',
           fontStyle: 'bold',
-          color: '#ffffff',
-          stroke: '#000000',
+          color: '#e6c88a',
+          stroke: '#2e1b0f',
           strokeThickness: 3,
+          shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
           fontFamily,
         }).setOrigin(0.5);
         this.gridContainer.add(name);
