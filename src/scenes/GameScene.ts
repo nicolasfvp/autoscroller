@@ -7,6 +7,7 @@ import { LoopCelebration } from '../ui/LoopCelebration';
 import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
+import { AudioManager } from '../systems/AudioManager';
 import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
@@ -60,6 +61,9 @@ export class GameScene extends Scene {
   create(): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
+
+    // Fade out any menu or town music when entering the actual run
+    AudioManager.fadeOut(this, 1000);
 
     const run = getRun();
 
