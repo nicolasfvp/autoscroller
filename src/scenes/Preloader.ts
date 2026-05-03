@@ -43,8 +43,15 @@ export class Preloader extends Scene {
     this.load.image('wood_texture_big', 'assets/objects/wood-texture-big.png');
     this.load.image('bg_character_selection', 'assets/objects/background-character-selection.jpg');
     this.load.image('icon_table', 'assets/objects/icon-table.png');
-    this.load.image('library_table', 'assets/objects/library-table.png');
+    this.load.image('library_table', 'assets/buildings/library-table.png');
+    this.load.image('workshop_table', 'assets/buildings/workshop-table.png');
+    this.load.image('forge_table', 'assets/buildings/forge-table.png');
+    this.load.image('tavern_table', 'assets/buildings/tavern.png');
+    this.load.image('shrine_table', 'assets/buildings/shrine.png');
+    this.load.image('vault_table', 'assets/buildings/vault.png');
     this.load.image('wood_board_collection', 'assets/objects/wood-board-collection.png');
+    this.load.image('icons_up_table', 'assets/objects/icons-up-table.png');
+    this.load.image('base_icon_place', 'assets/objects/base-icon-place.png');
 
     // Material Icons
     this.load.image('mat_iron', 'assets/icons/iron.png');
@@ -52,10 +59,21 @@ export class Preloader extends Scene {
     this.load.image('mat_scroll', 'assets/icons/scroll.png');
     this.load.image('mat_wood', 'assets/icons/wood.png');
     this.load.image('mat_stone', 'assets/icons/stone.png');
-    this.load.image('mat_bone', 'assets/icons/stone.png'); // fallback/alias just in case
+    this.load.image('mat_bone', 'assets/icons/stone.png'); 
+    this.load.image('mat_essence', 'assets/icons/essence.png');
     
     // UI Elements
     this.load.image('collection_headline', 'assets/ui/collection-headline.png');
+    this.load.image('btn_continue_run', 'assets/ui/continue-run.png');
+    this.load.image('btn_new_game', 'assets/ui/new-game.png');
+    this.load.image('btn_keep_my_run', 'assets/ui/keep-my-run.png');
+    this.load.image('btn_yes_delete', 'assets/ui/yes, delete.png');
+    this.load.image('bg_base_option', 'assets/ui/base-option.png');
+    this.load.image('fog', 'assets/ui/fog.png');
+
+    // Audio
+    this.load.audio('theme_song', 'assets/audio/theme-song.mp3');
+    this.load.audio('town_song', 'assets/audio/town-song.mp3');
     
     this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
     this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
@@ -97,6 +115,7 @@ export class Preloader extends Scene {
     this.load.image('bg_battle_forest', 'assets/backgrounds/bg_battle_forest.png');
     this.load.image('bg_battle_graveyard', 'assets/backgrounds/bg_battle_graveyard.png');
     this.load.image('bg_battle_swamp', 'assets/backgrounds/bg_battle_swamp.png');
+    this.load.image('homepage', 'assets/backgrounds/homepage.jpg');
 
     // Desert Parallax backgrounds
     this.load.image('bg_desert', 'assets/backgrounds/desert.png');
