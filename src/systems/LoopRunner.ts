@@ -1,10 +1,11 @@
-import { createBasicLoop, createTileSlot, getTileConfig, type TileSlot, type TileInventoryEntry } from './TileRegistry';
+import { createBasicLoop, createBufferTiles, createTileSlot, getTileConfig, type TileSlot, type TileInventoryEntry } from './TileRegistry';
 import { resolveAdjacencySynergies, type SynergyBuff } from './SynergyResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
 
 const TILE_SIZE = 64;
+export const BUFFER_TILE_COUNT = 5; // Safe tiles at the start of every loop
 
 export type LoopState = 'idle' | 'traversing' | 'tile-interaction' | 'planning' | 'boss-choice' | 'run-ended';
 
@@ -59,7 +60,12 @@ export class LoopRunner {
     const config = getDifficultyConfig();
     this.runState.loop.count = 1;
     this.runState.loop.length = config.baseLoopLength;
-    this.runState.loop.tiles = createBasicLoop(config.baseLoopLength);
+    // Prepend buffer tiles — these are non-interactive and give the player
+    // a few safe tiles before hitting any user-placed content.
+    const baseTiles = createBasicLoop(config.baseLoopLength);
+    const bufferTiles = createBufferTiles(BUFFER_TILE_COUNT);
+    this.runState.loop.tiles = [...bufferTiles, ...baseTiles];
+    this.runState.loop.length = this.runState.loop.tiles.length;
     this.runState.loop.positionInLoop = 0;
     this.runState.loop.difficultyMultiplier = 1.0;
     this.lastTileIndex = -1;
@@ -144,34 +150,38 @@ export class LoopRunner {
     const loop = this.runState.loop;
     loop.count++;
 
-    // Award tile points: +2 per loop (accumulates with unspent balance)
+    // Award tile points
     const diffConfig = getDifficultyConfig();
     this.runState.economy.tilePoints += diffConfig.baseTilePointsPerLoop + Math.floor(loop.count * diffConfig.tilePointScalePerLoop);
 
-    // Reset defeated flags
+    // Reset defeated flags (buffer tiles stay permanently defeated)
     for (const tile of loop.tiles) {
-      tile.defeatedThisLoop = false;
+      if (tile.type !== 'buffer') tile.defeatedThisLoop = false;
     }
 
     // Update difficulty multiplier
     loop.difficultyMultiplier = 1 + (loop.count - 1) * diffConfig.percentPerLoop;
 
-    // Check if boss loop: add boss as extra tile (feedback #25 — don't overwrite existing)
+    // Check if boss loop: add boss as extra tile
     if (loop.count % diffConfig.bossEveryNLoops === 0) {
       loop.tiles.push(createTileSlot('boss'));
-      loop.length = loop.tiles.length;
     }
 
-    // Reset position to beginning of loop (feedback #33, #34)
+    // Strip old buffer prefix and re-add fresh ones so the landmark positions stay consistent
+    const nonBuffer = loop.tiles.filter(t => t.type !== 'buffer');
+    const freshBuffer = createBufferTiles(BUFFER_TILE_COUNT);
+    loop.tiles = [...freshBuffer, ...nonBuffer];
+    loop.length = loop.tiles.length;
+
+    // Reset position to beginning of loop
     this.runState.loop.positionInLoop = 0;
     this.lastTileIndex = -1;
 
-    // Assign enemies AFTER planning confirmation, not here — moved to confirmPlanning
-    // but still assign for boss loops since they skip planning
     if (loop.count % diffConfig.bossEveryNLoops === 0) {
       this.assignEnemies();
     }
 
+    this.assignEnemies();
     this.emit('loop-completed', { loopCount: loop.count });
     this.state = 'planning';
     this.emit('planning-phase-started', { loopCount: loop.count });
@@ -266,8 +276,8 @@ export class LoopRunner {
     // Prevent placing tiles on slots with pre-assigned enemies (feedback #16)
     if (tile.enemyId) return false;
 
-    // Prevent placing on boss tiles
-    if (tile.type === 'boss') return false;
+    // Prevent placing on boss or buffer tiles
+    if (tile.type === 'boss' || tile.type === 'buffer') return false;
 
     // If slot is occupied by a non-basic tile, return it to inventory (feedback #24)
     if (tile.type !== 'basic') {

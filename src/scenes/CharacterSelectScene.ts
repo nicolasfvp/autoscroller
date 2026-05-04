@@ -161,7 +161,7 @@ export class CharacterSelectScene extends Scene {
     }
 
     // Description
-    const desc = this.add.text(0, -5, cls.description, {
+    const desc = this.add.text(0, 20, cls.description, {
       fontSize: '18px',
       color: '#ffffff',
       stroke: '#000000',

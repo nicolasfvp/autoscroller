@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { AudioManager } from '../systems/AudioManager';
 
 const BUILDING_COLORS: Record<string, number> = {
   forge: 0xcc3333,
@@ -15,12 +16,12 @@ const BUILDING_COLORS: Record<string, number> = {
 
 
 const BUILDING_NAMES: Record<string, string> = {
-  forge: 'Forge',
-  library: 'Library',
-  tavern: 'Tavern',
-  workshop: 'Workshop',
-  shrine: 'Shrine',
-  storehouse: 'Storehouse',
+  forge: 'FORGE',
+  library: 'LIBRARY',
+  tavern: 'TAVERN',
+  workshop: 'WORKSHOP',
+  shrine: 'ORACLE',
+  storehouse: 'VAULT',
 };
 
 interface BuildingLayout {
@@ -30,12 +31,12 @@ interface BuildingLayout {
 }
 
 const BUILDING_LAYOUT: BuildingLayout[] = [
-  { key: 'library', x: 400, y: 120 },
-  { key: 'forge', x: 200, y: 260 },
-  { key: 'tavern', x: 400, y: 260 },
-  { key: 'workshop', x: 600, y: 260 },
-  { key: 'shrine', x: 300, y: 400 },
-  { key: 'storehouse', x: 500, y: 400 },
+  { key: 'library', x: 400, y: 160 },
+  { key: 'forge', x: 220, y: 310 },
+  { key: 'tavern', x: 400, y: 310 },
+  { key: 'workshop', x: 580, y: 310 },
+  { key: 'shrine', x: 310, y: 460 },
+  { key: 'storehouse', x: 490, y: 460 },
 ];
 
 export class CityHubScene extends Scene {
@@ -68,31 +69,97 @@ export class CityHubScene extends Scene {
       this.add.image(400, 300, 'bg_city').setDisplaySize(800, 600).setDepth(-10);
     }
 
+    // Stop Theme Song and Play Town Song with crossfade
+    AudioManager.transitionTo(this, 'town_song', { volume: 0.4, duration: 1500 });
+
     const fontFamily = FONTS.family;
 
     // Top bar: material inventory (top-left)
-    const matEntries = Object.entries(this.metaState.materials).filter(([, v]) => v > 0);
-    const matDisplay = matEntries.length > 0
-      ? matEntries.map(([k, v]) => `${k}: ${v}`).join(' | ')
-      : 'No materials';
-    this.add.text(24, 24, matDisplay, {
-      fontSize: '14px',
-      color: COLORS.material,
-      fontFamily,
+    const tableImg = this.add.image(10, 10, 'icons_up_table').setOrigin(0, 0).setDepth(50);
+    // Let's adjust scale and position slightly based on typical asset size
+    tableImg.setScale(0.7); // Reduced table size further
+
+    const materialsLeft = ['stone', 'essence', 'herbs'];
+    const materialsRight = ['bone', 'wood', 'iron'];
+    
+    // Base positions relative to the table
+    const startX = 35; 
+    const startY = 36; // moved slightly up
+    const rowHeight = 26; // increased spacing a bit
+    const colWidth = 90;
+
+    const renderMat = (matKey: string, x: number, y: number) => {
+      const val = (this.metaState.materials as any)[matKey] || 0;
+      const hasImage = ['stone', 'wood', 'iron', 'crystal', 'bone', 'scroll'].includes(matKey);
+      
+      if (hasImage) {
+        this.add.image(x, y, `mat_${matKey}`).setDisplaySize(18, 18).setOrigin(0.5, 0.5).setDepth(51);
+      } else {
+        let iconStr = '';
+        if (matKey === 'essence') iconStr = '✨';
+        else if (matKey === 'herbs') iconStr = '🌿';
+        
+        this.add.text(x, y, iconStr, {
+          fontSize: '16px', // larger emojis
+          fontFamily
+        }).setOrigin(0.5, 0.5).setDepth(51);
+      }
+
+      // Text always aligned perfectly at x + 10
+      const textX = x + 10;
+      this.add.text(textX, y, `${matKey}: ${val}`, {
+        fontSize: '12px',
+        color: '#e6c88a',
+        stroke: '#2e1b0f',
+        strokeThickness: 2,
+        fontStyle: 'bold',
+        fontFamily,
+        shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
+      }).setOrigin(0, 0.5).setDepth(51);
+    };
+
+    materialsLeft.forEach((mat, i) => {
+      renderMat(mat, startX, startY + i * rowHeight);
     });
+
+    materialsRight.forEach((mat, i) => {
+      renderMat(mat, startX + colWidth, startY + i * rowHeight);
+    });
+
+    // Render crystal centered at the bottom row
+    renderMat('crystal', startX + (colWidth / 2) - 5, startY + 3 * rowHeight);
 
     // Top bar: class XP display (top-right)
     this.add.text(776, 24, `Warrior Lv.${this.metaState.classXP.warrior}`, {
       fontSize: '16px',
-      color: COLORS.xp,
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
+      fontStyle: 'bold',
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(1, 0);
 
-    // Hover label (reused across buildings)
+    // Title
+    this.add.text(400, 50, '〰 THE VILLAGE 〰', {
+      fontSize: '36px',
+      fontStyle: 'bold',
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 3,
+      fontFamily,
+      shadow: { offsetX: 2, offsetY: 2, color: '#1a0d06', blur: 4, fill: true }
+    }).setOrigin(0.5, 0.5).setDepth(10);
+
+    // Hover label (reused across buildings, though maybe not needed with new layout)
     this.hoverLabel = this.add.text(0, 0, '', {
       fontSize: '16px',
-      color: COLORS.textPrimary,
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
+      fontStyle: 'bold',
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5, 1).setDepth(200).setVisible(false);
 
     // Buildings
@@ -104,73 +171,88 @@ export class CityHubScene extends Scene {
     const collectionBtn = createButton(this, 48, 560, 'Collection', () => {
       this.fadeToScene('CollectionScene');
     }, 'primary');
-    collectionBtn.setOrigin(0, 1);
+    collectionBtn.setOrigin(0, 1)
+      .setColor('#e6c88a')
+      .setStroke('#2e1b0f', 2)
+      .setShadow(1, 1, '#1a0d06', 2, true, true)
+      .setFontStyle('bold');
 
     // Change Hero button (feedback #36)
     const changeHeroBtn = createButton(this, 752, 560, 'Change Hero', () => {
       this.fadeToScene('CharacterSelectScene');
     }, 'secondary');
-    changeHeroBtn.setOrigin(1, 1);
+    changeHeroBtn.setOrigin(1, 1)
+      .setColor('#e6c88a')
+      .setStroke('#2e1b0f', 2)
+      .setShadow(1, 1, '#1a0d06', 2, true, true)
+      .setFontStyle('bold');
 
-    // Navigation hint
-    this.add.text(400, 560, 'Click a building to interact', {
-      fontSize: '16px',
-      color: COLORS.textSecondary,
-      fontFamily,
-    }).setOrigin(0.5, 1);
+
   }
 
   private createBuilding(layout: BuildingLayout, fontFamily: string): void {
     const { key, x, y } = layout;
     const level = (this.metaState.buildings as any)[key].level as number;
     const isTierZero = level === 0;
-    const color = isTierZero ? 0x444444 : BUILDING_COLORS[key];
 
-    // Building rectangle
-    const rect = this.add.rectangle(x, y, 100, 100, color, LAYOUT.panelAlpha);
-    rect.setInteractive({ useHandCursor: true });
+    // Use a container for the building elements
+    const container = this.add.container(x, y);
 
-    // Dashed border for tier 0
-    if (isTierZero) {
-      rect.setStrokeStyle(2, 0xaaaaaa);
-    }
+    // Building background frame
+    const frame = this.add.image(0, 0, 'base_icon_place');
+    frame.setDisplaySize(115, 115);
+    
+    container.add(frame);
 
     // Building icon image
-    const iconImage = this.add.image(x, y, `icon_${key}`).setDisplaySize(80, 80);
+    const iconImage = this.add.image(0, -8, `icon_${key}`);
+    iconImage.setDisplaySize(70, 70);
+    container.add(iconImage);
 
-    // Tier indicator below building
-    const tierColorHex = '#' + BUILDING_COLORS[key].toString(16).padStart(6, '0');
-    this.add.text(x, y + 64, `Lv.${level}`, {
-      fontSize: '14px',
-      color: isTierZero ? COLORS.textSecondary : tierColorHex,
+    // Building name over bottom of frame
+    const nameText = this.add.text(0, 38, BUILDING_NAMES[key], {
+      fontSize: '15px',
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
+      fontStyle: 'bold',
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
+    }).setOrigin(0.5, 0.5);
+    container.add(nameText);
+
+    // Tier indicator below building (outside frame)
+    const levelText = this.add.text(0, 60, `Level ${level}`, {
+      fontSize: '18px', 
+      color: '#e6c88a', // dull yellow/gold from main menu
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
+      fontStyle: 'bold',
+      fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5, 0);
+    container.add(levelText);
+
+    // Make frame interactive
+    frame.setInteractive({ useHandCursor: true });
 
     // Hover effects
-    rect.on('pointerover', () => {
-      rect.setStrokeStyle(2, 0xffffff);
-      this.tweens.add({ targets: rect, scaleX: 1.05, scaleY: 1.05, duration: 100 });
-      if (this.hoverLabel) {
-        this.hoverLabel.setText(`${BUILDING_NAMES[key]} (Lv.${level})`);
-        this.hoverLabel.setPosition(x, y - 60);
-        this.hoverLabel.setVisible(true);
-      }
+    frame.on('pointerover', () => {
+      // Adding a slight glow/brightness on hover
+      frame.setTint(0xffffcc);
+      iconImage.setTint(0xffffcc);
+      this.tweens.add({ targets: container, scaleX: 1.05, scaleY: 1.05, duration: 100 });
     });
 
-    rect.on('pointerout', () => {
-      if (isTierZero) {
-        rect.setStrokeStyle(2, 0xaaaaaa);
-      } else {
-        rect.setStrokeStyle(0);
-      }
-      this.tweens.add({ targets: rect, scaleX: 1, scaleY: 1, duration: 100 });
-      if (this.hoverLabel) {
-        this.hoverLabel.setVisible(false);
-      }
+    frame.on('pointerout', () => {
+      // Reset tint
+      frame.clearTint();
+      iconImage.clearTint();
+      this.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 100 });
     });
 
     // Click handler
-    rect.on('pointerdown', () => {
+    frame.on('pointerdown', () => {
       // Disable CityHub input while overlay is open to prevent click-through
       this.input.enabled = false;
 

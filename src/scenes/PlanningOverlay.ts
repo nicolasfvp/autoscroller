@@ -34,53 +34,81 @@ export class PlanningOverlay extends Scene {
 
     const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
 
-    // Semi-transparent overlay
-    this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+    // Background - Custom asset for tile selection
+    if (this.textures.exists('bg_tile_selection')) {
+      this.add.image(400, 300, 'bg_tile_selection').setDisplaySize(800, 600);
+    } else {
+      // Semi-transparent overlay fallback
+      this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+    }
 
-
-
-    // Loop layout strip at y=160
+    // Loop layout strip at y=240
     this.gridContainer = this.add.container(0, 0);
     this.buildLoopGrid();
 
     // Tile inventory panel at y=300
     this.buildInventoryPanel(fontFamily);
 
-    // Deck / Relic viewer shortcuts (feedback #3)
-    const deckBtn = this.add.text(60, 30, '[D] Deck', {
-      fontSize: '14px', color: '#aaccff', fontFamily,
-    }).setInteractive({ useHandCursor: true });
-    deckBtn.on('pointerdown', () => {
-      this.scene.pause();
-      this.scene.launch('DeckCustomizationScene');
+    // Deck / Relic icons at top center with table background
+    const tableY = 65;
+    const iconY = 55;
+    if (this.textures.exists('deck_relic_table')) {
+      this.add.image(400, tableY, 'deck_relic_table').setDisplaySize(220, 100);
+    }
+
+    const deckIcon = this.add.image(360, iconY, 'deck_icon').setDisplaySize(60, 60).setInteractive({ useHandCursor: true });
+    this.add.text(360, iconY + 35, '[D]', { fontSize: '12px', color: '#ffffff', fontFamily }).setOrigin(0.5);
+    
+    deckIcon.on('pointerover', () => {
+      deckIcon.setScale(deckIcon.scale * 1.1);
+      deckIcon.setTint(0xdddddd);
+    });
+    deckIcon.on('pointerout', () => {
+      deckIcon.setScale(deckIcon.scale / 1.1);
+      deckIcon.clearTint();
+    });
+    deckIcon.on('pointerdown', () => {
+      this.scene.sleep();
+      this.scene.launch('DeckCustomizationScene', { parentScene: 'PlanningOverlay' });
     });
 
-    const relicBtn = this.add.text(60, 50, '[R] Relics', {
-      fontSize: '14px', color: '#aaccff', fontFamily,
-    }).setInteractive({ useHandCursor: true });
-    relicBtn.on('pointerdown', () => {
-      this.scene.pause();
-      this.scene.launch('RelicViewerScene');
+    const relicIcon = this.add.image(440, iconY, 'relic_icon').setDisplaySize(60, 60).setInteractive({ useHandCursor: true });
+    this.add.text(440, iconY + 35, '[R]', { fontSize: '12px', color: '#ffffff', fontFamily }).setOrigin(0.5);
+    
+    relicIcon.on('pointerover', () => {
+      relicIcon.setScale(relicIcon.scale * 1.1);
+      relicIcon.setTint(0xdddddd);
+    });
+    relicIcon.on('pointerout', () => {
+      relicIcon.setScale(relicIcon.scale / 1.1);
+      relicIcon.clearTint();
+    });
+    relicIcon.on('pointerdown', () => {
+      this.scene.sleep();
+      this.scene.launch('RelicViewerScene', { parentScene: 'PlanningOverlay' });
     });
 
     this.input.keyboard?.on('keydown-D', () => {
-      this.scene.pause();
-      this.scene.launch('DeckCustomizationScene');
+      this.scene.sleep();
+      this.scene.launch('DeckCustomizationScene', { parentScene: 'PlanningOverlay' });
     });
     this.input.keyboard?.on('keydown-R', () => {
-      this.scene.pause();
-      this.scene.launch('RelicViewerScene');
+      this.scene.sleep();
+      this.scene.launch('RelicViewerScene', { parentScene: 'PlanningOverlay' });
     });
 
-    // "Start Loop" button at y=540 — LEFT CLICK ONLY (feedback #30)
+    // "Start Loop" text button at y=540 (styled like Tile Inventory)
     const startBtn = this.add.text(400, 540, 'Start Loop', {
-      fontSize: '24px', fontStyle: 'bold', color: '#ffd700', fontFamily,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      fontSize: '32px', 
+      fontStyle: 'bold', 
+      color: '#ffd700', 
+      fontFamily,
+      stroke: '#000000',
+      strokeThickness: 4,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
 
-    startBtn.on('pointerover', () => startBtn.setColor('#ffffff'));
-    startBtn.on('pointerout', () => startBtn.setColor('#ffd700'));
     startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button !== 0) return; // Left click only (feedback #30)
+      if (pointer.button !== 0) return; // Left click only
       this.loopRunner.confirmPlanning();
       this.tweens.add({
         targets: this.cameras.main,
@@ -101,12 +129,13 @@ export class PlanningOverlay extends Scene {
 
   private buildLoopGrid(): void {
     const tiles = this.loopRunState.loop.tiles;
-    const scale = 0.5;
-    const tileSize = 40;
-    const gap = 4;
-    const totalWidth = tiles.length * tileSize + (tiles.length - 1) * gap;
-    const startX = (800 - Math.min(totalWidth, 700)) / 2 + tileSize / 2;
-    const y = 160;
+    const scale = 0.7;
+    const tileSize = Math.round(TILE_SIZE * scale);
+    const gap = 8;
+    const visibleCount = tiles.filter(t => t.type !== 'buffer').length;
+    const totalWidth = visibleCount * tileSize + (visibleCount - 1) * gap;
+    const startX = (800 - totalWidth) / 2 + tileSize / 2;
+    const y = 240;
 
     // Clear existing
     for (const tv of this.tileVisuals) {
@@ -129,8 +158,14 @@ export class PlanningOverlay extends Scene {
       synergyByTile.set(nextIdx, nextExisting);
     }
 
+    let visualSlot = 0;
     for (let i = 0; i < tiles.length; i++) {
-      const x = startX + i * (tileSize + gap) + this.scrollOffset;
+      // Buffer tiles are non-editable — hide them from the planning view
+      if (tiles[i].type === 'buffer') continue;
+
+      const x = startX + visualSlot * (tileSize + gap) + this.scrollOffset;
+      visualSlot++;
+
       const tv = new TileVisual(this, x, y, tiles[i], scale, i, true);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
@@ -183,17 +218,18 @@ export class PlanningOverlay extends Scene {
 
   private buildInventoryPanel(fontFamily: string): void {
     // Panel background
-    this.add.image(400, 390, 'wood_texture').setDisplaySize(700, 200);
+    const board = this.add.image(400, 420, 'tile_selection_board');
+    // Reducing size as requested
+    board.setDisplaySize(720, 190);
 
-    // Title
-    this.add.text(66, 300, 'Tile Inventory', {
-      fontSize: '24px', fontStyle: 'bold', color: '#ffffff', fontFamily,
-    });
 
-    // Tile point balance
-    this.tpBalanceText = this.add.text(734, 300, `${this.loopRunState.economy.tilePoints} TP`, {
-      fontSize: '24px', color: '#00e5ff', fontFamily,
-    }).setOrigin(1, 0);
+    // Tile point balance - repositioned and styled
+    this.tpBalanceText = this.add.text(720, 360, `${this.loopRunState.economy.tilePoints} TP`, {
+      fontSize: '22px', color: '#00e5ff', fontFamily,
+      fontStyle: 'bold',
+      stroke: '#000000',
+      strokeThickness: 2,
+    }).setOrigin(1, 0.5);
 
     this.refreshInventory();
   }
@@ -211,22 +247,67 @@ export class PlanningOverlay extends Scene {
     this.tpBalanceText.setText(`${this.loopRunState.economy.tilePoints} TP`);
 
     const placeableTiles = getAllPlaceableTiles();
-    const cardWidth = 80;
-    const cardHeight = 140;
-    const gap = 12;
-    const totalContentWidth = placeableTiles.length * cardWidth + (placeableTiles.length - 1) * gap;
-    const startX = 400 - (totalContentWidth / 2) + (cardWidth / 2);
-    const y = 400;
+
+    // ── Responsive sizing: shrink tiles to always fit within the panel ──
+    const MAX_W       = 720;                       // usable horizontal space
+    const MIN_FRAME   = 62;                        // smallest frame we'll go
+    const IDEAL_FRAME = 80;
+    const IDEAL_GAP   = 12;
+
+    // How many tiles fit in one row at the ideal size?
+    const idealTotalW = placeableTiles.length * IDEAL_FRAME + (placeableTiles.length - 1) * IDEAL_GAP;
+    let frameWidth: number;
+    let gap: number;
+    let cols: number;
+    let rows: number;
+
+    if (idealTotalW <= MAX_W) {
+      // All tiles fit in 1 row at ideal size
+      frameWidth = IDEAL_FRAME;
+      gap        = IDEAL_GAP;
+      cols       = placeableTiles.length;
+      rows       = 1;
+    } else {
+      // Try shrinking down to MIN_FRAME first
+      const shrunkGap   = 8;
+      const shrunkTotal = placeableTiles.length * MIN_FRAME + (placeableTiles.length - 1) * shrunkGap;
+      if (shrunkTotal <= MAX_W) {
+        // Fits in 1 row when shrunk
+        frameWidth = Math.floor((MAX_W - (placeableTiles.length - 1) * shrunkGap) / placeableTiles.length);
+        frameWidth = Math.max(MIN_FRAME, Math.min(IDEAL_FRAME, frameWidth));
+        gap        = shrunkGap;
+        cols       = placeableTiles.length;
+        rows       = 1;
+      } else {
+        // Wrap to 2 rows
+        cols       = Math.ceil(placeableTiles.length / 2);
+        rows       = 2;
+        gap        = 8;
+        frameWidth = Math.floor((MAX_W - (cols - 1) * gap) / cols);
+        frameWidth = Math.max(MIN_FRAME, Math.min(IDEAL_FRAME, frameWidth));
+      }
+    }
+
+    const frameHeight = frameWidth;
+    const rowSpacing  = frameHeight + 52; // frame + name + cost text below
+
+    const totalRowW = cols * frameWidth + (cols - 1) * gap;
+    const startX    = 400 - totalRowW / 2 + frameWidth / 2;
+    // Centre vertically in the board area
+    const rowStartY = rows === 2 ? 400 : 420;
 
     placeableTiles.forEach((tileConfig, idx) => {
-      const x = startX + idx * (cardWidth + gap);
+      const col = idx % cols;
+      const row = Math.floor(idx / cols);
+      const x   = startX + col * (frameWidth + gap);
+      const y   = rowStartY + row * rowSpacing;
       const container = this.add.container(x, y);
 
       // Card background
-      const bg = this.add.rectangle(0, 0, cardWidth, cardHeight, 0x333333);
-      container.add(bg);
+      const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(frameWidth, frameHeight);
+      container.add(frame);
 
-      // Tile color preview (40x40)
+      // Tile preview
       const tileKey = (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase();
       const pseudoSlot: TileSlot = {
         type: tileConfig.type,
@@ -234,48 +315,60 @@ export class PlanningOverlay extends Scene {
         defeatedThisLoop: false
       };
       
-      // Use the actual visual representation of the tile (scaled to fit)
-      const scale = 60 / TILE_SIZE;
-      // Ajustando o offset Y para acomodar a imagem maior (de -20 para -10)
-      const preview = new TileVisual(this, 0, -10, pseudoSlot, scale, 0, false, true);
+      const previewSize = Math.round(frameWidth * 0.65);
+      const scale = previewSize / TILE_SIZE;
+      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
       
-      // se for um bloco especial ou de terreno, esconde a areia/bloco para deixar só o item
       if (['shop', 'rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
         preview.hideFloor();
       }
       container.add(preview);
 
-      // Name
-      const nameText = this.add.text(0, 25, tileConfig.name, {
-        fontSize: '14px', color: '#ffffff', fontFamily,
+      // Name - below frame
+      const fontSize = frameWidth >= 74 ? '14px' : '11px';
+      const nameText = this.add.text(0, frameHeight / 2 + 8, tileConfig.name, {
+        fontSize, color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      // Cost
-      const costText = this.add.text(0, 45, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '14px', color: '#00e5ff', fontFamily,
+      // Cost - below name
+      const costText = this.add.text(0, frameHeight / 2 + 24, `${tileConfig.tilePointCost} TP`, {
+        fontSize, color: '#ff4444', fontFamily, fontStyle: 'bold'
       }).setOrigin(0.5);
       container.add(costText);
 
-      // Check inventory for free copies
+      // Free copies badge
       const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileKey);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const countText = this.add.text(0, 60, `x${freeCount}`, {
-          fontSize: '14px', color: '#aaaaaa', fontFamily,
-        }).setOrigin(0.5);
+        const countText = this.add.text(frameWidth / 2 - 8, -frameHeight / 2 + 8, `x${freeCount}`, {
+          fontSize: '13px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 3, y: 2 }
+        }).setOrigin(1, 0);
         container.add(countText);
       }
 
-      // Check affordability
+      // Affordability
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
       if (!canAfford) {
-        container.setAlpha(0.4);
-        costText.setColor('#ff0000');
+        container.setAlpha(0.5);
+        costText.setColor('#880000');
       } else {
-        // Make interactive
-        bg.setInteractive({ useHandCursor: true });
-        bg.on('pointerdown', () => this.selectInventoryTile(idx, (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase()));
+        frame.setInteractive({ useHandCursor: true });
+        
+        frame.on('pointerover', () => {
+          const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
+          container.setScale(hoverScale);
+          frame.setTint(0xdddddd);
+        });
+        
+        frame.on('pointerout', () => {
+          const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
+          container.setScale(baseScale);
+          frame.clearTint();
+        });
+
+        frame.on('pointerdown', () => this.selectInventoryTile(idx, (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase()));
       }
 
       this.inventoryCards.push(container);
@@ -306,18 +399,18 @@ export class PlanningOverlay extends Scene {
 
   private setupDragScroll(): void {
     const tiles = this.loopRunState.loop.tiles;
-    const tileSize = 40;
-    const gap = 4;
+    const tileSize = 45; // Updated to match 0.7 scale (64 * 0.7)
+    const gap = 8;
     const totalWidth = tiles.length * tileSize + (tiles.length - 1) * gap;
 
-    if (totalWidth <= 700) return; // No scroll needed
+    if (totalWidth <= 780) return; // No scroll needed
 
     let dragging = false;
     let startPointerX = 0;
     let startOffset = 0;
 
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.y > 120 && pointer.y < 220) {
+      if (pointer.y > 200 && pointer.y < 300) {
         dragging = true;
         startPointerX = pointer.x;
         startOffset = this.scrollOffset;
@@ -328,12 +421,12 @@ export class PlanningOverlay extends Scene {
       if (!dragging) return;
       const dx = pointer.x - startPointerX;
       const maxScroll = 0;
-      const minScroll = -(totalWidth - 700);
+      const minScroll = -(totalWidth - 780);
       this.scrollOffset = Math.max(minScroll, Math.min(maxScroll, startOffset + dx));
 
       // Update tile positions
       for (let i = 0; i < this.tileVisuals.length; i++) {
-        const baseX = (800 - Math.min(totalWidth, 700)) / 2 + tileSize / 2 + i * (tileSize + gap);
+        const baseX = (800 - totalWidth) / 2 + tileSize / 2 + i * (tileSize + gap);
         this.tileVisuals[i].x = baseX + this.scrollOffset;
       }
     });

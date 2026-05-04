@@ -17,6 +17,8 @@ import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 
+import { AudioManager } from '../systems/AudioManager';
+
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
   private hud!: CombatHUD;
@@ -33,6 +35,11 @@ export class CombatScene extends Scene {
   // Game speed multiplier (1x or 2x from settings)
   private gameSpeed: number = 1;
   private transitioning = false;
+
+  // Combat clock
+  private combatElapsed: number = 0;
+  private clockGraphics!: Phaser.GameObjects.Graphics;
+  private clockText!: Phaser.GameObjects.Text;
 
   // Event handler references for cleanup
   private onCardPlayed!: (data: GameEvents['combat:card-played']) => void;
@@ -61,6 +68,8 @@ export class CombatScene extends Scene {
 
     const run = getRun();
     run.isInCombat = true;
+
+    AudioManager.stopAmbience(this, 500);
 
     // Use combat speed from RunState (persists between battles)
     this.gameSpeed = run.combatSpeed ?? 1;
@@ -168,6 +177,24 @@ export class CombatScene extends Scene {
     this.cardQueue = new CardQueueDisplay(this);
     this.combatEffects = new CombatEffects(this);
 
+    // ── Elapsed combat clock (below cooldown arc, top-center) ──
+    this.combatElapsed = 0;
+    const CLOCK_X = 400;
+    const CLOCK_Y = 72;  // below the cooldown arc at y=34
+    const CLOCK_R = 16;
+
+    // Background
+    this.add.circle(CLOCK_X, CLOCK_Y, CLOCK_R + 2, 0x000000, 0.5).setDepth(300).setScrollFactor(0);
+    this.add.circle(CLOCK_X, CLOCK_Y, CLOCK_R + 2).setDepth(300).setScrollFactor(0)
+      .setStrokeStyle(1.5, 0x4a9eff, 0.5);
+
+    this.clockGraphics = this.add.graphics().setDepth(301).setScrollFactor(0);
+    this.clockText = this.add.text(CLOCK_X, CLOCK_Y, '0s', {
+      fontSize: '11px', fontStyle: 'bold', color: '#aaddff',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0.5).setDepth(302).setScrollFactor(0);
+
     // ── Combat speed controls ──
     this.createSpeedControls(run);
 
@@ -179,6 +206,14 @@ export class CombatScene extends Scene {
       this.cardQueue.onCardPlayed(0);
       // Play hero attack animation and flash enemy on hit
       if (eventData.damage > 0) {
+        // Play SFX based on card
+        const cardId = eventData.cardId.toLowerCase();
+        if (cardId.includes('fireball')) {
+          AudioManager.playSFX(this, 'sfx_fireball', 0.5);
+        } else {
+          AudioManager.playSFX(this, 'sfx_slash', 0.4);
+        }
+
         // Play hero attack animation if possible
         const sp = getSpritePrefix((getRun() as any).hero?.className ?? 'warrior');
         const heroAttackKey = `${sp}_attack`;
@@ -233,6 +268,9 @@ export class CombatScene extends Scene {
     eventBus.on('combat:deck-reshuffled', this.onDeckReshuffled);
 
     this.onEnemyAttack = (eventData) => {
+      if (eventData.damage > 0) {
+        AudioManager.playSFX(this, 'sfx_hurt', 0.6);
+      }
       // Floating damage number on hero side
       this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
       this.combatEffects.screenShake(3, 150);
@@ -375,6 +413,26 @@ export class CombatScene extends Scene {
         this.engine.getHeroCooldownTimer(),
         this.engine.getHeroMaxCooldown(),
       );
+
+      // Update combat clock
+      this.combatElapsed += delta * this.gameSpeed;
+      const elapsedSec = Math.floor(this.combatElapsed / 1000);
+      this.clockText.setText(`${elapsedSec}s`);
+
+      // Redraw elapsed pie arc (fills every 60s, just cosmetic)
+      const CLOCK_X = 400;
+      const CLOCK_Y = 72;
+      const CLOCK_R = 16;
+      const fraction = (this.combatElapsed % 60000) / 60000;
+      this.clockGraphics.clear();
+      this.clockGraphics.fillStyle(0x4a9eff, 0.45);
+      this.clockGraphics.slice(
+        CLOCK_X, CLOCK_Y, CLOCK_R,
+        Phaser.Math.DegToRad(-90),
+        Phaser.Math.DegToRad(-90 + fraction * 360),
+        false,
+      );
+      this.clockGraphics.fillPath();
     }
   }
 

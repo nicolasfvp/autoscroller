@@ -26,7 +26,7 @@ export class TavernPanelScene extends Scene {
     });
 
     // Panel
-    const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(500, 420);
+    const panel = this.add.image(400, 300, 'tavern_table').setDisplaySize(500, 420);
     panel.setInteractive(); // absorb clicks
 
     // Máscara para bordas arredondadas
@@ -35,36 +35,36 @@ export class TavernPanelScene extends Scene {
     shape.fillRoundedRect(150, 90, 500, 420, 24); // 24 de raio
     panel.setMask(shape.createGeometryMask());
 
-    // Title (now larger, above or atop the panel, medieval styled)
-    this.add.text(400, 55, 'Tavern', {
-      fontSize: '48px',
-      fontStyle: 'bold',
-      color: '#fdf6e3', // light cream
-      stroke: '#3e2723', // dark wood border
-      strokeThickness: 6,
-      fontFamily: '"Impact", "Arial Black", sans-serif',
-      shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
-    }).setOrigin(0.5);
+    // Title (removed since it's baked into tavern.png)
+    // ...
 
     // Description
-    this.add.text(400, 143, 'Prepare for your next expedition.', {
-      fontSize: '16px',
-      color: '#ffeebb', // pale cream
+    this.add.text(400, 165, 'Prepare for your next expedition.', {
+      fontSize: '18px',
+      fontStyle: 'bold',
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5);
 
     // Seed input label
-    this.add.text(400, 170, 'Seed (optional)', {
+    this.add.text(400, 200, 'Seed (optional)', {
       fontSize: '14px',
-      color: '#ffeebb',
+      fontStyle: 'bold',
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5);
 
     // Seed input using Phaser DOM element (dark brown style)
-    const inputElement = this.add.dom(400, 200).createFromHTML(
+    const inputElement = this.add.dom(400, 230).createFromHTML(
       `<input type="text" id="seed-input" placeholder="Enter seed or leave blank"
-        style="width:300px;height:36px;background:#3e2723;color:#ffeebb;border:2px solid #5d4037;
-        border-radius:4px;padding:0 8px;font-size:14px;font-family:${fontFamily};text-align:center;outline:none;"
+        style="width:300px;height:36px;background:#3e2723;color:#e6c88a;border:2px solid #2e1b0f;
+        border-radius:4px;padding:0 8px;font-size:16px;font-weight:bold;font-family:${fontFamily};text-align:center;outline:none;"
         />`
     );
 
@@ -72,30 +72,35 @@ export class TavernPanelScene extends Scene {
     const inputEl = inputElement.getChildByID('seed-input') as HTMLInputElement | null;
     if (inputEl) {
       inputEl.addEventListener('focus', () => {
-        inputEl.style.borderColor = '#ffd700';
+        inputEl.style.borderColor = '#e6c88a';
       });
       inputEl.addEventListener('blur', () => {
-        inputEl.style.borderColor = '#5d4037';
+        inputEl.style.borderColor = '#2e1b0f';
       });
       inputEl.addEventListener('input', () => {
         this.seedInputValue = inputEl.value;
       });
     }
 
-    // Start Run button (Custom Wood Style)
-    const btnContainer = this.add.container(400, 260);
-    const btnBg = this.add.rectangle(0, 0, 240, 44, 0x8d6e63).setStrokeStyle(3, 0x3e2723).setInteractive({ useHandCursor: true });
-    const btnText = this.add.text(0, 0, 'Start Run', {
+    const startBtn = this.add.text(400, 270, 'Start Run', {
       fontSize: '24px',
       fontStyle: 'bold',
-      color: '#3e2723', // dark brown text
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 3,
       fontFamily,
-    }).setOrigin(0.5);
-    btnContainer.add([btnBg, btnText]);
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-    btnBg.on('pointerover', () => btnBg.setFillStyle(0xa1887f));
-    btnBg.on('pointerout', () => btnBg.setFillStyle(0x8d6e63));
-    btnBg.on('pointerdown', () => {
+    startBtn.on('pointerover', () => {
+      startBtn.setColor('#ffffff');
+      this.tweens.add({ targets: startBtn, scaleX: 1.05, scaleY: 1.05, duration: 100 });
+    });
+    startBtn.on('pointerout', () => {
+      startBtn.setColor('#e6c88a');
+      this.tweens.add({ targets: startBtn, scaleX: 1, scaleY: 1, duration: 100 });
+    });
+    startBtn.on('pointerdown', () => {
       const seedValue = this.seedInputValue.trim() || undefined;
       const rng = new SeededRNG(seedValue);
 
@@ -111,19 +116,22 @@ export class TavernPanelScene extends Scene {
     });
 
     // Run History section
-    this.add.text(400, 320, 'Run History', {
-      fontSize: '22px',
+    this.add.text(400, 310, 'Run History:', {
+      fontSize: '24px',
       fontStyle: 'bold',
-      color: '#fdf6e3', // clean cream text, no stroke
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 3,
       fontFamily,
+      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5);
 
-    // History list area (pale parchment style for high contrast, low saturation)
-    this.add.rectangle(400, 400, 460, 110, 0xeee8d5, 1.0); // very pale, desaturated beige
+    // History list area
+    this.add.rectangle(400, 370, 280, 80, 0xeee8d5, 1.0).setStrokeStyle(2, 0xdab988);
 
     const runHistory = this.metaState.runHistory;
     if (runHistory.length === 0) {
-      this.add.text(400, 400, 'No completed runs yet.', {
+      this.add.text(400, 370, 'No completed runs yet.', {
         fontSize: '16px',
         color: '#3e2723', // dark brown
         fontFamily,
@@ -134,9 +142,9 @@ export class TavernPanelScene extends Scene {
         entry.loopsCompleted > best.loopsCompleted ? entry : best, runHistory[0]
       );
 
-      // Show most recent 5, newest first
-      const recentRuns = [...runHistory].reverse().slice(0, 5);
-      let histY = 360;
+      // Show most recent 3, newest first to fit the smaller box
+      const recentRuns = [...runHistory].reverse().slice(0, 3);
+      let histY = 345; // Top of the new 80px high box
       for (let i = 0; i < recentRuns.length; i++) {
         const entry = recentRuns[i];
         const runNumber = runHistory.length - i;

@@ -7,6 +7,7 @@ import { LoopCelebration } from '../ui/LoopCelebration';
 import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
+import { AudioManager } from '../systems/AudioManager';
 import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
@@ -60,6 +61,10 @@ export class GameScene extends Scene {
   create(): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
+
+    // Transition to the main gameplay music
+    AudioManager.transitionTo(this, 'walk_forward', { volume: 0.3, duration: 1500 });
+    AudioManager.transitionAmbience(this, 'ambience_wind', { volume: 0.1 });
 
     const run = getRun();
 
@@ -239,10 +244,15 @@ export class GameScene extends Scene {
     // Update tile visuals
     this.updateTilePool();
 
-    // Update HUD with synced RunState
+    // Update HUD with synced RunState + loop progress
     this.syncRunState();
     const run = getRun();
-    this.hud.update(run);
+    const loop = this.loopRunState.loop;
+    const nonBufferCount = loop.tiles.filter((t: any) => t.type !== 'buffer').length;
+    const loopTotalPx = nonBufferCount * TILE_SIZE;
+    // positionInLoop counts world pixels since loop start; subtract buffer tiles
+    const posInLoop = Math.max(0, loop.positionInLoop - (loop.tiles.length - nonBufferCount) * TILE_SIZE);
+    this.hud.update(run, posInLoop, loopTotalPx);
   }
 
   /** Sync LoopRunState values back to global RunState */
@@ -415,6 +425,7 @@ export class GameScene extends Scene {
       this.tilePool.set(gi, tv);
     }
   }
+
 
   private cleanup(): void {
     for (const [, tv] of this.tilePool) {

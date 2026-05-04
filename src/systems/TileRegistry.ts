@@ -1,6 +1,6 @@
 import tilesData from '../data/tiles.json';
 
-export type TileSlotType = 'basic' | 'terrain' | 'shop' | 'rest' | 'event' | 'treasure' | 'boss';
+export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'shop' | 'rest' | 'event' | 'treasure' | 'boss';
 export type TerrainType = 'forest' | 'graveyard' | 'swamp';
 
 export interface TileConfig {
@@ -58,4 +58,12 @@ export function createTileSlot(key: string): TileSlot {
 
 export function createBasicLoop(length: number): TileSlot[] {
   return Array.from({ length }, () => createTileSlot('basic'));
+}
+
+/** Creates N non-interactive buffer tiles to prepend to a loop */
+export function createBufferTiles(count: number): TileSlot[] {
+  return Array.from({ length: count }, () => ({
+    type: 'buffer' as TileSlotType,
+    defeatedThisLoop: true, // Always 'defeated' so runner skips interaction
+  }));
 }
