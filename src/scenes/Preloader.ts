@@ -11,13 +11,13 @@ export class Preloader extends Scene {
     // Ground tiles (64x64, seamless, extracted from tilesets)
     this.load.image('tile_basic', 'assets/map/tiles/tile_basic.png');
     this.load.image('tile_sand', 'assets/map/tiles/sand_tile.jpg');
-    this.load.image('tile_forest', 'assets/map/tiles/tile_forest.png');
+    this.load.image('tile_forest', 'assets/map/tiles/tile_meadow.png');
     this.load.image('tile_graveyard', 'assets/map/tiles/tile_graveyard.png');
     this.load.image('tile_swamp', 'assets/map/tiles/tile_swamp.png');
 
     // Background objects (64x64, transparent)
     this.load.image('bg_basic', 'assets/map/tiles/bg_path.png');
-    this.load.image('bg_forest', 'assets/map/tiles/tile_forest.png');
+    this.load.image('bg_forest', 'assets/map/tiles/bg_forest.png');
     this.load.image('bg_graveyard', 'assets/map/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/map/tiles/bg_swamp.png');
 
