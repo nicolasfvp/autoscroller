@@ -30,6 +30,7 @@ import { CityHubScene } from './scenes/CityHubScene'
 import { BuildingPanelScene } from './scenes/BuildingPanelScene'
 import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
+import { GlobalSound } from './scenes/GlobalSound'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -76,7 +77,8 @@ const config: Phaser.Types.Core.GameConfig = {
         CityHubScene,
         BuildingPanelScene,
         TavernPanelScene,
-        CollectionScene
+        CollectionScene,
+        GlobalSound
     ]
 }
 

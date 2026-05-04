@@ -67,12 +67,12 @@ export class MainMenu extends Scene {
 
     if (this.savedRun) {
       // Continue Run button
-      this.createImgBtn(LAYOUT.centerX, 300, 'btn_continue_run', () => this.continueRun());
+      this.createImgBtn(LAYOUT.centerX, 330, 'btn_continue_run', () => this.continueRun(), 0.6);
       // New Run button
-      this.createImgBtn(LAYOUT.centerX, 360, 'btn_new_game', () => this.showDeleteConfirmation());
+      this.createImgBtn(LAYOUT.centerX, 430, 'btn_new_game', () => this.showDeleteConfirmation(), 1.1);
     } else {
       // No saved run -- show only New Run
-      this.createImgBtn(LAYOUT.centerX, 300, 'btn_new_game', () => this.startNewRun());
+      this.createImgBtn(LAYOUT.centerX, 330, 'btn_new_game', () => this.startNewRun(), 1.1);
     }
 
     this.events.on('shutdown', this.cleanup, this);

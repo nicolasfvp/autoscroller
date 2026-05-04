@@ -5,6 +5,7 @@ import { TILE_SIZE } from '../systems/LoopRunner';
 /** Maps tile keys to their sprite texture keys */
 const TILE_SPRITE_MAP: Record<string, string> = {
   basic: 'tile_sand',
+  buffer: 'tile_sand',
   forest: 'tile_sand',
   graveyard: 'tile_sand',
   swamp: 'tile_sand',
@@ -62,7 +63,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
 
     const key = getTileTerrainKey(tileSlot);
     let fillColor: number;
-    if (tileSlot.type === 'basic') {
+    if (tileSlot.type === 'basic' || tileSlot.type === 'buffer') {
       fillColor = index % 2 === 0 ? 0x666666 : 0x888888;
     } else {
       const config = getTileConfig(key);
@@ -84,23 +85,28 @@ export class TileVisual extends Phaser.GameObjects.Container {
     // Background object (trees, tombstones, tents, chests, etc.)
     const bgKey = BG_SPRITE_MAP[key];
     if (bgKey && scene.textures.exists(bgKey)) {
-      // Escala conservadora para evitar overlap contínuo
-      const objectMultipler = isInventory ? 1.0 : 1.15;
+      const objectMultipler = isInventory ? 1.1 : 1.15;
       
       this.bgObject = scene.add.image(0, 0, bgKey);
-      // Foca a âncora de todo item na base dele (0.5, 1.0) para "ficar em pé" sobre a areia sem ter que advinhar offets loucos
-      this.bgObject.setOrigin(0.5, 1.0);
-      // Retorna os objetos para cima do topo do bloco (pois a base dupla foi desativada)
-      this.bgObject.y = isInventory ? size * 0.1 : size * 0.1;
+      
+      if (isInventory) {
+        // Centered for inventory frames
+        this.bgObject.setOrigin(0.5, 0.5);
+        this.bgObject.y = 0;
+      } else {
+        // Standing on floor for world map
+        this.bgObject.setOrigin(0.5, 1.0);
+        this.bgObject.y = size * 0.1;
+      }
       
       this.bgObject.setDisplaySize(size * objectMultipler, size * objectMultipler);
       this.add(this.bgObject);
     }
 
     // Icon text (only for tiles without sprites)
-    const config = getTileConfig(key);
+    const tileConfigForIcon = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
     const fontSize = Math.round(16 * scale);
-    this.iconText = scene.add.text(0, 0, config.icon, {
+    this.iconText = scene.add.text(0, 0, tileConfigForIcon?.icon ?? '', {
       fontSize: `${fontSize}px`,
       color: '#ffffff',
       fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -189,7 +195,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
   updateTile(tileSlot: TileSlot, index: number = 0): void {
     const key = getTileTerrainKey(tileSlot);
     let fillColor: number;
-    if (tileSlot.type === 'basic') {
+    if (tileSlot.type === 'basic' || tileSlot.type === 'buffer') {
       fillColor = index % 2 === 0 ? 0x666666 : 0x888888;
     } else {
       const config = getTileConfig(key);
@@ -220,8 +226,8 @@ export class TileVisual extends Phaser.GameObjects.Container {
       if (this.bgObject) this.bgObject.setVisible(false);
     }
 
-    const config = getTileConfig(key);
-    this.iconText.setText(config.icon);
+    const updateConfig = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
+    this.iconText.setText(updateConfig?.icon ?? '');
     this.setSynergyEdge('none');
   }
 

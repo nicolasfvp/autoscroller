@@ -7,12 +7,15 @@ import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
  * Reads run.relics. Full display is Phase 2+.
  */
 export class RelicViewerScene extends Scene {
+  private parentScene: string = 'GameScene';
+
   constructor() {
     super('RelicViewerScene');
   }
 
-  create(): void {
+  create(data?: { parentScene?: string }): void {
     const run = getRun();
+    this.parentScene = data?.parentScene ?? 'GameScene';
 
     this.cameras.main.setBackgroundColor(COLORS.background);
 
@@ -52,7 +55,7 @@ export class RelicViewerScene extends Scene {
 
   private close(): void {
     this.scene.stop();
-    this.scene.resume('GameScene');
+    this.scene.wake(this.parentScene);
   }
 
   private cleanup(): void {

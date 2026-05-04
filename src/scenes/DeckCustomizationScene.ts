@@ -13,7 +13,7 @@ const COLS = 6;
 const CARD_W = 80;
 const CARD_H = 106;
 const GAP = 10;
-const GRID_TOP = 110;
+const GRID_TOP = 180;
 
 const RARITY_COLORS: Record<string, number> = {
   common: 0xcccccc, uncommon: 0x33cc33, rare: 0xff6600, epic: 0xaa00ff,
@@ -24,7 +24,7 @@ const CATEGORY_COLORS: Record<CardCategory, number> = {
 };
 
 // ── Dropped cards strip constants ──
-const STRIP_TOP = 110;
+const STRIP_TOP = 160;
 const STRIP_CARD_W = 64;
 const STRIP_CARD_H = 86;
 const STRIP_GAP = 8;
@@ -42,7 +42,9 @@ export class DeckCustomizationScene extends Scene {
   // Drag state
   private dragCard: Phaser.GameObjects.Container | null = null;
   private dragFromDropped = false;
+  private dragFromDeck = false;
   private dragDroppedIndex = -1;
+  private dragDeckIndex = -1;
   private dragCardId = '';
   private hoverIndex = -1;
 
@@ -60,39 +62,33 @@ export class DeckCustomizationScene extends Scene {
     this.scrollY = 0;
     this.parentScene = data?.parentScene ?? 'GameScene';
 
-    this.cameras.main.setBackgroundColor(COLORS.background);
+    this.cameras.main.setBackgroundColor(0x1a1a2e);
+    if (this.textures.exists('deck_frame')) {
+        const board = this.add.image(LAYOUT.centerX, LAYOUT.centerY - 10, 'deck_frame');
+        board.setDisplaySize(760, 540); // Slightly wider but controlled
+        board.setDepth(-1);
+    }
+
     const fontFamily = FONTS.family;
 
     const hasDropped = run.deck.droppedCards.length > 0;
 
-    // Title
-    this.add.text(LAYOUT.centerX, 20, 'Your Deck', {
-      ...FONTS.title, color: COLORS.accent, fontFamily,
-    }).setOrigin(0.5);
-
-    // Stats bar
-    const deckIds = run.deck.active;
-    const attacks = deckIds.filter(id => getCardById(id)?.category === 'attack').length;
-    const defenses = deckIds.filter(id => getCardById(id)?.category === 'defense').length;
-    const spells = deckIds.filter(id => getCardById(id)?.category === 'magic').length;
-
-    this.add.text(LAYOUT.centerX, 54, `${deckIds.length} Cards  |  Atk: ${attacks}  |  Def: ${defenses}  |  Mag: ${spells}`, {
-      ...FONTS.small, color: COLORS.textSecondary, fontFamily,
-    }).setOrigin(0.5);
-
-    // Instructions
-    if (hasDropped) {
-      this.add.text(LAYOUT.centerX, 76, `Loot Cards (${run.deck.droppedCards.length}) — drag into deck to add`, {
-        fontSize: '13px', color: '#ffaa00', fontFamily, fontStyle: 'italic',
-      }).setOrigin(0.5);
-      this.add.text(LAYOUT.centerX, 94, 'Deck cards shift to make room. Only loot cards can be dragged.', {
-        fontSize: '11px', color: COLORS.textSecondary, fontFamily, fontStyle: 'italic',
-      }).setOrigin(0.5);
-    } else {
-      this.add.text(LAYOUT.centerX, 76, 'Cards from loot drops will appear here for you to add.', {
-        fontSize: '11px', color: COLORS.textSecondary, fontFamily, fontStyle: 'italic',
-      }).setOrigin(0.5);
+    // Stats board - Reduced size for a more compact look, moved down slightly
+    if (this.textures.exists('deck_status_board')) {
+      this.add.image(LAYOUT.centerX, 75, 'deck_status_board').setDisplaySize(450, 34);
     }
+
+    const deckIds = run.deck.active;
+    // Using symbols to mimic the icons in the mockup
+    const statsText = `${deckIds.length} Cards  |  ⚔️ Atk: ${run.hero.strength}  |  🛡️ Def: ${run.hero.defenseMultiplier}  |  ✨ Mag: ${run.hero.maxMana}`;
+    
+    this.add.text(LAYOUT.centerX, 75, statsText, {
+      fontSize: '15px',
+      color: '#ffffff',
+      fontFamily,
+      stroke: '#000000',
+      strokeThickness: 1,
+    }).setOrigin(0.5);
 
     // ── Dropped cards strip ──
     this.droppedStrip = this.add.container(0, 0);
@@ -102,6 +98,16 @@ export class DeckCustomizationScene extends Scene {
 
     // ── Active deck grid ──
     this.gridContainer = this.add.container(0, 0);
+
+    // Create a mask to keep cards within the ornate frame interior
+    const maskGraphics = this.add.graphics();
+    maskGraphics.fillStyle(0xffffff);
+    // Adjusted for 760 width
+    maskGraphics.fillRect(LAYOUT.centerX - 360, 160, 720, 400);
+    maskGraphics.setVisible(false);
+    const mask = new Phaser.Display.Masks.GeometryMask(this, maskGraphics);
+    this.gridContainer.setMask(mask);
+
     this.rebuildGrid();
 
     // Scroll
@@ -144,7 +150,6 @@ export class DeckCustomizationScene extends Scene {
     });
 
     // ── Buttons ──
-    createButton(this, LAYOUT.centerX, LAYOUT.canvasHeight - 25, 'Close (D)', () => this.close(), 'primary');
     this.input.keyboard?.on('keydown-D', () => this.close());
     this.input.keyboard?.on('keydown-ESC', () => this.close());
 
@@ -154,8 +159,8 @@ export class DeckCustomizationScene extends Scene {
   // ── Layout helpers ──
 
   private getGridTop(): number {
-    const run = getRun();
-    return run.deck.droppedCards.length > 0 ? STRIP_TOP + STRIP_HEIGHT + 4 : GRID_TOP;
+    const hasDropped = getRun().deck.droppedCards.length > 0;
+    return hasDropped ? 280 : 180;
   }
 
   private getGridLeft(): number {
@@ -229,30 +234,45 @@ export class DeckCustomizationScene extends Scene {
     const card = getCardById(cardId);
     const container = this.add.container(x, y);
 
-    // BG
-    const bg = this.add.rectangle(0, 0, CARD_W, CARD_H, 0x222222);
+    // BG - using new deck-frame asset
+    const bg = this.add.image(0, 0, 'deck_frame');
+    bg.setDisplaySize(CARD_W, CARD_H);
     const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-    bg.setStrokeStyle(2, isDraggable ? 0xffd700 : rarityColor);
+    // We can use a tint or an invisible rectangle with stroke to keep the rarity/selection feedback
+    const stroke = this.add.rectangle(0, 0, CARD_W, CARD_H).setStrokeStyle(2, isDraggable ? 0xffd700 : rarityColor);
     container.add(bg);
+    container.add(stroke);
 
     // Category strip
     const catColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
     container.add(this.add.rectangle(0, -CARD_H / 2 + 3, CARD_W - 4, 6, catColor));
 
-    // Order number (only for deck cards)
+    // Illustration
+    const imgKey = `card_${cardId}`;
+    if (this.textures.exists(imgKey)) {
+      const img = this.add.image(0, 10, imgKey); 
+      const scaleX = (CARD_W - 12) / img.width;
+      const scaleY = (CARD_H - 45) / img.height;
+      img.setScale(Math.min(scaleX, scaleY));
+      img.setAlpha(0.7);
+      container.add(img);
+    }
+
+    // Order number (top-left)
     if (deckIndex >= 0) {
-      container.add(this.add.text(-CARD_W / 2 + 4, -CARD_H / 2 + 8, `${deckIndex + 1}`, {
-        fontSize: '10px', color: COLORS.textSecondary, fontFamily: FONTS.family,
+      container.add(this.add.text(-CARD_W / 2 + 4, -CARD_H / 2 + 6, `${deckIndex + 1}`, {
+        fontSize: '12px', color: '#888888', fontFamily: FONTS.family,
       }));
     }
 
-    // Name
+    // Name - moved to top area below category strip
     const isUpgraded = (() => { try { return getRun().deck.upgradedCards?.includes(cardId) ?? false; } catch { return false; } })();
     const displayName = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
     const nameColor = isUpgraded ? COLORS.accent : '#ffffff';
-    container.add(this.add.text(0, 2, displayName, {
-      fontSize: '13px', color: nameColor, fontFamily: FONTS.family,
-      wordWrap: { width: CARD_W - 8 }, align: 'center',
+    container.add(this.add.text(0, -32, displayName, {
+      fontSize: '11px', color: nameColor, fontFamily: FONTS.family,
+      stroke: '#000000', strokeThickness: 3,
+      wordWrap: { width: CARD_W - 10 }, align: 'center',
     }).setOrigin(0.5));
 
     // Cost
@@ -273,12 +293,16 @@ export class DeckCustomizationScene extends Scene {
 
     // Interactive
     container.setSize(CARD_W, CARD_H);
-    container.setInteractive({ useHandCursor: isDraggable });
+    container.setInteractive({ useHandCursor: true });
 
     if (isDraggable) {
       container.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
         const droppedIdx = container.getData('droppedIndex') as number;
         this.startDragFromDropped(droppedIdx, cardId, pointer);
+      });
+    } else {
+      container.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+        this.startDragFromDeck(deckIndex, cardId, pointer);
       });
     }
 
@@ -297,6 +321,17 @@ export class DeckCustomizationScene extends Scene {
     this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
   }
 
+  private startDragFromDeck(deckIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
+    this.dragFromDeck = true;
+    this.dragDeckIndex = deckIndex;
+    this.dragCardId = cardId;
+    this.hoverIndex = deckIndex;
+
+    // Hide the original slot while dragging
+    if (this.cardSlots[deckIndex]) this.cardSlots[deckIndex].setVisible(false);
+    this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
+  }
+
   private createDragVisual(cardId: string, x: number, y: number): Phaser.GameObjects.Container {
     const card = getCardById(cardId);
     const w = 160;
@@ -305,9 +340,10 @@ export class DeckCustomizationScene extends Scene {
     container.setDepth(1000);
 
     const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-    const bg = this.add.rectangle(0, 0, w, h, 0x1a1a2e, 0.95);
-    bg.setStrokeStyle(3, rarityColor);
+    const bg = this.add.image(0, 0, 'deck_frame').setDisplaySize(w, h);
+    const stroke = this.add.rectangle(0, 0, w, h).setStrokeStyle(3, rarityColor);
     container.add(bg);
+    container.add(stroke);
 
     const catColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
     container.add(this.add.rectangle(0, -h / 2 + 4, w - 6, 8, catColor));
@@ -358,14 +394,19 @@ export class DeckCustomizationScene extends Scene {
 
   private animateSlots(): void {
     const gapAt = Math.min(this.hoverIndex, this.deckOrder.length);
+    let visualCounter = 0;
 
     for (let i = 0; i < this.deckOrder.length; i++) {
       const slot = this.cardSlots[i];
       if (!slot) continue;
 
-      // Shift cards at/after gap one position forward
-      const visualIdx = i >= gapAt ? i + 1 : i;
-      const targetPos = this.getSlotPos(visualIdx);
+      // Skip the card being dragged from the deck (it's hidden)
+      if (this.dragFromDeck && i === this.dragDeckIndex) continue;
+
+      // Open a gap at hover position
+      if (visualCounter === gapAt) visualCounter++;
+
+      const targetPos = this.getSlotPos(visualCounter);
       this.tweens.add({
         targets: slot,
         x: targetPos.x,
@@ -374,6 +415,7 @@ export class DeckCustomizationScene extends Scene {
         ease: 'Sine.easeOut',
         overwrite: true,
       });
+      visualCounter++;
     }
   }
 
@@ -409,19 +451,41 @@ export class DeckCustomizationScene extends Scene {
       return;
     }
 
+    if (this.dragFromDeck && this.dragDeckIndex >= 0) {
+      const run = getRun();
+
+      // Remove from original position and insert at hover
+      const [moved] = this.deckOrder.splice(this.dragDeckIndex, 1);
+      let insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
+      // Adjust for the removed element
+      if (this.hoverIndex > this.dragDeckIndex) insertAt = Math.max(0, insertAt - 1);
+      this.deckOrder.splice(insertAt, 0, moved);
+      run.deck.active = [...this.deckOrder];
+
+      // Reset drag state
+      this.dragFromDeck = false;
+      this.dragDeckIndex = -1;
+      this.dragCardId = '';
+      this.hoverIndex = -1;
+
+      this.rebuildGrid();
+      return;
+    }
+
     // Reset drag state
     this.dragFromDropped = false;
+    this.dragFromDeck = false;
     this.dragDroppedIndex = -1;
+    this.dragDeckIndex = -1;
     this.dragCardId = '';
     this.hoverIndex = -1;
 
-    // Rebuild grid
     this.rebuildGrid();
   }
 
   private close(): void {
     this.scene.stop();
-    this.scene.resume(this.parentScene);
+    this.scene.wake(this.parentScene);
   }
 
   private cleanup(): void {

@@ -9,103 +9,65 @@ export class Preloader extends Scene {
 
   preload(): void {
     // Ground tiles (64x64, seamless, extracted from tilesets)
-    this.load.image('tile_basic', 'assets/tiles/tile_basic.png');
-    this.load.image('tile_sand', 'assets/tiles/sand_tile.jpg');
-    this.load.image('tile_forest', 'assets/tiles/tile_forest.png');
-    this.load.image('tile_graveyard', 'assets/tiles/tile_graveyard.png');
-    this.load.image('tile_swamp', 'assets/tiles/tile_swamp.png');
+    this.load.image('tile_basic', 'assets/map/tiles/tile_basic.png');
+    this.load.image('tile_sand', 'assets/map/tiles/sand_tile.jpg');
+    this.load.image('tile_forest', 'assets/map/tiles/tile_forest.png');
+    this.load.image('tile_graveyard', 'assets/map/tiles/tile_graveyard.png');
+    this.load.image('tile_swamp', 'assets/map/tiles/tile_swamp.png');
 
     // Background objects (64x64, transparent)
-    this.load.image('bg_basic', 'assets/tiles/bg_path.png');
-    this.load.image('bg_forest', 'assets/tiles/tile_forest.png');
-    this.load.image('bg_graveyard', 'assets/tiles/bg_graveyard.png');
-    this.load.image('bg_swamp', 'assets/tiles/bg_swamp.png');
+    this.load.image('bg_basic', 'assets/map/tiles/bg_path.png');
+    this.load.image('bg_forest', 'assets/map/tiles/tile_forest.png');
+    this.load.image('bg_graveyard', 'assets/map/tiles/bg_graveyard.png');
+    this.load.image('bg_swamp', 'assets/map/tiles/bg_swamp.png');
 
     // Special Floating/Resting objects
-    this.load.image('bg_event', 'assets/objects/event_icon.png');
-    this.load.image('bg_treasure', 'assets/objects/treasure_chest.png');
-    this.load.image('bg_rest', 'assets/objects/rest_tent.png');
-    this.load.image('bg_shop', 'assets/objects/shop_stall.png');
+    this.load.image('bg_event', 'assets/map/objects/event_icon.png');
+    this.load.image('bg_treasure', 'assets/map/objects/treasure_chest.png');
+    this.load.image('bg_rest', 'assets/map/objects/rest_tent.png');
+    this.load.image('bg_shop', 'assets/map/objects/shop_stall.png');
 
     // Building Icons
-    this.load.image('icon_forge', 'assets/buildings/icon_forge.png');
-    this.load.image('icon_library', 'assets/buildings/icon_library.png');
-    this.load.image('icon_tavern', 'assets/buildings/icon_tavern.png');
-    this.load.image('icon_workshop', 'assets/buildings/icon_workshop.png');
-    this.load.image('icon_shrine', 'assets/buildings/icon_shrine.png');
-    this.load.image('icon_storehouse', 'assets/buildings/icon_storehouse.png');
+    this.load.image('icon_forge', 'assets/buildings/icons/icon_forge.png');
+    this.load.image('icon_library', 'assets/buildings/icons/icon_library.png');
+    this.load.image('icon_tavern', 'assets/buildings/icons/icon_tavern.png');
+    this.load.image('icon_workshop', 'assets/buildings/icons/icon_workshop.png');
+    this.load.image('icon_shrine', 'assets/buildings/icons/icon_shrine.png');
+    this.load.image('icon_storehouse', 'assets/buildings/icons/icon_storehouse.png');
 
-    // Carregando os monstros e herois em batch (IA gerado)
-    this.load.image('archer_preview', 'assets/sprites/archer_generated.png');
-    this.load.image('archer_reference', 'assets/sprites/archer.png');
-    this.load.image('bar_wood', 'assets/objects/bar-wood.png');
-    this.load.image('wood_texture', 'assets/objects/wood-texture.png');
-    this.load.image('wood_texture_big', 'assets/objects/wood-texture-big.png');
-    this.load.image('bg_character_selection', 'assets/objects/background-character-selection.jpg');
-    this.load.image('icon_table', 'assets/objects/icon-table.png');
-    this.load.image('library_table', 'assets/buildings/library-table.png');
-    this.load.image('workshop_table', 'assets/buildings/workshop-table.png');
-    this.load.image('forge_table', 'assets/buildings/forge-table.png');
-    this.load.image('tavern_table', 'assets/buildings/tavern.png');
-    this.load.image('shrine_table', 'assets/buildings/shrine.png');
-    this.load.image('vault_table', 'assets/buildings/vault.png');
-    this.load.image('wood_board_collection', 'assets/objects/wood-board-collection.png');
-    this.load.image('icons_up_table', 'assets/objects/icons-up-table.png');
-    this.load.image('base_icon_place', 'assets/objects/base-icon-place.png');
+    // Character preview sprites (IA gerado)
+    this.load.image('archer_preview', 'assets/characters/sprites/archer_generated.png');
+    this.load.image('slime_sprite', 'assets/characters/sprites/slime_generated.png');
+    this.load.image('orc_sprite', 'assets/characters/sprites/orc_generated.png');
+    this.load.image('goblin_sprite', 'assets/characters/sprites/goblin_generated.png');
+    this.load.image('dragon_sprite', 'assets/characters/sprites/dragon_generated.png');
+    this.load.image('snake_sprite', 'assets/characters/sprites/snake_generated.png');
+    this.load.image('judge_sprite', 'assets/characters/sprites/judge_generated.png');
 
-    // Material Icons
-    this.load.image('mat_iron', 'assets/icons/iron.png');
-    this.load.image('mat_crystal', 'assets/icons/crystal.png');
-    this.load.image('mat_scroll', 'assets/icons/scroll.png');
-    this.load.image('mat_wood', 'assets/icons/wood.png');
-    this.load.image('mat_stone', 'assets/icons/stone.png');
-    this.load.image('mat_bone', 'assets/icons/stone.png'); 
-    this.load.image('mat_essence', 'assets/icons/essence.png');
-    
-    // UI Elements
-    this.load.image('collection_headline', 'assets/ui/collection-headline.png');
-    this.load.image('btn_continue_run', 'assets/ui/continue-run.png');
-    this.load.image('btn_new_game', 'assets/ui/new-game.png');
-    this.load.image('btn_keep_my_run', 'assets/ui/keep-my-run.png');
-    this.load.image('btn_yes_delete', 'assets/ui/yes, delete.png');
-    this.load.image('bg_base_option', 'assets/ui/base-option.png');
-    this.load.image('fog', 'assets/ui/fog.png');
-
-    // Audio
-    this.load.audio('theme_song', 'assets/audio/theme-song.mp3');
-    this.load.audio('town_song', 'assets/audio/town-song.mp3');
-    
-    this.load.image('slime_sprite', 'assets/sprites/slime_generated.png');
-    this.load.image('orc_sprite', 'assets/sprites/orc_generated.png');
-    this.load.image('goblin_sprite', 'assets/sprites/goblin_generated.png');
-    this.load.image('dragon_sprite', 'assets/sprites/dragon_generated.png');
-    this.load.image('snake_sprite', 'assets/sprites/snake_generated.png');
-    this.load.image('judge_sprite', 'assets/sprites/judge_generated.png');
-
-    // Carregando a SpriteSheet do Cavaleiro (Idle)
-    this.load.spritesheet('knight_idle', 'assets/sprites/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png', {
+    // Knight spritesheet (legacy character)
+    this.load.spritesheet('knight_idle', 'assets/characters/sprites/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png', {
       frameWidth: 120,
       frameHeight: 80
     });
 
     // Hero spritesheets (64x64 per frame, horizontal strips)
-    this.load.spritesheet('hero_walk', 'assets/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_idle', 'assets/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_attack', 'assets/hero/spritesheets/hero_attack.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_death', 'assets/hero/spritesheets/hero_death.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_walk', 'assets/characters/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_idle', 'assets/characters/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/spritesheets/hero_attack.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_death', 'assets/characters/hero/spritesheets/hero_death.png', { frameWidth: 64, frameHeight: 64 });
 
     // Mage hero spritesheets (64x64 per frame, horizontal strips)
-    this.load.spritesheet('mage_walk', 'assets/mage/spritesheets/mage_walk.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_idle', 'assets/mage/spritesheets/mage_idle.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_attack', 'assets/mage/spritesheets/mage_attack.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_death', 'assets/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_walk', 'assets/characters/mage/spritesheets/mage_walk.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_idle', 'assets/characters/mage/spritesheets/mage_idle.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_attack', 'assets/characters/mage/spritesheets/mage_attack.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('mage_death', 'assets/characters/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
 
     // Monster spritesheets (64x64 per frame, horizontal strips)
     const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
     for (const id of monsterIds) {
-      this.load.spritesheet(`${id}_idle`, `assets/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_attack`, `assets/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_death`, `assets/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
@@ -122,18 +84,66 @@ export class Preloader extends Scene {
     this.load.image('bg_desert_sky', 'assets/backgrounds/desert-background.jpg');
 
     // Special tile icons (64x64)
-    this.load.image('tile_shop', 'assets/tiles/tile_shop.png');
-    this.load.image('tile_rest', 'assets/tiles/tile_rest.png');
-    this.load.image('tile_event', 'assets/tiles/tile_event.png');
-    this.load.image('tile_treasure', 'assets/tiles/tile_treasure.png');
-    this.load.image('tile_boss', 'assets/tiles/tile_boss.png');
+    this.load.image('tile_shop', 'assets/map/tiles/tile_shop.png');
+    this.load.image('tile_rest', 'assets/map/tiles/tile_rest.png');
+    this.load.image('tile_event', 'assets/map/tiles/tile_event.png');
+    this.load.image('tile_treasure', 'assets/map/tiles/tile_treasure.png');
+    this.load.image('tile_boss', 'assets/map/tiles/tile_boss.png');
+
+    // Building panel backgrounds
+    this.load.image('library_table', 'assets/buildings/backgrounds/library-table.png');
+    this.load.image('workshop_table', 'assets/buildings/backgrounds/workshop-table.png');
+    this.load.image('forge_table', 'assets/buildings/backgrounds/forge-table.png');
+    this.load.image('tavern_table', 'assets/buildings/backgrounds/tavern.png');
+    this.load.image('shrine_table', 'assets/buildings/backgrounds/shrine.png');
+    this.load.image('vault_table', 'assets/buildings/backgrounds/vault.png');
+
+    // UI Panels & textures
+    this.load.image('bar_wood', 'assets/ui/panels/bar-wood.png');
+    this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
+    this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
+    this.load.image('bg_character_selection', 'assets/ui/panels/background-character-selection.jpg');
+    this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
+    this.load.image('wood_board_collection', 'assets/ui/panels/wood-board-collection.png');
+    this.load.image('icons_up_table', 'assets/ui/panels/icons-up-table.png');
+    this.load.image('base_icon_place', 'assets/ui/panels/base-icon-place.png');
+    this.load.image('collection_headline', 'assets/ui/panels/collection-headline.png');
+    this.load.image('bg_base_option', 'assets/ui/panels/base-option.png');
+    this.load.image('fog', 'assets/ui/panels/fog.png');
+    this.load.image('tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
+    this.load.image('tile_frame', 'assets/ui/panels/tile-frame.png');
+    this.load.image('deck_frame', 'assets/ui/panels/deck-frame.png');
+    this.load.image('deck_status_board', 'assets/ui/panels/deck-status-board.png');
+    this.load.image('bg_tile_selection', 'assets/ui/panels/background-tile-selection.png');
+    this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
+    this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
+    this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
+    this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
+
+    // UI Buttons
+    this.load.image('btn_continue_run', 'assets/ui/buttons/continue-run.png');
+    this.load.image('btn_new_game', 'assets/ui/buttons/new-game.png');
+    this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
+    this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
+    this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
+
+    // Material Icons
+    this.load.image('mat_iron', 'assets/icons/iron.png');
+    this.load.image('mat_crystal', 'assets/icons/crystal.png');
+    this.load.image('mat_scroll', 'assets/icons/scroll.png');
+    this.load.image('mat_wood', 'assets/icons/wood.png');
+    this.load.image('mat_stone', 'assets/icons/stone.png');
+    this.load.image('mat_bone', 'assets/icons/stone.png');
+    this.load.image('mat_essence', 'assets/icons/essence.png');
+    this.load.image('deck_icon', 'assets/icons/deck-icon.png');
+    this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
     // Card Illustrations
     const cardIds = [
-      'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall', 
-      'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain', 
-      'weaken', 'cleave', 'reckless-charge', 'execute', 'doom-blade', 'parry', 'bulwark', 
-      'last-stand', 'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud', 
+      'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
+      'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',
+      'weaken', 'cleave', 'reckless-charge', 'execute', 'doom-blade', 'parry', 'bulwark',
+      'last-stand', 'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud',
       'soul-rend', 'sacrifice', 'chain-lightning'
     ];
 
@@ -149,7 +159,15 @@ export class Preloader extends Scene {
     }
 
     // Audio
-    this.load.audio('walk_forward', 'assets/songs/walk-forward.mp3');
+    this.load.audio('theme_song', 'assets/audio/theme-song.mp3');
+    this.load.audio('town_song', 'assets/audio/town-song.mp3');
+    this.load.audio('walk_forward', 'assets/audio/walk-forward.mp3');
+    this.load.audio('sfx_click', 'assets/audio/select.mp3');
+    this.load.audio('sfx_slash', 'assets/audio/slash.mp3');
+    this.load.audio('sfx_fireball', 'assets/audio/fire.m4a');
+    this.load.audio('sfx_hurt', 'assets/audio/hurt.m4a');
+    this.load.audio('sfx_cashing', 'assets/audio/cashing.m4a');
+    this.load.audio('ambience_wind', 'assets/audio/wind.wav');
   }
 
   async create(): Promise<void> {
@@ -167,6 +185,7 @@ export class Preloader extends Scene {
     // Pass saved run info to MainMenu via registry
     this.registry.set('savedRun', savedRun);
 
+    this.scene.launch('GlobalSound');
     this.scene.start('MainMenu');
   }
 }
