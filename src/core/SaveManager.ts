@@ -1,5 +1,5 @@
 import { get, set, del, createStore } from 'idb-keyval';
-import type { RunState } from '../state/RunState';
+import { migrateRunState, type RunState } from '../state/RunState';
 import { eventBus } from './EventBus';
 
 const gameStore = createStore('rogue-scroll-db', 'save-store');
@@ -11,7 +11,7 @@ export class SaveManager {
       const toSave = { ...state };
       if (toSave.isInCombat) {
         toSave.isInCombat = false;
-        toSave.currentScene = 'Game';
+        toSave.currentScene = 'GameScene';
       }
       await set(SAVE_KEY, toSave, gameStore);
       eventBus.emit('save:completed', { timestamp: Date.now() });
@@ -23,20 +23,12 @@ export class SaveManager {
 
   async load(): Promise<RunState | null> {
     try {
-      const saved = await get<RunState>(SAVE_KEY, gameStore);
-      if (saved) {
-        // Migrate old saves
-        if (!saved.deck.droppedCards) {
-          saved.deck.droppedCards = [];
-        }
-        if (saved.stopAtShop === undefined) {
-          saved.stopAtShop = true;
-        }
-        if (saved.combatSpeed === undefined) {
-          saved.combatSpeed = 1;
-        }
-      }
-      return saved ?? null;
+      const saved = await get<unknown>(SAVE_KEY, gameStore);
+      if (!saved) return null;
+      // Route every load through migrateRunState — versioned schema
+      // means future field additions are one-line migrations instead
+      // of more ad-hoc field-presence checks here.
+      return migrateRunState(saved);
     } catch (err) {
       console.error('Load failed:', err);
       return null;
@@ -46,15 +38,31 @@ export class SaveManager {
   async clear(): Promise<void> {
     try {
       await del(SAVE_KEY, gameStore);
+      eventBus.emit('run:cleared', {});
     } catch (err) {
       console.error('Clear failed:', err);
     }
   }
 
-  setupAutoSave(getState: () => RunState): void {
-    const doSave = () => this.save(getState());
+  /**
+   * Subscribes save() to combat:end and loop:completed events.
+   * Returns an unsubscribe function — call it from the scene's shutdown
+   * handler to avoid stacked listeners across scene restarts.
+   *
+   * Optional `isEnabled` predicate is checked before each save so users
+   * can disable auto-save via MetaState.autoSave without re-subscribing.
+   */
+  setupAutoSave(getState: () => RunState, isEnabled?: () => boolean): () => void {
+    const doSave = () => {
+      if (isEnabled && !isEnabled()) return;
+      this.save(getState());
+    };
     eventBus.on('combat:end', doSave);
     eventBus.on('loop:completed', doSave);
+    return () => {
+      eventBus.off('combat:end', doSave);
+      eventBus.off('loop:completed', doSave);
+    };
   }
 }
 

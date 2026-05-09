@@ -1,10 +1,13 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
+import { saveManager } from '../core/SaveManager';
+import { loadMetaState } from '../systems/MetaPersistence';
 import { LoopRunner, TILE_SIZE, type LoopRunState } from '../systems/LoopRunner';
 import { getDifficultyConfig } from '../systems/DifficultyScaler';
 import { LoopHUD } from '../ui/LoopHUD';
 import { LoopCelebration } from '../ui/LoopCelebration';
 import { TileVisual } from '../ui/TileVisual';
+import { MapSpeedSlider } from '../ui/MapSpeedSlider';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
@@ -25,6 +28,7 @@ export class GameScene extends Scene {
   private loopRunState!: LoopRunState;
   private heroSprite!: Phaser.GameObjects.Sprite;
   private hud!: LoopHUD;
+  private speedSlider!: MapSpeedSlider;
   private celebration = new LoopCelebration();
 
   // Tile pool: globalIndex -> TileVisual
@@ -40,6 +44,9 @@ export class GameScene extends Scene {
 
   // Temporary slow debuff from events
   private slowTimer: number = 0;
+
+  // Auto-save subscription (cleared on shutdown to avoid stacked listeners)
+  private autoSaveUnsubscribe?: () => void;
   
   // Parallax Backgrounds
   private bgSky?: Phaser.GameObjects.TileSprite;
@@ -91,20 +98,30 @@ export class GameScene extends Scene {
     }
 
     // Build LoopRunState adapter from global RunState
+    // Hydrate tileInventory from RunState (Record<string,number> -> Array)
+    const initialTileInventory = Object.entries(run.economy.tileInventory ?? {})
+      .filter(([, count]) => count > 0)
+      .map(([tileType, count]) => ({ tileType, count }));
+
+    // Resume in-progress run iff we have meaningful loop progress AND a
+    // persisted tile layout to rebuild from. Otherwise treat as a fresh run.
+    const hasPersistedProgress = (run.loop.count ?? 0) > 1
+      && Array.isArray(run.loop.tiles) && run.loop.tiles.length > 0;
+
     this.loopRunState = {
       loop: {
-        count: run.loop.count || 1,
+        count: hasPersistedProgress ? run.loop.count : 1,
         length: run.loop.tileLength || getDifficultyConfig().baseLoopLength,
-        tiles: [],
-        positionInLoop: 0,
-        difficultyMultiplier: run.loop.difficulty || 1.0,
+        tiles: hasPersistedProgress ? [...run.loop.tiles] : [],
+        positionInLoop: hasPersistedProgress ? (run.loop.positionInLoop ?? 0) : 0,
+        difficultyMultiplier: hasPersistedProgress ? (run.loop.difficultyMultiplier ?? run.loop.difficulty ?? 1) : (run.loop.difficulty || 1.0),
       },
       economy: {
         gold: run.economy.gold,
         tilePoints: run.economy.tilePoints,
         materials: run.economy.materials ?? {},
       },
-      tileInventory: [],
+      tileInventory: initialTileInventory,
       hero: { xp: run.hero.runXP ?? 0 },
     };
 
@@ -112,7 +129,11 @@ export class GameScene extends Scene {
     this.loopRunner = new LoopRunner((event: string, data: any) => {
       this.handleLoopEvent(event, data);
     });
-    this.loopRunner.startRun(this.loopRunState);
+    if (hasPersistedProgress) {
+      this.loopRunner.resumeRun(this.loopRunState, run.loop.bossKillCount ?? 0);
+    } else {
+      this.loopRunner.startRun(this.loopRunState);
+    }
 
     this.worldOffset = 0;
     this.celebrationPlaying = false;
@@ -144,7 +165,12 @@ export class GameScene extends Scene {
     // HUD
     this.hud = new LoopHUD(this);
 
-
+    // Map speed slider (independent of combatSpeed)
+    this.speedSlider = new MapSpeedSlider(this, 400, 580, run.mapSpeed ?? 1, (speed) => {
+      const r = getRun();
+      r.mapSpeed = speed;
+      this.gameSpeed = speed;
+    });
 
     // Keyboard shortcuts
     this.input.keyboard?.on('keydown-D', () => {
@@ -178,6 +204,10 @@ export class GameScene extends Scene {
       for (const [mat, amount] of Object.entries(run.economy.materials ?? {})) {
         this.loopRunState.economy.materials[mat] = amount;
       }
+      // Refresh tileInventory from RunState so combat tile drops show up in planning.
+      this.loopRunState.tileInventory = Object.entries(run.economy.tileInventory ?? {})
+        .filter(([, count]) => count > 0)
+        .map(([tileType, count]) => ({ tileType, count }));
 
       // Show pending loot notifications above hero
       if (hasPendingLoot()) {
@@ -194,10 +224,16 @@ export class GameScene extends Scene {
       // Force HUD update to keep gold/HP synced after scene transitions (feedback #32)
       this.hud.update(run);
 
+      // Re-sync map speed in case it was changed elsewhere
+      if (this.speedSlider) {
+        this.speedSlider.setSpeed(run.mapSpeed ?? 1);
+        this.gameSpeed = run.mapSpeed ?? 1;
+      }
+
       // If LoopRunner is in tile-interaction state, check if boss was defeated
       if (this.loopRunner.getState() === 'tile-interaction') {
-        if ((run as any)._lastBossDefeated) {
-          (run as any)._lastBossDefeated = false;
+        if (run.loop.lastBossDefeated) {
+          run.loop.lastBossDefeated = false;
           this.loopRunner.onBossDefeated();
           // boss-defeated event handler will launch BossExitScene
         } else {
@@ -210,6 +246,18 @@ export class GameScene extends Scene {
         this.scene.launch('PlanningOverlay', { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
       }
     });
+
+    // Auto-save: persist after combat ends or a loop wraps. Gate on the
+    // MetaState autoSave preference so users who disable it in Settings
+    // actually skip the IndexedDB write. We fetch it once and capture in
+    // a closure-local; SettingsScene mutates MetaState directly so this
+    // value updates without a scene reload.
+    let autoSaveEnabled = true;
+    void loadMetaState().then(meta => { autoSaveEnabled = meta.autoSave !== false; });
+    this.autoSaveUnsubscribe = saveManager.setupAutoSave(
+      () => getRun(),
+      () => autoSaveEnabled,
+    );
 
     // Cleanup
     this.events.on('shutdown', this.cleanup, this);
@@ -260,6 +308,19 @@ export class GameScene extends Scene {
     const run = getRun();
     run.loop.count = this.loopRunState.loop.count;
     run.loop.difficulty = this.loopRunState.loop.difficultyMultiplier;
+    // Persist tiles + position + bossKillCount so save/load can resume.
+    run.loop.tiles = [...this.loopRunState.loop.tiles];
+    run.loop.tileLength = this.loopRunState.loop.length;
+    run.loop.positionInLoop = this.loopRunState.loop.positionInLoop;
+    run.loop.difficultyMultiplier = this.loopRunState.loop.difficultyMultiplier;
+    run.loop.bossKillCount = this.loopRunner.getBossKillCount();
+    // Re-serialize tileInventory (Array -> Record). Reset and rewrite so
+    // entries that were spent and dropped to count==0 are removed.
+    const inv: Record<string, number> = {};
+    for (const entry of this.loopRunState.tileInventory) {
+      if (entry.count > 0) inv[entry.tileType] = entry.count;
+    }
+    run.economy.tileInventory = inv;
     run.economy.gold = this.loopRunState.economy.gold;
     run.economy.tilePoints = this.loopRunState.economy.tilePoints;
     // Sync materials from loop runner to global state
@@ -428,6 +489,10 @@ export class GameScene extends Scene {
 
 
   private cleanup(): void {
+    if (this.autoSaveUnsubscribe) {
+      this.autoSaveUnsubscribe();
+      this.autoSaveUnsubscribe = undefined;
+    }
     for (const [, tv] of this.tilePool) {
       tv.destroy();
     }

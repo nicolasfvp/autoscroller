@@ -27,6 +27,11 @@ export class EnemyAI {
     this.applyPeriodicBehaviors(deltaMs, state);
   }
 
+  /** Returns the current cooldown timer (used for tie-break ordering with hero). */
+  public getCooldownTimer(): number {
+    return this.cooldownTimer;
+  }
+
   private getEffectiveCooldown(state: CombatState): number {
     let cooldown = state.enemyAttackCooldown;
     // Enrage: reduce cooldown when below HP threshold
@@ -88,8 +93,16 @@ export class EnemyAI {
       let totalDamage = 0;
       const perHitDamage = Math.floor(damage * multiHit.damageMultiplier);
       for (let i = 0; i < multiHit.hitCount; i++) {
-        const actualDmg = this.applyDamage(perHitDamage, state);
+        // Skip per-hit damage_taken relic application; we run it once after
+        // the full multi-hit lands. Otherwise iron_will defense compounds
+        // hit-over-hit and phoenix can revive mid-loop only to be
+        // re-killed by the next hit.
+        const actualDmg = this.applyDamage(perHitDamage, state, /*skipRelics=*/true);
         totalDamage += actualDmg;
+      }
+      // Apply damage_taken relics once for the *attack*, using cumulative damage.
+      if (totalDamage > 0) {
+        applyDamageTakenRelics(state.activeRelicIds, totalDamage, state);
       }
       stats.damageReceived += totalDamage;
 
@@ -119,7 +132,9 @@ export class EnemyAI {
     }
 
     if (state.enemySpecialEffect === 'lifesteal') {
-      const healAmount = Math.floor(actualDamage * 0.5);
+      // Lifesteal scales off the *attempted* damage, not the post-defense
+      // amount — otherwise high hero armor nullifies lifesteal entirely.
+      const healAmount = Math.floor(damage * 0.5);
       state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
     }
 
@@ -153,23 +168,37 @@ export class EnemyAI {
 
   /**
    * Apply raw damage to hero, accounting for defense.
-   * Defense absorbs damage first, then remaining hits HP.
-   * Returns actual HP damage dealt.
+   * Effective defense = heroDefense * heroDefenseMultiplier — Iron Body
+   * (1.1) absorbs more, mage's natural 0.8 absorbs less. Defense absorbs
+   * damage first, then remaining hits HP. Returns actual HP damage dealt.
+   * `skipRelics=true` is used by multi-hit attacks so iron_will/phoenix
+   * fire once for the whole attack, not once per hit.
    */
-  private applyDamage(rawDamage: number, state: CombatState): number {
-    const damage = Math.floor(rawDamage);
+  private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
+    // Fragility curse (one-shot): incoming attack deals +X% damage. Consumed.
+    const fragility = (state as any)._pendingFragilityMultiplier ?? 1;
+    const damage = Math.floor(rawDamage * fragility);
+    if (fragility !== 1) (state as any)._pendingFragilityMultiplier = 1;
 
-    if (state.heroDefense >= damage) {
-      state.heroDefense -= damage;
+    const multiplier = state.heroDefenseMultiplier ?? 1;
+    const effectiveDefense = Math.floor(state.heroDefense * multiplier);
+
+    if (effectiveDefense >= damage) {
+      // Consume the unscaled equivalent of `damage` from the raw defense pool.
+      const consumed = multiplier > 0 ? Math.ceil(damage / multiplier) : 0;
+      state.heroDefense = Math.max(0, state.heroDefense - consumed);
       return 0;
     }
 
-    const remaining = damage - state.heroDefense;
+    const remaining = damage - effectiveDefense;
     state.heroDefense = 0;
-    state.heroHP -= remaining;
+    state.heroHP = Math.max(0, state.heroHP - remaining);
 
-    // Apply damage_taken relics (iron_will, phoenix_feather)
-    applyDamageTakenRelics(state.activeRelicIds, remaining, state);
+    // Apply damage_taken relics (iron_will, phoenix_feather) unless caller
+    // is batching them (multi-hit attacks invoke them once at the end).
+    if (!skipRelics) {
+      applyDamageTakenRelics(state.activeRelicIds, remaining, state);
+    }
 
     return remaining;
   }

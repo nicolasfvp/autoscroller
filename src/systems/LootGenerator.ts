@@ -1,5 +1,6 @@
 import terrainEnemiesData from '../data/terrain-enemies.json';
 import materialsConfig from '../data/json/materials.json';
+import enemiesData from '../data/json/enemies.json';
 import { getAllPlaceableTiles, type TileInventoryEntry } from './TileRegistry';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 
@@ -78,11 +79,23 @@ export function rollMaterialDrops(
       break;
     }
     case 'boss': {
+      // Generic boss drops (essence + crystal) apply to every boss kill.
       const bossDrops = materialsConfig.bossDrops.materials;
       for (const [mat, range] of Object.entries(bossDrops)) {
         const r = (range as any).max - (range as any).min + 1;
         const amount = Math.floor(((range as any).min + Math.floor(rng.next() * r)) * boostMult);
-        drops[mat] = amount;
+        drops[mat] = (drops[mat] ?? 0) + amount;
+      }
+      // Per-boss bonus material from enemies.json materialReward (e.g. dragon
+      // drops more essence than demon). Stack on top of the generic table.
+      const bossDef = (enemiesData as any[]).find(e => e.id === sourceKey);
+      const reward = bossDef?.materialReward;
+      if (reward && reward.bonusMaterial && reward.bonusAmount) {
+        if (rng.next() < (reward.chance ?? 1)) {
+          const r = reward.bonusAmount.max - reward.bonusAmount.min + 1;
+          const amount = Math.floor((reward.bonusAmount.min + Math.floor(rng.next() * r)) * boostMult);
+          drops[reward.bonusMaterial] = (drops[reward.bonusMaterial] ?? 0) + amount;
+        }
       }
       break;
     }
@@ -166,7 +179,11 @@ export function getEnemyPoolForTerrain(terrainKey: string, loopCount: number): s
 
   const enemies = [...pool.base];
 
-  for (const [threshold, ids] of Object.entries(pool.addAtLoop)) {
+  // Sort thresholds ascending so reordered JSON entries don't change semantics.
+  const entries = Object.entries(pool.addAtLoop).sort(
+    ([a], [b]) => Number(a) - Number(b),
+  );
+  for (const [threshold, ids] of entries) {
     if (loopCount >= Number(threshold)) {
       enemies.push(...ids);
     }

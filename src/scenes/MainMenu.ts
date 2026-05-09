@@ -82,10 +82,20 @@ export class MainMenu extends Scene {
     const btn = this.add.image(x, y, key)
       .setScale(scale)
       .setInteractive({ useHandCursor: true });
-      
-    btn.on('pointerover', () => this.tweens.add({ targets: btn, scale: scale * 1.05, duration: 100 }));
-    btn.on('pointerout', () => this.tweens.add({ targets: btn, scale: scale, duration: 100 }));
+
+    // Stop any in-flight scale tween on the same button before starting a
+    // new one — otherwise rapid hover bounces stack tweens and race the
+    // final scale to a wrong value.
+    btn.on('pointerover', () => {
+      this.tweens.killTweensOf(btn);
+      this.tweens.add({ targets: btn, scale: scale * 1.05, duration: 100 });
+    });
+    btn.on('pointerout', () => {
+      this.tweens.killTweensOf(btn);
+      this.tweens.add({ targets: btn, scale: scale, duration: 100 });
+    });
     btn.on('pointerdown', () => {
+      this.tweens.killTweensOf(btn);
       this.tweens.add({ targets: btn, scale: scale * 0.95, duration: 50, yoyo: true });
       callback();
     });

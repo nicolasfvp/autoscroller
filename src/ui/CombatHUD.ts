@@ -270,7 +270,6 @@ export class CombatHUD {
       mana: this.manaTween, enemyHp: this.enemyHpTween,
     };
     map[key]?.stop();
-    onComplete();
 
     const tween = this.scene.tweens.addCounter({
       from, to, duration: 280,
@@ -286,6 +285,9 @@ export class CombatHUD {
         bar.width = Math.max(0, (BAR_W - 16) * r);
         bar.setFillStyle(getColor(r));
         text.setText(`${to}/${max}`);
+        // Run the caller's onComplete *after* the tween finishes so the
+        // tracked "displayed" value is only updated when animation completes.
+        onComplete();
       },
     });
 

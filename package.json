@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "idb-keyval": "^6.2.2",
+    "nanoid": "^5.0.0",
     "phaser": "^3.80.0"
   }
 }

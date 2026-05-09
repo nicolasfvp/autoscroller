@@ -38,10 +38,12 @@ const events: EventDefinition[] = eventsData as EventDefinition[];
 
 export function getRandomEvent(): EventDefinition {
   const totalWeight = events.reduce((sum, e) => sum + (e.weight ?? 1.0), 0);
+  // Math.random() can return 0 — use a `< 0` boundary so the first event
+  // doesn't get picked just because the roll started at exactly 0.
   let roll = Math.random() * totalWeight;
   for (const event of events) {
     roll -= event.weight ?? 1.0;
-    if (roll <= 0) return event;
+    if (roll < 0) return event;
   }
   return events[events.length - 1];
 }
@@ -102,7 +104,9 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
         break;
       }
       case 'lose_hp': {
-        const amount = typeof val === 'number' ? val : 0;
+        // Clamp to non-negative so a typo'd negative value can't heal the
+        // hero through the wrong effect type. (gain_hp exists for that.)
+        const amount = Math.max(0, typeof val === 'number' ? val : 0);
         runState.hero.hp = Math.max(runState.hero.hp - amount, 1);
         descriptions.push(`Lost ${amount} HP`);
         appliedEffects.push({ type: 'lose_hp', value: amount, applied: true });
@@ -117,14 +121,19 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
       }
       case 'lose_gold': {
         const amount = typeof val === 'number' ? val : 0;
+        // Report what was actually lost, not the requested amount —
+        // otherwise a player with 20g facing a 30g cost sees "Lost 30 gold"
+        // even though only 20 was deducted.
+        const actuallyLost = Math.min(amount, runState.economy.gold);
         runState.economy.gold = Math.max(runState.economy.gold - amount, 0);
-        descriptions.push(`Lost ${amount} gold`);
-        appliedEffects.push({ type: 'lose_gold', value: amount, applied: true });
+        descriptions.push(`Lost ${actuallyLost} gold`);
+        appliedEffects.push({ type: 'lose_gold', value: actuallyLost, applied: true });
         break;
       }
       case 'add_card': {
         const cardId = typeof val === 'string' ? val : 'strike';
         let resolvedId = cardId;
+        let resolvedFromEmptyPool = false;
         if (cardId === 'random_rare' || cardId === 'random') {
           // Filter by unlock state when available, pick from available pool
           const availableCards = getAvailableCards(unlockState?.unlockedCards ?? []);
@@ -133,12 +142,23 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
             : availableCards;
           if (rareCards.length > 0) {
             resolvedId = rareCards[Math.floor(Math.random() * rareCards.length)].id;
+          } else if (availableCards.length > 0) {
+            // Fall back to *any* available card rather than the silent 'strike'
+            // sentinel — at least the player gets something they don't already
+            // have in their starter deck a dozen times.
+            resolvedId = availableCards[Math.floor(Math.random() * availableCards.length)].id;
+            resolvedFromEmptyPool = true;
           } else {
             resolvedId = 'strike';
+            resolvedFromEmptyPool = true;
           }
         }
         runState.deck.order.push(resolvedId);
         descriptions.push(`Added card: ${resolvedId}`);
+        // mark via the description rather than extending the schema
+        if (resolvedFromEmptyPool && cardId !== 'strike') {
+          descriptions[descriptions.length - 1] = `Added card: ${resolvedId} (no rare available)`;
+        }
         appliedEffects.push({ type: 'add_card', value: resolvedId, applied: true });
         break;
       }

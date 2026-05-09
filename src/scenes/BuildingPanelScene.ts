@@ -349,11 +349,9 @@ export class BuildingPanelScene extends Scene {
   }
 
   private closePanel(): void {
-    // Stop this overlay first, then restart CityHub to refresh its display
-    // Use scene manager from the game to avoid calling start on a stopped scene
-    const sceneManager = this.scene;
-    sceneManager.stop('BuildingPanelScene');
-    sceneManager.stop('CityHub');
-    sceneManager.start('CityHub');
+    // Resume CityHub instead of restarting it — full restart blows away any
+    // tween state, ongoing animations, and re-runs preload work.
+    this.scene.resume('CityHub');
+    this.scene.stop();
   }
 }

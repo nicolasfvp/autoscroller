@@ -67,6 +67,10 @@ export class ShopScene extends Scene {
   create(): void {
     const run = getRun();
 
+    // Reset per-visit shop counters so price escalation starts fresh.
+    run.economy.removalsThisShop = 0;
+    run.economy.reordersThisShop = 0;
+
     // Background
     this.add.image(400, 300, 'bg_shop_scene').setDisplaySize(800, 600);
 
@@ -322,7 +326,8 @@ export class ShopScene extends Scene {
   // ── Modal: Remove Cards ───────────────────────────────────────
   private modalRemove(): void {
     const run   = getRun();
-    const cost  = ShopSystem.getRemoveCardCost(run.deck.active.length);
+    const removalCount = run.economy.removalsThisShop ?? 0;
+    const cost  = ShopSystem.getRemoveCardCost(removalCount);
     const cards = run.deck.active;
 
     this.modalTitle(`🗑 Remove Cards  (${cost} Gold each)`);
@@ -340,7 +345,8 @@ export class ShopScene extends Scene {
 
       const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
         const adp = this.getRunAdapter();
-        if (ShopSystem.removeCard(adp, i)) {
+        if (ShopSystem.removeCard(adp, i, removalCount)) {
+          run.economy.removalsThisShop = removalCount + 1;
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
           this.syncFromAdapter(adp); this.closeModal(); this.openModal('remove');
         }

@@ -46,7 +46,7 @@ describe('Boot Flow Integration', () => {
     expect(deserialized).toEqual(run);
   });
 
-  it('save with isInCombat=true loads as isInCombat=false and currentScene=Game', async () => {
+  it('save with isInCombat=true loads as isInCombat=false and currentScene=GameScene', async () => {
     const run = createNewRun();
     run.isInCombat = true;
     run.currentScene = 'CombatScene';
@@ -56,7 +56,7 @@ describe('Boot Flow Integration', () => {
 
     expect(loaded).not.toBeNull();
     expect(loaded!.isInCombat).toBe(false);
-    expect(loaded!.currentScene).toBe('Game');
+    expect(loaded!.currentScene).toBe('GameScene');
   });
 
   it('two sequential saves: load returns the latest state', async () => {

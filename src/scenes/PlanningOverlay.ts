@@ -211,8 +211,21 @@ export class PlanningOverlay extends Scene {
         this.selectedCardIndex = -1;
       }
     } else {
-      // Toast: slot occupied
-      this.showToast('This slot already has a tile.');
+      // Differentiate the failure reason — enemy-locked vs boss/buffer vs occupied —
+      // so players don't think "already has a tile" when the real reason is
+      // "this combat tile is locked because an enemy is already pre-assigned".
+      const slot = this.loopRunState.loop.tiles[slotIndex];
+      if (!slot) {
+        this.showToast('Invalid slot.');
+      } else if (slot.type === 'boss') {
+        this.showToast('Boss tiles cannot be replaced.');
+      } else if (slot.type === 'buffer') {
+        this.showToast('Buffer tiles cannot be replaced.');
+      } else if (slot.enemyId) {
+        this.showToast('This tile already has an enemy — fight it first.');
+      } else {
+        this.showToast('This slot already has a tile.');
+      }
     }
   }
 
@@ -307,8 +320,8 @@ export class PlanningOverlay extends Scene {
       const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(frameWidth, frameHeight);
       container.add(frame);
 
-      // Tile preview
-      const tileKey = (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase();
+      // Tile preview — getAllPlaceableTiles guarantees `key` is set
+      const tileKey = tileConfig.key;
       const pseudoSlot: TileSlot = {
         type: tileConfig.type,
         terrain: tileConfig.terrain,
@@ -368,7 +381,7 @@ export class PlanningOverlay extends Scene {
           frame.clearTint();
         });
 
-        frame.on('pointerdown', () => this.selectInventoryTile(idx, (tileConfig as any).key ?? tileConfig.terrain ?? tileConfig.name.toLowerCase()));
+        frame.on('pointerdown', () => this.selectInventoryTile(idx, tileConfig.key));
       }
 
       this.inventoryCards.push(container);

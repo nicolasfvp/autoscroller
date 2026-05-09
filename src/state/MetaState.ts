@@ -69,6 +69,12 @@ export function createDefaultMetaState(): MetaState {
 }
 
 export function migrateMetaState(raw: any): MetaState {
+  // Coerce version to a number — corrupt saves can have it as a string
+  // ("3"), which then doesn't satisfy `< 2` even though it should.
+  if (raw && typeof raw === 'object') {
+    const v = Number(raw.version);
+    raw.version = Number.isFinite(v) ? v : undefined;
+  }
   // v1 -> v2 migration
   if (!raw || !raw.version || raw.version < 2) {
     const materials: Record<string, number> = {};

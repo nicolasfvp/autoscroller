@@ -32,7 +32,8 @@ export function triggerBossCombat(runState: RunState): BossEncounterData {
 }
 
 export function onBossVictory(runState: RunState): { materialsAwarded: Record<string, number> } {
-  const materials = rollMaterialDrops('boss', '', runState.loop.count);
+  const gatheringBoost = (runState as any).economy?.gatheringBoost ?? 0;
+  const materials = rollMaterialDrops('boss', '', runState.loop.count, undefined, gatheringBoost);
   for (const [mat, amount] of Object.entries(materials)) {
     runState.economy.materials[mat] = (runState.economy.materials[mat] ?? 0) + amount;
   }

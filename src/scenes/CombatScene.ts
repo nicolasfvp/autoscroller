@@ -226,7 +226,9 @@ export class CombatScene extends Scene {
         }
         this.combatEffects.floatingNumber(600, 320, eventData.damage, '#ffffff', '-');
         if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
-          this.enemySprite.setTint(0xffffff);
+          // 0xffffff is a no-op tint (multiplies by 1) — flash red so the
+          // hit feedback is actually visible.
+          this.enemySprite.setTint(0xff5555);
           this.time.delayedCall(200, () => {
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite) this.enemySprite.clearTint();
           });
@@ -326,18 +328,22 @@ export class CombatScene extends Scene {
         const currentRun = getRun();
         currentRun.isInCombat = false;
 
+        // Always sync HP/stamina/mana from CombatState back to RunState —
+        // not just on victory. Otherwise the death-screen / save-on-defeat
+        // path sees stale pre-fight values.
+        const finalState = this.engine.getState();
+        currentRun.hero.currentHP = Math.max(0, finalState.heroHP);
+        currentRun.hero.currentStamina = finalState.heroStamina;
+        currentRun.hero.currentMana = finalState.heroMana;
+
         if (eventData.result === 'victory') {
           // Award XP
           const xpEarned = getXPForEnemy(enemyDef.type);
           earnXP(currentRun, xpEarned);
-          // Write HP, stamina, and mana back to RunState for 50% recovery between fights
-          const finalState = this.engine.getState();
-          currentRun.hero.currentHP = finalState.heroHP;
-          currentRun.hero.currentStamina = finalState.heroStamina;
-          currentRun.hero.currentMana = finalState.heroMana;
           // Flag boss defeat for GameScene to trigger BossExitScene
           if (enemyDef.type === 'boss') {
-            (currentRun as any)._lastBossDefeated = true;
+            currentRun.loop.lastBossDefeated = true;
+            currentRun.loop.bossesDefeated = (currentRun.loop.bossesDefeated ?? 0) + 1;
           }
 
           // Generate loot (gold + cards + materials) and queue notifications

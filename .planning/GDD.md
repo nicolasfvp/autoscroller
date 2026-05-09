@@ -4,7 +4,6 @@
 **Ultima atualizacao:** 2026-03-25
 **Engine:** Phaser (HTML5/Canvas)
 **Plataforma:** Web browser
-**Idioma do documento:** Portugues brasileiro
 
 ---
 

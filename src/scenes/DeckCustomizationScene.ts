@@ -484,8 +484,10 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private close(): void {
+    // Parent was paused (not slept), so resume — wake() targets sleeping
+    // scenes and silently no-ops on paused ones.
+    this.scene.resume(this.parentScene);
     this.scene.stop();
-    this.scene.wake(this.parentScene);
   }
 
   private cleanup(): void {

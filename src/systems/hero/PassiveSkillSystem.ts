@@ -47,15 +47,58 @@ export function resolvePassives(run: RunState): PassiveSkill[] {
 
 /**
  * Apply all stat_modifier passives to a hero state (in-place mutation).
+ * HeroState fields are named directly (maxHP, maxStamina, ...), matching the
+ * passive `stat` keys verbatim.
  */
 export function applyPassiveModifiers(
   hero: HeroState,
   passives: PassiveSkill[],
 ): void {
+  const target = hero as unknown as Record<string, number>;
   for (const p of passives) {
     if (p.effect.type === 'stat_modifier' && p.effect.stat && p.effect.value != null) {
-      (hero as Record<string, unknown>)[p.effect.stat] =
-        ((hero as Record<string, unknown>)[p.effect.stat] as number) + p.effect.value;
+      target[p.effect.stat] = (target[p.effect.stat] ?? 0) + p.effect.value;
+    }
+  }
+}
+
+/**
+ * Map from passive `stat` keys to CombatState field names.
+ * CombatState prefixes hero fields (heroMaxHP, heroStrength, …) so a direct
+ * write would orphan the modifier; we route through this map instead.
+ */
+const COMBAT_STAT_KEY_MAP: Record<string, keyof import('../combat/CombatState').CombatState> = {
+  maxHP: 'heroMaxHP',
+  maxStamina: 'heroMaxStamina',
+  maxMana: 'heroMaxMana',
+  defenseMultiplier: 'heroDefenseMultiplier',
+  attackDamage: 'heroStrength',
+};
+
+/**
+ * Apply stat_modifier passives to a CombatState (in-place mutation).
+ * Use this from CombatState.create — fixes the silent no-op caused by
+ * casting CombatState to `any` and writing to mismatched field names.
+ */
+export function applyPassiveModifiersToCombatState(
+  state: import('../combat/CombatState').CombatState,
+  passives: PassiveSkill[],
+): void {
+  const target = state as unknown as Record<string, number>;
+  for (const p of passives) {
+    if (p.effect.type !== 'stat_modifier' || !p.effect.stat || p.effect.value == null) continue;
+    const mappedKey = COMBAT_STAT_KEY_MAP[p.effect.stat];
+    if (!mappedKey) continue; // unknown stat — skip rather than orphan
+    target[mappedKey as string] = (target[mappedKey as string] ?? 0) + p.effect.value;
+    // If a maxHP passive lands, also bump current HP so the hero starts at full.
+    if (mappedKey === 'heroMaxHP') {
+      target.heroHP = (target.heroHP ?? 0) + p.effect.value;
+    }
+    if (mappedKey === 'heroMaxStamina') {
+      target.heroStamina = (target.heroStamina ?? 0) + p.effect.value;
+    }
+    if (mappedKey === 'heroMaxMana') {
+      target.heroMana = (target.heroMana ?? 0) + p.effect.value;
     }
   }
 }

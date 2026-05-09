@@ -42,7 +42,7 @@ describe('SaveManager', () => {
     expect(loaded).toBeNull();
   });
 
-  it('save with isInCombat=true stores isInCombat=false and currentScene=Game', async () => {
+  it('save with isInCombat=true stores isInCombat=false and currentScene=GameScene', async () => {
     const run = createNewRun();
     run.isInCombat = true;
     run.currentScene = 'CombatScene';
@@ -52,7 +52,7 @@ describe('SaveManager', () => {
 
     expect(loaded).not.toBeNull();
     expect(loaded!.isInCombat).toBe(false);
-    expect(loaded!.currentScene).toBe('Game');
+    expect(loaded!.currentScene).toBe('GameScene');
   });
 
   it('save emits save:completed event with timestamp', async () => {

@@ -16,7 +16,5 @@ export class GlobalSound extends Scene {
     this.input.on('pointerdown', () => {
       AudioManager.playSFX(this, 'sfx_click', 0.25);
     });
-    
-    console.log('GlobalSound scene active - Global click listener initialized');
   }
 }

@@ -78,7 +78,7 @@ describe('UnlockManager', () => {
       const tiles = getAvailableTiles([]);
       const ids = tiles.map(t => t.id);
       expect(ids).toContain('basic');
-      expect(ids).toContain('combat_forest');
+      expect(ids).toContain('forest');
       expect(ids).toContain('shop');
       expect(ids).toContain('rest');
       expect(ids).toContain('event');

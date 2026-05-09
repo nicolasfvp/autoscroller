@@ -12,7 +12,15 @@ export interface GameEvents {
   'combat:card-skipped': { cardId: string; reason: string };
   'combat:synergy-triggered': { displayName: string; bonus: { type: string; value: number; target: string } };
   'combat:deck-reshuffled': { reshuffleCount: number };
-  'combat:enemy-attack': { damage: number; specialEffect: string | null };
+  'combat:enemy-attack': {
+    damage: number;
+    specialEffect: string | null;
+    /** Set on multi-hit boss attacks */
+    multiHit?: boolean;
+    /** Number of hits when multiHit is true */
+    hitCount?: number;
+  };
+  'combat:boss-behavior': { type: string; value: number };
   'combat:damage-dealt': { source: string; target: string; amount: number };
 
   // Hero events
@@ -46,6 +54,7 @@ export interface GameEvents {
   // Run lifecycle
   'run:started': { runId: string };
   'run:ended': { victory: boolean; loopsCompleted: number };
+  'run:cleared': Record<string, never>;
 }
 
 type Listener<T> = (data: T) => void;
