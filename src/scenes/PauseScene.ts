@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
-import { getRun } from '../state/RunState';
+import { getRun, clearRun } from '../state/RunState';
+import { saveManager } from '../core/SaveManager';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 
 /**
@@ -52,6 +53,11 @@ export class PauseScene extends Scene {
     });
 
     this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', () => {
+      // Tear down the active run AND wipe the persisted save before
+      // returning to the menu — otherwise MainMenu will offer "Continue"
+      // pointing at the abandoned run.
+      void saveManager.clear();
+      clearRun();
       this.scene.stop('GameScene');
       this.scene.stop();
       this.scene.start('MainMenu');
@@ -86,6 +92,8 @@ export class PauseScene extends Scene {
 
     container.add([bg, txt]);
 
+    let pressed = false;
+
     bg.on('pointerover', () => {
       container.setScale(1.05);
       // Lighten the background slightly
@@ -93,18 +101,25 @@ export class PauseScene extends Scene {
       colorObj.lighten(10);
       bg.setFillStyle(colorObj.color);
     });
-    
+
     bg.on('pointerout', () => {
       container.setScale(1.0);
       bg.setFillStyle(bgColor);
+      // Pointer left the button while pressed → cancel the click.
+      pressed = false;
     });
-    
+
     bg.on('pointerdown', () => {
+      pressed = true;
       container.setScale(0.95);
     });
 
     bg.on('pointerup', () => {
       container.setScale(1.05);
+      // Only fire if the corresponding pointerdown happened on this button
+      // and the pointer didn't leave the bounds in between.
+      if (!pressed) return;
+      pressed = false;
       onClick();
     });
   }

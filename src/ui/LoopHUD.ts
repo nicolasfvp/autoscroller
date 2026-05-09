@@ -23,6 +23,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   private shopToggleBg!: Phaser.GameObjects.Graphics;
   private shopToggleText!: Phaser.GameObjects.Text;
+  private rightPanelContainer!: Phaser.GameObjects.Container;
 
   private pendingBadge!: Phaser.GameObjects.Text;
   private pendingBg!: Phaser.GameObjects.Graphics;

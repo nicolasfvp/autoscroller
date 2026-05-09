@@ -29,16 +29,26 @@ function findSynergy(a: string, b: string): SynergyDef | undefined {
 export function resolveAdjacencySynergies(tiles: TileSlot[]): SynergyBuff[] {
   if (tiles.length < 2) return [];
 
+  // Buffer tiles are non-interactive runway at loop start; exclude them so
+  // adjacency math doesn't wrap a "boss → buffer" or "buffer → forest"
+  // pair into a surprise buff. We keep the original indices so the returned
+  // tileIndex still refers to the live loop array.
+  const playable: { tile: TileSlot; index: number }[] = [];
+  for (let i = 0; i < tiles.length; i++) {
+    if (tiles[i].type !== 'buffer') playable.push({ tile: tiles[i], index: i });
+  }
+  if (playable.length < 2) return [];
+
   const buffs: SynergyBuff[] = [];
 
-  for (let i = 0; i < tiles.length; i++) {
-    const nextIndex = (i + 1) % tiles.length;
-    const keyA = getTileKey(tiles[i]);
-    const keyB = getTileKey(tiles[nextIndex]);
+  for (let i = 0; i < playable.length; i++) {
+    const next = playable[(i + 1) % playable.length];
+    const keyA = getTileKey(playable[i].tile);
+    const keyB = getTileKey(next.tile);
     const synergy = findSynergy(keyA, keyB);
     if (synergy) {
       buffs.push({
-        tileIndex: i,
+        tileIndex: playable[i].index,
         type: synergy.buff.type,
         value: synergy.buff.value,
       });

@@ -3,9 +3,9 @@
 
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
-import { loseAllRunXP } from '../systems/hero/XPSystem';
 import { bankRunRewards, getStorehouseEffects } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import { saveManager } from '../core/SaveManager';
 import type { CombatStats } from '../systems/combat/CombatStats';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 
@@ -116,10 +116,11 @@ export class DeathScene extends Scene {
       'death',
       {
         seed: (run as any).seed ?? 'unknown',
-        loopsCompleted: run.loop.count,
-        bossesDefeated: 0,
+        loopsCompleted: Math.max(0, run.loop.count - 1),
+        bossesDefeated: run.loop.bossesDefeated ?? 0,
       },
-      metaState
+      metaState,
+      run.hero.className ?? 'warrior',
     );
     await saveMetaState(updatedState);
 
@@ -142,7 +143,9 @@ export class DeathScene extends Scene {
 
     // "Return to City" button
     createButton(this, 400, 520, 'Return to City', () => {
-      loseAllRunXP(run);
+      // CombatScene already calls loseAllRunXP on defeat; no need to repeat.
+      // Wipe persisted run save — death is final, no Continue option.
+      void saveManager.clear();
       clearRun();
       this.fadeToScene('CityHub');
     }, 'primary');

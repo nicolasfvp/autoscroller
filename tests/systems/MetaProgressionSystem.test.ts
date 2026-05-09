@@ -93,14 +93,14 @@ describe('MetaProgressionSystem', () => {
   describe('bankRunRewards', () => {
     it('adds 100% materials and 100% XP on safe exit', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'safe', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
+      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'safe', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state, 'warrior');
       expect(result.materials).toEqual({ essence: 100, wood: 50 });
       expect(result.classXP.warrior).toBe(50);
     });
 
     it('adds 10% materials and 0 XP on death (no storehouse)', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
+      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state, 'warrior');
       expect(result.materials).toEqual({ essence: 10, wood: 5 });
       expect(result.classXP.warrior).toBe(0);
     });
@@ -108,14 +108,14 @@ describe('MetaProgressionSystem', () => {
     it('death with storehouse level 5 retains 25% materials', () => {
       const state = createDefaultMetaState();
       state.buildings.storehouse.level = 5;
-      const result = bankRunRewards({ essence: 100, wood: 40 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state);
+      const result = bankRunRewards({ essence: 100, wood: 40 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state, 'warrior');
       expect(result.materials.essence).toBe(25);
       expect(result.materials.wood).toBe(10);
     });
 
     it('appends a RunHistoryEntry with correct fields', () => {
       const state = createDefaultMetaState();
-      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'test-seed', loopsCompleted: 5, bossesDefeated: 2 }, state);
+      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'test-seed', loopsCompleted: 5, bossesDefeated: 2 }, state, 'warrior');
       expect(result.runHistory).toHaveLength(1);
       const entry = result.runHistory[0];
       expect(entry.seed).toBe('test-seed');
@@ -130,7 +130,7 @@ describe('MetaProgressionSystem', () => {
     it('increments totalRuns by 1', () => {
       const state = createDefaultMetaState();
       state.totalRuns = 5;
-      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'abc', loopsCompleted: 1, bossesDefeated: 0 }, state);
+      const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'abc', loopsCompleted: 1, bossesDefeated: 0 }, state, 'warrior');
       expect(result.totalRuns).toBe(6);
     });
   });

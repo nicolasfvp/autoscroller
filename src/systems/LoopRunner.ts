@@ -1,4 +1,4 @@
-import { createBasicLoop, createBufferTiles, createTileSlot, getTileConfig, type TileSlot, type TileInventoryEntry } from './TileRegistry';
+import { createBasicLoop, createBufferTiles, createTileSlot, type TileSlot, type TileInventoryEntry } from './TileRegistry';
 import { resolveAdjacencySynergies, type SynergyBuff } from './SynergyResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
@@ -59,7 +59,6 @@ export class LoopRunner {
     this.runState = runState;
     const config = getDifficultyConfig();
     this.runState.loop.count = 1;
-    this.runState.loop.length = config.baseLoopLength;
     // Prepend buffer tiles — these are non-interactive and give the player
     // a few safe tiles before hitting any user-placed content.
     const baseTiles = createBasicLoop(config.baseLoopLength);
@@ -71,6 +70,29 @@ export class LoopRunner {
     this.lastTileIndex = -1;
     this.activeBuffs = [];
     this.bossKillCount = 0;
+    this.assignEnemies();
+    this.state = 'traversing';
+  }
+
+  /**
+   * Resume an in-progress run from a previously persisted LoopRunState.
+   * Caller is responsible for hydrating tiles/positionInLoop/etc into
+   * runState before calling. This avoids the unconditional reset that
+   * `startRun` performs.
+   */
+  resumeRun(runState: LoopRunState, bossKillCount: number = 0): void {
+    this.runState = runState;
+    if (!runState.loop.tiles || runState.loop.tiles.length === 0) {
+      // Nothing usable to resume from — fall back to a fresh run.
+      this.startRun(runState);
+      return;
+    }
+    runState.loop.length = runState.loop.tiles.length;
+    this.lastTileIndex = -1;
+    this.activeBuffs = resolveAdjacencySynergies(runState.loop.tiles);
+    this.bossKillCount = bossKillCount;
+    // Re-roll enemy assignments for any tile that hasn't been pre-assigned
+    // (saves don't necessarily round-trip enemyId in older data).
     this.assignEnemies();
     this.state = 'traversing';
   }
@@ -101,9 +123,6 @@ export class LoopRunner {
   private onTileEntered(tileIndex: number): void {
     const tile = this.runState.loop.tiles[tileIndex];
     if (!tile || tile.defeatedThisLoop) return;
-
-    const config = getTileConfig(tile.terrain ?? tile.type);
-    const diffConfig = getDifficultyConfig();
 
     switch (tile.type) {
       case 'basic': {
@@ -162,24 +181,43 @@ export class LoopRunner {
     // Update difficulty multiplier
     loop.difficultyMultiplier = 1 + (loop.count - 1) * diffConfig.percentPerLoop;
 
-    // Check if boss loop: add boss as extra tile
-    if (loop.count % diffConfig.bossEveryNLoops === 0) {
-      loop.tiles.push(createTileSlot('boss'));
+    // Boss tile management:
+    //  - On a boss loop, ensure exactly ONE boss tile exists (don't append a
+    //    second one that would have to be re-fought every loop).
+    //  - On a non-boss loop, drop any leftover boss tile from the previous
+    //    boss cycle so the player doesn't keep refighting it.
+    const isBossLoop = loop.count % diffConfig.bossEveryNLoops === 0;
+    const existingBossIndex = loop.tiles.findIndex(t => t.type === 'boss');
+    if (isBossLoop) {
+      if (existingBossIndex === -1) {
+        loop.tiles.push(createTileSlot('boss'));
+      } else {
+        // Reuse the existing boss tile (already at end). Just clear flag.
+        loop.tiles[existingBossIndex].defeatedThisLoop = false;
+        loop.tiles[existingBossIndex].enemyId = undefined;
+      }
+    } else if (existingBossIndex !== -1) {
+      loop.tiles.splice(existingBossIndex, 1);
     }
 
-    // Strip old buffer prefix and re-add fresh ones so the landmark positions stay consistent
+    // Reuse the existing buffer prefix instead of allocating new TileSlot
+    // objects every loop. Tile *identity* matters for any caller using a
+    // WeakMap keyed on TileSlot (none today, but cheap insurance + GC win).
+    const existingBuffer = loop.tiles.filter(t => t.type === 'buffer');
     const nonBuffer = loop.tiles.filter(t => t.type !== 'buffer');
-    const freshBuffer = createBufferTiles(BUFFER_TILE_COUNT);
-    loop.tiles = [...freshBuffer, ...nonBuffer];
+    while (existingBuffer.length < BUFFER_TILE_COUNT) {
+      existingBuffer.push(...createBufferTiles(BUFFER_TILE_COUNT - existingBuffer.length));
+    }
+    if (existingBuffer.length > BUFFER_TILE_COUNT) {
+      existingBuffer.length = BUFFER_TILE_COUNT;
+    }
+    for (const t of existingBuffer) t.defeatedThisLoop = true;
+    loop.tiles = [...existingBuffer, ...nonBuffer];
     loop.length = loop.tiles.length;
 
     // Reset position to beginning of loop
     this.runState.loop.positionInLoop = 0;
     this.lastTileIndex = -1;
-
-    if (loop.count % diffConfig.bossEveryNLoops === 0) {
-      this.assignEnemies();
-    }
 
     this.assignEnemies();
     this.emit('loop-completed', { loopCount: loop.count });
@@ -204,6 +242,14 @@ export class LoopRunner {
     const loop = this.runState.loop;
     const diffConfig = getDifficultyConfig();
     for (const tile of loop.tiles) {
+      // Non-combat tiles never need enemy assignment — skip them up front
+      // so we don't burn rng() calls (would also drift the seeded RNG state
+      // once B.7/B.8 lands).
+      if (tile.type === 'buffer' || tile.type === 'shop' ||
+          tile.type === 'rest' || tile.type === 'event' ||
+          tile.type === 'treasure') {
+        continue;
+      }
       tile.enemyId = undefined;
       if (tile.defeatedThisLoop) continue;
 
@@ -221,7 +267,10 @@ export class LoopRunner {
           break;
         }
         case 'boss': {
-          tile.enemyId = 'boss_demon';
+          // Cycle through the 6 boss types as the player progresses, so
+          // every cycle isn't a Boss Demon refight.
+          const BOSS_ROTATION = ['boss_demon', 'boss_tank', 'boss_berserker', 'boss_mage', 'boss_dragon', 'boss_hydra'];
+          tile.enemyId = BOSS_ROTATION[this.bossKillCount % BOSS_ROTATION.length];
           break;
         }
       }
@@ -233,8 +282,13 @@ export class LoopRunner {
     this.emit('boss-defeated', { loopCount: this.runState.loop.count });
   }
 
-  /** Track boss kills for diminishing loop growth */
+  /** Track boss kills for diminishing loop growth (persisted via resumeRun) */
   private bossKillCount: number = 0;
+
+  /** Expose bossKillCount so the scene layer can persist it across save/load. */
+  getBossKillCount(): number {
+    return this.bossKillCount;
+  }
 
   onBossChoice(choice: 'exit' | 'continue'): RunEndResult | void {
     if (choice === 'exit') {
@@ -263,6 +317,21 @@ export class LoopRunner {
     this.runState.loop.tiles.splice(insertAt, 0, ...newTiles);
     this.runState.loop.length += Math.max(0, actualGrowth);
 
+    // Drop the boss tile that was just defeated — otherwise it gets reset by
+    // the next onLoopCompleted and re-fought. The next bossEveryNLoops cycle
+    // will spawn a fresh one.
+    const bossIdx = this.runState.loop.tiles.findIndex(t => t.type === 'boss');
+    if (bossIdx !== -1) {
+      this.runState.loop.tiles.splice(bossIdx, 1);
+      this.runState.loop.length = this.runState.loop.tiles.length;
+    }
+
+    // Reset traversal position so the freshly-inserted basic tiles aren't
+    // skipped on this loop (the player was sitting near loop end at the
+    // boss tile). lastTileIndex must also reset so onTileEntered re-fires.
+    this.runState.loop.positionInLoop = 0;
+    this.lastTileIndex = -1;
+
     this.state = 'planning';
     this.emit('planning-phase-started', { loopCount: this.runState.loop.count });
   }
@@ -279,13 +348,17 @@ export class LoopRunner {
     // Prevent placing on boss or buffer tiles
     if (tile.type === 'boss' || tile.type === 'buffer') return false;
 
-    // If slot is occupied by a non-basic tile, return it to inventory (feedback #24)
+    // If slot is occupied by a non-basic tile, return it to inventory (feedback #24).
+    // Inventory is keyed on the *specific* tile kind (forest, swamp, shop, …),
+    // not on tile.type — terrain tiles all have type === 'terrain' so using
+    // that as the key collapses every terrain into a single 'terrain' entry.
     if (tile.type !== 'basic') {
-      const existing = this.runState.tileInventory.find(t => t.tileType === tile.type);
+      const inventoryKey = tile.terrain ?? tile.type;
+      const existing = this.runState.tileInventory.find(t => t.tileType === inventoryKey);
       if (existing) {
         existing.count++;
       } else {
-        this.runState.tileInventory.push({ tileType: tile.type, count: 1 });
+        this.runState.tileInventory.push({ tileType: inventoryKey, count: 1 });
       }
     }
 

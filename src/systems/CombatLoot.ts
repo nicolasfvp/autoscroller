@@ -6,7 +6,7 @@ import type { RunState } from '../state/RunState';
 import { getAllCards } from '../data/DataLoader';
 import type { CardDefinition } from '../data/types';
 import { addPendingLoot } from './PendingLoot';
-import { rollMaterialDrops } from './LootGenerator';
+import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
 import enemyDropsData from '../data/json/enemy-drops.json';
 
 interface CardDropTable {
@@ -50,8 +50,11 @@ export function generateAndApplyCombatLoot(
     entries.push({ label: `+${xpAmount} XP`, color: '#00ccff' });
   }
 
+  // Storehouse gathering boost — cached on RunState at run start.
+  const gatheringBoost = run.economy.gatheringBoost ?? 0;
+
   // Material drops from terrain
-  const terrainMats = rollMaterialDrops('terrain', terrain, run.loop.count);
+  const terrainMats = rollMaterialDrops('terrain', terrain, run.loop.count, undefined, gatheringBoost);
   for (const [mat, amount] of Object.entries(terrainMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
@@ -60,7 +63,7 @@ export function generateAndApplyCombatLoot(
   }
 
   // Material drops from enemy
-  const enemyMats = rollMaterialDrops('enemy', enemyId, run.loop.count);
+  const enemyMats = rollMaterialDrops('enemy', enemyId, run.loop.count, undefined, gatheringBoost);
   for (const [mat, amount] of Object.entries(enemyMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
@@ -70,13 +73,23 @@ export function generateAndApplyCombatLoot(
 
   // Boss material drops
   if (enemyType === 'boss') {
-    const bossMats = rollMaterialDrops('boss', enemyId, run.loop.count);
+    const bossMats = rollMaterialDrops('boss', enemyId, run.loop.count, undefined, gatheringBoost);
     for (const [mat, amount] of Object.entries(bossMats)) {
       if (amount > 0) {
         run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
         entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
       }
     }
+  }
+
+  // Tile drops (rare; 15% chance per terrain combat). Writes to the
+  // canonical RunState tile inventory; LoopRunState rehydrates from there
+  // on next GameScene.create / planning entry.
+  const tileDrops = rollTileDrops(terrain, run.loop.count);
+  for (const drop of tileDrops) {
+    const current = run.economy.tileInventory[drop.tileType] ?? 0;
+    run.economy.tileInventory[drop.tileType] = current + drop.count;
+    entries.push({ label: `+${drop.count} ${drop.tileType} tile`, color: '#80ffd0' });
   }
 
   // Card drop from enemy-specific pool

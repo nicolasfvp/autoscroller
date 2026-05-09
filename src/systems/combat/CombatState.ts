@@ -4,7 +4,7 @@
 import type { RunState } from '../../state/RunState';
 import type { EnemyDefinition, BossBehavior } from '../../data/types';
 import { applyPassiveRelics, applyOnCombatStartRelics } from './RelicSystem';
-import { resolvePassives, applyPassiveModifiers } from '../hero/PassiveSkillSystem';
+import { resolvePassives, applyPassiveModifiersToCombatState } from '../hero/PassiveSkillSystem';
 
 export interface CombatState {
   heroHP: number;
@@ -101,9 +101,11 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
   // Apply combat_start relics (first_strike_amulet, etc.)
   applyOnCombatStartRelics(run.relics ?? [], state);
 
-  // Apply class passives from XP
+  // Apply class passives from XP (writes to CombatState fields via the
+  // dedicated combat helper — the HeroState-shaped applyPassiveModifiers
+  // would silently orphan modifiers because CombatState prefixes its keys.)
   const passives = resolvePassives(run);
-  applyPassiveModifiers(state as any, passives as any);
+  applyPassiveModifiersToCombatState(state, passives);
   state.activePassives = passives;
 
   return state;

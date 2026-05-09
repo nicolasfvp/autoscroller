@@ -4,6 +4,7 @@ import { getBossExitChoiceData } from '../systems/BossSystem';
 import { LoopRunner, type LoopRunState } from '../systems/LoopRunner';
 import { bankRunRewards } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import { saveManager } from '../core/SaveManager';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 
 /**
@@ -182,13 +183,17 @@ export class BossExitScene extends Scene {
         'safe',
         {
           seed: (run as any).seed ?? 'unknown',
-          loopsCompleted: run.loop.count,
-          bossesDefeated: (run as any).bossesDefeated ?? 1,
+          loopsCompleted: Math.max(0, run.loop.count - 1),
+          bossesDefeated: run.loop.bossesDefeated ?? 0,
         },
-        metaState
+        metaState,
+        run.hero.className ?? 'warrior',
       );
       await saveMetaState(updatedState);
 
+      // Wipe the persisted run save — the run is resolved, MainMenu shouldn't
+      // offer "Continue" pointing at it.
+      await saveManager.clear();
       clearRun();
       this.scene.stop('GameScene');
       this.fadeToScene('CityHub');

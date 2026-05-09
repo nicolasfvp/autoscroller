@@ -93,9 +93,9 @@ export class TutorialScene extends Scene {
 
     // Navigation
     this.input.keyboard?.on('keydown-SPACE', () => this.nextStep());
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      // Don't advance if clicking the skip button area
-      if (pointer.x > 640 && pointer.y > 540) return;
+    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) => {
+      // Don't advance if the click was on an interactive child (skip button etc.)
+      if (currentlyOver && currentlyOver.length > 0) return;
       this.nextStep();
     });
 

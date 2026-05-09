@@ -85,7 +85,7 @@ export function bankRunRewards(
   exitType: 'safe' | 'death',
   runSummary: { seed: string; loopsCompleted: number; bossesDefeated: number },
   state: MetaState,
-  className: string = 'warrior',
+  className: string,
 ): MetaState {
   const storehouseEffects = getStorehouseEffects(state.buildings.storehouse.level);
   const materialMultiplier = exitType === 'safe' ? 1.0 : storehouseEffects.deathRetention;
@@ -124,13 +124,18 @@ export function bankRunRewards(
 // ── Passive unlocks ──────────────────────────────────────────
 
 export function checkPassiveUnlocks(state: MetaState): { updatedState: MetaState; newPassives: string[] } {
-  const warriorPassives = (passivesData as any).warrior as Array<{ id: string; xpCost: number }>;
   const updated = structuredClone(state);
   const newPassives: string[] = [];
-  for (const passive of warriorPassives) {
-    if (!updated.passivesUnlocked.includes(passive.id) && updated.classXP.warrior >= passive.xpCost) {
-      updated.passivesUnlocked.push(passive.id);
-      newPassives.push(passive.id);
+  const data = passivesData as Record<string, Array<{ id: string; xpCost: number }>>;
+  const classXP = updated.classXP as unknown as Record<string, number>;
+  for (const className of Object.keys(data)) {
+    const list = data[className];
+    const xp = classXP[className] ?? 0;
+    for (const passive of list) {
+      if (!updated.passivesUnlocked.includes(passive.id) && xp >= passive.xpCost) {
+        updated.passivesUnlocked.push(passive.id);
+        newPassives.push(passive.id);
+      }
     }
   }
   return { updatedState: updated, newPassives };

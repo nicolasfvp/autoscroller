@@ -7,6 +7,11 @@ import { getClassDef } from '../systems/hero/ClassRegistry';
 import { SeededRNG } from '../systems/SeededRNG';
 import { MetaState, createDefaultMetaState } from './MetaState';
 import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../systems/UnlockManager';
+import type { TileSlot } from '../systems/TileRegistry';
+import { eventBus } from '../core/EventBus';
+import { clearPendingLoot } from '../systems/PendingLoot';
+import { getStorehouseEffects } from '../systems/MetaProgressionSystem';
+import { resetRNG } from '../systems/LootGenerator';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -40,18 +45,31 @@ export interface DeckState {
   droppedCards: string[];
 }
 
-export interface TileData {
-  type: string;
-  index: number;
-  defeated: boolean;
-}
-
 export interface LoopState {
   count: number;
-  /** The tile layout for the current loop */
-  tiles: TileData[];
+  /** The tile layout for the current loop (matches LoopRunner's TileSlot shape) */
+  tiles: TileSlot[];
   difficulty: number;
   tileLength: number;
+  /**
+   * Set to true by CombatScene when a boss is defeated, consumed by
+   * GameScene's resume handler to launch BossExitScene. Replaces the
+   * previous (run as any)._lastBossDefeated cross-scene flag.
+   */
+  lastBossDefeated?: boolean;
+  /** Cumulative boss kills in this run (for run history reporting). */
+  bossesDefeated?: number;
+  /**
+   * Drives the diminishing loop-growth schedule. Persisted so save/load
+   * doesn't reset growth back to schedule[0]. Distinct from bossesDefeated
+   * because that field counts *defeats* whereas this counts *Continue
+   * choices the player made*.
+   */
+  bossKillCount?: number;
+  /** Hero pixel position within the current loop. Persisted on save. */
+  positionInLoop?: number;
+  /** Difficulty multiplier for the current loop. Persisted on save. */
+  difficultyMultiplier?: number;
 }
 
 export interface EconomyState {
@@ -61,9 +79,20 @@ export interface EconomyState {
   tileInventory: Record<string, number>;
   /** Materials accumulated during the current run (banked at run end) */
   materials: Record<string, number>;
+  /** Removals used in the current shop visit (for escalating remove prices). Reset on shop open. */
+  removalsThisShop?: number;
+  /** Reorders used in the current shop visit (for escalating reorder prices). Reset on shop open. */
+  reordersThisShop?: number;
+  /**
+   * Cached Storehouse gathering boost (0–0.25) — sampled at run start so
+   * combat loot doesn't have to load MetaState async every kill.
+   */
+  gatheringBoost?: number;
 }
 
 export interface RunState {
+  /** Save schema version — bumped when shape changes incompatibly. */
+  version?: number;
   /** Unique run identifier */
   runId: string;
   /** Run generation (heir system) */
@@ -96,6 +125,33 @@ export interface RunState {
   };
 }
 
+/** Current RunState save schema version. Bump when shape changes incompatibly. */
+export const RUN_STATE_VERSION = 1;
+
+/**
+ * Apply schema migrations to a raw save blob and return a usable RunState.
+ * Existing ad-hoc field-presence backfills (droppedCards, stopAtShop,
+ * combatSpeed, mapSpeed) are folded in here so SaveManager.load is one call.
+ */
+export function migrateRunState(raw: any): RunState | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const v = Number(raw.version);
+  // Treat unversioned saves as v0 — apply v0→v1 backfills.
+  if (!Number.isFinite(v) || v < 1) {
+    if (raw.deck && !raw.deck.droppedCards) raw.deck.droppedCards = [];
+    if (raw.stopAtShop === undefined) raw.stopAtShop = true;
+    if (raw.combatSpeed === undefined) raw.combatSpeed = 1;
+    if (raw.mapSpeed === undefined) raw.mapSpeed = 1;
+    if (raw.currentScene === 'Game') raw.currentScene = 'GameScene';
+    if (raw.economy && raw.economy.tileInventory === undefined) raw.economy.tileInventory = {};
+    if (raw.economy && raw.economy.materials === undefined) raw.economy.materials = {};
+    if (raw.deck && !Array.isArray(raw.deck.upgradedCards)) raw.deck.upgradedCards = [];
+    if (raw.loop && raw.loop.bossesDefeated === undefined) raw.loop.bossesDefeated = 0;
+    raw.version = 1;
+  }
+  return raw as RunState;
+}
+
 // ── Factory ─────────────────────────────────────────────────
 
 export function createNewRun(metaState?: MetaState, generation: number = 1, className: string = 'warrior'): RunState {
@@ -104,6 +160,7 @@ export function createNewRun(metaState?: MetaState, generation: number = 1, clas
   const stats = classDef.baseStats;
   const runId = nanoid();
   return {
+    version: RUN_STATE_VERSION,
     runId,
     generation,
     startedAt: Date.now(),
@@ -131,16 +188,20 @@ export function createNewRun(metaState?: MetaState, generation: number = 1, clas
       tiles: [],
       difficulty: 1,
       tileLength: 20,
+      bossesDefeated: 0,
     },
     economy: {
       gold: 0,
       tilePoints: 2,
       tileInventory: {},
       materials: {},
+      // Cache Storehouse gathering boost so CombatLoot can multiply drops
+      // without an async metaState read on every combat.
+      gatheringBoost: getStorehouseEffects(meta.buildings.storehouse.level).gatheringBoost,
     },
     relics: [],
     isInCombat: false,
-    currentScene: 'Game',
+    currentScene: 'GameScene',
     stopAtShop: true,
     combatSpeed: 1,
     mapSpeed: 1,
@@ -171,4 +232,8 @@ export function hasActiveRun(): boolean {
 
 export function clearRun(): void {
   currentRun = null;
+  // Drain module-level singletons that survive across runs.
+  clearPendingLoot();
+  resetRNG();
+  eventBus.emit('run:cleared', {});
 }

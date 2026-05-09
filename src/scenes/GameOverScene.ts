@@ -73,7 +73,10 @@ export class GameOverScene extends Scene {
 
     // New Run button — go to character select instead of directly creating a run
     createButton(this, 300, 420, 'New Run', async () => {
+      // Wipe both the persisted save AND the in-memory run before navigating —
+      // otherwise CharacterSelectScene/createNewRun can race with the old run.
       await saveManager.clear();
+      clearRun();
       this.fadeToScene('CharacterSelectScene');
     }, 'primary');
 

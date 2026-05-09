@@ -2,7 +2,7 @@
 // All combat logic driven by tick(deltaMs) calls from the scene layer.
 
 import { eventBus } from '../../core/EventBus';
-import { getCardById } from '../../data/DataLoader';
+import { getCardById, getCurseById } from '../../data/DataLoader';
 import type { CardDefinition } from '../../data/types';
 import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
@@ -20,6 +20,8 @@ const STAMINA_REGEN = 2;
 const MANA_REGEN = 1;
 /** Retry delay when all cards are unaffordable */
 const RETRY_DELAY = 500;
+/** Maximum total combat duration (ms) before a deadlock fail-safe defeats the hero */
+const DEADLOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 export class CombatEngine {
   private state: CombatState;
@@ -35,6 +37,8 @@ export class CombatEngine {
   private isFinished = false;
 
   private regenAccumulator = 0;
+  /** Total elapsed ms in this combat — used by the deadlock fail-safe. */
+  private totalElapsedMs = 0;
 
   constructor(state: CombatState) {
     this.state = state;
@@ -47,20 +51,41 @@ export class CombatEngine {
   tick(deltaMs: number): void {
     if (this.isFinished) return;
 
-    // Hero card play
-    this.heroCooldownTimer -= deltaMs;
-    if (this.heroCooldownTimer <= 0) {
-      this.playNextCard();
+    // Deadlock fail-safe: cap total combat duration. If no side has won
+    // after DEADLOCK_TIMEOUT_MS (e.g. empty deck + immortal enemy, or a
+    // bug producing 0-damage attacks), force a defeat.
+    this.totalElapsedMs += deltaMs;
+    if (this.totalElapsedMs >= DEADLOCK_TIMEOUT_MS) {
+      this.state.heroHP = 0;
+      this.checkEndConditions();
+      return;
     }
 
-    // Check end conditions after hero plays
-    if (this.checkEndConditions()) return;
+    // Decrement both timers up front, then resolve in fairness order.
+    this.heroCooldownTimer -= deltaMs;
+    // Determine who reached 0 first using *projected* post-decrement enemy
+    // timer. If both are overdue this tick, the more-negative one acts first.
+    const projectedEnemyTimer = this.enemyAI.getCooldownTimer() - deltaMs;
+    const heroReady = this.heroCooldownTimer <= 0;
+    const enemyReady = projectedEnemyTimer <= 0;
 
-    // Enemy AI
-    this.enemyAI.tick(deltaMs, this.state, this.stats);
+    // Default to hero-first (preserves existing behavior when only one side
+    // is ready). Swap only when both are ready AND enemy was more overdue.
+    const enemyGoesFirst = heroReady && enemyReady && projectedEnemyTimer < this.heroCooldownTimer;
 
-    // Check end conditions after enemy attacks
-    if (this.checkEndConditions()) return;
+    if (enemyGoesFirst) {
+      this.enemyAI.tick(deltaMs, this.state, this.stats);
+      if (this.checkEndConditions()) return;
+
+      if (this.heroCooldownTimer <= 0) this.playNextCard();
+      if (this.checkEndConditions()) return;
+    } else {
+      if (this.heroCooldownTimer <= 0) this.playNextCard();
+      if (this.checkEndConditions()) return;
+
+      this.enemyAI.tick(deltaMs, this.state, this.stats);
+      if (this.checkEndConditions()) return;
+    }
 
     // Passive regen
     this.applyPassiveRegen(deltaMs);
@@ -72,9 +97,15 @@ export class CombatEngine {
       return;
     }
 
-    // If hero is stunned, skip this turn
+    // If hero is stunned, the next card is *skipped* (not just delayed).
+    // We advance the deck pointer past the current card and re-arm the
+    // cooldown so the *following* card plays on its normal cadence.
     if (this.state.heroStunned) {
       this.state.heroStunned = false;
+      const skippedCardId = this.state.deckOrder[this.deckPointer];
+      eventBus.emit('combat:card-skipped', { cardId: skippedCardId, reason: 'stunned' });
+      this.stats.cardsSkipped++;
+      this.advanceDeckPointer();
       this.heroCooldownTimer = RETRY_DELAY;
       return;
     }
@@ -86,12 +117,40 @@ export class CombatEngine {
       const card = getCardById(cardId);
 
       if (!card) {
-        // Card not found in data -- skip it
+        // Not a regular card — could be a curse pushed onto the deck via
+        // EventResolver.add_curse. Resolve curse effects and advance.
+        const curse = getCurseById(cardId);
+        if (curse) {
+          this.applyCurseEffects(curse);
+          eventBus.emit('combat:card-played', {
+            cardId,
+            damage: 0,
+            healed: 0,
+            armorGained: 0,
+          });
+          this.lastPlayedCardId = cardId;
+          this.heroCooldownTimer = 1000; // curses use a flat 1s cooldown
+          this.consecutiveAttacks = 0; // curses never count as attacks
+          this.advanceDeckPointer();
+          return;
+        }
+        // Truly unknown ID — skip and advance.
         this.advanceDeckPointer();
         continue;
       }
 
-      if (this.cardResolver.canAfford(card, this.state)) {
+      // Check cost-waiver synergy BEFORE the affordability gate so cards
+      // like Fortified Fury can fire even when the hero can't afford the
+      // base cost. (Without this, the card is skipped before synergy is
+      // even checked.)
+      const synergyForAffordability = this.synergies.check(
+        this.lastPlayedCardId,
+        card.id,
+        this.state.heroClass,
+      );
+      const waivedByCost = synergyForAffordability?.bonus.type === 'cost_waive';
+
+      if (waivedByCost || this.cardResolver.canAfford(card, this.state)) {
         this.executeCard(card);
         return;
       }
@@ -151,7 +210,14 @@ export class CombatEngine {
     // Update stats
     this.stats.cardsPlayed++;
     this.stats.damageDealt += result.totalDamage;
-    this.consecutiveAttacks++;
+
+    // Track consecutive *attack* cards only — utility/heal cards reset the
+    // streak so triggers like Battle Rage represent real combat aggression.
+    if (result.totalDamage > 0) {
+      this.consecutiveAttacks++;
+    } else {
+      this.consecutiveAttacks = 0;
+    }
 
     // Check battle_rage passive (consecutive attacks)
     const activePassives = this.state.activePassives as any[];
@@ -163,8 +229,12 @@ export class CombatEngine {
       this.stats.damageDealt += bonusDmg;
     }
 
-    // Set cooldown for next card (with relic multiplier)
-    this.heroCooldownTimer = card.cooldown * 1000 * (this.state.cooldownMultiplier ?? 1.0);
+    // Set cooldown for next card. Upgraded variants override base cooldown.
+    const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
+    const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
+      ? card.upgraded.cooldown
+      : card.cooldown;
+    this.heroCooldownTimer = effectiveCooldown * 1000 * (this.state.cooldownMultiplier ?? 1.0);
 
     // Emit event
     eventBus.emit('combat:card-played', {
@@ -185,6 +255,11 @@ export class CombatEngine {
       this.deckPointer = 0;
       this.stats.reshuffles++;
       this.consecutiveAttacks = 0; // reset on reshuffle
+
+      // Actually re-randomize order — emitting the event without shuffling
+      // gave the player the same card sequence forever.
+      this.fisherYatesInPlace(this.state.deckOrder);
+
       eventBus.emit('combat:deck-reshuffled', { reshuffleCount: this.stats.reshuffles });
 
       // second_wind passive: recover 5 stamina on reshuffle
@@ -193,6 +268,52 @@ export class CombatEngine {
       if (windBonus && windBonus.type === 'stamina') {
         this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + windBonus.value);
       }
+    }
+  }
+
+  /**
+   * Apply effects from a curse card. Curses are pushed onto the deck via
+   * EventResolver.add_curse and were previously skipped silently because
+   * CombatEngine.getCardById didn't know about them.
+   *
+   *   pain     -> nothing (clogs deck)
+   *   wound    -> hero loses 2 HP
+   *   weakness -> next damage card deals -2 damage
+   *   fragility-> next incoming attack deals +50% damage
+   */
+  private applyCurseEffects(curse: { id: string; effects: Array<{ type: string; value?: number }> }): void {
+    for (const eff of curse.effects ?? []) {
+      switch (eff.type) {
+        case 'damage_self': {
+          const amount = Math.max(0, eff.value ?? 0);
+          this.state.heroHP = Math.max(0, this.state.heroHP - amount);
+          break;
+        }
+        case 'reduce_damage': {
+          // Stash a one-shot damage debuff on the state. CardResolver consumes it.
+          (this.state as any)._pendingDamagePenalty = (this.state as any)._pendingDamagePenalty ?? 0;
+          (this.state as any)._pendingDamagePenalty += Math.max(0, eff.value ?? 0);
+          break;
+        }
+        case 'increase_damage_taken': {
+          // Stash a one-shot incoming-damage multiplier (percent).
+          const mult = 1 + Math.max(0, eff.value ?? 0) / 100;
+          (this.state as any)._pendingFragilityMultiplier = mult;
+          break;
+        }
+        case 'nothing':
+        default:
+          break;
+      }
+    }
+  }
+
+  private fisherYatesInPlace<T>(arr: T[]): void {
+    // TODO(B.7/B.8): route through the run's seeded RNG instead of Math.random
+    // once a shared SeededRNG is exposed via RunState/CombatState.
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   }
 
@@ -256,6 +377,11 @@ export class CombatEngine {
     const cardId = this.state.deckOrder[this.deckPointer];
     if (!cardId) return 1000;
     const card = getCardById(cardId);
-    return card ? card.cooldown * 1000 : 1000;
+    if (!card) return 1000;
+    const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
+    const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
+      ? card.upgraded.cooldown
+      : card.cooldown;
+    return effectiveCooldown * 1000;
   }
 }

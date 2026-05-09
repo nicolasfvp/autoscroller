@@ -68,8 +68,11 @@ export class LoopCelebration {
       });
     });
 
-    // Total ~1.5s, then call onComplete
+    // Total ~1.5s, then call onComplete — guard against the scene
+    // shutting down mid-celebration (e.g. player Abandon Run during a
+    // loop wrap), which would otherwise call into a torn-down scene.
     scene.time.delayedCall(1500, () => {
+      if (!scene.scene || !scene.scene.isActive(scene.scene.key)) return;
       onComplete();
     });
   }

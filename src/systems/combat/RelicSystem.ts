@@ -69,13 +69,15 @@ export function applyPassiveRelics(relicIds: string[], state: CombatState): void
       }
       case 'conditional_strength':
       case 'conditional_damage_mult': {
-        // Evaluated per-card in resolveRelicBonus — registered here for tracking
-        state.activeRelicIds.push(id);
+        // Evaluated per-card in resolveRelicBonus — registered here for tracking.
+        // Don't double-register: CombatState.create already seeds activeRelicIds
+        // from run.relics, so re-pushing here causes multiplier double-application.
+        if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
         break;
       }
       default: {
-        // Register for later evaluation
-        state.activeRelicIds.push(id);
+        // Register for later evaluation (same dedup rationale as above).
+        if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
         break;
       }
     }
@@ -112,7 +114,9 @@ function applyStatMultiplier(stat: string, mult: number, state: CombatState): vo
       state.heroHP = Math.min(state.heroHP, state.heroMaxHP);
       break;
     case 'strength':
-      state.heroStrength = Math.floor(state.heroStrength * mult);
+      // Round (not floor) so a 1.5x multiplier on strength=1 actually
+      // grants the bonus instead of floor()'ing back to 1.
+      state.heroStrength = Math.max(state.heroStrength, Math.round(state.heroStrength * mult));
       break;
   }
 }
@@ -148,8 +152,11 @@ export function resolveCardPlayedRelicBonus(
   let staminaRefund = 0;
   let manaOverride: number | null = null;
 
-  // Consume first-card multiplier
-  if (state.firstCardDamageMultiplier && state.firstCardDamageMultiplier > 1) {
+  // Consume first-card multiplier — but ONLY when this card actually deals
+  // damage. Otherwise utility/heal cards (which don't benefit) would burn
+  // the buff for nothing.
+  const hasDamageEffect = (card.effects ?? []).some(e => e.type === 'damage' && (e.value ?? 0) > 0);
+  if (hasDamageEffect && state.firstCardDamageMultiplier && state.firstCardDamageMultiplier > 1) {
     damageMultiplier *= state.firstCardDamageMultiplier;
     state.firstCardDamageMultiplier = 1.0; // consume once
   }

@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
+import { eventBus } from '../core/EventBus';
 import { LAYOUT } from '../ui/StyleConstants';
 
 export class Preloader extends Scene {
@@ -184,6 +185,13 @@ export class Preloader extends Scene {
 
     // Pass saved run info to MainMenu via registry
     this.registry.set('savedRun', savedRun);
+
+    // Keep the registry copy in sync when the active run is cleared elsewhere
+    // (PauseScene "Abandon Run", BossExitScene safe path, DeathScene, etc.)
+    const game = this.game;
+    eventBus.on('run:cleared', () => {
+      game.registry.set('savedRun', null);
+    });
 
     this.scene.launch('GlobalSound');
     this.scene.start('MainMenu');
