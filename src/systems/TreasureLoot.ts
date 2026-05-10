@@ -20,6 +20,7 @@ export function generateTreasureLoot(run: RunState): void {
   const goldAmount = Math.floor((15 + rand() * 20) * Math.log2(loopCount + 1));
   if (goldAmount > 0) {
     run.economy.gold += goldAmount;
+    run.stats.goldEarned += goldAmount;
     entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700' });
   }
 

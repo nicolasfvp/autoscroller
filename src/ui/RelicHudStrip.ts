@@ -50,13 +50,11 @@ export class RelicHudStrip extends Phaser.GameObjects.Container {
       bg.setInteractive({ useHandCursor: true });
       this.add(bg);
 
-      // Icon text
-      const iconText = this.scene.add.text(offsetX, 0, icon, {
-        fontSize: '14px',
-        color: '#ffffff',
-        fontFamily,
-      }).setOrigin(0.5);
-      this.add(iconText);
+      // Relic Image
+      // Textures are 256x256, target size is ~24x24 so we scale by 24/256 ≈ 0.09375
+      const relicImg = this.scene.add.image(offsetX, 0, `relic_${id}`);
+      relicImg.setDisplaySize(24, 24);
+      this.add(relicImg);
 
       // Hover: show tooltip
       bg.on('pointerover', () => {

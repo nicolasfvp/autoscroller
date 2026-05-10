@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { getRelicById } from '../data/DataLoader';
 
 /**
  * RelicViewerScene -- overlay for viewing collected relics.
@@ -15,6 +16,7 @@ export class RelicViewerScene extends Scene {
   }
 
   create(data?: { parentScene?: string }): void {
+    this.scene.bringToTop();
     const run = getRun();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
@@ -38,13 +40,42 @@ export class RelicViewerScene extends Scene {
         align: 'center',
       }).setOrigin(0.5);
     } else {
-      // List relic IDs (full display with names/icons is Phase 2+)
+      const COLS = 5;
+      const START_X = 200;
+      const START_Y = 140;
+      const SPACING_X = 100;
+      const SPACING_Y = 130;
+
       run.relics.forEach((relicId, i) => {
-        this.add.text(400, 140 + i * 30, relicId, {
-          fontSize: '14px',
+        const col = i % COLS;
+        const row = Math.floor(i / COLS);
+        const x = START_X + col * SPACING_X;
+        const y = START_Y + row * SPACING_Y;
+
+        const relDef = getRelicById(relicId);
+        const name = relDef?.name ?? relicId.replace(/_/g, ' ');
+
+        const img = this.add.image(x, y, `relic_${relicId}`);
+        img.setDisplaySize(64, 64);
+
+        this.add.text(x, y + 42, name, {
+          fontSize: '13px',
+          fontStyle: 'bold',
           color: COLORS.textPrimary,
           fontFamily: FONTS.family,
-        }).setOrigin(0.5);
+          align: 'center',
+          wordWrap: { width: 90 }
+        }).setOrigin(0.5, 0);
+
+        if (relDef?.description) {
+          this.add.text(x, y + 58, relDef.description, {
+            fontSize: '10px',
+            color: '#998877',
+            fontFamily: FONTS.family,
+            align: 'center',
+            wordWrap: { width: 95 }
+          }).setOrigin(0.5, 0);
+        }
       });
     }
 

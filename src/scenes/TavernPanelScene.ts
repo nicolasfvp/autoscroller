@@ -112,10 +112,10 @@ export class TavernPanelScene extends Scene {
       const run = createNewRun(this.metaState, 1, chosenClass, rng.seed);
       setRun(run);
 
-      // Stop this overlay and CityHub, start GameScene
+      // Stop this overlay and CityHub, start RunTransitionScene
       this.scene.stop('CityHub');
       this.scene.stop();
-      this.scene.start('GameScene', { seed: rng.seed, manualSeed: !!seedValue });
+      this.scene.start('RunTransitionScene', { seed: rng.seed, manualSeed: !!seedValue });
     });
 
     // Run History section

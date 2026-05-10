@@ -31,6 +31,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     centerY: number,
     initialSpeed: number,
     onChange: (speed: number) => void,
+    title: string = 'Map Speed',
   ) {
     super(scene, 0, 0);
     scene.add.existing(this);
@@ -46,7 +47,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     this.trackY = centerY;
 
     // Title label
-    this.titleText = scene.add.text(centerX, centerY - 20, 'Map Speed', {
+    this.titleText = scene.add.text(centerX, centerY - 20, title, {
       fontFamily: FONTS.family,
       fontSize: '11px',
       fontStyle: 'bold',

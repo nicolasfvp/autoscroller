@@ -4,6 +4,7 @@ import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/T
 import { resolveAdjacencySynergies } from '../systems/SynergyResolver';
 import { TileVisual } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * PlanningOverlay -- planning phase UI with miniature loop grid and tile inventory panel.
@@ -22,10 +23,11 @@ export class PlanningOverlay extends Scene {
   private gridGeometry!: { cellW: number; period: number; centerX: number };
 
   constructor() {
-    super('PlanningOverlay');
+    super(SCENE_KEYS.PLANNING);
   }
 
   create(data: { loopRunner: LoopRunner; loopRunState: LoopRunState }): void {
+    this.scene.bringToTop();
     this.loopRunner = data.loopRunner;
     this.loopRunState = data.loopRunState;
     this.selectedTileKey = null;
@@ -71,7 +73,7 @@ export class PlanningOverlay extends Scene {
     });
     deckIcon.on('pointerdown', () => {
       this.scene.sleep();
-      this.scene.launch('DeckCustomizationScene', { parentScene: 'PlanningOverlay' });
+      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PLANNING });
     });
 
     const relicIcon = this.add.image(440, iconY, 'relic_icon').setDisplaySize(60, 60).setInteractive({ useHandCursor: true });
@@ -87,16 +89,16 @@ export class PlanningOverlay extends Scene {
     });
     relicIcon.on('pointerdown', () => {
       this.scene.sleep();
-      this.scene.launch('RelicViewerScene', { parentScene: 'PlanningOverlay' });
+      this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
     });
 
     this.input.keyboard?.on('keydown-D', () => {
       this.scene.sleep();
-      this.scene.launch('DeckCustomizationScene', { parentScene: 'PlanningOverlay' });
+      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PLANNING });
     });
     this.input.keyboard?.on('keydown-R', () => {
       this.scene.sleep();
-      this.scene.launch('RelicViewerScene', { parentScene: 'PlanningOverlay' });
+      this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
     });
 
     // "Start Loop" text button at y=540 (styled like Tile Inventory)
@@ -124,7 +126,7 @@ export class PlanningOverlay extends Scene {
         duration: 300,
         onComplete: () => {
           this.scene.stop();
-          this.scene.resume('GameScene');
+          this.scene.wake(SCENE_KEYS.GAME);
         },
       });
     });

@@ -227,6 +227,7 @@ export class LoopRunner {
     // tiles the player would never see (planning could swap them out).
     this.emit('loop-completed', { loopCount: loop.count });
     this.state = 'planning';
+    this.assignEnemies(); // Pre-assign enemies for the next loop layout
     this.emit('planning-phase-started', { loopCount: loop.count });
   }
 
