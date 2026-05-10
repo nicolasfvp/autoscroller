@@ -11,6 +11,7 @@ import { EnemyAI } from './EnemyAI';
 import { SynergySystem } from './SynergySystem';
 import { resolveCardPlayedRelicBonus } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
+import { rand } from '../SharedRNG';
 
 /** Passive regen interval in milliseconds */
 const REGEN_INTERVAL = 3000;
@@ -324,10 +325,8 @@ export class CombatEngine {
   }
 
   private fisherYatesInPlace<T>(arr: T[]): void {
-    // TODO(B.7/B.8): route through the run's seeded RNG instead of Math.random
-    // once a shared SeededRNG is exposed via RunState/CombatState.
     for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(rand() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   }

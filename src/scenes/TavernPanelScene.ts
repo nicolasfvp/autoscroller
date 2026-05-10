@@ -102,11 +102,14 @@ export class TavernPanelScene extends Scene {
     });
     startBtn.on('pointerdown', () => {
       const seedValue = this.seedInputValue.trim() || undefined;
+      // Construct an RNG just to resolve the canonical seed string (so an
+      // empty input becomes a Date-based seed); the run then owns its own
+      // RNG via run.seed in GameScene.
       const rng = new SeededRNG(seedValue);
 
       // Create a new run preserving the chosen class
       const chosenClass = hasActiveRun() ? (getRun().hero.className ?? 'warrior') : 'warrior';
-      const run = createNewRun(this.metaState, 1, chosenClass);
+      const run = createNewRun(this.metaState, 1, chosenClass, rng.seed);
       setRun(run);
 
       // Stop this overlay and CityHub, start GameScene

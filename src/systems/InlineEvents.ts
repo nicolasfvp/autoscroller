@@ -4,6 +4,7 @@
 
 import type { RunState } from '../state/RunState';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
+import { rand } from './SharedRNG';
 
 interface EventResult {
   notifications: LootEntry[];
@@ -37,7 +38,7 @@ const EVENT_TABLE: EventOption[] = [
   {
     weight: 20,
     apply(run) {
-      const amount = 15 + Math.floor(Math.random() * 26);
+      const amount = 15 + Math.floor(rand() * 26);
       run.economy.gold += amount;
       return { notifications: [{ label: `+${amount} Gold`, color: '#ffd700' }] };
     },
@@ -46,7 +47,7 @@ const EVENT_TABLE: EventOption[] = [
   {
     weight: 15,
     apply() {
-      const enemyId = EASY_ENEMIES[Math.floor(Math.random() * EASY_ENEMIES.length)];
+      const enemyId = EASY_ENEMIES[Math.floor(rand() * EASY_ENEMIES.length)];
       return {
         notifications: [{ label: 'Ambush!', color: '#ff4444' }],
         combatEnemyId: enemyId,
@@ -76,7 +77,7 @@ const EVENT_TABLE: EventOption[] = [
   {
     weight: 10,
     apply(run) {
-      const amount = Math.min(run.economy.gold, 5 + Math.floor(Math.random() * 16));
+      const amount = Math.min(run.economy.gold, 5 + Math.floor(rand() * 16));
       if (amount <= 0) {
         return { notifications: [{ label: 'Pickpocket! (no gold)', color: '#ff8800' }] };
       }
@@ -113,7 +114,7 @@ const EVENT_TABLE: EventOption[] = [
  */
 export function resolveInlineEvent(run: RunState): EventResult {
   const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + e.weight, 0);
-  let roll = Math.random() * totalWeight;
+  let roll = rand() * totalWeight;
 
   for (const option of EVENT_TABLE) {
     roll -= option.weight;

@@ -8,6 +8,7 @@ import type { CardDefinition } from '../data/types';
 import { addPendingLoot } from './PendingLoot';
 import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
 import enemyDropsData from '../data/json/enemy-drops.json';
+import { rand } from './SharedRNG';
 
 interface CardDropTable {
   cardPool: string[];
@@ -96,13 +97,13 @@ export function generateAndApplyCombatLoot(
   const dropTable = dropTables[enemyName];
   if (dropTable?.cardDrops) {
     const { cardPool, minDrops, maxDrops } = dropTable.cardDrops;
-    const dropCount = minDrops + Math.floor(Math.random() * (maxDrops - minDrops + 1));
+    const dropCount = minDrops + Math.floor(rand() * (maxDrops - minDrops + 1));
 
     const allCards = getAllCards();
     const validPool = cardPool.filter(id => allCards.some((c: CardDefinition) => c.id === id));
 
     for (let i = 0; i < dropCount && validPool.length > 0; i++) {
-      const cardId = validPool[Math.floor(Math.random() * validPool.length)];
+      const cardId = validPool[Math.floor(rand() * validPool.length)];
       run.deck.droppedCards.push(cardId);
       const cardDef = allCards.find((c: CardDefinition) => c.id === cardId);
       const cardName = cardDef?.name ?? cardId;
@@ -112,7 +113,7 @@ export function generateAndApplyCombatLoot(
     const allCards = getAllCards();
     const commons = allCards.filter((c: CardDefinition & { rarity?: string }) => c.rarity === 'common');
     if (commons.length > 0) {
-      const card = commons[Math.floor(Math.random() * commons.length)];
+      const card = commons[Math.floor(rand() * commons.length)];
       run.deck.droppedCards.push(card.id);
       entries.push({ label: `+Card: ${card.name}`, color: '#ffffff' });
     }

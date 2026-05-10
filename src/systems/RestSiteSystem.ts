@@ -1,5 +1,6 @@
 import restConfig from '../data/rest-config.json';
 import type { RunState } from '../state/RunState';
+import { rand } from './SharedRNG';
 
 export type RestChoice = 'rest' | 'train' | 'meditate';
 
@@ -11,7 +12,7 @@ export interface RestResult {
 export function applyRestChoice(
   choice: RestChoice,
   runState: RunState,
-  rng: () => number = () => Math.random()
+  rng: () => number = () => rand()
 ): RestResult {
   switch (choice) {
     case 'rest': {

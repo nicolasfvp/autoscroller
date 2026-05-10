@@ -95,6 +95,8 @@ export interface RunState {
   version?: number;
   /** Unique run identifier */
   runId: string;
+  /** Seed string used to construct the run's SeededRNG (deterministic replays). */
+  seed: string;
   /** Run generation (heir system) */
   generation: number;
   /** Timestamp of run start */
@@ -149,19 +151,32 @@ export function migrateRunState(raw: any): RunState | null {
     if (raw.loop && raw.loop.bossesDefeated === undefined) raw.loop.bossesDefeated = 0;
     raw.version = 1;
   }
+  // Older saves predate run.seed; backfill from runId so resumed runs still
+  // have a deterministic SeededRNG source (the actual sequence will diverge
+  // from the original session, which is unavoidable for pre-seed saves).
+  if (typeof raw.seed !== 'string' || raw.seed.length === 0) {
+    raw.seed = typeof raw.runId === 'string' ? raw.runId : Date.now().toString(36);
+  }
   return raw as RunState;
 }
 
 // ── Factory ─────────────────────────────────────────────────
 
-export function createNewRun(metaState?: MetaState, generation: number = 1, className: string = 'warrior'): RunState {
+export function createNewRun(
+  metaState?: MetaState,
+  generation: number = 1,
+  className: string = 'warrior',
+  seed?: string,
+): RunState {
   const meta = metaState ?? createDefaultMetaState();
   const classDef = getClassDef(className);
   const stats = classDef.baseStats;
   const runId = nanoid();
+  const runSeed = seed && seed.length > 0 ? seed : Date.now().toString(36);
   return {
     version: RUN_STATE_VERSION,
     runId,
+    seed: runSeed,
     generation,
     startedAt: Date.now(),
     hero: {
@@ -178,7 +193,9 @@ export function createNewRun(metaState?: MetaState, generation: number = 1, clas
       className: stats.className,
     },
     deck: {
-      active: new SeededRNG(`${runId}-initial-deck`).shuffle([...classDef.starterDeck]),
+      // Deterministic starter shuffle: bind to (runSeed, runId) so a fresh run
+      // with a user-chosen seed shuffles the starter deck the same way each time.
+      active: new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...classDef.starterDeck]),
       inventory: {},
       upgradedCards: [],
       droppedCards: [],

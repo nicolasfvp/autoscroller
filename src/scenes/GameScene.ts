@@ -15,6 +15,8 @@ import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/Pen
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
 import { resolveInlineEvent } from '../systems/InlineEvents';
+import { SeededRNG } from '../systems/SeededRNG';
+import { setActiveRNG, rand } from '../systems/SharedRNG';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -65,7 +67,7 @@ export class GameScene extends Scene {
     });
   }
 
-  create(): void {
+  create(data?: { seed?: string; manualSeed?: boolean }): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
@@ -74,6 +76,12 @@ export class GameScene extends Scene {
     AudioManager.transitionAmbience(this, 'ambience_wind', { volume: 0.1 });
 
     const run = getRun();
+
+    // Install the run's seeded RNG as the module-level SharedRNG. Source of
+    // truth is run.seed; data.seed is a fallback for legacy callers that
+    // started GameScene without populating run.seed first.
+    const seedSource = run.seed ?? data?.seed ?? Date.now().toString(36);
+    setActiveRNG(new SeededRNG(seedSource));
 
     // Load map speed from RunState (independent of combat speed)
     this.gameSpeed = run.mapSpeed ?? 1;
@@ -125,10 +133,11 @@ export class GameScene extends Scene {
       hero: { xp: run.hero.runXP ?? 0 },
     };
 
-    // Create LoopRunner with emit callback
+    // Create LoopRunner with emit callback. Pass the shared seeded source so
+    // tile/enemy assignment is deterministic for replays.
     this.loopRunner = new LoopRunner((event: string, data: any) => {
       this.handleLoopEvent(event, data);
-    });
+    }, () => rand());
     if (hasPersistedProgress) {
       this.loopRunner.resumeRun(this.loopRunState, run.loop.bossKillCount ?? 0);
     } else {
@@ -497,5 +506,8 @@ export class GameScene extends Scene {
       tv.destroy();
     }
     this.tilePool.clear();
+    // Drop the module-level RNG so it can't bleed into the next run / a
+    // standalone scene that opens after game shutdown.
+    setActiveRNG(null);
   }
 }

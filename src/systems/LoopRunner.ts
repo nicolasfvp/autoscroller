@@ -3,6 +3,7 @@ import { resolveAdjacencySynergies, type SynergyBuff } from './SynergyResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
+import { rand } from './SharedRNG';
 
 const TILE_SIZE = 64;
 export const BUFFER_TILE_COUNT = 5; // Safe tiles at the start of every loop
@@ -44,7 +45,9 @@ export class LoopRunner {
 
   constructor(emit: LoopEventCallback, rng?: () => number) {
     this.emit = emit;
-    this.rng = rng ?? (() => Math.random());
+    // Default to the module-level SharedRNG so a single seeded source flows
+    // through enemy assignment without each caller threading rng explicitly.
+    this.rng = rng ?? (() => rand());
   }
 
   getState(): LoopState {

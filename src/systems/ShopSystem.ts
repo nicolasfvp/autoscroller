@@ -2,6 +2,7 @@ import { getTileConfig } from './TileRegistry';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import difficultyConfig from '../data/difficulty.json';
 import type { RunState } from '../state/RunState';
+import { rand } from './SharedRNG';
 
 const pricing = (difficultyConfig as any).pricing;
 
@@ -91,7 +92,7 @@ export class ShopSystem {
   static getShopRelics(runState: RunState, availableRelicIds: string[], loopCount: number = 0): ShopRelic[] {
     const unowned = availableRelicIds.filter(id => !runState.relics.includes(id));
     const shuffled = fisherYates([...unowned]);
-    const count = Math.min(1 + Math.floor(Math.random() * 2), shuffled.length);
+    const count = Math.min(1 + Math.floor(rand() * 2), shuffled.length);
     return shuffled.slice(0, count).map(id => ({
       relicId: id,
       name: id,
@@ -156,12 +157,12 @@ export class ShopSystem {
 
 /**
  * Unbiased Fisher-Yates shuffle. Replaces sort(() => Math.random() - 0.5),
- * which produces a heavily biased distribution and can throw under strict
- * V8. TODO(B.7/B.8): route through the run's seeded RNG for replays.
+ * which produces a heavily biased distribution and can throw under strict V8.
+ * Routed through the run's seeded RNG (SharedRNG) for replays.
  */
 function fisherYates<T>(arr: T[]): T[] {
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rand() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;

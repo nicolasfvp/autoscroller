@@ -1,6 +1,7 @@
 import eventsData from '../data/events.json';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import type { RunState } from '../state/RunState';
+import { rand } from './SharedRNG';
 
 export interface EventUnlockState {
   unlockedCards: string[];
@@ -34,7 +35,7 @@ export function getRandomEvent(): EventDefinition {
   const totalWeight = events.reduce((sum, e) => sum + (e.weight ?? 1.0), 0);
   // Math.random() can return 0 — use a `< 0` boundary so the first event
   // doesn't get picked just because the roll started at exactly 0.
-  let roll = Math.random() * totalWeight;
+  let roll = rand() * totalWeight;
   for (const event of events) {
     roll -= event.weight ?? 1.0;
     if (roll < 0) return event;
@@ -135,12 +136,12 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
             ? availableCards.filter(c => c.rarity === 'rare' || c.rarity === 'uncommon')
             : availableCards;
           if (rareCards.length > 0) {
-            resolvedId = rareCards[Math.floor(Math.random() * rareCards.length)].id;
+            resolvedId = rareCards[Math.floor(rand() * rareCards.length)].id;
           } else if (availableCards.length > 0) {
             // Fall back to *any* available card rather than the silent 'strike'
             // sentinel — at least the player gets something they don't already
             // have in their starter deck a dozen times.
-            resolvedId = availableCards[Math.floor(Math.random() * availableCards.length)].id;
+            resolvedId = availableCards[Math.floor(rand() * availableCards.length)].id;
             resolvedFromEmptyPool = true;
           } else {
             resolvedId = 'strike';
@@ -160,7 +161,7 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
         const mode = typeof val === 'string' ? val : 'random';
         if (mode === 'random') {
           if (runState.deck.active.length > 3) {
-            const idx = Math.floor(Math.random() * runState.deck.active.length);
+            const idx = Math.floor(rand() * runState.deck.active.length);
             const removed = runState.deck.active.splice(idx, 1)[0];
             descriptions.push(`Removed card: ${removed}`);
             appliedEffects.push({ type: 'remove_card', value: removed, applied: true });
@@ -185,7 +186,7 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
             ? availableRelics.filter(r => r.rarity === 'rare' || r.rarity === 'epic' || r.rarity === 'legendary')
             : availableRelics;
           if (filtered.length > 0) {
-            resolvedId = filtered[Math.floor(Math.random() * filtered.length)].id;
+            resolvedId = filtered[Math.floor(rand() * filtered.length)].id;
           } else {
             resolvedId = 'bronze_scale';
           }

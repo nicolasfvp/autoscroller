@@ -3,6 +3,7 @@ import materialsConfig from '../data/json/materials.json';
 import enemiesData from '../data/json/enemies.json';
 import { getAllPlaceableTiles, type TileInventoryEntry } from './TileRegistry';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
+import { rand } from './SharedRNG';
 
 export interface UnlockState {
   unlockedCards: string[];
@@ -32,7 +33,9 @@ export interface RNG {
   next(): number;
 }
 
-const defaultRNG: RNG = { next: () => Math.random() };
+// Default routes through SharedRNG so loot rolls inherit the run's seed
+// (callers passing rng=undefined still get deterministic behavior).
+const defaultRNG: RNG = { next: () => rand() };
 
 let activeRNG: RNG = defaultRNG;
 

@@ -6,6 +6,7 @@ import type { CombatState } from './CombatState';
 import type { CombatStats } from './CombatStats';
 import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
+import { rand } from '../SharedRNG';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -72,7 +73,7 @@ export class EnemyAI {
       switch (state.enemySpecialEffect) {
         case 'double': {
           // 30% chance to double damage
-          if (Math.random() < 0.3) {
+          if (rand() < 0.3) {
             damage *= 2;
           }
           break;
@@ -102,7 +103,7 @@ export class EnemyAI {
       }
       // Apply damage_taken relics once for the *attack*, using cumulative damage.
       if (totalDamage > 0) {
-        applyDamageTakenRelics(state.activeRelicIds, totalDamage, state);
+        applyDamageTakenRelics(state.activeRelicIds ?? [], totalDamage, state);
       }
       stats.damageReceived += totalDamage;
 
@@ -153,7 +154,7 @@ export class EnemyAI {
       case 'fixed':
         return state.enemyDamage;
       case 'random':
-        return state.enemyDamage * (0.8 + Math.random() * 0.4);
+        return state.enemyDamage * (0.8 + rand() * 0.4);
       case 'scaling':
         return state.enemyDamage + Math.floor(stats.cardsPlayed * 0.5);
       case 'conditional':
@@ -197,7 +198,7 @@ export class EnemyAI {
     // Apply damage_taken relics (iron_will, phoenix_feather) unless caller
     // is batching them (multi-hit attacks invoke them once at the end).
     if (!skipRelics) {
-      applyDamageTakenRelics(state.activeRelicIds, remaining, state);
+      applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
     }
 
     return remaining;
