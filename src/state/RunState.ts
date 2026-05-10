@@ -133,7 +133,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 2;
+export const RUN_STATE_VERSION = 3;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.
@@ -176,6 +176,26 @@ export function migrateRunState(raw: any): RunState | null {
   // from the original session, which is unavoidable for pre-seed saves).
   if (typeof raw.seed !== 'string' || raw.seed.length === 0) {
     raw.seed = typeof raw.runId === 'string' ? raw.runId : Date.now().toString(36);
+  }
+  // v2 → v3: harden loop-resume invariants. The previous LoopState used a
+  // typed-but-unenforced `tiles: TileData[]` while runtime stored TileSlot.
+  // Saves taken before C.8 wiring may have null/undefined `loop.tiles` or
+  // a missing `seed` field; coerce both so resumeRun() has a sane shape.
+  if (raw.version === 2) {
+    if (raw.loop) {
+      if (!Array.isArray(raw.loop.tiles)) {
+        raw.loop.tiles = [];
+      }
+      if (typeof raw.loop.positionInLoop !== 'number') {
+        raw.loop.positionInLoop = 0;
+      }
+    }
+    if (typeof raw.seed !== 'string' || raw.seed.length === 0) {
+      raw.seed = typeof raw.runId === 'string' && raw.runId.length > 0
+        ? raw.runId.slice(0, 8)
+        : Date.now().toString(36);
+    }
+    raw.version = 3;
   }
   return raw as RunState;
 }
