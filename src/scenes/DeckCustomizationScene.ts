@@ -502,9 +502,16 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private close(): void {
-    // Parent was paused (not slept), so resume — wake() targets sleeping
-    // scenes and silently no-ops on paused ones.
-    this.scene.resume(this.parentScene);
+    // Different launchers leave the parent in different states:
+    //   GameScene + LoopHUD → paused → needs resume()
+    //   PlanningOverlay     → slept  → needs wake()
+    // resume() and wake() each only act on their target state, so dispatch
+    // on the live SceneManager status to avoid leaving the parent stuck.
+    if (this.scene.isSleeping(this.parentScene)) {
+      this.scene.wake(this.parentScene);
+    } else {
+      this.scene.resume(this.parentScene);
+    }
     this.scene.stop();
   }
 

@@ -57,9 +57,13 @@ export class RelicViewerScene extends Scene {
   }
 
   private close(): void {
-    // Parent was paused (not slept), so resume — wake() targets sleeping
-    // scenes and silently no-ops on paused ones.
-    this.scene.resume(this.parentScene);
+    // PlanningOverlay sleeps before launching us; GameScene pauses. Pick
+    // the matching wake/resume so the parent actually comes back.
+    if (this.scene.isSleeping(this.parentScene)) {
+      this.scene.wake(this.parentScene);
+    } else {
+      this.scene.resume(this.parentScene);
+    }
     this.scene.stop();
   }
 

@@ -350,9 +350,12 @@ export class BuildingPanelScene extends Scene {
   }
 
   private closePanel(): void {
-    // Resume CityHub instead of restarting it — full restart blows away any
-    // tween state, ongoing animations, and re-runs preload work.
-    this.scene.resume(SCENE_KEYS.CITY_HUB);
+    // CityHub disables its own input on launch so backdrop taps don't
+    // click through; re-enable it explicitly here. CityHub itself is
+    // never paused (it stays visible underneath), so scene.resume() is a
+    // no-op — the input flag is the only thing that needs flipping back.
+    const cityHub = this.scene.get(SCENE_KEYS.CITY_HUB);
+    if (cityHub && cityHub.input) cityHub.input.enabled = true;
     this.scene.stop();
   }
 }
