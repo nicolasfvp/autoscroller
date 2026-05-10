@@ -50,15 +50,26 @@ const TARGETING_LABELS: Record<string, string> = {
 export function showCardDetail(
   scene: Phaser.Scene,
   cardId: string,
+  deckIndex?: number,
 ): Phaser.GameObjects.Container {
   const card = getCardById(cardId);
   if (!card) return scene.add.container(0, 0);
 
-  // Check if card is upgraded
+  // Check if card is upgraded. With per-position tracking we need a deck
+  // index; if the caller doesn't supply one (e.g. previewing a card outside
+  // the deck), fall back to "any copy of this id is upgraded" so popups
+  // opened from buy-card / loot screens still show upgrade overlays when
+  // the player owns an upgraded copy.
   let isUpgraded = false;
   try {
     const run = getRun();
-    isUpgraded = run.deck.upgradedCards?.includes(cardId) ?? false;
+    if (typeof deckIndex === 'number'
+      && deckIndex >= 0
+      && deckIndex < run.deck.upgraded.length) {
+      isUpgraded = run.deck.upgraded[deckIndex];
+    } else {
+      isUpgraded = run.deck.active.some((id, i) => id === cardId && run.deck.upgraded[i]);
+    }
   } catch {
     // No active run
   }

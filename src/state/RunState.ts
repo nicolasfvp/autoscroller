@@ -39,8 +39,13 @@ export interface DeckState {
   active: string[];
   /** Card IDs in inventory (not currently in deck) mapped to quantity */
   inventory: Record<string, number>;
-  /** Card IDs that have been upgraded (display as CardName+) */
-  upgradedCards: string[];
+  /**
+   * Per-deck-position upgrade flags. Length always matches `active`.
+   * `upgraded[i] === true` means the card at `active[i]` is upgraded
+   * (displayed as CardName+). Tracking by position lets duplicate
+   * card IDs be upgraded independently.
+   */
+  upgraded: boolean[];
   /** Card IDs obtained from loot drops, waiting to be added to active deck */
   droppedCards: string[];
 }
@@ -128,7 +133,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 1;
+export const RUN_STATE_VERSION = 2;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.
@@ -150,6 +155,21 @@ export function migrateRunState(raw: any): RunState | null {
     if (raw.deck && !Array.isArray(raw.deck.upgradedCards)) raw.deck.upgradedCards = [];
     if (raw.loop && raw.loop.bossesDefeated === undefined) raw.loop.bossesDefeated = 0;
     raw.version = 1;
+  }
+  // v1 → v2: switch from `deck.upgradedCards: string[]` (per-id tracking)
+  // to `deck.upgraded: boolean[]` (per-position tracking). Existing per-id
+  // saves can't be reverse-engineered to per-instance, so any duplicate
+  // copies of an upgraded ID stay upgraded together (preserves prior behavior).
+  if (raw.version === 1) {
+    if (raw.deck) {
+      const active: string[] = Array.isArray(raw.deck.active) ? raw.deck.active : [];
+      const oldUpgraded: string[] = Array.isArray(raw.deck.upgradedCards) ? raw.deck.upgradedCards : [];
+      if (!Array.isArray(raw.deck.upgraded)) {
+        raw.deck.upgraded = active.map((id: string) => oldUpgraded.includes(id));
+      }
+      delete raw.deck.upgradedCards;
+    }
+    raw.version = 2;
   }
   // Older saves predate run.seed; backfill from runId so resumed runs still
   // have a deterministic SeededRNG source (the actual sequence will diverge
@@ -192,14 +212,17 @@ export function createNewRun(
       moveSpeed: 2,
       className: stats.className,
     },
-    deck: {
+    deck: (() => {
       // Deterministic starter shuffle: bind to (runSeed, runId) so a fresh run
       // with a user-chosen seed shuffles the starter deck the same way each time.
-      active: new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...classDef.starterDeck]),
-      inventory: {},
-      upgradedCards: [],
-      droppedCards: [],
-    },
+      const active = new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...classDef.starterDeck]);
+      return {
+        active,
+        inventory: {},
+        upgraded: new Array(active.length).fill(false),
+        droppedCards: [],
+      };
+    })(),
     loop: {
       count: 0,
       tiles: [],

@@ -7,7 +7,7 @@ function makeRunState(overrides: any = {}): any {
     deck: {
       active: ['strike', 'defend', 'fireball'],
       inventory: {},
-      upgradedCards: [],
+      upgraded: [false, false, false],
       droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },

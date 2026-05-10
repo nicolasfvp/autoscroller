@@ -33,6 +33,8 @@ const STRIP_HEIGHT = STRIP_CARD_H + 20;
 export class DeckCustomizationScene extends Scene {
   // Active deck state (working copy)
   private deckOrder: string[] = [];
+  /** Parallel to deckOrder: upgrade flag per deck position. */
+  private upgradedOrder: boolean[] = [];
   private cardSlots: Phaser.GameObjects.Container[] = [];
   private gridContainer!: Phaser.GameObjects.Container;
 
@@ -59,6 +61,7 @@ export class DeckCustomizationScene extends Scene {
   create(data?: { parentScene?: string }): void {
     const run = getRun();
     this.deckOrder = [...run.deck.active];
+    this.upgradedOrder = [...run.deck.upgraded];
     this.scrollY = 0;
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
@@ -266,7 +269,9 @@ export class DeckCustomizationScene extends Scene {
     }
 
     // Name - moved to top area below category strip
-    const isUpgraded = (() => { try { return getRun().deck.upgradedCards?.includes(cardId) ?? false; } catch { return false; } })();
+    const isUpgraded = deckIndex >= 0
+      ? (this.upgradedOrder[deckIndex] ?? false)
+      : false; // dropped-strip cards are never upgraded yet (loot drops are unupgraded)
     const displayName = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
     const nameColor = isUpgraded ? COLORS.accent : '#ffffff';
     container.add(this.add.text(0, -32, displayName, {
@@ -351,8 +356,12 @@ export class DeckCustomizationScene extends Scene {
     const fontFamily = FONTS.family;
     let yOff = -h / 2 + 24;
 
-    // Name
-    const isUpgraded = (() => { try { return getRun().deck.upgradedCards?.includes(cardId) ?? false; } catch { return false; } })();
+    // Name. Drag visual upgrade state mirrors the source slot:
+    //  - from-deck: upgradedOrder at the original deck index
+    //  - from-dropped: dropped/loot cards are always non-upgraded
+    const isUpgraded = this.dragFromDeck && this.dragDeckIndex >= 0
+      ? (this.upgradedOrder[this.dragDeckIndex] ?? false)
+      : false;
     const name = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
     container.add(this.add.text(0, yOff, name, {
       fontSize: '18px', fontStyle: 'bold', color: isUpgraded ? COLORS.accent : '#ffffff', fontFamily,
@@ -435,10 +444,13 @@ export class DeckCustomizationScene extends Scene {
         run.deck.droppedCards.splice(this.dragDroppedIndex, 1);
       }
 
-      // Insert into active deck at hover position
+      // Insert into active deck at hover position. Loot/dropped cards
+      // arrive un-upgraded — push `false` into the parallel flag array.
       const insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
       this.deckOrder.splice(insertAt, 0, this.dragCardId);
+      this.upgradedOrder.splice(insertAt, 0, false);
       run.deck.active = [...this.deckOrder];
+      run.deck.upgraded = [...this.upgradedOrder];
 
       // Reset drag state
       this.dragFromDropped = false;
@@ -456,13 +468,17 @@ export class DeckCustomizationScene extends Scene {
     if (this.dragFromDeck && this.dragDeckIndex >= 0) {
       const run = getRun();
 
-      // Remove from original position and insert at hover
+      // Remove from original position and insert at hover. Move the
+      // upgrade flag in lockstep so the upgrade follows its card.
       const [moved] = this.deckOrder.splice(this.dragDeckIndex, 1);
+      const [movedFlag] = this.upgradedOrder.splice(this.dragDeckIndex, 1);
       let insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
       // Adjust for the removed element
       if (this.hoverIndex > this.dragDeckIndex) insertAt = Math.max(0, insertAt - 1);
       this.deckOrder.splice(insertAt, 0, moved);
+      this.upgradedOrder.splice(insertAt, 0, movedFlag);
       run.deck.active = [...this.deckOrder];
+      run.deck.upgraded = [...this.upgradedOrder];
 
       // Reset drag state
       this.dragFromDeck = false;

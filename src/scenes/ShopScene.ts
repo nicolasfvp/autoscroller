@@ -13,7 +13,6 @@ const WHITE = '#ffffff';
 const DIM   = '#998877';
 const CYAN  = '#66ddff';
 const RED   = '#ff6655';
-const GREEN = '#88ee88';
 
 // ── Panel geometry (centered on 800px canvas) ─────────────────
 const PANEL_W     = 470;
@@ -320,41 +319,45 @@ export class ShopScene extends Scene {
 
   // ── Modal: Upgrade Cards ──────────────────────────────────────
   private modalUpgrade(): void {
-    const run      = getRun();
-    const upgraded = run.deck.upgradedCards ?? [];
+    const run = getRun();
+
+    // Pre-filter out already-upgraded cards entirely (the bug was that they
+    // showed up greyed-out instead of being hidden). Carry the original
+    // deck index so upgradeCard targets the right slot.
+    const items: Array<{ cardId: string; deckIndex: number }> = [];
+    for (let i = 0; i < run.deck.active.length; i++) {
+      if (!run.deck.upgraded[i]) items.push({ cardId: run.deck.active[i], deckIndex: i });
+    }
 
     this.createShopModal({
       title: '⬆ Upgrade Cards',
-      items: run.deck.active,
+      emptyMessage: 'No cards left to upgrade.',
+      items,
       cols: 3, cellW: 134, cellH: 58, maxRows: 3,
       reopenKey: 'upgrade',
-      canAfford: (cardId) => {
+      canAfford: ({ cardId }) => {
         const card = getCardById(cardId);
         const rarity = card?.rarity ?? 'common';
-        const isUpg = upgraded.includes(cardId);
-        return !isUpg && run.economy.gold >= ShopSystem.getUpgradePrice(rarity);
+        return run.economy.gold >= ShopSystem.getUpgradePrice(rarity);
       },
-      onSelect: (cardId) => {
+      onSelect: ({ cardId, deckIndex }) => {
         const card = getCardById(cardId);
         const rarity = card?.rarity ?? 'common';
-        return ShopSystem.upgradeCard(run, cardId, rarity);
+        return ShopSystem.upgradeCard(run, deckIndex, rarity);
       },
-      renderCell: (cardId, _i, x, cy, ok, bg) => {
+      renderCell: ({ cardId }, _i, x, cy, ok) => {
         const card = getCardById(cardId);
-        const isUpg = upgraded.includes(cardId);
         const rarity = card?.rarity ?? 'common';
         const price = ShopSystem.getUpgradePrice(rarity);
-        if (isUpg) bg.setStrokeStyle(1.5, 0x44aa44);
 
-        const display = isUpg ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
-        const name = this.add.text(x, cy - 13, display, {
+        const name = this.add.text(x, cy - 13, card?.name ?? cardId, {
           fontSize: '12px', fontStyle: 'bold',
-          color: isUpg ? GREEN : (ok ? WHITE : DIM),
+          color: ok ? WHITE : DIM,
           fontFamily: FF, stroke: '#000', strokeThickness: 2,
         }).setOrigin(0.5);
-        const subT = this.add.text(x, cy + 9, isUpg ? 'Upgraded ✓' : `${price} Gold`, {
+        const subT = this.add.text(x, cy + 9, `${price} Gold`, {
           fontSize: '11px',
-          color: isUpg ? GREEN : (ok ? GOLD : RED), fontFamily: FF,
+          color: ok ? GOLD : RED, fontFamily: FF,
         }).setOrigin(0.5);
         this.modalContainer.add([name, subT]);
       },

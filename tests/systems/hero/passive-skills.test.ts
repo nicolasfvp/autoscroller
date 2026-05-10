@@ -20,7 +20,7 @@ function makeRun(totalXP: number): RunState {
       runXP: 0, totalXP,
       className: 'warrior',
     },
-    deck: { active: [], inventory: {}, upgradedCards: [], droppedCards: [] },
+    deck: { active: [], inventory: {}, upgraded: [], droppedCards: [] },
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],

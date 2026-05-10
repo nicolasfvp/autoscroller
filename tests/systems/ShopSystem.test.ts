@@ -4,7 +4,7 @@ import { ShopSystem } from '../../src/systems/ShopSystem';
 function makeRunState(overrides: any = {}): any {
   return {
     hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
-    deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {}, upgraded: [false, false, false, false, false], droppedCards: [] },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
     economy: { gold: 200, tilePoints: 10, tileInventory: { forest: 2, treasure: 1 }, materials: {} },
     relics: [],
@@ -121,7 +121,7 @@ describe('ShopSystem', () => {
 
   it('removeCard returns false when deck size <= 3', () => {
     const run = makeRunState({
-      deck: { active: ['strike', 'defend', 'fireball'], inventory: {}, upgradedCards: [], droppedCards: [] },
+      deck: { active: ['strike', 'defend', 'fireball'], inventory: {}, upgraded: [false, false, false], droppedCards: [] },
     });
     const result = ShopSystem.removeCard(run, 0, 0);
     expect(result).toBe(false);
@@ -146,7 +146,7 @@ describe('ShopSystem', () => {
   // ── reorderCard unchanged ────────────────────────────────
   it('reorderCard moves card from index to index', () => {
     const run = makeRunState({
-      deck: { active: ['a', 'b', 'c', 'd'], inventory: {}, upgradedCards: [], droppedCards: [] },
+      deck: { active: ['a', 'b', 'c', 'd'], inventory: {}, upgraded: [false, false, false, false], droppedCards: [] },
     });
     ShopSystem.reorderCard(run, 0, 2);
     expect(run.deck.active).toEqual(['b', 'c', 'a', 'd']);
@@ -203,37 +203,38 @@ describe('ShopSystem', () => {
       expect(ShopSystem.getUpgradePrice('mythic')).toBe(100);
     });
 
-    it('upgradeCard deducts gold and tracks cardId', () => {
+    it('upgradeCard deducts gold and flags only the targeted index', () => {
       const run = makeRunState();
-      run.deck.upgradedCards = [];
-      const result = ShopSystem.upgradeCard(run, 'strike', 'common');
+      // Two copies of "strike" at indices 0 and 1; upgrading index 0 must
+      // not upgrade index 1 (this is the bug being fixed).
+      const result = ShopSystem.upgradeCard(run, 0, 'common');
       expect(result).toBe(true);
       expect(run.economy.gold).toBe(150); // 200 - 50
-      expect(run.deck.upgradedCards).toContain('strike');
+      expect(run.deck.upgraded[0]).toBe(true);
+      expect(run.deck.upgraded[1]).toBe(false);
     });
 
     it('upgradeCard returns false if insufficient gold', () => {
       const run = makeRunState({ economy: { gold: 10, tilePoints: 0, tileInventory: {}, materials: {} } });
-      run.deck.upgradedCards = [];
-      const result = ShopSystem.upgradeCard(run, 'strike', 'common');
+      const result = ShopSystem.upgradeCard(run, 0, 'common');
       expect(result).toBe(false);
       expect(run.economy.gold).toBe(10);
+      expect(run.deck.upgraded[0]).toBe(false);
     });
 
-    it('upgradeCard returns false if already upgraded', () => {
+    it('upgradeCard returns false if the slot is already upgraded', () => {
       const run = makeRunState();
-      run.deck.upgradedCards = ['strike'];
-      const result = ShopSystem.upgradeCard(run, 'strike', 'common');
+      run.deck.upgraded[0] = true;
+      const result = ShopSystem.upgradeCard(run, 0, 'common');
       expect(result).toBe(false);
       expect(run.economy.gold).toBe(200); // unchanged
     });
 
-    it('upgradeCard initializes upgradedCards if missing', () => {
+    it('upgradeCard returns false on out-of-range index', () => {
       const run = makeRunState();
-      // upgradedCards not set (undefined)
-      const result = ShopSystem.upgradeCard(run, 'defend', 'common');
-      expect(result).toBe(true);
-      expect(run.deck.upgradedCards).toContain('defend');
+      expect(ShopSystem.upgradeCard(run, -1, 'common')).toBe(false);
+      expect(ShopSystem.upgradeCard(run, 99, 'common')).toBe(false);
+      expect(run.economy.gold).toBe(200);
     });
   });
 });

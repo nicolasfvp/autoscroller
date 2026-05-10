@@ -42,7 +42,7 @@ function makeStarterRun(): RunState {
     deck: {
       active: [...STARTER_DECK],
       inventory: {},
-      upgradedCards: [],
+      upgraded: [],
       droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },

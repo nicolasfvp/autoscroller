@@ -134,7 +134,8 @@ export class CombatEngine {
       );
       const waivedByCost = synergyForAffordability?.bonus.type === 'cost_waive';
 
-      if (waivedByCost || this.cardResolver.canAfford(card, this.state)) {
+      const isUpgraded = this.state.upgraded[this.deckPointer] ?? false;
+      if (waivedByCost || this.cardResolver.canAfford(card, this.state, isUpgraded)) {
         this.executeCard(card);
         return;
       }
@@ -177,10 +178,12 @@ export class CombatEngine {
       this.state.heroStrength += this.state._bloodPactBonus;
     }
 
+    // Per-position upgrade flag for the card we're about to resolve.
+    const isUpgraded = this.state.upgraded[this.deckPointer] ?? false;
+
     // spell_focus relic: refund mana cost difference for magic cards before resolve.
     let manaRefund = 0;
     if (relicBonus.manaOverride !== null && card.category === 'magic') {
-      const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
       const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
       const baseManaCost = effectiveCost?.mana ?? 0;
       if (baseManaCost > relicBonus.manaOverride) {
@@ -189,7 +192,7 @@ export class CombatEngine {
     }
 
     // Resolve card (with damage multiplier from relics)
-    const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier);
+    const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier, isUpgraded);
 
     if (manaRefund > 0) {
       this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
@@ -229,7 +232,7 @@ export class CombatEngine {
     }
 
     // Set cooldown for next card. Upgraded variants override base cooldown.
-    const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
+    // `isUpgraded` is already resolved above for this deck position.
     const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;
@@ -256,8 +259,10 @@ export class CombatEngine {
       this.consecutiveAttacks = 0; // reset on reshuffle
 
       // Actually re-randomize order — emitting the event without shuffling
-      // gave the player the same card sequence forever.
-      this.fisherYatesInPlace(this.state.deckOrder);
+      // gave the player the same card sequence forever. Shuffle deckOrder
+      // and the parallel `upgraded` flags in lockstep so per-position
+      // upgrade tracking survives the reshuffle.
+      this.fisherYatesPair(this.state.deckOrder, this.state.upgraded);
 
       eventBus.emit('combat:deck-reshuffled', { reshuffleCount: this.stats.reshuffles });
 
@@ -270,10 +275,14 @@ export class CombatEngine {
     }
   }
 
-  private fisherYatesInPlace<T>(arr: T[]): void {
-    for (let i = arr.length - 1; i > 0; i--) {
+  /** Shuffle two parallel arrays in lockstep (same swaps). */
+  private fisherYatesPair<A, B>(a: A[], b: B[]): void {
+    for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+      [a[i], a[j]] = [a[j], a[i]];
+      if (j < b.length && i < b.length) {
+        [b[i], b[j]] = [b[j], b[i]];
+      }
     }
   }
 
@@ -338,7 +347,7 @@ export class CombatEngine {
     if (!cardId) return 1000;
     const card = getCardById(cardId);
     if (!card) return 1000;
-    const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
+    const isUpgraded = this.state.upgraded[this.deckPointer] ?? false;
     const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;

@@ -17,6 +17,7 @@ export const REORDER_SESSION_COST = 30;
  */
 export function addCard(cardId: string, run: RunState): void {
   run.deck.active.push(cardId);
+  run.deck.upgraded.push(false);
 }
 
 // ── Removal Cost ────────────────────────────────────────────
@@ -45,6 +46,7 @@ export function removeCard(cardId: string, run: RunState): boolean {
   const idx = run.deck.active.indexOf(cardId);
   if (idx === -1) return false;
   run.deck.active.splice(idx, 1);
+  run.deck.upgraded.splice(idx, 1);
   run.economy.gold -= cost;
   return true;
 }
@@ -63,7 +65,24 @@ export function reorderDeck(newOrder: string[], run: RunState): boolean {
   const sorted1 = [...newOrder].sort();
   const sorted2 = [...run.deck.active].sort();
   if (sorted1.join(',') !== sorted2.join(',')) return false;
+  // Remap upgraded flags from old positions to new ones. Since newOrder is
+  // a permutation of active (possibly with duplicates), bucket the existing
+  // boolean flags by cardId, then drain in newOrder order.
+  const buckets = new Map<string, boolean[]>();
+  for (let i = 0; i < run.deck.active.length; i++) {
+    const id = run.deck.active[i];
+    const arr = buckets.get(id);
+    if (arr) arr.push(run.deck.upgraded[i]);
+    else buckets.set(id, [run.deck.upgraded[i]]);
+  }
+  const newUpgraded: boolean[] = [];
+  for (const id of newOrder) {
+    const arr = buckets.get(id);
+    // Safe: same-multiset check above guarantees a non-empty bucket.
+    newUpgraded.push(arr!.shift() ?? false);
+  }
   run.deck.active = [...newOrder];
+  run.deck.upgraded = newUpgraded;
   run.economy.gold -= REORDER_SESSION_COST;
   return true;
 }
