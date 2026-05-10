@@ -5,6 +5,24 @@
 import type { RunState } from '../state/RunState';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
+import type { SynergyBuff } from './SynergyResolver';
+
+// Tile-adjacency event buffs (B.1). `eventBonus` multiplies the weight of
+// "positive" outcomes (heal/gold/restore) so adjacent rest+event tiles tilt
+// the table toward beneficial rolls.
+let activeBuffs: SynergyBuff[] = [];
+
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+function getEventBonus(): number {
+  let bonus = 0;
+  for (const buff of activeBuffs) {
+    if (buff.type === 'eventBonus') bonus += buff.value;
+  }
+  return bonus;
+}
 
 interface EventResult {
   notifications: LootEntry[];
@@ -16,6 +34,8 @@ interface EventResult {
 
 interface EventOption {
   weight: number;
+  /** Marks the option as a beneficial outcome — gets eventBonus weight uplift. */
+  positive?: boolean;
   apply: (run: RunState) => EventResult;
 }
 
@@ -28,6 +48,7 @@ const EVENT_TABLE: EventOption[] = [
   // Heal 20% HP
   {
     weight: 20,
+    positive: true,
     apply(run) {
       const heal = Math.floor(run.hero.maxHP * 0.2);
       run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
@@ -37,6 +58,7 @@ const EVENT_TABLE: EventOption[] = [
   // Give gold (15-40)
   {
     weight: 20,
+    positive: true,
     apply(run) {
       const amount = 15 + Math.floor(rand() * 26);
       run.economy.gold += amount;
@@ -98,6 +120,7 @@ const EVENT_TABLE: EventOption[] = [
   // Stamina/mana restore
   {
     weight: 5,
+    positive: true,
     apply(run) {
       const staRestore = Math.floor(run.hero.maxStamina * 0.3);
       const manaRestore = Math.floor(run.hero.maxMana * 0.3);
@@ -113,11 +136,16 @@ const EVENT_TABLE: EventOption[] = [
  * Returns combat enemy ID if the event triggers a fight.
  */
 export function resolveInlineEvent(run: RunState): EventResult {
-  const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + e.weight, 0);
+  const eventBonus = getEventBonus();
+  // Apply tile-adjacency eventBonus by uplifting positive-outcome weights.
+  // A `0.15` bonus multiplies positive weights by 1.15.
+  const weightOf = (e: EventOption): number =>
+    e.positive ? e.weight * (1 + eventBonus) : e.weight;
+  const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + weightOf(e), 0);
   let roll = rand() * totalWeight;
 
   for (const option of EVENT_TABLE) {
-    roll -= option.weight;
+    roll -= weightOf(option);
     if (roll <= 0) {
       const result = option.apply(run);
       addPendingLoot(result.notifications);

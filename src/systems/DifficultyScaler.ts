@@ -50,9 +50,16 @@ export function scaleEnemyForLoop(
     goldReward: { min: number; max: number };
   },
   loopCount: number,
-  isBoss?: boolean
+  isBoss?: boolean,
+  /**
+   * E.8.g: Optional override that lets LoopRunner pass its persisted
+   * `loop.difficultyMultiplier` (set in onLoopCompleted) directly. Falls
+   * back to recomputing from `loopCount` when omitted, so existing callers
+   * keep working. Boss multiplier is layered on top either way.
+   */
+  precomputedMultiplier?: number,
 ): ScaledEnemyStats {
-  let loopMult = 1 + (loopCount - 1) * config.percentPerLoop;
+  let loopMult = precomputedMultiplier ?? (1 + (loopCount - 1) * config.percentPerLoop);
   if (isBoss) {
     loopMult *= config.bossMultiplier;
   }

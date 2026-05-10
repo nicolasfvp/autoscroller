@@ -222,7 +222,9 @@ export class LoopRunner {
     this.runState.loop.positionInLoop = 0;
     this.lastTileIndex = -1;
 
-    this.assignEnemies();
+    // F.5.l: defer enemy assignment to confirmPlanning() — running here AND
+    // in confirmPlanning rerolled enemies twice and burned RNG state for
+    // tiles the player would never see (planning could swap them out).
     this.emit('loop-completed', { loopCount: loop.count });
     this.state = 'planning';
     this.emit('planning-phase-started', { loopCount: loop.count });

@@ -3,11 +3,32 @@
 
 import type { CardDefinition, SynergyDefinition } from '../../data/types';
 import type { CombatState } from './CombatState';
+import type { SynergyBuff } from '../SynergyResolver';
 
 export interface ResolveResult {
   totalDamage: number;
   healed: number;
   armorGained: number;
+}
+
+// Module-level active adjacency buffs from LoopRunner.
+// `damageBonus` is summed and added as a flat damage multiplier (e.g. 0.20 → +20%).
+let activeBuffs: SynergyBuff[] = [];
+
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+export function clearActiveBuffs(): void {
+  activeBuffs = [];
+}
+
+function getDamageBuffMultiplier(): number {
+  let bonus = 0;
+  for (const buff of activeBuffs) {
+    if (buff.type === 'damageBonus') bonus += buff.value;
+  }
+  return 1 + bonus;
 }
 
 export class CardResolver {
@@ -94,7 +115,10 @@ export class CardResolver {
 
         // Floor damage at 1 for any positive-damage card so high-defense
         // enemies (e.g. Iron Golem def 8) can't soft-lock low-strength heroes.
-        const computed = Math.floor((adjustedValue * state.heroStrength * damageMultiplier) - state.enemyDefense);
+        // Apply tile-adjacency damageBonus buffs (B.1) on top of card/relic
+        // multipliers — buffs are flat additive on the multiplier (e.g. 0.20).
+        const buffMult = getDamageBuffMultiplier();
+        const computed = Math.floor((adjustedValue * state.heroStrength * damageMultiplier * buffMult) - state.enemyDefense);
         const raw = adjustedValue > 0 ? Math.max(1, computed) : Math.max(0, computed);
         state.enemyHP -= raw;
         result.totalDamage += raw;
