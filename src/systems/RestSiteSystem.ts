@@ -1,6 +1,22 @@
 import restConfig from '../data/rest-config.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
+import type { SynergyBuff } from './SynergyResolver';
+
+// B.1: tile-adjacency hpRecoveryBonus uplifts the rest tile heal amount.
+let activeBuffs: SynergyBuff[] = [];
+
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+export function getHpRecoveryBonus(): number {
+  let bonus = 0;
+  for (const buff of activeBuffs) {
+    if (buff.type === 'hpRecoveryBonus') bonus += buff.value;
+  }
+  return bonus;
+}
 
 export type RestChoice = 'rest' | 'train' | 'meditate';
 
@@ -16,7 +32,8 @@ export function applyRestChoice(
 ): RestResult {
   switch (choice) {
     case 'rest': {
-      const heal = Math.floor(runState.hero.maxHP * restConfig.hpRecoveryPercent);
+      const recoveryPct = restConfig.hpRecoveryPercent * (1 + getHpRecoveryBonus());
+      const heal = Math.floor(runState.hero.maxHP * recoveryPct);
       runState.hero.currentHP = Math.min(runState.hero.currentHP + heal, runState.hero.maxHP);
       return { choice, description: `Recovered ${heal} HP.` };
     }

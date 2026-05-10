@@ -2,6 +2,29 @@ import eventsData from '../data/events.json';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
+import type { SynergyBuff } from './SynergyResolver';
+
+// NOTE: This module is the canonical resolver for *data-driven* events
+// (events.json). At runtime, GameScene.handleLoopEvent('event') currently
+// routes to InlineEvents.resolveInlineEvent instead, so this module is only
+// reached via tests today. The EventScene/EventResolver wiring is preserved
+// for future re-enable; see FIXES.md E.7.a.
+
+let activeBuffs: SynergyBuff[] = [];
+
+/**
+ * B.1: data-driven event resolver buff hook. The live runtime path uses
+ * InlineEvents (which has its own setActiveBuffs); kept here for tests
+ * that exercise the JSON-driven path so the API surface is consistent.
+ */
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+/** Test-friendly accessor so the buff list isn't write-only dead state. */
+export function getActiveEventBuffs(): SynergyBuff[] {
+  return activeBuffs;
+}
 
 export interface EventUnlockState {
   unlockedCards: string[];

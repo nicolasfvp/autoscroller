@@ -1,6 +1,22 @@
 import { MetaState } from '../state/MetaState';
 import buildingsData from '../data/json/buildings.json';
 import passivesData from '../data/json/passives.json';
+import type { SynergyBuff } from './SynergyResolver';
+
+// B.1: tile-adjacency xpBonus uplifts XP banked at run end.
+let activeBuffs: SynergyBuff[] = [];
+
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+function getXpBonus(): number {
+  let bonus = 0;
+  for (const buff of activeBuffs) {
+    if (buff.type === 'xpBonus') bonus += buff.value;
+  }
+  return bonus;
+}
 
 export interface UpgradeResult {
   success: boolean;
@@ -64,14 +80,19 @@ export function upgradeBuilding(buildingKey: string, state: MetaState): UpgradeR
 // ── Storehouse effects ───────────────────────────────────────
 
 export function getStorehouseEffects(storehouseLevel: number): { gatheringBoost: number; deathRetention: number } {
-  if (storehouseLevel === 0) return { gatheringBoost: 0, deathRetention: 0.10 };
+  // E.8.h: Drop the level-0 short-circuit and let the JSON-tier walk decide.
+  // Pre-fix this branch hardcoded {0, 0.10} which diverged from any future
+  // change to buildings.json — the loop below produces the same defaults
+  // (gatheringBoost=0, deathRetention=0.10) when no tiers apply.
   const building = (buildingsData as any).storehouse;
   let gatheringBoost = 0;
-  let deathRetention = 0.10; // base death retention
-  for (const tier of building.tiers) {
-    if (tier.level <= storehouseLevel) {
-      if (tier.effect?.gatheringBoost !== undefined) gatheringBoost = tier.effect.gatheringBoost;
-      if (tier.effect?.deathRetention !== undefined) deathRetention = tier.effect.deathRetention;
+  let deathRetention = 0.10; // baseline retention until level 2 unlocks one
+  if (building && Array.isArray(building.tiers)) {
+    for (const tier of building.tiers) {
+      if (tier.level <= storehouseLevel) {
+        if (tier.effect?.gatheringBoost !== undefined) gatheringBoost = tier.effect.gatheringBoost;
+        if (tier.effect?.deathRetention !== undefined) deathRetention = tier.effect.deathRetention;
+      }
     }
   }
   return { gatheringBoost, deathRetention };
@@ -92,6 +113,10 @@ export function bankRunRewards(
   const xpMultiplier = exitType === 'safe' ? 1.0 : 0.0;
 
   const updated = structuredClone(state);
+  // C.9.a NOTE: gatheringBoost is intentionally NOT re-applied here — it is
+  // already factored into combat drops via run.economy.gatheringBoost
+  // (sampled at run start, multiplied into rollMaterialDrops). Applying it
+  // again at banking would double-apply.
   const bankedMaterials: Record<string, number> = {};
   for (const [mat, amount] of Object.entries(materialsEarned)) {
     const banked = Math.floor(amount * materialMultiplier);
@@ -101,7 +126,9 @@ export function bankRunRewards(
     bankedMaterials[mat] = banked;
   }
 
-  const xpGained = Math.floor(xpEarned * xpMultiplier);
+  // B.1: xpBonus from tile adjacency uplifts banked XP on safe exits.
+  const xpBuffMultiplier = 1 + getXpBonus();
+  const xpGained = Math.floor(xpEarned * xpMultiplier * xpBuffMultiplier);
   if (className === 'mage') {
     updated.classXP.mage = (updated.classXP.mage ?? 0) + xpGained;
   } else {

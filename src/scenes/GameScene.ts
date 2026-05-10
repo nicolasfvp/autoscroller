@@ -14,9 +14,14 @@ import { AudioManager } from '../systems/AudioManager';
 import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
-import { resolveInlineEvent } from '../systems/InlineEvents';
+import { resolveInlineEvent, setActiveBuffs as setEventBuffs } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
 import { setActiveRNG, rand } from '../systems/SharedRNG';
+import { setActiveBuffs as setCardBuffs, clearActiveBuffs as clearCardBuffs } from '../systems/combat/CardResolver';
+import { setActiveBuffs as setLootBuffs } from '../systems/CombatLoot';
+import { setActiveBuffs as setRestBuffs } from '../systems/RestSiteSystem';
+import { setActiveBuffs as setMetaBuffs } from '../systems/MetaProgressionSystem';
+import type { SynergyBuff } from '../systems/SynergyResolver';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -422,11 +427,19 @@ export class GameScene extends Scene {
         // Accumulate world offset for seamless wrap
         this.worldOffset += this.loopRunState.loop.length * TILE_SIZE;
 
-        // Clean up all tile visuals for fresh rendering
-        for (const [, tv] of this.tilePool) {
-          tv.destroy();
+        // F.3: Don't destroy every TileVisual on every wrap. The post-wrap
+        // hero position pushes the visible globalIndex range forward by a
+        // full loop, so the natural range-trim in updateTilePool() drops
+        // stale entries on the next update tick. Tile data may have changed
+        // (defeatedThisLoop reset, boss tile add/remove) — flush any tile
+        // visuals whose underlying TileSlot identity changed by re-mapping
+        // their data instead of destroying.
+        for (const [gi, tv] of this.tilePool) {
+          const len = this.loopRunState.loop.length;
+          const dataIndex = ((gi % len) + len) % len;
+          const slot = this.loopRunState.loop.tiles[dataIndex];
+          if (slot) tv.updateTile(slot, dataIndex);
         }
-        this.tilePool.clear();
 
         const diffConfig = getDifficultyConfig();
         const tpEarned = diffConfig.baseTilePointsPerLoop + Math.floor(data.loopCount * diffConfig.tilePointScalePerLoop);
@@ -449,7 +462,11 @@ export class GameScene extends Scene {
         break;
       }
       case 'loop-started': {
-        // Loop resumed after planning -- synergy buffs active
+        // Loop resumed after planning -- broadcast adjacency buffs to the
+        // systems that consume them (combat damage, loot rolls, events,
+        // rest healing, run-end XP banking). Cleared again on shutdown.
+        const buffs: SynergyBuff[] = data?.buffs ?? this.loopRunner.getActiveBuffs();
+        this.applyBuffsToSystems(buffs);
         break;
       }
       case 'run-exited': {
@@ -497,6 +514,14 @@ export class GameScene extends Scene {
   }
 
 
+  private applyBuffsToSystems(buffs: SynergyBuff[]): void {
+    setCardBuffs(buffs);
+    setLootBuffs(buffs);
+    setEventBuffs(buffs);
+    setRestBuffs(buffs);
+    setMetaBuffs(buffs);
+  }
+
   private cleanup(): void {
     if (this.autoSaveUnsubscribe) {
       this.autoSaveUnsubscribe();
@@ -509,5 +534,11 @@ export class GameScene extends Scene {
     // Drop the module-level RNG so it can't bleed into the next run / a
     // standalone scene that opens after game shutdown.
     setActiveRNG(null);
+    // Clear adjacency buffs so they don't survive into a next run/scene.
+    clearCardBuffs();
+    setLootBuffs([]);
+    setEventBuffs([]);
+    setRestBuffs([]);
+    setMetaBuffs([]);
   }
 }

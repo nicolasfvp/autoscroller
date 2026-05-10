@@ -9,6 +9,23 @@ import { addPendingLoot } from './PendingLoot';
 import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
 import enemyDropsData from '../data/json/enemy-drops.json';
 import { rand } from './SharedRNG';
+import type { SynergyBuff } from './SynergyResolver';
+
+// B.1: tile-adjacency loot buffs. goldDropBonus / tileDropBonus uplift the
+// rolled gold and tile drop counts at combat resolution time.
+let activeBuffs: SynergyBuff[] = [];
+
+export function setActiveBuffs(buffs: SynergyBuff[]): void {
+  activeBuffs = buffs ?? [];
+}
+
+function sumBuff(type: string): number {
+  let total = 0;
+  for (const buff of activeBuffs) {
+    if (buff.type === type) total += buff.value;
+  }
+  return total;
+}
 
 interface CardDropTable {
   cardPool: string[];
@@ -40,10 +57,12 @@ export function generateAndApplyCombatLoot(
 ): void {
   const entries: Array<{ label: string; color: string }> = [];
 
-  // Gold
-  if (goldAmount > 0) {
-    run.economy.gold += goldAmount;
-    entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700' });
+  // Gold (apply tile-adjacency goldDropBonus on top of base reward)
+  const goldMult = 1 + sumBuff('goldDropBonus');
+  const finalGold = Math.floor(goldAmount * goldMult);
+  if (finalGold > 0) {
+    run.economy.gold += finalGold;
+    entries.push({ label: `+${finalGold} Gold`, color: '#ffd700' });
   }
 
   // XP
@@ -85,12 +104,14 @@ export function generateAndApplyCombatLoot(
 
   // Tile drops (rare; 15% chance per terrain combat). Writes to the
   // canonical RunState tile inventory; LoopRunState rehydrates from there
-  // on next GameScene.create / planning entry.
+  // on next GameScene.create / planning entry. tileDropBonus uplifts count.
   const tileDrops = rollTileDrops(terrain, run.loop.count);
+  const tileMult = 1 + sumBuff('tileDropBonus');
   for (const drop of tileDrops) {
+    const finalCount = Math.max(drop.count, Math.floor(drop.count * tileMult));
     const current = run.economy.tileInventory[drop.tileType] ?? 0;
-    run.economy.tileInventory[drop.tileType] = current + drop.count;
-    entries.push({ label: `+${drop.count} ${drop.tileType} tile`, color: '#80ffd0' });
+    run.economy.tileInventory[drop.tileType] = current + finalCount;
+    entries.push({ label: `+${finalCount} ${drop.tileType} tile`, color: '#80ffd0' });
   }
 
   // Card drop from enemy-specific pool
