@@ -141,8 +141,10 @@ export class PlanningOverlay extends Scene {
     const tileSize = Math.round(TILE_SIZE * scale);
     const gap = 8;
     const cellW = tileSize + gap;
-    const visibleCount = tiles.filter(t => t.type !== 'buffer').length;
-    const period = visibleCount * cellW;
+    // Show every slot — buffers included — so the displayed loop matches
+    // the actual loop length the hero will traverse. Buffers stay
+    // non-clickable; they're just no longer invisible.
+    const period = tiles.length * cellW;
     const centerX = 400;
     const y = 240;
 
@@ -169,15 +171,10 @@ export class PlanningOverlay extends Scene {
       synergyByTile.set(nextIdx, nextExisting);
     }
 
-    let visualSlot = 0;
     for (let i = 0; i < tiles.length; i++) {
-      // Buffer tiles are non-editable — hide them from the planning view
-      if (tiles[i].type === 'buffer') continue;
-
       // Initial position; updateTilePositions() handles the wrap math.
       const tv = new TileVisual(this, 0, y, tiles[i], scale, i, true);
-      tv.setData('beltSlot', visualSlot);
-      visualSlot++;
+      tv.setData('beltSlot', i);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
 
@@ -187,6 +184,13 @@ export class PlanningOverlay extends Scene {
         if (syn.left && syn.right) tv.setSynergyEdge('both');
         else if (syn.left) tv.setSynergyEdge('left');
         else if (syn.right) tv.setSynergyEdge('right');
+      }
+
+      // Buffer tiles are part of the path but not editable — dim them so
+      // players can see they exist without thinking they can be replaced.
+      if (tiles[i].type === 'buffer') {
+        tv.setAlpha(0.35);
+        continue;
       }
 
       // Make basic slots clickable for placement
