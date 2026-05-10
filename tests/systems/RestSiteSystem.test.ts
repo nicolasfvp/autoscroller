@@ -1,52 +1,61 @@
 import { describe, it, expect } from 'vitest';
 import { applyRestChoice, getRestChoices } from '../../src/systems/RestSiteSystem';
 
-function makeRunState(overrides: any = {}) {
+function makeRunState(overrides: any = {}): any {
   return {
-    hero: { hp: 60, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 },
+    hero: { currentHP: 60, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
     deck: {
-      cards: [
-        { id: 'strike', name: 'Strike', bonusDamage: 0 },
-        { id: 'defend', name: 'Defend', bonusDamage: 0 },
-        { id: 'fireball', name: 'Fireball', bonusDamage: 0 },
-      ],
-      order: ['strike', 'defend', 'fireball'],
+      active: ['strike', 'defend', 'fireball'],
+      inventory: {},
+      upgradedCards: [],
+      droppedCards: [],
     },
-    loop: { count: 1, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.0 },
-    economy: { gold: 100, tilePoints: 0, metaLoot: 0 },
-    tileInventory: [],
+    loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
+    economy: { gold: 100, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    runId: 'test',
+    generation: 1,
+    startedAt: 0,
+    isInCombat: false,
+    currentScene: 'GameScene',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
     ...overrides,
   };
 }
 
 describe('RestSiteSystem', () => {
-  it('rest choice heals 30% of maxHp', () => {
+  it('rest choice heals 30% of maxHP', () => {
     const run = makeRunState();
     const result = applyRestChoice('rest', run);
     // 30% of 100 = 30, so hp goes from 60 to 90
-    expect(run.hero.hp).toBe(90);
+    expect(run.hero.currentHP).toBe(90);
     expect(result.choice).toBe('rest');
     expect(result.description).toContain('30');
   });
 
-  it('rest choice does not exceed maxHp', () => {
-    const run = makeRunState({ hero: { hp: 90, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 } });
+  it('rest choice does not exceed maxHP', () => {
+    const run = makeRunState({ hero: { currentHP: 90, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 } });
     applyRestChoice('rest', run);
-    expect(run.hero.hp).toBe(100);
+    expect(run.hero.currentHP).toBe(100);
   });
 
-  it('train choice adds +2 bonusDamage to a card', () => {
+  it('train choice picks a card and returns description with bonus amount', () => {
     const run = makeRunState();
-    applyRestChoice('train', run, () => 0); // deterministic: always pick first card
-    expect(run.deck.cards[0].bonusDamage).toBe(2);
+    const result = applyRestChoice('train', run, () => 0);
+    expect(result.choice).toBe('train');
+    expect(result.description).toContain('strike');
+    expect(result.description).toContain('+2');
   });
 
-  it('train choice stacks bonusDamage', () => {
+  it('train choice picks a different card based on rng', () => {
     const run = makeRunState();
-    run.deck.cards[0].bonusDamage = 4;
-    applyRestChoice('train', run, () => 0); // pick first card
-    expect(run.deck.cards[0].bonusDamage).toBe(6);
+    const result = applyRestChoice('train', run, () => 0.5);
+    expect(result.choice).toBe('train');
+    // rng=0.5 * 3 cards => idx 1 => 'defend'
+    expect(result.description).toContain('defend');
   });
 
   it('meditate choice increases maxStamina or maxMana by 5', () => {

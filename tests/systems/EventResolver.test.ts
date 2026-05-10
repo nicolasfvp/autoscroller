@@ -7,16 +7,52 @@ import {
   resolveEventChoice,
 } from '../../src/systems/EventResolver';
 
-function makeRunState(overrides: any = {}) {
-  return {
-    hero: { hp: 80, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 },
-    deck: { cards: [], order: ['strike', 'defend', 'fury', 'fireball'] },
-    loop: { count: 1, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.0 },
-    economy: { gold: 100, tilePoints: 10, metaLoot: 0 },
-    tileInventory: [],
+function makeRunState(overrides: any = {}): any {
+  const base = {
+    hero: { currentHP: 80, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
+    deck: { active: ['strike', 'defend', 'fury', 'fireball'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
+    economy: { gold: 100, tilePoints: 10, tileInventory: {}, materials: {} },
     relics: [],
-    ...overrides,
+    runId: 'test',
+    generation: 1,
+    startedAt: 0,
+    isInCombat: false,
+    currentScene: 'GameScene',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
+  // Field-name compat: tests pass { hero: { hp, maxHp } } and { economy: { gold, ..., metaLoot } }.
+  // Translate those overrides to canonical names while still supporting partial overrides.
+  if (overrides.hero) {
+    const h: any = overrides.hero;
+    overrides = { ...overrides, hero: {
+      ...base.hero,
+      ...(h.hp !== undefined ? { currentHP: h.hp } : {}),
+      ...(h.maxHp !== undefined ? { maxHP: h.maxHp } : {}),
+      ...(h.stamina !== undefined ? { currentStamina: h.stamina } : {}),
+      ...(h.maxStamina !== undefined ? { maxStamina: h.maxStamina } : {}),
+      ...(h.mana !== undefined ? { currentMana: h.mana } : {}),
+      ...(h.maxMana !== undefined ? { maxMana: h.maxMana } : {}),
+      ...(h.xp !== undefined ? { runXP: h.xp } : {}),
+      // Allow direct canonical overrides too
+      ...Object.fromEntries(Object.entries(h).filter(([k]) =>
+        ['currentHP','maxHP','currentStamina','maxStamina','currentMana','maxMana','runXP','totalXP','currentDefense','strength','defenseMultiplier','moveSpeed','className'].includes(k)
+      )),
+    }};
+  }
+  if (overrides.economy) {
+    const e: any = overrides.economy;
+    overrides = { ...overrides, economy: {
+      ...base.economy,
+      ...e,
+      tileInventory: e.tileInventory ?? base.economy.tileInventory,
+      materials: e.materials ?? base.economy.materials,
+    }};
+  }
+  return { ...base, ...overrides };
 }
 
 describe('EventResolver', () => {
@@ -72,7 +108,7 @@ describe('EventResolver', () => {
     const run = makeRunState({ hero: { hp: 80, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 } });
     // healing_fountain choice 0: gain_hp 40 => 80+40=120 capped at 100
     const outcome = resolveEventChoice('healing_fountain', 0, run);
-    expect(run.hero.hp).toBe(100);
+    expect(run.hero.currentHP).toBe(100);
     expect(outcome.description).toBeTruthy();
   });
 
@@ -102,10 +138,10 @@ describe('EventResolver', () => {
     const run = makeRunState({ hero: { hp: 10, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 } });
     // ancient_shrine choice 0: lose_hp 20 => 10-20 = min 1
     resolveEventChoice('ancient_shrine', 0, run);
-    expect(run.hero.hp).toBe(1);
+    expect(run.hero.currentHP).toBe(1);
   });
 
-  it('resolveEventChoice add_curse adds curse card to deck.order', () => {
+  it('resolveEventChoice add_curse adds curse card to deck.active', () => {
     const run = makeRunState();
     // cursed_chest choice 0: gain_relic + add_curse
     const outcome = resolveEventChoice('cursed_chest', 0, run);
@@ -113,7 +149,7 @@ describe('EventResolver', () => {
     expect(curseEffect).toBeDefined();
     expect(curseEffect!.applied).toBe(true);
     // Curse card should be in deck
-    expect(run.deck.order.length).toBeGreaterThan(4);
+    expect(run.deck.active.length).toBeGreaterThan(4);
   });
 
   // ── Material Effects (crystal_cave event) ──────────────────

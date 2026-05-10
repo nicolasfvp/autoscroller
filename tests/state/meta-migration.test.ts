@@ -2,19 +2,19 @@ import { describe, it, expect } from 'vitest';
 import { migrateMetaState, createDefaultMetaState } from '../../src/state/MetaState';
 
 describe('migrateMetaState', () => {
-  it('returns a valid default MetaState v3 when passed null', () => {
+  it('returns a valid default MetaState v4 when passed null', () => {
     const result = migrateMetaState(null);
     const defaults = createDefaultMetaState();
     expect(result).toEqual(defaults);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.materials).toEqual({});
   });
 
-  it('returns a valid default MetaState v3 when passed undefined', () => {
+  it('returns a valid default MetaState v4 when passed undefined', () => {
     const result = migrateMetaState(undefined);
     const defaults = createDefaultMetaState();
     expect(result).toEqual(defaults);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
   });
 
   it('converts v1 state with metaLoot: 50 to materials: { essence: 50 }', () => {
@@ -119,7 +119,7 @@ describe('migrateMetaState', () => {
     expect(result.runHistory[1].materialsEarned).toEqual({ essence: 10 });
   });
 
-  it('migrates v2 state to v3 with new fields', () => {
+  it('migrates v2 state to v4 with new fields', () => {
     const v2State = {
       buildings: {
         forge: { level: 2 },
@@ -143,7 +143,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v2State);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.materials).toEqual({ wood: 10, iron: 5 });
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -175,10 +175,10 @@ describe('migrateMetaState', () => {
 
     const result = migrateMetaState(v2State);
     expect(result.tutorialSeen).toBe(true);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
   });
 
-  it('sets version: 3 on migrated v1 state', () => {
+  it('sets version: 4 on migrated v1 state', () => {
     const v1State = {
       buildings: {
         forge: { level: 0 },
@@ -199,12 +199,12 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
   });
 
-  it('v1 state with metaLoot produces v3 with materials.essence and new fields', () => {
+  it('v1 state with metaLoot produces v4 with materials.essence and new fields', () => {
     const v1State = {
       buildings: {
         forge: { level: 1 },
@@ -225,13 +225,13 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.materials).toEqual({ essence: 50 });
     expect(result.tutorialSeen).toBe(false);
   });
 
-  it('returns v3 state unchanged (passthrough)', () => {
-    const v3State = {
+  it('returns v4 state unchanged (passthrough)', () => {
+    const v4State = {
       buildings: {
         forge: { level: 2 },
         library: { level: 1 },
@@ -241,7 +241,7 @@ describe('migrateMetaState', () => {
         storehouse: { level: 3 },
       },
       materials: { wood: 10 },
-      classXP: { warrior: 200 },
+      classXP: { warrior: 200, mage: 0 },
       passivesUnlocked: ['power_strike'],
       unlockedCards: ['fury'],
       unlockedRelics: ['iron_will'],
@@ -252,12 +252,12 @@ describe('migrateMetaState', () => {
       audioPrefs: { sfxVolume: 0.8, sfxEnabled: true },
       gameSpeed: 2,
       autoSave: false,
-      version: 3,
+      version: 4,
     };
 
-    const result = migrateMetaState(v3State);
-    expect(result).toEqual(v3State);
-    expect(result.version).toBe(3);
+    const result = migrateMetaState(v4State);
+    expect(result).toEqual(v4State);
+    expect(result.version).toBe(4);
   });
 
   it('preserves existing buildings, unlockedCards, passivesUnlocked, etc.', () => {

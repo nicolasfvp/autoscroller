@@ -2,14 +2,22 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { triggerBossCombat, onBossVictory, getBossExitChoiceData } from '../../src/systems/BossSystem';
 import { setRNG, resetRNG } from '../../src/systems/LootGenerator';
 
-function makeRunState() {
+function makeRunState(): any {
   return {
-    hero: { hp: 100, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 200 },
-    deck: { cards: [], order: ['strike', 'defend'] },
-    loop: { count: 3, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.2 },
-    economy: { gold: 100, tilePoints: 5, materials: { essence: 20, crystal: 10 } },
-    tileInventory: [],
+    hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 200, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
+    deck: { active: ['strike', 'defend'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    loop: { count: 3, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.2 },
+    economy: { gold: 100, tilePoints: 5, tileInventory: {}, materials: { essence: 20, crystal: 10 } },
     relics: [],
+    runId: 'test',
+    generation: 1,
+    startedAt: 0,
+    isInCombat: false,
+    currentScene: 'GameScene',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 
@@ -55,7 +63,7 @@ describe('BossSystem', () => {
     const data = getBossExitChoiceData(run);
     expect(data.safeExitReward.exitType).toBe('safe');
     expect(data.safeExitReward.materials).toEqual(run.economy.materials);
-    expect(data.safeExitReward.xp).toBe(run.hero.xp);
+    expect(data.safeExitReward.xp).toBe(run.hero.runXP);
   });
 
   it('getBossExitChoiceData returns continue risk warning string', () => {

@@ -44,13 +44,17 @@ describe('LoopRunner', () => {
     expect(runner.getState()).toBe('idle');
   });
 
-  it('startRun sets state to traversing with 15 basic tiles', () => {
+  it('startRun sets state to traversing with 5 buffer + 15 basic tiles', () => {
     runner.startRun(runState);
     expect(runner.getState()).toBe('traversing');
     expect(runState.loop.count).toBe(1);
-    expect(runState.loop.length).toBe(15);
-    expect(runState.loop.tiles).toHaveLength(15);
-    expect(runState.loop.tiles.every(t => t.type === 'basic')).toBe(true);
+    // 5 buffer prefix tiles + 15 basic tiles = 20 total
+    expect(runState.loop.length).toBe(20);
+    expect(runState.loop.tiles).toHaveLength(20);
+    const bufferCount = runState.loop.tiles.filter(t => t.type === 'buffer').length;
+    const basicCount = runState.loop.tiles.filter(t => t.type === 'basic').length;
+    expect(bufferCount).toBe(5);
+    expect(basicCount).toBe(15);
     expect(runState.loop.positionInLoop).toBe(0);
   });
 
@@ -115,7 +119,7 @@ describe('LoopRunner', () => {
     expect(runState.economy.tilePoints).toBe(2);
   });
 
-  it('loop completion resets defeatedThisLoop flags', () => {
+  it('loop completion resets defeatedThisLoop flags (buffer tiles stay defeated)', () => {
     runner.startRun(runState);
     for (const t of runState.loop.tiles) {
       t.defeatedThisLoop = true;
@@ -124,7 +128,9 @@ describe('LoopRunner', () => {
       if (runner.getState() !== 'traversing') break;
       runner.tick(1000);
     }
-    expect(runState.loop.tiles.every(t => t.defeatedThisLoop === false)).toBe(true);
+    // Non-buffer tiles reset; buffer tiles remain permanently 'defeated' (skipped on traversal).
+    expect(runState.loop.tiles.filter(t => t.type !== 'buffer').every(t => t.defeatedThisLoop === false)).toBe(true);
+    expect(runState.loop.tiles.filter(t => t.type === 'buffer').every(t => t.defeatedThisLoop === true)).toBe(true);
   });
 
   it('boss tile injected at last position on loop 5', () => {
@@ -187,10 +193,13 @@ describe('LoopRunner', () => {
       runner.tick(1000);
     }
     expect(runner.getState()).toBe('planning');
-    const result = runner.placeTile(0, 'forest');
+    // First 5 slots are buffer tiles; first basic slot is at index 5.
+    // Clear pre-assigned enemy (rng=0 below basicTileCombatChance assigned one)
+    runState.loop.tiles[5].enemyId = undefined;
+    const result = runner.placeTile(5, 'forest');
     expect(result).toBe(true);
-    expect(runState.loop.tiles[0].type).toBe('terrain');
-    expect(runState.loop.tiles[0].terrain).toBe('forest');
+    expect(runState.loop.tiles[5].type).toBe('terrain');
+    expect(runState.loop.tiles[5].terrain).toBe('forest');
   });
 
   it('placeTile rejects non-basic slot', () => {
@@ -307,9 +316,12 @@ describe('LoopRunner', () => {
       if (runner.getState() !== 'traversing') break;
       runner.tick(1000);
     }
-    // Place two adjacent forest tiles
-    runner.placeTile(0, 'forest');
-    runner.placeTile(1, 'forest');
+    // Place two adjacent forest tiles in basic slots (5 = first basic, 6 = second).
+    // Clear pre-assigned enemies (rng=0 < basicTileCombatChance assigns them).
+    runState.loop.tiles[5].enemyId = undefined;
+    runState.loop.tiles[6].enemyId = undefined;
+    runner.placeTile(5, 'forest');
+    runner.placeTile(6, 'forest');
     runner.confirmPlanning();
     const buffs = runner.getActiveBuffs();
     expect(buffs.some(b => b.type === 'goldDropBonus')).toBe(true);
