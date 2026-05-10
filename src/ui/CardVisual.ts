@@ -143,7 +143,10 @@ export function createCardVisual(
   let isUpgraded = false;
   try {
     const run = getRun();
-    isUpgraded = run.deck.upgradedCards?.includes(cardId) ?? false;
+    // CardVisual has no deck index; treat the card as "shows upgraded" if
+    // *any* copy of this id is upgraded (best-effort display for hands/loot
+    // screens that don't have a position context).
+    isUpgraded = run.deck.active.some((id, i) => id === cardId && run.deck.upgraded[i]);
   } catch {
     //
   }

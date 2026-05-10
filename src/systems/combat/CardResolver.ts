@@ -34,9 +34,10 @@ function getDamageBuffMultiplier(): number {
 export class CardResolver {
   /**
    * Check if the hero can afford to play a card given current state.
+   * `isUpgraded` is supplied by the caller (CombatEngine reads
+   * `state.upgraded[deckPointer]`).
    */
-  canAfford(card: CardDefinition, state: CombatState): boolean {
-    const isUpgraded = state.upgradedCards?.includes(card.id) ?? false;
+  canAfford(card: CardDefinition, state: CombatState, isUpgraded: boolean = false): boolean {
     const cost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
     if (!cost) return true;
     if (cost.stamina !== undefined && state.heroStamina < cost.stamina) return false;
@@ -54,11 +55,12 @@ export class CardResolver {
     state: CombatState,
     synergyBonus: SynergyDefinition | null,
     extraDamageMultiplier: number = 1.0,
+    isUpgraded: boolean = false,
   ): ResolveResult {
     const result: ResolveResult = { totalDamage: 0, healed: 0, armorGained: 0 };
 
-    // Determine effective card properties (base or upgraded)
-    const isUpgraded = state.upgradedCards?.includes(card.id) ?? false;
+    // Determine effective card properties (base or upgraded). Caller passes
+    // the per-position upgrade flag from `state.upgraded[deckPointer]`.
     const effectiveEffects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
     const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
 

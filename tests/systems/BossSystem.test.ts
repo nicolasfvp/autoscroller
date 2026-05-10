@@ -5,7 +5,7 @@ import { setRNG, resetRNG } from '../../src/systems/LootGenerator';
 function makeRunState(): any {
   return {
     hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 200, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
-    deck: { active: ['strike', 'defend'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    deck: { active: ['strike', 'defend'], inventory: {}, upgraded: [false, false], droppedCards: [] },
     loop: { count: 3, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.2 },
     economy: { gold: 100, tilePoints: 5, tileInventory: {}, materials: { essence: 20, crystal: 10 } },
     relics: [],

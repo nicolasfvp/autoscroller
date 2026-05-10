@@ -37,8 +37,11 @@ export interface CombatState {
 
   /** Flag set by EnemyAI stun effect -- skips next hero card */
   heroStunned: boolean;
-  /** Card IDs that are upgraded for this combat */
-  upgradedCards: string[];
+  /**
+   * Per-deck-position upgrade flags for this combat. Length matches
+   * `deckOrder`. Index `i` corresponds to `deckOrder[i]`.
+   */
+  upgraded: boolean[];
   /** Boss behavioral patterns (empty for non-boss enemies) */
   behaviors: BossBehavior[];
 
@@ -86,7 +89,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     activeRelicIds: [...(run.relics ?? [])],
     activePassives: [],
     heroStunned: false,
-    upgradedCards: run.deck.upgradedCards ?? [],
+    upgraded: [...run.deck.upgraded],
     behaviors: (enemy as any).behaviors ?? [],
 
     cooldownMultiplier: 1.0,

@@ -28,6 +28,7 @@ export function openTreasure(runState: RunState, loopCount: number, unlockState?
         const cardId = item.id ?? 'strike';
         const resolvedId = cardId === 'random' ? 'strike' : cardId;
         runState.deck.active.push(resolvedId);
+        runState.deck.upgraded.push(false);
         treasureItems.push({ type: 'card', name: resolvedId, id: resolvedId });
         break;
       }

@@ -30,6 +30,13 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     enemySpecialEffect: null,
     activePassives: [],
     heroStunned: false,
+    upgraded: [],
+    activeRelicIds: [],
+    behaviors: [],
+    cooldownMultiplier: 1.0,
+    firstCardDamageMultiplier: 1.0,
+    _bloodPactBonus: 0,
+    phoenixUsed: false,
     ...overrides,
   };
 }

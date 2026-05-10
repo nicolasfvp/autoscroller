@@ -61,6 +61,7 @@ export class ShopSystem {
     if (runState.economy.gold < price) return false;
     runState.economy.gold -= price;
     runState.deck.active.push(cardId);
+    runState.deck.upgraded.push(false);
     return true;
   }
 
@@ -74,6 +75,7 @@ export class ShopSystem {
     if (runState.economy.gold < cost) return false;
     runState.economy.gold -= cost;
     runState.deck.active.splice(cardIndex, 1);
+    runState.deck.upgraded.splice(cardIndex, 1);
     return true;
   }
 
@@ -87,6 +89,8 @@ export class ShopSystem {
   static reorderCard(runState: RunState, fromIndex: number, toIndex: number): void {
     const [card] = runState.deck.active.splice(fromIndex, 1);
     runState.deck.active.splice(toIndex, 0, card);
+    const [flag] = runState.deck.upgraded.splice(fromIndex, 1);
+    runState.deck.upgraded.splice(toIndex, 0, flag);
   }
 
   static getShopRelics(runState: RunState, availableRelicIds: string[], loopCount: number = 0): ShopRelic[] {
@@ -122,18 +126,15 @@ export class ShopSystem {
 
   static upgradeCard(
     runState: RunState,
-    cardId: string,
+    deckIndex: number,
     rarity: string,
   ): boolean {
-    const upgradedCards = runState.deck.upgradedCards ?? [];
+    if (deckIndex < 0 || deckIndex >= runState.deck.active.length) return false;
+    if (runState.deck.upgraded[deckIndex]) return false;
     const price = ShopSystem.getUpgradePrice(rarity);
     if (runState.economy.gold < price) return false;
-    if (upgradedCards.includes(cardId)) return false;
     runState.economy.gold -= price;
-    upgradedCards.push(cardId);
-    if (!runState.deck.upgradedCards) {
-      runState.deck.upgradedCards = upgradedCards;
-    }
+    runState.deck.upgraded[deckIndex] = true;
     return true;
   }
 

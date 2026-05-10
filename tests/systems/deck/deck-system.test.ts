@@ -28,7 +28,7 @@ function makeRun(overrides?: {
     deck: {
       active: overrides?.active ?? [],
       inventory: {},
-      upgradedCards: [],
+      upgraded: overrides?.active ? overrides.active.map(() => false) : [],
       droppedCards: [],
     },
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },

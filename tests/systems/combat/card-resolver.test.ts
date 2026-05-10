@@ -20,6 +20,13 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     enemySpecialEffect: null,
     activePassives: [],
     heroStunned: false,
+    upgraded: [],
+    activeRelicIds: [],
+    behaviors: [],
+    cooldownMultiplier: 1.0,
+    firstCardDamageMultiplier: 1.0,
+    _bloodPactBonus: 0,
+    phoenixUsed: false,
     ...overrides,
   };
 }
@@ -234,8 +241,8 @@ describe('CardResolver', () => {
   });
 
   describe('upgrade resolution', () => {
-    it('uses upgraded effects when card is in upgradedCards', () => {
-      const state = makeState({ upgradedCards: ['strike'] } as any);
+    it('uses upgraded effects when isUpgraded=true', () => {
+      const state = makeState();
       const card = makeCard({
         id: 'strike',
         effects: [{ type: 'damage', value: 10, target: 'enemy' }],
@@ -243,13 +250,13 @@ describe('CardResolver', () => {
           effects: [{ type: 'damage', value: 15, target: 'enemy' }],
         },
       });
-      const result = resolver.resolve(card, state, null);
+      const result = resolver.resolve(card, state, null, 1.0, true);
       expect(result.totalDamage).toBe(15);
       expect(state.enemyHP).toBe(85);
     });
 
-    it('uses base effects when card is not in upgradedCards', () => {
-      const state = makeState({ upgradedCards: [] } as any);
+    it('uses base effects when isUpgraded=false', () => {
+      const state = makeState();
       const card = makeCard({
         id: 'strike',
         effects: [{ type: 'damage', value: 10, target: 'enemy' }],
@@ -257,13 +264,13 @@ describe('CardResolver', () => {
           effects: [{ type: 'damage', value: 15, target: 'enemy' }],
         },
       });
-      const result = resolver.resolve(card, state, null);
+      const result = resolver.resolve(card, state, null, 1.0, false);
       expect(result.totalDamage).toBe(10);
       expect(state.enemyHP).toBe(90);
     });
 
-    it('uses upgraded cost when card is in upgradedCards', () => {
-      const state = makeState({ upgradedCards: ['fireball'], heroMana: 30 } as any);
+    it('uses upgraded cost when isUpgraded=true', () => {
+      const state = makeState({ heroMana: 30 });
       const card = makeCard({
         id: 'fireball',
         effects: [{ type: 'damage', value: 15, target: 'enemy' }],
@@ -272,12 +279,12 @@ describe('CardResolver', () => {
           cost: { mana: 3 },
         },
       });
-      resolver.resolve(card, state, null);
+      resolver.resolve(card, state, null, 1.0, true);
       expect(state.heroMana).toBe(27); // 30 - 3 (upgraded cost)
     });
 
-    it('uses base cost when card is not in upgradedCards', () => {
-      const state = makeState({ upgradedCards: [], heroMana: 30 } as any);
+    it('uses base cost when isUpgraded=false', () => {
+      const state = makeState({ heroMana: 30 });
       const card = makeCard({
         id: 'fireball',
         effects: [{ type: 'damage', value: 15, target: 'enemy' }],
@@ -286,19 +293,19 @@ describe('CardResolver', () => {
           cost: { mana: 3 },
         },
       });
-      resolver.resolve(card, state, null);
+      resolver.resolve(card, state, null, 1.0, false);
       expect(state.heroMana).toBe(25); // 30 - 5 (base cost)
     });
 
-    it('canAfford uses upgraded cost when card is in upgradedCards', () => {
-      const state = makeState({ upgradedCards: ['fireball'], heroMana: 4 } as any);
+    it('canAfford uses upgraded cost when isUpgraded=true', () => {
+      const state = makeState({ heroMana: 4 });
       const card = makeCard({
         id: 'fireball',
         cost: { mana: 5 },
         upgraded: { cost: { mana: 3 } },
       });
       // base cost 5 > mana 4, but upgraded cost 3 <= mana 4
-      expect(resolver.canAfford(card, state)).toBe(true);
+      expect(resolver.canAfford(card, state, true)).toBe(true);
     });
   });
 });
