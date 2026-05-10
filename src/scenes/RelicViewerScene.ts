@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
 
 /**
  * RelicViewerScene -- overlay for viewing collected relics.

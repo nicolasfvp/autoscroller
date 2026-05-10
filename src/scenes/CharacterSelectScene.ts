@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
-import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { LAYOUT } from '../ui/StyleConstants';
 
 interface ClassOption {
   id: string;

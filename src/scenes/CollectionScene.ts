@@ -15,20 +15,12 @@ const TAB_KEYS: Record<TabName, keyof CollectionStatus> = {
   Bosses: 'bosses',
 };
 
-const TAB_COLORS: Record<TabName, number> = {
-  Cards: 0xcc3333,
-  Relics: 0x9370db,
-  Tiles: 0x228B22,
-  Events: 0xff8c00,
-  Bosses: 0x6a5acd,
-};
-
 export class CollectionScene extends Scene {
   private metaState!: MetaState;
   private collectionStatus!: CollectionStatus;
   private activeTab: TabName = 'Cards';
   private gridContainer!: Phaser.GameObjects.Container;
-  private tabObjects: Phaser.GameObjects.Rectangle[] = [];
+  private tabObjects: Phaser.GameObjects.Image[] = [];
   private tabTexts: Phaser.GameObjects.Text[] = [];
   private transitioning = false;
   private detailPopup: Phaser.GameObjects.Container | null = null;
@@ -82,7 +74,7 @@ export class CollectionScene extends Scene {
 
     // Nice Red Close Button
     const closeBtnBg = this.add.circle(750, 55, 16, 0xcc0000).setStrokeStyle(2, 0x3e2723).setInteractive({ useHandCursor: true });
-    const closeBtnTxt = this.add.text(750, 55, 'X', {
+    this.add.text(750, 55, 'X', {
       fontSize: '18px',
       fontStyle: 'bold',
       color: '#ffffff',
@@ -96,8 +88,7 @@ export class CollectionScene extends Scene {
     // Tab bar
     this.tabObjects = [];
     this.tabTexts = [];
-    let tabX = 40;
-    
+
     // Total width available is ~750. We have 5 tabs.
     const tabW = 148;
     const tabH = 50;
@@ -180,7 +171,7 @@ export class CollectionScene extends Scene {
       const tabName = TAB_NAMES[i];
       const isActive = tabName === this.activeTab;
       
-      const img = this.tabObjects[i] as Phaser.GameObjects.Image;
+      const img = this.tabObjects[i];
       if (isActive) {
         img.setTint(0xff9999);
       } else {

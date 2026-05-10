@@ -5,7 +5,7 @@ import Phaser from 'phaser';
 import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
 import { COLORS, FONTS } from './StyleConstants';
-import type { CardDefinition, CardCategory } from '../data/types';
+import type { CardCategory } from '../data/types';
 
 const RARITY_COLORS: Record<string, number> = {
   common: 0xcccccc,
@@ -183,7 +183,7 @@ export function showCardDetail(
     popup.add(costLabel);
 
     let costStr = '';
-    let costColor = COLORS.textPrimary;
+    let costColor: string = COLORS.textPrimary;
     if (effectiveCost.stamina) { costStr = `${effectiveCost.stamina} Stamina`; costColor = '#ff8c00'; }
     else if (effectiveCost.mana) { costStr = `${effectiveCost.mana} Mana`; costColor = '#6a5acd'; }
     else if (effectiveCost.defense) { costStr = `${effectiveCost.defense} Defense`; costColor = '#3366cc'; }

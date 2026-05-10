@@ -4,15 +4,6 @@ import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 
-const BUILDING_COLORS: Record<string, number> = {
-  forge: 0xcc3333,
-  library: 0x6a5acd,
-  tavern: 0xff8c00,
-  workshop: 0x228B22,
-  shrine: 0x9370db,
-  storehouse: 0x8B6914,
-};
-
 
 
 const BUILDING_NAMES: Record<string, string> = {
@@ -41,7 +32,6 @@ const BUILDING_LAYOUT: BuildingLayout[] = [
 
 export class CityHubScene extends Scene {
   private metaState!: MetaState;
-  private hoverLabel: Phaser.GameObjects.Text | null = null;
   private transitioning = false;
 
   constructor() {
@@ -152,7 +142,7 @@ export class CityHubScene extends Scene {
     }).setOrigin(0.5, 0.5).setDepth(10);
 
     // Hover label (reused across buildings, though maybe not needed with new layout)
-    this.hoverLabel = this.add.text(0, 0, '', {
+    this.add.text(0, 0, '', {
       fontSize: '16px',
       color: '#e6c88a',
       stroke: '#2e1b0f',
@@ -193,7 +183,6 @@ export class CityHubScene extends Scene {
   private createBuilding(layout: BuildingLayout, fontFamily: string): void {
     const { key, x, y } = layout;
     const level = (this.metaState.buildings as any)[key].level as number;
-    const isTierZero = level === 0;
 
     // Use a container for the building elements
     const container = this.add.container(x, y);

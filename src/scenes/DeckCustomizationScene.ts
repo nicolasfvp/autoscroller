@@ -6,14 +6,13 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { getCardById } from '../data/DataLoader';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import type { CardCategory } from '../data/types';
 
 const COLS = 6;
 const CARD_W = 80;
 const CARD_H = 106;
 const GAP = 10;
-const GRID_TOP = 180;
 
 const RARITY_COLORS: Record<string, number> = {
   common: 0xcccccc, uncommon: 0x33cc33, rare: 0xff6600, epic: 0xaa00ff,
