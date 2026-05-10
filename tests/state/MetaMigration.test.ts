@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createDefaultMetaState, migrateMetaState } from '../../src/state/MetaState';
 
-describe('MetaState v4 defaults', () => {
-  it('createDefaultMetaState returns version 4', () => {
-    expect(createDefaultMetaState().version).toBe(4);
+describe('MetaState v5 defaults', () => {
+  it('createDefaultMetaState returns version 5', () => {
+    expect(createDefaultMetaState().version).toBe(5);
   });
 
   it('createDefaultMetaState has tutorialSeen === false', () => {
@@ -27,7 +27,7 @@ describe('MetaState v4 defaults', () => {
   });
 });
 
-describe('MetaState v4 migration paths', () => {
+describe('MetaState v5 migration paths', () => {
   it('v2 object without new fields migrates to v4 with defaults', () => {
     const v2 = {
       buildings: {
@@ -50,7 +50,7 @@ describe('MetaState v4 migration paths', () => {
     };
 
     const result = migrateMetaState(v2);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
     expect(result.gameSpeed).toBe(1);
@@ -104,7 +104,7 @@ describe('MetaState v4 migration paths', () => {
     };
 
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.materials).toEqual({ essence: 50 });
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -112,7 +112,7 @@ describe('MetaState v4 migration paths', () => {
     expect(result.autoSave).toBe(true);
   });
 
-  it('v4 object returns unchanged', () => {
+  it('v4 object migrates to v5', () => {
     const v4 = {
       buildings: {
         forge: { level: 2 },
@@ -138,6 +138,35 @@ describe('MetaState v4 migration paths', () => {
     };
 
     const result = migrateMetaState(v4);
-    expect(result).toEqual(v4);
+    expect(result.version).toBe(5);
+  });
+
+  it('v5 object returns unchanged (passthrough)', () => {
+    const v5 = {
+      buildings: {
+        forge: { level: 2 },
+        library: { level: 1 },
+        tavern: { level: 0 },
+        workshop: { level: 1 },
+        shrine: { level: 0 },
+        storehouse: { level: 3 },
+      },
+      materials: { iron: 10 },
+      classXP: { warrior: 200, mage: 0 },
+      passivesUnlocked: [],
+      unlockedCards: ['fury'],
+      unlockedRelics: [],
+      unlockedTiles: [],
+      runHistory: [],
+      totalRuns: 5,
+      tutorialSeen: true,
+      audioPrefs: { sfxVolume: 0.5, sfxEnabled: false },
+      gameSpeed: 2,
+      autoSave: false,
+      version: 5,
+    };
+
+    const result = migrateMetaState(v5);
+    expect(result).toEqual(v5);
   });
 });

@@ -40,6 +40,7 @@ export interface RunHistoryEntry {
   materialsEarned: Record<string, number>;
   xpEarned: number;
   timestamp: number;
+  className: string;
 }
 
 export function createDefaultMetaState(): MetaState {
@@ -64,7 +65,7 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 4,
+    version: 5,
   };
 }
 
@@ -122,6 +123,19 @@ export function migrateMetaState(raw: any): MetaState {
         mage: raw.classXP?.mage ?? 0,
       },
       version: 4,
+    };
+  }
+
+  // v4 -> v5 migration: backfill className on existing run history entries
+  if (raw.version === 4) {
+    const history = (raw.runHistory ?? []).map((entry: any) => ({
+      ...entry,
+      className: entry.className ?? 'warrior',
+    }));
+    raw = {
+      ...raw,
+      runHistory: history,
+      version: 5,
     };
   }
 
