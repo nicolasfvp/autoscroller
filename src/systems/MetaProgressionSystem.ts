@@ -131,11 +131,15 @@ export function bankRunRewards(
   // B.1: xpBonus from tile adjacency uplifts banked XP on safe exits.
   const xpBuffMultiplier = 1 + getXpBonus();
   const xpGained = Math.floor(xpEarned * xpMultiplier * xpBuffMultiplier);
-  if (className === 'mage') {
-    updated.classXP.mage = (updated.classXP.mage ?? 0) + xpGained;
-  } else {
-    updated.classXP.warrior += xpGained;
+  // B.3: route XP to the correct class bucket. Guard against unknown classes
+  // — fall back to warrior with a warning rather than silently dropping XP.
+  let resolvedClass = className;
+  if (resolvedClass !== 'warrior' && resolvedClass !== 'mage') {
+    console.warn(`[bankRunRewards] unknown className "${className}", falling back to "warrior"`);
+    resolvedClass = 'warrior';
   }
+  const classXP = updated.classXP as unknown as Record<string, number>;
+  classXP[resolvedClass] = (classXP[resolvedClass] ?? 0) + xpGained;
 
   updated.totalRuns += 1;
   updated.runHistory.push({
@@ -146,6 +150,7 @@ export function bankRunRewards(
     materialsEarned: bankedMaterials,
     xpEarned: xpGained,
     timestamp: Date.now(),
+    className: resolvedClass,
   });
   return updated;
 }

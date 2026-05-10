@@ -6,7 +6,7 @@ describe('migrateMetaState', () => {
     const result = migrateMetaState(null);
     const defaults = createDefaultMetaState();
     expect(result).toEqual(defaults);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.materials).toEqual({});
   });
 
@@ -14,7 +14,7 @@ describe('migrateMetaState', () => {
     const result = migrateMetaState(undefined);
     const defaults = createDefaultMetaState();
     expect(result).toEqual(defaults);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
   });
 
   it('converts v1 state with metaLoot: 50 to materials: { essence: 50 }', () => {
@@ -143,7 +143,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v2State);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.materials).toEqual({ wood: 10, iron: 5 });
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -175,7 +175,7 @@ describe('migrateMetaState', () => {
 
     const result = migrateMetaState(v2State);
     expect(result.tutorialSeen).toBe(true);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
   });
 
   it('sets version: 4 on migrated v1 state', () => {
@@ -199,7 +199,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
   });
@@ -225,12 +225,12 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
     expect(result.materials).toEqual({ essence: 50 });
     expect(result.tutorialSeen).toBe(false);
   });
 
-  it('returns v4 state unchanged (passthrough)', () => {
+  it('migrates v4 state to v5, backfilling className on existing run history entries', () => {
     const v4State = {
       buildings: {
         forge: { level: 2 },
@@ -246,7 +246,9 @@ describe('migrateMetaState', () => {
       unlockedCards: ['fury'],
       unlockedRelics: ['iron_will'],
       unlockedTiles: ['swamp'],
-      runHistory: [],
+      runHistory: [
+        { seed: 'old-run', loopsCompleted: 4, bossesDefeated: 1, exitType: 'safe', materialsEarned: { wood: 5 }, xpEarned: 80, timestamp: 4000 },
+      ],
       totalRuns: 10,
       tutorialSeen: true,
       audioPrefs: { sfxVolume: 0.8, sfxEnabled: true },
@@ -256,8 +258,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v4State);
-    expect(result).toEqual(v4State);
-    expect(result.version).toBe(4);
+    expect(result.version).toBe(5);
+    expect(result.runHistory[0].className).toBe('warrior');
   });
 
   it('preserves existing buildings, unlockedCards, passivesUnlocked, etc.', () => {
