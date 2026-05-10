@@ -5,8 +5,6 @@ import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
 const QUEUE_X = 740;
-const CARD_WIDTH = 75; // 150 * 0.5
-const CARD_HEIGHT = 120; // 240 * 0.5
 const GAP = 15; // Espaço confortável
 const VISIBLE_COUNT = 3; // Menos cartas visíveis por vez para limpar a área central
 const START_Y = 110; // Cobre exatamente do limite final da barra de HP do inimigo e desce

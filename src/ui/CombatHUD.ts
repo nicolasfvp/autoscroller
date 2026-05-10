@@ -39,11 +39,6 @@ export class CombatHUD {
   private displayedMana    = 0;
   private displayedEnemyHp = 0;
 
-  private heroMaxHP      = 1;
-  private heroMaxStamina = 1;
-  private heroMaxMana    = 1;
-  private enemyMaxHP     = 1;
-
   private hpTween?:      Phaser.Tweens.Tween;
   private staminaTween?: Phaser.Tweens.Tween;
   private manaTween?:    Phaser.Tweens.Tween;
@@ -182,11 +177,6 @@ export class CombatHUD {
   // ── Public update ──────────────────────────────────────────────
 
   update(state: CombatState, heroCooldown: number, heroMaxCooldown: number): void {
-    this.heroMaxHP      = state.heroMaxHP;
-    this.heroMaxStamina = state.heroMaxStamina;
-    this.heroMaxMana    = state.heroMaxMana;
-    this.enemyMaxHP     = state.enemyMaxHP;
-
     // Hero bars
     const newHP = Math.ceil(state.heroHP);
     if (newHP !== this.displayedHeroHp) {
@@ -274,7 +264,7 @@ export class CombatHUD {
     const tween = this.scene.tweens.addCounter({
       from, to, duration: 280,
       onUpdate: (t) => {
-        const v = Math.round(t.getValue());
+        const v = Math.round(t.getValue() ?? 0);
         const r = Math.max(0, v / max);
         bar.width = Math.max(0, (BAR_W - 16) * r); // 16 = padX * 2
         bar.setFillStyle(getColor(r));

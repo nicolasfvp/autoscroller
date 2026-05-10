@@ -3,7 +3,7 @@ import { MetaState } from '../state/MetaState';
 import { upgradeBuilding, getBuildingTierData } from '../systems/MetaProgressionSystem';
 import { saveMetaState } from '../systems/MetaPersistence';
 import { playUnlockCelebration } from '../ui/UnlockCelebration';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { FONTS } from '../ui/StyleConstants';
 
 const BUILDING_COLORS: Record<string, number> = {
   forge: 0xcc3333,
@@ -336,7 +336,7 @@ export class BuildingPanelScene extends Scene {
 
     // Nice Red Close Button
     const closeBtnBg = this.add.circle(620, 50, 16, 0xcc0000).setStrokeStyle(2, 0x3e2723).setInteractive({ useHandCursor: true });
-    const closeBtnTxt = this.add.text(620, 50, 'X', {
+    this.add.text(620, 50, 'X', {
       fontSize: '18px',
       fontStyle: 'bold',
       color: '#ffffff',

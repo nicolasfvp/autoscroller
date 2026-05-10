@@ -15,7 +15,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private diffBadgeBg!: Phaser.GameObjects.Graphics;
 
   private hpBar!: Phaser.GameObjects.Rectangle;
-  private hpBarBgAsset!: Phaser.GameObjects.Image;
   private hpText!: Phaser.GameObjects.Text;
 
   private tpText!: Phaser.GameObjects.Text;
@@ -58,7 +57,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private static readonly RP_H  = 104;
 
   // HP bar inner bounds (world coords)
-  private readonly HP_BAR_X: number;
   private readonly HP_BAR_W: number;
 
   constructor(scene: Phaser.Scene) {
@@ -111,7 +109,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const barY = LP.LP_Y + 76; // Positioned in the lower slot of the panel
     const barW = LP.LP_W - 24;
     const barH = 20;
-    this.HP_BAR_X = barX;
     this.HP_BAR_W = barW;
 
     // Green fill (no extra background needed, as the panel itself provides the frame)
@@ -224,20 +221,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   // ── Helpers ────────────────────────────────────────────────────
 
-  /** Draws a glassmorphism panel using Graphics */
-  private drawPanel(
-    scene: Phaser.Scene,
-    x: number, y: number, w: number, h: number,
-    fillColor: number, borderColor: number,
-  ): void {
-    const g = scene.add.graphics();
-    g.fillStyle(fillColor, 0.82);
-    g.fillRoundedRect(x, y, w, h, 8);
-    g.lineStyle(1.5, borderColor, 0.55);
-    g.strokeRoundedRect(x, y, w, h, 8);
-    this.add(g);
-  }
-
   private buildLoopProgressBar(scene: Phaser.Scene): void {
     const P = LoopHUD;
     const cx = P.PROG_X + P.PROG_W / 2;   // 400
@@ -256,7 +239,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     // Progress bar geometry (fits inside the lower slot of the panel)
     const barX = P.PROG_X + 12;
     const barY = P.PROG_Y + 76;
-    const barW = P.PROG_W - 24;
     const barH = 20;
 
     // Bar fill (starts at 0 width)
@@ -385,7 +367,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
     const tween = this.scene.tweens.addCounter({
       from, to, duration: 280,
-      onUpdate: (t) => onUpdate(Math.round(t.getValue())),
+      onUpdate: (t) => onUpdate(Math.round(t.getValue() ?? 0)),
       onComplete: () => { onUpdate(to); onComplete(); },
     });
 

@@ -49,7 +49,7 @@ export function resetRNG(): void {
 export function rollMaterialDrops(
   source: 'terrain' | 'enemy' | 'boss',
   sourceKey: string,
-  loopCount: number,
+  _loopCount: number,
   rng: RNG = activeRNG,
   gatheringBoost: number = 0
 ): Record<string, number> {

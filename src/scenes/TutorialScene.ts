@@ -14,7 +14,6 @@ export class TutorialScene extends Scene {
   private bodyText!: Phaser.GameObjects.Text;
   private hintText!: Phaser.GameObjects.Text;
   private stepCounter!: Phaser.GameObjects.Text;
-  private skipBtn!: Phaser.GameObjects.Text;
 
   private readonly tutorialTexts: string[] = [
     'Welcome to Rogue Scroll!\n\nYou are a hero traveling through an endless loop of tiles.\nYour cards fight automatically -- your job is to prepare.',
@@ -89,11 +88,11 @@ export class TutorialScene extends Scene {
     }).setOrigin(0.5);
 
     // Skip Tutorial button (bottom-right)
-    this.skipBtn = createButton(this, 700, 560, 'Skip Tutorial', () => this.skipTutorial(), 'secondary');
+    createButton(this, 700, 560, 'Skip Tutorial', () => this.skipTutorial(), 'secondary');
 
     // Navigation
     this.input.keyboard?.on('keydown-SPACE', () => this.nextStep());
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) => {
+    this.input.on('pointerdown', (_pointer: Phaser.Input.Pointer, currentlyOver: Phaser.GameObjects.GameObject[]) => {
       // Don't advance if the click was on an interactive child (skip button etc.)
       if (currentlyOver && currentlyOver.length > 0) return;
       this.nextStep();

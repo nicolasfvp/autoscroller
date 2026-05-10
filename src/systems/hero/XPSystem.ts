@@ -24,17 +24,6 @@ export function getXPForNextLevel(level: number): number {
 }
 
 /**
- * Total cumulative XP required to reach a given level from 0.
- */
-function cumulativeXPForLevel(level: number): number {
-  let total = 0;
-  for (let i = 0; i < level; i++) {
-    total += getXPForNextLevel(i);
-  }
-  return total;
-}
-
-/**
  * Calculate the level for a given total XP amount.
  */
 export function getLevel(totalXP: number): number {

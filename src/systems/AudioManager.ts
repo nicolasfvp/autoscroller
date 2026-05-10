@@ -77,7 +77,7 @@ export class AudioManager {
     const { volume = 0.2, duration = 1000 } = config;
 
     if (this.ambienceKey === key && this.ambienceSound?.isPlaying) {
-      this.ambienceSound.setVolume(volume);
+      (this.ambienceSound as Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound).setVolume(volume);
       return;
     }
 
