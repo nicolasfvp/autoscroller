@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   addCard,
   removeCard,
@@ -15,7 +15,9 @@ function makeRun(overrides?: {
   gold?: number;
 }): RunState {
   return {
+    version: 3,
     runId: 'test',
+    seed: 'test-seed',
     generation: 1,
     startedAt: 0,
     hero: {
@@ -41,7 +43,11 @@ function makeRun(overrides?: {
     relics: [],
     isInCombat: false,
     currentScene: 'Game',
-  } as RunState;
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
+  };
 }
 
 describe('DeckSystem', () => {

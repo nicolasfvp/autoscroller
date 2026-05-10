@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { resolveAdjacencySynergies, type SynergyBuff } from '../../src/systems/SynergyResolver';
+import { resolveAdjacencySynergies } from '../../src/systems/SynergyResolver';
 import type { TileSlot } from '../../src/systems/TileRegistry';
 
 function slot(type: string, terrain?: string): TileSlot {
