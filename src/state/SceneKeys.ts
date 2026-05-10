@@ -8,10 +8,12 @@
  */
 
 export const SCENE_KEYS = {
+  BOOT: 'Boot',
   PRELOADER: 'Preloader',
   MAIN_MENU: 'MainMenu',
   GAME: 'GameScene',
   COMBAT: 'CombatScene',
+  PLANNING: 'PlanningOverlay',
   PLANNING_OVERLAY: 'PlanningOverlay',
   BOSS_EXIT: 'BossExitScene',
   DEATH: 'DeathScene',

@@ -7,6 +7,7 @@ import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { getCardById } from '../data/DataLoader';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 import type { CardCategory } from '../data/types';
 
 const COLS = 6;
@@ -49,17 +50,17 @@ export class DeckCustomizationScene extends Scene {
 
   private scrollY = 0;
   private maxScroll = 0;
-  private parentScene: string = 'GameScene';
+  private parentScene: string = SCENE_KEYS.GAME;
 
   constructor() {
-    super('DeckCustomizationScene');
+    super(SCENE_KEYS.DECK_CUSTOMIZATION);
   }
 
   create(data?: { parentScene?: string }): void {
     const run = getRun();
     this.deckOrder = [...run.deck.active];
     this.scrollY = 0;
-    this.parentScene = data?.parentScene ?? 'GameScene';
+    this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
     this.cameras.main.setBackgroundColor(0x1a1a2e);
     if (this.textures.exists('deck_frame')) {
@@ -445,8 +446,10 @@ export class DeckCustomizationScene extends Scene {
       this.dragCardId = '';
       this.hoverIndex = -1;
 
-      // Full scene restart so layout recalculates (strip may disappear)
-      this.scene.restart();
+      // Full scene restart so layout recalculates (strip may disappear).
+      // Pass parentScene via data so the restarted scene preserves the
+      // close target (don't rely on closure capture of the previous run).
+      this.scene.restart({ parentScene: this.parentScene });
       return;
     }
 

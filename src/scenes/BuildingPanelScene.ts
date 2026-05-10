@@ -4,6 +4,7 @@ import { upgradeBuilding, getBuildingTierData } from '../systems/MetaProgression
 import { saveMetaState } from '../systems/MetaPersistence';
 import { playUnlockCelebration } from '../ui/UnlockCelebration';
 import { FONTS } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 const BUILDING_COLORS: Record<string, number> = {
   forge: 0xcc3333,
@@ -27,7 +28,7 @@ export class BuildingPanelScene extends Scene {
   private buildingKey!: string;
 
   constructor() {
-    super('BuildingPanelScene');
+    super(SCENE_KEYS.BUILDING_PANEL);
   }
 
   create(data: { buildingKey: string; metaState: MetaState }): void {
@@ -351,7 +352,7 @@ export class BuildingPanelScene extends Scene {
   private closePanel(): void {
     // Resume CityHub instead of restarting it — full restart blows away any
     // tween state, ongoing animations, and re-runs preload work.
-    this.scene.resume('CityHub');
+    this.scene.resume(SCENE_KEYS.CITY_HUB);
     this.scene.stop();
   }
 }

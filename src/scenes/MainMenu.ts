@@ -4,6 +4,7 @@ import { setRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
+import { SCENE_KEYS, REGISTRY_KEYS } from '../state/SceneKeys';
 
 export class MainMenu extends Scene {
   private savedRun: RunState | null = null;
@@ -11,14 +12,14 @@ export class MainMenu extends Scene {
   private transitioning = false;
 
   constructor() {
-    super('MainMenu');
+    super(SCENE_KEYS.MAIN_MENU);
   }
 
   create(): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
-    this.savedRun = this.registry.get('savedRun') as RunState | null;
+    this.savedRun = this.registry.get(REGISTRY_KEYS.SAVED_RUN) as RunState | null;
     this.confirmOverlay = null;
 
     // Theme Song
@@ -30,36 +31,39 @@ export class MainMenu extends Scene {
       this.add.image(LAYOUT.centerX, LAYOUT.centerY, 'homepage').setDisplaySize(LAYOUT.canvasWidth, LAYOUT.canvasHeight).setDepth(-10);
     }
 
-    // Fog Effect using the provided asset
-    // Instead of particles, use a couple of large images that slowly drift to avoid the "popping" and "multiple copies" effect
+    // Fog Effect — two large images that drift left in lockstep. Use
+    // onRepeat to teleport each image back to the right edge so the
+    // strip stays seamless across loops (a plain tween with repeat:-1
+    // snaps both images back to their starting x simultaneously, which
+    // produces a visible gap on the first loop).
+    const fogImages: Phaser.GameObjects.Image[] = [];
     for (let i = 0; i < 2; i++) {
-      const fogImg = this.add.image(
-        LAYOUT.canvasWidth / 2 + (i * LAYOUT.canvasWidth), 
-        LAYOUT.canvasHeight - 150, 
-        'fog'
-      );
-      // Scale to cover width if needed, adjust alpha
+      const startX = LAYOUT.canvasWidth / 2 + (i * LAYOUT.canvasWidth);
+      const fogImg = this.add.image(startX, LAYOUT.canvasHeight - 150, 'fog');
       fogImg.setDisplaySize(LAYOUT.canvasWidth * 1.5, LAYOUT.canvasHeight * 0.8);
       fogImg.setAlpha(0.3);
       fogImg.setBlendMode(Phaser.BlendModes.SCREEN);
       fogImg.setDepth(-5);
+      fogImages.push(fogImg);
+
+      const baseY = fogImg.y;
 
       this.tweens.add({
         targets: fogImg,
-        x: fogImg.x - LAYOUT.canvasWidth,
-        duration: 30000, // Very slow drift
-        repeat: -1,      // Infinite repeat
-        ease: 'Linear'
+        x: startX - LAYOUT.canvasWidth * 2,
+        duration: 60000,
+        repeat: -1,
+        ease: 'Linear',
+        onRepeat: () => { fogImg.x = startX; },
       });
-      
-      // Gentle vertical bobbing
+
       this.tweens.add({
         targets: fogImg,
-        y: fogImg.y - 20,
+        y: baseY - 20,
         duration: 5000,
         yoyo: true,
         repeat: -1,
-        ease: 'Sine.easeInOut'
+        ease: 'Sine.easeInOut',
       });
     }
 
@@ -114,7 +118,7 @@ export class MainMenu extends Scene {
   private continueRun(): void {
     if (this.savedRun) {
       setRun(this.savedRun);
-      this.fadeToScene('GameScene');
+      this.fadeToScene(SCENE_KEYS.GAME);
     }
   }
 
@@ -163,7 +167,7 @@ export class MainMenu extends Scene {
 
   private async startNewRun(): Promise<void> {
     await saveManager.clear();
-    this.fadeToScene('CharacterSelectScene');
+    this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT);
   }
 
   private cleanup(): void {

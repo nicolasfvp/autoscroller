@@ -3,6 +3,7 @@ import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { LAYOUT } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 interface ClassOption {
   id: string;
@@ -36,9 +37,10 @@ export class CharacterSelectScene extends Scene {
   private selectedIndex = 0;
   private classCards: Phaser.GameObjects.Container[] = [];
   private transitioning = false;
+  private lastInputWasMouse = false;
 
   constructor() {
-    super('CharacterSelectScene');
+    super(SCENE_KEYS.CHARACTER_SELECT);
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -87,10 +89,12 @@ export class CharacterSelectScene extends Scene {
 
     // Keyboard navigation
     this.input.keyboard?.on('keydown-LEFT', () => {
+      this.lastInputWasMouse = false;
       this.selectedIndex = Math.max(0, this.selectedIndex - 1);
       this.highlightSelected();
     });
     this.input.keyboard?.on('keydown-RIGHT', () => {
+      this.lastInputWasMouse = false;
       this.selectedIndex = Math.min(CLASSES.length - 1, this.selectedIndex + 1);
       this.highlightSelected();
     });
@@ -100,6 +104,11 @@ export class CharacterSelectScene extends Scene {
     this.input.keyboard?.on('keydown-SPACE', () => {
       this.confirmSelection();
     });
+
+    // Reset to mouse mode when the pointer actually moves — this prevents
+    // a stale pointerover event from overriding keyboard navigation when
+    // the cursor happens to sit over a non-active card.
+    this.input.on('pointermove', () => { this.lastInputWasMouse = true; });
 
     // Hint
     this.add.text(LAYOUT.centerX, 570, 'Arrow keys to browse, Enter to select', {
@@ -136,6 +145,10 @@ export class CharacterSelectScene extends Scene {
       }
     });
     bg.on('pointerover', () => {
+      // Only follow the cursor's selection when the user is actually
+      // driving with the mouse — a stale pointerover (mouse parked over
+      // a card) shouldn't fight keyboard navigation.
+      if (!this.lastInputWasMouse) return;
       this.selectedIndex = index;
       this.highlightSelected();
     });
@@ -263,6 +276,6 @@ export class CharacterSelectScene extends Scene {
     const meta = await loadMetaState();
     setRun(createNewRun(meta, 1, selected.id));
     await saveManager.save(getRun());
-    this.fadeToScene('TutorialScene');
+    this.fadeToScene(SCENE_KEYS.TUTORIAL);
   }
 }

@@ -4,5 +4,14 @@ export default defineConfig({
     base: './',
     server: {
         host: true
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    phaser: ['phaser']
+                }
+            }
+        }
     }
 })

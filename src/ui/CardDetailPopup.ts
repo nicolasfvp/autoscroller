@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
 import { COLORS, FONTS } from './StyleConstants';
+import { createDelayedBackdrop } from './Backdrop';
 import type { CardCategory } from '../data/types';
 
 const RARITY_COLORS: Record<string, number> = {
@@ -71,9 +72,9 @@ export function showCardDetail(
   const popup = scene.add.container(0, 0);
   popup.setDepth(500);
 
-  // Full-screen dimmed backdrop
-  const backdrop = scene.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
-  backdrop.setInteractive();
+  // Full-screen dimmed backdrop -- 100ms delay before interactive prevents
+  // the same pointerdown that opened the popup from closing it.
+  const backdrop = createDelayedBackdrop(scene, 100, 0.7);
   backdrop.on('pointerdown', () => {
     popup.destroy(true);
   });

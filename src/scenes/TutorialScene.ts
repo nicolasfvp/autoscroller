@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * TutorialScene -- 6-screen tutorial with accurate game content.
@@ -30,7 +31,7 @@ export class TutorialScene extends Scene {
   ];
 
   constructor() {
-    super('TutorialScene');
+    super(SCENE_KEYS.TUTORIAL);
   }
 
   async create(): Promise<void> {
@@ -41,7 +42,7 @@ export class TutorialScene extends Scene {
 
     // First-run gate: skip if already seen
     if (this.metaState.tutorialSeen) {
-      this.scene.start('CityHub');
+      this.scene.start(SCENE_KEYS.CITY_HUB);
       return;
     }
 
@@ -114,13 +115,13 @@ export class TutorialScene extends Scene {
   private async completeTutorial(): Promise<void> {
     this.metaState.tutorialSeen = true;
     await saveMetaState(this.metaState);
-    this.scene.start('CityHub');
+    this.scene.start(SCENE_KEYS.CITY_HUB);
   }
 
   private async skipTutorial(): Promise<void> {
     this.metaState.tutorialSeen = true;
     await saveMetaState(this.metaState);
-    this.scene.start('CityHub');
+    this.scene.start(SCENE_KEYS.CITY_HUB);
   }
 
   private cleanup(): void {

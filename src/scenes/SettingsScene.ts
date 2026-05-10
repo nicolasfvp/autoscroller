@@ -4,6 +4,7 @@ import { getAudioManager } from '../audio/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState } from '../state/MetaState';
 import { saveManager } from '../core/SaveManager';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * SettingsScene -- full settings overlay with volume, speed, save management.
@@ -25,7 +26,7 @@ export class SettingsScene extends Scene {
   private confirmContainer: Phaser.GameObjects.Container | null = null;
 
   constructor() {
-    super('SettingsScene');
+    super(SCENE_KEYS.SETTINGS);
   }
 
   async create(): Promise<void> {
@@ -233,7 +234,7 @@ export class SettingsScene extends Scene {
     await saveMetaState(this.metaState);
 
     this.scene.stop();
-    this.scene.resume('PauseScene');
+    this.scene.resume(SCENE_KEYS.PAUSE);
   }
 
   private cleanup(): void {

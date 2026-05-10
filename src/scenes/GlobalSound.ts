@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { AudioManager } from '../systems/AudioManager';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * GlobalSound scene stays active throughout the entire game.
@@ -7,7 +8,7 @@ import { AudioManager } from '../systems/AudioManager';
  */
 export class GlobalSound extends Scene {
   constructor() {
-    super({ key: 'GlobalSound' });
+    super({ key: SCENE_KEYS.GLOBAL_SOUND });
   }
 
   create(): void {

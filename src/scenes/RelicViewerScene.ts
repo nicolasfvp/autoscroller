@@ -1,23 +1,26 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * RelicViewerScene -- overlay for viewing collected relics.
  * Reads run.relics. Full display is Phase 2+.
  */
 export class RelicViewerScene extends Scene {
-  private parentScene: string = 'GameScene';
+  private parentScene: string = SCENE_KEYS.GAME;
 
   constructor() {
-    super('RelicViewerScene');
+    super(SCENE_KEYS.RELIC_VIEWER);
   }
 
   create(data?: { parentScene?: string }): void {
     const run = getRun();
-    this.parentScene = data?.parentScene ?? 'GameScene';
+    this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
-    this.cameras.main.setBackgroundColor(COLORS.background);
+    // Opaque backdrop covering the full canvas — RelicViewerScene runs as
+    // an overlay with the parent scene paused but still visible underneath.
+    this.add.rectangle(400, 300, 800, 600, 0x0a0a14, 0.96).setInteractive();
 
     // Title
     this.add.text(400, 60, 'Your Relics', {

@@ -17,6 +17,8 @@ export class CardQueueDisplay {
   private pulseTween: Phaser.Tweens.Tween | null = null;
   private currentDeckOrder: string[] = [];
   private currentPointer = 0;
+  private animatingPlay = false;
+  private pendingState: { deck: string[]; pointer: number } | null = null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -28,7 +30,12 @@ export class CardQueueDisplay {
    * Refresh the queue display from current combat state.
    */
   public update(state: CombatState, deckPointer: number): void {
-    // Evita reconstrução na mesmíssima alteração se quisermos gerenciar animações de forma assíncrona
+    if (this.animatingPlay) {
+      // A play animation is mid-flight; queue this state and apply when it
+      // finishes so the rebuild doesn't kill the in-progress tweens.
+      this.pendingState = { deck: state.deckOrder, pointer: deckPointer };
+      return;
+    }
     this.currentDeckOrder = state.deckOrder;
     this.currentPointer = deckPointer;
     this.rebuild();
@@ -121,6 +128,8 @@ export class CardQueueDisplay {
    */
   onCardPlayed(_deckPosition: number): void {
     if (this.cardContainers.length === 0) return;
+    if (this.animatingPlay) return;
+    this.animatingPlay = true;
     const topCard = this.cardContainers[0];
 
     // "Explodes" in place and fade out effect - more dramatic
@@ -157,6 +166,7 @@ export class CardQueueDisplay {
       const targetScale = isBecomingTop ? 0.65 : 0.45;
       const targetAlpha = isBecomingTop ? 1 : 0.8;
 
+      const isLast = (newIdx === slideTargets.length - 1);
       this.scene.tweens.add({
         targets: card,
         y: targetY,
@@ -166,7 +176,17 @@ export class CardQueueDisplay {
         duration: 350,
         ease: 'Cubic.easeOut',
         onComplete: () => {
-          if (card === incomingCard) incomingCard.destroy(); // Will be replaced exactly by rebuild()
+          if (card === incomingCard) incomingCard.destroy();
+          if (isLast) {
+            this.animatingPlay = false;
+            if (this.pendingState) {
+              const next = this.pendingState;
+              this.pendingState = null;
+              this.currentDeckOrder = next.deck;
+              this.currentPointer = next.pointer;
+              this.rebuild();
+            }
+          }
         }
       });
     }

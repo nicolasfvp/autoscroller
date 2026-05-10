@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
+import { SCENE_KEYS, REGISTRY_KEYS } from '../state/SceneKeys';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -8,7 +9,7 @@ import { saveManager } from '../core/SaveManager';
  */
 export class PauseScene extends Scene {
   constructor() {
-    super('PauseScene');
+    super(SCENE_KEYS.PAUSE);
   }
 
   create(): void {
@@ -43,12 +44,12 @@ export class PauseScene extends Scene {
     
     this.createChunkyButton(400, 280, 260, 50, 'View Deck', 0xdab988, '#111111', () => {
       this.scene.pause();
-      this.scene.launch('DeckCustomizationScene', { parentScene: 'PauseScene' });
+      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
     });
-    
+
     this.createChunkyButton(400, 350, 260, 50, 'Settings', 0xdab988, '#111111', () => {
       this.scene.pause();
-      this.scene.launch('SettingsScene');
+      this.scene.launch(SCENE_KEYS.SETTINGS);
     });
 
     this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', async () => {
@@ -57,10 +58,10 @@ export class PauseScene extends Scene {
       // pointing at the abandoned run.
       clearRun();
       await saveManager.clear();
-      this.registry.set('savedRun', null);
-      this.scene.stop('GameScene');
+      this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
+      this.scene.stop(SCENE_KEYS.GAME);
       this.scene.stop();
-      this.scene.start('MainMenu');
+      this.scene.start(SCENE_KEYS.MAIN_MENU);
     });
 
     // ESC to resume
@@ -71,7 +72,7 @@ export class PauseScene extends Scene {
 
   private resume(): void {
     this.scene.stop();
-    this.scene.resume('GameScene');
+    this.scene.resume(SCENE_KEYS.GAME);
   }
 
   private createChunkyButton(x: number, y: number, w: number, h: number, text: string, bgColor: number, textColor: string, onClick: () => void): void {

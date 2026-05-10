@@ -45,6 +45,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
   private leftSynergy: Phaser.GameObjects.Rectangle | null = null;
   private rightSynergy: Phaser.GameObjects.Rectangle | null = null;
   private tileScale: number;
+  private synergyState: 'left' | 'right' | 'both' | 'none' = 'none';
 
   constructor(
     scene: Phaser.Scene,
@@ -176,6 +177,11 @@ export class TileVisual extends Phaser.GameObjects.Container {
   }
 
   setSynergyEdge(side: 'left' | 'right' | 'both' | 'none'): void {
+    // Skip the rebuild if state hasn't changed — updateTile() runs every
+    // frame for visible tiles and was thrashing graphics objects.
+    if (side === this.synergyState) return;
+    this.synergyState = side;
+
     const size = TILE_SIZE * this.tileScale;
     const stripW = 4 * this.tileScale;
 

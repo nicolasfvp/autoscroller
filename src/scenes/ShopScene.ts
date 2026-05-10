@@ -4,6 +4,7 @@ import { ShopSystem } from '../systems/ShopSystem';
 import { getCardById, getRelicById } from '../data/DataLoader';
 import { FONTS } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 // ── Design tokens ────────────────────────────────────────────
 const FF    = FONTS.family;
@@ -62,7 +63,7 @@ export class ShopScene extends Scene {
   private menuContainer!: Phaser.GameObjects.Container;
   private modalContainer!: Phaser.GameObjects.Container;
 
-  constructor() { super('ShopScene'); }
+  constructor() { super(SCENE_KEYS.SHOP); }
 
   create(): void {
     const run = getRun();
@@ -183,7 +184,7 @@ export class ShopScene extends Scene {
     deckBtn.on('pointerout',  () => deckBtn.setColor('#aaddff'));
     deckBtn.on('pointerdown', () => {
       this.scene.pause();
-      this.scene.launch('DeckCustomizationScene', { parentScene: 'ShopScene' });
+      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.SHOP });
       this.events.once('resume', () => this.buildMenu());
     });
 
@@ -196,7 +197,7 @@ export class ShopScene extends Scene {
     relicBtn.on('pointerout',  () => relicBtn.setColor('#aaddff'));
     relicBtn.on('pointerdown', () => {
       this.scene.pause();
-      this.scene.launch('RelicViewerScene', { parentScene: 'ShopScene' });
+      this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.SHOP });
       this.events.once('resume', () => this.buildMenu());
     });
 
@@ -240,41 +241,80 @@ export class ShopScene extends Scene {
     this.buildMenu();
   }
 
+  // ── Generic shop modal grid helper ────────────────────────────
+  // Lays out items in a grid of `cardSlot` rectangles and lets the
+  // caller render its own per-cell content. Centralizes hit-area, hover
+  // styling, and "buy → re-open modal" plumbing.
+  private createShopModal<T>(opts: {
+    title: string;
+    emptyMessage?: string;
+    items: T[];
+    cols: number;
+    cellW: number;
+    cellH: number;
+    gap?: number;
+    startY?: number;
+    maxRows?: number;
+    canAfford: (item: T, index: number) => boolean;
+    onSelect: (item: T, index: number) => boolean;
+    reopenKey: ShopCategory;
+    renderCell: (
+      item: T, index: number, x: number, cy: number, ok: boolean,
+      bg: Phaser.GameObjects.Rectangle,
+    ) => void;
+  }): void {
+    const { title, emptyMessage, items, cols, cellW, cellH } = opts;
+    const gap = opts.gap ?? 6;
+    const startY = opts.startY ?? 105;
+    const maxRows = opts.maxRows ?? Infinity;
+
+    this.modalTitle(title);
+    if (items.length === 0 && emptyMessage) {
+      this.modalEmpty(emptyMessage);
+      return;
+    }
+    items.forEach((item, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      if (row >= maxRows) return;
+      const x  = colX(col, cols, cellW, gap);
+      const cy = startY + row * (cellH + gap) + cellH / 2;
+      const ok = opts.canAfford(item, i);
+      const bg = cardSlot(this, x, cy, cellW, cellH, ok, () => {
+        if (opts.onSelect(item, i)) {
+          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+          this.closeModal();
+          this.openModal(opts.reopenKey);
+        }
+      });
+      this.modalContainer.add(bg);
+      opts.renderCell(item, i, x, cy, ok, bg);
+    });
+  }
+
   // ── Modal: Buy Cards ──────────────────────────────────────────
   private modalBuyCards(): void {
     const run   = getRun();
     const cards = ShopSystem.getShopCards(run, run.pool.cards, run.loop.count);
 
-    this.modalTitle('🃏 Buy Cards');
-    const COLS = 3; const CW = 134; const CH = 60; const GAP = 6;
-    let y = 105;
-
-    if (cards.length === 0) {
-      this.modalEmpty('No cards available this visit.');
-      return;
-    }
-
-    cards.forEach((card, i) => {
-      const col = i % COLS;
-      const row = Math.floor(i / COLS);
-      const x   = colX(col, COLS, CW, GAP);
-      const cy  = y + row * (CH + GAP) + CH / 2;
-      const ok  = run.economy.gold >= card.price;
-
-      const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
-        if (ShopSystem.buyCard(run, card.cardId, card.price)) {
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('buyCards');
-        }
-      });
-      const name = this.add.text(x, cy - 13, card.name, {
-        fontSize: '13px', fontStyle: 'bold', color: ok ? WHITE : DIM,
-        fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(0.5);
-      const price = this.add.text(x, cy + 9, `${card.price} Gold`, {
-        fontSize: '12px', color: ok ? GOLD : RED, fontFamily: FF,
-      }).setOrigin(0.5);
-      this.modalContainer.add([bg, name, price]);
+    this.createShopModal({
+      title: '🃏 Buy Cards',
+      emptyMessage: 'No cards available this visit.',
+      items: cards,
+      cols: 3, cellW: 134, cellH: 60,
+      reopenKey: 'buyCards',
+      canAfford: (card) => run.economy.gold >= card.price,
+      onSelect:  (card) => ShopSystem.buyCard(run, card.cardId, card.price),
+      renderCell: (card, _i, x, cy, ok) => {
+        const name = this.add.text(x, cy - 13, card.name, {
+          fontSize: '13px', fontStyle: 'bold', color: ok ? WHITE : DIM,
+          fontFamily: FF, stroke: '#000', strokeThickness: 2,
+        }).setOrigin(0.5);
+        const price = this.add.text(x, cy + 9, `${card.price} Gold`, {
+          fontSize: '12px', color: ok ? GOLD : RED, fontFamily: FF,
+        }).setOrigin(0.5);
+        this.modalContainer.add([name, price]);
+      },
     });
   }
 
@@ -282,80 +322,73 @@ export class ShopScene extends Scene {
   private modalUpgrade(): void {
     const run      = getRun();
     const upgraded = run.deck.upgradedCards ?? [];
-    const deckCards = run.deck.active;
 
-    this.modalTitle('⬆ Upgrade Cards');
-    const COLS = 3; const CW = 134; const CH = 58; const GAP = 6;
-    let y = 105;
+    this.createShopModal({
+      title: '⬆ Upgrade Cards',
+      items: run.deck.active,
+      cols: 3, cellW: 134, cellH: 58, maxRows: 3,
+      reopenKey: 'upgrade',
+      canAfford: (cardId) => {
+        const card = getCardById(cardId);
+        const rarity = card?.rarity ?? 'common';
+        const isUpg = upgraded.includes(cardId);
+        return !isUpg && run.economy.gold >= ShopSystem.getUpgradePrice(rarity);
+      },
+      onSelect: (cardId) => {
+        const card = getCardById(cardId);
+        const rarity = card?.rarity ?? 'common';
+        return ShopSystem.upgradeCard(run, cardId, rarity);
+      },
+      renderCell: (cardId, _i, x, cy, ok, bg) => {
+        const card = getCardById(cardId);
+        const isUpg = upgraded.includes(cardId);
+        const rarity = card?.rarity ?? 'common';
+        const price = ShopSystem.getUpgradePrice(rarity);
+        if (isUpg) bg.setStrokeStyle(1.5, 0x44aa44);
 
-    deckCards.forEach((cardId, i) => {
-      const col    = i % COLS;
-      const row    = Math.floor(i / COLS);
-      if (row > 2) return; // max 3 rows
-      const card   = getCardById(cardId);
-      const rarity = card?.rarity ?? 'common';
-      const isUpg  = upgraded.includes(cardId);
-      const price  = ShopSystem.getUpgradePrice(rarity);
-      const ok     = !isUpg && run.economy.gold >= price;
-      const x      = colX(col, COLS, CW, GAP);
-      const cy     = y + row * (CH + GAP) + CH / 2;
-
-      const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
-        if (ShopSystem.upgradeCard(run as any, cardId, rarity)) {
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('upgrade');
-        }
-      });
-      if (isUpg) bg.setStrokeStyle(1.5, 0x44aa44);
-
-      const display = isUpg ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
-      const name = this.add.text(x, cy - 13, display, {
-        fontSize: '12px', fontStyle: 'bold',
-        color: isUpg ? GREEN : (ok ? WHITE : DIM),
-        fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(0.5);
-      const subT = this.add.text(x, cy + 9, isUpg ? 'Upgraded ✓' : `${price} Gold`, {
-        fontSize: '11px',
-        color: isUpg ? GREEN : (ok ? GOLD : RED), fontFamily: FF,
-      }).setOrigin(0.5);
-      this.modalContainer.add([bg, name, subT]);
+        const display = isUpg ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
+        const name = this.add.text(x, cy - 13, display, {
+          fontSize: '12px', fontStyle: 'bold',
+          color: isUpg ? GREEN : (ok ? WHITE : DIM),
+          fontFamily: FF, stroke: '#000', strokeThickness: 2,
+        }).setOrigin(0.5);
+        const subT = this.add.text(x, cy + 9, isUpg ? 'Upgraded ✓' : `${price} Gold`, {
+          fontSize: '11px',
+          color: isUpg ? GREEN : (ok ? GOLD : RED), fontFamily: FF,
+        }).setOrigin(0.5);
+        this.modalContainer.add([name, subT]);
+      },
     });
   }
 
   // ── Modal: Remove Cards ───────────────────────────────────────
   private modalRemove(): void {
-    const run   = getRun();
+    const run = getRun();
     const removalCount = run.economy.removalsThisShop ?? 0;
-    const cost  = ShopSystem.getRemoveCardCost(removalCount);
-    const cards = run.deck.active;
+    const cost = ShopSystem.getRemoveCardCost(removalCount);
 
-    this.modalTitle(`🗑 Remove Cards  (${cost} Gold each)`);
-    const COLS = 3; const CW = 134; const CH = 42; const GAP = 6;
-    let y = 105;
-
-    cards.forEach((cardId, i) => {
-      const col = i % COLS;
-      const row = Math.floor(i / COLS);
-      if (row > 3) return; // max 4 rows
-      const cardDef = getCardById(cardId);
-      const ok = run.economy.gold >= cost && run.deck.active.length > 3;
-      const x  = colX(col, COLS, CW, GAP);
-      const cy = y + row * (CH + GAP) + CH / 2;
-
-      const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
+    this.createShopModal({
+      title: `🗑 Remove Cards  (${cost} Gold each)`,
+      items: run.deck.active,
+      cols: 3, cellW: 134, cellH: 42, maxRows: 4,
+      reopenKey: 'remove',
+      canAfford: () => run.economy.gold >= cost && run.deck.active.length > 3,
+      onSelect: (_cardId, i) => {
         if (ShopSystem.removeCard(run, i, removalCount)) {
           run.economy.removalsThisShop = removalCount + 1;
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('remove');
+          return true;
         }
-      });
-      if (ok) bg.setStrokeStyle(1.5, 0xaa3322);
-
-      const name = this.add.text(x, cy, cardDef?.name ?? cardId, {
-        fontSize: '12px', color: ok ? WHITE : DIM,
-        fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(0.5);
-      this.modalContainer.add([bg, name]);
+        return false;
+      },
+      renderCell: (cardId, _i, x, cy, ok, bg) => {
+        if (ok) bg.setStrokeStyle(1.5, 0xaa3322);
+        const cardDef = getCardById(cardId);
+        const name = this.add.text(x, cy, cardDef?.name ?? cardId, {
+          fontSize: '12px', color: ok ? WHITE : DIM,
+          fontFamily: FF, stroke: '#000', strokeThickness: 2,
+        }).setOrigin(0.5);
+        this.modalContainer.add(name);
+      },
     });
   }
 
@@ -364,59 +397,46 @@ export class ShopScene extends Scene {
     const run    = getRun();
     const relics = ShopSystem.getShopRelics(run, run.pool.relics);
 
-    this.modalTitle('💎 Buy Relics');
-
-    if (relics.length === 0) {
-      this.modalEmpty('No relics in stock this visit.');
-      return;
-    }
-
-    const COLS = 2; const RW = 202; const RH = 76; const GAP = 8;
-    let y = 110;
-
-    relics.forEach((relic, i) => {
-      const col    = i % COLS;
-      const row    = Math.floor(i / COLS);
-      const ok     = run.economy.gold >= relic.price;
-      const relDef = getRelicById(relic.relicId);
-      const x      = colX(col, COLS, RW, GAP);
-      const cy     = y + row * (RH + GAP) + RH / 2;
-
-      const bg = cardSlot(this, x, cy, RW, RH, ok, () => {
-        if (ShopSystem.buyRelic(run, relic.relicId, relic.price)) {
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('relics');
-        }
-      });
-      bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020);
-
-      const name = this.add.text(x, cy - 24, relic.name, {
-        fontSize: '14px', fontStyle: 'bold', color: ok ? GOLD : DIM,
-        fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(0.5);
-      const effect = relDef?.description ?? 'Unknown effect';
-      const desc = this.add.text(x, cy - 4, effect, {
-        fontSize: '10px', color: ok ? CYAN : DIM, fontFamily: FF,
-        wordWrap: { width: RW - 12 }, align: 'center',
-      }).setOrigin(0.5);
-      const priceT = this.add.text(x, cy + 28, `${relic.price} Gold`, {
-        fontSize: '13px', fontStyle: 'bold', color: ok ? GOLD : RED, fontFamily: FF,
-      }).setOrigin(0.5);
-      this.modalContainer.add([bg, name, desc, priceT]);
+    this.createShopModal({
+      title: '💎 Buy Relics',
+      emptyMessage: 'No relics in stock this visit.',
+      items: relics,
+      cols: 2, cellW: 202, cellH: 76, gap: 8, startY: 110,
+      reopenKey: 'relics',
+      canAfford: (relic) => run.economy.gold >= relic.price,
+      onSelect:  (relic) => ShopSystem.buyRelic(run, relic.relicId, relic.price),
+      renderCell: (relic, _i, x, cy, ok, bg) => {
+        bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020);
+        const relDef = getRelicById(relic.relicId);
+        const name = this.add.text(x, cy - 24, relic.name, {
+          fontSize: '14px', fontStyle: 'bold', color: ok ? GOLD : DIM,
+          fontFamily: FF, stroke: '#000', strokeThickness: 2,
+        }).setOrigin(0.5);
+        const effect = relDef?.description ?? 'Unknown effect';
+        const desc = this.add.text(x, cy - 4, effect, {
+          fontSize: '10px', color: ok ? CYAN : DIM, fontFamily: FF,
+          wordWrap: { width: 202 - 12 }, align: 'center',
+        }).setOrigin(0.5);
+        const priceT = this.add.text(x, cy + 28, `${relic.price} Gold`, {
+          fontSize: '13px', fontStyle: 'bold', color: ok ? GOLD : RED, fontFamily: FF,
+        }).setOrigin(0.5);
+        this.modalContainer.add([name, desc, priceT]);
+      },
     });
   }
 
   // ── Modal Helpers ─────────────────────────────────────────────
   private modalTitle(text: string): void {
-    // Decorative top bar
-    this.add.rectangle(PANEL_CX, 60, PANEL_W - 12, 38, 0x3a2008, 0.9)
+    // Decorative top bar — every element parented to the modalContainer
+    // so closeModal() destroys them; otherwise they orphan and stack.
+    const topBar = this.add.rectangle(PANEL_CX, 60, PANEL_W - 12, 38, 0x3a2008, 0.9)
       .setStrokeStyle(1.5, 0x9a6030);
     const title = this.add.text(PANEL_CX, 60, text, {
       fontSize: '18px', fontStyle: 'bold', color: GOLD,
       fontFamily: FF, stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5).setShadow(1, 1, '#000', 2, true, true);
-    this.add.rectangle(PANEL_CX, 82, PANEL_W - 12, 1, 0x9a6030, 0.5);
-    this.modalContainer.add([title]);
+    const divider = this.add.rectangle(PANEL_CX, 82, PANEL_W - 12, 1, 0x9a6030, 0.5);
+    this.modalContainer.add([topBar, title, divider]);
   }
 
   private modalEmpty(msg: string): void {
@@ -434,7 +454,7 @@ export class ShopScene extends Scene {
 
   private close(): void {
     this.scene.stop();
-    this.scene.resume('GameScene');
+    this.scene.resume(SCENE_KEYS.GAME);
   }
 
   private cleanup(): void { /* nothing */ }

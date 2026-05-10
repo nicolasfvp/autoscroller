@@ -70,13 +70,10 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const leftPanelBg = scene.add.image(LP.LP_X + LP.LP_W / 2, LP.LP_Y + LP.LP_H / 2, 'healthbar').setDisplaySize(LP.LP_W, LP.LP_H);
     this.add(leftPanelBg);
 
-    // Gold
+    // Gold icon (one instance, parented to the container so it's cleaned
+    // up with the HUD).
     const goldIconX = LP.LP_X + 20;
     const goldIconY = LP.LP_Y + 26;
-    scene.add.text(goldIconX, goldIconY, '◆', {
-      fontFamily: FF, fontSize: '17px', color: '#ffd700',
-      stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0, 0.5);
     this.add(scene.add.text(goldIconX, goldIconY, '◆', {
       fontFamily: FF, fontSize: '17px', color: '#ffd700',
       stroke: '#000', strokeThickness: 3,
@@ -115,10 +112,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.hpBar = scene.add.rectangle(barX, barY, barW, barH, 0x22dd44).setOrigin(0, 0.5);
     this.add(this.hpBar);
 
-    // Little HP heart icon (offset slightly so it doesn't overlap the border)
-    scene.add.text(barX + 8, barY, '♥', {
-      fontFamily: FF, fontSize: '11px', color: '#ff4444',
-    }).setOrigin(0, 0.5);
+    // Little HP heart icon (single instance, parented to the container).
     this.add(scene.add.text(barX + 8, barY, '♥', {
       fontFamily: FF, fontSize: '11px', color: '#ff4444',
     }).setOrigin(0, 0.5));

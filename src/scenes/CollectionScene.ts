@@ -3,6 +3,7 @@ import { loadMetaState } from '../systems/MetaPersistence';
 import { getCollectionStatus, getCompletionPercent, getItemDetails, type CollectionStatus, type CategoryStatus } from '../systems/CollectionRegistry';
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Events', 'Bosses'] as const;
 type TabName = typeof TAB_NAMES[number];
@@ -24,9 +25,11 @@ export class CollectionScene extends Scene {
   private tabTexts: Phaser.GameObjects.Text[] = [];
   private transitioning = false;
   private detailPopup: Phaser.GameObjects.Container | null = null;
+  private scrollY = 0;
+  private wheelHandler: ((p: unknown, go: unknown, dx: number, dy: number) => void) | null = null;
 
   constructor() {
-    super('CollectionScene');
+    super(SCENE_KEYS.COLLECTION);
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -83,7 +86,7 @@ export class CollectionScene extends Scene {
 
     closeBtnBg.on('pointerover', () => closeBtnBg.setFillStyle(0xff3333));
     closeBtnBg.on('pointerout', () => closeBtnBg.setFillStyle(0xcc0000));
-    closeBtnBg.on('pointerdown', () => this.fadeToScene('CityHub'));
+    closeBtnBg.on('pointerdown', () => this.fadeToScene(SCENE_KEYS.CITY_HUB));
 
     // Tab bar
     this.tabObjects = [];
@@ -123,6 +126,8 @@ export class CollectionScene extends Scene {
 
       img.on('pointerdown', () => {
         this.activeTab = tabName;
+        this.scrollY = 0;
+        this.gridContainer.y = 0;
         this.updateTabs();
         this.renderGrid();
       });
@@ -140,12 +145,23 @@ export class CollectionScene extends Scene {
     maskGfx.fillRect(40, 140, 720, 430);
     this.gridContainer.setMask(maskGfx.createGeometryMask());
 
-    // Mouse wheel scroll for grid
-    let scrollY = 0;
-    this.input.on('wheel', (_p: any, _go: any, _dx: number, dy: number) => {
+    // Mouse wheel scroll for grid — track scrollY on the scene so the
+    // grid offset persists across tab switches; remove the old handler
+    // on shutdown so relaunching the scene doesn't stack listeners.
+    this.scrollY = 0;
+    if (this.wheelHandler) this.input.off('wheel', this.wheelHandler);
+    this.wheelHandler = (_p, _go, _dx, dy) => {
       const maxScroll = Math.max(0, this.getGridHeight() - 430);
-      scrollY = Math.max(0, Math.min(maxScroll, scrollY + dy * 0.5));
-      this.gridContainer.y = -scrollY;
+      this.scrollY = Math.max(0, Math.min(maxScroll, this.scrollY + dy * 0.5));
+      this.gridContainer.y = -this.scrollY;
+    };
+    this.input.on('wheel', this.wheelHandler);
+
+    this.events.once('shutdown', () => {
+      if (this.wheelHandler) {
+        this.input.off('wheel', this.wheelHandler);
+        this.wheelHandler = null;
+      }
     });
 
     this.renderGrid();
