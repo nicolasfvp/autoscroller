@@ -15,7 +15,7 @@ export class CardResolver {
    * Check if the hero can afford to play a card given current state.
    */
   canAfford(card: CardDefinition, state: CombatState): boolean {
-    const isUpgraded = (state as any).upgradedCards?.includes(card.id) ?? false;
+    const isUpgraded = state.upgradedCards?.includes(card.id) ?? false;
     const cost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
     if (!cost) return true;
     if (cost.stamina !== undefined && state.heroStamina < cost.stamina) return false;
@@ -37,7 +37,7 @@ export class CardResolver {
     const result: ResolveResult = { totalDamage: 0, healed: 0, armorGained: 0 };
 
     // Determine effective card properties (base or upgraded)
-    const isUpgraded = (state as any).upgradedCards?.includes(card.id) ?? false;
+    const isUpgraded = state.upgradedCards?.includes(card.id) ?? false;
     const effectiveEffects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
     const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
 

@@ -167,13 +167,13 @@ export function resolveCardPlayedRelicBonus(
 
     switch (relic.effectType) {
       case 'refund_resource': {
-        if (relic.condition === 'card_category_attack' && (card as any).category === 'attack') {
+        if (relic.condition === 'card_category_attack' && card.category === 'attack') {
           if (relic.stat === 'stamina') staminaRefund += relic.value ?? 0;
         }
         break;
       }
       case 'spell_cost_override': {
-        if (relic.condition === 'card_category_magic' && (card as any).category === 'magic') {
+        if (relic.condition === 'card_category_magic' && card.category === 'magic') {
           if (relic.stats?.manaCostOverride !== undefined) manaOverride = relic.stats.manaCostOverride;
           if (relic.stats?.damageMultiplier !== undefined) damageMultiplier *= relic.stats.damageMultiplier;
         }

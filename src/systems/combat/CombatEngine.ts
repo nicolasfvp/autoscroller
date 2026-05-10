@@ -193,8 +193,23 @@ export class CombatEngine {
       this.state.heroStrength += this.state._bloodPactBonus;
     }
 
+    // spell_focus relic: refund mana cost difference for magic cards before resolve.
+    let manaRefund = 0;
+    if (relicBonus.manaOverride !== null && card.category === 'magic') {
+      const isUpgraded = this.state.upgradedCards?.includes(card.id) ?? false;
+      const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
+      const baseManaCost = effectiveCost?.mana ?? 0;
+      if (baseManaCost > relicBonus.manaOverride) {
+        manaRefund = baseManaCost - relicBonus.manaOverride;
+      }
+    }
+
     // Resolve card (with damage multiplier from relics)
     const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier);
+
+    if (manaRefund > 0) {
+      this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
+    }
 
     // Restore blood_pact temp strength
     if (this.state._bloodPactBonus > 0) {

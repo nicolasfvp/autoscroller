@@ -35,7 +35,7 @@ export class EnemyAI {
   private getEffectiveCooldown(state: CombatState): number {
     let cooldown = state.enemyAttackCooldown;
     // Enrage: reduce cooldown when below HP threshold
-    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+    const behaviors: BossBehavior[] | undefined = state.behaviors;
     const enrage = behaviors?.find(b => b.type === 'enrage');
     if (enrage && enrage.hpThreshold && enrage.attackSpeedMultiplier) {
       if (state.enemyHP / state.enemyMaxHP <= enrage.hpThreshold) {
@@ -46,7 +46,7 @@ export class EnemyAI {
   }
 
   private applyPeriodicBehaviors(deltaMs: number, state: CombatState): void {
-    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+    const behaviors: BossBehavior[] | undefined = state.behaviors;
     if (!behaviors || behaviors.length === 0) return;
 
     // Shield behavior: periodic armor gain
@@ -85,7 +85,7 @@ export class EnemyAI {
       }
     }
 
-    const behaviors = (state as any).behaviors as BossBehavior[] | undefined;
+    const behaviors: BossBehavior[] | undefined = state.behaviors;
 
     // Multi-hit behavior
     const multiHit = behaviors?.find(b => b.type === 'multi_hit');
