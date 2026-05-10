@@ -1,3 +1,16 @@
+// update_enemies.cjs
+// One-shot maintenance script: stamps a `spriteKey` field onto each enemy
+// in src/data/json/enemies.json so runtime code can resolve the in-Phaser
+// texture key without a lookup table. Keys use the `_sprite` suffix to
+// match the Preloader's `this.load.image('<id>_sprite', ...)` calls in
+// src/scenes/Preloader.ts.
+//
+// This is the surviving copy of two duplicate scripts (the `_generated`
+// variant was removed under FIXES A.5). Run with:
+//   node update_enemies.cjs
+//
+// Note: Iron Golem has no dedicated sprite asset; reuses the snake sprite
+// (BUGS-DATA MED-15 — replace once a golem sprite ships).
 const fs = require('fs');
 const data = JSON.parse(fs.readFileSync('src/data/json/enemies.json', 'utf8'));
 

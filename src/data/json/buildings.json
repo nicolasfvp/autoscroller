@@ -112,8 +112,8 @@
       {
         "level": 3,
         "cost": { "stone": 50, "iron": 30, "crystal": 15, "essence": 5 },
-        "unlocks": { "tiles": ["volcano"] },
-        "description": "Unlock Volcano tiles"
+        "unlocks": { "tiles": [] },
+        "description": "Reserved for future tile type"
       }
     ]
   },

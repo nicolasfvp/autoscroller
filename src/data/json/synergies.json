@@ -67,5 +67,26 @@
     "cardB": "defend",
     "bonus": { "type": "armor", "value": 10, "target": "self" },
     "displayName": "Fortress!"
+  },
+  {
+    "cardA": "fireball",
+    "cardB": "chain-lightning",
+    "bonus": { "type": "damage", "value": 18, "target": "enemy" },
+    "classRestriction": "mage",
+    "displayName": "Storm Cascade!"
+  },
+  {
+    "cardA": "arcane-shield",
+    "cardB": "fireball",
+    "bonus": { "type": "damage", "value": 15, "target": "enemy" },
+    "classRestriction": "mage",
+    "displayName": "Bastion Burst!"
+  },
+  {
+    "cardA": "mana-drain",
+    "cardB": "soul-rend",
+    "bonus": { "type": "mana", "value": 6, "target": "self" },
+    "classRestriction": "mage",
+    "displayName": "Soul Siphon!"
   }
 ]

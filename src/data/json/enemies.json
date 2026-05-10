@@ -94,7 +94,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "crystal",
+      "bonusMaterial": "essence",
       "bonusAmount": {
         "min": 1,
         "max": 2

@@ -14,7 +14,7 @@
   "Goblin": {
     "cardDrops": {
       "enemyType": "Goblin",
-      "cardPool": ["strike", "defend", "heavy-hit", "berserk", "quick-strike"],
+      "cardPool": ["strike", "defend", "heavy-hit", "berserker", "counter-strike"],
       "minDrops": 1,
       "maxDrops": 1,
       "choicesShown": 3
@@ -27,7 +27,7 @@
   "Orc": {
     "cardDrops": {
       "enemyType": "Orc",
-      "cardPool": ["heavy-hit", "shield-wall", "defend", "fortress"],
+      "cardPool": ["heavy-hit", "shield-wall", "defend", "fortify"],
       "minDrops": 1,
       "maxDrops": 1,
       "choicesShown": 3
@@ -40,7 +40,7 @@
   "Dark Mage": {
     "cardDrops": {
       "enemyType": "Dark Mage",
-      "cardPool": ["fireball", "heal", "frost", "arcane-blast"],
+      "cardPool": ["fireball", "heal", "arcane-shield", "chain-lightning"],
       "minDrops": 1,
       "maxDrops": 1,
       "choicesShown": 3
@@ -53,7 +53,7 @@
   "Elite Knight": {
     "cardDrops": {
       "enemyType": "Elite Knight",
-      "cardPool": ["heavy-hit", "shield-wall", "fortress", "berserk"],
+      "cardPool": ["heavy-hit", "shield-wall", "fortify", "berserker"],
       "minDrops": 2,
       "maxDrops": 2,
       "choicesShown": 4
@@ -67,7 +67,7 @@
   "Demon Lord": {
     "cardDrops": {
       "enemyType": "Demon Lord",
-      "cardPool": ["berserk", "fury", "fireball", "arcane-blast", "fortress"],
+      "cardPool": ["berserker", "fury", "fireball", "chain-lightning", "fortify"],
       "minDrops": 2,
       "maxDrops": 3,
       "choicesShown": 5
@@ -78,6 +78,82 @@
       { "tileType": "treasure", "dropChance": 0.6, "minQuantity": 1, "maxQuantity": 2 },
       { "tileType": "shop", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
       { "tileType": "rest", "dropChance": 0.8, "minQuantity": 1, "maxQuantity": 2 }
+    ]
+  },
+  "Iron Golem": {
+    "cardDrops": {
+      "enemyType": "Iron Golem",
+      "cardPool": ["bulwark", "iron-skin", "shield-wall", "fortify", "last-stand"],
+      "minDrops": 2,
+      "maxDrops": 3,
+      "choicesShown": 5
+    },
+    "tileDrops": [
+      { "tileType": "combat", "dropChance": 1.0, "minQuantity": 3, "maxQuantity": 4 },
+      { "tileType": "elite", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "rest", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "shop", "dropChance": 0.6, "minQuantity": 1, "maxQuantity": 1 }
+    ]
+  },
+  "Blood Reaver": {
+    "cardDrops": {
+      "enemyType": "Blood Reaver",
+      "cardPool": ["berserker", "fury", "reckless-charge", "doom-blade", "execute"],
+      "minDrops": 2,
+      "maxDrops": 3,
+      "choicesShown": 5
+    },
+    "tileDrops": [
+      { "tileType": "combat", "dropChance": 1.0, "minQuantity": 3, "maxQuantity": 5 },
+      { "tileType": "elite", "dropChance": 0.8, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "treasure", "dropChance": 0.5, "minQuantity": 1, "maxQuantity": 1 },
+      { "tileType": "shop", "dropChance": 0.6, "minQuantity": 1, "maxQuantity": 1 }
+    ]
+  },
+  "Lich King": {
+    "cardDrops": {
+      "enemyType": "Lich King",
+      "cardPool": ["chain-lightning", "soul-rend", "mana-drain", "weaken", "poison-cloud"],
+      "minDrops": 2,
+      "maxDrops": 3,
+      "choicesShown": 5
+    },
+    "tileDrops": [
+      { "tileType": "combat", "dropChance": 0.9, "minQuantity": 2, "maxQuantity": 4 },
+      { "tileType": "event", "dropChance": 0.8, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "shop", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "treasure", "dropChance": 0.5, "minQuantity": 1, "maxQuantity": 1 }
+    ]
+  },
+  "Ancient Dragon": {
+    "cardDrops": {
+      "enemyType": "Ancient Dragon",
+      "cardPool": ["doom-blade", "fury", "fireball", "chain-lightning", "execute", "soul-rend"],
+      "minDrops": 3,
+      "maxDrops": 3,
+      "choicesShown": 6
+    },
+    "tileDrops": [
+      { "tileType": "combat", "dropChance": 1.0, "minQuantity": 4, "maxQuantity": 6 },
+      { "tileType": "elite", "dropChance": 0.9, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "treasure", "dropChance": 0.8, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "shop", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "rest", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 }
+    ]
+  },
+  "Swamp Hydra": {
+    "cardDrops": {
+      "enemyType": "Swamp Hydra",
+      "cardPool": ["poison-cloud", "vampiric-touch", "cleave", "weaken", "sacrifice"],
+      "minDrops": 2,
+      "maxDrops": 3,
+      "choicesShown": 5
+    },
+    "tileDrops": [
+      { "tileType": "combat", "dropChance": 1.0, "minQuantity": 3, "maxQuantity": 5 },
+      { "tileType": "event", "dropChance": 0.7, "minQuantity": 1, "maxQuantity": 2 },
+      { "tileType": "treasure", "dropChance": 0.5, "minQuantity": 1, "maxQuantity": 1 },
+      { "tileType": "rest", "dropChance": 0.6, "minQuantity": 1, "maxQuantity": 1 }
     ]
   }
 }
