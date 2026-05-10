@@ -35,9 +35,13 @@ export class CombatHUD {
 
   // Display values (for tween delta checks)
   private displayedHeroHp  = 0;
+  private targetHeroHp     = 0;
   private displayedStamina = 0;
+  private targetStamina    = 0;
   private displayedMana    = 0;
+  private targetMana       = 0;
   private displayedEnemyHp = 0;
+  private targetEnemyHp    = 0;
 
   private hpTween?:      Phaser.Tweens.Tween;
   private staminaTween?: Phaser.Tweens.Tween;
@@ -182,26 +186,26 @@ export class CombatHUD {
     // tween start) so consecutive update() ticks during an in-flight tween
     // don't restart it every frame and leave the value stuck at zero.
     const newHP = Math.ceil(state.heroHP);
-    if (newHP !== this.displayedHeroHp) {
+    if (newHP !== this.targetHeroHp) {
       const from = this.displayedHeroHp;
-      this.displayedHeroHp = newHP;
+      this.targetHeroHp = newHP;
       this.tweenBar('hp', from, newHP, state.heroMaxHP,
         this.hpBar, this.hpText,
         (r) => r > 0.5 ? 0x22cc44 : r > 0.25 ? 0xf0a020 : 0xff3333);
     }
 
     const newSTA = Math.ceil(state.heroStamina);
-    if (newSTA !== this.displayedStamina) {
+    if (newSTA !== this.targetStamina) {
       const from = this.displayedStamina;
-      this.displayedStamina = newSTA;
+      this.targetStamina = newSTA;
       this.tweenBar('stamina', from, newSTA, state.heroMaxStamina,
         this.staminaBar, this.staminaText, () => 0xf0a020);
     }
 
     const newMP = Math.ceil(state.heroMana);
-    if (newMP !== this.displayedMana) {
+    if (newMP !== this.targetMana) {
       const from = this.displayedMana;
-      this.displayedMana = newMP;
+      this.targetMana = newMP;
       this.tweenBar('mana', from, newMP, state.heroMaxMana,
         this.manaBar, this.manaText, () => 0x9966ff);
     }
@@ -209,9 +213,9 @@ export class CombatHUD {
     // Enemy
     this.enemyNameText.setText(state.enemyName);
     const newEHP = Math.ceil(state.enemyHP);
-    if (newEHP !== this.displayedEnemyHp) {
+    if (newEHP !== this.targetEnemyHp) {
       const from = this.displayedEnemyHp;
-      this.displayedEnemyHp = newEHP;
+      this.targetEnemyHp = newEHP;
       this.tweenBar('enemyHp', from, newEHP, state.enemyMaxHP,
         this.enemyHpBar, this.enemyHpText, () => 0xdd2222);
     }
@@ -275,6 +279,12 @@ export class CombatHUD {
         bar.width = Math.max(0, (BAR_W - 16) * r); // 16 = padX * 2
         bar.setFillStyle(getColor(r));
         text.setText(`${v}/${max}`);
+        
+        // Keep tracking the visual value for the next 'from' calculation
+        if (key === 'hp') this.displayedHeroHp = v;
+        else if (key === 'stamina') this.displayedStamina = v;
+        else if (key === 'mana') this.displayedMana = v;
+        else this.displayedEnemyHp = v;
       },
       onComplete: () => {
         const r = Math.max(0, to / max);

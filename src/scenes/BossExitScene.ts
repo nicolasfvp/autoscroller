@@ -6,6 +6,7 @@ import { bankRunRewards } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 /**
  * BossExitScene -- boss exit choice overlay with two-panel layout.
@@ -185,9 +186,10 @@ export class BossExitScene extends Scene {
 
       // Wipe the persisted run save — the run is resolved, MainMenu shouldn't
       // offer "Continue" pointing at it.
+      // offer "Continue" pointing at it.
       await saveManager.clear();
       clearRun();
-      this.scene.stop('GameScene');
+      stopAllRunScenes(this, SCENE_KEYS.BOSS_EXIT);
       this.fadeToScene('CityHub');
     } else {
       this.loopRunner.onBossChoice('continue');

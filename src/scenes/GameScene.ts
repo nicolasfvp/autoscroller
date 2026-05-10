@@ -22,6 +22,7 @@ import { setActiveBuffs as setLootBuffs } from '../systems/CombatLoot';
 import { setActiveBuffs as setRestBuffs } from '../systems/RestSiteSystem';
 import { setActiveBuffs as setMetaBuffs } from '../systems/MetaProgressionSystem';
 import type { SynergyBuff } from '../systems/SynergyResolver';
+import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -60,7 +61,7 @@ export class GameScene extends Scene {
   private bgDesert?: Phaser.GameObjects.TileSprite;
 
   constructor() {
-    super('GameScene');
+    super(SCENE_KEYS.GAME);
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -72,9 +73,66 @@ export class GameScene extends Scene {
     });
   }
 
-  create(data?: { seed?: string; manualSeed?: boolean }): void {
+  private introPlaying = false;
+
+  create(data?: { seed?: string; manualSeed?: boolean; introSlide?: boolean }): void {
     this.transitioning = false;
-    this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
+    this.introPlaying = !!data?.introSlide;
+
+    // Reset all run-related overlays to prevent leaks from previous runs
+    stopAllRunScenes(this, SCENE_KEYS.GAME);
+
+    // 1. Setup Backgrounds BEFORE mask logic
+    this.cameras.main.setBackgroundColor(COLORS.background);
+    
+    // Explicitly create backgrounds here to ensure they are visible under the mask
+    if (this.textures.exists('bg_desert_sky')) {
+      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_desert_sky').setScrollFactor(0).setDepth(-11);
+    }
+    if (this.textures.exists('bg_desert')) {
+      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert').setScrollFactor(0).setDepth(-10);
+    } else if (this.textures.exists('bg_run')) {
+      this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10).setDisplaySize(800, 600);
+    }
+
+    if (this.introPlaying) {
+      // Ensure GameScene is on top of RunTransitionScene
+      this.scene.bringToTop();
+
+      // Use make.graphics so it's not added to the display list, only used as a mask
+      const maskGfx = this.add.graphics();
+      maskGfx.setVisible(false); // CRITICAL: Do not render the mask itself
+      maskGfx.setScrollFactor(0); 
+      const mask = maskGfx.createGeometryMask();
+      this.cameras.main.setMask(mask);
+
+      const edgeLine = this.add.rectangle(0, 300, 2, 600, 0xe6c88a, 0.6).setDepth(1000).setScrollFactor(0);
+
+      const maskState = { width: 0 };
+      this.tweens.add({
+        targets: maskState,
+        width: 800,
+        duration: 1500,
+        ease: 'Linear',
+        onUpdate: () => {
+          maskGfx.clear();
+          maskGfx.fillStyle(0xffffff);
+          maskGfx.fillRect(0, 0, maskState.width, 600);
+          edgeLine.x = maskState.width;
+        },
+        onComplete: () => {
+          this.cameras.main.clearMask();
+          maskGfx.destroy();
+          edgeLine.destroy();
+          this.introPlaying = false;
+          // Resume hero animation
+          const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
+          this.heroSprite?.play(`${sp}_walk`, true);
+        }
+      });
+    } else {
+      this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
+    }
 
     // Transition to the main gameplay music
     AudioManager.transitionTo(this, 'walk_forward', { volume: 0.3, duration: 1500 });
@@ -91,62 +149,37 @@ export class GameScene extends Scene {
     // Load map speed from RunState (independent of combat speed)
     this.gameSpeed = run.mapSpeed ?? 1;
 
-    // Background
-    this.cameras.main.setBackgroundColor(COLORS.background);
-    
-    // Create Parallax Backgrounds
-    if (this.textures.exists('bg_desert_sky')) {
-      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_desert_sky')
-        .setScrollFactor(0)
-        .setDepth(-11);
-    }
-    if (this.textures.exists('bg_desert')) {
-      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert')
-        .setScrollFactor(0)
-        .setDepth(-10);
-    } else if (this.textures.exists('bg_run')) {
-      // Fallback
-      const bgImg = this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10);
-      bgImg.setDisplaySize(800, 600);
-    }
-
     // Build LoopRunState adapter from global RunState
-    // Hydrate tileInventory from RunState (Record<string,number> -> Array)
     const initialTileInventory = Object.entries(run.economy.tileInventory ?? {})
       .filter(([, count]) => count > 0)
       .map(([tileType, count]) => ({ tileType, count }));
 
-    // Resume in-progress run iff we have meaningful loop progress AND a
-    // persisted tile layout to rebuild from. Otherwise treat as a fresh run.
-    const hasPersistedProgress = (run.loop.count ?? 0) > 1
-      && Array.isArray(run.loop.tiles) && run.loop.tiles.length > 0;
-
     this.loopRunState = {
       loop: {
-        count: hasPersistedProgress ? run.loop.count : 1,
+        count: run.loop.count || 1,
         length: run.loop.tileLength || getDifficultyConfig().baseLoopLength,
-        tiles: hasPersistedProgress ? [...run.loop.tiles] : [],
-        positionInLoop: hasPersistedProgress ? (run.loop.positionInLoop ?? 0) : 0,
-        difficultyMultiplier: hasPersistedProgress ? (run.loop.difficultyMultiplier ?? run.loop.difficulty ?? 1) : (run.loop.difficulty || 1.0),
+        tiles: [...(run.loop.tiles || [])],
+        positionInLoop: run.loop.positionInLoop || 0,
+        difficultyMultiplier: run.loop.difficultyMultiplier || 1.0,
       },
       economy: {
         gold: run.economy.gold,
         tilePoints: run.economy.tilePoints,
-        materials: run.economy.materials ?? {},
+        materials: { ...(run.economy.materials || {}) },
       },
       tileInventory: initialTileInventory,
-      hero: { xp: run.hero.runXP ?? 0 },
+      hero: { xp: run.hero.runXP || 0 }
     };
 
-    // Create LoopRunner with emit callback. Pass the shared seeded source so
-    // tile/enemy assignment is deterministic for replays.
     this.loopRunner = new LoopRunner((event: string, data: any) => {
       this.handleLoopEvent(event, data);
     }, () => rand());
-    if (hasPersistedProgress) {
-      this.loopRunner.resumeRun(this.loopRunState, run.loop.bossKillCount ?? 0);
-    } else {
+    
+    // If we're starting fresh, startRun. Otherwise, resumeRun.
+    if (this.loopRunState.loop.tiles.length === 0) {
       this.loopRunner.startRun(this.loopRunState);
+    } else {
+      this.loopRunner.resumeRun(this.loopRunState, run.loop.bossKillCount || 0);
     }
 
     this.worldOffset = 0;
@@ -166,18 +199,24 @@ export class GameScene extends Scene {
     }
 
     // Hero sprite
-    this.heroSprite = this.add.sprite(100, 455, idleKey); // Afunda mais para o centro do bloco (que fica em Y=450)
-    this.heroSprite.setOrigin(0.5, 1.0); // Senta o pé exatamente na coordenada y inferior
-    this.heroSprite.setScale(1.5); // Baixou novamente para caber proporcional às tendas
+    this.heroSprite = this.add.sprite(100, 455, idleKey);
+    this.heroSprite.setOrigin(0.5, 1.0);
+    this.heroSprite.setScale(1.5);
     this.heroSprite.setDepth(50);
-    this.heroSprite.play(walkKey);
+    
+    // Play idle during intro, walk otherwise
+    this.heroSprite.play(this.introPlaying ? idleKey : walkKey);
 
     // Camera follow (push target lower on screen via offsetY)
     // Lerp set to 1 to avoid camera lagging behind the moving hero
     this.cameras.main.startFollow(this.heroSprite, true, 1.0, 1.0, 0, 280);
 
-    // HUD
-    this.hud = new LoopHUD(this);
+    // Create UI components with safety guards
+    try {
+      this.hud = new LoopHUD(this);
+    } catch (err) {
+      console.error("Loop HUD initialization failed:", err);
+    }
 
     // Map speed slider (independent of combatSpeed)
     this.speedSlider = new MapSpeedSlider(this, 400, 580, run.mapSpeed ?? 1, (speed) => {
@@ -190,76 +229,27 @@ export class GameScene extends Scene {
     this.input.keyboard?.on('keydown-D', () => {
       if (!this.scene.isPaused()) {
         this.scene.pause();
-        this.scene.launch('DeckCustomizationScene');
+        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
       }
     });
 
     this.input.keyboard?.on('keydown-R', () => {
       if (!this.scene.isPaused()) {
         this.scene.pause();
-        this.scene.launch('RelicViewerScene');
+        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
       }
     });
 
     this.input.keyboard?.on('keydown-ESC', () => {
       if (!this.scene.isPaused()) {
         this.scene.pause();
-        this.scene.launch('PauseScene');
+        this.scene.launch(SCENE_KEYS.PAUSE);
       }
     });
 
     // Resume handler (return from combat/shop/etc overlay)
-    this.events.on('resume', () => {
-      // Sync economy back from global RunState
-      const run = getRun();
-      this.loopRunState.economy.gold = run.economy.gold;
-      this.loopRunState.economy.tilePoints = run.economy.tilePoints;
-      // Sync materials both ways
-      for (const [mat, amount] of Object.entries(run.economy.materials ?? {})) {
-        this.loopRunState.economy.materials[mat] = amount;
-      }
-      // Refresh tileInventory from RunState so combat tile drops show up in planning.
-      this.loopRunState.tileInventory = Object.entries(run.economy.tileInventory ?? {})
-        .filter(([, count]) => count > 0)
-        .map(([tileType, count]) => ({ tileType, count }));
-
-      // Show pending loot notifications above hero
-      if (hasPendingLoot()) {
-        const items = drainPendingLoot();
-        showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
-      }
-
-      // Flush tile pool so world tiles re-render with updated data
-      for (const [, tv] of this.tilePool) {
-        tv.destroy();
-      }
-      this.tilePool.clear();
-
-      // Force HUD update to keep gold/HP synced after scene transitions (feedback #32)
-      this.hud.update(run);
-
-      // Re-sync map speed in case it was changed elsewhere
-      if (this.speedSlider) {
-        this.speedSlider.setSpeed(run.mapSpeed ?? 1);
-        this.gameSpeed = run.mapSpeed ?? 1;
-      }
-
-      // If LoopRunner is in tile-interaction state, check if boss was defeated
-      if (this.loopRunner.getState() === 'tile-interaction') {
-        if (run.loop.lastBossDefeated) {
-          run.loop.lastBossDefeated = false;
-          this.loopRunner.onBossDefeated();
-          // boss-defeated event handler will launch BossExitScene
-        } else {
-          this.loopRunner.resumeTraversal();
-        }
-      }
-      // If planning state, launch PlanningOverlay
-      if (this.loopRunner.getState() === 'planning') {
-        this.scene.pause();
-        this.scene.launch('PlanningOverlay', { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
-      }
-    });
+    this.events.on('resume', () => this.syncStateAfterTransition());
+    this.events.on('wake', () => this.syncStateAfterTransition());
 
     // Auto-save: persist after combat ends or a loop wraps. Gate on the
     // MetaState autoSave preference so users who disable it in Settings
@@ -273,16 +263,71 @@ export class GameScene extends Scene {
       () => autoSaveEnabled,
     );
 
+    // Initial visual setup: ensure tiles and HUD are populated immediately
+    this.updateTilePool();
+    
+    const runInitial = getRun();
+    this.syncRunState();
+    
+    const loopInitial = this.loopRunState.loop;
+    const nonBufferInitial = loopInitial.tiles.filter((t: any) => t.type !== 'buffer').length;
+    const loopTotalPxInitial = nonBufferInitial * TILE_SIZE;
+    const posInLoopInitial = Math.max(0, loopInitial.positionInLoop - (loopInitial.tiles.length - nonBufferInitial) * TILE_SIZE);
+    if (this.hud) this.hud.update(runInitial, posInLoopInitial, loopTotalPxInitial);
+
     // Cleanup
     this.events.on('shutdown', this.cleanup, this);
   }
 
-  update(_time: number, delta: number): void {
-    if (this.scene.isPaused() || this.celebrationPlaying) return;
+  private syncStateAfterTransition(): void {
+    const run = getRun();
+    this.loopRunState.economy.gold = run.economy.gold;
+    this.loopRunState.economy.tilePoints = run.economy.tilePoints;
+    for (const [mat, amount] of Object.entries(run.economy.materials ?? {})) {
+      this.loopRunState.economy.materials[mat] = amount;
+    }
+    this.loopRunState.tileInventory = Object.entries(run.economy.tileInventory ?? {})
+      .filter(([, count]) => count > 0)
+      .map(([tileType, count]) => ({ tileType, count }));
+
+    if (hasPendingLoot() && !this.celebrationPlaying) {
+      const items = drainPendingLoot();
+      showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
+    }
+
+    for (const [, tv] of this.tilePool) tv.destroy();
+    this.tilePool.clear();
+
+    if (this.hud) this.hud.update(run);
+    if (this.speedSlider) {
+      this.speedSlider.setSpeed(run.mapSpeed ?? 1);
+      this.gameSpeed = run.mapSpeed ?? 1;
+    }
+
+    const state = this.loopRunner.getState();
+    if (state === 'tile-interaction') {
+      if (run.loop.lastBossDefeated) {
+        run.loop.lastBossDefeated = false;
+        this.loopRunner.onBossDefeated();
+      } else {
+        this.loopRunner.resumeTraversal();
+      }
+    }
+  }
+
+  update(time: number, delta: number): void {
+    if (this.transitioning || this.introPlaying) return;
+
+    let run: RunState;
+    try {
+      run = getRun();
+      if (!run) return;
+    } catch {
+      return; // Run was cleared, stop updating
+    }
 
     // Apply slow debuff — use map speed from RunState (feedback #10, #28)
-    const currentRun = getRun();
-    let speedMult = currentRun.mapSpeed ?? this.gameSpeed;
+    let speedMult = run.mapSpeed ?? this.gameSpeed;
     if (this.slowTimer > 0) {
       this.slowTimer -= delta;
       speedMult *= 0.4;
@@ -308,13 +353,12 @@ export class GameScene extends Scene {
 
     // Update HUD with synced RunState + loop progress
     this.syncRunState();
-    const run = getRun();
     const loop = this.loopRunState.loop;
     const nonBufferCount = loop.tiles.filter((t: any) => t.type !== 'buffer').length;
     const loopTotalPx = nonBufferCount * TILE_SIZE;
     // positionInLoop counts world pixels since loop start; subtract buffer tiles
     const posInLoop = Math.max(0, loop.positionInLoop - (loop.tiles.length - nonBufferCount) * TILE_SIZE);
-    this.hud.update(run, posInLoop, loopTotalPx);
+    if (this.hud) this.hud.update(run, posInLoop, loopTotalPx);
   }
 
   /** Sync LoopRunState values back to global RunState */
@@ -360,8 +404,13 @@ export class GameScene extends Scene {
   private handleLoopEvent(event: string, data: any): void {
     switch (event) {
       case 'combat-start': {
-        this.scene.pause();
-        this.scene.launch('CombatScene', { enemyId: data.enemyId, isBoss: data.isBoss, terrain: data.terrain ?? 'basic' });
+        console.log('[GameScene] Launching combat for enemy:', data.enemyId);
+        this.scene.pause(SCENE_KEYS.GAME);
+        this.scene.launch(SCENE_KEYS.COMBAT, { 
+          enemyId: data.enemyId, 
+          isBoss: data.isBoss, 
+          terrain: data.terrain ?? 'basic' 
+        });
         break;
       }
       case 'open-scene': {
@@ -377,7 +426,7 @@ export class GameScene extends Scene {
           this.showPendingNotifications();
           // Force immediate HUD update so HP bar reflects heal (feedback #31)
           this.syncRunState();
-          this.hud.update(run);
+          if (this.hud) this.hud.update(run);
           this.loopRunner.resumeTraversal();
           break;
         }
@@ -389,8 +438,8 @@ export class GameScene extends Scene {
           this.showPendingNotifications();
           // If the event triggers combat, launch it
           if (result.combatEnemyId) {
-            this.scene.pause();
-            this.scene.launch('CombatScene', { enemyId: result.combatEnemyId, isBoss: false });
+            this.scene.pause(SCENE_KEYS.GAME);
+            this.scene.launch(SCENE_KEYS.COMBAT, { enemyId: result.combatEnemyId, isBoss: false });
           } else {
             // Apply slow debuff if any
             if (result.slowDurationMs) {
@@ -417,23 +466,14 @@ export class GameScene extends Scene {
         }
 
         // Default: open scene (shop when enabled, or any future scenes)
-        this.scene.pause();
+        console.log('[GameScene] Launching scene:', data.scene);
         this.scene.launch(data.scene);
+        this.scene.pause();
         break;
       }
       case 'loop-completed': {
         this.celebrationPlaying = true;
 
-        // Accumulate world offset for seamless wrap
-        this.worldOffset += this.loopRunState.loop.length * TILE_SIZE;
-
-        // F.3: Don't destroy every TileVisual on every wrap. The post-wrap
-        // hero position pushes the visible globalIndex range forward by a
-        // full loop, so the natural range-trim in updateTilePool() drops
-        // stale entries on the next update tick. Tile data may have changed
-        // (defeatedThisLoop reset, boss tile add/remove) — flush any tile
-        // visuals whose underlying TileSlot identity changed by re-mapping
-        // their data instead of destroying.
         for (const [gi, tv] of this.tilePool) {
           const len = this.loopRunState.loop.length;
           const dataIndex = ((gi % len) + len) % len;
@@ -446,9 +486,16 @@ export class GameScene extends Scene {
 
         this.celebration.play(this, data.loopCount, tpEarned, () => {
           this.celebrationPlaying = false;
-          // Planning phase: pause and launch overlay
-          this.scene.pause();
-          this.scene.launch('PlanningOverlay', { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+          // Accumulate world offset for seamless wrap ONLY after celebration is done
+          this.worldOffset += this.loopRunState.loop.length * TILE_SIZE;
+          
+          // Planning phase: launch overlay then sleep
+          this.scene.launch(SCENE_KEYS.PLANNING, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+          this.scene.sleep();
+          
+          // Clear pool to force fresh render after sleep/wake cycle
+          for (const [, tv] of this.tilePool) tv.destroy();
+          this.tilePool.clear();
         });
         break;
       }
@@ -458,7 +505,7 @@ export class GameScene extends Scene {
       }
       case 'boss-defeated': {
         this.scene.pause();
-        this.scene.launch('BossExitScene', { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+        this.scene.launch(SCENE_KEYS.BOSS_EXIT, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
         break;
       }
       case 'loop-started': {
@@ -471,7 +518,7 @@ export class GameScene extends Scene {
       }
       case 'run-exited': {
         // Transition to GameOverScene with safe exit data
-        this.fadeToScene('GameOverScene', data);
+        this.fadeToScene(SCENE_KEYS.GAME_OVER, data);
         break;
       }
     }
@@ -508,6 +555,7 @@ export class GameScene extends Scene {
 
       const worldX = gi * TILE_SIZE + 100; // +100 to match hero offset
       const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex);
+      this.add.existing(tv);
       tv.setDepth(10);
       this.tilePool.set(gi, tv);
     }

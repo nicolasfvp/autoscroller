@@ -95,6 +95,13 @@ export interface EconomyState {
   gatheringBoost?: number;
 }
 
+export interface RunStats {
+  damageDealt: number;
+  cardsPlayed: number;
+  combosTriggered: number;
+  goldEarned: number;
+}
+
 export interface RunState {
   /** Save schema version — bumped when shape changes incompatibly. */
   version?: number;
@@ -112,6 +119,7 @@ export interface RunState {
   loop: LoopState;
   economy: EconomyState;
   relics: string[];
+  stats: RunStats;
 
   /** Whether hero is currently in combat (for mid-combat save handling) */
   isInCombat: boolean;
@@ -154,6 +162,9 @@ export function migrateRunState(raw: any): RunState | null {
     if (raw.economy && raw.economy.materials === undefined) raw.economy.materials = {};
     if (raw.deck && !Array.isArray(raw.deck.upgradedCards)) raw.deck.upgradedCards = [];
     if (raw.loop && raw.loop.bossesDefeated === undefined) raw.loop.bossesDefeated = 0;
+    if (!raw.stats) {
+      raw.stats = { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: raw.economy?.gold || 0 };
+    }
     raw.version = 1;
   }
   // v1 → v2: switch from `deck.upgradedCards: string[]` (per-id tracking)
@@ -249,6 +260,12 @@ export function createNewRun(
       cards: getAvailableCards(meta.unlockedCards).map(c => c.id),
       relics: getAvailableRelics(meta.unlockedRelics).map(r => r.id),
       tiles: getAvailableTiles(meta.unlockedTiles).map(t => t.id),
+    },
+    stats: {
+      damageDealt: 0,
+      cardsPlayed: 0,
+      combosTriggered: 0,
+      goldEarned: 0,
     },
   };
 }
