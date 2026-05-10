@@ -2,14 +2,22 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { openTreasure } from '../../src/systems/TreasureSystem';
 import { setRNG, resetRNG, type RNG } from '../../src/systems/LootGenerator';
 
-function makeRunState() {
+function makeRunState(): any {
   return {
-    hero: { hp: 100, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 },
-    deck: { cards: [], order: ['strike', 'defend'] },
-    loop: { count: 1, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.0 },
-    economy: { gold: 50, tilePoints: 5, materials: {} },
-    tileInventory: [],
+    hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
+    deck: { active: ['strike', 'defend'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
+    economy: { gold: 50, tilePoints: 5, tileInventory: {}, materials: {} },
     relics: [],
+    runId: 'test',
+    generation: 1,
+    startedAt: 0,
+    isInCombat: false,
+    currentScene: 'GameScene',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 
@@ -49,7 +57,7 @@ describe('TreasureSystem', () => {
 
     const run = makeRunState();
     openTreasure(run, 1);
-    expect(run.tileInventory.length).toBeGreaterThan(0);
+    expect(Object.keys(run.economy.tileInventory).length).toBeGreaterThan(0);
   });
 
   it('openTreasure returns TreasureResult with item descriptions', () => {
@@ -65,16 +73,16 @@ describe('TreasureSystem', () => {
     }
   });
 
-  it('openTreasure card items add to deck.order', () => {
+  it('openTreasure card items add to deck.active', () => {
     let callCount = 0;
     // itemCount: 1, weight roll: 0.5 (>0.40 <0.70 = card)
     const values = [0.0, 0.5];
     setRNG({ next: () => values[callCount++] ?? 0.5 });
 
     const run = makeRunState();
-    const origLen = run.deck.order.length;
+    const origLen = run.deck.active.length;
     openTreasure(run, 1);
-    expect(run.deck.order.length).toBe(origLen + 1);
+    expect(run.deck.active.length).toBe(origLen + 1);
   });
 
   it('openTreasure relic items add to relics', () => {

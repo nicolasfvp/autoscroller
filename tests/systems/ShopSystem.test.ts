@@ -1,17 +1,22 @@
 import { describe, it, expect } from 'vitest';
 import { ShopSystem } from '../../src/systems/ShopSystem';
 
-function makeRunState(overrides: any = {}) {
+function makeRunState(overrides: any = {}): any {
   return {
-    hero: { hp: 100, maxHp: 100, stamina: 50, maxStamina: 50, mana: 30, maxMana: 30, xp: 0 },
-    deck: { cards: [], order: ['strike', 'strike', 'defend', 'defend', 'fireball'], active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {} },
-    loop: { count: 1, length: 15, tiles: [], positionInLoop: 0, difficultyMultiplier: 1.0 },
-    economy: { gold: 200, tilePoints: 10, tileInventory: {}, materials: {} },
-    tileInventory: [
-      { tileType: 'forest', count: 2 },
-      { tileType: 'treasure', count: 1 },
-    ],
+    hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
+    deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {}, upgradedCards: [], droppedCards: [] },
+    loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
+    economy: { gold: 200, tilePoints: 10, tileInventory: { forest: 2, treasure: 1 }, materials: {} },
     relics: [],
+    runId: 'test',
+    generation: 1,
+    startedAt: 0,
+    isInCombat: false,
+    currentScene: 'GameScene',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
     ...overrides,
   };
 }
@@ -94,7 +99,7 @@ describe('ShopSystem', () => {
     const result = ShopSystem.buyCard(run, 'fury', 60);
     expect(result).toBe(true);
     expect(run.economy.gold).toBe(140);
-    expect(run.deck.order).toContain('fury');
+    expect(run.deck.active).toContain('fury');
   });
 
   it('buyCard returns false when insufficient gold', () => {
@@ -111,12 +116,12 @@ describe('ShopSystem', () => {
     const result = ShopSystem.removeCard(run, 0, 0);
     expect(result).toBe(true);
     expect(run.economy.gold).toBe(150); // 200 - 50
-    expect(run.deck.order).toHaveLength(4);
+    expect(run.deck.active).toHaveLength(4);
   });
 
   it('removeCard returns false when deck size <= 3', () => {
     const run = makeRunState({
-      deck: { cards: [], order: ['strike', 'defend', 'fireball'], active: ['strike', 'defend', 'fireball'], inventory: {} },
+      deck: { active: ['strike', 'defend', 'fireball'], inventory: {}, upgradedCards: [], droppedCards: [] },
     });
     const result = ShopSystem.removeCard(run, 0, 0);
     expect(result).toBe(false);
@@ -141,23 +146,23 @@ describe('ShopSystem', () => {
   // ── reorderCard unchanged ────────────────────────────────
   it('reorderCard moves card from index to index', () => {
     const run = makeRunState({
-      deck: { cards: [], order: ['a', 'b', 'c', 'd'], active: ['a', 'b', 'c', 'd'], inventory: {} },
+      deck: { active: ['a', 'b', 'c', 'd'], inventory: {}, upgradedCards: [], droppedCards: [] },
     });
     ShopSystem.reorderCard(run, 0, 2);
-    expect(run.deck.order).toEqual(['b', 'c', 'a', 'd']);
+    expect(run.deck.active).toEqual(['b', 'c', 'a', 'd']);
   });
 
   // ── sellTile unchanged ───────────────────────────────────
   it('sellTile gives 50% tile points -- forest (3 TP cost) gives 1 TP', () => {
-    const run = makeRunState({ economy: { gold: 100, tilePoints: 0, tileInventory: {}, materials: {} } });
+    const run = makeRunState({ economy: { gold: 100, tilePoints: 0, tileInventory: { forest: 2 }, materials: {} } });
     const result = ShopSystem.sellTile(run, 'forest');
     expect(result).toBe(true);
     expect(run.economy.tilePoints).toBe(1);
-    expect(run.tileInventory.find((t: any) => t.tileType === 'forest')!.count).toBe(1);
+    expect(run.economy.tileInventory.forest).toBe(1);
   });
 
   it('sellTile returns false when tile not in inventory', () => {
-    const run = makeRunState({ tileInventory: [] });
+    const run = makeRunState({ economy: { gold: 100, tilePoints: 0, tileInventory: {}, materials: {} } });
     const result = ShopSystem.sellTile(run, 'swamp');
     expect(result).toBe(false);
   });

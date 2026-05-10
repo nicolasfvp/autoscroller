@@ -123,13 +123,13 @@ describe('CardResolver', () => {
       expect(state.enemyHP).toBe(80);
     });
 
-    it('damage reduced by enemy defense (minimum 0)', () => {
+    it('damage reduced by enemy defense (minimum 1 for damage cards)', () => {
       const state = makeState({ enemyDefense: 15 });
-      const card = makeCard(); // 10 * 1 - 15 = 0 (clamped)
+      const card = makeCard(); // 10 * 1 - 15 = clamped to 1 (B.5 floor)
       const result = resolver.resolve(card, state, null);
 
-      expect(result.totalDamage).toBe(0);
-      expect(state.enemyHP).toBe(100);
+      expect(result.totalDamage).toBe(1);
+      expect(state.enemyHP).toBe(99);
     });
 
     it('heal card restores HP capped at max', () => {

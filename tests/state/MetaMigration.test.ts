@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createDefaultMetaState, migrateMetaState } from '../../src/state/MetaState';
 
-describe('MetaState v3 defaults', () => {
-  it('createDefaultMetaState returns version 3', () => {
-    expect(createDefaultMetaState().version).toBe(3);
+describe('MetaState v4 defaults', () => {
+  it('createDefaultMetaState returns version 4', () => {
+    expect(createDefaultMetaState().version).toBe(4);
   });
 
   it('createDefaultMetaState has tutorialSeen === false', () => {
@@ -27,8 +27,8 @@ describe('MetaState v3 defaults', () => {
   });
 });
 
-describe('MetaState v3 migration paths', () => {
-  it('v2 object without new fields migrates to v3 with defaults', () => {
+describe('MetaState v4 migration paths', () => {
+  it('v2 object without new fields migrates to v4 with defaults', () => {
     const v2 = {
       buildings: {
         forge: { level: 1 },
@@ -50,7 +50,7 @@ describe('MetaState v3 migration paths', () => {
     };
 
     const result = migrateMetaState(v2);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
     expect(result.gameSpeed).toBe(1);
@@ -83,7 +83,7 @@ describe('MetaState v3 migration paths', () => {
     expect(result.tutorialSeen).toBe(true);
   });
 
-  it('v1 object migrates all the way to v3', () => {
+  it('v1 object migrates all the way to v4', () => {
     const v1 = {
       buildings: {
         forge: { level: 0 },
@@ -104,7 +104,7 @@ describe('MetaState v3 migration paths', () => {
     };
 
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(3);
+    expect(result.version).toBe(4);
     expect(result.materials).toEqual({ essence: 50 });
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -112,8 +112,8 @@ describe('MetaState v3 migration paths', () => {
     expect(result.autoSave).toBe(true);
   });
 
-  it('v3 object returns unchanged', () => {
-    const v3 = {
+  it('v4 object returns unchanged', () => {
+    const v4 = {
       buildings: {
         forge: { level: 2 },
         library: { level: 1 },
@@ -123,7 +123,7 @@ describe('MetaState v3 migration paths', () => {
         storehouse: { level: 3 },
       },
       materials: { iron: 10 },
-      classXP: { warrior: 200 },
+      classXP: { warrior: 200, mage: 0 },
       passivesUnlocked: [],
       unlockedCards: ['fury'],
       unlockedRelics: [],
@@ -134,10 +134,10 @@ describe('MetaState v3 migration paths', () => {
       audioPrefs: { sfxVolume: 0.5, sfxEnabled: false },
       gameSpeed: 2,
       autoSave: false,
-      version: 3,
+      version: 4,
     };
 
-    const result = migrateMetaState(v3);
-    expect(result).toEqual(v3);
+    const result = migrateMetaState(v4);
+    expect(result).toEqual(v4);
   });
 });

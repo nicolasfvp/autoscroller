@@ -23,8 +23,8 @@ describe('DifficultyScaler', () => {
     expect(stats.hp).toBe(148);
     expect(stats.damage).toBe(14); // floor(10 * 1.48) = 14
     expect(stats.defense).toBe(7); // floor(5 * 1.48) = 7
-    // goldReward = floor(15 * sqrt(1.48)) = floor(15 * 1.2166) = floor(18.249) = 18
-    expect(stats.goldReward).toBe(18);
+    // goldReward = floor(15 * log2(1.48 + 1)) = floor(15 * 1.31034) = 19
+    expect(stats.goldReward).toBe(19);
   });
 
   it('boss multiplier stacks on top of loop multiplier', () => {
@@ -33,8 +33,8 @@ describe('DifficultyScaler', () => {
     expect(stats.hp).toBe(296);
     expect(stats.damage).toBe(29); // floor(10 * 2.96)
     expect(stats.defense).toBe(14); // floor(5 * 2.96)
-    // goldReward = floor(15 * sqrt(2.96)) = floor(15 * 1.7205) = floor(25.807) = 25
-    expect(stats.goldReward).toBe(25);
+    // goldReward = floor(15 * log2(2.96 + 1)) = floor(15 * 1.98542) = 29
+    expect(stats.goldReward).toBe(29);
   });
 
   it('getLoopSpeed returns base speed at loop 1', () => {
@@ -42,9 +42,11 @@ describe('DifficultyScaler', () => {
     expect(speed).toBe(240);
   });
 
-  it('getLoopSpeed scales with loop count', () => {
+  it('getLoopSpeed is now player-controlled (constant baseSpeed)', () => {
+    // Per feedback #28, map speed is now player-controlled via RunState.mapSpeed
+    // and getLoopSpeed always returns the base speed regardless of loop count.
     const speed = getLoopSpeed(10);
-    expect(speed).toBeCloseTo(240 * Math.pow(1.02, 9), 2);
+    expect(speed).toBe(240);
   });
 
   it('getDifficultyConfig returns full config', () => {
