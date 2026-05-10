@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { loadMetaState } from '../systems/MetaPersistence';
 import { LoopRunner, TILE_SIZE, type LoopRunState } from '../systems/LoopRunner';
 import { getDifficultyConfig } from '../systems/DifficultyScaler';
 import { LoopHUD } from '../ui/LoopHUD';
@@ -261,17 +260,11 @@ export class GameScene extends Scene {
       }
     });
 
-    // Auto-save: persist after combat ends or a loop wraps. Gate on the
-    // MetaState autoSave preference so users who disable it in Settings
-    // actually skip the IndexedDB write. We fetch it once and capture in
-    // a closure-local; SettingsScene mutates MetaState directly so this
-    // value updates without a scene reload.
-    let autoSaveEnabled = true;
-    void loadMetaState().then(meta => { autoSaveEnabled = meta.autoSave !== false; });
-    this.autoSaveUnsubscribe = saveManager.setupAutoSave(
-      () => getRun(),
-      () => autoSaveEnabled,
-    );
+    // Auto-save: persist after combat ends or a loop wraps. SaveManager
+    // honors MetaState.autoSave === false internally (lazy read with a
+    // short cache), so SettingsScene toggles take effect without a scene
+    // reload and without us caching the value here.
+    this.autoSaveUnsubscribe = saveManager.setupAutoSave(() => getRun());
 
     // Cleanup
     this.events.on('shutdown', this.cleanup, this);
