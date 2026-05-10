@@ -19,6 +19,7 @@ export class PlanningOverlay extends Scene {
   private tpBalanceText!: Phaser.GameObjects.Text;
   private scrollOffset: number = 0;
   private gridContainer!: Phaser.GameObjects.Container;
+  private gridGeometry!: { cellW: number; period: number; centerX: number };
 
   constructor() {
     super('PlanningOverlay');
@@ -139,10 +140,13 @@ export class PlanningOverlay extends Scene {
     const scale = 0.7;
     const tileSize = Math.round(TILE_SIZE * scale);
     const gap = 8;
+    const cellW = tileSize + gap;
     const visibleCount = tiles.filter(t => t.type !== 'buffer').length;
-    const totalWidth = visibleCount * tileSize + (visibleCount - 1) * gap;
-    const startX = (800 - totalWidth) / 2 + tileSize / 2;
+    const period = visibleCount * cellW;
+    const centerX = 400;
     const y = 240;
+
+    this.gridGeometry = { cellW, period, centerX };
 
     // Clear existing
     for (const tv of this.tileVisuals) {
@@ -170,10 +174,10 @@ export class PlanningOverlay extends Scene {
       // Buffer tiles are non-editable — hide them from the planning view
       if (tiles[i].type === 'buffer') continue;
 
-      const x = startX + visualSlot * (tileSize + gap) + this.scrollOffset;
+      // Initial position; updateTilePositions() handles the wrap math.
+      const tv = new TileVisual(this, 0, y, tiles[i], scale, i, true);
+      tv.setData('beltSlot', visualSlot);
       visualSlot++;
-
-      const tv = new TileVisual(this, x, y, tiles[i], scale, i, true);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
 
@@ -190,6 +194,40 @@ export class PlanningOverlay extends Scene {
         tv.setAlpha(0.6);
         tv.onClick(() => this.onSlotClicked(i));
       }
+    }
+
+    this.updateTilePositions();
+  }
+
+  /**
+   * Reposition every belt tile so the strip behaves as an infinite loop:
+   * tile 0 follows the last tile and vice versa. The belt spans `period`
+   * pixels; each tile at slot k naturally sits at `centerX - period/2 +
+   * cellW/2 + k * cellW`. Adding scrollOffset and wrapping into the
+   * visible window range keeps a copy of the strip on screen no matter
+   * how far the user drags.
+   */
+  private updateTilePositions(): void {
+    if (!this.gridGeometry) return;
+    const { cellW, period, centerX } = this.gridGeometry;
+    if (period <= 0) return;
+
+    // Wrap window: anything outside [-cellW, 800 + cellW] gets shifted by
+    // ±period until it lands inside. `cellW` of slack on either side keeps
+    // tiles entering/leaving from being clipped before they reach the edge.
+    const leftBound = -cellW;
+    const rightBound = 800 + cellW;
+    const baseLeft = centerX - period / 2 + cellW / 2;
+
+    for (const tv of this.tileVisuals) {
+      const slot = tv.getData('beltSlot') as number;
+      let x = baseLeft + slot * cellW + this.scrollOffset;
+      // Normalize to [leftBound, leftBound + period)
+      x = ((x - leftBound) % period + period) % period + leftBound;
+      // After normalization x is in [leftBound, leftBound+period); if the
+      // belt is shorter than the screen this still gives a contiguous strip.
+      if (x > rightBound) x -= period;
+      tv.x = x;
     }
   }
 
@@ -418,20 +456,16 @@ export class PlanningOverlay extends Scene {
   }
 
   private setupDragScroll(): void {
-    const tiles = this.loopRunState.loop.tiles;
-    const tileSize = 45; // Updated to match 0.7 scale (64 * 0.7)
-    const gap = 8;
-    const totalWidth = tiles.length * tileSize + (tiles.length - 1) * gap;
-
-    if (totalWidth <= 780) return; // No scroll needed
-
     let dragging = false;
+    let dragMoved = false;
     let startPointerX = 0;
     let startOffset = 0;
+    const DRAG_THRESHOLD = 4; // pixels — below this, treat as a click
 
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (pointer.y > 200 && pointer.y < 300) {
         dragging = true;
+        dragMoved = false;
         startPointerX = pointer.x;
         startOffset = this.scrollOffset;
       }
@@ -440,19 +474,32 @@ export class PlanningOverlay extends Scene {
     this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
       if (!dragging) return;
       const dx = pointer.x - startPointerX;
-      const maxScroll = 0;
-      const minScroll = -(totalWidth - 780);
-      this.scrollOffset = Math.max(minScroll, Math.min(maxScroll, startOffset + dx));
-
-      // Update tile positions
-      for (let i = 0; i < this.tileVisuals.length; i++) {
-        const baseX = (800 - totalWidth) / 2 + tileSize / 2 + i * (tileSize + gap);
-        this.tileVisuals[i].x = baseX + this.scrollOffset;
-      }
+      if (Math.abs(dx) > DRAG_THRESHOLD) dragMoved = true;
+      // No clamp — the belt wraps via updateTilePositions().
+      this.scrollOffset = startOffset + dx;
+      this.updateTilePositions();
     });
 
     this.input.on('pointerup', () => {
       dragging = false;
+      // Fold scrollOffset back into [0, period) so future drags don't grow
+      // unbounded and lose precision over many loops.
+      if (this.gridGeometry && this.gridGeometry.period > 0 && dragMoved) {
+        const p = this.gridGeometry.period;
+        this.scrollOffset = ((this.scrollOffset % p) + p) % p;
+      }
+    });
+
+    // Mouse wheel scrolls horizontally too — handy for trackpads.
+    this.input.on('wheel', (
+      pointer: Phaser.Input.Pointer,
+      _objects: Phaser.GameObjects.GameObject[],
+      _dx: number,
+      dy: number,
+    ) => {
+      if (pointer.y < 200 || pointer.y > 300) return;
+      this.scrollOffset -= dy;
+      this.updateTilePositions();
     });
   }
 
