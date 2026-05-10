@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -52,12 +51,13 @@ export class PauseScene extends Scene {
       this.scene.launch('SettingsScene');
     });
 
-    this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', () => {
+    this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', async () => {
       // Tear down the active run AND wipe the persisted save before
       // returning to the menu — otherwise MainMenu will offer "Continue"
       // pointing at the abandoned run.
-      void saveManager.clear();
       clearRun();
+      await saveManager.clear();
+      this.registry.set('savedRun', null);
       this.scene.stop('GameScene');
       this.scene.stop();
       this.scene.start('MainMenu');

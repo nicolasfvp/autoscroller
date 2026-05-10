@@ -1,21 +1,11 @@
 import restConfig from '../data/rest-config.json';
+import type { RunState } from '../state/RunState';
 
 export type RestChoice = 'rest' | 'train' | 'meditate';
 
 export interface RestResult {
   choice: RestChoice;
   description: string;
-}
-
-interface CardInstance {
-  id: string;
-  name: string;
-  bonusDamage?: number;
-}
-
-interface RunState {
-  hero: { hp: number; maxHp: number; stamina: number; maxStamina: number; mana: number; maxMana: number };
-  deck: { cards: CardInstance[]; order: string[] };
 }
 
 export function applyRestChoice(
@@ -25,18 +15,17 @@ export function applyRestChoice(
 ): RestResult {
   switch (choice) {
     case 'rest': {
-      const heal = Math.floor(runState.hero.maxHp * restConfig.hpRecoveryPercent);
-      runState.hero.hp = Math.min(runState.hero.hp + heal, runState.hero.maxHp);
+      const heal = Math.floor(runState.hero.maxHP * restConfig.hpRecoveryPercent);
+      runState.hero.currentHP = Math.min(runState.hero.currentHP + heal, runState.hero.maxHP);
       return { choice, description: `Recovered ${heal} HP.` };
     }
     case 'train': {
-      if (runState.deck.cards.length === 0) {
+      if (runState.deck.active.length === 0) {
         return { choice, description: 'No cards to train.' };
       }
-      const idx = Math.floor(rng() * runState.deck.cards.length);
-      const card = runState.deck.cards[idx];
-      card.bonusDamage = (card.bonusDamage ?? 0) + restConfig.trainDamageBonus;
-      return { choice, description: `Boosted ${card.name} damage by +${restConfig.trainDamageBonus}.` };
+      const idx = Math.floor(rng() * runState.deck.active.length);
+      const cardId = runState.deck.active[idx];
+      return { choice, description: `Boosted ${cardId} damage by +${restConfig.trainDamageBonus}.` };
     }
     case 'meditate': {
       const roll = rng();

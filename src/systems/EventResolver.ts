@@ -1,5 +1,6 @@
 import eventsData from '../data/events.json';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
+import type { RunState } from '../state/RunState';
 
 export interface EventUnlockState {
   unlockedCards: string[];
@@ -25,13 +26,6 @@ export interface EventDefinition {
 export interface EventOutcome {
   description: string;
   effects: Array<{ type: string; value: number | string; applied: boolean }>;
-}
-
-interface RunState {
-  hero: { hp: number; maxHp: number };
-  deck: { cards: any[]; order: string[] };
-  economy: { gold: number; tilePoints: number; materials: Record<string, number> };
-  relics: string[];
 }
 
 const events: EventDefinition[] = eventsData as EventDefinition[];
@@ -60,7 +54,7 @@ export function isChoiceAvailable(choice: EventChoice, runState: RunState): bool
   if (choice.requirement?.minGold !== undefined && runState.economy.gold < choice.requirement.minGold) {
     return false;
   }
-  if (choice.requirement?.minHP !== undefined && runState.hero.hp < choice.requirement.minHP) {
+  if (choice.requirement?.minHP !== undefined && runState.hero.currentHP < choice.requirement.minHP) {
     return false;
   }
   if (choice.requirement?.minMaterial) {
@@ -96,9 +90,9 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
     switch (effect.type) {
       case 'gain_hp': {
         const amount = typeof val === 'number' ? val : 0;
-        const before = runState.hero.hp;
-        runState.hero.hp = Math.min(runState.hero.hp + amount, runState.hero.maxHp);
-        const healed = runState.hero.hp - before;
+        const before = runState.hero.currentHP;
+        runState.hero.currentHP = Math.min(runState.hero.currentHP + amount, runState.hero.maxHP);
+        const healed = runState.hero.currentHP - before;
         descriptions.push(`Gained ${healed} HP`);
         appliedEffects.push({ type: 'gain_hp', value: amount, applied: true });
         break;
@@ -107,7 +101,7 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
         // Clamp to non-negative so a typo'd negative value can't heal the
         // hero through the wrong effect type. (gain_hp exists for that.)
         const amount = Math.max(0, typeof val === 'number' ? val : 0);
-        runState.hero.hp = Math.max(runState.hero.hp - amount, 1);
+        runState.hero.currentHP = Math.max(runState.hero.currentHP - amount, 1);
         descriptions.push(`Lost ${amount} HP`);
         appliedEffects.push({ type: 'lose_hp', value: amount, applied: true });
         break;
@@ -153,7 +147,7 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
             resolvedFromEmptyPool = true;
           }
         }
-        runState.deck.order.push(resolvedId);
+        runState.deck.active.push(resolvedId);
         descriptions.push(`Added card: ${resolvedId}`);
         // mark via the description rather than extending the schema
         if (resolvedFromEmptyPool && cardId !== 'strike') {
@@ -165,9 +159,9 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
       case 'remove_card': {
         const mode = typeof val === 'string' ? val : 'random';
         if (mode === 'random') {
-          if (runState.deck.order.length > 3) {
-            const idx = Math.floor(Math.random() * runState.deck.order.length);
-            const removed = runState.deck.order.splice(idx, 1)[0];
+          if (runState.deck.active.length > 3) {
+            const idx = Math.floor(Math.random() * runState.deck.active.length);
+            const removed = runState.deck.active.splice(idx, 1)[0];
             descriptions.push(`Removed card: ${removed}`);
             appliedEffects.push({ type: 'remove_card', value: removed, applied: true });
           } else {
@@ -203,7 +197,7 @@ export function resolveEventChoice(eventId: string, choiceIndex: number, runStat
       }
       case 'add_curse': {
         const curseId = typeof val === 'string' ? val : 'pain';
-        runState.deck.order.push(curseId);
+        runState.deck.active.push(curseId);
         descriptions.push(`Cursed! ${curseId} added to deck`);
         appliedEffects.push({ type: 'add_curse', value: curseId, applied: true });
         break;

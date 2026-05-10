@@ -115,7 +115,7 @@ export class DeathScene extends Scene {
       xpEarned,
       'death',
       {
-        seed: (run as any).seed ?? 'unknown',
+        seed: run.runId,
         loopsCompleted: Math.max(0, run.loop.count - 1),
         bossesDefeated: run.loop.bossesDefeated ?? 0,
       },

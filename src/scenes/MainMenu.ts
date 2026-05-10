@@ -1,8 +1,8 @@
 import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
-import { createNewRun, setRun, getRun } from '../state/RunState';
+import { setRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 
 export class MainMenu extends Scene {

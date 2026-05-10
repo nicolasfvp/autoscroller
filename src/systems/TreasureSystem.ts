@@ -1,4 +1,5 @@
-import { rollTreasureLoot, type LootResult, type LootItem, type UnlockState } from './LootGenerator';
+import { rollTreasureLoot, type LootResult, type UnlockState } from './LootGenerator';
+import type { RunState } from '../state/RunState';
 
 export interface TreasureItem {
   type: string;
@@ -9,13 +10,6 @@ export interface TreasureItem {
 
 export interface TreasureResult {
   items: TreasureItem[];
-}
-
-interface RunState {
-  deck: { cards: any[]; order: string[] };
-  economy: { gold: number; tilePoints: number; materials: Record<string, number> };
-  tileInventory: Array<{ tileType: string; count: number }>;
-  relics: string[];
 }
 
 export function openTreasure(runState: RunState, loopCount: number, unlockState?: UnlockState): TreasureResult {
@@ -32,9 +26,8 @@ export function openTreasure(runState: RunState, loopCount: number, unlockState?
       }
       case 'card': {
         const cardId = item.id ?? 'strike';
-        // 'random' placeholder resolves to 'strike'
         const resolvedId = cardId === 'random' ? 'strike' : cardId;
-        runState.deck.order.push(resolvedId);
+        runState.deck.active.push(resolvedId);
         treasureItems.push({ type: 'card', name: resolvedId, id: resolvedId });
         break;
       }
@@ -47,12 +40,7 @@ export function openTreasure(runState: RunState, loopCount: number, unlockState?
       }
       case 'tile': {
         const tileName = item.id ?? 'forest';
-        const entry = runState.tileInventory.find(t => t.tileType === tileName);
-        if (entry) {
-          entry.count++;
-        } else {
-          runState.tileInventory.push({ tileType: tileName, count: 1 });
-        }
+        runState.economy.tileInventory[tileName] = (runState.economy.tileInventory[tileName] ?? 0) + 1;
         treasureItems.push({ type: 'tile', name: tileName, id: tileName });
         break;
       }

@@ -52,16 +52,7 @@ export class BossExitScene extends Scene {
 
     // Get choice data
     const run = getRun();
-    const bossAdapter = {
-      hero: { hp: run.hero.currentHP, maxHp: run.hero.maxHP, xp: run.hero.runXP ?? 0 },
-      loop: { count: run.loop.count },
-      economy: {
-        gold: run.economy.gold,
-        tilePoints: run.economy.tilePoints,
-        materials: run.economy.materials ?? {},
-      },
-    };
-    const choiceData = getBossExitChoiceData(bossAdapter);
+    const choiceData = getBossExitChoiceData(run);
 
     // Exit Run panel (left)
     this.exitPanel = this.add.container(270, 280);
@@ -182,7 +173,7 @@ export class BossExitScene extends Scene {
         xpEarned,
         'safe',
         {
-          seed: (run as any).seed ?? 'unknown',
+          seed: run.runId,
           loopsCompleted: Math.max(0, run.loop.count - 1),
           bossesDefeated: run.loop.bossesDefeated ?? 0,
         },

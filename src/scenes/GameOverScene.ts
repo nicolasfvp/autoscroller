@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { getRun, createNewRun, setRun, clearRun } from '../state/RunState';
+import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 

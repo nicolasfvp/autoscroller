@@ -1,6 +1,7 @@
 import { getTileConfig } from './TileRegistry';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import difficultyConfig from '../data/difficulty.json';
+import type { RunState } from '../state/RunState';
 
 const pricing = (difficultyConfig as any).pricing;
 
@@ -14,13 +15,6 @@ export interface ShopRelic {
   relicId: string;
   name: string;
   price: number;
-}
-
-interface RunState {
-  deck: { cards: any[]; order: string[]; upgradedCards?: string[] };
-  economy: { gold: number; tilePoints: number };
-  tileInventory: Array<{ tileType: string; count: number }>;
-  relics: string[];
 }
 
 export class ShopSystem {
@@ -55,7 +49,7 @@ export class ShopSystem {
 
   // ── Shop operations ────────────────────────────────────────
 
-  static getShopCards(runState: RunState, availableCardIds: string[], loopCount: number = 0): ShopCard[] {
+  static getShopCards(_runState: RunState, availableCardIds: string[], loopCount: number = 0): ShopCard[] {
     const shuffled = fisherYates([...availableCardIds]);
     const picked = shuffled.slice(0, 3);
     const price = ShopSystem.getCardPrice(loopCount);
@@ -65,7 +59,7 @@ export class ShopSystem {
   static buyCard(runState: RunState, cardId: string, price: number): boolean {
     if (runState.economy.gold < price) return false;
     runState.economy.gold -= price;
-    runState.deck.order.push(cardId);
+    runState.deck.active.push(cardId);
     return true;
   }
 
@@ -74,11 +68,11 @@ export class ShopSystem {
   }
 
   static removeCard(runState: RunState, cardIndex: number, removalCount: number = 0): boolean {
-    if (runState.deck.order.length <= 3) return false;
+    if (runState.deck.active.length <= 3) return false;
     const cost = ShopSystem.getRemovalPrice(removalCount);
     if (runState.economy.gold < cost) return false;
     runState.economy.gold -= cost;
-    runState.deck.order.splice(cardIndex, 1);
+    runState.deck.active.splice(cardIndex, 1);
     return true;
   }
 
@@ -90,8 +84,8 @@ export class ShopSystem {
   }
 
   static reorderCard(runState: RunState, fromIndex: number, toIndex: number): void {
-    const [card] = runState.deck.order.splice(fromIndex, 1);
-    runState.deck.order.splice(toIndex, 0, card);
+    const [card] = runState.deck.active.splice(fromIndex, 1);
+    runState.deck.active.splice(toIndex, 0, card);
   }
 
   static getShopRelics(runState: RunState, availableRelicIds: string[], loopCount: number = 0): ShopRelic[] {
@@ -147,12 +141,12 @@ export class ShopSystem {
   }
 
   static sellTile(runState: RunState, tileType: string): boolean {
-    const entry = runState.tileInventory.find(t => t.tileType === tileType);
-    if (!entry || entry.count <= 0) return false;
-    entry.count--;
-    if (entry.count === 0) {
-      const idx = runState.tileInventory.indexOf(entry);
-      runState.tileInventory.splice(idx, 1);
+    const count = runState.economy.tileInventory[tileType] ?? 0;
+    if (count <= 0) return false;
+    if (count === 1) {
+      delete runState.economy.tileInventory[tileType];
+    } else {
+      runState.economy.tileInventory[tileType] = count - 1;
     }
     const config = getTileConfig(tileType);
     runState.economy.tilePoints += Math.floor(config.tilePointCost * 0.5);

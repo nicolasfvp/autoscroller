@@ -243,7 +243,7 @@ export class ShopScene extends Scene {
   // ── Modal: Buy Cards ──────────────────────────────────────────
   private modalBuyCards(): void {
     const run   = getRun();
-    const cards = ShopSystem.getShopCards(this.getRunAdapter(), run.pool.cards, run.loop.count);
+    const cards = ShopSystem.getShopCards(run, run.pool.cards, run.loop.count);
 
     this.modalTitle('🃏 Buy Cards');
     const COLS = 3; const CW = 134; const CH = 60; const GAP = 6;
@@ -262,10 +262,9 @@ export class ShopScene extends Scene {
       const ok  = run.economy.gold >= card.price;
 
       const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
-        const adp = this.getRunAdapter();
-        if (ShopSystem.buyCard(adp, card.cardId, card.price)) {
+        if (ShopSystem.buyCard(run, card.cardId, card.price)) {
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.syncFromAdapter(adp); this.closeModal(); this.openModal('buyCards');
+          this.closeModal(); this.openModal('buyCards');
         }
       });
       const name = this.add.text(x, cy - 13, card.name, {
@@ -344,11 +343,10 @@ export class ShopScene extends Scene {
       const cy = y + row * (CH + GAP) + CH / 2;
 
       const bg = cardSlot(this, x, cy, CW, CH, ok, () => {
-        const adp = this.getRunAdapter();
-        if (ShopSystem.removeCard(adp, i, removalCount)) {
+        if (ShopSystem.removeCard(run, i, removalCount)) {
           run.economy.removalsThisShop = removalCount + 1;
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.syncFromAdapter(adp); this.closeModal(); this.openModal('remove');
+          this.closeModal(); this.openModal('remove');
         }
       });
       if (ok) bg.setStrokeStyle(1.5, 0xaa3322);
@@ -364,7 +362,7 @@ export class ShopScene extends Scene {
   // ── Modal: Buy Relics ─────────────────────────────────────────
   private modalRelics(): void {
     const run    = getRun();
-    const relics = ShopSystem.getShopRelics(this.getRunAdapter(), run.pool.relics);
+    const relics = ShopSystem.getShopRelics(run, run.pool.relics);
 
     this.modalTitle('💎 Buy Relics');
 
@@ -385,10 +383,9 @@ export class ShopScene extends Scene {
       const cy     = y + row * (RH + GAP) + RH / 2;
 
       const bg = cardSlot(this, x, cy, RW, RH, ok, () => {
-        const adp = this.getRunAdapter();
-        if (ShopSystem.buyRelic(adp, relic.relicId, relic.price)) {
+        if (ShopSystem.buyRelic(run, relic.relicId, relic.price)) {
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.syncFromAdapter(adp); this.closeModal(); this.openModal('relics');
+          this.closeModal(); this.openModal('relics');
         }
       });
       bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020);
@@ -397,7 +394,7 @@ export class ShopScene extends Scene {
         fontSize: '14px', fontStyle: 'bold', color: ok ? GOLD : DIM,
         fontFamily: FF, stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5);
-      const effect = relDef?.effect ?? 'Unknown effect';
+      const effect = relDef?.description ?? 'Unknown effect';
       const desc = this.add.text(x, cy - 4, effect, {
         fontSize: '10px', color: ok ? CYAN : DIM, fontFamily: FF,
         wordWrap: { width: RW - 12 }, align: 'center',
@@ -427,31 +424,6 @@ export class ShopScene extends Scene {
       fontSize: '15px', color: DIM, fontFamily: FF, align: 'center',
     }).setOrigin(0.5);
     this.modalContainer.add(t);
-  }
-
-  // ── Adapters ──────────────────────────────────────────────────
-  private getRunAdapter(): any {
-    const run = getRun();
-    return {
-      deck: { cards: [], order: [...run.deck.active] },
-      economy: { gold: run.economy.gold, tilePoints: run.economy.tilePoints },
-      tileInventory: Object.entries(run.economy.tileInventory)
-        .filter(([, c]) => c > 0)
-        .map(([tileType, count]) => ({ tileType, count })),
-      relics: [...run.relics],
-    };
-  }
-
-  private syncFromAdapter(adapter: any): void {
-    const run = getRun();
-    run.economy.gold = adapter.economy.gold;
-    run.economy.tilePoints = adapter.economy.tilePoints;
-    run.deck.active = [...adapter.deck.order];
-    run.relics = [...adapter.relics];
-    run.economy.tileInventory = {};
-    for (const entry of adapter.tileInventory) {
-      run.economy.tileInventory[entry.tileType] = entry.count;
-    }
   }
 
   private refreshBalances(): void {

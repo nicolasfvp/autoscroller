@@ -215,7 +215,7 @@ export class CombatScene extends Scene {
         }
 
         // Play hero attack animation if possible
-        const sp = getSpritePrefix((getRun() as any).hero?.className ?? 'warrior');
+        const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
         const heroAttackKey = `${sp}_attack`;
         const heroIdleKey = `${sp}_idle`;
         if (this.anims.exists(heroAttackKey)) {
@@ -299,6 +299,16 @@ export class CombatScene extends Scene {
       const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
       const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
 
+      // Sync HP/stamina/mana from CombatState back to RunState immediately.
+      // Deferring this to the 1s delayedCall below let the death-screen /
+      // save-on-defeat path see stale pre-fight values.
+      const currentRun = getRun();
+      currentRun.isInCombat = false;
+      const finalState = this.engine.getState();
+      currentRun.hero.currentHP = Math.max(0, finalState.heroHP);
+      currentRun.hero.currentStamina = finalState.heroStamina;
+      currentRun.hero.currentMana = finalState.heroMana;
+
       // Play death animation for the losing side
       if (eventData.result === 'victory') {
         // Enemy dies - play enemy death animation
@@ -325,16 +335,6 @@ export class CombatScene extends Scene {
       // Hold 1s then transition (enough time for death anim at 8fps with 7 frames = ~875ms)
       this.time.delayedCall(1000, () => {
         displayText.destroy();
-        const currentRun = getRun();
-        currentRun.isInCombat = false;
-
-        // Always sync HP/stamina/mana from CombatState back to RunState —
-        // not just on victory. Otherwise the death-screen / save-on-defeat
-        // path sees stale pre-fight values.
-        const finalState = this.engine.getState();
-        currentRun.hero.currentHP = Math.max(0, finalState.heroHP);
-        currentRun.hero.currentStamina = finalState.heroStamina;
-        currentRun.hero.currentMana = finalState.heroMana;
 
         if (eventData.result === 'victory') {
           // Award XP
