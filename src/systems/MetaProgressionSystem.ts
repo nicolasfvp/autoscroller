@@ -107,19 +107,21 @@ export function bankRunRewards(
   runSummary: { seed: string; loopsCompleted: number; bossesDefeated: number },
   state: MetaState,
   className: string,
+  gatheringBoost: number = 0,
 ): MetaState {
   const storehouseEffects = getStorehouseEffects(state.buildings.storehouse.level);
   const materialMultiplier = exitType === 'safe' ? 1.0 : storehouseEffects.deathRetention;
   const xpMultiplier = exitType === 'safe' ? 1.0 : 0.0;
 
   const updated = structuredClone(state);
-  // C.9.a NOTE: gatheringBoost is intentionally NOT re-applied here — it is
-  // already factored into combat drops via run.economy.gatheringBoost
-  // (sampled at run start, multiplied into rollMaterialDrops). Applying it
-  // again at banking would double-apply.
+  // C.9.a: gatheringBoost is now layered ONCE at banking time (drops in-run
+  // remain raw). Caller passes run.economy.gatheringBoost (cached at run
+  // start from getStorehouseEffects). Apply alongside the exit retention
+  // multiplier and floor the final per-material total.
+  const boostMult = 1 + (gatheringBoost ?? 0);
   const bankedMaterials: Record<string, number> = {};
   for (const [mat, amount] of Object.entries(materialsEarned)) {
-    const banked = Math.floor(amount * materialMultiplier);
+    const banked = Math.floor(amount * materialMultiplier * boostMult);
     if (banked > 0) {
       updated.materials[mat] = (updated.materials[mat] ?? 0) + banked;
     }

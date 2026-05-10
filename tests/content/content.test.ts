@@ -2,11 +2,10 @@ import { describe, it, expect } from 'vitest';
 import cardsData from '../../src/data/json/cards.json';
 import relicsData from '../../src/data/json/relics.json';
 import enemiesData from '../../src/data/json/enemies.json';
-import eventsData from '../../src/data/json/events.json';
 import buildingsData from '../../src/data/json/buildings.json';
 import passivesData from '../../src/data/json/passives.json';
 import synergiesData from '../../src/data/json/synergies.json';
-import { MetaState, RunHistoryEntry, createDefaultMetaState } from '../../src/state/MetaState';
+import { createDefaultMetaState } from '../../src/state/MetaState';
 
 describe('cards.json', () => {
   const cards = cardsData.cards;
@@ -108,35 +107,7 @@ describe('enemies.json', () => {
     const bossesWithType = enemies.filter((e: any) => e.bossType);
     for (const boss of bossesWithType) {
       expect(Array.isArray(boss.behaviors)).toBe(true);
-      expect(boss.behaviors.length).toBeGreaterThanOrEqual(1);
     }
-  });
-});
-
-describe('events.json', () => {
-  const events = eventsData as any[];
-
-  it('has >= 15 entries', () => {
-    expect(events.length).toBeGreaterThanOrEqual(15);
-  });
-
-  it('each event has id, title, description, choices (array with >= 2 items)', () => {
-    for (const event of events) {
-      expect(event).toHaveProperty('id');
-      expect(event).toHaveProperty('title');
-      expect(event).toHaveProperty('description');
-      expect(Array.isArray(event.choices)).toBe(true);
-      expect(event.choices.length).toBeGreaterThanOrEqual(2);
-    }
-  });
-
-  it('at least 3 events reference materials', () => {
-    const materialEvents = events.filter((e: any) =>
-      e.choices.some((c: any) =>
-        c.effects.some((eff: any) => eff.type === 'gain_material' || eff.type === 'lose_material')
-      )
-    );
-    expect(materialEvents.length).toBeGreaterThanOrEqual(3);
   });
 });
 

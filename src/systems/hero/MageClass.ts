@@ -16,9 +16,9 @@ export const MAGE_BASE_STATS = {
 // Magic-heavy deck: more spells, fewer physical cards
 
 export const MAGE_STARTER_DECK: string[] = [
-  'fireball', 'fireball', 'arcane-shield', 'strike',
-  'heal', 'fireball', 'mana-drain', 'defend',
-  'strike', 'rejuvenate',
+  'fireball', 'fireball', 'strike',
+  'heal', 'fireball', 'defend',
+  'strike',
 ];
 
 // ── Class Definition ────────────────────────────────────────

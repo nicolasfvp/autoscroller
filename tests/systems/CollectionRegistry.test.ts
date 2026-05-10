@@ -44,12 +44,6 @@ describe('CollectionRegistry', () => {
       expect(status.bosses.total).toBe(6);
     });
 
-    it('returns events total=15', () => {
-      const state = createDefaultMetaState();
-      const status = getCollectionStatus(state);
-      expect(status.events.total).toBe(15);
-    });
-
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);

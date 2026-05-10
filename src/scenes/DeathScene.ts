@@ -121,6 +121,7 @@ export class DeathScene extends Scene {
       },
       metaState,
       run.hero.className ?? 'warrior',
+      run.economy.gatheringBoost ?? 0,
     );
     await saveMetaState(updatedState);
 

@@ -8,8 +8,6 @@ import {
   getEnemyById,
   getAllTiles,
   getAllRelics,
-  getAllEvents,
-  getAllCurses,
   getDifficultyConfig,
   getDefaultHeroStats,
   getEnemyDropTable,
@@ -63,14 +61,6 @@ describe('DataLoader', () => {
 
   it('getAllRelics() returns at least 8 relics', () => {
     expect(getAllRelics().length).toBeGreaterThanOrEqual(8);
-  });
-
-  it('getAllEvents() returns at least 5 events', () => {
-    expect(getAllEvents().length).toBeGreaterThanOrEqual(5);
-  });
-
-  it('getAllCurses() returns at least 4 curses', () => {
-    expect(getAllCurses().length).toBeGreaterThanOrEqual(4);
   });
 
   it('getDifficultyConfig() returns normal config with expected fields', () => {

@@ -70,11 +70,11 @@ export function generateAndApplyCombatLoot(
     entries.push({ label: `+${xpAmount} XP`, color: '#00ccff' });
   }
 
-  // Storehouse gathering boost — cached on RunState at run start.
-  const gatheringBoost = run.economy.gatheringBoost ?? 0;
+  // Storehouse gathering boost is applied once at banking time in
+  // MetaProgressionSystem.bankRunRewards — drops here remain raw.
 
   // Material drops from terrain
-  const terrainMats = rollMaterialDrops('terrain', terrain, run.loop.count, undefined, gatheringBoost);
+  const terrainMats = rollMaterialDrops('terrain', terrain, run.loop.count);
   for (const [mat, amount] of Object.entries(terrainMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
@@ -83,7 +83,7 @@ export function generateAndApplyCombatLoot(
   }
 
   // Material drops from enemy
-  const enemyMats = rollMaterialDrops('enemy', enemyId, run.loop.count, undefined, gatheringBoost);
+  const enemyMats = rollMaterialDrops('enemy', enemyId, run.loop.count);
   for (const [mat, amount] of Object.entries(enemyMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
@@ -93,7 +93,7 @@ export function generateAndApplyCombatLoot(
 
   // Boss material drops
   if (enemyType === 'boss') {
-    const bossMats = rollMaterialDrops('boss', enemyId, run.loop.count, undefined, gatheringBoost);
+    const bossMats = rollMaterialDrops('boss', enemyId, run.loop.count);
     for (const [mat, amount] of Object.entries(bossMats)) {
       if (amount > 0) {
         run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;

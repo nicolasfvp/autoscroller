@@ -6,8 +6,6 @@ import cardsData from './json/cards.json';
 import enemiesData from './json/enemies.json';
 import tilesData from './json/tiles.json';
 import relicsData from './json/relics.json';
-import eventsData from './json/events.json';
-import cursesData from './json/curses.json';
 import difficultyData from './json/difficulty.json';
 import heroStatsData from './json/hero-stats.json';
 import enemyDropsData from './json/enemy-drops.json';
@@ -17,8 +15,6 @@ import type {
   EnemyDefinition,
   TileTypeConfig,
   RelicDefinition,
-  EventDefinition,
-  CurseDefinition,
   DifficultyConfig,
   HeroStatsConfig,
   EnemyDropTable,
@@ -30,8 +26,6 @@ let cards: CardDefinition[] | null = null;
 let enemies: EnemyDefinition[] | null = null;
 let tiles: TileTypeConfig[] | null = null;
 let relics: RelicDefinition[] | null = null;
-let events: EventDefinition[] | null = null;
-let curses: CurseDefinition[] | null = null;
 let difficulty: Record<string, DifficultyConfig> | null = null;
 let heroStats: HeroStatsConfig | null = null;
 let enemyDrops: Record<string, EnemyDropTable> | null = null;
@@ -45,8 +39,6 @@ export function loadAllData(): void {
   enemies = enemiesData as EnemyDefinition[];
   tiles = tilesData as TileTypeConfig[];
   relics = relicsData as RelicDefinition[];
-  events = eventsData as EventDefinition[];
-  curses = cursesData as CurseDefinition[];
   difficulty = difficultyData as Record<string, DifficultyConfig>;
   heroStats = heroStatsData as HeroStatsConfig;
   enemyDrops = enemyDropsData as Record<string, EnemyDropTable>;
@@ -99,28 +91,6 @@ export function getAllRelics(): RelicDefinition[] {
 
 export function getRelicById(id: string): RelicDefinition | undefined {
   return getAllRelics().find((r) => r.id === id);
-}
-
-// ── Event accessors ─────────────────────────────────────────
-
-export function getAllEvents(): EventDefinition[] {
-  if (!events) throw new Error('Data not loaded -- call loadAllData() first');
-  return events;
-}
-
-export function getEventById(id: string): EventDefinition | undefined {
-  return getAllEvents().find((e) => e.id === id);
-}
-
-// ── Curse accessors ─────────────────────────────────────────
-
-export function getAllCurses(): CurseDefinition[] {
-  if (!curses) throw new Error('Data not loaded -- call loadAllData() first');
-  return curses;
-}
-
-export function getCurseById(id: string): CurseDefinition | undefined {
-  return getAllCurses().find((c) => c.id === id);
 }
 
 // ── Difficulty accessors ────────────────────────────────────

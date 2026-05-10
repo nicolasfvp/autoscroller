@@ -3,6 +3,7 @@ import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner'
 import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
 import { resolveAdjacencySynergies } from '../systems/SynergyResolver';
 import { TileVisual } from '../ui/TileVisual';
+import { getRun } from '../state/RunState';
 
 /**
  * PlanningOverlay -- planning phase UI with miniature loop grid and tile inventory panel.
@@ -109,6 +110,12 @@ export class PlanningOverlay extends Scene {
 
     startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
       if (pointer.button !== 0) return; // Left click only
+      // Sync spent TP/gold back to RunState before resuming GameScene, so
+      // the resume handler doesn't refund the just-spent points by copying
+      // a stale RunState.economy back into loopRunState.
+      const run = getRun();
+      run.economy.gold = this.loopRunState.economy.gold;
+      run.economy.tilePoints = this.loopRunState.economy.tilePoints;
       this.loopRunner.confirmPlanning();
       this.tweens.add({
         targets: this.cameras.main,

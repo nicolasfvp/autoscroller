@@ -5,14 +5,13 @@ import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
-const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Events', 'Bosses'] as const;
+const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Bosses'] as const;
 type TabName = typeof TAB_NAMES[number];
 
 const TAB_KEYS: Record<TabName, keyof CollectionStatus> = {
   Cards: 'cards',
   Relics: 'relics',
   Tiles: 'tiles',
-  Events: 'events',
   Bosses: 'bosses',
 };
 
@@ -176,7 +175,6 @@ export class CollectionScene extends Scene {
       case 'Cards': return Math.ceil(itemCount / 6) * 136 + 80;
       case 'Relics': return Math.ceil(itemCount / 6) * 136 + 80;
       case 'Tiles': return Math.ceil(itemCount / 6) * 136 + 80;
-      case 'Events': return itemCount * 68 + 80;
       case 'Bosses': return 350;
       default: return 600;
     }
@@ -212,9 +210,6 @@ export class CollectionScene extends Scene {
         break;
       case 'Tiles':
         this.renderTilesGrid(status);
-        break;
-      case 'Events':
-        this.renderEventsList(status);
         break;
       case 'Bosses':
         this.renderBossesRow(status);
@@ -324,52 +319,6 @@ export class CollectionScene extends Scene {
 
   private renderTilesGrid(status: CategoryStatus): void {
     this.renderCardsGrid(status);
-  }
-
-  private renderEventsList(status: CategoryStatus): void {
-    const fontFamily = FONTS.family;
-    const startY = 160;
-
-    status.items.forEach((item, index) => {
-      const y = startY + index * 68;
-
-      const bg = this.add.rectangle(400, y + 30, 700, 60, 0x2a1a10).setStrokeStyle(2, 0x3e2723);
-      this.gridContainer.add(bg);
-
-      if (item.isUnlocked) {
-        const title = this.add.text(80, y + 18, item.name, {
-          fontSize: '20px',
-          fontStyle: 'bold',
-          color: '#e6c88a',
-          stroke: '#2e1b0f',
-          strokeThickness: 2,
-          shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
-          fontFamily,
-        });
-        this.gridContainer.add(title);
-
-        const desc = this.add.text(80, y + 42, 'Random event encounter', {
-          fontSize: '14px',
-          color: '#dab988',
-          fontFamily: 'Arial, sans-serif',
-        });
-        this.gridContainer.add(desc);
-      } else {
-        const locked = this.add.text(80, y + 18, '???', {
-          fontSize: '20px',
-          color: '#aaaaaa',
-          fontFamily,
-        });
-        this.gridContainer.add(locked);
-
-        const hint = this.add.text(80, y + 42, item.unlockHint || 'Discover during a run', {
-          fontSize: '14px',
-          color: '#888888',
-          fontFamily: 'Arial, sans-serif',
-        });
-        this.gridContainer.add(hint);
-      }
-    });
   }
 
   private renderBossesRow(status: CategoryStatus): void {

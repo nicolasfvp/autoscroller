@@ -2,7 +2,7 @@
 // All combat logic driven by tick(deltaMs) calls from the scene layer.
 
 import { eventBus } from '../../core/EventBus';
-import { getCardById, getCurseById } from '../../data/DataLoader';
+import { getCardById } from '../../data/DataLoader';
 import type { CardDefinition } from '../../data/types';
 import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
@@ -118,24 +118,7 @@ export class CombatEngine {
       const card = getCardById(cardId);
 
       if (!card) {
-        // Not a regular card — could be a curse pushed onto the deck via
-        // EventResolver.add_curse. Resolve curse effects and advance.
-        const curse = getCurseById(cardId);
-        if (curse) {
-          this.applyCurseEffects(curse);
-          eventBus.emit('combat:card-played', {
-            cardId,
-            damage: 0,
-            healed: 0,
-            armorGained: 0,
-          });
-          this.lastPlayedCardId = cardId;
-          this.heroCooldownTimer = 1000; // curses use a flat 1s cooldown
-          this.consecutiveAttacks = 0; // curses never count as attacks
-          this.advanceDeckPointer();
-          return;
-        }
-        // Truly unknown ID — skip and advance.
+        // Unknown ID — skip and advance.
         this.advanceDeckPointer();
         continue;
       }
@@ -283,43 +266,6 @@ export class CombatEngine {
       const windBonus = checkConditionalTrigger('deck_reshuffled', { deckReshuffled: true }, activePassives);
       if (windBonus && windBonus.type === 'stamina') {
         this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + windBonus.value);
-      }
-    }
-  }
-
-  /**
-   * Apply effects from a curse card. Curses are pushed onto the deck via
-   * EventResolver.add_curse and were previously skipped silently because
-   * CombatEngine.getCardById didn't know about them.
-   *
-   *   pain     -> nothing (clogs deck)
-   *   wound    -> hero loses 2 HP
-   *   weakness -> next damage card deals -2 damage
-   *   fragility-> next incoming attack deals +50% damage
-   */
-  private applyCurseEffects(curse: { id: string; effects: Array<{ type: string; value?: number }> }): void {
-    for (const eff of curse.effects ?? []) {
-      switch (eff.type) {
-        case 'damage_self': {
-          const amount = Math.max(0, eff.value ?? 0);
-          this.state.heroHP = Math.max(0, this.state.heroHP - amount);
-          break;
-        }
-        case 'reduce_damage': {
-          // Stash a one-shot damage debuff on the state. CardResolver consumes it.
-          (this.state as any)._pendingDamagePenalty = (this.state as any)._pendingDamagePenalty ?? 0;
-          (this.state as any)._pendingDamagePenalty += Math.max(0, eff.value ?? 0);
-          break;
-        }
-        case 'increase_damage_taken': {
-          // Stash a one-shot incoming-damage multiplier (percent).
-          const mult = 1 + Math.max(0, eff.value ?? 0) / 100;
-          (this.state as any)._pendingFragilityMultiplier = mult;
-          break;
-        }
-        case 'nothing':
-        default:
-          break;
       }
     }
   }

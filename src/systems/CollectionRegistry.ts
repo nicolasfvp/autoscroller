@@ -1,7 +1,6 @@
 import cardsJson from '../data/json/cards.json';
 import relicsData from '../data/json/relics.json';
 import enemiesData from '../data/json/enemies.json';
-import eventsData from '../data/json/events.json';
 import { MetaState } from '../state/MetaState';
 
 const cardsData: any[] = (cardsJson as any).cards;
@@ -16,7 +15,6 @@ export interface CollectionStatus {
   cards: CategoryStatus;
   relics: CategoryStatus;
   bosses: CategoryStatus;
-  events: CategoryStatus;
   tiles: CategoryStatus;
 }
 
@@ -59,12 +57,6 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
       isUnlocked: true,
     }));
 
-  const events = (eventsData as any[]).map((e: any) => ({
-    id: e.id,
-    name: e.title,
-    isUnlocked: true,
-  }));
-
   const baseTiles = ['basic', 'forest', 'shop', 'rest', 'event', 'treasure', 'boss'];
   const unlockableTiles = ['graveyard', 'swamp', 'volcano'];
   const allTiles = [...baseTiles, ...unlockableTiles];
@@ -79,15 +71,14 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
     cards: { total: cards.length, unlocked: cards.filter(c => c.isUnlocked).length, items: cards },
     relics: { total: relics.length, unlocked: relics.filter(r => r.isUnlocked).length, items: relics },
     bosses: { total: bosses.length, unlocked: bosses.filter(b => b.isUnlocked).length, items: bosses },
-    events: { total: events.length, unlocked: events.filter(e => e.isUnlocked).length, items: events },
     tiles: { total: tiles.length, unlocked: tiles.filter(t => t.isUnlocked).length, items: tiles },
   };
 }
 
 export function getCompletionPercent(metaState: MetaState): number {
   const status = getCollectionStatus(metaState);
-  const totalItems = status.cards.total + status.relics.total + status.bosses.total + status.events.total + status.tiles.total;
-  const unlockedItems = status.cards.unlocked + status.relics.unlocked + status.bosses.unlocked + status.events.unlocked + status.tiles.unlocked;
+  const totalItems = status.cards.total + status.relics.total + status.bosses.total + status.tiles.total;
+  const unlockedItems = status.cards.unlocked + status.relics.unlocked + status.bosses.unlocked + status.tiles.unlocked;
   return Math.floor((unlockedItems / totalItems) * 100);
 }
 

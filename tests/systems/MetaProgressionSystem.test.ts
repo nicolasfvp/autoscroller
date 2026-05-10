@@ -133,6 +133,21 @@ describe('MetaProgressionSystem', () => {
       const result = bankRunRewards({ essence: 100 }, 50, 'safe', { seed: 'abc', loopsCompleted: 1, bossesDefeated: 0 }, state, 'warrior');
       expect(result.totalRuns).toBe(6);
     });
+
+    it('applies gatheringBoost once at banking on safe exit', () => {
+      // 20% boost: 100 essence -> floor(100 * 1.0 * 1.2) = 120
+      const state = createDefaultMetaState();
+      const result = bankRunRewards({ essence: 100, wood: 50 }, 50, 'safe', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state, 'warrior', 0.20);
+      expect(result.materials.essence).toBe(120);
+      expect(result.materials.wood).toBe(60);
+    });
+
+    it('compounds gatheringBoost with deathRetention on death', () => {
+      // 20% boost + 10% retention: 100 -> floor(100 * 0.10 * 1.2) = 12
+      const state = createDefaultMetaState();
+      const result = bankRunRewards({ essence: 100 }, 50, 'death', { seed: 'abc', loopsCompleted: 3, bossesDefeated: 1 }, state, 'warrior', 0.20);
+      expect(result.materials.essence).toBe(12);
+    });
   });
 
   describe('checkPassiveUnlocks', () => {

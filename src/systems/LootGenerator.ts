@@ -48,26 +48,35 @@ export function resetRNG(): void {
 }
 
 // ── Material drop system ─────────────────────────────────────
+//
+// Loot layering at drop time (all paths use the seeded RNG via SharedRNG):
+//   - Bosses get layered drops: the generic `bossDrops.materials` table
+//     (essence + crystal) PLUS the per-boss `materialReward` block sourced
+//     from enemies.json (e.g. dragon-only essence bonus).
+//   - Normal enemies get `enemyBonusDrops` keyed by enemy id (materials.json),
+//     gated by an independent chance roll.
+//   - Terrain drops are independent and keyed by tile terrain.
+// gatheringBoost is NOT applied here — it is layered on once at banking time
+// in MetaProgressionSystem.bankRunRewards so the in-run inventory shows raw
+// drops while the storehouse perk uplifts the final banked total.
 
 export function rollMaterialDrops(
   source: 'terrain' | 'enemy' | 'boss',
   sourceKey: string,
   _loopCount: number,
   rng: RNG = activeRNG,
-  gatheringBoost: number = 0
 ): Record<string, number> {
   const drops: Record<string, number> = {};
-  const boostMult = 1 + gatheringBoost;
 
   switch (source) {
     case 'terrain': {
       const terrain = materialsConfig.terrainDrops[sourceKey as keyof typeof materialsConfig.terrainDrops];
       if (!terrain) return drops;
       const range = terrain.baseAmount.max - terrain.baseAmount.min + 1;
-      const amount = Math.floor((terrain.baseAmount.min + Math.floor(rng.next() * range)) * boostMult);
+      const amount = terrain.baseAmount.min + Math.floor(rng.next() * range);
       drops[terrain.primary] = amount;
       if ((terrain as any).secondary && terrain.secondaryChance > 0 && rng.next() < terrain.secondaryChance) {
-        drops[(terrain as any).secondary] = Math.max(1, Math.floor(1 * boostMult));
+        drops[(terrain as any).secondary] = 1;
       }
       break;
     }
@@ -76,7 +85,7 @@ export function rollMaterialDrops(
       if (!enemy) return drops;
       if (rng.next() < enemy.chance) {
         const range = enemy.amount.max - enemy.amount.min + 1;
-        const amount = Math.floor((enemy.amount.min + Math.floor(rng.next() * range)) * boostMult);
+        const amount = enemy.amount.min + Math.floor(rng.next() * range);
         drops[enemy.material] = amount;
       }
       break;
@@ -86,7 +95,7 @@ export function rollMaterialDrops(
       const bossDrops = materialsConfig.bossDrops.materials;
       for (const [mat, range] of Object.entries(bossDrops)) {
         const r = (range as any).max - (range as any).min + 1;
-        const amount = Math.floor(((range as any).min + Math.floor(rng.next() * r)) * boostMult);
+        const amount = (range as any).min + Math.floor(rng.next() * r);
         drops[mat] = (drops[mat] ?? 0) + amount;
       }
       // Per-boss bonus material from enemies.json materialReward (e.g. dragon
@@ -96,7 +105,7 @@ export function rollMaterialDrops(
       if (reward && reward.bonusMaterial && reward.bonusAmount) {
         if (rng.next() < (reward.chance ?? 1)) {
           const r = reward.bonusAmount.max - reward.bonusAmount.min + 1;
-          const amount = Math.floor((reward.bonusAmount.min + Math.floor(rng.next() * r)) * boostMult);
+          const amount = reward.bonusAmount.min + Math.floor(rng.next() * r);
           drops[reward.bonusMaterial] = (drops[reward.bonusMaterial] ?? 0) + amount;
         }
       }

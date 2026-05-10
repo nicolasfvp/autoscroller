@@ -242,13 +242,7 @@
       "specialEffect": "debuff"
     },
     "attackCooldown": 2200,
-    "behaviors": [
-      {
-        "type": "summon",
-        "summonId": "mage",
-        "interval": 15000
-      }
-    ],
+    "behaviors": [],
     "goldReward": {
       "min": 110,
       "max": 170

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/validate-data.mjs
 // Cross-references IDs across the JSON data layer and fails CI on drift.
-// - Every card ID referenced by enemy-drops, events, synergies, buildings,
+// - Every card ID referenced by enemy-drops, synergies, buildings,
 //   and class starter decks must exist in cards.json.
 // - Every relic ID referenced by buildings.json must exist in relics.json.
 // - Every passive ID referenced by buildings.json must exist in
@@ -35,7 +35,6 @@ function fail(msg) { errors.push(msg); }
 // ── Load all data ──────────────────────────────────────────────
 const cards = loadJSON('src/data/json/cards.json');
 const enemyDrops = loadJSON('src/data/json/enemy-drops.json');
-const events = loadJSON('src/data/json/events.json');
 const cardSynergies = loadJSON('src/data/json/synergies.json');
 const relics = loadJSON('src/data/json/relics.json');
 const passives = loadJSON('src/data/json/passives.json');
@@ -67,28 +66,6 @@ for (const [enemyName, table] of Object.entries(enemyDrops)) {
   for (const id of pool) {
     if (!cardIds.has(id)) {
       fail(`enemy-drops.json["${enemyName}"].cardPool: card "${id}" not in cards.json`);
-    }
-  }
-}
-
-// ── Check 2: events.json add_card / upgrade_card values ────────
-// add_card / remove_card / upgrade_card use generic tokens like
-// "random", "random_rare", "choose", "curse" — these are NOT card IDs,
-// they're effect-resolver tokens. Skip those. Only fail if a literal
-// card id is referenced and doesn't exist. The current schema only
-// emits tokens, so this loop is mostly defensive.
-const EVENT_CARD_TOKENS = new Set([
-  'random', 'random_rare', 'random_uncommon', 'random_common', 'choose', 'curse',
-]);
-for (const ev of events ?? []) {
-  for (const choice of ev.choices ?? []) {
-    for (const eff of choice.effects ?? []) {
-      if (eff.type === 'add_card' || eff.type === 'upgrade_card') {
-        const v = eff.value;
-        if (typeof v === 'string' && !EVENT_CARD_TOKENS.has(v) && !cardIds.has(v)) {
-          fail(`events.json["${ev.id}"]: ${eff.type} value "${v}" is not a known card id or token`);
-        }
-      }
     }
   }
 }

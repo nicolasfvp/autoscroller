@@ -176,11 +176,7 @@ export class EnemyAI {
    * fire once for the whole attack, not once per hit.
    */
   private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-    // Fragility curse (one-shot): incoming attack deals +X% damage. Consumed.
-    const fragility = (state as any)._pendingFragilityMultiplier ?? 1;
-    const damage = Math.floor(rawDamage * fragility);
-    if (fragility !== 1) (state as any)._pendingFragilityMultiplier = 1;
-
+    const damage = rawDamage;
     const multiplier = state.heroDefenseMultiplier ?? 1;
     const effectiveDefense = Math.floor(state.heroDefense * multiplier);
 

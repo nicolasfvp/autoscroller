@@ -27,8 +27,9 @@ export function triggerBossCombat(runState: RunState): BossEncounterData {
 }
 
 export function onBossVictory(runState: RunState): { materialsAwarded: Record<string, number> } {
-  const gatheringBoost = runState.economy.gatheringBoost ?? 0;
-  const materials = rollMaterialDrops('boss', '', runState.loop.count, undefined, gatheringBoost);
+  // gatheringBoost is layered at banking time (MetaProgressionSystem.bankRunRewards),
+  // not at drop time — keep raw boss drops here.
+  const materials = rollMaterialDrops('boss', '', runState.loop.count);
   for (const [mat, amount] of Object.entries(materials)) {
     runState.economy.materials[mat] = (runState.economy.materials[mat] ?? 0) + amount;
   }

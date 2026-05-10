@@ -71,11 +71,12 @@ describe('LootGenerator', () => {
       expect(drops.crystal).toBeGreaterThanOrEqual(2);
     });
 
-    it('gatheringBoost increases material amounts', () => {
-      // With 20% boost and roll=0.99: wood = 2+floor(0.99*4)=5, then floor(5*1.2)=6
+    it('drops are no longer modified by gatheringBoost (banking-only now)', () => {
+      // gatheringBoost moved to MetaProgressionSystem.bankRunRewards.
+      // rollMaterialDrops returns raw amounts: wood = 2+floor(0.99*4)=5.
       const rng = createDeterministicRNG([0.99, 0.99]); // high roll, no secondary
-      const drops = rollMaterialDrops('terrain', 'forest', 1, rng, 0.20);
-      expect(drops.wood).toBe(6);
+      const drops = rollMaterialDrops('terrain', 'forest', 1, rng);
+      expect(drops.wood).toBe(5);
     });
 
     it('unknown terrain returns empty', () => {

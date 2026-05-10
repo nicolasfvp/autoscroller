@@ -12,7 +12,7 @@ import { CardQueueDisplay } from '../ui/CardQueueDisplay';
 import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
-import { scaleEnemy } from '../data/EnemyDefinitions';
+import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
@@ -91,7 +91,7 @@ export class CombatScene extends Scene {
       return;
     }
 
-    const scaled = scaleEnemy(enemyDef, run.loop.count);
+    const scaled = scaleEnemyForLoop(enemyDef, run.loop.count, enemyDef.type === 'boss');
     // Create a scaled enemy definition for CombatState
     const scaledEnemy = {
       ...enemyDef,
@@ -347,9 +347,9 @@ export class CombatScene extends Scene {
           }
 
           // Generate loot (gold + cards + materials) and queue notifications
-          const scaled = scaleEnemy(enemyDef, currentRun.loop.count);
+          const scaled = scaleEnemyForLoop(enemyDef, currentRun.loop.count, enemyDef.type === 'boss');
           const combatTerrain = data.terrain ?? 'basic';
-          generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, combatTerrain, scaled.gold, xpEarned);
+          generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, combatTerrain, scaled.goldReward, xpEarned);
 
           // Resume GameScene directly (no PostCombatScene/RewardScene)
           this.scene.stop();

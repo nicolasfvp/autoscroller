@@ -138,49 +138,6 @@ export interface RelicDefinition {
   unlockTier?: number;
 }
 
-// ── Event Types ─────────────────────────────────────────────
-
-export type EventChoiceEffect = 'gain_hp' | 'lose_hp' | 'gain_gold' | 'lose_gold' | 'add_card' | 'remove_card' | 'gain_relic' | 'add_curse' | 'gain_material' | 'lose_material' | 'upgrade_card';
-
-export interface EventChoiceEffectEntry {
-  type: EventChoiceEffect;
-  value?: number | string;
-  material?: string;
-}
-
-export interface EventChoice {
-  text: string;
-  effects: EventChoiceEffectEntry[];
-  requirement?: {
-    minGold?: number;
-    minHP?: number;
-    minMaterial?: Record<string, number>;
-  };
-}
-
-export interface EventDefinition {
-  id: string;
-  title: string;
-  description: string;
-  choices: EventChoice[];
-  weight?: number;
-}
-
-// ── Curse Types ─────────────────────────────────────────────
-
-export interface CurseEffect {
-  type: 'nothing' | 'damage_self' | 'reduce_damage' | 'increase_damage_taken';
-  value?: number;
-}
-
-export interface CurseDefinition {
-  id: string;
-  name: string;
-  description: string;
-  effects: CurseEffect[];
-  color: number;
-}
-
 // ── Pricing & Economy Types ─────────────────────────────────
 
 export interface PricingConfig {

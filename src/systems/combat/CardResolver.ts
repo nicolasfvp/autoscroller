@@ -101,25 +101,20 @@ export class CardResolver {
     switch (type) {
       case 'damage': {
         if (target === 'self') {
-          // Self-damage cards (e.g. Wound curse) bypass strength scaling and
-          // enemy defense — value is the literal HP loss the hero takes.
+          // Self-damage cards bypass strength scaling and enemy defense —
+          // value is the literal HP loss the hero takes.
           const selfDamage = Math.max(0, Math.floor(value));
           state.heroHP = Math.max(0, state.heroHP - selfDamage);
           break;
         }
-        // Apply Weakness curse penalty (one-shot): subtracts a flat amount
-        // from this card's damage value. Consumed once.
-        const penalty = (state as any)._pendingDamagePenalty ?? 0;
-        const adjustedValue = Math.max(0, value - penalty);
-        if (penalty > 0) (state as any)._pendingDamagePenalty = 0;
 
         // Floor damage at 1 for any positive-damage card so high-defense
         // enemies (e.g. Iron Golem def 8) can't soft-lock low-strength heroes.
         // Apply tile-adjacency damageBonus buffs (B.1) on top of card/relic
         // multipliers — buffs are flat additive on the multiplier (e.g. 0.20).
         const buffMult = getDamageBuffMultiplier();
-        const computed = Math.floor((adjustedValue * state.heroStrength * damageMultiplier * buffMult) - state.enemyDefense);
-        const raw = adjustedValue > 0 ? Math.max(1, computed) : Math.max(0, computed);
+        const computed = Math.floor((value * state.heroStrength * damageMultiplier * buffMult) - state.enemyDefense);
+        const raw = value > 0 ? Math.max(1, computed) : Math.max(0, computed);
         state.enemyHP -= raw;
         result.totalDamage += raw;
         break;
