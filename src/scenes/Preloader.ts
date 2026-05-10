@@ -183,7 +183,12 @@ export class Preloader extends Scene {
     // Check for existing saved run
     const savedRun = await saveManager.load();
 
-    // Pass saved run info to MainMenu via registry
+    // Pass saved run info to MainMenu via registry as a fast-paint hint.
+    // Invalidation contract: MainMenu always re-loads from IDB before
+    // deciding whether to show "Continue", and removes this key after
+    // reading. Other scenes that clear the run also null this out via
+    // the run:cleared listener below, so a stale hint can never survive
+    // long enough to mislead the menu.
     this.registry.set('savedRun', savedRun);
 
     // Keep the registry copy in sync when the active run is cleared elsewhere
