@@ -100,10 +100,11 @@ export class CombatHUD {
 
     // Background asset (frame)
     const bg = s.add.image(x + w / 2, y, 'healthbar').setDisplaySize(w, h);
-    // Fill (padded to fit inside the well, revealing golden corners/borders)
+    // Fill starts empty so the first hud.update() frame can grow it from 0
+    // without a visible "full bar then snap to value" flash on combat entry.
     const padX = 8;
     const padY = 4;
-    const fill = s.add.rectangle(x + padX, y, w - padX * 2, h - padY * 2, color).setOrigin(0, 0.5);
+    const fill = s.add.rectangle(x + padX, y, 0, h - padY * 2, color).setOrigin(0, 0.5);
 
     this.container.add([bg, fill]);
     // Store fill reference via a small hack — expose it to the calling scope
@@ -145,7 +146,7 @@ export class CombatHUD {
     const padX = 8;
     const padY = 4;
     const ebg = s.add.image(bx + BAR_W / 2, by, 'healthbar').setDisplaySize(BAR_W, 28);
-    this.enemyHpBar = s.add.rectangle(bx + padX, by, BAR_W - padX * 2, 28 - padY * 2, 0xdd2222).setOrigin(0, 0.5);
+    this.enemyHpBar = s.add.rectangle(bx + padX, by, 0, 28 - padY * 2, 0xdd2222).setOrigin(0, 0.5);
 
     this.enemyHpText = s.add.text(bx + BAR_W / 2, by, '', {
       fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
@@ -177,36 +178,42 @@ export class CombatHUD {
   // ── Public update ──────────────────────────────────────────────
 
   update(state: CombatState, heroCooldown: number, heroMaxCooldown: number): void {
-    // Hero bars
+    // Hero bars. Track displayed* against the tween *target* (updated at
+    // tween start) so consecutive update() ticks during an in-flight tween
+    // don't restart it every frame and leave the value stuck at zero.
     const newHP = Math.ceil(state.heroHP);
     if (newHP !== this.displayedHeroHp) {
-      this.tweenBar('hp', this.displayedHeroHp, newHP, state.heroMaxHP,
+      const from = this.displayedHeroHp;
+      this.displayedHeroHp = newHP;
+      this.tweenBar('hp', from, newHP, state.heroMaxHP,
         this.hpBar, this.hpText,
-        (r) => r > 0.5 ? 0x22cc44 : r > 0.25 ? 0xf0a020 : 0xff3333,
-        () => { this.displayedHeroHp = newHP; });
+        (r) => r > 0.5 ? 0x22cc44 : r > 0.25 ? 0xf0a020 : 0xff3333);
     }
 
     const newSTA = Math.ceil(state.heroStamina);
     if (newSTA !== this.displayedStamina) {
-      this.tweenBar('stamina', this.displayedStamina, newSTA, state.heroMaxStamina,
-        this.staminaBar, this.staminaText, () => 0xf0a020,
-        () => { this.displayedStamina = newSTA; });
+      const from = this.displayedStamina;
+      this.displayedStamina = newSTA;
+      this.tweenBar('stamina', from, newSTA, state.heroMaxStamina,
+        this.staminaBar, this.staminaText, () => 0xf0a020);
     }
 
     const newMP = Math.ceil(state.heroMana);
     if (newMP !== this.displayedMana) {
-      this.tweenBar('mana', this.displayedMana, newMP, state.heroMaxMana,
-        this.manaBar, this.manaText, () => 0x9966ff,
-        () => { this.displayedMana = newMP; });
+      const from = this.displayedMana;
+      this.displayedMana = newMP;
+      this.tweenBar('mana', from, newMP, state.heroMaxMana,
+        this.manaBar, this.manaText, () => 0x9966ff);
     }
 
     // Enemy
     this.enemyNameText.setText(state.enemyName);
     const newEHP = Math.ceil(state.enemyHP);
     if (newEHP !== this.displayedEnemyHp) {
-      this.tweenBar('enemyHp', this.displayedEnemyHp, newEHP, state.enemyMaxHP,
-        this.enemyHpBar, this.enemyHpText, () => 0xdd2222,
-        () => { this.displayedEnemyHp = newEHP; });
+      const from = this.displayedEnemyHp;
+      this.displayedEnemyHp = newEHP;
+      this.tweenBar('enemyHp', from, newEHP, state.enemyMaxHP,
+        this.enemyHpBar, this.enemyHpText, () => 0xdd2222);
     }
 
     // Cooldown arc
@@ -253,7 +260,6 @@ export class CombatHUD {
     bar: Phaser.GameObjects.Rectangle,
     text: Phaser.GameObjects.Text,
     getColor: (ratio: number) => number,
-    onComplete: () => void,
   ): void {
     const map: Record<string, Phaser.Tweens.Tween | undefined> = {
       hp: this.hpTween, stamina: this.staminaTween,
@@ -275,9 +281,6 @@ export class CombatHUD {
         bar.width = Math.max(0, (BAR_W - 16) * r);
         bar.setFillStyle(getColor(r));
         text.setText(`${to}/${max}`);
-        // Run the caller's onComplete *after* the tween finishes so the
-        // tracked "displayed" value is only updated when animation completes.
-        onComplete();
       },
     });
 
