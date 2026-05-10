@@ -110,13 +110,14 @@ export class CardResolver {
           break;
         }
 
-        // Floor damage at 1 for any positive-damage card so high-defense
+        // B.5: floor damage at 1 for any positive-damage card so high-defense
         // enemies (e.g. Iron Golem def 8) can't soft-lock low-strength heroes.
+        // Utility cards (value=0) still produce 0 — they aren't damage cards.
         // Apply tile-adjacency damageBonus buffs (B.1) on top of card/relic
         // multipliers — buffs are flat additive on the multiplier (e.g. 0.20).
         const buffMult = getDamageBuffMultiplier();
-        const computed = Math.floor((value * state.heroStrength * damageMultiplier * buffMult) - state.enemyDefense);
-        const raw = value > 0 ? Math.max(1, computed) : Math.max(0, computed);
+        const baseDmg = value * state.heroStrength * damageMultiplier * buffMult;
+        const raw = baseDmg > 0 ? Math.max(1, Math.floor(baseDmg - state.enemyDefense)) : 0;
         state.enemyHP -= raw;
         result.totalDamage += raw;
         break;
