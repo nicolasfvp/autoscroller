@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createEmptyCombatStats, CombatStats } from '../../../src/systems/combat/CombatStats';
+import { createEmptyCombatStats } from '../../../src/systems/combat/CombatStats';
 
 describe('CombatStats', () => {
   it('createEmptyCombatStats returns object with all counters at 0', () => {

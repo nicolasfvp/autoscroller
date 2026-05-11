@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
-import type { CombatState } from '../../../src/systems/combat/CombatState';
 import type { RunState } from '../../../src/state/RunState';
 import type { EnemyDefinition } from '../../../src/data/types';
 import { loadAllData } from '../../../src/data/DataLoader';
@@ -18,7 +17,9 @@ vi.mock('../../../src/core/EventBus', () => ({
 
 function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): RunState {
   return {
+    version: 3,
     runId: 'test-run',
+    seed: 'test-seed',
     generation: 1,
     startedAt: Date.now(),
     hero: {
@@ -44,6 +45,10 @@ function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): R
     relics: [],
     isInCombat: false,
     currentScene: 'Game',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 

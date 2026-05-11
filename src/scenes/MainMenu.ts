@@ -15,11 +15,21 @@ export class MainMenu extends Scene {
     super(SCENE_KEYS.MAIN_MENU);
   }
 
-  create(): void {
+  async create(): Promise<void> {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
-    this.savedRun = this.registry.get(REGISTRY_KEYS.SAVED_RUN) as RunState | null;
+    // Read the registry hint (set by Preloader for fast first paint), but
+    // prefer the freshly-loaded IDB value so we never offer "Continue"
+    // for a run that was just abandoned/deleted in another scene. After
+    // consuming, drop the registry copy so future reads can't pick up
+    // stale data.
+    // The registry hint is read but intentionally ignored when IDB has
+    // no save — IDB is the source of truth, and trusting a stale hint
+    // would re-surface an abandoned run.
+    this.registry.get(REGISTRY_KEYS.SAVED_RUN);
+    this.savedRun = await saveManager.load();
+    this.registry.remove(REGISTRY_KEYS.SAVED_RUN);
     this.confirmOverlay = null;
 
     // Theme Song

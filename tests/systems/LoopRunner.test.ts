@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { LoopRunner, TILE_SIZE, type LoopRunState } from '../../src/systems/LoopRunner';
+import { LoopRunner, type LoopRunState } from '../../src/systems/LoopRunner';
 
 interface EmittedEvent {
   event: string;
