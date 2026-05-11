@@ -58,40 +58,40 @@ Cost shape legend: *free* = no resource cost, *S/n* = n Stamina, *D/n* = n Defen
 | ID | Name | Rarity | Category | Cost | Effect summary | Tags |
 |---|---|---|---|---|---|---|
 | strike | Strike | common | attack | free | 7 dmg; +1 Stamina on play | S, R |
-| heavy-hit | Heavy Hit | common | attack | S/5 | 13 dmg | S |
-| defend | Defend | common | defense | free | +2 Armor | A |
-| cleave | Cleave | common | attack | S/4 | 5 dmg AoE | S, B |
-| brace | Brace | common | defense | free | +1 Armor; +1 Stamina | S, A |
+| heavy-hit | Heavy Hit | common | attack | S/4 | 16 dmg | S |
+| defend | Defend | common | defense | free | +10 Armor | A |
+| cleave | Cleave | common | attack | S/3 | 10 dmg AoE | S, B |
+| brace | Brace | common | defense | free | +9 Armor; +1 Stamina | S, A |
 | bloodied-grip | Bloodied Grip | common | attack | free | 3 dmg; +1 Rage stack | R |
-| iron-resolve | Iron Resolve | common | defense | free | +2 Armor; +2 more if HP<50% | A, R |
-| shoulder-check | Shoulder Check | common | attack | S/2 | 4 dmg; enemy −1 Defense | S, B |
-| whetstone | Whetstone | common | utility | D/1 | +1 STR this combat | R, u |
-| jab | Jab | common | attack | free | 2 dmg; +2 Stamina | S |
-| bandage | Bandage | common | utility | HP/2 | Heal 6 HP (net +4); +1 SPI this combat | u |
-| war-cry | War Cry | common | utility | S/3 | +2 STR for next 2 attacks | R |
+| iron-resolve | Iron Resolve | common | defense | free | +8 Armor; +4 more if HP<50% | A, R |
+| shoulder-check | Shoulder Check | common | attack | S/2 | 6 dmg; enemy −1 Defense | S, B |
+| whetstone | Whetstone | common | utility | D/1 | +2 STR this combat | R, u |
+| jab | Jab | common | attack | free | 6 dmg; +2 Stamina | S |
+| bandage | Bandage | common | utility | HP/1 | Heal 12 HP (net +10); +1 SPI this combat | u |
+| war-cry | War Cry | common | utility | S/2 | +3 STR for next 2 attacks | R |
 | counter-strike | Counter Strike | uncommon | attack | free | 8 dmg; +4 dmg if hero took damage in last 2s | A, S |
-| shield-wall | Shield Wall | uncommon | defense | S/5 | +5 Armor | A, S |
-| fortify | Fortify | uncommon | defense | S/10 | +8 Armor | A, S |
-| parry | Parry | uncommon | defense | S/3 | +3 Armor; 2 dmg | A, S |
-| reckless-charge | Reckless Charge | uncommon | attack | HP/3 | 18 dmg | R |
-| rage-cycle | Rage Cycle | uncommon | attack | S/4 | 6 dmg; +2 Rage stacks | R, S |
-| bone-splinter | Bone Splinter | uncommon | attack | S/3 | 6 dmg; apply 6 Bleed | B, S |
+| shield-wall | Shield Wall | uncommon | defense | S/3 | +20 Armor | A, S |
+| fortify | Fortify | uncommon | defense | S/4 | +25 Armor | A, S |
+| parry | Parry | uncommon | defense | S/2 | +8 Armor; 5 dmg | A, S |
+| reckless-charge | Reckless Charge | uncommon | attack | HP/2 | 35 dmg | R |
+| rage-cycle | Rage Cycle | uncommon | attack | S/3 | 8 dmg; +2 Rage stacks | R, S |
+| bone-splinter | Bone Splinter | uncommon | attack | S/3 | 5 dmg; apply 4 Bleed | B, S |
 | battle-stance | Battle Stance | uncommon | utility | free | +1 STR per 5 HP missing (cap +5) | R, A |
-| shieldbash | Shield Bash | uncommon | attack | D/5 | Deal damage = current Armor (max 14) | A |
-| wound-reopener | Wound Reopener | uncommon | attack | S/2 | 3 dmg; if target bleeding, double Bleed remaining | B, S |
-| plate-up | Plate Up | uncommon | defense | S/5 | +4 Armor; +1 VIT this combat | A, u |
-| rallying-roar | Rallying Roar | uncommon | utility | Stat-drain (−1 SPI this combat) | +1 STR perm for the combat; +5 Stamina | R |
-| fury | Fury | rare | attack | D/10 | 20 dmg | A, R |
-| iron-skin | Iron Skin | rare | defense | M/5 | +7 Armor | A |
-| bulwark | Bulwark | rare | defense | S/8 | +12 Armor | A, S |
-| berserker | Berserker | rare | attack | S/15 + D/5 | 27 dmg | S, A, R |
-| execute | Execute | rare | attack | S/12 | 30 dmg to lowest-HP enemy | S |
-| crimson-tide | Crimson Tide | rare | attack | S/6 | 9 dmg; +2 per Bleed on target | B, R, u |
-| unyielding | Unyielding | rare | defense | S/8 | +10 Armor; +1 Armor per STR | A, R, u |
-| bloodsworn | Bloodsworn | rare | attack | Stat-drain (−1 STR this combat) | 5 dmg; +3 Rage stacks | R, u |
-| doom-blade | Doom Blade | epic | attack | D/10 | 40 dmg | A, R |
-| last-stand | Last Stand | epic | defense | S/5 + M/5 | +17 Armor | A, S |
-| worldbreaker | Worldbreaker | epic | attack | free — **once per combat**; on play lose 5 HP | 60 dmg single target; if it kills, +2 STR permanently for this run | R, A, S, u |
+| shieldbash | Shield Bash | uncommon | attack | D/2 | Deal damage = current Armor (max 18) | A |
+| wound-reopener | Wound Reopener | uncommon | attack | S/2 | 4 dmg; if target bleeding, double Bleed remaining | B, S |
+| plate-up | Plate Up | uncommon | defense | S/3 | +15 Armor; +2 VIT this combat | A, u |
+| rallying-roar | Rallying Roar | uncommon | utility | Stat-drain (−1 SPI this combat) | +3 STR temp for the combat; +10 Stamina | R |
+| fury | Fury | rare | attack | D/5 | 45 dmg | A, R |
+| iron-skin | Iron Skin | rare | defense | M/3 | +30 Armor | A |
+| bulwark | Bulwark | rare | defense | S/4 | +35 Armor | A, S |
+| berserker | Berserker | rare | attack | S/8 + D/3 | 70 dmg | S, A, R |
+| execute | Execute | rare | attack | S/8 | 55 dmg to lowest-HP enemy | S |
+| crimson-tide | Crimson Tide | rare | attack | S/4 | 15 dmg; +3 per Bleed on target | B, R, u |
+| unyielding | Unyielding | rare | defense | S/4 | +20 Armor; +3 Armor per STR | A, R, u |
+| bloodsworn | Bloodsworn | rare | attack | Stat-drain (−1 STR this combat) | 15 dmg; +7 Rage stacks | R, u |
+| doom-blade | Doom Blade | epic | attack | D/6 | 75 dmg | A, R |
+| last-stand | Last Stand | epic | defense | S/3 + M/3 | +70 Armor | A, S |
+| worldbreaker | Worldbreaker | epic | attack | free — **once per combat**; on play lose 3 HP | 120 dmg single target; if it kills, +2 STR permanently for this run | R, A, S, u |
 
 **Rarity tally**: 12 common · 12 uncommon · 8 rare · 3 epic = **35** ✓
 
@@ -127,29 +127,29 @@ Every rarity tier hits all three shape buckets. Rarity does **not** predict cost
 
 ### 5.3 Rares (8 detail blocks)
 
-**fury — *Crimson Wedge.*** You trade a wall of armor for a single, ruinous swing. 20 damage, costs 10 Defense. Upgrade: +7 dmg (→27). The card that defines the "armor-as-fuel" identity — armor stops being a resource you spend on survival and starts being a resource you spend on kills.
+**fury — *Crimson Wedge.*** You trade a wall of armor for a single, ruinous swing. 45 damage, costs 5 Defense. Upgrade: +15 dmg. The card that defines the "armor-as-fuel" identity — armor stops being a resource you spend on survival and starts being a resource you spend on kills.
 
-**iron-skin — *Arcane Plating.*** The one Mana-touching defense rare in the warrior set; a remnant of the Mage-warrior overlap. +7 Armor for 5 Mana. Upgrade: +2 Armor. Niche but combos with neutral mana-batteries.
+**iron-skin — *Arcane Plating.*** The one Mana-touching defense rare in the warrior set; a remnant of the Mage-warrior overlap. +30 Armor for 3 Mana. Upgrade: +8 Armor. Niche but combos with neutral mana-batteries.
 
-**bulwark — *The Wall.*** +12 Armor for 8 Stamina. Upgrade: +4 Armor. The pure-tank scaling tool, and the launchpad most decks build for Fury / Doom Blade.
+**bulwark — *The Wall.*** +35 Armor for 4 Stamina. Upgrade: +10 Armor. The pure-tank scaling tool, and the launchpad most decks build for Fury / Doom Blade.
 
-**berserker — *The Pact.*** 27 dmg, costs 15 Stamina AND 5 Defense. Upgrade: +9 dmg. The double-resource finisher; usually the better Fury when you have stamina to burn.
+**berserker — *The Pact.*** 70 dmg, costs 8 Stamina AND 3 Defense. Upgrade: +20 dmg. The double-resource finisher; usually the better Fury when you have stamina to burn.
 
-**execute — *Headsman.*** 30 dmg, costs 12 Stamina, hits lowest-HP target. Upgrade: +11 dmg. Boss-phase mop-up and elite-add deletion.
+**execute — *Headsman.*** 55 dmg, costs 8 Stamina, hits lowest-HP target. Upgrade: +20 dmg. Boss-phase mop-up and elite-add deletion.
 
-**crimson-tide — *Wound Logic.*** A scaling Bleed payoff: 9 dmg base, +2 per Bleed stack on target. Costs 6 Stamina. Upgrade: +3 base, +1 per Bleed stack. The card that makes the bleed micro-mechanic *matter* in a deck.
+**crimson-tide — *Wound Logic.*** A scaling Bleed payoff: 15 dmg base, +3 per Bleed stack on target. Costs 4 Stamina. Upgrade: +5 base, +1 per Bleed stack. The card that makes the bleed micro-mechanic *matter* in a deck.
 
-**unyielding — *Steel Will.*** +10 Armor, then +1 Armor per current STR. Costs 8 Stamina. Upgrade: scales off (STR + VIT) instead of STR. The card that makes Rage stacking pivot into defense.
+**unyielding — *Steel Will.*** +20 Armor, then +3 Armor per current STR. Costs 4 Stamina. Upgrade: scales off (STR + VIT) instead of STR. The card that makes Rage stacking pivot into defense.
 
-**bloodsworn — *Wolf's Bargain.*** No resource cost — instead, drain 1 STR for the combat. Gain 3 Rage stacks; deal 5 damage. Upgrade: drain becomes 0 (becomes strictly better; this is the "you found the upgrade payoff" moment). The **free rare with a stat-drain consequence** — proves rarity doesn't equal cost complexity (v2 §2).
+**bloodsworn — *Wolf's Bargain.*** No resource cost — instead, drain 1 STR for the combat. Gain 7 Rage stacks; deal 15 damage. Upgrade: drain becomes 0 (becomes strictly better; this is the "you found the upgrade payoff" moment). The **free rare with a stat-drain consequence** — proves rarity doesn't equal cost complexity (v2 §2).
 
 ### 5.4 Epics (3 detail blocks)
 
-**doom-blade — *Crown of Endings.*** 40 dmg, costs 10 Defense. Upgrade: +8 dmg. The classic glass-cannon epic; the cost shape means a single Doom Blade can burn ~25 armor across a combat (Fortify + Doom Blade is the canonical Iron Tide combo). Tradeoff: you cannot use it without having paid the armor up front. *(Note: cards.json currently also imposes 3 HP self-damage; v2 design drops the HP rider to keep Doom Blade as a clean single-cost epic — engine to be updated.)*
+**doom-blade — *Crown of Endings.*** 75 dmg, costs 6 Defense. Upgrade: +20 dmg. The classic glass-cannon epic; the cost shape means a single Doom Blade can burn ~18 armor across a combat (Fortify + Doom Blade is the canonical Iron Tide combo). Tradeoff: you cannot use it without having paid the armor up front. *(Note: cards.json currently also imposes 3 HP self-damage; v2 design drops the HP rider to keep Doom Blade as a clean single-cost epic — engine to be updated.)*
 
-**last-stand — *No Step Back.*** +17 Armor for 5 Stamina + 5 Mana. Upgrade: +3 Armor. The cross-resource defense epic; the mana cost is the real barrier — warriors who don't have neutral mana relics can't loop it.
+**last-stand — *No Step Back.*** +70 Armor for 3 Stamina + 3 Mana. Upgrade: +12 Armor. The cross-resource defense epic; the mana cost is the real barrier — warriors who don't have neutral mana relics can't loop it.
 
-**worldbreaker — *Build-defining, deliberately OP.*** **No resource cost. Once per combat. On play, lose 5 HP.** 60 damage single target. **If it kills, +2 STR permanently for this run.** Upgrade: kill bonus becomes +3 STR. This is the OP build-definer per framework §8 — the epic that costs *nothing* in currency but carries hard consequences: (1) the once-per-combat lock, (2) the flat 5 HP self-damage, (3) the conditional permanent-stat payoff that only triggers on the kill. Proves v2 §2: an epic that "costs nothing but has a permanent downside" earns its rarity through consequence-weight, not resource-flow.
+**worldbreaker — *Build-defining, deliberately OP.*** **No resource cost. Once per combat. On play, lose 3 HP.** 120 damage single target. **If it kills, +2 STR permanently for this run.** Upgrade: kill bonus becomes +3 STR. This is the OP build-definer per framework §8 — the epic that costs *nothing* in currency but carries hard consequences: (1) the once-per-combat lock, (2) the flat 3 HP self-damage, (3) the conditional permanent-stat payoff that only triggers on the kill. Proves v2 §2: an epic that "costs nothing but has a permanent downside" earns its rarity through consequence-weight, not resource-flow.
 
 ---
 
@@ -305,7 +305,123 @@ Per framework §9 heuristic:
 
 ---
 
-## 9. Open Questions for Engine Wiring (not blocking design)
+## 9. Balance audit (RPU pass per framework §10)
+
+This section audits every card against framework §10 (`Reward-per-Usage`). RPU = total reward units (R) divided by total cost units (C, floored at 1 for free cards). Bands by rarity: Common 6.0–9.0 · Uncommon 8.5–11.5 · Rare 11.0–14.5 · Epic 13.5–19.0.
+
+### 9.1 Scoring conventions used
+
+- Default card cooldown is 1.0s baseline (C = 0). No cards in this set have above-baseline cooldowns, so cooldown contributes 0 to C throughout.
+- AoE damage is scored at single-target value (conservative; AoE multi-hit upside is "free").
+- "Rage stack" = +1 temp STR for the combat → 3.0 R per stack (§10.1 stat buff temp STR).
+- "STR for next N attacks" (war-cry-style — bounded, not whole-combat) is scored at **2.0 R per +1 STR**, between the §10.1 full-combat 3.0 R/pt and a half-credit conditional rider 1.5 R/pt.
+- "+X Armor per STR" uses Warrior baseline STR = 4 (§10.7).
+- Conditional riders (e.g. iron-resolve "+4 more if HP<50%") count at half their face value (avg activation ~50%).
+- Wound-reopener's "double Bleed remaining" assumes avg 4 Bleed on target when fired (~8 R added) and ~60% activation → +4.8 R.
+- Crimson-tide assumes avg 4 Bleed stacks on a target when fired.
+- Worldbreaker's "+2 STR permanently this run" rider is amortized at **+10 R** per framework §10.6 example.
+
+### 9.2 Per-card RPU table (post-adjustment)
+
+| ID | Rarity | R (effects) | C (cost) | RPU | Band |
+|---|---|---|---|---|---|
+| strike | common | 7 + 0.5 = 7.5 | 0 → 1 | 7.5 | ✓ |
+| heavy-hit | common | 16 | 2.0 | 8.0 | ✓ |
+| defend | common | 7.0 | 0 → 1 | 7.0 | ✓ |
+| cleave | common | 10 | 1.5 | 6.67 | ✓ |
+| brace | common | 6.3 + 0.5 = 6.8 | 0 → 1 | 6.8 | ✓ |
+| bloodied-grip | common | 3 + 3 = 6.0 | 0 → 1 | 6.0 | ✓ |
+| iron-resolve | common | 5.6 + 1.4 = 7.0 | 0 → 1 | 7.0 | ✓ |
+| shoulder-check | common | 6 + 1 = 7.0 | 1.0 | 7.0 | ✓ |
+| whetstone | common | 6.0 | 0.7 | 8.57 | ✓ |
+| jab | common | 6 + 1 = 7.0 | 0 → 1 | 7.0 | ✓ |
+| bandage | common | 10.8 + 1.5 = 12.3 | 2.0 | 6.15 | ✓ |
+| war-cry | common | 6.0 | 1.0 | 6.0 | ✓ |
+| counter-strike | uncommon | 8 + 2 = 10.0 | 0 → 1 | 10.0 | ✓ |
+| shield-wall | uncommon | 14.0 | 1.5 | 9.33 | ✓ |
+| fortify | uncommon | 17.5 | 2.0 | 8.75 | ✓ |
+| parry | uncommon | 5.6 + 5 = 10.6 | 1.0 | 10.6 | ✓ |
+| reckless-charge | uncommon | 35 | 4.0 | 8.75 | ✓ |
+| rage-cycle | uncommon | 8 + 6 = 14.0 | 1.5 | 9.33 | ✓ |
+| bone-splinter | uncommon | 5 + 10 = 15.0 | 1.5 | 10.0 | ✓ |
+| battle-stance | uncommon | 9.0 (3 STR avg × 3.0) | 0 → 1 | 9.0 | ✓ |
+| shieldbash | uncommon | 14.0 (avg armor) | 1.4 | 10.0 | ✓ |
+| wound-reopener | uncommon | 4 + 4.8 = 8.8 | 1.0 | 8.8 | ✓ |
+| plate-up | uncommon | 10.5 + 3 = 13.5 | 1.5 | 9.0 | ✓ |
+| rallying-roar | uncommon | 9 + 5 = 14.0 | 1.5 | 9.33 | ✓ |
+| fury | rare | 45 | 3.5 | 12.86 | ✓ |
+| iron-skin | rare | 21.0 | 1.8 | 11.67 | ✓ |
+| bulwark | rare | 24.5 | 2.0 | 12.25 | ✓ |
+| berserker | rare | 70 | 4.0 + 2.1 = 6.1 | 11.48 | ✓ |
+| execute | rare | 55 | 4.0 | 13.75 | ✓ |
+| crimson-tide | rare | 15 + 12 = 27.0 | 2.0 | 13.5 | ✓ |
+| unyielding | rare | (20+12) × 0.7 = 22.4 | 2.0 | 11.2 | ✓ |
+| bloodsworn | rare | 15 + 21 = 36.0 | 3.0 | 12.0 | ✓ |
+| doom-blade | epic | 75 | 4.2 | 17.86 | ✓ |
+| last-stand | epic | 49.0 | 1.5 + 1.8 = 3.3 | 14.85 | ✓ |
+| worldbreaker | epic | 120 + 10 = 130 | 6.0 + 3.0 = 9.0 | 14.44 | ✓ |
+
+All 35 cards land inside their rarity band.
+
+### 9.3 Per-card change log (before → after)
+
+Cards not listed below were already in band at authored numbers.
+
+**Commons:**
+
+- **heavy-hit**: 13 dmg / S/5 → **16 dmg / S/4** to lift RPU from 4.52 → 8.0 ✓. (Per §10.6, the framework's worked example for this exact card.)
+- **defend**: +2 Armor → **+10 Armor** to lift RPU from 1.4 → 7.0 ✓. Reference: 10 Armor × 0.7 R = 7.0 R, matching Strike's reference R.
+- **cleave**: 5 dmg AoE / S/4 → **10 dmg AoE / S/3** to lift RPU from 2.5 → 6.67 ✓. (Scored single-target conservatively; AoE upside is bonus.)
+- **brace**: +1 Armor / +1 Stam → **+9 Armor / +1 Stam** to lift RPU from 1.2 → 6.8 ✓.
+- **iron-resolve**: +2 Armor + 2 conditional → **+8 Armor + 4 conditional** to lift RPU from 2.1 → 7.0 ✓.
+- **shoulder-check**: 4 dmg / S/2 → **6 dmg / S/2** to lift RPU from 5.0 → 7.0 ✓.
+- **whetstone**: +1 STR temp / D/1 → **+2 STR temp / D/1** to lift RPU from 4.29 → 8.57 ✓.
+- **jab**: 2 dmg + 2 Stam → **6 dmg + 2 Stam** to lift RPU from 3.0 → 7.0 ✓.
+- **bandage**: Heal 6 / HP/2 → **Heal 12 / HP/1** to lift RPU from 1.73 → 6.15 ✓ (kept as noob-trap floor of band).
+- **war-cry**: +2 STR/2-attacks / S/3 → **+3 STR/2-attacks / S/2** to lift RPU from 2.67 → 6.0 ✓.
+
+**Uncommons:**
+
+- **counter-strike**: unchanged. RPU = 10.0 ✓.
+- **shield-wall**: +5 Armor / S/5 → **+20 Armor / S/3** to lift RPU from 1.4 → 9.33 ✓.
+- **fortify**: +8 Armor / S/10 → **+25 Armor / S/4** to lift RPU from 1.12 → 8.75 ✓. (Differentiated from shield-wall: more Armor for slightly more Stamina.)
+- **parry**: +3 Armor + 2 dmg / S/3 → **+8 Armor + 5 dmg / S/2** to lift RPU from 2.73 → 10.6 ✓.
+- **reckless-charge**: 18 dmg / HP/3 → **35 dmg / HP/2** to lift RPU from 3.0 → 8.75 ✓.
+- **rage-cycle**: 6 dmg / S/4 → **8 dmg / S/3** to lift RPU from 6.0 → 9.33 ✓.
+- **bone-splinter**: 6 dmg + 6 Bleed / S/3 → **5 dmg + 4 Bleed / S/3** to drop RPU from 14.0 → 10.0 ✓. (Was over-band — Bleed at 2.5 R/stack made the authored 6 Bleed too hot for uncommon.)
+- **battle-stance**: unchanged. RPU = 9.0 ✓.
+- **shieldbash**: max 14 / D/5 → **max 18 / D/2** to lift RPU from 2.86 → 10.0 ✓.
+- **wound-reopener**: 3 dmg / S/2 → **4 dmg / S/2** to lift RPU from 7.8 → 8.8 ✓.
+- **plate-up**: +4 Armor + 1 VIT / S/5 → **+15 Armor + 2 VIT / S/3** to lift RPU from 1.72 → 9.0 ✓.
+- **rallying-roar**: +1 STR + 5 Stam / SPI-drain → **+3 STR + 10 Stam / SPI-drain** to lift RPU from 3.67 → 9.33 ✓.
+
+**Rares:**
+
+- **fury** (iconic): 20 dmg / D/10 → **45 dmg / D/5** to lift RPU from 2.86 → 12.86 ✓.
+- **iron-skin**: +7 Armor / M/5 → **+30 Armor / M/3** to lift RPU from 1.63 → 11.67 ✓.
+- **bulwark**: +12 Armor / S/8 → **+35 Armor / S/4** to lift RPU from 2.1 → 12.25 ✓.
+- **berserker** (iconic): 27 dmg / S/15+D/5 → **70 dmg / S/8+D/3** to lift RPU from 2.45 → 11.48 ✓. (Dual cost shape preserved.)
+- **execute** (iconic): 30 dmg / S/12 → **55 dmg / S/8** to lift RPU from 5.0 → 13.75 ✓.
+- **crimson-tide** (iconic): 9 + 2/Bleed / S/6 → **15 + 3/Bleed / S/4** to lift RPU from 5.67 → 13.5 ✓ (ceiling-adjacent — appropriate for a Bleed-build payoff rare).
+- **unyielding**: +10 Armor + 1/STR / S/8 → **+20 Armor + 3/STR / S/4** to lift RPU from 2.45 → 11.2 ✓.
+- **bloodsworn**: 5 dmg + 3 Rage / STR-drain → **15 dmg + 7 Rage / STR-drain** to lift RPU from 4.67 → 12.0 ✓.
+
+**Epics:**
+
+- **doom-blade** (iconic): 40 dmg / D/10 → **75 dmg / D/6** to lift RPU from 5.71 → 17.86 ✓. (HP self-damage rider explicitly dropped per existing §5.4 note.)
+- **last-stand** (iconic): +17 Armor / S/5+M/5 → **+70 Armor / S/3+M/3** to lift RPU from 2.16 → 14.85 ✓. (Dual cost shape preserved; mana barrier intact.)
+- **worldbreaker** (iconic, build-definer): 60 dmg + permanent +2 STR / HP-5 once-per-combat → **120 dmg + permanent +2 STR / HP-3 once-per-combat** to lift RPU from 5.38 → 14.44 ✓. Followed framework §10.6 worked example's "boost damage" lever; trimmed HP cost 5 → 3 to keep the card playable in early combats.
+
+### 9.4 Summary
+
+- **32 of 35 cards adjusted** — 31 lifted into band from below; 1 (bone-splinter) trimmed from above band.
+- **3 cards unchanged** (already in band at authored values): strike, counter-strike, battle-stance.
+- **All 35 cards now sit inside their rarity band.**
+- **0 balance exceptions** — every card fit its band without distorting identity. Iconic cards (Worldbreaker, Crimson Tide, Doom Blade, Last Stand, Berserker, Fury, Execute) all sit clearly stronger than their corresponding commons: Strike (common) RPU 7.5 → Fury (rare) 12.86 → Doom Blade (epic) 17.86, a clean ascending curve.
+
+---
+
+## 10. Open Questions for Engine Wiring (not blocking design)
 
 - Rage stack decay: persist across combats or reset? Recommend **reset on combat end** (mirror Shadowblade combo points per framework §4.3).
 - Bleed tick rate: 1/sec while in combat; off out of combat.

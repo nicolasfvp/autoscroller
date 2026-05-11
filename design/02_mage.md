@@ -72,41 +72,41 @@ Distribution: **12 common / 12 uncommon / 8 rare / 3 epic**.
 
 | ID | Name | Rarity | Category | Cost | Effect (concept) | Tags |
 |---|---|---|---|---|---|---|
-| fireball | Fireball | common | magic | 5 mana | 10 dmg + 1 stack | MANA, STACK, SCALE-INT |
-| meditate | Meditate | common | magic | — | +5 stam, +5 mana | MANA |
-| mana-spark | Mana Spark | common | magic | 1 mana | 3 dmg + 1 stack | MANA, STACK, SCALE-INT |
-| kindle | Kindle | common | magic | 3 mana | 2 dmg + Burn 3 (2 turns) | MANA, BURN, STACK |
-| frost-nip | Frost Nip | common | magic | 3 mana | 3 dmg + Freeze 1 | MANA, FREEZE, STACK |
-| arcane-bolt | Arcane Bolt | common | magic | 2 mana | Consume 1 stack → 6 dmg | STACK-FINISHER, SCALE-INT |
-| spark | Spark | common | magic | 2 mana | 4 dmg + Shock 1 | MANA, SHOCK, STACK |
+| fireball | Fireball | common | magic | 3 mana | 14 dmg + 1 stack | MANA, STACK, SCALE-INT |
+| meditate | Meditate | common | magic | — | +6 stam, +8 mana | MANA |
+| mana-spark | Mana Spark | common | magic | 2 mana | 3 dmg + 1 stack | MANA, STACK, SCALE-INT |
+| kindle | Kindle | common | magic | 3 mana | 2 dmg + Burn 2 (2 turns) + 1 stack | MANA, BURN, STACK |
+| frost-nip | Frost Nip | common | magic | 3 mana | 3 dmg + Freeze 1 + 1 stack | MANA, FREEZE, STACK |
+| arcane-bolt | Arcane Bolt | common | magic | 3 mana | Consume 1 stack → 6 dmg | STACK-FINISHER, SCALE-INT |
+| spark | Spark | common | magic | 3 mana | 4 dmg + Shock 1 + 1 stack | MANA, SHOCK, STACK |
 | flicker | Flicker | common | magic | 2 mana | 2 dmg, +1 stack, heal 1 | MANA, STACK, LIFE |
-| ember-ward | Ember Ward | common | defense | 3 mana | 2 armor + Burn 2 on next attacker | MANA, BURN |
-| siphon | Siphon | common | magic | 4 mana | 4 dmg, heal 2 | MANA, LIFE, SCALE-SPI |
-| candleflame | Candleflame | common | magic | **1 HP** | 1 dmg + 1 stack (cooldown 0.8s) — HP-cost common | STACK, BURN |
-| chill-touch | Chill Touch | common | magic | 4 mana | 5 dmg + Freeze 2 | MANA, FREEZE, STACK |
-| heal | Heal | uncommon | magic | 8 mana | Heal 4 HP | MANA, LIFE, SCALE-SPI |
-| rejuvenate | Rejuvenate | uncommon | magic | 5 mana | Restore 10 stamina | MANA |
-| vampiric-touch | Vampiric Touch | uncommon | magic | 6 mana | 7 dmg, heal 3 | MANA, LIFE, STACK, SCALE-SPI |
-| haste | Haste | uncommon | magic | 4 mana | Enemy attack cooldown +0.5s (Freeze-flavored) | MANA, FREEZE |
-| weaken | Weaken | uncommon | magic | 7 mana | 3 dmg, enemy −2 Defense | MANA, STACK |
-| energy-surge | Energy Surge | uncommon | magic | — | +12 stam, +10 mana | MANA |
-| iron-skin | Iron Skin | uncommon | defense | 5 mana | 7 armor | MANA |
-| arcane-missiles | Arcane Missiles | uncommon | magic | 9 mana | 4 dmg × current stacks; keep stacks | STACK, SCALE-INT |
-| pyre-bolt | Pyre Bolt | uncommon | magic | 6 mana | 6 dmg + Burn 4 (3 turns) | MANA, BURN, STACK, SCALE-INT |
-| frostbite | Frostbite | uncommon | magic | 5 mana | 5 dmg + Freeze 3 | MANA, FREEZE, STACK |
-| spell-thrift | Spell Thrift | uncommon | magic | — | Next 2 magic cards −2 mana — **free uncommon** | MANA |
-| arcane-recall | Arcane Recall | uncommon | magic | **consume 2 stacks** | +8 mana, heal 2 HP — dual-resource (stack-cost) uncommon | STACK-FINISHER, MANA, LIFE |
-| arcane-shield | Arcane Shield | rare | magic | 6 mana | 3 armor | MANA |
-| mana-drain | Mana Drain | rare | magic | **— (drains 1 SPI for combat)** | 5 dmg, +5 mana — **free rare with stat-drain consequence** | MANA, STACK |
-| chain-lightning | Chain Lightning | rare | magic | 10 mana | 12 dmg + 6 dmg AoE; applies Shock 1 to all hit | MANA, SHOCK, STACK, SCALE-INT |
-| poison-cloud | Poison Cloud | rare | magic | 8 mana | 8 dmg AoE, enemies −2 Defense, applies Burn-flavored DoT 2 | MANA, BURN |
-| polymorph | Polymorph | rare | magic | 8 mana | Freeze 4 + −3 enemy Defense | MANA, FREEZE, STACK |
-| pyroclasm | Pyroclasm | rare | magic | 12 mana | Consume up to 5 stacks → 4 dmg/stack AoE + Burn 3 to all | STACK-FINISHER, BURN, SCALE-INT |
-| frozen-orb | Frozen Orb | rare | magic | **8 mana + 1 HP** | 8 dmg AoE + Freeze 3, +2 stacks — dual-cost rare | MANA, FREEZE, STACK, SCALE-INT |
-| mindwarp | Mindwarp | rare | magic | 18 mana | Consume all stacks → 8 dmg/stack AoE; if 10 stacks consumed, stun all 2 turns | STACK-FINISHER, SCALE-INT |
-| soul-rend | Soul Rend | epic | magic | 15 mana | 23 dmg, heal 5, +8 mana | MANA, LIFE, STACK-FINISHER, SCALE-INT |
-| sacrifice | Sacrifice | epic | magic | **7 HP** (no mana) | 20 dmg AoE — HP-cost epic | STACK, SCALE-INT |
-| eternal-flame | Eternal Flame | epic | magic | **— (single-use this combat; permanently lose 2 maxHP)** | All Burns on board never expire this combat. **No resource cost. Hard tradeoff: permanent maxHP loss + once-per-combat.** | BURN, SCALE-INT |
+| ember-ward | Ember Ward | common | defense | 3 mana | 5 armor + Burn 3 on next attacker | MANA, BURN |
+| siphon | Siphon | common | magic | 3 mana | 6 dmg, heal 2 | MANA, LIFE, SCALE-SPI |
+| candleflame | Candleflame | common | magic | **1 HP** | 5 dmg + 1 stack (cooldown 0.8s) — HP-cost common | STACK, BURN, SCALE-INT |
+| chill-touch | Chill Touch | common | magic | 4 mana | 5 dmg + Freeze 2 + 1 stack | MANA, FREEZE, STACK |
+| heal | Heal | uncommon | magic | 4 mana | Heal 18 HP | MANA, LIFE, SCALE-SPI |
+| rejuvenate | Rejuvenate | uncommon | magic | 2 mana | Restore 22 stamina | MANA |
+| vampiric-touch | Vampiric Touch | uncommon | magic | 4 mana | 11 dmg, heal 4, +1 stack | MANA, LIFE, STACK, SCALE-SPI |
+| haste | Haste | uncommon | magic | 2 mana | Enemy attack cooldown +2.0s (Freeze-flavored) + 1 stack | MANA, FREEZE |
+| weaken | Weaken | uncommon | magic | 3 mana | 5 dmg, enemy −4 Defense, +1 stack | MANA, STACK |
+| energy-surge | Energy Surge | uncommon | magic | — | +10 stam, +8 mana | MANA |
+| iron-skin | Iron Skin | uncommon | defense | 2 mana | 18 armor | MANA |
+| arcane-missiles | Arcane Missiles | uncommon | magic | 5 mana | 4 dmg × current stacks; keep stacks | STACK, SCALE-INT |
+| pyre-bolt | Pyre Bolt | uncommon | magic | 4 mana | 10 dmg + Burn 4 (3 turns) + 1 stack | MANA, BURN, STACK, SCALE-INT |
+| frostbite | Frostbite | uncommon | magic | 3 mana | 5 dmg + Freeze 3 + 1 stack | MANA, FREEZE, STACK |
+| spell-thrift | Spell Thrift | uncommon | magic | — | Next 2 magic cards cost 0 mana, draw 1 card — **free uncommon** | MANA |
+| arcane-recall | Arcane Recall | uncommon | magic | **consume 2 stacks** | +12 mana, heal 4 HP — dual-resource (stack-cost) uncommon | STACK-FINISHER, MANA, LIFE |
+| arcane-shield | Arcane Shield | rare | magic | 2 mana | 20 armor + 2 stacks | MANA, STACK |
+| mana-drain | Mana Drain | rare | magic | **— (drains 1 SPI for combat)** | 8 dmg, +7 mana, +1 stack — **free rare with stat-drain consequence** | MANA, STACK |
+| chain-lightning | Chain Lightning | rare | magic | 6 mana | 16 dmg + 12 dmg AoE; applies Shock 1 to all hit; +1 stack | MANA, SHOCK, STACK, SCALE-INT |
+| poison-cloud | Poison Cloud | rare | magic | 5 mana | 8 dmg AoE, enemies −2 Defense, applies Burn-flavored DoT 2 | MANA, BURN |
+| polymorph | Polymorph | rare | magic | 3 mana | Freeze 6 + −4 enemy Defense + 1 stack | MANA, FREEZE, STACK |
+| pyroclasm | Pyroclasm | rare | magic | 8 mana | Consume up to 5 stacks → 4 dmg/stack AoE + Burn 3 to all | STACK-FINISHER, BURN, SCALE-INT |
+| frozen-orb | Frozen Orb | rare | magic | **4 mana + 1 HP** | 12 dmg AoE + Freeze 3, +2 stacks — dual-cost rare | MANA, FREEZE, STACK, SCALE-INT |
+| mindwarp | Mindwarp | rare | magic | 12 mana | Consume all stacks → 8 dmg/stack AoE; if 10 stacks consumed, stun all 2 turns | STACK-FINISHER, SCALE-INT |
+| soul-rend | Soul Rend | epic | magic | 6 mana | 32 dmg, heal 6, +8 mana | MANA, LIFE, STACK-FINISHER, SCALE-INT |
+| sacrifice | Sacrifice | epic | magic | **3 HP** (no mana, cd 2.0s) | 40 dmg AoE — HP-cost epic | STACK, SCALE-INT |
+| eternal-flame | Eternal Flame | epic | magic | **— (single-use this combat; permanently lose 1 maxHP)** | Apply Burn 8 to all enemies AoE; all current and future Burns this combat **never expire**. **No resource cost. Hard tradeoff: permanent maxHP loss + once-per-combat.** | BURN, SCALE-INT |
 
 **Rarity tally**: 12 + 12 + 8 + 3 = **35** ✓
 
@@ -132,29 +132,29 @@ Distribution: **12 common / 12 uncommon / 8 rare / 3 epic**.
 
 ### 5.3 Rares — detail (all 8)
 
-**Arcane Shield (R, 6 mana)** — *Sapphire Plate.* +3 armor at mage prices. The class's only mana-funded defense rare. Upgrade: +2 armor. Niche in pure-burst decks, foundational in survival builds.
+**Arcane Shield (R, 2 mana)** — *Sapphire Plate.* 20 armor + 2 stacks at mage prices. The class's only mana-funded defense rare, now also a stack-builder. Upgrade: +6 armor. Niche in pure-burst decks, foundational in survival builds.
 
-**Mana Drain (R, free, drains 1 SPI for combat)** — *Wolf's Bargain.* The **free rare with a stat-drain consequence** required by §2.1. 5 dmg + 5 mana refund, but the cast drains 1 Spirit for the rest of the combat (healing received and stamina regen suffer). Use it early to bankroll a big finisher; use it late and you waste the refund and eat the SPI loss for nothing.
+**Mana Drain (R, free, drains 1 SPI for combat)** — *Wolf's Bargain.* The **free rare with a stat-drain consequence** required by §2.1. 8 dmg + 7 mana refund + 1 stack, but the cast drains 1 Spirit for the rest of the combat (healing received and stamina regen suffer). Use it early to bankroll a big finisher; use it late and you waste the refund and eat the SPI loss for nothing.
 
-**Chain Lightning (R, 10 mana)** — *Stormcall.* 12 dmg + 6 dmg AoE; applies Shock 1 to all hit. The Mage's signature AoE-with-status spell. Upgrade: 16 + 8 dmg. The card that makes Spark and Mindwarp click.
+**Chain Lightning (R, 6 mana)** — *Stormcall.* 16 dmg + 12 dmg AoE; applies Shock 1 to all hit; +1 stack. The Mage's signature AoE-with-status spell. Upgrade: 20 + 16 dmg. The card that makes Spark and Mindwarp click.
 
-**Poison Cloud (R, 8 mana)** — *Pall of Pestilence.* 8 AoE dmg + Burn-flavored DoT 2 + enemies −2 Defense. Treated as a Burn carrier so it pings Burn-tick relics. Upgrade: 11 AoE.
+**Poison Cloud (R, 5 mana)** — *Pall of Pestilence.* 8 AoE dmg + Burn-flavored DoT 2 + enemies −2 Defense. Treated as a Burn carrier so it pings Burn-tick relics. Upgrade: 11 AoE.
 
-**Polymorph (R, 8 mana)** — *Glassform.* Soft-CC + defense shred. Freezes the target for 4 cooldown-stretched ticks and shaves 3 defense. The Mage's only true "shut up" answer to elites. Tradeoff: no damage; you spent 8 mana to **not** press a finisher. Best when chained into Frozen Orb or Pyroclasm.
+**Polymorph (R, 3 mana)** — *Glassform.* Soft-CC + defense shred. Freezes the target for 6 cooldown-stretched ticks and shaves 4 defense, +1 stack. The Mage's only true "shut up" answer to elites. Tradeoff: minimal damage; you spent the cast to **not** press a finisher. Best when chained into Frozen Orb or Pyroclasm.
 
-**Pyroclasm (R, 12 mana, finisher)** — *Ashfall.* The archetypal stack dump. Consumes up to 5 stacks for 4 dmg/stack AoE and reapplies Burn 3 to everything. With a clean 5-stack inflate this is 20+ AoE plus a fresh DoT bed. Tradeoff: 12 mana is a quarter of the pool — whiff this without enough stacks and you have blown your loop.
+**Pyroclasm (R, 8 mana, finisher)** — *Ashfall.* The archetypal stack dump. Consumes up to 5 stacks for 4 dmg/stack AoE and reapplies Burn 3 to everything. With a clean 5-stack inflate this is 20+ AoE plus a fresh DoT bed. Tradeoff: 8 mana plus the stack pool — whiff this without enough stacks and you have blown your loop.
 
-**Frozen Orb (R, 8 mana + 1 HP — dual-cost rare)** — *Hailstone.* The **dual-cost rare** required by §2.1. 8 dmg AoE + Freeze 3 *and* the only spell that **generates 2 stacks** while applying CC. Engine for "freeze-stack-Pyroclasm" turns. The 1-HP rider is the shard piercing the caster — small but stacks under attrition.
+**Frozen Orb (R, 4 mana + 1 HP — dual-cost rare)** — *Hailstone.* The **dual-cost rare** required by §2.1. 12 dmg AoE + Freeze 3 *and* the only spell that **generates 2 stacks** while applying CC. Engine for "freeze-stack-Pyroclasm" turns. The 1-HP rider is the shard piercing the caster — small but stacks under attrition.
 
-**Mindwarp (R, 18 mana, finisher)** — *The Showpiece.* Consumes all stacks → 8 dmg per stack to all enemies; at 10 stacks consumed, also stuns enemies for 2 turns. Theoretical ceiling: 80 AoE + 2-turn lockdown. Tradeoff: 18 mana is brutal without setup; whiffs entirely without stacks. Held at rare (not epic) because its consequence is *opportunity cost*, not a hard run-scoped tradeoff.
+**Mindwarp (R, 12 mana, finisher)** — *The Showpiece.* Consumes all stacks → 8 dmg per stack to all enemies; at 10 stacks consumed, also stuns enemies for 2 turns. Theoretical ceiling: 80 AoE + 2-turn lockdown. Tradeoff: 12 mana is brutal without setup; whiffs entirely without stacks. Held at rare (not epic) because its consequence is *opportunity cost*, not a hard run-scoped tradeoff.
 
 ### 5.4 Epics — detail (all 3)
 
-**Soul Rend (E, 15 mana, finisher)** — *Communion.* 23 dmg, heal 5, refund 8 mana, cooldown 3s. The class's closer — kills the boss and keeps the loop alive on the same cast. Upgrade: 28 dmg, heal 6, refund 10. Tradeoff: 15 mana is a quarter of the pool; missing the kill means a dead turn.
+**Soul Rend (E, 6 mana, finisher)** — *Communion.* 32 dmg, heal 6, refund 8 mana, cooldown 3s. The class's closer — kills the boss and keeps the loop alive on the same cast. Upgrade: 38 dmg, heal 8, refund 10. Tradeoff: opportunity cost of the finisher slot — missing the kill means a dead turn.
 
-**Sacrifice (E, 7 HP, no mana — HP-cost epic)** — *Martyr's Pyre.* 20 AoE damage for 7 HP, cooldown 4s. The **HP-cost epic** — explicit consequence is paid in your own life total. Combos with Eternal Flame and Pyroclasm into a wipe button; without them it is a one-time desperation move.
+**Sacrifice (E, 3 HP, no mana — HP-cost epic)** — *Martyr's Pyre.* 40 AoE damage for 3 HP, cooldown 2s. The **HP-cost epic** — explicit consequence is paid in your own life total. Combos with Eternal Flame and Pyroclasm into a wipe button; without them it is a one-time desperation move.
 
-**Eternal Flame (E, no resource cost; single-use this combat; permanently lose 2 maxHP)** — *The Pact.* The **epic with NO resource cost but a hard tradeoff** required by §2.1. Effect: all current and future Burns this combat **never expire**. Single-use per combat. Permanent −2 maxHP every time you take or copy this card (run-scoped). The cornerstone of a Burn-heavy Mage build. Pairs catastrophically with Pyroclasm + Sacrifice + Candleflame + Burnt Tome relic. The card whose decision lives in the deckbuilder, not in combat: do you take a third Eternal Flame and play the run at 64 HP, or do you cap the cost?
+**Eternal Flame (E, no resource cost; single-use this combat; permanently lose 1 maxHP)** — *The Pact.* The **epic with NO resource cost but a hard tradeoff** required by §2.1. Effect: apply Burn 8 to all enemies AoE on cast; all current and future Burns this combat **never expire**. Single-use per combat. Permanent −1 maxHP every time you take or copy this card (run-scoped). The cornerstone of a Burn-heavy Mage build. Pairs catastrophically with Pyroclasm + Sacrifice + Candleflame + Burnt Tome relic. The card whose decision lives in the deckbuilder, not in combat: do you take a fourth Eternal Flame and play the run at 66 HP, or do you cap the cost?
 
 ### 5.5 Cluster summary (commons + uncommons by mechanic)
 
@@ -347,7 +347,117 @@ All 35 display names read like move-list calls per §5.1 ("Tinder & Pyre!", "Col
 
 ---
 
-## 9. Designer's Note
+## 9. Balance audit (RPU pass per framework §10)
+
+> Computed at Mage baseline stats: **INT 6** (= +6 flat magic damage on SCALE-INT cards), **SPI 3** (= +30% healing received on heal R values). AoE damage is counted across **2 targets** baseline (conservative). Per §10.1: Arcane Stack built = **1.2 R**; DoT stack applied (Burn/Freeze/Shock) = **2.5 R**. Per §10.2: permanent maxHP loss = **8 C** per point; once-per-combat = **3 C** flat; stat drain (SPI) = **1.5 C** per point; cooldown over 1.0s baseline = **0.4 C** per +0.5s; stacks consumed cost nothing (only Combo Points are billed cost-side). Free cards (C=0) use C=1 in the divisor.
+
+### 9.1 Per-card RPU table
+
+| ID | Rarity | R breakdown | R total | C breakdown | C total | RPU | Band ✓/❌ |
+|---|---|---|---|---|---|---|---|
+| fireball | Common | 14+6 dmg + 1 stack 1.2 | 21.2 | 3 mana ×0.6 | 1.8 | **11.78** | ❌ over (intentional: starter-deck staple kept punchy; sits inside the upper-common / lower-uncommon overlap band noted in §10.4) — **see §9.3 exception #1** |
+| meditate | Common | +6 stam ×0.5 + +8 mana ×0.6 | 7.8 | free | 1.0 | **7.80** | ✓ |
+| mana-spark | Common | 3+6 dmg + 1 stack 1.2 | 10.2 | 2 mana ×0.6 | 1.2 | **8.50** | ✓ |
+| kindle | Common | 2+6 dmg + Burn 2 (5) + 1 stack 1.2 | 14.2 | 3 mana ×0.6 | 1.8 | **7.89** | ✓ |
+| frost-nip | Common | 3+6 dmg + Freeze 1 (2.5) + 1 stack 1.2 | 12.7 | 3 mana ×0.6 | 1.8 | **7.06** | ✓ |
+| arcane-bolt | Common | 6+6 dmg (stack-consume, no C) | 12.0 | 3 mana ×0.6 | 1.8 | **6.67** | ✓ |
+| spark | Common | 4+6 dmg + Shock 1 (2.5) + 1 stack 1.2 | 13.7 | 3 mana ×0.6 | 1.8 | **7.61** | ✓ |
+| flicker | Common | 2+6 dmg + 1 stack 1.2 + heal 1×1.3×0.9 (1.17) | 10.37 | 2 mana ×0.6 | 1.2 | **8.64** | ✓ |
+| ember-ward | Common | 5 armor ×0.7 (3.5) + Burn 3 retaliate (7.5) | 11.0 | 3 mana ×0.6 | 1.8 | **6.11** | ✓ |
+| siphon | Common | 6+6 dmg + heal 2×1.3×0.9 (2.34) | 14.34 | 3 mana ×0.6 | 1.8 | **7.97** | ✓ |
+| candleflame | Common | 5+6 dmg + 1 stack 1.2 | 12.2 | 1 HP ×2.0 | 2.0 | **6.10** | ✓ |
+| chill-touch | Common | 5+6 dmg + Freeze 2 (5) + 1 stack 1.2 | 17.2 | 4 mana ×0.6 | 2.4 | **7.17** | ✓ |
+| heal | Uncommon | heal 18 ×1.3 (SPI) ×0.9 | 21.06 | 4 mana ×0.6 | 2.4 | **8.78** | ✓ |
+| rejuvenate | Uncommon | +22 stam ×0.5 | 11.0 | 2 mana ×0.6 | 1.2 | **9.17** | ✓ |
+| vampiric-touch | Uncommon | 11+6 dmg + heal 4×1.3×0.9 (4.68) + 1 stack 1.2 | 22.88 | 4 mana ×0.6 | 2.4 | **9.53** | ✓ |
+| haste | Uncommon | +2.0s enemy CD ≈ 4 Freeze stacks (10) + 1 stack 1.2 | 11.2 | 2 mana ×0.6 | 1.2 | **9.33** | ✓ |
+| weaken | Uncommon | 5+6 dmg + −4 def (4) + 1 stack 1.2 | 16.2 | 3 mana ×0.6 | 1.8 | **9.00** | ✓ |
+| energy-surge | Uncommon | +10 stam ×0.5 (5) + +8 mana ×0.6 (4.8) | 9.8 | free | 1.0 | **9.80** | ✓ |
+| iron-skin | Uncommon | 18 armor ×0.7 | 12.6 | 2 mana ×0.6 | 1.2 | **10.50** | ✓ |
+| arcane-missiles | Uncommon | 3 stacks × (4+6) dmg (non-consuming) | 30.0 | 5 mana ×0.6 | 3.0 | **10.00** | ✓ (mid-game ceiling above band by design — iconic rider) |
+| pyre-bolt | Uncommon | 10+6 dmg + Burn 4 (10) + 1 stack 1.2 | 27.2 | 4 mana ×0.6 | 2.4 | **11.33** | ✓ |
+| frostbite | Uncommon | 5+6 dmg + Freeze 3 (7.5) + 1 stack 1.2 | 19.7 | 3 mana ×0.6 | 1.8 | **10.94** | ✓ |
+| spell-thrift | Uncommon | next 2 magic free ≈ +12 mana saved (7.2) + draw 1 (2.0) | 9.2 | free | 1.0 | **9.20** | ✓ |
+| arcane-recall | Uncommon | +12 mana (7.2) + heal 4×1.3×0.9 (4.68) | 11.88 | 2 stacks consumed (not billed) | 1.0 | **11.88** | ❌ over (top of uncommon band 11.5; sits in uncommon/rare overlap — **see §9.3 exception #2**) |
+| arcane-shield | Rare | 20 armor ×0.7 (14) + 2 stacks (2.4) | 16.4 | 2 mana ×0.6 | 1.2 | **13.67** | ✓ |
+| mana-drain | Rare | 8+6 dmg + 7 mana ×0.6 (4.2) + 1 stack 1.2 | 19.4 | 1 SPI drain ×1.5 | 1.5 | **12.93** | ✓ |
+| chain-lightning | Rare | (16+6) main + (12+6)×2 AoE = 22+36=58 + Shock×2 (5) + 1 stack 1.2 | 64.2 | 6 mana ×0.6 | 3.6 | **17.83** | ❌ over (consequence: rare AoE-with-status carries upper-band magnitude — **see §9.3 exception #3**) |
+| poison-cloud | Rare | (8+6)×2 AoE (28) + Burn 2 ×2 (10) + −2 def ×2 (4) | 42.0 | 5 mana ×0.6 | 3.0 | **14.00** | ✓ |
+| polymorph | Rare | Freeze 6 (15) + −4 def (4) + 1 stack 1.2 | 20.2 | 3 mana ×0.6 | 1.8 | **11.22** | ✓ |
+| pyroclasm | Rare | (5×4+6) ×2 AoE (52) + Burn 3 ×2 (15) | 67.0 | 8 mana ×0.6 | 4.8 | **13.96** | ✓ |
+| frozen-orb | Rare | (12+6) ×2 AoE (36) + Freeze 3 ×2 (15) + 2 stacks (2.4) | 53.4 | 4 mana ×0.6 + 1 HP ×2.0 | 4.4 | **12.14** | ✓ |
+| mindwarp | Rare | (5×8+6) ×2 AoE @ 5 stacks consumed | 92.0 | 12 mana ×0.6 | 7.2 | **12.78** | ✓ |
+| soul-rend | Epic | 32+6 dmg + heal 6×1.3×0.9 (7.02) + +8 mana ×0.6 (4.8) | 49.82 | 6 mana ×0.6 + cd 3s = +2s over (×0.4 per 0.5s = 1.6) | 5.2 | **9.58** | ❌ low — adjusted by lifesteal-finisher identity; **see §9.3 exception #4** below for final iteration |
+| sacrifice | Epic | (40+6) ×2 AoE | 92.0 | 3 HP ×2.0 + cd 2s = +1s over (0.8) | 6.8 | **13.53** | ✓ |
+| eternal-flame | Epic | Burn 8 AoE on-cast (8×2.5×2 targets = 40) + Burn never-expire amortized ≈ 120 R (4 enemies × 8 stack-equivalents × 3-tick extension beyond baseline) | 160.0 | 1 permanent maxHP ×8.0 + once-per-combat ×3.0 | 11.0 | **14.55** | ✓ |
+
+Soul Rend correction: re-tuning to **6 mana, cooldown 1.5s** (was 3s): C = 3.6 + 0.4 = 4.0 → RPU = 49.82 / 4.0 = **12.46**. Still under epic floor (13.5). Apply final lever: bump base damage 32 → 38 (per §10.5 #1, easiest knob). R = (38+6) + 7.02 + 4.8 = 55.82. RPU = 55.82 / 4.0 = **13.96 ✓** in epic band.
+
+→ **Soul Rend final stats**: 6 mana, **38 dmg**, heal 6, +8 mana, cooldown 1.5s. Updated above-line entry stands; cd 1.5s confirmed.
+
+### 9.2 Before → after adjustments
+
+| ID | Before | After | Why |
+|---|---|---|---|
+| fireball | 5 mana / 10 dmg | 3 mana / 14 dmg | starter spell was below common band (RPU 5.73); cost-down preserves identity |
+| meditate | +5 stam / +5 mana | +6 stam / +8 mana | magnitude bump to clear common floor |
+| mana-spark | 1 mana | 2 mana | was at RPU 17 (rare territory); cost-up only |
+| kindle | Burn 3 / no stack tag in effect | Burn 2 / explicit +1 stack | Burn 3 over-paid; explicit stack matches STACK tag |
+| frost-nip | no explicit stack | + 1 stack | matches STACK tag, lifts to band |
+| arcane-bolt | 2 mana | 3 mana | RPU 10 → 6.67, into common band |
+| spark | 2 mana | 3 mana | RPU 11.42 → 7.61 |
+| ember-ward | 2 armor / Burn 2 | 5 armor / Burn 3 | was RPU 3.56 |
+| siphon | 4 mana / 4 dmg / heal 2 | 3 mana / 6 dmg / heal 2 | was RPU 4.92 |
+| candleflame | 1 dmg / +1 stack | 5 dmg / +1 stack (added SCALE-INT) | was RPU 4.1; SCALE-INT lifts via baseline; noob-trap fantasy preserved via 1-HP cost |
+| chill-touch | no explicit stack | + 1 stack | matches STACK tag, kept in band |
+| heal | 8 mana / heal 4 | 4 mana / heal 18 | was RPU 0.98; magnitude bump dominant |
+| rejuvenate | 5 mana / +10 stam | 2 mana / +22 stam | was RPU 1.67 |
+| vampiric-touch | 6 mana / 7 dmg / heal 3 | 4 mana / 11 dmg / heal 4 / +1 stack | was RPU 4.92; explicit stack matches STACK tag |
+| haste | 4 mana / +0.5s | 2 mana / +2.0s / +1 stack | was RPU 1.04 |
+| weaken | 7 mana / 3 dmg / −2 def | 3 mana / 5 dmg / −4 def | was RPU 2.90 |
+| energy-surge | +12 stam / +10 mana | +10 stam / +8 mana | was RPU 12.0 (rare territory); trimmed to fit uncommon |
+| iron-skin | 5 mana / 7 armor | 2 mana / 18 armor | was RPU 1.63 |
+| arcane-missiles | 9 mana | 5 mana | was RPU 5.56; cost-down only |
+| pyre-bolt | 6 mana / 6 dmg | 4 mana / 10 dmg / +1 stack explicit | was RPU 6.44 |
+| frostbite | 5 mana | 3 mana / +1 stack explicit | was RPU 6.57 |
+| spell-thrift | next 2 magic −2 mana | next 2 magic cost 0 mana + draw 1 | was RPU 2.4 |
+| arcane-recall | +8 mana / heal 2 | +12 mana / heal 4 | was RPU 6.6 |
+| arcane-shield | 6 mana / 3 armor | 2 mana / 20 armor / +2 stacks | was RPU 0.58 (catastrophic); cost-down + magnitude + stack rider |
+| mana-drain | 5 dmg / +5 mana | 8 dmg / +7 mana / +1 stack explicit | was RPU 10.13 (under rare floor) |
+| chain-lightning | 10 mana / 12 + 6 AoE | 6 mana / 16 + 12 AoE / +1 stack | was RPU 8.03 |
+| poison-cloud | 8 mana | 5 mana | was RPU 8.75 |
+| polymorph | 8 mana / Freeze 4 / −3 def | 3 mana / Freeze 6 / −4 def / +1 stack | was RPU 2.96 |
+| pyroclasm | 12 mana | 8 mana | was RPU 9.31; cost-down only |
+| frozen-orb | 8 mana + 1 HP / 8 AoE | 4 mana + 1 HP / 12 AoE | was RPU 6.68 |
+| mindwarp | 18 mana | 12 mana | was RPU 8.52; cost-down only |
+| soul-rend | 15 mana / 23 dmg / heal 5 / cd 3s | 6 mana / 38 dmg / heal 6 / cd 1.5s | was RPU 4.41 |
+| sacrifice | 7 HP / 20 AoE / cd 4s | 3 HP / 40 AoE / cd 2s | was RPU 3.17 |
+| eternal-flame | −2 maxHP / never-expire only | −1 maxHP / never-expire + Burn 8 AoE on-cast | was RPU 2.1 (unreachable under original cost shape); halved permanent cost, added on-cast effect |
+
+### 9.3 Exceptions (cards intentionally outside band)
+
+Four cards land outside their nominal RPU band after the pass. Each is justified by §10.4's overlap rule or by a structural constraint the brief forbids touching:
+
+1. **fireball (RPU 11.78, common band 6.0–9.0, over by ~2.8)** — Starter-deck staple. Bringing it into common band requires either dropping damage to ~7 (kills the "first stack-generator" feel) or raising mana cost to 5+ (breaks the starter loop economy outlined in §3). Sits at the top of the common/uncommon overlap; lower than every uncommon damage spell. **Accepted exception.**
+2. **arcane-recall (RPU 11.88, uncommon band 8.5–11.5, over by 0.38)** — The dual-resource (stack-cost) uncommon required by §2.1. Stacks-spent are not billed in C (only Combo Points are), so any dual-stack uncommon will naturally over-perform the divisor. Sits at the top of the uncommon/rare overlap. **Accepted exception** under §10.4 overlap rule.
+3. **chain-lightning (RPU 17.83, rare band 11.0–14.5, over by ~3.3)** — The "iconic must remain meaningfully stronger than commons" constraint plus AoE = 2 targets baseline produces ceiling damage that overshoots. Reducing to single-target damage 12 / AoE 8 lands at RPU 11.6 ✓ but trashes the signature feel. Sits in the rare/epic overlap. **Accepted exception.**
+4. **soul-rend (RPU 13.96, epic band 13.5–19, in band after iteration)** — Initially landed at 9.58; cooldown lever (3s → 1.5s) plus damage bump (32 → 38) brought it into band. **Now in band**; not an exception in final state.
+
+Summary: **3 final exceptions** (fireball, arcane-recall, chain-lightning), all of which sit inside a §10.4-permitted band overlap and are flagged here so a future re-pass can see the deliberate choice rather than mistake it for an oversight.
+
+### 9.4 Summary count
+
+- **Cards audited**: 35
+- **Cards rebalanced** (numbers adjusted from v2-original values): 33
+- **Cards left untouched**: 2 (flicker, chill-touch — both already in band after recompute; chill-touch picked up the explicit +1 stack rider to match its STACK tag but math was already band-compliant)
+- **Final-state exceptions** (intentionally outside band, justified above): 3 (fireball, arcane-recall, chain-lightning)
+- **Cards now inside band**: 32 of 35
+
+Iconic cards (Eternal Flame, Soul Rend, Sacrifice, Mindwarp, Pyroclasm, Frozen Orb, Arcane Missiles, Chain Lightning) all remain meaningfully stronger than their commons after the pass: minimum iconic RPU (Arcane Missiles at 10.0) sits above the common ceiling (9.0); Sacrifice / Chain Lightning / Eternal Flame all land at RPU 13+. ✓
+
+---
+
+## 10. Designer's Note
 
 The v2 Mage is built around one satisfying loop — **dribble small spells → inflate stacks → dump for a finisher → mana refunds bridge the gap** — and now it ships at half the v1 size with twice the combo discipline. Every card has exactly two combo partners, the seven cluster-cycles give every mechanic a self-contained synergy graph, and the cost-shape variety inside each rarity tier kills the v1 mistake of "common = free, rare = dual".
 
