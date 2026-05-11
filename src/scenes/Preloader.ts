@@ -140,10 +140,14 @@ export class Preloader extends Scene {
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
     // Relic Illustrations
+    // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
+    // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic
+    // IDs removed; iron_will retained as a neutral rare"). All remaining
+    // IDs verified to exist in v2 relics.json on 2026-05-11.
     const relicIds = [
       'arcane_crystal', 'berserker_ring', 'blood_pact', 'bronze_scale', 'demon_heart',
       'energy_potion', 'first_strike_amulet', 'iron_will', 'mana_stone', 'phoenix_feather',
-      'spell_focus', 'swift_boots', 'thin_deck_charm', 'vitality_ring', 'warrior_spirit'
+      'swift_boots', 'thin_deck_charm', 'vitality_ring'
     ];
 
     for (const id of relicIds) {
@@ -151,6 +155,11 @@ export class Preloader extends Scene {
     }
 
     // Card Illustrations
+    // Phase 9 (Design v2) audit: every ID below survives in v2 cards.json
+    // (verified via cards.json membership check 2026-05-11). Per D-08 no new
+    // Shadowblade card assets are added in this phase -- v2 cards without
+    // preload entries fall back to the default card visual via the
+    // existing preload-skip path.
     const cardIds = [
       'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
       'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',
