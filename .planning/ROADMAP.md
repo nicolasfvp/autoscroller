@@ -148,3 +148,13 @@ Plans:
 - [ ] 08-01-PLAN.md — Generate 6 monster characters + animations via PixelLab + 5 special tile sprites (Wave 1)
 - [ ] 08-02-PLAN.md — Build monster spritesheets + update Preloader + wire special tiles into TileVisual (Wave 2)
 - [ ] 08-03-PLAN.md — Wire monster sprites into CombatScene (replace rectangles) + visual verification checkpoint (Wave 3)
+
+### Phase 9: Implement Design v2 — Shadowblade class, VIT/DEX/INT/SPI status system, 125 cards (35×3 + 20 neutral), 50 relics, 125 synergies, 3 new tiles (Library/Arena/Shrine of Pact), schema extensions
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 8
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 9 to break down)
