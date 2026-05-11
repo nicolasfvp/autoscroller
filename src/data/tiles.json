@@ -7,5 +7,8 @@
   "rest": { "type": "rest", "name": "Rest Site", "color": 4286945, "canPlaceManually": true, "tilePointCost": 4, "icon": "R" },
   "event": { "type": "event", "name": "Event", "color": 9662683, "canPlaceManually": true, "tilePointCost": 2, "icon": "?" },
   "treasure": { "type": "treasure", "name": "Treasure", "color": 16748800, "canPlaceManually": true, "tilePointCost": 6, "icon": "!" },
-  "boss": { "type": "boss", "name": "Boss", "color": 16711680, "canPlaceManually": false, "tilePointCost": 0, "icon": "B" }
+  "boss": { "type": "boss", "name": "Boss", "color": 16711680, "canPlaceManually": false, "tilePointCost": 0, "icon": "B" },
+  "library": { "type": "event", "name": "Library", "color": 8281071, "hexColor": "#7E5BEF", "canPlaceManually": true, "tilePointCost": 4, "icon": "L" },
+  "arena": { "type": "event", "name": "Arena", "color": 12659499, "hexColor": "#C12B2B", "canPlaceManually": true, "tilePointCost": 5, "icon": "A" },
+  "shrine_of_pact": { "type": "event", "name": "Shrine of Pact", "color": 5908075, "hexColor": "#5A2A6B", "canPlaceManually": true, "tilePointCost": 4, "icon": "P" }
 }

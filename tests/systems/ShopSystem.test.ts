@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { ShopSystem } from '../../src/systems/ShopSystem';
+import { describe, it, expect, afterEach } from 'vitest';
+import { ShopSystem, setActiveBuffs as setShopActiveBuffs } from '../../src/systems/ShopSystem';
 
 function makeRunState(overrides: any = {}): any {
   return {
@@ -235,6 +235,44 @@ describe('ShopSystem', () => {
       expect(ShopSystem.upgradeCard(run, -1, 'common')).toBe(false);
       expect(ShopSystem.upgradeCard(run, 99, 'common')).toBe(false);
       expect(run.economy.gold).toBe(200);
+    });
+  });
+
+  // -- Phase 9: Library+Shop cardUpgradeDiscount (design/04 §7) --
+  describe('upgradeCard with cardUpgradeDiscount (Library+Shop adjacency)', () => {
+    afterEach(() => {
+      // Reset module-level buffs so other tests aren't polluted.
+      setShopActiveBuffs([]);
+    });
+
+    it('applies a 20% discount when cardUpgradeDiscount buff is active', () => {
+      setShopActiveBuffs([{ tileIndex: 0, type: 'cardUpgradeDiscount', value: 0.20 }]);
+      const run = makeRunState();
+      // common upgrade is 50g; with 0.20 discount -> 40g.
+      const ok = ShopSystem.upgradeCard(run, 0, 'common');
+      expect(ok).toBe(true);
+      expect(run.economy.gold).toBe(160); // 200 - 40
+      expect(run.deck.upgraded[0]).toBe(true);
+    });
+
+    it('falls back to full price when no discount buff is active', () => {
+      setShopActiveBuffs([]);
+      const run = makeRunState();
+      const ok = ShopSystem.upgradeCard(run, 0, 'common');
+      expect(ok).toBe(true);
+      expect(run.economy.gold).toBe(150); // 200 - 50
+    });
+
+    it('sums multiple cardUpgradeDiscount buffs (capped at 95%)', () => {
+      setShopActiveBuffs([
+        { tileIndex: 0, type: 'cardUpgradeDiscount', value: 0.20 },
+        { tileIndex: 1, type: 'cardUpgradeDiscount', value: 0.30 },
+      ]);
+      const run = makeRunState();
+      // 0.50 discount on 50g common -> 25g.
+      const ok = ShopSystem.upgradeCard(run, 0, 'common');
+      expect(ok).toBe(true);
+      expect(run.economy.gold).toBe(175);
     });
   });
 });
