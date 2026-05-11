@@ -42,13 +42,13 @@ function makeRun(overrides?: {
       materials: {},
     },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
     stopAtShop: true,
     combatSpeed: 1,
     mapSpeed: 1,
     pool: { cards: [], relics: [], tiles: [] },
-    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
   };
 }
 

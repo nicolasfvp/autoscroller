@@ -33,7 +33,6 @@ export class CombatScene extends Scene {
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
-  private transitioning = false;
   private initData!: { enemyId: string; isBoss?: boolean; terrain?: string };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
@@ -127,7 +126,6 @@ export class CombatScene extends Scene {
         this.scene.resume(SCENE_KEYS.GAME);
       } else {
         loseAllRunXP(currentRun);
-        this.transitioning = true;
         this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
         this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(SCENE_KEYS.GAME_OVER, { defeatedBy: enemyDef.name, enemyName: enemyDef.name, stats: this.engine.getStats() }));
       }
@@ -152,7 +150,6 @@ export class CombatScene extends Scene {
        return;
     }
     this.scene.bringToTop();
-    this.transitioning = false;
     this.cameras.main.setBackgroundColor(0x000000);
     console.log('[CombatScene] Creating combat scene...');
 
@@ -222,7 +219,16 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this);
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
-      this.speedSlider = new MapSpeedSlider(this, 400, 580, this.gameSpeed, (speed) => { this.gameSpeed = speed; run.combatSpeed = speed; }, 'Combat Speed');
+      
+      // Initialize HUD and Queue with initial state
+      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
+
+      this.speedSlider = new MapSpeedSlider(this, 400, 580, this.gameSpeed, (speed) => { 
+        this.gameSpeed = speed; 
+        const run = getRun();
+        run.combatSpeed = speed; 
+      }, 'Combat Speed');
 
       eventBus.on('combat:card-played', this.onCardPlayed);
       eventBus.on('combat:synergy-triggered', this.onSynergyTriggered);
@@ -256,6 +262,7 @@ export class CombatScene extends Scene {
     eventBus.off('combat:end', this.onCombatEnd);
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
+    if (this.speedSlider) this.speedSlider.destroy();
     try { const run = getRun(); run.isInCombat = false; } catch {}
   }
 }

@@ -188,7 +188,7 @@ export class EnemyAI {
       case 'random':
         return state.enemyDamage * (0.8 + rand() * 0.4);
       case 'scaling':
-        return state.enemyDamage + Math.floor(stats.cardsPlayed * 0.5);
+        return state.enemyDamage + Math.floor(stats.cardsPlayed * 0.16);
       case 'conditional':
         if (state.heroHP < state.heroMaxHP * 0.5) {
           return state.enemyDamage * 1.5;

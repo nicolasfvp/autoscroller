@@ -308,7 +308,7 @@ export class GameScene extends Scene {
     }
   }
 
-  update(time: number, delta: number): void {
+  update(_time: number, delta: number): void {
     if (this.transitioning || this.introPlaying) return;
 
     let run: RunState;

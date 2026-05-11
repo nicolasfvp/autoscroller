@@ -248,9 +248,6 @@ export class LoopRunner {
     const loop = this.runState.loop;
     const diffConfig = getDifficultyConfig();
     for (const tile of loop.tiles) {
-      // Non-combat tiles never need enemy assignment — skip them up front
-      // so we don't burn rng() calls (would also drift the seeded RNG state
-      // once B.7/B.8 lands).
       if (tile.type === 'buffer' || tile.type === 'shop' ||
           tile.type === 'rest' || tile.type === 'event' ||
           tile.type === 'treasure') {
@@ -273,11 +270,28 @@ export class LoopRunner {
           break;
         }
         case 'boss': {
-          // Cycle through the 3 bosses as the player progresses
-          const BOSS_ROTATION = ['doom_knight', 'iron_golem', 'lizard_king'];
+          const BOSS_ROTATION = ['doom_knight', 'boss_demon', 'iron_golem', 'boss_berserker', 'boss_mage', 'lizard_king', 'boss_hydra'];
           tile.enemyId = BOSS_ROTATION[this.bossKillCount % BOSS_ROTATION.length];
           break;
         }
+      }
+    }
+
+    // Ensure at least 2 enemies per loop
+    let enemyCount = loop.tiles.filter(t => t.enemyId !== undefined).length;
+    if (enemyCount < 2) {
+      const basicTilesWithoutEnemy = loop.tiles.filter(t => t.type === 'basic' && !t.enemyId && !t.defeatedThisLoop);
+      // Shuffle candidates and pick enough to reach 2
+      for (let i = basicTilesWithoutEnemy.length - 1; i > 0; i--) {
+        const j = Math.floor(this.rng() * (i + 1));
+        [basicTilesWithoutEnemy[i], basicTilesWithoutEnemy[j]] = [basicTilesWithoutEnemy[j], basicTilesWithoutEnemy[i]];
+      }
+      
+      while (enemyCount < 2 && basicTilesWithoutEnemy.length > 0) {
+        const tile = basicTilesWithoutEnemy.pop()!;
+        const pool = getEnemyPoolForTerrain('basic', loop.count);
+        tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+        enemyCount++;
       }
     }
   }

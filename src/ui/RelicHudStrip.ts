@@ -27,7 +27,6 @@ export class RelicHudStrip extends Phaser.GameObjects.Container {
 
   updateRelics(relicIds: string[]): void {
     this.removeAll(true);
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
     const maxVisible = 8;
     const size = 28;
     const gap = 4;
@@ -37,7 +36,6 @@ export class RelicHudStrip extends Phaser.GameObjects.Container {
       const relicDef = (relicsData as any[]).find((r: any) => r.id === id);
       const rarity = relicDef?.rarity ?? 'common';
       const rarityColor = RARITY_COLORS[rarity] ?? 0xcccccc;
-      const icon = relicDef?.icon ?? '?';
       const name = relicDef?.name ?? id;
       const effect = relicDef?.description ?? '';
       const source = relicDef?.unlockSource ? `${relicDef.unlockSource} Lv.${relicDef.unlockTier}` : 'Starter';

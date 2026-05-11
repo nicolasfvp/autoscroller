@@ -53,16 +53,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private static readonly PROG_W  = 200;
   private static readonly PROG_H  = 104;
 
-  // Tweened display values
-  private displayedGold = 0;
-  private displayedHP    = 0;
-  private displayedMaxHP = 0;
-  private displayedTP    = 0;
-
-  private goldTween?: Phaser.Tweens.Tween;
-  private hpTween?:   Phaser.Tweens.Tween;
-  private tpTween?:   Phaser.Tweens.Tween;
-
   // Panel constants
   private static readonly LP_X  = 10;
   private static readonly LP_Y  = 10;

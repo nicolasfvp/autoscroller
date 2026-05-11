@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 /**
@@ -54,7 +54,7 @@ export class GameOverScene extends Scene {
     }
 
     // ── Title ───────────────────────────────────────────────────
-    const title = this.add.text(400, 70, 'RUN OVER', {
+    this.add.text(400, 70, 'RUN OVER', {
       fontFamily: FONTS.family, fontSize: '64px', fontStyle: 'bold',
       color: '#ff2222', stroke: '#000000', strokeThickness: 8,
     }).setOrigin(0.5);
@@ -142,7 +142,7 @@ export class GameOverScene extends Scene {
     }).setOrigin(0.5);
 
     // ── Return Button ───────────────────────────────────────────
-    const btn = createButton(this, 400, 540, 'Return to City', async () => {
+    createButton(this, 400, 540, 'Return to City', async () => {
       stopAllRunScenes(this, SCENE_KEYS.GAME_OVER);
       await saveManager.clear();
       clearRun();

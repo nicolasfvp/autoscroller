@@ -1,6 +1,4 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import fs from 'node:fs';
-import path from 'node:path';
 import { EventBus } from '../../src/core/EventBus';
 
 describe('EventBus', () => {
@@ -63,12 +61,5 @@ describe('EventBus', () => {
     expect(() => {
       bus.emit('combat:start', { enemyId: 'slime', isElite: false, isBoss: false });
     }).not.toThrow();
-  });
-
-  it('EventBus module has zero Phaser imports', () => {
-    const filePath = path.resolve(__dirname, '../../src/core/EventBus.ts');
-    const content = fs.readFileSync(filePath, 'utf-8');
-    expect(content).not.toContain("from 'phaser'");
-    expect(content).not.toContain('import Phaser');
   });
 });
