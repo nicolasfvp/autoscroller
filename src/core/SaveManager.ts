@@ -58,6 +58,12 @@ export class SaveManager {
       // D-07: incompatible save -- clear and start fresh.
       if (!migrated.version || migrated.version < RUN_STATE_VERSION) {
         await this.clear();
+        // Phase 9 (Plan 4): surface to MainMenu for one-shot notice.
+        // globalThis side-channel chosen over a custom event because the
+        // boot path runs before any scene/eventBus listeners are wired.
+        if (typeof globalThis !== 'undefined') {
+          (globalThis as { __runStateClearedOnBoot?: boolean }).__runStateClearedOnBoot = true;
+        }
         return null;
       }
       return migrated;
