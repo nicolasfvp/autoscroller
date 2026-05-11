@@ -8,8 +8,8 @@ import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
 import { CardResolver } from './CardResolver';
 import { EnemyAI } from './EnemyAI';
-import { SynergySystem } from './SynergySystem';
-import { resolveCardPlayedRelicBonus } from './RelicSystem';
+import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
+import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { rand } from '../SharedRNG';
 import { getRun } from '../../state/RunState';
@@ -192,6 +192,18 @@ export class CombatEngine {
     // Resolve card (with damage multiplier from relics)
     const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier, isUpgraded);
 
+    // Phase 9 Task 5: cooldown_reduction synergy bonus mutates CombatState
+    // directly (CardResolver.applyEffect is a no-op for that bonus type).
+    if (synergy) {
+      applyDirectSynergyBonus(synergy, this.state);
+      // combo_played relic trigger fires whenever a synergy resolves.
+      dispatchTriggerRelics('combo_played', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:combo-played', {
+        displayName: synergy.displayName,
+        comboPointsAfter: this.state.comboPoints,
+      });
+    }
+
     if (manaRefund > 0) {
       this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
     }
@@ -233,12 +245,41 @@ export class CombatEngine {
       this.stats.damageDealt += bonusDmg;
     }
 
+    // Phase 9: INT adds +1 flat damage per point on magic-category cards
+    // (design/00 §3). Applied AFTER the resolver returns so it survives the
+    // defense subtraction floor (Pitfall: applying INT pre-defense would let
+    // high-defense enemies eat the entire INT bonus).
+    if (card.category === 'magic' && result.totalDamage > 0 && this.state.heroIntellect > 0) {
+      const intBonus = this.state.heroIntellect;
+      this.state.enemyHP -= intBonus;
+      this.stats.damageDealt += intBonus;
+      result.totalDamage += intBonus;
+      getRun().stats.damageDealt += intBonus;
+    }
+
+    // Phase 9: DoT tick cadence is "every card play" (INDEX §7 #2, RESEARCH
+    // A2). Tick BEFORE deck-pointer advance so attribution to the triggering
+    // card is preserved (Pitfall 4).
+    this.tickActiveDoTs(card.id);
+
     // Set cooldown for next card. Upgraded variants override base cooldown.
     // `isUpgraded` is already resolved above for this deck position.
     const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;
-    this.heroCooldownTimer = effectiveCooldown * 1000 * (this.state.cooldownMultiplier ?? 1.0);
+    // Phase 9: DEX scales card cooldown by -2% per point, capped at -60%
+    // (design/00 §3). cardCooldown * (1 - dexReduction) * cooldownMultiplier.
+    const dexReduction = Math.min(0.60, this.state.heroDexterity * 0.02);
+    // Phase 9 (Task 5): synergy bonus cooldown_reduction shaves the NEXT
+    // card's cooldown. Stored as a one-shot field on state; consumed here.
+    const cooldownShave = this.state.nextCardCooldownReduction;
+    if (cooldownShave > 0) {
+      this.state.nextCardCooldownReduction = 0;
+    }
+    this.heroCooldownTimer = Math.max(
+      0,
+      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0),
+    );
 
     // Emit event
     eventBus.emit('combat:card-played', {
@@ -253,8 +294,89 @@ export class CombatEngine {
     this.advanceDeckPointer();
   }
 
+  /**
+   * Phase 9: Resolve active DoT stacks once per card play (DoT cadence per
+   * INDEX §7 #2 + RESEARCH A2). Per-tick damage = stacks * (1 + floor(DEX/4))
+   * for poison. Bleed / burn / freeze / shock follow the same shape per
+   * design/00 §3 with class-internal formulas. After the tick, each stack
+   * decays by 1 unless state.poisonDecayDisabled (widows-kiss / empress-fang
+   * relics flip this on).
+   */
+  private tickActiveDoTs(triggeringCardId: string): void {
+    const state = this.state;
+    const dexBonus = 1 + Math.floor(state.heroDexterity / 4);
+
+    // Poison: stacks * (1 + floor(DEX/4)) damage; -1 stack/tick unless disabled.
+    if (state.poisonStacks > 0) {
+      const dmg = state.poisonStacks * dexBonus;
+      state.enemyHP -= dmg;
+      this.stats.damageDealt += dmg;
+      getRun().stats.damageDealt += dmg;
+      eventBus.emit('combat:dot-tick', {
+        stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
+      });
+      if (!state.poisonDecayDisabled) state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      // dot_tick relic trigger fires once per active DoT stack type.
+      dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
+    }
+
+    // Bleed: per design/00 §3, similar shape — class-internal (warrior-leaning).
+    // Use stack * 1 baseline; class-specific formulas land in their per-class plans.
+    if (state.bleedStacks > 0) {
+      const dmg = state.bleedStacks;
+      state.enemyHP -= dmg;
+      this.stats.damageDealt += dmg;
+      getRun().stats.damageDealt += dmg;
+      eventBus.emit('combat:dot-tick', { stack: 'bleed', damage: dmg, sourceCard: triggeringCardId });
+      state.bleedStacks = Math.max(0, state.bleedStacks - 1);
+    }
+
+    // Burn: mage-leaning DoT. INT-scaling per design/00 §3 — baseline +INT.
+    if (state.burnStacks > 0) {
+      const dmg = state.burnStacks + Math.floor(state.heroIntellect / 2);
+      state.enemyHP -= dmg;
+      this.stats.damageDealt += dmg;
+      getRun().stats.damageDealt += dmg;
+      eventBus.emit('combat:dot-tick', { stack: 'burn', damage: dmg, sourceCard: triggeringCardId });
+      state.burnStacks = Math.max(0, state.burnStacks - 1);
+    }
+
+    // Freeze: not pure DoT — slows enemy cooldown. Stack still decays per tick.
+    if (state.freezeStacks > 0) {
+      state.freezeStacks = Math.max(0, state.freezeStacks - 1);
+    }
+
+    // Shock: small DoT + stamina drain placeholder (design/02 mage burn line).
+    if (state.shockStacks > 0) {
+      const dmg = state.shockStacks;
+      state.enemyHP -= dmg;
+      this.stats.damageDealt += dmg;
+      getRun().stats.damageDealt += dmg;
+      eventBus.emit('combat:dot-tick', { stack: 'shock', damage: dmg, sourceCard: triggeringCardId });
+      state.shockStacks = Math.max(0, state.shockStacks - 1);
+    }
+
+    // Shadowblade class branch: combo_played trigger fires when a synergy
+    // resolved AND poison just ticked (Task 5 wires the relic dispatch).
+    if (state.heroClass === 'shadowblade') {
+      // Class-specific hooks go here. Currently the only Shadowblade-specific
+      // tick logic is the poison cadence above (DEX-scaled per RESEARCH A2);
+      // additional hooks (e.g. Stealth refresh on N CP spent) are deferred
+      // to a future balance pass.
+    }
+  }
+
   private advanceDeckPointer(): void {
     this.deckPointer++;
+    // Phase 9 Task 5: card_drawn trigger fires once per advance (the "next"
+    // card is now the active card). Dispatched here so it stays in lockstep
+    // with whatever the next pointer points at — including post-reshuffle.
+    const nextCardId = this.state.deckOrder[this.deckPointer >= this.state.deckOrder.length ? 0 : this.deckPointer];
+    if (nextCardId) {
+      dispatchTriggerRelics('card_drawn', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:card-drawn', { cardId: nextCardId });
+    }
+
     if (this.deckPointer >= this.state.deckOrder.length) {
       this.deckPointer = 0;
       this.stats.reshuffles++;
@@ -273,6 +395,17 @@ export class CombatEngine {
       const windBonus = checkConditionalTrigger('deck_reshuffled', { deckReshuffled: true }, activePassives);
       if (windBonus && windBonus.type === 'stamina') {
         this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + windBonus.value);
+      }
+
+      // Phase 9: SPI grants stamina regen on shuffle (+1 per 2 SPI per
+      // design/00 §3). INT grants +1 mana per 2 INT on the same trigger.
+      if (this.state.heroSpirit > 0) {
+        const spiStamina = Math.floor(this.state.heroSpirit / 2);
+        this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + spiStamina);
+      }
+      if (this.state.heroIntellect > 0) {
+        const intMana = Math.floor(this.state.heroIntellect / 2);
+        this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + intMana);
       }
     }
   }
@@ -310,6 +443,9 @@ export class CombatEngine {
     if (this.state.enemyHP <= 0) {
       this.stats.result = 'victory';
       this.isFinished = true;
+      // Phase 9 Task 5: enemy_killed relic trigger fires once on victory.
+      dispatchTriggerRelics('enemy_killed', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:enemy-killed', { enemyId: this.state.enemyId });
       eventBus.emit('combat:end', { result: 'victory', enemyId: this.state.enemyId });
       return true;
     }
@@ -353,6 +489,9 @@ export class CombatEngine {
     const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;
-    return effectiveCooldown * 1000;
+    // Mirror playNextCard's DEX scaling so the HUD bar fills at the same
+    // visual rate the engine actually schedules cards.
+    const dexReduction = Math.min(0.60, this.state.heroDexterity * 0.02);
+    return effectiveCooldown * 1000 * (1 - dexReduction);
   }
 }

@@ -41,6 +41,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     comboPoints: 0, comboPointsCap: 5, stealthCharges: 0, stealthCap: 4, evadeNextHit: false,
     poisonStacks: 0, poisonDecayDisabled: false, bleedStacks: 0, burnStacks: 0,
     freezeStacks: 0, shockStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    nextCardCooldownReduction: 0,
     ...overrides,
   };
 }

@@ -350,3 +350,20 @@ export function clearRun(): void {
   resetRNG();
   eventBus.emit('run:cleared', {});
 }
+
+/**
+ * Phase 9 (Task 5): mutate statDeltas AND emit the stat_changed trigger.
+ * Centralizes the trigger so cards / relics / events all fire stat_changed
+ * relics via a single helper instead of inlining the event emit at every
+ * statDelta write site.
+ */
+export function applyStatDelta(
+  run: RunState,
+  stat: "maxHP" | "maxStamina" | "maxMana" | "str" | "vit" | "dex" | "int" | "spi",
+  delta: number,
+): void {
+  if (delta === 0) return;
+  const d = run.hero.statDeltas ?? (run.hero.statDeltas = {});
+  d[stat] = (d[stat] ?? 0) + delta;
+  eventBus.emit('combat:stat-changed', { stat, delta });
+}

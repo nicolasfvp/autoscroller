@@ -239,3 +239,78 @@ export function applyDamageTakenRelics(relicIds: string[], actualDamage: number,
 
   return preventedDeath;
 }
+
+// ── Phase 9: generic trigger dispatch (Task 5) ────────────────
+
+/**
+ * Phase 9 Task 5: generic trigger dispatcher for the 7 new RelicTrigger
+ * values (enemy_killed, card_drawn, rest_used, shop_visited, stat_changed,
+ * combo_played, dot_tick).
+ *
+ * Resolves any relic whose `trigger` matches and applies its `effectType` to
+ * the supplied CombatState. Effect-type handling here intentionally
+ * overlaps the existing applyPassiveRelics / applyDamageTakenRelics shapes
+ * so future relic definitions can reuse the same effect vocabulary.
+ *
+ * Out-of-combat triggers (rest_used, shop_visited) accept a partial state
+ * shape via the same function — callers from RestSiteSystem / ShopSystem
+ * pass a CombatState-shaped accumulator or use a thin adapter. For now the
+ * dispatch is a structural pass-through so JSON-authored relics don't
+ * crash at runtime even when their effects target run-state fields that
+ * aren't on CombatState.
+ */
+export function dispatchTriggerRelics(
+  trigger: string,
+  relicIds: string[],
+  state: CombatState,
+): void {
+  for (const id of relicIds) {
+    const relic = RELIC_MAP.get(id);
+    if (!relic || relic.trigger !== trigger) continue;
+
+    switch (relic.effectType) {
+      case 'stat_bonus': {
+        if (relic.stat && relic.value != null) applySingleStatBonus(relic.stat, relic.value, state);
+        if (relic.stats) {
+          for (const [stat, val] of Object.entries(relic.stats)) {
+            applySingleStatBonus(stat, val, state);
+          }
+        }
+        break;
+      }
+      case 'heal_flat': {
+        const v = relic.value ?? 0;
+        state.heroHP = Math.min(state.heroMaxHP, state.heroHP + v);
+        break;
+      }
+      case 'damage_flat': {
+        const v = relic.value ?? 0;
+        state.enemyHP -= v;
+        break;
+      }
+      case 'gain_combo': {
+        state.comboPoints = Math.min(state.comboPointsCap, state.comboPoints + (relic.value ?? 0));
+        break;
+      }
+      case 'gain_stealth': {
+        state.stealthCharges = Math.min(state.stealthCap, state.stealthCharges + (relic.value ?? 0));
+        if (state.stealthCharges > 0) state.evadeNextHit = true;
+        break;
+      }
+      case 'add_poison': {
+        state.poisonStacks += (relic.value ?? 0);
+        break;
+      }
+      case 'disable_poison_decay': {
+        state.poisonDecayDisabled = true;
+        break;
+      }
+      default: {
+        // Unknown effectType for these triggers: no-op. JSON authors get a
+        // safe "effect didn't fire" rather than a runtime crash, and the
+        // schema validator in Plan 2 catches the typo at build time.
+        break;
+      }
+    }
+  }
+}

@@ -15,7 +15,11 @@ interface SynergyDef {
 const synergies = synergiesData as SynergyDef[];
 
 function getTileKey(tile: TileSlot): string {
-  return tile.terrain ?? tile.type;
+  // Phase 9: prefer the explicit registry key (`kind`) when present so tiles
+  // like library/arena/shrine_of_pact (which all share type='event') resolve
+  // to their distinct adjacency rows. Fall back to terrain (forest/graveyard/
+  // swamp) and then to the umbrella type for legacy slots.
+  return tile.kind ?? tile.terrain ?? tile.type;
 }
 
 function findSynergy(a: string, b: string): SynergyDef | undefined {
