@@ -1,9 +1,19 @@
 // Shared type definitions for all static game data schemas.
 // All types must be JSON-serializable (no Map, no class instances, no functions).
 
-// ── Card Types ──────────────────────────────────────────────
+// -- Status / Stack Identifiers --
+// Phase 9 (Design v2) status system. Five primary stats (str + 4 new axes)
+// plus seven elemental/condition stack identifiers. These extend the
+// engine per-card / per-combat / per-run state vocabulary; mechanics
+// (cooldown reduction from DEX, max-HP from VIT, etc.) land in Plan 3.
 
-export type CardCategory = 'attack' | 'defense' | 'magic';
+export type StatId = "str" | "vit" | "dex" | "int" | "spi";
+
+export type StackId = "poison" | "bleed" | "burn" | "freeze" | "shock" | "arcane" | "rage";
+
+// -- Card Types --
+
+export type CardCategory = "attack" | "defense" | "magic";
 
 export interface CardCost {
   stamina?: number;
@@ -12,9 +22,18 @@ export interface CardCost {
 }
 
 export interface CardEffect {
-  type: 'damage' | 'heal' | 'armor' | 'stamina' | 'mana' | 'debuff';
+  type:
+    // Existing (v1)
+    | "damage" | "heal" | "armor" | "stamina" | "mana" | "debuff"
+    // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
+    | "buff" | "debuff_stat" | "dot" | "stack"
+    | "consume_combo" | "gain_combo" | "stealth" | "taunt";
   value: number;
-  target: 'enemy' | 'self';
+  target: "enemy" | "self";
+  /** Optional stat scaling: adds floor(stat / per) * value to the resolved value. */
+  scale?: { stat: StatId; per: number; value: number };
+  /** Disambiguates which stack to apply for type="dot" or type="stack". */
+  stack?: StackId;
 }
 
 export interface CardUpgrade {
@@ -39,23 +58,23 @@ export interface CardDefinition {
   /** Cooldown in seconds before card can be played again */
   cooldown: number;
   /** Targeting mode for this card */
-  targeting: 'single' | 'aoe' | 'lowest-hp' | 'random' | 'self';
+  targeting: "single" | "aoe" | "lowest-hp" | "random" | "self";
   /** Card rarity tier */
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic';
+  rarity: "common" | "uncommon" | "rare" | "epic";
 }
 
-// ── Enemy Types ─────────────────────────────────────────────
+// -- Enemy Types --
 
-export type AttackPattern = 'fixed' | 'random' | 'scaling' | 'conditional';
+export type AttackPattern = "fixed" | "random" | "scaling" | "conditional";
 
 export interface EnemyAttack {
   damage: number;
   defense?: number;
   pattern: AttackPattern;
-  specialEffect?: 'double' | 'stun' | 'debuff' | 'lifesteal';
+  specialEffect?: "double" | "stun" | "debuff" | "lifesteal";
 }
 
-export type BossBehaviorType = 'enrage' | 'shield' | 'multi_hit' | 'drain' | 'summon';
+export type BossBehaviorType = "enrage" | "shield" | "multi_hit" | "drain" | "summon";
 
 export interface BossBehavior {
   type: BossBehaviorType;
@@ -72,7 +91,7 @@ export interface BossBehavior {
 export interface EnemyDefinition {
   id: string;
   name: string;
-  type: 'normal' | 'elite' | 'boss';
+  type: "normal" | "elite" | "boss";
   baseHP: number;
   baseDefense: number;
   attack: EnemyAttack;
@@ -89,23 +108,31 @@ export interface EnemyDefinition {
   };
 }
 
-// ── Synergy Types ──────────────────────────────────────────
+// -- Synergy Types --
 
 export interface SynergyDefinition {
   cardA: string;
   cardB: string;
   bonus: {
-    type: 'damage' | 'armor' | 'heal' | 'stamina' | 'mana' | 'cost_waive';
+    type:
+      // Existing (v1)
+      | "damage" | "armor" | "heal" | "stamina" | "mana" | "cost_waive"
+      // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
+      | "dot" | "combo_point" | "stealth" | "stat_buff" | "cooldown_reduction";
     value: number;
-    target: 'enemy' | 'self';
+    target: "enemy" | "self";
+    /** Used by stat_buff: which stat axis to buff. */
+    stat?: StatId;
+    /** Used by dot: which stack to apply. */
+    stack?: StackId;
   };
   classRestriction?: string;
   displayName: string;
 }
 
-// ── Tile Types ──────────────────────────────────────────────
+// -- Tile Types --
 
-export type TileType = 'basic' | 'combat' | 'elite' | 'boss' | 'shop' | 'rest' | 'event' | 'treasure';
+export type TileType = "basic" | "combat" | "elite" | "boss" | "shop" | "rest" | "event" | "treasure";
 
 export interface TileTypeConfig {
   type: TileType;
@@ -114,10 +141,15 @@ export interface TileTypeConfig {
   canPlaceManually: boolean;
 }
 
-// ── Relic Types ─────────────────────────────────────────────
+// -- Relic Types --
 
-export type RelicRarity = 'common' | 'rare' | 'epic' | 'legendary';
-export type RelicTrigger = 'combat_start' | 'turn_start' | 'card_played' | 'damage_taken' | 'heal' | 'passive';
+export type RelicRarity = "common" | "rare" | "epic" | "legendary";
+export type RelicTrigger =
+  // Existing (v1)
+  | "combat_start" | "turn_start" | "card_played" | "damage_taken" | "heal" | "passive"
+  // NEW (v2 / Phase 9) -- Plan 3 implements dispatch
+  | "enemy_killed" | "card_drawn" | "rest_used" | "shop_visited" | "stat_changed"
+  | "combo_played" | "dot_tick";
 
 export interface RelicDefinition {
   id: string;
@@ -138,7 +170,7 @@ export interface RelicDefinition {
   unlockTier?: number;
 }
 
-// ── Pricing & Economy Types ─────────────────────────────────
+// -- Pricing & Economy Types --
 
 export interface PricingConfig {
   cardBasePrice: number;
@@ -160,7 +192,7 @@ export interface LoopGrowthConfig {
   maxTileLength: number;
 }
 
-import type { MaterialDefinition } from '../state/MetaState';
+import type { MaterialDefinition } from "../state/MetaState";
 
 export interface MaterialDropConfig {
   materials: MaterialDefinition[];
@@ -180,7 +212,7 @@ export interface MaterialDropConfig {
   };
 }
 
-// ── Difficulty Types ────────────────────────────────────────
+// -- Difficulty Types --
 
 export interface DifficultyConfig {
   baseEnemyHPMultiplier: number;
@@ -198,7 +230,7 @@ export interface DifficultyConfig {
   };
 }
 
-// ── Hero Stats Types ────────────────────────────────────────
+// -- Hero Stats Types --
 
 export interface HeroStatsConfig {
   maxHP: number;
@@ -212,9 +244,14 @@ export interface HeroStatsConfig {
   strength: number;
   defenseMultiplier: number;
   moveSpeed: number;
+  // -- Phase 9: stat axes (status system) --
+  vitality: number;
+  dexterity: number;
+  intellect: number;
+  spirit: number;
 }
 
-// ── Enemy Drop Types ────────────────────────────────────────
+// -- Enemy Drop Types --
 
 export interface EnemyDropConfig {
   enemyType: string;
