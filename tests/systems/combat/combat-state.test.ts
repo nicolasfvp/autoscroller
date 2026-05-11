@@ -31,6 +31,7 @@ function makeMockRun(overrides?: Partial<{
       strength: overrides?.strength ?? 2,
       defenseMultiplier: overrides?.defenseMultiplier ?? 1.5,
       moveSpeed: 2,
+      vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
     },
     deck: {
       active: ['strike', 'defend', 'fireball', 'heavy-hit'],

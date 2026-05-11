@@ -8,6 +8,7 @@ import { SeededRNG } from '../systems/SeededRNG';
 import { MetaState, createDefaultMetaState } from './MetaState';
 import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../systems/UnlockManager';
 import type { TileSlot } from '../systems/TileRegistry';
+import type { StatId } from '../data/types';
 import { eventBus } from '../core/EventBus';
 import { clearPendingLoot } from '../systems/PendingLoot';
 import { getStorehouseEffects } from '../systems/MetaProgressionSystem';
@@ -32,6 +33,19 @@ export interface HeroState {
   totalXP?: number;
   /** Hero class name */
   className?: string;
+  // -- Phase 9 (Design v2): status system stat axes --
+  // Defaults from class baseStats; mutated via relics/passives/events.
+  vitality: number;
+  dexterity: number;
+  intellect: number;
+  spirit: number;
+  /**
+   * Per-run additive stat deltas applied on top of class baseStats.
+   * Mutated in place by cards/relics/events that grant permanent in-run shifts
+   * (Worldroot Seed, Crown of Pact, Shrine of Pact, Eternal Veil). Resets to {}
+   * on createNewRun. Distinct from per-combat buffs (which live on CombatState).
+   */
+  statDeltas: Partial<Record<"maxHP" | "maxStamina" | "maxMana" | StatId, number>>;
 }
 
 export interface DeckState {
@@ -141,7 +155,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 3;
+export const RUN_STATE_VERSION = 4;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.
@@ -208,6 +222,22 @@ export function migrateRunState(raw: any): RunState | null {
     }
     raw.version = 3;
   }
+  // v3 -> v4 (Phase 9 / Design v2): backfill HeroState stat axes
+  // (vitality/dexterity/intellect/spirit) and statDeltas. A v3 save that
+  // pre-dates the status system gets zero defaults for the new stats and
+  // an empty statDeltas object so resolveHeroStats() produces baseStats.
+  if (raw.version === 3) {
+    if (raw.hero) {
+      if (raw.hero.vitality === undefined) raw.hero.vitality = 0;
+      if (raw.hero.dexterity === undefined) raw.hero.dexterity = 0;
+      if (raw.hero.intellect === undefined) raw.hero.intellect = 0;
+      if (raw.hero.spirit === undefined) raw.hero.spirit = 0;
+      if (raw.hero.statDeltas === undefined || raw.hero.statDeltas === null) {
+        raw.hero.statDeltas = {};
+      }
+    }
+    raw.version = 4;
+  }
   return raw as RunState;
 }
 
@@ -242,6 +272,12 @@ export function createNewRun(
       defenseMultiplier: stats.defenseMultiplier,
       moveSpeed: 2,
       className: stats.className,
+      // Phase 9 stat axes seeded from class baseStats; statDeltas starts empty.
+      vitality: stats.vitality,
+      dexterity: stats.dexterity,
+      intellect: stats.intellect,
+      spirit: stats.spirit,
+      statDeltas: {},
     },
     deck: (() => {
       // Deterministic starter shuffle: bind to (runSeed, runId) so a fresh run

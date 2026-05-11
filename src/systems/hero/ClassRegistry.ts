@@ -11,6 +11,11 @@ export interface ClassDef {
     maxMana: number;
     strength: number;
     defenseMultiplier: number;
+    // -- Phase 9: status system stat axes --
+    vitality: number;
+    dexterity: number;
+    intellect: number;
+    spirit: number;
     className: string;
   };
   starterDeck: string[];

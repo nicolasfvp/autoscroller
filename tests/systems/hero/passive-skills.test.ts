@@ -19,6 +19,7 @@ function makeRun(totalXP: number): RunState {
       maxMana: 30, currentMana: 30,
       currentDefense: 0, strength: 1,
       defenseMultiplier: 1, moveSpeed: 2,
+      vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
       runXP: 0, totalXP,
       className: 'warrior',
     },
@@ -42,6 +43,7 @@ function makeHero(): HeroState {
     maxMana: 30, currentMana: 30,
     currentDefense: 0, strength: 1,
     defenseMultiplier: 1, moveSpeed: 2,
+    vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
     runXP: 0, totalXP: 0,
   };
 }

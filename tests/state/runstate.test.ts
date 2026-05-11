@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import {
+  RUN_STATE_VERSION,
   createNewRun,
   getRun,
   setRun,
@@ -67,5 +68,29 @@ describe('RunState', () => {
     expect(run.hero.strength).toBe(1);
     expect(run.hero.defenseMultiplier).toBe(1);
     expect(run.hero.moveSpeed).toBe(2);
+  });
+});
+
+describe('RunState v4 (Phase 9) — stat axes + statDeltas wiring', () => {
+  it('RUN_STATE_VERSION is 4 (Phase 9 stat axes added)', () => {
+    // Import inline to avoid colliding with the existing top-level imports.
+    // (vitest hoists describe but locally-scoped imports work too.)
+    
+    expect(RUN_STATE_VERSION).toBe(4);
+  });
+
+  it('createNewRun has hero.statDeltas === {} (new run never has deltas)', () => {
+    
+    const run = createNewRun(undefined, 1, 'warrior');
+    expect(run.hero.statDeltas).toEqual({});
+  });
+
+  it('createNewRun for warrior has vitality/dexterity/intellect/spirit === 0', () => {
+    
+    const run = createNewRun(undefined, 1, 'warrior');
+    expect(run.hero.vitality).toBe(0);
+    expect(run.hero.dexterity).toBe(0);
+    expect(run.hero.intellect).toBe(0);
+    expect(run.hero.spirit).toBe(0);
   });
 });
