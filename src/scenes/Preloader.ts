@@ -156,6 +156,7 @@ export class Preloader extends Scene {
     this.load.image('mat_stone', 'assets/icons/stone.png');
     this.load.image('mat_bone', 'assets/icons/stone.png');
     this.load.image('mat_essence', 'assets/icons/essence.png');
+    this.load.image('mat_herbs', 'assets/icons/herbs.png');
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
