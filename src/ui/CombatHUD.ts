@@ -2,7 +2,32 @@
 // Hero panel (left) | Cooldown arc (center) | Enemy panel (right)
 
 import type { CombatState } from '../systems/combat/CombatState';
-import { FONTS } from './StyleConstants';
+import { FONTS, SHADOWBLADE_PALETTE } from './StyleConstants';
+
+/**
+ * Phase 9 (Design v2): Pure visibility logic for class-conditional HUD widgets.
+ *
+ * Extracted so the toggle logic is unit-testable without a Phaser scene.
+ * Returns flags only -- callers apply them to GameObject.setVisible().
+ */
+export interface HUDVisibilityInput {
+  heroClassName?: string;
+  stealthCharges?: number;
+}
+export interface HUDVisibility {
+  showCP: boolean;
+  showStealth: boolean;
+  staminaLabel: string;
+}
+export function computeHUDVisibility(state: HUDVisibilityInput): HUDVisibility {
+  const isSB = state.heroClassName === 'shadowblade';
+  const stealth = state.stealthCharges ?? 0;
+  return {
+    showCP: isSB,
+    showStealth: isSB && stealth > 0,
+    staminaLabel: isSB ? '⚡ ENG' : '⚡ STA',
+  };
+}
 
 const FF = FONTS.family;
 const STROKE = { stroke: '#000000', strokeThickness: 3 };
@@ -48,6 +73,16 @@ export class CombatHUD {
   private manaTween?:    Phaser.Tweens.Tween;
   private enemyHpTween?: Phaser.Tweens.Tween;
 
+  // ── Phase 9: Shadowblade class-conditional widgets ──────────────
+  private staminaMicroLabel!: Phaser.GameObjects.Text;
+  private cpPips: Phaser.GameObjects.Arc[] = [];
+  private cpLabel!: Phaser.GameObjects.Text;
+  private stealthPill!: Phaser.GameObjects.Rectangle;
+  private stealthLabel!: Phaser.GameObjects.Text;
+  private stealthPulseTween?: Phaser.Tweens.Tween;
+  private lastCP = 0;
+  private lastStealth = 0;
+
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.container = scene.add.container(0, 0)
@@ -57,6 +92,8 @@ export class CombatHUD {
     this.buildHeroPanel();
     this.buildEnemyPanel();
     this.buildCooldownArc();
+    this.buildComboPointStrip();
+    this.buildStealthIndicator();
   }
 
   // ── Hero panel ─────────────────────────────────────────────────
@@ -78,9 +115,10 @@ export class CombatHUD {
     this.hpBar  = this.getLastFill();
     this.hpText = this.buildBarLabel(bx + BAR_W / 2, by);
 
-    // Stamina
+    // Stamina (Shadowblade: label flips to ⚡ ENG in update())
     this.buildBar(bx, by + gap,   BAR_W, 22, 0xf0a020, '⚡ STA');
     this.staminaBar  = this.getLastFill();
+    this.staminaMicroLabel = this._lastMicroLabel;
     this.staminaText = this.buildBarLabel(bx + BAR_W / 2, by + gap);
 
     // Mana
@@ -101,6 +139,7 @@ export class CombatHUD {
       color: '#dddddd', ...STROKE, strokeThickness: 2,
     }).setOrigin(0, 1);
     this.container.add(lbl);
+    this._lastMicroLabel = lbl;
 
     // Background asset (frame)
     const bg = s.add.image(x + w / 2, y, 'healthbar').setDisplaySize(w, h);
@@ -116,6 +155,7 @@ export class CombatHUD {
   }
 
   private _lastFill!: Phaser.GameObjects.Rectangle;
+  private _lastMicroLabel!: Phaser.GameObjects.Text;
   private getLastFill() { return this._lastFill; }
 
   private buildBarLabel(cx: number, cy: number): Phaser.GameObjects.Text {
@@ -177,6 +217,126 @@ export class CombatHUD {
       color: '#ffffff', stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5);
     this.container.add(this.cooldownText);
+  }
+
+  // ── Phase 9: Combo Point pip strip (Shadowblade-only) ──────────
+  // 5 pips × 12px diameter + 4 × 4px gap = 76px strip. Sits inside the
+  // left panel (238×132) below the mana bar. UI-SPEC §Spacing.
+  private buildComboPointStrip(): void {
+    const s = this.scene;
+    const PIP_DIAMETER = 12;
+    const PIP_GAP = 4;
+    const STRIP_X = LP.x + 16;    // inset from left panel edge
+    const STRIP_Y = LP.y + 122;   // below mana bar (mana bar ends ~y=120)
+    this.cpPips = [];
+    for (let i = 0; i < 5; i++) {
+      const x = STRIP_X + i * (PIP_DIAMETER + PIP_GAP) + PIP_DIAMETER / 2;
+      const pip = s.add.circle(x, STRIP_Y, PIP_DIAMETER / 2, SHADOWBLADE_PALETTE.comboPointEmpty);
+      pip.setStrokeStyle(1, SHADOWBLADE_PALETTE.comboPoint, 1);
+      pip.setVisible(false);
+      this.container.add(pip);
+      this.cpPips.push(pip);
+    }
+    // CP count label (11px bold white, 2px black stroke -- matches buildBarLabel)
+    this.cpLabel = s.add.text(STRIP_X + 5 * (PIP_DIAMETER + PIP_GAP) + 4, STRIP_Y, 'CP 0/5', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0, 0.5);
+    this.cpLabel.setVisible(false);
+    this.container.add(this.cpLabel);
+  }
+
+  // ── Phase 9: Stealth indicator pill (Shadowblade-only) ─────────
+  private buildStealthIndicator(): void {
+    const s = this.scene;
+    const PILL_W = 76, PILL_H = 22;
+    const X = LP.x + LP.w - PILL_W - 16;  // right-anchored inside left panel
+    const Y = LP.y + 122;                  // same row as CP strip
+    this.stealthPill = s.add.rectangle(X + PILL_W / 2, Y, PILL_W, PILL_H, SHADOWBLADE_PALETTE.stealth, 0.4);
+    this.stealthPill.setStrokeStyle(1, SHADOWBLADE_PALETTE.stealth, 1);
+    this.stealthPill.setVisible(false);
+    this.container.add(this.stealthPill);
+
+    this.stealthLabel = s.add.text(X + PILL_W / 2, Y, 'STEALTH ×0', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#c8a8ff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0.5, 0.5);
+    this.stealthLabel.setVisible(false);
+    this.container.add(this.stealthLabel);
+  }
+
+  // ── Phase 9: Shadowblade widget update (called from update()) ──
+  private updateShadowbladeWidgets(state: CombatState): void {
+    const vis = computeHUDVisibility({
+      heroClassName: state.heroClass,
+      stealthCharges: state.stealthCharges,
+    });
+
+    // Stamina micro-label swap (Energy flavor when Shadowblade)
+    if (this.staminaMicroLabel) this.staminaMicroLabel.setText(vis.staminaLabel);
+
+    // CP pip strip visibility + fill
+    this.cpPips.forEach(p => p.setVisible(vis.showCP));
+    this.cpLabel.setVisible(vis.showCP);
+    if (vis.showCP) {
+      const cp = state.comboPoints ?? 0;
+      const cap = state.comboPointsCap ?? 5;
+      for (let i = 0; i < this.cpPips.length; i++) {
+        const filled = i < cp;
+        this.cpPips[i].setFillStyle(filled ? SHADOWBLADE_PALETTE.comboPoint : SHADOWBLADE_PALETTE.comboPointEmpty);
+      }
+      this.cpLabel.setText(`CP ${cp}/${cap}`);
+      // Motion: pip fill 180ms scale pulse on newly-filled pip(s)
+      if (cp > this.lastCP) {
+        for (let i = this.lastCP; i < cp && i < this.cpPips.length; i++) {
+          const pip = this.cpPips[i];
+          this.scene.tweens.add({ targets: pip, scale: 1.15, duration: 90, yoyo: true });
+        }
+      } else if (cp < this.lastCP) {
+        // Drain: left-to-right white flash with 60ms stagger, 240ms total
+        for (let i = 0; i < this.lastCP; i++) {
+          const pip = this.cpPips[i];
+          this.scene.tweens.add({
+            targets: pip, alpha: 0.3, duration: 60, yoyo: true, delay: i * 60,
+          });
+        }
+      }
+      this.lastCP = cp;
+    } else {
+      this.lastCP = 0;
+    }
+
+    // Stealth indicator visibility + alpha pulse
+    this.stealthPill.setVisible(vis.showStealth);
+    this.stealthLabel.setVisible(vis.showStealth);
+    if (vis.showStealth) {
+      const charges = state.stealthCharges ?? 0;
+      this.stealthLabel.setText(`STEALTH ×${charges}`);
+      // 200ms fade-in on transition from 0
+      if (this.lastStealth === 0) {
+        this.stealthPill.setAlpha(0);
+        this.stealthLabel.setAlpha(0);
+        this.scene.tweens.add({
+          targets: [this.stealthPill, this.stealthLabel],
+          alpha: 1, duration: 200,
+        });
+      }
+      // Maintain a 0.6Hz pulse (1670ms cycle) on alpha 0.7 ↔ 1.0 if not already running
+      if (!this.stealthPulseTween || !this.stealthPulseTween.isPlaying()) {
+        this.stealthPulseTween = this.scene.tweens.add({
+          targets: this.stealthPill,
+          alpha: { from: 0.7, to: 1.0 },
+          duration: 833, yoyo: true, repeat: -1,
+        });
+      }
+      this.lastStealth = charges;
+    } else {
+      if (this.stealthPulseTween) {
+        this.stealthPulseTween.stop();
+        this.stealthPulseTween = undefined;
+      }
+      this.lastStealth = 0;
+    }
   }
 
   // ── Public update ──────────────────────────────────────────────
@@ -254,6 +414,9 @@ export class CombatHUD {
       const remaining = Math.max(0, heroCooldown / 1000);
       this.cooldownText.setText(remaining > 0 ? remaining.toFixed(1) : '▶');
     }
+
+    // Phase 9 (Design v2): class-conditional widgets driven by CombatState.
+    this.updateShadowbladeWidgets(state);
   }
 
   // ── Tween helper ───────────────────────────────────────────────

@@ -30,6 +30,31 @@ export const LAYOUT = {
   fadeDuration: 400,
 } as const;
 
+/**
+ * Phase 9 (Design v2): Shadowblade + status-stat + new-tile semantic palette.
+ *
+ * Each entry is a single-use semantic token (never reused as a generic accent).
+ * Hex values are LOCKED by design/04_neutral_and_combos.md §7 (tiles) and the
+ * Phase 9 UI-SPEC §Color (Shadowblade resources + VIT/DEX/INT/SPI codes).
+ *
+ * DO NOT modify the existing COLORS / FONTS / LAYOUT exports above -- those are
+ * the v1 design system. SHADOWBLADE_PALETTE is the v2 extension.
+ */
+export const SHADOWBLADE_PALETTE = {
+  shadowblade: 0x7E5BEF,
+  comboPoint: 0xE03A6B,
+  comboPointEmpty: 0x3a1a26,
+  stealth: 0xc8a8ff,
+  poison: 0x6BBF59,
+  vit: 0xff6666,
+  dex: 0xf0a020,
+  int: 0x9966ff,
+  spi: 0x22cc44,
+  library: 0x7E5BEF,         // LOCKED -- design/04 §7
+  arena: 0xC12B2B,           // LOCKED
+  shrineOfPact: 0x5A2A6B,    // LOCKED
+} as const;
+
 export function createButton(
   scene: Phaser.Scene,
   x: number,
