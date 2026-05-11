@@ -7,7 +7,7 @@ import { bankRunRewards, getStorehouseEffects } from '../systems/MetaProgression
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import type { CombatStats } from '../systems/combat/CombatStats';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 export class DeathScene extends Scene {

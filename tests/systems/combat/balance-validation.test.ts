@@ -25,6 +25,7 @@ const STARTER_DECK = [
 function makeStarterRun(): RunState {
   return {
     runId: 'balance-test',
+    seed: 'test-seed',
     generation: 1,
     startedAt: Date.now(),
     hero: {
@@ -42,14 +43,19 @@ function makeStarterRun(): RunState {
     deck: {
       active: [...STARTER_DECK],
       inventory: {},
-      upgraded: [],
+      upgraded: STARTER_DECK.map(() => false),
       droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 

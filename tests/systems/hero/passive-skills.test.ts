@@ -9,6 +9,7 @@ import type { RunState, HeroState } from '../../../src/state/RunState';
 function makeRun(totalXP: number): RunState {
   return {
     runId: 'test',
+    seed: 'test-seed',
     generation: 1,
     startedAt: 0,
     hero: {
@@ -24,9 +25,14 @@ function makeRun(totalXP: number): RunState {
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
-  } as RunState;
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
+  };
 }
 
 function makeHero(): HeroState {

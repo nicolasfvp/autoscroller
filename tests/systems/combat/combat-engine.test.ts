@@ -1,7 +1,6 @@
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
-import type { CombatState } from '../../../src/systems/combat/CombatState';
 import type { RunState } from '../../../src/state/RunState';
 import type { EnemyDefinition } from '../../../src/data/types';
 import { loadAllData } from '../../../src/data/DataLoader';
@@ -19,6 +18,7 @@ vi.mock('../../../src/core/EventBus', () => ({
 function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): RunState {
   return {
     runId: 'test-run',
+    seed: 'test-seed',
     generation: 1,
     startedAt: Date.now(),
     hero: {
@@ -36,14 +36,19 @@ function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): R
     deck: {
       active: deckActive,
       inventory: {},
-      upgraded: [false, false, false],
+      upgraded: deckActive.map(() => false),
       droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 50, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 
@@ -64,11 +69,8 @@ function makeMockEnemy(): EnemyDefinition {
 describe('CombatEngine', () => {
   let engine: CombatEngine;
 
-  beforeAll(() => {
-    loadAllData();
-  });
-
   beforeEach(() => {
+    loadAllData();
     mockEmit.mockClear();
     const run = makeMockRun();
     const enemy = makeMockEnemy();

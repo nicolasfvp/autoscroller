@@ -4,7 +4,6 @@ import {
   getEnemyPoolForTerrain,
   rollTreasureLoot,
   rollTileDrops,
-  setRNG,
   resetRNG,
   type RNG,
 } from '../../src/systems/LootGenerator';

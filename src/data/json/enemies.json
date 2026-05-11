@@ -133,18 +133,18 @@
     "name": "Demon Lord",
     "type": "boss",
     "bossType": "demon",
-    "baseHP": 250,
+    "baseHP": 450,
     "baseDefense": 1,
     "attack": {
-      "damage": 5,
+      "damage": 4,
       "defense": 0,
       "pattern": "scaling"
     },
-    "attackCooldown": 2500,
+    "attackCooldown": 2800,
     "behaviors": [
       {
         "type": "drain",
-        "healPercent": 4
+        "healPercent": 15
       }
     ],
     "goldReward": {
@@ -166,19 +166,19 @@
     "name": "Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 1440,
-    "baseDefense": 10,
+    "baseHP": 700,
+    "baseDefense": 8,
     "attack": {
-      "damage": 5,
-      "defense": 5,
+      "damage": 4,
+      "defense": 4,
       "pattern": "scaling"
     },
-    "attackCooldown": 3000,
+    "attackCooldown": 3200,
     "behaviors": [
       {
         "type": "shield",
-        "interval": 10000,
-        "shieldAmount": 20
+        "interval": 8000,
+        "shieldAmount": 15
       }
     ],
     "goldReward": {
@@ -200,19 +200,19 @@
     "name": "Blood Reaver",
     "type": "boss",
     "bossType": "berserker",
-    "baseHP": 720,
+    "baseHP": 850,
     "baseDefense": 3,
     "attack": {
-      "damage": 13,
+      "damage": 10,
       "pattern": "random",
       "specialEffect": "double"
     },
-    "attackCooldown": 1800,
+    "attackCooldown": 2000,
     "behaviors": [
       {
         "type": "enrage",
-        "hpThreshold": 0.3,
-        "attackSpeedMultiplier": 2
+        "hpThreshold": 0.4,
+        "attackSpeedMultiplier": 1.5
       }
     ],
     "goldReward": {
@@ -235,13 +235,13 @@
     "type": "boss",
     "bossType": "mage",
     "baseHP": 960,
-    "baseDefense": 5,
+    "baseDefense": 4,
     "attack": {
-      "damage": 8,
+      "damage": 7,
       "pattern": "conditional",
       "specialEffect": "debuff"
     },
-    "attackCooldown": 2200,
+    "attackCooldown": 2400,
     "behaviors": [],
     "goldReward": {
       "min": 110,
@@ -262,19 +262,19 @@
     "name": "Ancient Dragon",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 1100,
-    "baseDefense": 7,
+    "baseHP": 1200,
+    "baseDefense": 6,
     "attack": {
-      "damage": 9,
+      "damage": 8,
       "pattern": "scaling",
       "specialEffect": "double"
     },
-    "attackCooldown": 2200,
+    "attackCooldown": 2400,
     "behaviors": [
       {
         "type": "enrage",
-        "hpThreshold": 0.25,
-        "attackSpeedMultiplier": 1.8
+        "hpThreshold": 0.3,
+        "attackSpeedMultiplier": 1.5
       },
       {
         "type": "multi_hit",
@@ -301,23 +301,23 @@
     "name": "Swamp Hydra",
     "type": "boss",
     "bossType": "hydra",
-    "baseHP": 900,
+    "baseHP": 1000,
     "baseDefense": 3,
     "attack": {
-      "damage": 6,
+      "damage": 5,
       "pattern": "random",
       "specialEffect": "debuff"
     },
-    "attackCooldown": 1800,
+    "attackCooldown": 2000,
     "behaviors": [
       {
         "type": "multi_hit",
         "hitCount": 3,
-        "damageMultiplier": 0.45
+        "damageMultiplier": 0.4
       },
       {
         "type": "drain",
-        "healPercent": 30
+        "healPercent": 15
       }
     ],
     "goldReward": {

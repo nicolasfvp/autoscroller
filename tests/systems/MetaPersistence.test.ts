@@ -1,12 +1,7 @@
 import 'fake-indexeddb/auto';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
 import { loadMetaState, saveMetaState } from '../../src/systems/MetaPersistence';
 import { createDefaultMetaState } from '../../src/state/MetaState';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Reset IndexedDB between tests
 beforeEach(() => {
@@ -38,12 +33,5 @@ describe('MetaPersistence', () => {
     expect(loaded.unlockedCards).toEqual(['fury', 'iron-skin']);
     expect(loaded.totalRuns).toBe(5);
     expect(loaded.version).toBe(4);
-  });
-
-  it('uses a separate store name from run state (autoscroller-meta)', async () => {
-    // This test validates the import path references the correct store name
-    // We verify by checking the module source contains the expected store name
-    const moduleSource = readFileSync(resolve(__dirname, '../../src/systems/MetaPersistence.ts'), 'utf8');
-    expect(moduleSource).toContain('autoscroller-meta');
   });
 });

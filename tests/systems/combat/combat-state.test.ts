@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createCombatState, CombatState } from '../../../src/systems/combat/CombatState';
+import { createCombatState } from '../../../src/systems/combat/CombatState';
 import type { RunState } from '../../../src/state/RunState';
 import type { EnemyDefinition } from '../../../src/data/types';
 
@@ -16,6 +16,7 @@ function makeMockRun(overrides?: Partial<{
 }>): RunState {
   return {
     runId: 'test-run',
+    seed: 'test-seed',
     generation: 1,
     startedAt: Date.now(),
     hero: {
@@ -39,8 +40,13 @@ function makeMockRun(overrides?: Partial<{
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 50, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
+    stopAtShop: true,
+    combatSpeed: 1,
+    mapSpeed: 1,
+    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 
@@ -94,7 +100,7 @@ describe('CombatState', () => {
     const slime = makeMockEnemy();
     const wolf: EnemyDefinition = { ...makeMockEnemy(), id: 'wolf', name: 'Wolf' };
 
-    const stateSlime = createCombatState(run, slime);
+    createCombatState(run, slime);
     const stateWolf = createCombatState(run, wolf);
 
     // Different enemy -> different seed -> (very likely) different order

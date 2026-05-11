@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { FONTS, LAYOUT } from '../ui/StyleConstants';
+import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
 export class RunTransitionScene extends Scene {
