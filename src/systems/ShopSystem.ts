@@ -4,6 +4,7 @@ import difficultyConfig from '../data/difficulty.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
 import type { SynergyBuff } from './SynergyResolver';
+import { eventBus } from '../core/EventBus';
 
 const pricing = (difficultyConfig as any).pricing;
 
@@ -168,6 +169,15 @@ export class ShopSystem {
 
   static buildAvailableRelicIds(metaUnlockedRelics: string[]): string[] {
     return getAvailableRelics(metaUnlockedRelics).map(r => r.id);
+  }
+
+  /**
+   * Phase 9 Task 5: notify the rest of the engine that a shop visit started.
+   * ShopScene calls this in its `create()` hook so shop_visited relic
+   * triggers fire exactly once per visit (not once per UI interaction).
+   */
+  static notifyShopVisited(): void {
+    eventBus.emit('combat:shop-visited', {});
   }
 
   static sellTile(runState: RunState, tileType: string): boolean {

@@ -8,8 +8,8 @@ import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
 import { CardResolver } from './CardResolver';
 import { EnemyAI } from './EnemyAI';
-import { SynergySystem } from './SynergySystem';
-import { resolveCardPlayedRelicBonus } from './RelicSystem';
+import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
+import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { rand } from '../SharedRNG';
 import { getRun } from '../../state/RunState';
@@ -192,6 +192,18 @@ export class CombatEngine {
     // Resolve card (with damage multiplier from relics)
     const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier, isUpgraded);
 
+    // Phase 9 Task 5: cooldown_reduction synergy bonus mutates CombatState
+    // directly (CardResolver.applyEffect is a no-op for that bonus type).
+    if (synergy) {
+      applyDirectSynergyBonus(synergy, this.state);
+      // combo_played relic trigger fires whenever a synergy resolves.
+      dispatchTriggerRelics('combo_played', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:combo-played', {
+        displayName: synergy.displayName,
+        comboPointsAfter: this.state.comboPoints,
+      });
+    }
+
     if (manaRefund > 0) {
       this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
     }
@@ -304,6 +316,8 @@ export class CombatEngine {
         stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
       });
       if (!state.poisonDecayDisabled) state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      // dot_tick relic trigger fires once per active DoT stack type.
+      dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
     }
 
     // Bleed: per design/00 §3, similar shape — class-internal (warrior-leaning).
@@ -354,6 +368,15 @@ export class CombatEngine {
 
   private advanceDeckPointer(): void {
     this.deckPointer++;
+    // Phase 9 Task 5: card_drawn trigger fires once per advance (the "next"
+    // card is now the active card). Dispatched here so it stays in lockstep
+    // with whatever the next pointer points at — including post-reshuffle.
+    const nextCardId = this.state.deckOrder[this.deckPointer >= this.state.deckOrder.length ? 0 : this.deckPointer];
+    if (nextCardId) {
+      dispatchTriggerRelics('card_drawn', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:card-drawn', { cardId: nextCardId });
+    }
+
     if (this.deckPointer >= this.state.deckOrder.length) {
       this.deckPointer = 0;
       this.stats.reshuffles++;
@@ -420,6 +443,9 @@ export class CombatEngine {
     if (this.state.enemyHP <= 0) {
       this.stats.result = 'victory';
       this.isFinished = true;
+      // Phase 9 Task 5: enemy_killed relic trigger fires once on victory.
+      dispatchTriggerRelics('enemy_killed', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:enemy-killed', { enemyId: this.state.enemyId });
       eventBus.emit('combat:end', { result: 'victory', enemyId: this.state.enemyId });
       return true;
     }

@@ -445,6 +445,37 @@ describe('DEX cooldown reduction', () => {
   });
 });
 
+// -- RelicSystem trigger dispatch (Task 5) -------------------------------
+
+describe('RelicSystem — Phase 9 trigger dispatch', () => {
+  it('dispatchTriggerRelics is a safe no-op when no relics match the trigger', async () => {
+    const { dispatchTriggerRelics } = await import('../../../src/systems/combat/RelicSystem');
+    const state = makeState();
+    // No active relics, no exception.
+    expect(() => dispatchTriggerRelics('enemy_killed', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('combo_played', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('dot_tick', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('card_drawn', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('rest_used', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('shop_visited', [], state)).not.toThrow();
+    expect(() => dispatchTriggerRelics('stat_changed', [], state)).not.toThrow();
+  });
+
+  it('dispatchTriggerRelics ignores relics whose trigger does not match', async () => {
+    const { dispatchTriggerRelics } = await import('../../../src/systems/combat/RelicSystem');
+    const state = makeState();
+    // Reference an existing relic that has trigger='passive' (e.g. iron_will
+    // is damage_taken; arcane_crystal is passive). Since we don't know the
+    // full relic set here, the assertion is that no field on state shifts
+    // when dispatching enemy_killed with an unrelated active relic id.
+    const before = { ...state };
+    dispatchTriggerRelics('enemy_killed', ['arcane_crystal'], state);
+    expect(state.heroHP).toBe(before.heroHP);
+    expect(state.enemyHP).toBe(before.enemyHP);
+    expect(state.comboPoints).toBe(before.comboPoints);
+  });
+});
+
 // -- Poison per-tick damage formula --------------------------------------
 
 describe('Poison DoT — per-tick damage formula (RESEARCH A2)', () => {
