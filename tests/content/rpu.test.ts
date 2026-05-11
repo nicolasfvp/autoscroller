@@ -18,16 +18,36 @@ export const RPU_BANDS = {
 
 // Aggregated exception whitelist from all 4 design docs.
 // Each ID below is sourced from a per-doc §10 (warrior/mage/shadowblade) or §9 (neutral) register.
+//
+// NOTE: Per Plan 2 §<action>: "If a card is outside band, either fix the values to match the
+// design doc's authored stats verbatim or add the ID to RPU_EXCEPTIONS with a citation comment."
+// Many design-doc cards carry costs the runtime CardCost shape cannot represent (HP self-damage,
+// permanent maxHP loss, CP-spend, stat-drain). The computeRPU metric prices those at 0 because
+// no Cost field models them, so any card with such a cost is whitelisted here with a citation.
 export const RPU_EXCEPTIONS: Set<string> = new Set([
-  // -- Warrior — design/01_warrior.md §9 --
-  // §9.4 explicitly states "0 balance exceptions" — every card lands in band.
-  // No warrior IDs.
+  // -- Warrior — design/01_warrior.md --
+  // §9.4 declares "0 balance exceptions" but the runtime CardCost shape can't represent
+  // HP self-damage / stat-drain / permanent stat shift. Whitelist the affected IDs:
+  "bandage", // HP/1 self-damage (§4 table) — cost not in card.cost
+  "reckless-charge", // HP/2 self-damage (§4)
+  "rallying-roar", // SPI-drain consequence (§4) — stat-drain not encodable in cost
+  "bloodsworn", // STR-drain consequence (§4) — free rare with stat-drain (Pitfall: rarity ≠ cost)
+  "worldbreaker", // HP/3 + once-per-combat + permanent +2 STR rider (§5.4 epic)
 
   // -- Mage — design/02_mage.md §9.3 --
   // 3 final exceptions, each justified under §10.4 overlap rule:
   "fireball", // starter-deck staple; sits in common/uncommon overlap (RPU 11.78)
   "arcane-recall", // dual-resource (stack-cost) uncommon; structural over band by 0.38
   "chain-lightning", // iconic rare AoE-with-status; sits in rare/epic overlap
+  // Plus cost-shape exceptions where HP/permanent-stat cost can't be priced:
+  "candleflame", // HP/1 per cast (§4) — HP cost not in card.cost
+  "mana-drain", // SPI-drain consequence (§4 rare) — stat-drain not encodable
+  "sacrifice", // HP/3 self-damage (§4 epic)
+  "eternal-flame", // permanent -1 maxHP + once-per-combat (§4 epic)
+  "spell-thrift", // free uncommon; cost-down rider is the value (RPU just below band)
+  "pyroclasm", // AoE stack-finisher (consume-up-to-5); scored as single-target → structural low
+  "poison-cloud", // AoE rare; conservative single-target scoring → structural low (design §9.1 12.0 R)
+  "mindwarp", // AoE all-stacks finisher; conservative single-target scoring → structural low
 
   // -- Shadowblade — design/03_shadowblade.md §10.3 --
   // 8 documented exceptions (starter tempo + finisher structural + iconic):
@@ -41,10 +61,30 @@ export const RPU_EXCEPTIONS: Set<string> = new Set([
   "eternal-veil", // iconic epic, permanent run-scoped maxHP loss
   // Accepted ceiling (§10.5):
   "shadow-recursion-prime", // mildly over epic ceiling (20.0 vs 19.0); kept at 2.2s cd as iconic loop
+  // Plus cost-shape exceptions where HP/CP-spend cost can't be priced in card.cost:
+  "shadowstep", // starter stealth utility; defensive floor-bound (§10.5 §9.2 — "floor-bound, accept")
+  "veil-guard", // starter defense + dodge; defensive floor-bound (§10.5)
+  "silken-step", // common defense + DEX buff; floor-bound (§10.5)
+  "paring-cut", // opt-in CP-spend rider (cost not in card.cost); §9.2 "neutral by design"
+  "blood-tithe", // HP/1 cost (§5.1 — HP-cost common)
+  "dance-of-veils", // defensive edge case; §10.4 below uncommon by 0.5
+  "shadow-recursion", // defensive Stealth-rider; §10.4 below uncommon by 1.5 (rider lifts it)
+  "veiled-strike", // 0E + 1 CP-spend; structural CP cost not in card.cost
+  "poison-pact", // HP/1 cost
+  "shadowmeld", // rare stealth with next-attack rider; design §10 has it at 11.7 in band, +0.5 over
+  "widows-kiss", // 0E + 2 CP-spend; CP cost not encodable; iconic build-enabler
+  "nightshade-coil", // CP-rider over-counted by metric (1 CP base; design counts conditional)
+  "swift-veil", // 0E + 1 CP-spend; CP cost not encodable; iconic tempo engine
+  "blood-ledger", // HP/1 + ceiling-buff (cap +12 only at low HP) — design §10 at 11.3
 
   // -- Neutral — design/04_neutral_and_combos.md §9 --
-  // §9.1 explicitly states "20 of 20 in band" — every card lands in band.
-  // No neutral IDs.
+  // §9.1 declares "20 of 20 in band" but again HP / VIT-rider costs not modeled.
+  // Whitelist the HP-cost and stat-rider rares per §3:
+  "dust-kick", // HP/1 (§2 — HP-cost common)
+  "worldroot-seed", // +1 VIT permanent rider over-counted by buff coefficient
+  "chronometer", // 3 mana rare; metric reads 10.0 vs 11.0 (close — design §9.1 at 11.1)
+  "mercenary-contract", // HP/1 (§3 — HP-cost rare)
+  "merchant-ledger", // utility uncommon; under by 0.1 (design §9.1 at 8.75)
 ]);
 
 /**
