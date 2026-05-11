@@ -199,3 +199,63 @@ describe('CombatState', () => {
     });
   });
 });
+
+describe('CombatState — Phase 9 transient fields', () => {
+  it('initializes Shadowblade resources (comboPoints/stealth/evade) at defaults', () => {
+    const run = makeMockRun();
+    const enemy = makeMockEnemy();
+    const state = createCombatState(run, enemy);
+
+    expect(state.comboPoints).toBe(0);
+    expect(state.comboPointsCap).toBe(5);
+    expect(state.stealthCharges).toBe(0);
+    expect(state.stealthCap).toBe(4);
+    expect(state.evadeNextHit).toBe(false);
+  });
+
+  it('initializes all elemental stack pools at 0', () => {
+    const run = makeMockRun();
+    const enemy = makeMockEnemy();
+    const state = createCombatState(run, enemy);
+
+    expect(state.poisonStacks).toBe(0);
+    expect(state.poisonDecayDisabled).toBe(false);
+    expect(state.bleedStacks).toBe(0);
+    expect(state.burnStacks).toBe(0);
+    expect(state.freezeStacks).toBe(0);
+    expect(state.shockStacks).toBe(0);
+    expect(state.arcaneStacks).toBe(0);
+    expect(state.arcaneStacksCap).toBe(10);
+    expect(state.rageStacks).toBe(0);
+  });
+
+  it('seeds heroDexterity from run.hero.dexterity + statDeltas.dex', () => {
+    const run = makeMockRun();
+    run.hero.dexterity = 8;
+    run.hero.statDeltas = { dex: 3 };
+    const state = createCombatState(run, makeMockEnemy());
+    expect(state.heroDexterity).toBe(11);
+  });
+
+  it('seeds heroVitality from resolved stats (baseStats + delta)', () => {
+    const run = makeMockRun();
+    run.hero.vitality = 2;
+    run.hero.statDeltas = { vit: 5 };
+    const state = createCombatState(run, makeMockEnemy());
+    expect(state.heroVitality).toBe(7);
+  });
+
+  it('seeds all four per-combat stat axes from resolveHeroStats', () => {
+    const run = makeMockRun();
+    run.hero.vitality = 1;
+    run.hero.dexterity = 2;
+    run.hero.intellect = 3;
+    run.hero.spirit = 4;
+    run.hero.statDeltas = {};
+    const state = createCombatState(run, makeMockEnemy());
+    expect(state.heroVitality).toBe(1);
+    expect(state.heroDexterity).toBe(2);
+    expect(state.heroIntellect).toBe(3);
+    expect(state.heroSpirit).toBe(4);
+  });
+});

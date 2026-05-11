@@ -4,6 +4,7 @@
 import type { RunState } from '../../state/RunState';
 import type { EnemyDefinition, BossBehavior } from '../../data/types';
 import { applyPassiveRelics, applyOnCombatStartRelics } from './RelicSystem';
+import { resolveHeroStats } from '../hero/HeroStatsResolver';
 import { resolvePassives, applyPassiveModifiersToCombatState } from '../hero/PassiveSkillSystem';
 
 export interface CombatState {
@@ -54,6 +55,30 @@ export interface CombatState {
   _bloodPactBonus: number;
   /** Whether phoenix_feather has already been used this combat */
   phoenixUsed: boolean;
+
+  // ── Phase 9: per-combat stat axes (seeded from resolveHeroStats(run)) ─
+  heroVitality: number;
+  heroDexterity: number;
+  heroIntellect: number;
+  heroSpirit: number;
+
+  // ── Phase 9: Shadowblade resources ───────────────────────────────────
+  comboPoints: number;
+  comboPointsCap: number;       // default 5; chalice-of-five-blades -> 8
+  stealthCharges: number;
+  stealthCap: number;           // default 4
+  evadeNextHit: boolean;        // 1-hit dodge guarantee while stealth charges > 0
+
+  // ── Phase 9: DoT + status stack pools (reset per combat) ─────────────
+  poisonStacks: number;
+  poisonDecayDisabled: boolean; // widows-kiss / empress-fang flip this
+  bleedStacks: number;
+  burnStacks: number;
+  freezeStacks: number;
+  shockStacks: number;
+  arcaneStacks: number;         // cap = arcaneStacksCap (Pitfall 8: cap-and-drop)
+  arcaneStacksCap: number;      // default 10
+  rageStacks: number;
 }
 
 /**
@@ -96,7 +121,38 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     firstCardDamageMultiplier: 1.0,
     _bloodPactBonus: 0,
     phoenixUsed: false,
+
+    // -- Phase 9: per-combat stat axes seeded from resolveHeroStats(run) --
+    heroVitality: 0,
+    heroDexterity: 0,
+    heroIntellect: 0,
+    heroSpirit: 0,
+
+    // -- Phase 9: Shadowblade resources --
+    comboPoints: 0,
+    comboPointsCap: 5,
+    stealthCharges: 0,
+    stealthCap: 4,
+    evadeNextHit: false,
+
+    // -- Phase 9: DoT + status stack pools --
+    poisonStacks: 0,
+    poisonDecayDisabled: false,
+    bleedStacks: 0,
+    burnStacks: 0,
+    freezeStacks: 0,
+    shockStacks: 0,
+    arcaneStacks: 0,
+    arcaneStacksCap: 10,
+    rageStacks: 0,
   };
+
+  // -- Phase 9: seed per-combat stat axes from resolved per-run stats --
+  const resolved = resolveHeroStats(run);
+  state.heroVitality = resolved.vit;
+  state.heroDexterity = resolved.dex;
+  state.heroIntellect = resolved.int;
+  state.heroSpirit = resolved.spi;
 
   // Apply passive (stat) relics immediately
   applyPassiveRelics(run.relics ?? [], state);
