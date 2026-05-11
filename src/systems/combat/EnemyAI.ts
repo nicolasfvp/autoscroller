@@ -169,32 +169,32 @@ export class EnemyAI {
 
   /**
    * Apply raw damage to hero, accounting for defense.
-   * Effective defense = heroDefense * heroDefenseMultiplier — Iron Body
-   * (1.1) absorbs more, mage's natural 0.8 absorbs less. Defense absorbs
-   * damage first, then remaining hits HP. Returns actual HP damage dealt.
-   * `skipRelics=true` is used by multi-hit attacks so iron_will/phoenix
-   * fire once for the whole attack, not once per hit.
+   * B.6: heroDefenseMultiplier scales defense *effectiveness*, not capacity:
+   *   - Iron Body (1.1) → +10% defense efficiency (less damage taken)
+   *   - Mage natural   (0.8) → -20% defense efficiency (more damage taken)
+   * Armor itself is consumed at face value (the raw `damage` amount), while
+   * the damage-blocked is computed against the scaled effectiveDefense.
+   * Returns actual HP damage dealt. `skipRelics=true` is used by multi-hit
+   * attacks so iron_will/phoenix fire once for the whole attack.
    */
   private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
     const damage = rawDamage;
     const multiplier = state.heroDefenseMultiplier ?? 1;
-    const effectiveDefense = Math.floor(state.heroDefense * multiplier);
+    const effectiveDefense = state.heroDefense * multiplier;
 
-    if (effectiveDefense >= damage) {
-      // Consume the unscaled equivalent of `damage` from the raw defense pool.
-      const consumed = multiplier > 0 ? Math.ceil(damage / multiplier) : 0;
-      state.heroDefense = Math.max(0, state.heroDefense - consumed);
-      return 0;
-    }
+    const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
+    // Armor consumed at face value — multiplier only shifts how much damage
+    // each point of armor blocks, not how fast armor itself depletes.
+    state.heroDefense = Math.max(0, state.heroDefense - damage);
 
-    const remaining = damage - effectiveDefense;
-    state.heroDefense = 0;
-    state.heroHP = Math.max(0, state.heroHP - remaining);
+    if (remaining > 0) {
+      state.heroHP = Math.max(0, state.heroHP - remaining);
 
-    // Apply damage_taken relics (iron_will, phoenix_feather) unless caller
-    // is batching them (multi-hit attacks invoke them once at the end).
-    if (!skipRelics) {
-      applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
+      // Apply damage_taken relics (iron_will, phoenix_feather) unless caller
+      // is batching them (multi-hit attacks invoke them once at the end).
+      if (!skipRelics) {
+        applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
+      }
     }
 
     return remaining;

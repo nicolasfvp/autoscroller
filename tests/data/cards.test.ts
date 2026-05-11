@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import cardsData from '../../src/data/json/cards.json';
 import type { CardDefinition } from '../../src/data/types';
 

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { openTreasure } from '../../src/systems/TreasureSystem';
-import { setRNG, resetRNG, type RNG } from '../../src/systems/LootGenerator';
+import { setRNG, resetRNG } from '../../src/systems/LootGenerator';
 
 function makeRunState(): any {
   return {

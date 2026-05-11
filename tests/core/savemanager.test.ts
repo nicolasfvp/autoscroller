@@ -75,7 +75,7 @@ describe('SaveManager', () => {
     manager.setupAutoSave(getState);
 
     // Emit combat:end
-    eventBus.emit('combat:end', { victory: true, goldEarned: 10, cardDrops: [] });
+    eventBus.emit('combat:end', { result: 'victory', enemyId: 'test' });
     // Wait for async save
     await new Promise((r) => setTimeout(r, 50));
     expect(saveSpy).toHaveBeenCalledTimes(1);

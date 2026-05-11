@@ -1,9 +1,34 @@
 import { get, set, del, createStore } from 'idb-keyval';
 import { migrateRunState, type RunState } from '../state/RunState';
 import { eventBus } from './EventBus';
+import { loadMetaState } from '../systems/MetaPersistence';
 
 const gameStore = createStore('rogue-scroll-db', 'save-store');
 const SAVE_KEY = 'active-run';
+
+// Cache the MetaState autoSave preference briefly so doSave doesn't hit
+// IndexedDB on every combat:end / loop:completed event. SettingsScene
+// updates MetaState directly, so a short TTL keeps toggles snappy.
+const AUTO_SAVE_CACHE_TTL_MS = 1000;
+let cachedAutoSaveEnabled: boolean | null = null;
+let cachedAutoSaveAt = 0;
+
+async function isAutoSaveAllowedByMeta(): Promise<boolean> {
+  const now = Date.now();
+  if (cachedAutoSaveEnabled !== null && now - cachedAutoSaveAt < AUTO_SAVE_CACHE_TTL_MS) {
+    return cachedAutoSaveEnabled;
+  }
+  try {
+    const meta = await loadMetaState();
+    cachedAutoSaveEnabled = meta.autoSave !== false;
+  } catch {
+    // If MetaState can't be read, default to enabled — saving is the safer
+    // failure mode than silently dropping run progress.
+    cachedAutoSaveEnabled = true;
+  }
+  cachedAutoSaveAt = now;
+  return cachedAutoSaveEnabled;
+}
 
 export class SaveManager {
   async save(state: RunState): Promise<void> {
@@ -53,9 +78,15 @@ export class SaveManager {
    * can disable auto-save via MetaState.autoSave without re-subscribing.
    */
   setupAutoSave(getState: () => RunState, isEnabled?: () => boolean): () => void {
-    const doSave = () => {
+    const doSave = async () => {
+      // Caller-provided gate first (legacy callers may pass a closure-cached flag).
       if (isEnabled && !isEnabled()) return;
-      this.save(getState());
+      // Always honor MetaState.autoSave === false. Read lazily so SettingsScene
+      // toggles take effect without re-subscribing. Cached briefly inside
+      // isAutoSaveAllowedByMeta() to avoid IDB pressure under bursty events.
+      const allowed = await isAutoSaveAllowedByMeta();
+      if (!allowed) return;
+      await this.save(getState());
     };
     eventBus.on('combat:end', doSave);
     eventBus.on('loop:completed', doSave);
