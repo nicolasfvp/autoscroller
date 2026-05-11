@@ -61,6 +61,8 @@ export interface CardDefinition {
   targeting: "single" | "aoe" | "lowest-hp" | "random" | "self";
   /** Card rarity tier */
   rarity: "common" | "uncommon" | "rare" | "epic";
+  /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
+  classRestriction?: "warrior" | "mage" | "shadowblade" | "neutral";
 }
 
 // -- Enemy Types --
@@ -168,6 +170,8 @@ export interface RelicDefinition {
   color: number;
   unlockSource?: string;
   unlockTier?: number;
+  /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
+  classRestriction?: "warrior" | "mage" | "shadowblade" | "neutral";
 }
 
 // -- Pricing & Economy Types --
