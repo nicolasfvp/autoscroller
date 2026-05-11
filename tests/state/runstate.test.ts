@@ -86,11 +86,48 @@ describe('RunState v4 (Phase 9) — stat axes + statDeltas wiring', () => {
   });
 
   it('createNewRun for warrior has vitality/dexterity/intellect/spirit === 0', () => {
-    
+
     const run = createNewRun(undefined, 1, 'warrior');
     expect(run.hero.vitality).toBe(0);
     expect(run.hero.dexterity).toBe(0);
     expect(run.hero.intellect).toBe(0);
     expect(run.hero.spirit).toBe(0);
+  });
+});
+
+describe('RunState — Shadowblade class (Phase 9 Plan 3)', () => {
+  it('createNewRun shadowblade returns base stats per design/03 §2', () => {
+    const run = createNewRun(undefined, 1, 'shadowblade');
+    expect(run.hero.className).toBe('shadowblade');
+    expect(run.hero.maxHP).toBe(60);
+    expect(run.hero.currentHP).toBe(60);
+    expect(run.hero.maxStamina).toBe(50);
+    expect(run.hero.maxMana).toBe(20);
+    expect(run.hero.strength).toBe(1);
+    expect(run.hero.dexterity).toBe(8);
+    expect(run.hero.intellect).toBe(1);
+    expect(run.hero.vitality).toBe(0);
+    expect(run.hero.spirit).toBe(0);
+    expect(run.hero.defenseMultiplier).toBe(0.8);
+  });
+
+  it('createNewRun shadowblade has the 10-card starter deck (composition)', () => {
+    const run = createNewRun(undefined, 1, 'shadowblade');
+    expect(run.deck.active).toHaveLength(10);
+    // Composition (order is shuffled by SeededRNG, so check counts).
+    const counts = run.deck.active.reduce<Record<string, number>>((acc, id) => {
+      acc[id] = (acc[id] ?? 0) + 1;
+      return acc;
+    }, {});
+    expect(counts['backstab']).toBe(4);
+    expect(counts['eviscerate']).toBe(2);
+    expect(counts['shadowstep']).toBe(2);
+    expect(counts['toxic-coat']).toBe(1);
+    expect(counts['veil-guard']).toBe(1);
+  });
+
+  it('createNewRun shadowblade has empty statDeltas', () => {
+    const run = createNewRun(undefined, 1, 'shadowblade');
+    expect(run.hero.statDeltas).toEqual({});
   });
 });
