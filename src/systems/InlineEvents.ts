@@ -62,6 +62,7 @@ const EVENT_TABLE: EventOption[] = [
     apply(run) {
       const amount = 15 + Math.floor(rand() * 26);
       run.economy.gold += amount;
+      run.stats.goldEarned += amount;
       return { notifications: [{ label: `+${amount} Gold`, color: '#ffd700' }] };
     },
   },

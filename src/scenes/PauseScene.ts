@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { SCENE_KEYS, REGISTRY_KEYS } from '../state/SceneKeys';
+import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -56,11 +56,10 @@ export class PauseScene extends Scene {
       // Tear down the active run AND wipe the persisted save before
       // returning to the menu — otherwise MainMenu will offer "Continue"
       // pointing at the abandoned run.
-      clearRun();
-      await saveManager.clear();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
-      this.scene.stop(SCENE_KEYS.GAME);
-      this.scene.stop();
+      stopAllRunScenes(this, SCENE_KEYS.PAUSE);
+      await saveManager.clear();
+      clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
     });
 

@@ -30,6 +30,7 @@ export class SettingsScene extends Scene {
   }
 
   async create(): Promise<void> {
+    this.scene.bringToTop();
     // Load current settings
     this.metaState = await loadMetaState();
     this.sfxVolume = this.metaState.audioPrefs.sfxVolume;

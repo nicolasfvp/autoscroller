@@ -59,6 +59,7 @@ export class DeckCustomizationScene extends Scene {
   }
 
   create(data?: { parentScene?: string }): void {
+    this.scene.bringToTop();
     const run = getRun();
     this.deckOrder = [...run.deck.active];
     this.upgradedOrder = [...run.deck.upgraded];
@@ -339,62 +340,81 @@ export class DeckCustomizationScene extends Scene {
 
   private createDragVisual(cardId: string, x: number, y: number): Phaser.GameObjects.Container {
     const card = getCardById(cardId);
-    const w = 160;
-    const h = 200;
+    const w = 180;
+    const h = 240;
     const container = this.add.container(x, y);
     container.setDepth(1000);
 
     const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-    const bg = this.add.image(0, 0, 'deck_frame').setDisplaySize(w, h);
-    const stroke = this.add.rectangle(0, 0, w, h).setStrokeStyle(3, rarityColor);
-    container.add(bg);
-    container.add(stroke);
-
     const catColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
-    container.add(this.add.rectangle(0, -h / 2 + 4, w - 6, 8, catColor));
-
     const fontFamily = FONTS.family;
-    let yOff = -h / 2 + 24;
 
-    // Name. Drag visual upgrade state mirrors the source slot:
-    //  - from-deck: upgradedOrder at the original deck index
-    //  - from-dropped: dropped/loot cards are always non-upgraded
+    // Main Frame
+    const bg = this.add.image(0, 0, 'deck_frame').setDisplaySize(w, h);
+    // Darker inner background for text legibility
+    const innerBg = this.add.rectangle(0, 0, w - 12, h - 12, 0x050505, 0.4);
+    const stroke = this.add.rectangle(0, 0, w, h).setStrokeStyle(3, rarityColor);
+    container.add([bg, innerBg, stroke]);
+
+    // Top Category Strip
+    const topStrip = this.add.rectangle(0, -h / 2 + 6, w - 8, 10, catColor);
+    container.add(topStrip);
+
+    let currentY = -h / 2 + 25;
+
+    // Name
     const isUpgraded = this.dragFromDeck && this.dragDeckIndex >= 0
       ? (this.upgradedOrder[this.dragDeckIndex] ?? false)
       : false;
-    const name = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
-    container.add(this.add.text(0, yOff, name, {
-      fontSize: '18px', fontStyle: 'bold', color: isUpgraded ? COLORS.accent : '#ffffff', fontFamily,
-    }).setOrigin(0.5, 0));
-    yOff += 24;
+    const displayName = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
+    const nameText = this.add.text(0, currentY, displayName, {
+      fontSize: '18px', fontStyle: 'bold', color: isUpgraded ? COLORS.accent : '#ffffff',
+      fontFamily, stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(0.5, 0);
+    container.add(nameText);
+    currentY += 28;
+
+    // Illustration Area
+    if (this.textures.exists(`card_${cardId}`)) {
+      const img = this.add.image(0, currentY + 40, `card_${cardId}`);
+      const imgSize = 80;
+      const scale = Math.min(imgSize / img.width, imgSize / img.height);
+      img.setScale(scale);
+      
+      // Subtle frame for the image
+      const imgFrame = this.add.rectangle(0, currentY + 40, imgSize + 4, imgSize + 4, 0x000000, 0.3)
+        .setStrokeStyle(1, 0x444444);
+      container.add([imgFrame, img]);
+      currentY += imgSize + 12;
+    }
 
     // Description
     if (card) {
       const desc = (isUpgraded && card.upgraded?.description) ? card.upgraded.description : card.description;
-      const descText = this.add.text(0, yOff, desc, {
-        fontSize: '13px', color: COLORS.textPrimary, fontFamily,
-        wordWrap: { width: w - 16 }, align: 'center', lineSpacing: 2,
+      const descText = this.add.text(0, currentY, desc, {
+        fontSize: '12px', color: '#dddddd', fontFamily,
+        wordWrap: { width: w - 24 }, align: 'center', lineSpacing: 2,
       }).setOrigin(0.5, 0);
       container.add(descText);
-      yOff += descText.height + 10;
     }
 
-    // Stats line
+    // Stats Bar at the bottom
+    const statsY = h / 2 - 18;
     if (card) {
       const stats: string[] = [];
       stats.push(`${card.cooldown}s`);
-      if (card.cost?.stamina) stats.push(`${card.cost.stamina} Sta`);
-      if (card.cost?.mana) stats.push(`${card.cost.mana} Mana`);
-      if (card.cost?.defense) stats.push(`${card.cost.defense} Def`);
-      stats.push(card.targeting === 'single' ? 'Single' : card.targeting === 'aoe' ? 'AoE' : card.targeting);
-
-      container.add(this.add.text(0, yOff, stats.join(' · '), {
-        fontSize: '11px', color: COLORS.textSecondary, fontFamily,
-      }).setOrigin(0.5, 0));
+      if (card.cost?.stamina) stats.push(`${card.cost.stamina} St`);
+      if (card.cost?.mana) stats.push(`${card.cost.mana} Mp`);
+      if (card.cost?.defense) stats.push(`${card.cost.defense} Df`);
+      
+      const statsText = this.add.text(0, statsY, stats.join(' · '), {
+        fontSize: '11px', color: '#aaaaaa', fontStyle: 'bold', fontFamily,
+      }).setOrigin(0.5);
+      container.add(statsText);
     }
 
-    container.setAlpha(0.95);
-    this.tweens.add({ targets: container, scaleX: 1.02, scaleY: 1.02, duration: 100 });
+    container.setAlpha(1);
+    this.tweens.add({ targets: container, scaleX: 1.05, scaleY: 1.05, duration: 80 });
 
     return container;
   }

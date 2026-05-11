@@ -135,8 +135,6 @@ export class TileVisual extends Phaser.GameObjects.Container {
         this.bg.setStrokeStyle(2, 0x000000, 0);
       });
     }
-
-    scene.add.existing(this);
   }
 
   private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number): void {

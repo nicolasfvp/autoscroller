@@ -16,14 +16,16 @@ import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
-
 import { AudioManager } from '../systems/AudioManager';
+import { MapSpeedSlider } from '../ui/MapSpeedSlider';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
   private hud!: CombatHUD;
   private cardQueue!: CardQueueDisplay;
   private combatEffects!: CombatEffects;
+  private speedSlider!: MapSpeedSlider;
 
   // Visual representations
   private heroSprite!: Phaser.GameObjects.Sprite;
@@ -32,413 +34,209 @@ export class CombatScene extends Scene {
   private enemyAttackKey = '';
   private enemyDeathKey = '';
 
-  // Game speed multiplier (1x or 2x from settings)
   private gameSpeed: number = 1;
   private transitioning = false;
+  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string };
 
-  // Combat clock
-  private combatElapsed: number = 0;
-  private clockGraphics!: Phaser.GameObjects.Graphics;
-  private clockText!: Phaser.GameObjects.Text;
+  private onCardPlayed = (data: GameEvents['combat:card-played']) => {
+    if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+    if (data.damage > 0) {
+      AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+      const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
+      const heroAttackKey = `${sp}_attack`;
+      const heroIdleKey = `${sp}_idle`;
+      if (this.anims.exists(heroAttackKey)) {
+        this.heroSprite.play(heroAttackKey);
+        this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
+      }
+      if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
+      if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
+        this.enemySprite.setTint(0xff5555);
+        this.time.delayedCall(200, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite) this.enemySprite.clearTint(); });
+      }
+    }
+    this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
+  };
 
-  // Event handler references for cleanup
-  private onCardPlayed!: (data: GameEvents['combat:card-played']) => void;
-  private onSynergyTriggered!: (data: GameEvents['combat:synergy-triggered']) => void;
-  private onCardSkipped!: (data: GameEvents['combat:card-skipped']) => void;
-  private onDeckReshuffled!: (data: GameEvents['combat:deck-reshuffled']) => void;
-  private onEnemyAttack!: (data: GameEvents['combat:enemy-attack']) => void;
-  private onCombatEnd!: (data: GameEvents['combat:end']) => void;
+  private onSynergyTriggered = (e: GameEvents['combat:synergy-triggered']) => showSynergyFlash(this, e.bonus.type, e.bonus.value, e.displayName);
+
+  private onCardSkipped = () => this.cardQueue?.onCardSkipped(0);
+
+  private onDeckReshuffled = () => this.cardQueue?.onDeckReshuffled();
+
+  private onEnemyAttack = (data: GameEvents['combat:enemy-attack']) => {
+    if (data.damage > 0) AudioManager.playSFX(this, 'sfx_hurt', 0.6);
+    if (this.combatEffects) { this.combatEffects.floatingNumber(200, 320, data.damage, '#ff0000', '-'); this.combatEffects.screenShake(3, 150); }
+    this.heroSprite.setTint(0xff0000);
+    this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
+    if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyAttackKey)) {
+      this.enemySprite.play(this.enemyAttackKey);
+      this.enemySprite.once('animationcomplete', () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyIdleKey)) this.enemySprite.play(this.enemyIdleKey); });
+    }
+  };
+
+  private onCombatEnd = (eventData: GameEvents['combat:end']) => {
+    const currentRun = getRun();
+    currentRun.isInCombat = false;
+    const finalState = this.engine.getState();
+    currentRun.hero.currentHP = Math.max(0, finalState.heroHP);
+    currentRun.hero.currentStamina = finalState.heroStamina;
+    currentRun.hero.currentMana = finalState.heroMana;
+
+    const sp = getSpritePrefix(currentRun.hero.className ?? 'warrior');
+    const heroDeathKey = `${sp}_death`;
+
+    if (eventData.result === 'victory') {
+      if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyDeathKey)) this.enemySprite.play(this.enemyDeathKey);
+    } else {
+      if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
+    }
+
+    const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
+    const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
+    const displayText = this.add.text(400, 300, resultText, {
+      fontSize: '56px', fontFamily: '"Impact", "Arial Black", sans-serif', fontStyle: 'bold',
+      color: resultColor, stroke: '#000000', strokeThickness: 6, shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true }
+    }).setOrigin(0.5).setDepth(600);
+
+    this.time.delayedCall(1000, () => {
+      if (displayText) displayText.destroy();
+      const enemyDef = getEnemyById(this.initData.enemyId);
+      if (!enemyDef) return;
+
+      if (eventData.result === 'victory') {
+        const scaled = scaleEnemyForLoop(enemyDef, currentRun.loop.count, enemyDef.type === 'boss');
+        const xpEarned = getXPForEnemy(enemyDef.type);
+        earnXP(currentRun, xpEarned);
+        if (enemyDef.type === 'boss') {
+          currentRun.loop.lastBossDefeated = true;
+          currentRun.loop.bossesDefeated = (currentRun.loop.bossesDefeated ?? 0) + 1;
+        }
+        generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward, xpEarned);
+        this.scene.stop();
+        this.scene.resume(SCENE_KEYS.GAME);
+      } else {
+        loseAllRunXP(currentRun);
+        this.transitioning = true;
+        this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
+        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(SCENE_KEYS.GAME_OVER, { defeatedBy: enemyDef.name, enemyName: enemyDef.name, stats: this.engine.getStats() }));
+      }
+    });
+  };
 
   constructor() {
-    super('CombatScene');
+    super(SCENE_KEYS.COMBAT);
+  }
+ 
+  init(data: { enemyId: string; isBoss?: boolean; terrain?: string }): void {
+    console.log('[CombatScene] init() called with data:', data);
+    this.initData = data;
   }
 
-  private fadeToScene(sceneKey: string, data?: any): void {
-    if (this.transitioning) return;
-    this.transitioning = true;
-    this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start(sceneKey, data);
-    });
-  }
-
-  create(data: { enemyId: string; terrain?: string }): void {
+  create(): void {
+    this.cleanup();
+    const data = this.initData;
+    if (!data || !data.enemyId) {
+       this.scene.stop();
+       this.scene.resume(SCENE_KEYS.GAME);
+       return;
+    }
+    this.scene.bringToTop();
     this.transitioning = false;
-    this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
+    this.cameras.main.setBackgroundColor(0x000000);
+    console.log('[CombatScene] Creating combat scene...');
 
-    const run = getRun();
-    run.isInCombat = true;
+    try {
+      const run = getRun();
+      run.isInCombat = true;
 
-    AudioManager.stopAmbience(this, 500);
+      try {
+        AudioManager.stopAmbience(this, 500);
+      } catch (e) { console.warn("Audio stop failed", e); }
 
-    // Use combat speed from RunState (persists between battles)
-    this.gameSpeed = run.combatSpeed ?? 1;
+      this.gameSpeed = run.combatSpeed ?? 1;
+      this.cameras.main.setBackgroundColor(COLORS.background);
+      this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
-    // Background — terrain-based battle background
-    this.cameras.main.setBackgroundColor(COLORS.background);
-    const terrain = data.terrain ?? 'basic';
-    const battleBgKey = `bg_battle_${terrain}`;
-    if (this.textures.exists(battleBgKey)) {
-      this.add.image(400, 300, battleBgKey).setDisplaySize(800, 600).setDepth(0);
-    }
-
-    // Look up and scale enemy
-    const enemyDef = getEnemyById(data.enemyId);
-    if (!enemyDef) {
-      // Fallback: return to game if enemy not found
-      run.isInCombat = false;
-      this.fadeToScene('GameScene');
-      return;
-    }
-
-    const scaled = scaleEnemyForLoop(enemyDef, run.loop.count, enemyDef.type === 'boss');
-    // Create a scaled enemy definition for CombatState
-    const scaledEnemy = {
-      ...enemyDef,
-      baseHP: scaled.hp,
-      baseDefense: scaled.defense,
-      attack: { ...enemyDef.attack, damage: scaled.damage },
-    };
-
-    // Create combat state and engine
-    const combatState = createCombatState(run, scaledEnemy);
-    this.engine = new CombatEngine(combatState);
-
-    // ── Hero & Enemy visual representations ──────────────
-    // Hero (left side) - animated sprite at 4x scale (64x64 -> 256x256)
-    const sp = getSpritePrefix(run.hero.className ?? 'warrior');
-    const heroIdleKey = `${sp}_idle`;
-    const heroAttackKey = `${sp}_attack`;
-    const heroDeathKey = `${sp}_death`;
-    if (!this.anims.exists(heroIdleKey) && this.textures.exists(heroIdleKey)) {
-      this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
-    }
-    if (!this.anims.exists(heroAttackKey) && this.textures.exists(heroAttackKey)) {
-      this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
-    }
-    if (!this.anims.exists(heroDeathKey) && this.textures.exists(heroDeathKey)) {
-      this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
-    }
-    
-    // Check if texture exists, else fallback to knight_idle
-    if (this.textures.exists(heroIdleKey)) {
-      this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
-      this.heroSprite.play(heroIdleKey);
-    } else {
-      this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
-    }
-    
-    // Enemy (right side) - animated sprite or colored square fallback
-    this.enemyIdleKey = `${enemyDef.id}_idle`;
-    this.enemyAttackKey = `${enemyDef.id}_attack`;
-    this.enemyDeathKey = `${enemyDef.id}_death`;
-    const idleKey = this.enemyIdleKey;
-    const attackKey = this.enemyAttackKey;
-    const deathKey = this.enemyDeathKey;
-
-    const spriteKey = (enemyDef as any).spriteKey;
-    const enemyColor = enemyDef.color ?? 0xff0000;
-
-    if (this.textures.exists(idleKey)) {
-      if (!this.anims.exists(idleKey)) {
-        this.anims.create({ key: idleKey, frames: this.anims.generateFrameNumbers(idleKey, {}), frameRate: 4, repeat: -1 });
+      const terrain = data.terrain ?? 'basic';
+      const battleBgKey = `bg_battle_${terrain}`;
+      if (this.textures.exists(battleBgKey)) {
+        this.add.image(400, 300, battleBgKey).setDisplaySize(800, 600).setDepth(0);
       }
-      if (!this.anims.exists(attackKey) && this.textures.exists(attackKey)) {
-        this.anims.create({ key: attackKey, frames: this.anims.generateFrameNumbers(attackKey, {}), frameRate: 10, repeat: 0 });
+
+      const enemyDef = getEnemyById(data.enemyId);
+      if (!enemyDef) {
+        run.isInCombat = false;
+        this.scene.stop();
+        this.scene.resume(SCENE_KEYS.GAME);
+        return;
       }
-      if (!this.anims.exists(deathKey) && this.textures.exists(deathKey)) {
-        this.anims.create({ key: deathKey, frames: this.anims.generateFrameNumbers(deathKey, {}), frameRate: 8, repeat: 0 });
-      }
-      this.enemySprite = this.add.sprite(600, 350, idleKey).setDepth(10).setScale(4);
-      (this.enemySprite as Phaser.GameObjects.Sprite).play(idleKey);
-    } else if (spriteKey && this.textures.exists(spriteKey)) {
-      this.enemySprite = this.add.sprite(600, 350, spriteKey).setDisplaySize(128, 128).setDepth(10);
-    } else {
-      // Fallback: colored rectangle when sprite assets are missing
-      this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyColor).setDepth(10);
-    }
-    // Flip dark mage sprite that is inverted (feedback #27)
-    if (this.enemySprite instanceof Phaser.GameObjects.Sprite && enemyDef.id.includes('dark_mage')) {
-      this.enemySprite.setFlipX(true);
-    }
-    
-    // "VS" divider
-    this.add.text(400, 350, 'VS', {
-      fontSize: '28px',
-      fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-      stroke: '#000000',
-      strokeThickness: 2,
-    }).setOrigin(0.5).setDepth(10).setAlpha(0.5);
 
-    // Create UI components
-    this.hud = new CombatHUD(this);
-    this.cardQueue = new CardQueueDisplay(this);
-    this.combatEffects = new CombatEffects(this);
+      const scaled = scaleEnemyForLoop(enemyDef, run.loop.count, enemyDef.type === 'boss');
+      const scaledEnemy = {
+        ...enemyDef,
+        baseHP: scaled.hp,
+        baseDefense: scaled.defense,
+        attack: { ...enemyDef.attack, damage: scaled.damage },
+      };
 
-    // ── Elapsed combat clock (below cooldown arc, top-center) ──
-    this.combatElapsed = 0;
-    const CLOCK_X = 400;
-    const CLOCK_Y = 72;  // below the cooldown arc at y=34
-    const CLOCK_R = 16;
+      const combatState = createCombatState(run, scaledEnemy);
+      this.engine = new CombatEngine(combatState);
 
-    // Background
-    this.add.circle(CLOCK_X, CLOCK_Y, CLOCK_R + 2, 0x000000, 0.5).setDepth(300).setScrollFactor(0);
-    this.add.circle(CLOCK_X, CLOCK_Y, CLOCK_R + 2).setDepth(300).setScrollFactor(0)
-      .setStrokeStyle(1.5, 0x4a9eff, 0.5);
-
-    this.clockGraphics = this.add.graphics().setDepth(301).setScrollFactor(0);
-    this.clockText = this.add.text(CLOCK_X, CLOCK_Y, '0s', {
-      fontSize: '11px', fontStyle: 'bold', color: '#aaddff',
-      fontFamily: 'Inter, system-ui, sans-serif',
-      stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0.5).setDepth(302).setScrollFactor(0);
-
-    // ── Combat speed controls ──
-    this.createSpeedControls(run);
-
-    // Initial queue display
-    this.cardQueue.update(combatState, 0);
-
-    // Subscribe to EventBus events
-    this.onCardPlayed = (eventData) => {
-      this.cardQueue.onCardPlayed(0);
-      // Play hero attack animation and flash enemy on hit
-      if (eventData.damage > 0) {
-        // Play SFX based on card
-        const cardId = eventData.cardId.toLowerCase();
-        if (cardId.includes('fireball')) {
-          AudioManager.playSFX(this, 'sfx_fireball', 0.5);
-        } else {
-          AudioManager.playSFX(this, 'sfx_slash', 0.4);
-        }
-
-        // Play hero attack animation if possible
-        const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
-        const heroAttackKey = `${sp}_attack`;
-        const heroIdleKey = `${sp}_idle`;
-        if (this.anims.exists(heroAttackKey)) {
-          this.heroSprite.play(heroAttackKey);
-          this.heroSprite.once('animationcomplete', () => {
-             if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey);
-          });
-        }
-        this.combatEffects.floatingNumber(600, 320, eventData.damage, '#ffffff', '-');
-        if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
-          // 0xffffff is a no-op tint (multiplies by 1) — flash red so the
-          // hit feedback is actually visible.
-          this.enemySprite.setTint(0xff5555);
-          this.time.delayedCall(200, () => {
-            if (this.enemySprite instanceof Phaser.GameObjects.Sprite) this.enemySprite.clearTint();
-          });
-        } else if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) {
-          this.enemySprite.setFillStyle(0xffffff);
-          const savedColor = enemyDef.color ?? 0xff0000;
-          this.time.delayedCall(200, () => {
-            if (this.enemySprite instanceof Phaser.GameObjects.Rectangle) this.enemySprite.setFillStyle(savedColor);
-          });
-        }
-      }
-      // Update HUD and queue after a short delay for animation
-      this.time.delayedCall(350, () => {
-        if (this.engine && !this.engine.isComplete()) {
-          this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
-        }
-      });
-    };
-    eventBus.on('combat:card-played', this.onCardPlayed);
-
-    this.onSynergyTriggered = (eventData) => {
-      showSynergyFlash(
-        this,
-        eventData.bonus.type,
-        eventData.bonus.value,
-        eventData.displayName,
-      );
-    };
-    eventBus.on('combat:synergy-triggered', this.onSynergyTriggered);
-
-    this.onCardSkipped = (_eventData) => {
-      this.cardQueue.onCardSkipped(0);
-    };
-    eventBus.on('combat:card-skipped', this.onCardSkipped);
-
-    this.onDeckReshuffled = (_eventData) => {
-      this.cardQueue.onDeckReshuffled();
-    };
-    eventBus.on('combat:deck-reshuffled', this.onDeckReshuffled);
-
-    this.onEnemyAttack = (eventData) => {
-      if (eventData.damage > 0) {
-        AudioManager.playSFX(this, 'sfx_hurt', 0.6);
-      }
-      // Floating damage number on hero side
-      this.combatEffects.floatingNumber(200, 320, eventData.damage, '#ff0000', '-');
-      this.combatEffects.screenShake(3, 150);
-      // Flash hero red briefly on hit
-      this.heroSprite.setTint(0xff0000);
-      this.time.delayedCall(300, () => {
-        if (this.heroSprite) {
-          this.heroSprite.clearTint();
-        }
-      });
-      // Play enemy attack animation
-      if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyAttackKey)) {
-        this.enemySprite.play(this.enemyAttackKey);
-        this.enemySprite.once('animationcomplete', () => {
-          if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyIdleKey)) {
-            this.enemySprite.play(this.enemyIdleKey);
-          }
-        });
-      }
-    };
-    eventBus.on('combat:enemy-attack', this.onEnemyAttack);
-
-    this.onCombatEnd = (eventData) => {
-      const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
-      const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
-
-      // Sync HP/stamina/mana from CombatState back to RunState immediately.
-      // Deferring this to the 1s delayedCall below let the death-screen /
-      // save-on-defeat path see stale pre-fight values.
-      const currentRun = getRun();
-      currentRun.isInCombat = false;
-      const finalState = this.engine.getState();
-      currentRun.hero.currentHP = Math.max(0, finalState.heroHP);
-      currentRun.hero.currentStamina = finalState.heroStamina;
-      currentRun.hero.currentMana = finalState.heroMana;
-
-      // Play death animation for the losing side
-      if (eventData.result === 'victory') {
-        // Enemy dies - play enemy death animation
-        if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyDeathKey)) {
-          this.enemySprite.play(this.enemyDeathKey);
-        }
+      const sp = getSpritePrefix(run.hero.className ?? 'warrior');
+      const heroIdleKey = `${sp}_idle`;
+      const heroAttackKey = `${sp}_attack`;
+      const heroDeathKey = `${sp}_death`;
+      
+      if (this.textures.exists(heroIdleKey)) {
+        if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
+        if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
+        if (!this.anims.exists(heroDeathKey)) this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
+        this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
+        this.heroSprite.play(heroIdleKey);
       } else {
-        // Hero dies - play hero death animation
-        if (this.anims.exists(heroDeathKey)) {
-          this.heroSprite.play(heroDeathKey);
-        }
+        this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
+      }
+      
+      this.enemyIdleKey = `${enemyDef.id}_idle`;
+      this.enemyAttackKey = `${enemyDef.id}_attack`;
+      this.enemyDeathKey = `${enemyDef.id}_death`;
+
+      if (this.textures.exists(this.enemyIdleKey)) {
+        if (!this.anims.exists(this.enemyIdleKey)) this.anims.create({ key: this.enemyIdleKey, frames: this.anims.generateFrameNumbers(this.enemyIdleKey, {}), frameRate: 4, repeat: -1 });
+        if (!this.anims.exists(this.enemyAttackKey)) this.anims.create({ key: this.enemyAttackKey, frames: this.anims.generateFrameNumbers(this.enemyAttackKey, {}), frameRate: 10, repeat: 0 });
+        if (!this.anims.exists(this.enemyDeathKey)) this.anims.create({ key: this.enemyDeathKey, frames: this.anims.generateFrameNumbers(this.enemyDeathKey, {}), frameRate: 8, repeat: 0 });
+        this.enemySprite = this.add.sprite(600, 350, this.enemyIdleKey).setDepth(10).setScale(4);
+        (this.enemySprite as Phaser.GameObjects.Sprite).play(this.enemyIdleKey);
+      } else {
+        this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
 
-      const displayText = this.add.text(400, 300, resultText, {
-        fontSize: '56px',
-        fontFamily: '"Impact", "Arial Black", sans-serif',
-        fontStyle: 'bold',
-        color: resultColor,
-        stroke: '#000000',
-        strokeThickness: 6,
-        shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true }
-      }).setOrigin(0.5).setDepth(600);
+      this.hud = new CombatHUD(this);
+      this.cardQueue = new CardQueueDisplay(this);
+      this.combatEffects = new CombatEffects(this);
+      this.speedSlider = new MapSpeedSlider(this, 400, 580, this.gameSpeed, (speed) => { this.gameSpeed = speed; run.combatSpeed = speed; }, 'Combat Speed');
 
-      // Hold 1s then transition (enough time for death anim at 8fps with 7 frames = ~875ms)
-      this.time.delayedCall(1000, () => {
-        displayText.destroy();
+      eventBus.on('combat:card-played', this.onCardPlayed);
+      eventBus.on('combat:synergy-triggered', this.onSynergyTriggered);
+      eventBus.on('combat:card-skipped', this.onCardSkipped);
+      eventBus.on('combat:deck-reshuffled', this.onDeckReshuffled);
+      eventBus.on('combat:enemy-attack', this.onEnemyAttack);
+      eventBus.on('combat:end', this.onCombatEnd);
 
-        if (eventData.result === 'victory') {
-          // Award XP
-          const xpEarned = getXPForEnemy(enemyDef.type);
-          earnXP(currentRun, xpEarned);
-          // Flag boss defeat for GameScene to trigger BossExitScene
-          if (enemyDef.type === 'boss') {
-            currentRun.loop.lastBossDefeated = true;
-            currentRun.loop.bossesDefeated = (currentRun.loop.bossesDefeated ?? 0) + 1;
-          }
-
-          // Generate loot (gold + cards + materials) and queue notifications
-          const scaled = scaleEnemyForLoop(enemyDef, currentRun.loop.count, enemyDef.type === 'boss');
-          const combatTerrain = data.terrain ?? 'basic';
-          generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, combatTerrain, scaled.goldReward, xpEarned);
-
-          // Resume GameScene directly (no PostCombatScene/RewardScene)
-          this.scene.stop();
-          this.scene.resume('GameScene');
-        } else {
-          // Defeat
-          loseAllRunXP(currentRun);
-          this.fadeToScene('DeathScene', {
-            enemyName: enemyDef.name,
-            stats: this.engine.getStats(),
-          });
-        }
-      });
-    };
-    eventBus.on('combat:end', this.onCombatEnd);
-
-    // Register cleanup
-    this.events.on('shutdown', this.cleanup, this);
-  }
-
-  private speedText!: Phaser.GameObjects.Text;
-
-  private createSpeedControls(run: ReturnType<typeof getRun>): void {
-    const SPEEDS = [0.5, 1, 1.5, 2, 3];
-    const y = 580;
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
-
-    // Slow button
-    const slowBtn = this.add.text(370, y, '<<', {
-      fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
-    slowBtn.on('pointerdown', () => {
-      const idx = SPEEDS.indexOf(this.gameSpeed);
-      if (idx > 0) {
-        this.gameSpeed = SPEEDS[idx - 1];
-        run.combatSpeed = this.gameSpeed;
-        this.speedText.setText(`${this.gameSpeed}x`);
-      }
-    });
-
-    // Speed label
-    this.speedText = this.add.text(400, y, `${this.gameSpeed}x`, {
-      fontSize: '16px', color: COLORS.accent, fontFamily, fontStyle: 'bold',
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(200);
-
-    // Fast button
-    const fastBtn = this.add.text(430, y, '>>', {
-      fontSize: '16px', color: '#aaaaaa', fontFamily, fontStyle: 'bold',
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setInteractive({ useHandCursor: true });
-    fastBtn.on('pointerdown', () => {
-      const idx = SPEEDS.indexOf(this.gameSpeed);
-      if (idx < SPEEDS.length - 1) {
-        this.gameSpeed = SPEEDS[idx + 1];
-        run.combatSpeed = this.gameSpeed;
-        this.speedText.setText(`${this.gameSpeed}x`);
-      }
-    });
+      this.events.on('shutdown', this.cleanup, this);
+      console.log('[CombatScene] Combat scene created successfully.');
+    } catch (err) {
+      console.error('[CombatScene] Critical error in create():', err);
+      const run = getRun(); run.isInCombat = false;
+      this.scene.stop(); this.scene.resume(SCENE_KEYS.GAME);
+    }
   }
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
       this.engine.tick(delta * this.gameSpeed);
-
-      // Update HUD each frame
-      this.hud.update(
-        this.engine.getState(),
-        this.engine.getHeroCooldownTimer(),
-        this.engine.getHeroMaxCooldown(),
-      );
-
-      // Update combat clock
-      this.combatElapsed += delta * this.gameSpeed;
-      const elapsedSec = Math.floor(this.combatElapsed / 1000);
-      this.clockText.setText(`${elapsedSec}s`);
-
-      // Redraw elapsed pie arc (fills every 60s, just cosmetic)
-      const CLOCK_X = 400;
-      const CLOCK_Y = 72;
-      const CLOCK_R = 16;
-      const fraction = (this.combatElapsed % 60000) / 60000;
-      this.clockGraphics.clear();
-      this.clockGraphics.fillStyle(0x4a9eff, 0.45);
-      this.clockGraphics.slice(
-        CLOCK_X, CLOCK_Y, CLOCK_R,
-        Phaser.Math.DegToRad(-90),
-        Phaser.Math.DegToRad(-90 + fraction * 360),
-        false,
-      );
-      this.clockGraphics.fillPath();
+      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
     }
   }
 
@@ -449,16 +247,8 @@ export class CombatScene extends Scene {
     eventBus.off('combat:deck-reshuffled', this.onDeckReshuffled);
     eventBus.off('combat:enemy-attack', this.onEnemyAttack);
     eventBus.off('combat:end', this.onCombatEnd);
-
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
-
-    // Ensure isInCombat is reset
-    try {
-      const run = getRun();
-      run.isInCombat = false;
-    } catch {
-      // No active run
-    }
+    try { const run = getRun(); run.isInCombat = false; } catch {}
   }
 }

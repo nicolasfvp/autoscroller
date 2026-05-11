@@ -139,6 +139,17 @@ export class Preloader extends Scene {
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
+    // Relic Illustrations
+    const relicIds = [
+      'arcane_crystal', 'berserker_ring', 'blood_pact', 'bronze_scale', 'demon_heart',
+      'energy_potion', 'first_strike_amulet', 'iron_will', 'mana_stone', 'phoenix_feather',
+      'spell_focus', 'swift_boots', 'thin_deck_charm', 'vitality_ring', 'warrior_spirit'
+    ];
+
+    for (const id of relicIds) {
+      this.load.image(`relic_${id}`, `assets/relics/${id}.png`);
+    }
+
     // Card Illustrations
     const cardIds = [
       'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
