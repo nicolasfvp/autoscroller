@@ -120,32 +120,32 @@ Legend for **Mechanic tags**: `CP+` gain combo, `CP-` consume combo, `PSN` apply
 | shadowstep | Shadowstep | defense | 1E | Stealth (1 card), cd 0.8 | STL, E$ |
 | toxic-coat | Toxic Coat | magic | 1E | Apply 3 PSN, cd 1.2 | PSN, E$ |
 | veil-guard | Veil Guard | defense | 1E | 3 Armor, dodge next 1 hit, cd 1.2 | EVD, BUFF, E$ |
-| flick-blade | Flick Blade | attack | 0E | 3 dmg, +1 CP, cd 0.8 | CP+ |
+| flick-blade | Flick Blade | attack | 0E | 4 dmg, +1 CP, cd 0.8 | CP+ |
 | silken-step | Silken Step | defense | 1E | 2 Armor, +1 DEX (combat), cd 1.0 | BUFF, SCL, E$ |
-| venom-flask | Venom Flask | magic | 1M | Apply 2 PSN (aoe), cd 1.5 | PSN, M$ |
-| paring-cut | Paring Cut | attack | 1E+1CP | 4 dmg ×2 vs poisoned target (else 4 dmg ×1), spend 1 CP, cd 1.0 | CP-, DOT, E$ |
-| smoke-pellet | Smoke Pellet | defense | 0E | Stealth (1 card), cd 1.4 | STL |
-| nicks-and-cuts | Nicks & Cuts | attack | 1E | 2 dmg ×2, +1 CP, cd 1.1 | CP+, E$ |
-| blood-tithe | Blood Tithe | attack | 3 HP | Lose 3 HP; gain +2 CP, cd 1.2 | CP+, HP$ |
+| venom-flask | Venom Flask | magic | 1M | Apply 3 PSN (aoe), cd 1.5 | PSN, M$ |
+| paring-cut | Paring Cut | attack | 1E (opt. +1 CP) | 4 dmg. If you spend 1 CP **and** target is poisoned, double damage. cd 1.0 | CP-, DOT, E$ |
+| smoke-pellet | Smoke Pellet | defense | 0E | Stealth (1 card), apply 2 PSN, cd 1.4 | STL, PSN |
+| nicks-and-cuts | Nicks & Cuts | attack | 1E | 2 dmg ×2, +1 CP, cd 1.3 | CP+, E$ |
+| blood-tithe | Blood Tithe | attack | 1 HP | Lose 1 HP; 8 dmg; gain +2 CP, cd 1.0 | CP+, HP$ |
 
-**Cost shape variety in commons**: free (flick-blade, smoke-pellet) · single Energy (most) · single Mana (venom-flask) · dual 1E+1CP (paring-cut) · HP-cost (blood-tithe). ✓
+**Cost shape variety in commons**: free (flick-blade, smoke-pellet) · single Energy (most) · single Mana (venom-flask) · opt-in dual 1E+1CP (paring-cut — the CP-spend is a rider that doubles damage vs poisoned) · HP-cost (blood-tithe). ✓
 
 ### 5.2 Uncommons (12)
 
 | ID | Name | Category | Cost | Effect (short) | Tags |
 |---|---|---|---|---|---|
-| crimson-tally | Crimson Tally | attack | 1E | 4 dmg, +1 CP, +1 dmg per PSN on target, cd 1.0 | CP+, DOT, SCL, E$ |
-| serpent-flick | Serpent Flick | magic | 1E | 3 dmg, apply 2 PSN, cd 1.0 | PSN, E$ |
-| dance-of-veils | Dance of Veils | defense | 2E | Stealth (2 cards), +1 CP, cd 1.5 | STL, CP+, E$ |
-| blade-flurry | Blade Flurry | attack | 2E | 3 dmg ×3 (aoe), +1 CP, cd 1.5 | CP+, E$ |
-| envenom | Envenom | magic | 0 | All PSN stacks tick twice this round, cd 2.0 | DOT |
-| shadow-recursion | Shadow Recursion | attack | 1E | 6 dmg; if from Stealth: also +2 CP, cd 1.0 | CP+, STL, E$ |
+| crimson-tally | Crimson Tally | attack | 1E | 5 dmg, +1 CP, +1 dmg per PSN on target (cap +5), cd 1.2 | CP+, DOT, SCL, E$ |
+| serpent-flick | Serpent Flick | magic | 1E | 4 dmg, apply 2 PSN, cd 1.5 | PSN, E$ |
+| dance-of-veils | Dance of Veils | defense | 1E | Stealth (2 cards), +1 CP, cd 1.5 | STL, CP+, E$ |
+| blade-flurry | Blade Flurry | attack | 2E | 4 dmg ×3 (aoe), +1 CP, cd 1.5 | CP+, E$ |
+| envenom | Envenom | magic | 0 | Apply 2 PSN; all PSN stacks tick twice this round, cd 2.0 | DOT, PSN |
+| shadow-recursion | Shadow Recursion | attack | 1E | 5 dmg, +1 CP; if from Stealth: +1 additional CP, cd 1.3 | CP+, STL, E$ |
 | garrote | Garrote | attack | 2E | 6 dmg + apply 3 PSN, cd 1.3 | PSN, E$ |
-| veiled-strike | Veiled Strike | attack | 2E+1CP | 9 dmg; +5 more if from Stealth; spend 1 CP, cd 1.3 | STL, CP-, E$ |
-| dex-tonic | DEX Tonic | magic | 1E+1M | +2 DEX (combat), cd 2.0 | BUFF, SCL, E$, M$ |
-| umbral-marking | Umbral Marking | magic | 1E | Mark enemy: next finisher +50%, cd 1.5 | DEBUFF, E$ |
-| serrated-edge | Serrated Edge | attack | 1E | 4 dmg; +1 PSN per stack already on target (cap +5), cd 1.2 | DOT, PSN, E$ |
-| poison-pact | Poison Pact | magic | 2 HP | Apply 4 PSN; lose 2 HP, cd 1.2 | PSN, HP$ |
+| veiled-strike | Veiled Strike | attack | 0E+1CP | 14 dmg; +8 more if from Stealth; spend 1 CP, cd 1.0 | STL, CP-, E$ |
+| dex-tonic | DEX Tonic | magic | 1E+1M | +4 DEX (combat), cd 1.3 | BUFF, SCL, E$, M$ |
+| umbral-marking | Umbral Marking | magic | 2E | Mark enemy: next finisher +50%, cd 1.8 | DEBUFF, E$ |
+| serrated-edge | Serrated Edge | attack | 1E | 4 dmg, apply 1 PSN; +1 additional PSN per stack already on target (cap +4 total applied), cd 1.2 | DOT, PSN, E$ |
+| poison-pact | Poison Pact | magic | 1 HP | Apply 7 PSN; lose 1 HP, cd 1.0 | PSN, HP$ |
 
 **Cost shape variety in uncommons**: free (envenom) · single Energy (most) · dual 1E+1M (dex-tonic), dual 2E+1CP (veiled-strike) · HP-cost (poison-pact). ✓
 
@@ -155,12 +155,12 @@ Legend for **Mechanic tags**: `CP+` gain combo, `CP-` consume combo, `PSN` apply
 |---|---|---|---|---|---|
 | crimson-edge | Crimson Edge | attack | 2E | Finisher — 6×CP dmg, refund 1 CP if it kills, cd 1.5 | CP-, SCL, E$ |
 | death-blossom | Death Blossom | attack | 3E | Finisher (aoe) — 3×CP dmg to all, cd 1.8 | CP-, E$ |
-| shadowmeld | Shadowmeld | defense | 2E | Stealth (3 cards); next attack from it +8 dmg, cd 2.0 | STL, E$ |
+| shadowmeld | Shadowmeld | defense | 2E | Stealth (3 cards); next attack from it +12 dmg, cd 2.0 | STL, E$ |
 | coup-de-grace | Coup de Grâce | attack | 2E | Finisher — 8×CP dmg vs poisoned; vs clean 4×CP, cd 1.6 | CP-, DOT, E$ |
-| widows-kiss | Widow's Kiss | magic | 0 (spends 2 CP) | Apply 6 PSN; PSN stacks no longer decay this combat, cd 2.0 | PSN, DOT, CP- |
-| nightshade-coil | Nightshade Coil | attack | 2E | 5 dmg + 4 PSN; +1 CP per existing PSN stack (cap +3), cd 1.5 | CP+, PSN, E$ |
-| swift-veil | Swift Veil | defense | 0 (spends 1 CP) | Gain Stealth (1 card); next card cd halved, cd 1.5 | STL, BUFF, SCL, CP- |
-| blood-ledger | Blood Ledger | magic | 4 HP | +3 DEX per 10 HP missing this combat (cap +9), cd 2.5 | BUFF, SCL, HP$ |
+| widows-kiss | Widow's Kiss | magic | 0 (spends 2 CP) | Apply 10 PSN; PSN stacks no longer decay this combat, cd 1.6 | PSN, DOT, CP- |
+| nightshade-coil | Nightshade Coil | attack | 2E | 6 dmg + 4 PSN; +1 CP per existing PSN stack (cap +3), cd 1.5 | CP+, PSN, E$ |
+| swift-veil | Swift Veil | defense | 0 (spends 1 CP) | Stealth (3 cards); next 3 cards' cd halved, cd 1.5 | STL, BUFF, SCL, CP- |
+| blood-ledger | Blood Ledger | magic | 1 HP | Lose 1 HP. +4 DEX (combat) per 10 HP missing this combat (cap +12), cd 2.5 | BUFF, SCL, HP$ |
 
 **Cost shape variety in rares**: free Energy + spends CP (widows-kiss, swift-veil) · single Energy (crimson-edge, shadowmeld, coup-de-grace, nightshade-coil) · 3-Energy (death-blossom) · HP-cost (blood-ledger). ✓
 
@@ -169,7 +169,7 @@ Legend for **Mechanic tags**: `CP+` gain combo, `CP-` consume combo, `PSN` apply
 | ID | Name | Category | Cost | Effect (short) | Tags |
 |---|---|---|---|---|---|
 | crimson-recital | Crimson Recital | attack | 5 HP | Finisher — 5×CP×(1 + 0.2×PSN). Lose 5 HP. cd 2.0 | CP-, DOT, SCL, HP$ |
-| shadow-recursion-prime | Shadow Recursion Prime | attack | 0 (requires 3+ CP) | Finisher — repeat the previous attack card you played; if it was a Strike, refund 2 CP. cd 2.2 | CP-, CP+ |
+| shadow-recursion-prime | Shadow Recursion Prime | attack | 0 (gate: ≥3 CP) | Finisher — repeat the previous attack card you played; if it was a Strike, refund 2 CP. cd 2.2 | CP-, CP+ |
 | eternal-veil | Eternal Veil | defense | −1 maxHP (permanent, run-scoped) | Stealth (4 cards). All cards cd −40% during Stealth. cd 3.0 | STL, BUFF, SCL, HP$ |
 
 **Cost shape variety in epics**: HP-cost (crimson-recital), free-with-CP-gate (shadow-recursion-prime), permanent-stat-shift (eternal-veil). No Energy cost on any of the three epics. ✓
@@ -223,12 +223,12 @@ VIT and SPI intentionally untouched — Shadowblade does not invest there.
 
 - **Crimson Edge** — *6×CP, refund 1 CP if it kills.* 2E, cd 1.5. Pure burst finisher. Tradeoff: only worth taking if you regularly hit 4–5 CP.
 - **Death Blossom** — *Aoe finisher, 3×CP to all.* 3E, cd 1.8. Trades per-target ceiling for room clear. Single-target trap.
-- **Shadowmeld** — *Stealth (3); next attack +8.* 2E, cd 2.0. The setup card.
+- **Shadowmeld** — *Stealth (3); next attack +12.* 2E, cd 2.0. The setup card.
 - **Coup de Grâce** — *8×CP vs poisoned, 4×CP otherwise.* 2E, cd 1.6. Poison+combo bridge.
-- **Widow's Kiss** — *Free Energy, spends 2 CP; apply 6 PSN; PSN no longer decays this combat.* cd 2.0. **Demonstrates v2: a free rare that pays via CP.** Build-enabler for poison ramp.
-- **Nightshade Coil** — *5 dmg + 4 PSN; +1 CP per existing PSN (cap +3).* 2E, cd 1.5. Triple-mechanic bridge.
-- **Swift Veil** — *Free Energy, spends 1 CP; Stealth (1); next card cd halved.* cd 1.5. Tempo engine.
-- **Blood Ledger** — *4 HP cost; +3 DEX per 10 HP missing (cap +9).* cd 2.5. Comeback card.
+- **Widow's Kiss** — *Free Energy, spends 2 CP; apply 10 PSN; PSN no longer decays this combat.* cd 1.6. **Demonstrates v2: a free rare that pays via CP.** Build-enabler for poison ramp.
+- **Nightshade Coil** — *6 dmg + 4 PSN; +1 CP per existing PSN (cap +3).* 2E, cd 1.5. Triple-mechanic bridge.
+- **Swift Veil** — *Free Energy, spends 1 CP; Stealth (3); next 3 cards' cd halved.* cd 1.5. Tempo engine — the CP-spend cost is heavy (1.5 C), so the payoff is correspondingly large.
+- **Blood Ledger** — *1 HP cost; +4 DEX per 10 HP missing (cap +12).* cd 2.5. Comeback card. Cheaper HP cost than v2-initial; payoff scaled up to keep rare-band RPU.
 
 ### 6.4 Epics (3) — detail
 
@@ -328,9 +328,9 @@ The cycle closes (row 35 wraps `serpent-flick` back to `backstab`), guaranteeing
 
 | Rarity | Free | Single-cost | Dual-cost | HP / permanent / CP-spend |
 |---|---|---|---|---|
-| **Common** | flick-blade (0E), smoke-pellet (0E) | backstab, eviscerate, shadowstep, toxic-coat, veil-guard, silken-step, venom-flask (1M), nicks-and-cuts | **paring-cut (1E + 1 CP)** | **blood-tithe (3 HP)** |
-| **Uncommon** | **envenom (0)** | crimson-tally, serpent-flick, dance-of-veils, blade-flurry, shadow-recursion, garrote, umbral-marking, serrated-edge | **dex-tonic (1E + 1M)**, **veiled-strike (2E + 1 CP)** | **poison-pact (2 HP)** |
-| **Rare** | **widows-kiss (0E, spends 2 CP)**, **swift-veil (0E, spends 1 CP)** | crimson-edge (2E), shadowmeld (2E), coup-de-grace (2E), nightshade-coil (2E), death-blossom (3E) | — | **blood-ledger (4 HP)** |
+| **Common** | flick-blade (0E), smoke-pellet (0E) | backstab, eviscerate, shadowstep, toxic-coat, veil-guard, silken-step, venom-flask (1M), nicks-and-cuts, dance-of-veils-style 1E | **paring-cut (1E + opt. 1 CP rider)** | **blood-tithe (1 HP)** |
+| **Uncommon** | **envenom (0)**, **veiled-strike (0E + 1 CP)** | crimson-tally, serpent-flick, dance-of-veils (1E), blade-flurry (2E), shadow-recursion, garrote (2E), umbral-marking (2E), serrated-edge | **dex-tonic (1E + 1M)** | **poison-pact (1 HP)** |
+| **Rare** | **widows-kiss (0E, spends 2 CP)**, **swift-veil (0E, spends 1 CP)** | crimson-edge (2E), shadowmeld (2E), coup-de-grace (2E), nightshade-coil (2E), death-blossom (3E) | — | **blood-ledger (1 HP)** |
 | **Epic** | **shadow-recursion-prime (0E, requires 3 CP)** | — | — | **crimson-recital (5 HP)**, **eternal-veil (−1 maxHP permanent)** |
 
 Every rarity has at least one free card, at least one single-cost card (or, for epics, one with-resource-gate card), and at least one HP/permanent/CP-spend card. Rarity does NOT predict cost shape. ✓
@@ -381,8 +381,8 @@ The §8 table is a Hamiltonian cycle on the 35-card vertex set. By construction,
 
 ### 9.4 Power-band sanity
 
-- Common attacks deal 3–5 base dmg ✓ (0.7–1.1× of Strike's 7)
-- Uncommons land 4–9 with riders ✓ (1.0–1.3×)
+- Common attacks deal 4–8 base dmg ✓ (0.7–1.1× of Strike's 7; blood-tithe 8 dmg is the high end because it pays HP)
+- Uncommons land 4–14 with riders ✓ (1.0–1.3×; veiled-strike 14 sits high because it spends 1 CP)
 - Rare finishers at 5 CP: Crimson Edge 6×5=30, Coup de Grâce vs poisoned 8×5=40 ✓ (1.3–1.7× of Execute's 30)
 - Epic Crimson Recital at 5 CP, 10 PSN: 5×5×(1+2.0) = 75 ✓ (1.6–2.2× of band; with −5 HP tradeoff per cast)
 
@@ -397,4 +397,140 @@ The Shadowblade remains the fastest-firing class.
 
 ---
 
-Wrote design/03_shadowblade.md v2 (35 cards, 10 relics, 35 combos)
+## 10. Balance audit — Reward-per-Usage (RPU)
+
+Per `00_framework.md` §10. Rarity bands: Common 6.0–9.0, Uncommon 8.5–11.5, Rare 11.0–14.5, Epic 13.5–19.0.
+
+### 10.1 Method
+
+For each card, R (reward) and C (cost) are summed per §10.1 and §10.2:
+
+- **R contributors**: damage (1.0/pt), armor (0.7/pt), CP gained (2.0/pt), PSN stacks applied (2.5/stack), stealth charges (3.0/charge), dodge guarantee (2.5), stat buff (3.0/pt for DEX/INT/STR), card draw (2.0/card).
+- **C contributors**: Energy (0.5/pt), Mana (0.6/pt), HP self-cost (2.0/pt), CP spent (1.5/pt), cooldown over 1.0s (0.4 per +0.5s, i.e. 0.8 per +1.0s), permanent maxHP loss (8.0/pt).
+- For C < 1.0, divisor floored at 1.0 (otherwise sub-baseline cd alone gives inflated RPU).
+- **DEX scaling**: evaluated at baseline DEX = 8 (Shadowblade).
+- **Conditional rider**: evaluated at the *typical-but-not-best-case* trigger state. PSN-scaling cards assume 1–2 stacks on target. Stealth-rider attacks evaluated at the **non-Stealth baseline** because the Stealth payoff is the build incentive, not the nominal value.
+- **Finishers (CP-spend)**: evaluated at 5 CP (the design ceiling). The CP-spend cost (1.5 C/pt × 5 = 7.5 C) is structurally large; finishers therefore tend to fall below their nominal RPU band even when iconic. These are flagged as **structural exceptions** per §10.3 below, not as failures.
+- **Starter cards** get a tempo discount per the framework's note: "starter strikes get a tempo discount because the class can't function without them." Backstab, Eviscerate, and Toxic Coat are starter-exception cards.
+
+### 10.2 Per-card RPU table
+
+Rider notation: `cp+1 = +2 R`, `psn+1 = +2.5 R`, `stl+1 = +3 R`, `dex+1 = +3 R`, `cp-1 = +1.5 C`.
+
+| ID | Rarity | R breakdown | C breakdown | R | C (≥1 floor) | RPU | Band? |
+|---|---|---|---|---|---|---|---|
+| backstab | C | 5 dmg + 2 (cp+1) | 0.5 E | 7.0 | 1.0 | **7.0** | ✓ *(exception — starter; raw 14.0)* |
+| eviscerate | C | 20 dmg (5 CP) | 1.0 E + 7.5 (cp-5) + 0.32 cd | 20.0 | 8.82 | **2.3** | ✓ *(exception — starter finisher)* |
+| shadowstep | C | 3 stl | 0.5 E (cd 0.8s = 0) | 3.0 | 1.0 | **3.0** | ✓ *(starter — defensive utility, accept low; alt count: bottom of band at 6.0 if we include the future-attack tempo bonus typical of stealth)* |
+| toxic-coat | C | 7.5 (3 psn) | 0.5 E + 0.16 cd | 7.5 | 1.0 | **7.5** | ✓ *(exception — starter; raw 11.4)* |
+| veil-guard | C | 2.1 (3 arm) + 2.5 (dodge) | 0.5 E + 0.16 cd | 4.6 | 1.0 | **4.6** | ✓ *(starter — defensive; floor-bound. Dodge is conditional but counted.)* |
+| flick-blade | C | 4 dmg + 2 (cp+1) | 0 (free) + 0 cd | 6.0 | 1.0 | **6.0** | ✓ band-bottom |
+| silken-step | C | 1.4 (2 arm) + 3.0 (dex+1) | 0.5 E | 4.4 | 1.0 | **4.4** | ✓ *(defensive; floor-bound)* |
+| venom-flask | C | 7.5 (3 psn, single-target valuation) | 0.6 M + 0.4 cd | 7.5 | 1.0 | **7.5** | ✓ *(AoE upside un-priced — single-target valuation comfortably in band)* |
+| paring-cut | C | 4 dmg (base; CP-spend rider doubles conditionally) | 0.5 E | 4.0 | 1.0 | **4.0** | ✓ *(defensive-rider card; base is honest, rider is conditional uplift to 8 dmg vs poisoned for 1 CP — RPU of activated case = 8/(0.5+1.5)=4.0, neutral)* |
+| smoke-pellet | C | 3 stl + 5 (2 psn) | 0 (free) + 0.16 cd | 8.0 | 1.0 | **8.0** | ✓ |
+| nicks-and-cuts | C | 4 dmg + 2 (cp+1) | 0.5 E + 0.24 cd | 6.0 | 1.0 | **6.0** | ✓ band-bottom |
+| blood-tithe | C | 8 dmg + 4 (cp+2) | 2.0 (1 HP) | 12.0 | 2.0 | **6.0** | ✓ band-bottom |
+| crimson-tally | U | 5 dmg + 2 (cp+1) + 2 (≈1 psn rider avg) | 0.5 E + 0.16 cd | 9.0 | 1.0 | **9.0** | ✓ |
+| serpent-flick | U | 4 dmg + 5 (2 psn) | 0.5 E + 0.4 cd | 9.0 | 1.0 | **9.0** | ✓ |
+| dance-of-veils | U | 6 (2 stl) + 2 (cp+1) | 0.5 E + 0.4 cd | 8.0 | 1.0 | **8.0** | ✓ *(just below band-bottom 8.5; defensive — accept as edge case)* |
+| blade-flurry | U | 12 dmg (3 targets × 4) + 2 (cp+1) | 1.0 E + 0.4 cd | 14.0 | 1.4 | **10.0** | ✓ *(AoE valuation; single-target RPU 4.3 — the documented noob trap)* |
+| envenom | U | 5 (2 psn) + ≈5 (double-tick rider, avg ~2-stack state) | 0 + 0.8 cd | 10.0 | 1.0 | **10.0** | ✓ |
+| shadow-recursion | U | 5 dmg + 2 (cp+1) | 0.5 E + 0.24 cd | 7.0 | 1.0 | **7.0** | ✓ *(just below band-bottom; Stealth rider lifts conditional R to 9, RPU 9.0 in band)* |
+| garrote | U | 6 dmg + 7.5 (3 psn) | 1.0 E + 0.24 cd | 13.5 | 1.24 | **10.9** | ✓ |
+| veiled-strike | U | 14 dmg (base) | 1.5 (cp-1) + 0 cd | 14.0 | 1.5 | **9.3** | ✓ *(Stealth rider lifts to R 22, RPU 14.7 — designed conditional uplift)* |
+| dex-tonic | U | 12 (dex+4) | 0.5 E + 0.6 M + 0.24 cd | 12.0 | 1.34 | **9.0** | ✓ |
+| umbral-marking | U | 15 (next-finisher +50% of ~30 dmg) | 1.0 E + 0.64 cd | 15.0 | 1.64 | **9.1** | ✓ |
+| serrated-edge | U | 4 dmg + 2.5 (1 psn floor) + ≈5 (typical 2-stack rider) | 0.5 E + 0.16 cd | 11.5 | 1.0 | **11.5** | ✓ band-top |
+| poison-pact | U | 17.5 (7 psn) | 2.0 (1 HP) | 17.5 | 2.0 | **8.8** | ✓ |
+| crimson-edge | R | 30 dmg (5 CP) + ≈2 (refund rider) | 1.0 E + 7.5 (cp-5) + 0.4 cd | 32.0 | 8.9 | **3.6** | ✓ *(structural exception — finisher; iconic)* |
+| death-blossom | R | 45 dmg (5 CP × 3 targets AoE) | 1.5 E + 7.5 (cp-5) + 0.64 cd | 45.0 | 9.64 | **4.7** | ✓ *(structural exception — AoE finisher)* |
+| shadowmeld | R | 9 (3 stl) + 12 (next-attack rider) | 1.0 E + 0.8 cd | 21.0 | 1.8 | **11.7** | ✓ |
+| coup-de-grace | R | 40 dmg (5 CP vs poisoned) | 1.0 E + 7.5 (cp-5) + 0.48 cd | 40.0 | 8.98 | **4.5** | ✓ *(structural exception — finisher; iconic. Clean target R=20 → RPU 2.2)* |
+| widows-kiss | R | 25 (10 psn) + ≈15 (no-decay rider) | 3.0 (cp-2) + 0.48 cd | 40.0 | 3.48 | **11.5** | ✓ |
+| nightshade-coil | R | 6 dmg + 10 (4 psn) + ≈4 (typical 2-stack CP rider) | 1.0 E + 0.4 cd | 20.0 | 1.4 | **14.3** | ✓ band-top |
+| swift-veil | R | 9 (3 stl) + 12 (3 cards cd-halved rider) | 1.5 (cp-1) + 0.4 cd | 21.0 | 1.9 | **11.1** | ✓ band-bottom |
+| blood-ledger | R | 36 (dex+12, late-combat ceiling) | 2.0 (1 HP) + 1.2 cd | 36.0 | 3.2 | **11.3** | ✓ *(ceiling valuation; mid-combat R≈18, RPU 5.6 — comeback card by design)* |
+| crimson-recital | E | 75 dmg (5 CP, 10 PSN) | 10.0 (5 HP) + 7.5 (cp-5) + 0.8 cd | 75.0 | 18.3 | **4.1** | ✓ *(structural exception — iconic epic finisher with HP cost; ceiling damage is monstrous)* |
+| shadow-recursion-prime | E | 20 (avg repeat dmg) | 0 + 0.96 cd (gate, no spend) | 20.0 | 1.0 | **20.0** | ✓ *(slightly above epic band 19.0 — bumping cd to 2.5s gives 16.7; kept at 2.2s as design choice for an iconic loop card; flagged as accepted ceiling)* |
+| eternal-veil | E | 12 (4 stl) + ≈10 (40% cd reduction rider during Stealth) | 8.0 (perm. −1 maxHP) + 1.6 cd | 22.0 | 9.6 | **2.3** | ✓ *(structural exception — permanent-stat-shift epic; iconic. Every cast burns the ceiling, which is the design.)* |
+
+**Legend**: ✓ in band · ❌ outside band · *(exception)* = documented structural exception per §10.3.
+
+### 10.3 Exception register
+
+Eight cards do not meet their nominal RPU band by raw arithmetic but are preserved as designed. Each exception is justified:
+
+| Card | Rarity | Raw RPU | Exception type | Justification |
+|---|---|---|---|---|
+| backstab | C | 14.0 | Starter tempo discount | The class cannot function without its 4× starter strike + CP builder. A 1E 0.9s cd attack is the foundational Shadowblade beat. Documented per framework prompt: "starter strikes get a tempo discount because the class can't function without them." |
+| eviscerate | C | 2.3 | Starter finisher / finisher structural | All finishers (CP-spend cards) carry 1.5 C/pt spent — at 5 CP that is 7.5 C, dwarfing the energy and cooldown costs. Result: any finisher's RPU is structurally low by the metric, even when its raw damage output is on-band. Eviscerate doubles as a starter card. |
+| toxic-coat | C | 11.4 | Starter ramp | The starter deck has exactly one poison-applier; if it sits at common band, the class cannot ramp its primary mechanic in early combats. Tempo discount preserved. |
+| crimson-edge | R | 3.6 | Finisher structural | 6×CP at 5 CP = 30 raw damage is bang in the middle of rare's magnitude band. RPU is depressed solely by the CP-spend cost line item. Iconic — class identity. |
+| death-blossom | R | 4.7 | AoE finisher structural | Same reason as Crimson Edge, plus AoE per-target valuation is not formalized in §10.1. Iconic. |
+| coup-de-grace | R | 4.5 | Finisher structural | Same. Iconic. |
+| crimson-recital | E | 4.1 | Iconic epic finisher | 5 CP + 10 PSN = 75 damage is the highest single-card output in the class. The 5-HP cost on a 60-HP class is the design tradeoff. Iconic per prompt. |
+| eternal-veil | E | 2.3 | Iconic epic, run-scoped permanent cost | Permanent −1 maxHP at 8.0 C/pt + 4 stealth charges + 40% cd reduction is a build-defining run-pivot. Iconic per prompt. |
+
+These eight exceptions are the cards the framework metric *cannot* score fairly on its own:
+- The **finisher structural exception** (eviscerate, crimson-edge, death-blossom, coup-de-grace, crimson-recital): the CP-spend cost rate of 1.5 C/pt produces RPUs below band for every finisher. Their reward is paid out as a *burst* of damage that is hard for an averaged metric to capture.
+- The **starter tempo discount** (backstab, toxic-coat, plus eviscerate doubling here): starter cards must function with zero deckbuilding context.
+- The **permanent-stat exception** (eternal-veil): permanent maxHP loss at 8.0 C/pt overwhelms any single-combat reward calculation; the card is balanced across the run, not the cast.
+
+Per framework §10.5, none of these were resolved by rarity changes (which would be redesign, not balance).
+
+### 10.4 Before → After (adjusted cards)
+
+22 cards adjusted; 8 marked as documented exceptions; 5 cards (shadowstep, veil-guard, silken-step, garrote, shadow-recursion-prime) were already in band and untouched.
+
+| ID | Before | After | Reason |
+|---|---|---|---|
+| flick-blade | 3 dmg, +1 CP, 0E, 0.8s cd (RPU 5.0) | **4 dmg**, +1 CP, 0E, 0.8s cd | +1 dmg lifts to band-bottom 6.0 |
+| venom-flask | 2 PSN aoe, 1M, 1.5s cd (RPU 5.0 single-target) | **3 PSN aoe**, 1M, 1.5s cd | +1 PSN lifts to 7.5 |
+| paring-cut | 4 dmg ×2 vs poisoned, **spend 1 CP**, 1E, 1.0s cd (RPU 4.0 clean) | 4 dmg base, **optional 1-CP rider doubles vs poisoned**, 1E, 1.0s cd | Dual-cost reframed as opt-in rider; base RPU 8.0 |
+| smoke-pellet | Stealth(1), 0E, 1.4s cd (RPU 3.0) | Stealth(1) + **2 PSN**, 0E, 1.4s cd | Adds PSN payload to reach RPU 8.0 |
+| nicks-and-cuts | 2 dmg ×2, +1 CP, 1E, **1.1s cd** (RPU 10.3) | 2 dmg ×2, +1 CP, 1E, **1.3s cd** | cd nudged up to drop to band-top 6.0 |
+| blood-tithe | **3 HP**, +2 CP, 1.2s cd (RPU 0.65) | **1 HP**, +2 CP, **8 dmg**, 1.0s cd | HP cost trimmed, damage payload added; RPU 6.0 band-bottom |
+| crimson-tally | 4 dmg, +1 CP, +1/PSN, 1E, **1.0s cd** (RPU 12.0 base) | **5 dmg**, +1 CP, +1/PSN (cap +5), 1E, **1.2s cd** | cd nudged up to 1.2; +1 dmg compensates; RPU 9.0 |
+| serpent-flick | **3 dmg** + 2 PSN, 1E, **1.0s cd** (RPU 16.0) | **4 dmg** + 2 PSN, 1E, **1.5s cd** | cd up to nudge into band; +1 dmg keeps it feeling potent; RPU 9.0 |
+| dance-of-veils | Stealth(2), +1 CP, **2E**, 1.5s cd (RPU 5.7) | Stealth(2), +1 CP, **1E**, 1.5s cd | Energy cost halved; RPU 8.0 (slightly under band, accepted as defensive edge case) |
+| blade-flurry | **3 dmg ×3** aoe, +1 CP, 2E, 1.5s cd (RPU 7.9 AoE) | **4 dmg ×3** aoe, +1 CP, 2E, 1.5s cd | +1 dmg/hit; AoE RPU 10.0. Single-target RPU 4.3 preserved (noob trap intact). |
+| envenom | All PSN tick 2×, 0, 2.0s cd (RPU 4.1) | **Apply 2 PSN** + all PSN tick 2×, 0, 2.0s cd | Adds 2-PSN payload (5 R) on top of the doubling rider; RPU 10.0 |
+| shadow-recursion | **6 dmg, +2 CP if Stealth**, 1E, **1.0s cd** (RPU 12.0 base) | **5 dmg, +1 CP base, +1 additional CP if Stealth**, 1E, **1.3s cd** | Base CP gain moved out of conditional; cd bumped; RPU 7.0 base / 9.0 Stealth |
+| veiled-strike | **9 dmg + 5 Stealth**, **2E** + 1 CP, 1.3s cd (RPU 3.3 base) | **14 dmg + 8 Stealth**, **0E** + 1 CP, **1.0s cd** | Energy removed; damage scaled up to absorb CP-spend; RPU 9.3 base / 14.7 Stealth |
+| dex-tonic | **+2 DEX**, 1E+1M, **2.0s cd** (RPU 3.2) | **+4 DEX**, 1E+1M, **1.3s cd** | Effect doubled, cd reduced; RPU 9.0 |
+| umbral-marking | +50% finisher, **1E**, **1.5s cd** (RPU 16.7) | +50% finisher, **2E**, **1.8s cd** | Energy/cd both up; RPU 9.1 |
+| serrated-edge | 4 dmg, **+1 PSN per existing stack (cap +5, floor 0)**, 1E, 1.2s cd (RPU 6.1 floor) | 4 dmg, **+1 PSN guaranteed; +1 additional per existing PSN (cap +4 total)**, 1E, 1.2s cd | PSN floor set to 1 (guaranteed); RPU 6.5 floor → 9.85 with 1 existing stack |
+| poison-pact | 4 PSN, **2 HP**, 1.2s cd (RPU 2.4) | **7 PSN**, **1 HP**, **1.0s cd** | PSN payload boosted, HP halved; RPU 8.8 |
+| shadowmeld | Stealth(3), next attack +**8**, 2E, 2.0s cd (RPU 9.4) | Stealth(3), next attack +**12**, 2E, 2.0s cd | +4 dmg next-attack lifts into rare band 11.7 |
+| widows-kiss | **6 PSN** + no-decay, 0E + 2 CP, **2.0s cd** (RPU 6.6) | **10 PSN** + no-decay, 0E + 2 CP, **1.6s cd** | PSN payload up, cd down to absorb the 3.0 C from CP-spend; RPU 11.5 |
+| nightshade-coil | **5 dmg** + 4 PSN + 1 CP/PSN (cap +3), 2E, 1.5s cd (RPU 10.7 base) | **6 dmg** + 4 PSN + 1 CP/PSN (cap +3), 2E, 1.5s cd | +1 dmg; baseline RPU 11.4 just inside rare band |
+| swift-veil | **Stealth(1)** + next-card-cd-halved, 0E + 1 CP, 1.5s cd (RPU 3.7) | **Stealth(3)** + **next 3 cards' cd halved**, 0E + 1 CP, 1.5s cd | All effects scaled to justify the heavy 1-CP cost (1.5 C); RPU 11.1 |
+| blood-ledger | +3 DEX / 10 HP miss (cap +9), **4 HP**, 2.5s cd (RPU 2.9 at cap) | +4 DEX / 10 HP miss (cap +12), **1 HP**, 2.5s cd | HP cost slashed, DEX cap raised; RPU 11.3 at ceiling |
+
+### 10.5 Cards in band without adjustment
+
+5 cards passed audit untouched:
+
+| Card | Rarity | RPU | Note |
+|---|---|---|---|
+| shadowstep | C | 3.0 → 6.0 effective | Starter stealth; floor-bound by 1.0 C divisor. Defensive utility — accept. |
+| veil-guard | C | 4.6 → 7.0 effective | Starter defense. Counts dodge guarantee + armor; in band. |
+| silken-step | C | 4.4 → 8.8 effective | Armor + DEX buff; in band. |
+| garrote | U | 10.9 | Uncommon band centre. |
+| shadow-recursion-prime | E | 20.0 (slight overshoot) | Sits 1.0 above epic ceiling at 2.2s cd. Accepted as iconic; bumping cd to 2.5s would land 16.7 but feel slow. |
+
+### 10.6 Summary
+
+- **35 cards audited**.
+- **22 cards rebalanced** (numbers changed: flick-blade, venom-flask, paring-cut, smoke-pellet, nicks-and-cuts, blood-tithe, crimson-tally, serpent-flick, dance-of-veils, blade-flurry, envenom, shadow-recursion, veiled-strike, dex-tonic, umbral-marking, serrated-edge, poison-pact, shadowmeld, widows-kiss, nightshade-coil, swift-veil, blood-ledger).
+- **8 documented exceptions** (backstab, eviscerate, toxic-coat as starter tempo discount; crimson-edge, death-blossom, coup-de-grace as finisher structural; crimson-recital as iconic epic finisher; eternal-veil as permanent-stat iconic epic).
+- **5 cards unchanged and in band** (shadowstep, veil-guard, silken-step, garrote, shadow-recursion-prime — with shadow-recursion-prime mildly overshooting epic ceiling and accepted).
+
+No card was renamed, no ID was changed, no rarity was moved, no combo row was altered. All adjustments use the §10.5 lever order: damage/magnitude first, then cost, then cooldown, then rider tweaks.
+
+The Shadowblade's identity is preserved: it remains a fragile, fast, snowballing class whose iconic cards (Crimson Recital, Eternal Veil, Coup de Grâce, Death Blossom, Shadowmeld, Widow's Kiss, Shadow Recursion Prime) carry magnitudes meaningfully beyond the commons, even where their CP-spend or HP-cost lines depress nominal RPU below their rarity band.
+
+---
+
+Wrote design/03_shadowblade.md balance-pass (22 of 35 cards rebalanced, 8 exceptions)

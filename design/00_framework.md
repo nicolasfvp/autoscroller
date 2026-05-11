@@ -207,7 +207,92 @@ Keep:
 
 ---
 
-## 10. Process
+## 10. Balance principle — reward per usage
+
+> **A rarer card should pay you more, per time you play it, than a less-rare card.**
+
+The v2 rarity philosophy says "rarity = magnitude of currency flow". This section makes that operational by defining a single metric the designer can check per card.
+
+### 10.1 Effect → reward units (R)
+
+All effects normalize into one currency so cards with mixed effects can be compared:
+
+| Effect | Reward per point |
+|---|---|
+| Damage to enemy | **1.0** R |
+| Armor gained | **0.7** R (can be wasted if not hit) |
+| HP healed | **0.9** R |
+| Stamina restored | **0.5** R |
+| Mana restored | **0.6** R |
+| Stack applied (DoT — Bleed/Poison/Burn) | **2.5** R per stack (ticks ~3 times average) |
+| Arcane Stack built | **1.2** R (enables finisher) |
+| Combo Point gained | **2.0** R (enables finisher) |
+| Enemy Defense debuff | **1.0** R per point |
+| Stat buff (temp, 1 combat) | **3.0** R per point (STR / DEX / INT) — **1.5** R for VIT / SPI |
+| Card draw | **2.0** R per card |
+| Stealth charge | **3.0** R per charge |
+| Dodge guarantee | **2.5** R |
+
+### 10.2 Cost → cost units (C)
+
+| Cost | Cost per point |
+|---|---|
+| Stamina | **0.5** C |
+| Mana | **0.6** C |
+| Defense paid | **0.7** C |
+| HP self-damage | **2.0** C (limited resource) |
+| Combo Point spent | **1.5** C (built over multiple cards) |
+| Stat drain (temp, 1 combat) | **3.0** C per point (STR / DEX / INT) — **1.5** C for VIT / SPI |
+| Permanent maxHP loss | **8.0** C per point (run-scoped) |
+| Cooldown over 1.0s baseline | **0.4** C per +0.5s |
+| Once-per-combat lock | **3.0** C flat |
+
+A free, instant-cooldown card has C = 0. A 1.0s-cooldown card has C = 0 (baseline). A 2.0s-cooldown card has C = 0.8.
+
+### 10.3 Reward-per-Usage (RPU)
+
+`RPU = (total R from all effects, including riders and synergy-independent bonuses) / max(C, 1)`
+
+For free cards (C = 0), use `C = 1` as the divisor — a free card with R = 7 has RPU = 7.
+
+### 10.4 Target RPU bands by rarity
+
+| Rarity | RPU band | Strike (7 dmg, 0 cost, 1s cd) = 7.0 reference |
+|---|---|---|
+| **Common** | 6.0 – 9.0 | Strike sits here at 7.0 |
+| **Uncommon** | 8.5 – 11.5 | ~+25% over common ceiling |
+| **Rare** | 11.0 – 14.5 | ~+30% over uncommon |
+| **Epic** | 13.5 – 19.0 | ~+30% over rare; consequence costs (permanent maxHP loss, stat drain) keep this honest |
+
+**Bands overlap** intentionally at the edges: a high-end common can RPU at 9.0, the same value an entry-level uncommon hits at 8.5 — that's fine. What's NOT fine: a common at RPU 11 (rare's territory) or a rare at RPU 7 (common's territory).
+
+### 10.5 Adjustment levers
+
+When a card's RPU is outside its band, adjust in this order of preference:
+
+1. **Damage / magnitude** — easiest knob, least design impact.
+2. **Cost down or up** — preserves the card's "feel" but shifts who can play it.
+3. **Cooldown** — affects pacing; useful for nudging RPU by ~0.5–1.0.
+4. **Add or remove a rider** — last resort; changes the card's identity.
+
+Never adjust by changing rarity (that's a re-design, not a balance pass).
+
+### 10.6 Practical examples
+
+- **Strike (common)**: 7 dmg, 0 cost, 1.0s cd → R = 7, C = 0 → **RPU = 7.0** ✓ (centre of common band)
+- **Heavy Hit (common in v2 reclass)**: 13 dmg, 5 stam, 1.5s cd → R = 13, C = 2.5 + 0.4 = 2.9 → **RPU = 4.5** ❌ (too low for any tier — bump damage to ~17 or drop cost to 3 stam)
+- **Fireball (common, magic)**: 10 dmg, 5 mana, 1.5s cd → R = 10, C = 3.0 + 0.4 = 3.4 → **RPU = 2.9** ❌ (way too low — bump damage to 12 *and* drop cooldown to 1.2s for RPU ≈ 3.9, still low; consider promoting to uncommon or letting INT scaling push it up)
+- **Worldbreaker (epic)**: 60 dmg, 20 stam + 20 def + 5 HP self → R = 60, C = 10 + 14 + 10 = 34 → **RPU = 1.8** ❌ (the +2 STR-on-kill permanent rider is what makes this an epic — that rider is worth ~10 R amortized, so adjusted R ≈ 70, RPU ≈ 2.1 — STILL too low. Either trim costs (drop to 15/15/3 HP) or boost the damage to 90)
+
+These three sample audits show the v2 numbers were authored more by "feel" than by RPU. The balance pass tightens them.
+
+### 10.7 Stat scaling
+
+Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's baseline stat value** for that stat. Shadowblade has DEX 8, so a "+2 dmg per DEX" card adds 16 R at baseline. Late-game stacking lets it overperform — that's intentional and is the *reward for investing in the build*.
+
+---
+
+## 11. Process
 
 The detailed cards/relics live in:
 - `01_warrior.md` — 35 cards + 10 relics
