@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 /**
  * AudioManager handles cross-fading between soundtracks.
@@ -21,6 +22,9 @@ export class AudioManager {
   ): void {
     const { loop = true, volume = 0.4, duration = 1000 } = config;
 
+    // Use GlobalSound scene for persistent audio tweens if available
+    const audioScene = scene.scene.get(SCENE_KEYS.GLOBAL_SOUND) || scene;
+
     // 1. If already playing this song, do nothing
     if (this.currentKey === key && this.currentSound?.isPlaying) {
       return;
@@ -29,7 +33,7 @@ export class AudioManager {
     // 2. Fade out current sound if exists
     if (this.currentSound) {
       const oldSound = this.currentSound;
-      scene.tweens.add({
+      audioScene.tweens.add({
         targets: oldSound,
         volume: 0,
         duration: duration,
@@ -42,11 +46,11 @@ export class AudioManager {
 
     // 3. Start new sound at volume 0 and fade in
     this.currentKey = key;
-    const newSound = scene.sound.add(key, { loop, volume: 0 });
+    const newSound = audioScene.sound.add(key, { loop, volume: 0 });
     this.currentSound = newSound;
     newSound.play();
 
-    scene.tweens.add({
+    audioScene.tweens.add({
       targets: newSound,
       volume: volume,
       duration: duration
@@ -76,6 +80,9 @@ export class AudioManager {
   ): void {
     const { volume = 0.2, duration = 1000 } = config;
 
+    // Use GlobalSound scene for persistent audio tweens if available
+    const audioScene = scene.scene.get(SCENE_KEYS.GLOBAL_SOUND) || scene;
+
     if (this.ambienceKey === key && this.ambienceSound?.isPlaying) {
       (this.ambienceSound as Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound).setVolume(volume);
       return;
@@ -83,7 +90,7 @@ export class AudioManager {
 
     if (this.ambienceSound) {
       const old = this.ambienceSound;
-      scene.tweens.add({
+      audioScene.tweens.add({
         targets: old,
         volume: 0,
         duration,
@@ -92,11 +99,11 @@ export class AudioManager {
     }
 
     this.ambienceKey = key;
-    const sound = scene.sound.add(key, { loop: true, volume: 0 });
+    const sound = audioScene.sound.add(key, { loop: true, volume: 0 });
     this.ambienceSound = sound;
     sound.play();
 
-    scene.tweens.add({
+    audioScene.tweens.add({
       targets: sound,
       volume: volume,
       duration

@@ -8,12 +8,13 @@ import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import type { CombatStats } from '../systems/combat/CombatStats';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 export class DeathScene extends Scene {
   private transitioning = false;
 
   constructor() {
-    super('DeathScene');
+    super(SCENE_KEYS.DEATH);
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -21,135 +22,153 @@ export class DeathScene extends Scene {
     this.transitioning = true;
     this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.stop('GameScene');
+      stopAllRunScenes(this, SCENE_KEYS.DEATH);
       this.scene.start(sceneKey, data);
     });
   }
 
   async create(data?: { enemyName?: string; stats?: CombatStats }): Promise<void> {
+    this.scene.bringToTop();
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
     const run = getRun();
     const enemyName = data?.enemyName ?? 'Unknown';
-    const stats = data?.stats;
+    const combatStats = data?.stats;
+    const globalStats = run.stats;
 
-    this.cameras.main.setBackgroundColor(COLORS.background);
+    // Background: Dark abyss
+    this.cameras.main.setBackgroundColor('#0a0a0a');
 
-    const fontFamily = FONTS.family;
+    // Subtle blood spatters/runes background
+    const bgGfx = this.add.graphics();
+    bgGfx.fillStyle(0x440000, 0.2);
+    for (let i = 0; i < 12; i++) {
+      const rx = Math.random() * 800;
+      const ry = Math.random() * 600;
+      const rSize = 20 + Math.random() * 60;
+      bgGfx.fillCircle(rx, ry, rSize);
+    }
+    bgGfx.lineStyle(2, 0x333333, 0.3);
+    for (let i = 0; i < 20; i++) {
+      const rx = Math.random() * 800;
+      const ry = Math.random() * 600;
+      bgGfx.strokeRect(rx, ry, 10, 10);
+    }
 
-    // Title
-    this.add.text(400, 60, 'Run Over', {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: COLORS.danger,
-      fontFamily,
+    // ── Title ───────────────────────────────────────────────────
+    this.add.text(400, 70, 'RUN OVER', {
+      fontFamily: FONTS.family, fontSize: '64px', fontStyle: 'bold',
+      color: '#ff2222', stroke: '#000000', strokeThickness: 8,
     }).setOrigin(0.5);
 
-    // Cause of death
-    this.add.text(400, 95, `Defeated by ${enemyName}`, {
-      fontSize: '16px',
-      color: COLORS.textSecondary,
-      fontFamily,
+    this.add.text(400, 120, `Defeated by ${enemyName}`, {
+      fontFamily: FONTS.family, fontSize: '20px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5);
 
-    // Stats panel
-    this.add.rectangle(400, 270, 400, 320, COLORS.panel, LAYOUT.panelAlpha);
+    // ── Central Panel ───────────────────────────────────────────
+    const PX = 400; const PY = 330;
+    const PW = 520; const PH = 320;
 
-    // Stats
-    const startY = 145;
-    const gap = 38;
-    const labelX = 240;
-    const valueX = 560;
+    const panelGfx = this.add.graphics();
+    // Outer metallic frame
+    panelGfx.lineStyle(4, 0x444444, 1);
+    panelGfx.fillStyle(0x1a1a1a, 0.95);
+    panelGfx.fillRoundedRect(PX - PW / 2, PY - PH / 2, PW, PH, 12);
+    panelGfx.strokeRoundedRect(PX - PW / 2, PY - PH / 2, PW, PH, 12);
 
-    // Calculate materials retained on death (10% base, storehouse may increase)
-    const materialsEarned: Record<string, number> = { ...(run.economy.materials ?? {}) };
-    const xpEarned = run.hero.runXP ?? 0;
+    // Inner purple glow border
+    panelGfx.lineStyle(2, 0x8822ff, 0.6);
+    panelGfx.strokeRoundedRect(PX - PW / 2 + 6, PY - PH / 2 + 6, PW - 12, PH - 12, 8);
+
+    // ── Stats Rows ──────────────────────────────────────────────
+    const startX = PX - PW / 2 + 40;
+    let currentY = PY - PH / 2 + 40;
+    const gap = 36;
+
+    const createStatRow = (icon: string, label: string, value: string | number) => {
+      this.add.text(startX, currentY, icon, { fontSize: '24px' }).setOrigin(0, 0.5);
+      this.add.text(startX + 40, currentY, label, {
+        fontFamily: FONTS.family, fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
+      }).setOrigin(0, 0.5);
+      this.add.text(PX + PW / 2 - 40, currentY, value.toString(), {
+        fontFamily: FONTS.family, fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
+      }).setOrigin(1, 0.5);
+      currentY += gap;
+    };
+
+    createStatRow('🔗', 'Loops Completed', run.loop.count);
+    createStatRow('⚔️', 'Total Damage Dealt', globalStats.damageDealt || (combatStats?.damageDealt ?? 0));
+    createStatRow('🃏', 'Total Cards Played', globalStats.cardsPlayed || (combatStats?.cardsPlayed ?? 0));
+    createStatRow('🔥', 'Total Combos', globalStats.combosTriggered || (combatStats?.synergiesTriggered ?? 0));
+
+    // ── Resources Section (Retention) ───────────────────────────
     const metaState = await loadMetaState();
     const storehouseLevel = metaState.buildings.storehouse?.level ?? 0;
     const { deathRetention } = getStorehouseEffects(storehouseLevel);
     const retentionPct = Math.round(deathRetention * 100);
 
-    const retainedEntries = Object.entries(materialsEarned)
-      .filter(([, v]) => v > 0)
-      .map(([k, v]) => `${k}: ${Math.floor(v * deathRetention)}`);
-    const retainedLines = retainedEntries.length > 0 ? retainedEntries.join(', ') : 'None';
+    currentY += 10;
+    this.add.text(startX, currentY, `\u2705 You Keep (${retentionPct}%):`, {
+      fontFamily: FONTS.family, fontSize: '18px', fontStyle: 'bold', color: '#00ff00'
+    }).setOrigin(0, 0.5);
 
-    const statRows: Array<{ label: string; value: string; color: string }> = [
-      { label: 'Loops Completed', value: `${run.loop.count}`, color: COLORS.textPrimary },
-      { label: 'Total Damage Dealt', value: `${stats?.damageDealt ?? 0}`, color: COLORS.textPrimary },
-      { label: 'Total Cards Played', value: `${stats?.cardsPlayed ?? 0}`, color: COLORS.textPrimary },
-      { label: 'Total Combos', value: `${stats?.synergiesTriggered ?? 0}`, color: COLORS.synergy },
-      { label: `\u2705 You Keep (${retentionPct}%)`, value: retainedLines, color: '#00ff00' },
-    ];
+    // Materials logic
+    const materialsEarned = { ...(run.economy.materials ?? {}) };
+    const xpEarned = run.hero.runXP ?? 0;
 
-    for (let i = 0; i < statRows.length; i++) {
-      const row = statRows[i];
-      const y = startY + i * gap;
-
-      // Label
-      this.add.text(labelX, y, row.label, {
-        fontSize: '16px',
-        color: COLORS.textSecondary,
-        fontFamily,
+    const materialsToShow = Object.entries(materialsEarned).filter(([, v]) => v > 0).slice(0, 2);
+    
+    if (materialsToShow.length === 0) {
+      this.add.text(startX + 180, currentY, 'None', {
+        fontFamily: FONTS.family, fontSize: '16px', color: '#888888'
       }).setOrigin(0, 0.5);
-
-      // Value
-      this.add.text(valueX, y, row.value, {
-        fontSize: '24px',
-        color: row.color,
-        fontFamily,
-      }).setOrigin(1, 0.5);
+    } else {
+      let barX = startX + 150;
+      for (const [mat, amount] of materialsToShow) {
+        const texture = this.textures.exists(`mat_${mat}`) ? `mat_${mat}` : 'mat_stone';
+        this.add.image(barX - 20, currentY, texture).setDisplaySize(20, 20);
+        
+        panelGfx.fillStyle(0x333333);
+        panelGfx.fillRect(barX, currentY - 5, 60, 10);
+        panelGfx.fillStyle(0x00ff44);
+        panelGfx.fillRect(barX, currentY - 5, 60 * deathRetention, 10);
+        
+        this.add.text(barX + 65, currentY, `${Math.floor(amount * deathRetention)}`, {
+          fontFamily: FONTS.family, fontSize: '14px', color: '#ffffff'
+        }).setOrigin(0, 0.5);
+        
+        barX += 130;
+      }
     }
 
-    // XP warning
-    this.add.text(400, startY + statRows.length * gap + 10, 'All unbanked XP has been lost.', {
-      fontSize: '16px',
-      color: COLORS.danger,
-      fontFamily,
+    // ── Footer Messages ─────────────────────────────────────────
+    currentY += 45;
+    this.add.text(PX, currentY, '💀 All unbanked XP has been lost.', {
+      fontFamily: FONTS.family, fontSize: '18px', fontStyle: 'bold', color: '#ff4444'
     }).setOrigin(0.5);
 
-    // Bank run rewards to meta state (metaState already loaded above for storehouse)
+    const unlockNotice = this.add.text(PX, currentY + 30, 'New unlocks available! Return to the city.', {
+      fontFamily: FONTS.family, fontSize: '16px', fontStyle: 'bold', color: '#ffcc00'
+    }).setOrigin(0.5);
+    this.tweens.add({ targets: unlockNotice, alpha: 0.5, duration: 800, yoyo: true, repeat: -1 });
+
+    // ── Return Button ───────────────────────────────────────────
+    createButton(this, 400, 540, 'Return to City', async () => {
+      stopAllRunScenes(this, SCENE_KEYS.DEATH);
+      await saveManager.clear();
+      clearRun();
+      this.fadeToScene(SCENE_KEYS.CITY_HUB);
+    }, 'primary');
+
+    // ── Bank Rewards ────────────────────────────────────────────
     const updatedState = bankRunRewards(
-      materialsEarned,
-      xpEarned,
-      'death',
-      {
-        seed: run.runId,
-        loopsCompleted: Math.max(0, run.loop.count - 1),
-        bossesDefeated: run.loop.bossesDefeated ?? 0,
-      },
-      metaState,
-      run.hero.className ?? 'warrior',
-      run.economy.gatheringBoost ?? 0,
+      materialsEarned, xpEarned, 'death',
+      { seed: run.runId, loopsCompleted: Math.max(0, run.loop.count - 1), bossesDefeated: run.loop.bossesDefeated ?? 0 },
+      metaState, run.hero.className ?? 'warrior', run.economy.gatheringBoost ?? 0
     );
     await saveMetaState(updatedState);
-
-    // Unlock notification
-    const unlockY = startY + statRows.length * gap + 45;
-    const unlockNotice = this.add.text(400, unlockY, 'New unlocks available! Return to the city.', {
-      fontSize: '16px',
-      color: COLORS.accent,
-      fontFamily,
-    }).setOrigin(0.5);
-
-    // Pulse tween
-    this.tweens.add({
-      targets: unlockNotice,
-      alpha: { from: 1, to: 0.5 },
-      duration: 800,
-      yoyo: true,
-      repeat: -1,
-    });
-
-    // "Return to City" button
-    createButton(this, 400, 520, 'Return to City', () => {
-      // CombatScene already calls loseAllRunXP on defeat; no need to repeat.
-      // Wipe persisted run save — death is final, no Continue option.
-      void saveManager.clear();
-      clearRun();
-      this.fadeToScene('CityHub');
-    }, 'primary');
 
     this.events.on('shutdown', this.cleanup, this);
   }

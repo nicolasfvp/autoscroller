@@ -12,6 +12,7 @@ import { SynergySystem } from './SynergySystem';
 import { resolveCardPlayedRelicBonus } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { rand } from '../SharedRNG';
+import { getRun } from '../../state/RunState';
 
 /** Passive regen interval in milliseconds */
 const REGEN_INTERVAL = 3000;
@@ -159,11 +160,8 @@ export class CombatEngine {
     );
 
     if (synergy) {
-      eventBus.emit('combat:synergy-triggered', {
-        displayName: synergy.displayName,
-        bonus: synergy.bonus,
-      });
       this.stats.synergiesTriggered++;
+      getRun().stats.combosTriggered++;
     }
 
     // Relic bonuses for this card
@@ -212,6 +210,10 @@ export class CombatEngine {
     // Update stats
     this.stats.cardsPlayed++;
     this.stats.damageDealt += result.totalDamage;
+    
+    const globalStats = getRun().stats;
+    globalStats.cardsPlayed++;
+    globalStats.damageDealt += result.totalDamage;
 
     // Track consecutive *attack* cards only — utility/heal cards reset the
     // streak so triggers like Battle Rage represent real combat aggression.

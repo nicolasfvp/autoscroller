@@ -62,6 +62,7 @@ export function generateAndApplyCombatLoot(
   const finalGold = Math.floor(goldAmount * goldMult);
   if (finalGold > 0) {
     run.economy.gold += finalGold;
+    run.stats.goldEarned += finalGold;
     entries.push({ label: `+${finalGold} Gold`, color: '#ffd700' });
   }
 

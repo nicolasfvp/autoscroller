@@ -172,9 +172,9 @@ export class CollectionScene extends Scene {
     const status = this.collectionStatus[tabKey];
     const itemCount = status.items.length;
     switch (this.activeTab) {
-      case 'Cards': return Math.ceil(itemCount / 6) * 136 + 80;
-      case 'Relics': return Math.ceil(itemCount / 6) * 136 + 80;
-      case 'Tiles': return Math.ceil(itemCount / 6) * 136 + 80;
+      case 'Cards': return Math.ceil(itemCount / 6) * 160 + 80;
+      case 'Relics': return Math.ceil(itemCount / 6) * 160 + 80;
+      case 'Tiles': return Math.ceil(itemCount / 6) * 160 + 80;
       case 'Bosses': return 350;
       default: return 600;
     }
@@ -223,12 +223,11 @@ export class CollectionScene extends Scene {
     const itemW = 90;
     const itemH = 100;
     const gapX = 12;
-    const gapY = 36; // Extra vertical gap for names below cards
+    const gapY = 60; // Slightly decreased from 70
     
     const totalWidth = cols * itemW + (cols - 1) * gapX;
     const startX = 400 - (totalWidth / 2) + (itemW / 2);
-    const startY = 200;
-
+    const startY = 220; // Increased padding at the top from 200
     status.items.forEach((item, index) => {
       const col = index % cols;
       const row = Math.floor(index / cols);
@@ -264,8 +263,46 @@ export class CollectionScene extends Scene {
             wordWrap: { width: itemW + gapX }
           }).setOrigin(0.5, 0); // Top-center alignment
           this.gridContainer.add(name);
+        } else if (this.activeTab === 'Relics' || this.activeTab === 'Tiles') {
+          // Render Relic or Tile Asset
+          const assetPrefix = this.activeTab === 'Relics' ? 'relic_' : 'tile_';
+          const imgKey = `${assetPrefix}${item.id}`;
+          
+          const img = this.add.image(x, y, imgKey);
+          if (this.textures.exists(imgKey)) {
+            img.setDisplaySize(itemW - 10, itemH - 10);
+          } else {
+            // Fallback for missing tile textures
+            img.setVisible(false);
+            const fallback = this.add.rectangle(x, y, itemW - 10, itemH - 10, 0x333333);
+            this.gridContainer.add(fallback);
+          }
+          
+          img.setInteractive({ useHandCursor: true });
+          this.gridContainer.add(img);
+          interactableObj = img;
+
+          // Frame
+          const frameColor = this.activeTab === 'Relics' ? 0xcc0000 : 0x00aa00;
+          const frame = this.add.rectangle(x, y, itemW, itemH).setStrokeStyle(3, frameColor);
+          this.gridContainer.add(frame);
+
+          // Name below
+          const textY = y + (itemH / 2) + 6;
+          const name = this.add.text(x, textY, item.name, {
+            fontSize: '16px',
+            fontStyle: 'bold',
+            color: '#e6c88a',
+            stroke: '#2e1b0f',
+            strokeThickness: 2,
+            shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
+            fontFamily,
+            align: 'center',
+            wordWrap: { width: itemW + gapX }
+          }).setOrigin(0.5, 0);
+          this.gridContainer.add(name);
         } else {
-          // Plain Red Box for Relics / Tiles
+          // Plain Red Box for Tiles
           const card = this.add.rectangle(x, y, itemW, itemH, 0xcc0000).setStrokeStyle(3, 0x3e2723);
           card.setInteractive({ useHandCursor: true });
           this.gridContainer.add(card);
