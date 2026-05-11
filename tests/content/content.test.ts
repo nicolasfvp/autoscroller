@@ -196,3 +196,55 @@ describe('MetaState', () => {
     expect(state.buildings.shrine.level).toBe(0);
   });
 });
+
+describe('Phase 9 (v2) content totals + coverage', () => {
+  const cards = cardsData.cards;
+  const relics = relicsData as any[];
+  const synergies = synergiesData as any[];
+
+  it('cards.json has exactly 125 entries (RED until Plan 2)', () => {
+    expect(cards.length).toBe(125);
+  });
+
+  it('relics.json has exactly 50 entries (RED until Plan 2)', () => {
+    expect(relics.length).toBe(50);
+  });
+
+  it('synergies.json has exactly 125 entries (RED until Plan 2)', () => {
+    expect(synergies.length).toBe(125);
+  });
+
+  it('every card appears in exactly 2 synergy rows (RED until Plan 2)', () => {
+    const counts = new Map<string, number>();
+    for (const card of cards as any[]) counts.set(card.id, 0);
+    for (const row of synergies) {
+      counts.set(row.cardA, (counts.get(row.cardA) ?? 0) + 1);
+      counts.set(row.cardB, (counts.get(row.cardB) ?? 0) + 1);
+    }
+    const offenders: Array<{ id: string; count: number }> = [];
+    for (const [id, count] of counts) {
+      if (count !== 2) offenders.push({ id, count });
+    }
+    expect(offenders, JSON.stringify(offenders)).toEqual([]);
+  });
+
+  it('all card effect.type values are in the known enumeration', () => {
+    const allowed = new Set([
+      'damage', 'heal', 'armor', 'stamina', 'mana', 'debuff',
+      'buff', 'debuff_stat', 'dot', 'stack',
+      'consume_combo', 'gain_combo', 'stealth', 'taunt',
+    ]);
+    for (const card of cards as any[]) {
+      for (const eff of card.effects) {
+        expect(allowed.has(eff.type), `${card.id}: unknown effect type ${eff.type}`).toBe(true);
+      }
+    }
+  });
+
+  it('every card has rarity in {common, uncommon, rare, epic}', () => {
+    const allowed = new Set(['common', 'uncommon', 'rare', 'epic']);
+    for (const card of cards as any[]) {
+      expect(allowed.has(card.rarity), `${card.id}: rarity ${card.rarity}`).toBe(true);
+    }
+  });
+});
