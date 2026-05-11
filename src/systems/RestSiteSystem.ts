@@ -2,6 +2,7 @@ import restConfig from '../data/rest-config.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
 import type { SynergyBuff } from './SynergyResolver';
+import { eventBus } from '../core/EventBus';
 
 // B.1: tile-adjacency hpRecoveryBonus uplifts the rest tile heal amount.
 let activeBuffs: SynergyBuff[] = [];
@@ -30,6 +31,12 @@ export function applyRestChoice(
   runState: RunState,
   rng: () => number = () => rand()
 ): RestResult {
+  // Phase 9 Task 5: rest_used relic trigger event. RelicSystem subscribers
+  // can listen via `combat:rest-used` and apply effects to RunState. The
+  // dispatchTriggerRelics(rest_used, ...) call is gated to in-combat-only
+  // (it mutates CombatState), so out-of-combat rest sites emit the event
+  // for HUD / future hook layers without re-entering CombatState.
+  eventBus.emit('combat:rest-used', { choice });
   switch (choice) {
     case 'rest': {
       const recoveryPct = restConfig.hpRecoveryPercent * (1 + getHpRecoveryBonus());
