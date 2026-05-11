@@ -79,6 +79,13 @@ export interface CombatState {
   arcaneStacks: number;         // cap = arcaneStacksCap (Pitfall 8: cap-and-drop)
   arcaneStacksCap: number;      // default 10
   rageStacks: number;
+
+  /**
+   * Phase 9: one-shot cooldown shave consumed by the NEXT card's cooldown.
+   * Set by SynergySystem cooldown_reduction bonus type; consumed by
+   * CombatEngine.playNextCard immediately after that card resolves.
+   */
+  nextCardCooldownReduction: number;
 }
 
 /**
@@ -145,6 +152,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     arcaneStacks: 0,
     arcaneStacksCap: 10,
     rageStacks: 0,
+    nextCardCooldownReduction: 0,
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --
@@ -153,6 +161,20 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
   state.heroDexterity = resolved.dex;
   state.heroIntellect = resolved.int;
   state.heroSpirit = resolved.spi;
+
+  // -- Phase 9: VIT scales combat-start maxHP (+5 per point per design/00 §3).
+  // Applied here so heroMaxHP is the post-VIT value before relic passives
+  // (which may further raise it via stat_bonus.maxHP). currentHP is NOT
+  // re-floored — entering combat with full HP is a separate concern (run-end
+  // healing) that already runs in RunEndResolver / GameScene.
+  if (state.heroVitality > 0) {
+    const vitBonus = state.heroVitality * 5;
+    state.heroMaxHP += vitBonus;
+    // Bump currentHP so the hero benefits from VIT on the FIRST combat after
+    // the stat was gained (otherwise the buff appears only after a heal). We
+    // only top up the bonus amount, not to full, so HP attrition still bites.
+    state.heroHP = Math.min(state.heroMaxHP, state.heroHP + vitBonus);
+  }
 
   // Apply passive (stat) relics immediately
   applyPassiveRelics(run.relics ?? [], state);
