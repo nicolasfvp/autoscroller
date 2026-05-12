@@ -15,7 +15,7 @@ export interface MetaState {
     storehouse: { level: number };
   };
   materials: Record<string, number>;
-  classXP: { warrior: number; mage: number };
+  classXP: { warrior: number; mage: number; shadowblade: number };
   passivesUnlocked: string[];
   unlockedCards: string[];
   unlockedRelics: string[];
@@ -58,7 +58,7 @@ export function createDefaultMetaState(): MetaState {
       storehouse: { level: 0 },
     },
     materials: {},
-    classXP: { warrior: 0, mage: 0 },
+    classXP: { warrior: 0, mage: 0, shadowblade: 0 },
     passivesUnlocked: [],
     unlockedCards: [],
     unlockedRelics: [],
@@ -119,12 +119,16 @@ export function migrateMetaState(raw: any): MetaState {
   }
 
   // v3 -> v4 migration: add classXP.mage
+  // Phase 9 (CR-02 fix): also widen classXP shape to include shadowblade
+  // so a v3 save migrated forward to v4 doesn't leave the field undefined
+  // before the v6 wipe. (Migrate path defensively backfills all three.)
   if (raw.version === 3) {
     raw = {
       ...raw,
       classXP: {
         warrior: raw.classXP?.warrior ?? 0,
         mage: raw.classXP?.mage ?? 0,
+        shadowblade: raw.classXP?.shadowblade ?? 0,
       },
       version: 4,
     };
