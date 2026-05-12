@@ -309,7 +309,14 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const pct = Math.round(progress * 100);
     this.loopProgressFill.width = (LoopHUD.PROG_W - 24) * progress;
     this.loopProgressText.setText(`${pct}%`);
-    this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / runState.hero.maxHP);
+    // Phase 9 (WR-07 fix): clamp maxHP to 1 before division. A corrupted save
+    // or transient mid-migration state with maxHP === 0 yields NaN, which
+    // Phaser silently propagates into the rectangle's width and breaks the
+    // bar. The text label still shows the raw `currentHP/maxHP` so the
+    // underlying corruption is surfaced to the user, but the bar geometry
+    // stays sane.
+    const maxHPForBar = Math.max(1, runState.hero.maxHP);
+    this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / maxHPForBar);
     this.hpText.setText(`${runState.hero.currentHP}/${runState.hero.maxHP}`);
     this.tpText.setText(`${runState.economy.tilePoints} TP`);
     const MAT: Record<string, string> = { wood: '🪵', stone: '🪨', iron: '⚙', crystal: '💎', bone: '🦴', herbs: '🌿', essence: '✨' };
