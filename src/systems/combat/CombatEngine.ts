@@ -306,6 +306,13 @@ export class CombatEngine {
     const state = this.state;
     const dexBonus = 1 + Math.floor(state.heroDexterity / 4);
 
+    // Phase 9 (WR-01 fix): track whether ANY DoT type ticked this cycle so
+    // the `dot_tick` relic dispatch can fire once after the pass, instead of
+    // only inside the poison branch (which silently excluded bleed/burn/shock
+    // tick triggers — Warrior bleed + Mage burn relics had no `dot_tick`
+    // coverage). Fires once per card-play cycle if any DoT actually ticked.
+    let anyDotTicked = false;
+
     // Poison: stacks * (1 + floor(DEX/4)) damage; -1 stack/tick unless disabled.
     if (state.poisonStacks > 0) {
       const dmg = state.poisonStacks * dexBonus;
@@ -316,8 +323,7 @@ export class CombatEngine {
         stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
       });
       if (!state.poisonDecayDisabled) state.poisonStacks = Math.max(0, state.poisonStacks - 1);
-      // dot_tick relic trigger fires once per active DoT stack type.
-      dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
+      anyDotTicked = true;
     }
 
     // Bleed: per design/00 §3, similar shape — class-internal (warrior-leaning).
@@ -329,6 +335,7 @@ export class CombatEngine {
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'bleed', damage: dmg, sourceCard: triggeringCardId });
       state.bleedStacks = Math.max(0, state.bleedStacks - 1);
+      anyDotTicked = true;
     }
 
     // Burn: mage-leaning DoT. INT-scaling per design/00 §3 — baseline +INT.
@@ -339,6 +346,7 @@ export class CombatEngine {
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'burn', damage: dmg, sourceCard: triggeringCardId });
       state.burnStacks = Math.max(0, state.burnStacks - 1);
+      anyDotTicked = true;
     }
 
     // Freeze: not pure DoT — slows enemy cooldown. Stack still decays per tick.
@@ -354,6 +362,17 @@ export class CombatEngine {
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'shock', damage: dmg, sourceCard: triggeringCardId });
       state.shockStacks = Math.max(0, state.shockStacks - 1);
+      anyDotTicked = true;
+    }
+
+    // Phase 9 (WR-01 fix): dispatch the `dot_tick` relic trigger ONCE per
+    // tickActiveDoTs pass, regardless of which DoT type(s) ticked. Previously
+    // this dispatch was nested inside the poison branch, so bleed/burn/shock
+    // never fired the trigger and `dot_tick` relics for warrior/mage builds
+    // were effectively dead. Single dispatch matches the "tick once per card
+    // play" cadence (INDEX §7 #2) and avoids over-firing for multi-DoT stacks.
+    if (anyDotTicked) {
+      dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
     }
 
     // Shadowblade class branch: combo_played trigger fires when a synergy
