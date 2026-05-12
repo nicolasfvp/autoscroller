@@ -45,12 +45,25 @@ export function applyRestChoice(
       return { choice, description: `Recovered ${heal} HP.` };
     }
     case 'train': {
+      // Phase 9 (WR-03 fix): previously this branch picked a random card and
+      // returned a description claiming a damage boost — but no state was
+      // ever mutated. Players got a fictional buff. Implement the promise
+      // by flipping the per-position upgrade flag on a random non-upgraded
+      // card. Upgraded cards already exist via shops and use card.upgraded
+      // effects in CardResolver, so the boost is real and visible (CardName+
+      // in the deck UI) without adding a parallel damage-modifier system.
+      // If the random pick is already upgraded, fall through to a no-op
+      // notice so the player isn't silently double-paying for the same buff.
       if (runState.deck.active.length === 0) {
         return { choice, description: 'No cards to train.' };
       }
       const idx = Math.floor(rng() * runState.deck.active.length);
       const cardId = runState.deck.active[idx];
-      return { choice, description: `Boosted ${cardId} damage by +${restConfig.trainDamageBonus}.` };
+      if (runState.deck.upgraded[idx]) {
+        return { choice, description: `${cardId} is already trained.` };
+      }
+      runState.deck.upgraded[idx] = true;
+      return { choice, description: `Trained ${cardId} (upgraded).` };
     }
     case 'meditate': {
       const roll = rng();
