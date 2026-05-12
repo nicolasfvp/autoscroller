@@ -207,7 +207,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
     expect(result.unlockedCards).toEqual([]);
     expect(result.unlockedRelics).toEqual([]);
     expect(result.unlockedTiles).toEqual([]);
-    expect(result.classXP).toEqual({ warrior: 0, mage: 0 });
+    expect(result.classXP).toEqual({ warrior: 0, mage: 0, shadowblade: 0 });
     expect(result.buildings.forge.level).toBe(0);
     expect(result.materials).toEqual({});
     expect(result.passivesUnlocked).toEqual([]);

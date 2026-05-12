@@ -42,12 +42,12 @@ describe('RestSiteSystem', () => {
     expect(run.hero.currentHP).toBe(100);
   });
 
-  it('train choice picks a card and returns description with bonus amount', () => {
+  it('train choice picks a card and returns description noting the upgrade', () => {
     const run = makeRunState();
     const result = applyRestChoice('train', run, () => 0);
     expect(result.choice).toBe('train');
     expect(result.description).toContain('strike');
-    expect(result.description).toContain('+2');
+    expect(result.description.toLowerCase()).toContain('upgrad');
   });
 
   it('train choice picks a different card based on rng', () => {
