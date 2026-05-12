@@ -390,8 +390,18 @@ export class CombatEngine {
     // Phase 9 Task 5: card_drawn trigger fires once per advance (the "next"
     // card is now the active card). Dispatched here so it stays in lockstep
     // with whatever the next pointer points at — including post-reshuffle.
+    //
+    // Phase 9 (WR-02 fix): skip the dispatch if combat has ALREADY ended
+    // this card (hero or enemy at 0 HP). Without this guard, a killing-blow
+    // card would (1) drop enemy HP to 0, (2) fire card_drawn relics that
+    // mutate CombatState on a corpse — potentially dealing more damage,
+    // gaining CP, or producing NaN HP — and (3) emit `combat:card-drawn`
+    // for a card that will never actually be played. `tick()` re-runs
+    // checkEndConditions immediately after executeCard returns, so the
+    // win/loss event still fires on the correct tick.
+    const combatStillLive = this.state.enemyHP > 0 && this.state.heroHP > 0;
     const nextCardId = this.state.deckOrder[this.deckPointer >= this.state.deckOrder.length ? 0 : this.deckPointer];
-    if (nextCardId) {
+    if (nextCardId && combatStillLive) {
       dispatchTriggerRelics('card_drawn', this.state.activeRelicIds ?? [], this.state);
       eventBus.emit('combat:card-drawn', { cardId: nextCardId });
     }
