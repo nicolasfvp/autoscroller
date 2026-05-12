@@ -47,10 +47,12 @@ export class MainMenu extends Scene {
       const wipedFrom = consumeWipeFlag(meta);
       if (wipedFrom !== undefined) {
         await saveMetaState(meta);
-        // Defer the visual notice until after the menu's UI is built.
-        this.events.once('create', () => this.showWelcomeNotice(wipedFrom));
-        // events.once('create') doesn't fire because we're already inside
-        // create() — schedule on next tick instead.
+        // Phase 9 (WR-06 fix): defer the visual notice until after the menu's
+        // UI is built. The previous `events.once('create', ...)` line was
+        // dead — the 'create' event fires before this create() runs, so the
+        // callback never fired. A future refactor that hoisted the wipe-flag
+        // consumption would have left both callbacks armed and surfaced a
+        // duplicate notice. delayedCall(50) alone is sufficient.
         this.time.delayedCall(50, () => this.showWelcomeNotice(wipedFrom));
       }
     } catch (err) {
