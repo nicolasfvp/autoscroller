@@ -138,7 +138,10 @@ export class TileVisual extends Phaser.GameObjects.Container {
   }
 
   private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number): void {
-    const idleKey = `${enemyId}_idle`;
+    // Phase 9 (CR-01 fix): monster texture keys are namespaced `monster_*`
+    // to avoid colliding with hero spritesheets (e.g. enemy 'mage' vs hero
+    // Mage class). See Preloader.ts monsterIds loop.
+    const idleKey = `monster_${enemyId}_idle`;
     if (scene.textures.exists(idleKey)) {
       // Create idle animation if it doesn't exist
       if (!scene.anims.exists(idleKey)) {

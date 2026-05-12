@@ -198,9 +198,12 @@ export class CombatScene extends Scene {
         this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
       }
       
-      this.enemyIdleKey = `${enemyDef.id}_idle`;
-      this.enemyAttackKey = `${enemyDef.id}_attack`;
-      this.enemyDeathKey = `${enemyDef.id}_death`;
+      // Phase 9 (CR-01 fix): monster texture keys namespaced `monster_*` to
+      // avoid colliding with hero spritesheets (enemy 'mage' vs hero Mage).
+      // Source rename in Preloader.ts; render sites here + TileVisual.ts.
+      this.enemyIdleKey = `monster_${enemyDef.id}_idle`;
+      this.enemyAttackKey = `monster_${enemyDef.id}_attack`;
+      this.enemyDeathKey = `monster_${enemyDef.id}_death`;
 
       if (this.textures.exists(this.enemyIdleKey)) {
         if (!this.anims.exists(this.enemyIdleKey)) this.anims.create({ key: this.enemyIdleKey, frames: this.anims.generateFrameNumbers(this.enemyIdleKey, {}), frameRate: 4, repeat: -1 });

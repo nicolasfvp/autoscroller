@@ -64,11 +64,18 @@ export class Preloader extends Scene {
     this.load.spritesheet('mage_death', 'assets/characters/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
 
     // Monster spritesheets (64x64 per frame, horizontal strips)
+    // Phase 9 (CR-01 fix): monster enemy IDs include 'mage', which used to
+    // collide with the hero Mage spritesheet keys (`mage_idle/attack/death`).
+    // Phaser's loader silently overwrites duplicate keys, so the hero Mage
+    // (and Shadowblade, which reuses the mage_* prefix per D-08) rendered as
+    // the monster sprite. Namespace monster keys with `monster_` to keep the
+    // hero and enemy texture buckets disjoint. Render-site consumers
+    // (TileVisual, CombatScene) resolve enemy keys via `monster_${enemyId}_*`.
     const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
     for (const id of monsterIds) {
-      this.load.spritesheet(`${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
