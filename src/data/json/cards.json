@@ -1,1045 +1,4 @@
 {
-  "cards": [
-    {
-      "id": "strike",
-      "name": "Strike",
-      "description": "Deal 7 damage.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy"
-        }
-      ],
-      "cooldown": 1,
-      "targeting": "single",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 8,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 8 damage."
-      }
-    },
-    {
-      "id": "heavy-hit",
-      "name": "Heavy Hit",
-      "description": "Deal 13 damage. Costs 5 Stamina.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 13,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "stamina": 5
-      },
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 17,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 17 damage. Costs 5 Stamina."
-      }
-    },
-    {
-      "id": "fury",
-      "name": "Fury",
-      "description": "Deal 20 damage. Costs 10 Defense.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 20,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "defense": 10
-      },
-      "cooldown": 2,
-      "targeting": "single",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 2,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 27,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 27 damage. Costs 10 Defense."
-      }
-    },
-    {
-      "id": "berserker",
-      "name": "Berserker",
-      "description": "Deal 27 damage. Costs 15 Stamina and 5 Defense.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 27,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "stamina": 15,
-        "defense": 5
-      },
-      "cooldown": 2.5,
-      "targeting": "single",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 36,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 36 damage. Costs 15 Stamina and 5 Defense."
-      }
-    },
-    {
-      "id": "counter-strike",
-      "name": "Counter Strike",
-      "description": "Deal 8 damage.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 8,
-          "target": "enemy"
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 1,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 11,
-            "target": "enemy"
-          }
-        ],
-        "cooldown": 1,
-        "description": "Deal 11 damage."
-      }
-    },
-    {
-      "id": "defend",
-      "name": "Defend",
-      "description": "Gain 2 Armor.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 2,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1,
-      "targeting": "self",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 2,
-            "target": "self"
-          }
-        ],
-        "description": "Gain 2 Armor."
-      }
-    },
-    {
-      "id": "shield-wall",
-      "name": "Shield Wall",
-      "description": "Gain 5 Armor. Costs 5 Stamina.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 5,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "stamina": 5
-      },
-      "cooldown": 1.5,
-      "targeting": "self",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 1,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 7,
-            "target": "self"
-          }
-        ],
-        "cooldown": 1,
-        "description": "Gain 7 Armor. Costs 5 Stamina."
-      }
-    },
-    {
-      "id": "fortify",
-      "name": "Fortify",
-      "description": "Gain 8 Armor. Costs 10 Stamina.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 8,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "stamina": 10
-      },
-      "cooldown": 2,
-      "targeting": "self",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 3,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 11,
-            "target": "self"
-          }
-        ],
-        "cooldown": 1.5,
-        "description": "Gain 11 Armor. Costs 10 Stamina."
-      }
-    },
-    {
-      "id": "iron-skin",
-      "name": "Iron Skin",
-      "description": "Gain 7 Armor. Costs 5 Mana.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 7,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 5
-      },
-      "cooldown": 2,
-      "targeting": "self",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 2,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 9,
-            "target": "self"
-          }
-        ],
-        "description": "Gain 9 Armor. Costs 5 Mana."
-      }
-    },
-    {
-      "id": "fireball",
-      "name": "Fireball",
-      "description": "Deal 10 damage. Costs 5 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 10,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "mana": 5
-      },
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 13,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 13 damage. Costs 5 Mana."
-      }
-    },
-    {
-      "id": "heal",
-      "name": "Heal",
-      "description": "Restore 4 HP. Costs 8 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "heal",
-          "value": 4,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 8
-      },
-      "cooldown": 1.5,
-      "targeting": "self",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 1,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "heal",
-            "value": 5,
-            "target": "self"
-          }
-        ],
-        "cost": {
-          "mana": 7
-        },
-        "description": "Restore 5 HP. Costs 7 Mana."
-      }
-    },
-    {
-      "id": "arcane-shield",
-      "name": "Arcane Shield",
-      "description": "Gain 3 Armor. Costs 6 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 6
-      },
-      "cooldown": 2,
-      "targeting": "self",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 3,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 5,
-            "target": "self"
-          }
-        ],
-        "description": "Gain 5 Armor. Costs 6 Mana."
-      }
-    },
-    {
-      "id": "rejuvenate",
-      "name": "Rejuvenate",
-      "description": "Restore 10 Stamina. Costs 5 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "stamina",
-          "value": 10,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 5
-      },
-      "cooldown": 2,
-      "targeting": "self",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "stamina",
-            "value": 13,
-            "target": "self"
-          }
-        ],
-        "cost": {
-          "mana": 4
-        },
-        "description": "Restore 13 Stamina. Costs 4 Mana."
-      }
-    },
-    {
-      "id": "mana-drain",
-      "name": "Mana Drain",
-      "description": "Deal 5 damage. Restore 5 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 5,
-          "target": "enemy"
-        },
-        {
-          "type": "mana",
-          "value": 5,
-          "target": "self"
-        }
-      ],
-      "cooldown": 2,
-      "targeting": "single",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 7,
-            "target": "enemy"
-          },
-          {
-            "type": "mana",
-            "value": 7,
-            "target": "self"
-          }
-        ],
-        "description": "Deal 7 damage. Restore 7 Mana."
-      }
-    },
-    {
-      "id": "weaken",
-      "name": "Weaken",
-      "description": "Deal 3 damage. Enemy loses 2 Defense. Costs 7 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 3,
-          "target": "enemy"
-        },
-        {
-          "type": "debuff",
-          "value": 2,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "mana": 7
-      },
-      "cooldown": 2.5,
-      "targeting": "single",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 5,
-            "target": "enemy"
-          },
-          {
-            "type": "debuff",
-            "value": 2,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 5 damage. Enemy loses 2 Defense. Costs 7 Mana."
-      }
-    },
-    {
-      "id": "cleave",
-      "name": "Cleave",
-      "description": "Deal 5 damage. Costs 4 Stamina.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 5,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "stamina": 4
-      },
-      "cooldown": 1.5,
-      "targeting": "aoe",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 6,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 6 damage. Costs 4 Stamina."
-      }
-    },
-    {
-      "id": "reckless-charge",
-      "name": "Reckless Charge",
-      "description": "Deal 18 damage. Lose 3 HP.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 18,
-          "target": "enemy"
-        },
-        {
-          "type": "damage",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 2,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 24,
-            "target": "enemy"
-          },
-          {
-            "type": "damage",
-            "value": 3,
-            "target": "self"
-          }
-        ],
-        "cooldown": 1,
-        "description": "Deal 24 damage. Lose 3 HP."
-      }
-    },
-    {
-      "id": "execute",
-      "name": "Execute",
-      "description": "Deal 30 damage. Costs 12 Stamina.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 30,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "stamina": 12
-      },
-      "cooldown": 2.5,
-      "targeting": "lowest-hp",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 3,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 41,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 41 damage. Costs 12 Stamina."
-      }
-    },
-    {
-      "id": "chain-lightning",
-      "name": "Chain Lightning",
-      "description": "Deal 12 damage. Deal 6 damage. Costs 10 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 12,
-          "target": "enemy"
-        },
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "mana": 10
-      },
-      "cooldown": 2,
-      "targeting": "aoe",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 16,
-            "target": "enemy"
-          },
-          {
-            "type": "damage",
-            "value": 8,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 16 damage. Deal 8 damage. Costs 10 Mana."
-      }
-    },
-    {
-      "id": "doom-blade",
-      "name": "Doom Blade",
-      "description": "Deal 40 damage. Lose 3 HP. Costs 10 Defense.",
-      "category": "attack",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 40,
-          "target": "enemy"
-        },
-        {
-          "type": "damage",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "defense": 10
-      },
-      "cooldown": 3,
-      "targeting": "single",
-      "rarity": "epic",
-      "unlockSource": "forge",
-      "unlockTier": 5,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 48,
-            "target": "enemy"
-          },
-          {
-            "type": "damage",
-            "value": 3,
-            "target": "self"
-          }
-        ],
-        "description": "Deal 48 damage. Lose 3 HP. Costs 10 Defense."
-      }
-    },
-    {
-      "id": "parry",
-      "name": "Parry",
-      "description": "Gain 3 Armor. Deal 2 damage. Costs 3 Stamina.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 3,
-          "target": "self"
-        },
-        {
-          "type": "damage",
-          "value": 2,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "stamina": 3
-      },
-      "cooldown": 1,
-      "targeting": "self",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 1,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 3,
-            "target": "self"
-          },
-          {
-            "type": "damage",
-            "value": 2,
-            "target": "enemy"
-          }
-        ],
-        "cooldown": 0.8,
-        "description": "Gain 3 Armor. Deal 2 damage. Costs 3 Stamina."
-      }
-    },
-    {
-      "id": "bulwark",
-      "name": "Bulwark",
-      "description": "Gain 12 Armor. Costs 8 Stamina.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 12,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "stamina": 8
-      },
-      "cooldown": 2.5,
-      "targeting": "self",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 3,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 16,
-            "target": "self"
-          }
-        ],
-        "description": "Gain 16 Armor. Costs 8 Stamina."
-      }
-    },
-    {
-      "id": "last-stand",
-      "name": "Last Stand",
-      "description": "Gain 17 Armor. Costs 5 Stamina and 5 Mana.",
-      "category": "defense",
-      "effects": [
-        {
-          "type": "armor",
-          "value": 17,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 5,
-        "stamina": 5
-      },
-      "cooldown": 3,
-      "targeting": "self",
-      "rarity": "epic",
-      "unlockSource": "forge",
-      "unlockTier": 5,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "armor",
-            "value": 20,
-            "target": "self"
-          }
-        ],
-        "description": "Gain 20 Armor. Costs 5 Stamina and 5 Mana."
-      }
-    },
-    {
-      "id": "meditate",
-      "name": "Meditate",
-      "description": "Restore 5 Stamina. Restore 5 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "stamina",
-          "value": 5,
-          "target": "self"
-        },
-        {
-          "type": "mana",
-          "value": 5,
-          "target": "self"
-        }
-      ],
-      "cooldown": 3,
-      "targeting": "self",
-      "rarity": "common",
-      "upgraded": {
-        "effects": [
-          {
-            "type": "stamina",
-            "value": 7,
-            "target": "self"
-          },
-          {
-            "type": "mana",
-            "value": 7,
-            "target": "self"
-          }
-        ],
-        "description": "Restore 7 Stamina. Restore 7 Mana."
-      }
-    },
-    {
-      "id": "vampiric-touch",
-      "name": "Vampiric Touch",
-      "description": "Deal 7 damage. Restore 3 HP. Costs 6 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy"
-        },
-        {
-          "type": "heal",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 6
-      },
-      "cooldown": 2,
-      "targeting": "single",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 2,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 9,
-            "target": "enemy"
-          },
-          {
-            "type": "heal",
-            "value": 4,
-            "target": "self"
-          }
-        ],
-        "cooldown": 1.5,
-        "description": "Deal 9 damage. Restore 4 HP. Costs 6 Mana."
-      }
-    },
-    {
-      "id": "haste",
-      "name": "Haste",
-      "description": "Enemy loses 3 Defense. Costs 4 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "debuff",
-          "value": 3,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "mana": 4
-      },
-      "cooldown": 2,
-      "targeting": "single",
-      "rarity": "uncommon",
-      "unlockSource": "forge",
-      "unlockTier": 2,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "debuff",
-            "value": 3,
-            "target": "enemy"
-          }
-        ],
-        "cooldown": 1.5,
-        "description": "Enemy loses 3 Defense. Costs 4 Mana."
-      }
-    },
-    {
-      "id": "energy-surge",
-      "name": "Energy Surge",
-      "description": "Restore 12 Stamina. Restore 10 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "stamina",
-          "value": 12,
-          "target": "self"
-        },
-        {
-          "type": "mana",
-          "value": 10,
-          "target": "self"
-        }
-      ],
-      "cooldown": 4,
-      "targeting": "self",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 3,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "stamina",
-            "value": 16,
-            "target": "self"
-          },
-          {
-            "type": "mana",
-            "value": 14,
-            "target": "self"
-          }
-        ],
-        "description": "Restore 16 Stamina. Restore 14 Mana."
-      }
-    },
-    {
-      "id": "poison-cloud",
-      "name": "Poison Cloud",
-      "description": "Deal 8 damage. Enemy loses 2 Defense. Costs 8 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 8,
-          "target": "enemy"
-        },
-        {
-          "type": "debuff",
-          "value": 2,
-          "target": "enemy"
-        }
-      ],
-      "cost": {
-        "mana": 8
-      },
-      "cooldown": 2.5,
-      "targeting": "aoe",
-      "rarity": "rare",
-      "unlockSource": "forge",
-      "unlockTier": 4,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 11,
-            "target": "enemy"
-          },
-          {
-            "type": "debuff",
-            "value": 2,
-            "target": "enemy"
-          }
-        ],
-        "description": "Deal 11 damage. Enemy loses 2 Defense. Costs 8 Mana."
-      }
-    },
-    {
-      "id": "soul-rend",
-      "name": "Soul Rend",
-      "description": "Deal 23 damage. Restore 5 HP. Restore 8 Mana. Costs 15 Mana.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 23,
-          "target": "enemy"
-        },
-        {
-          "type": "heal",
-          "value": 5,
-          "target": "self"
-        },
-        {
-          "type": "mana",
-          "value": 8,
-          "target": "self"
-        }
-      ],
-      "cost": {
-        "mana": 15
-      },
-      "cooldown": 3,
-      "targeting": "single",
-      "rarity": "epic",
-      "unlockSource": "forge",
-      "unlockTier": 5,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 28,
-            "target": "enemy"
-          },
-          {
-            "type": "heal",
-            "value": 6,
-            "target": "self"
-          },
-          {
-            "type": "mana",
-            "value": 10,
-            "target": "self"
-          }
-        ],
-        "description": "Deal 28 damage. Restore 6 HP. Restore 10 Mana. Costs 15 Mana."
-      }
-    },
-    {
-      "id": "sacrifice",
-      "name": "Sacrifice",
-      "description": "Deal 20 damage. Lose 7 HP.",
-      "category": "magic",
-      "effects": [
-        {
-          "type": "damage",
-          "value": 20,
-          "target": "enemy"
-        },
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "self"
-        }
-      ],
-      "cooldown": 4,
-      "targeting": "aoe",
-      "rarity": "epic",
-      "unlockSource": "forge",
-      "unlockTier": 6,
-      "upgraded": {
-        "effects": [
-          {
-            "type": "damage",
-            "value": 24,
-            "target": "enemy"
-          },
-          {
-            "type": "damage",
-            "value": 7,
-            "target": "self"
-          }
-        ],
-        "description": "Deal 24 damage. Lose 7 HP."
-      }
-    }
-  ],
   "starterDeckIds": [
     "strike",
     "strike",
@@ -1048,8 +7,138 @@
     "defend",
     "defend",
     "defend",
-    "defend",
     "heavy-hit",
-    "fireball"
+    "cleave",
+    "bloodied-grip"
+  ],
+  "cards": [
+    { "id": "strike", "name": "Strike", "description": "Deal 7 damage. +1 Stamina on play.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 7, "target": "enemy" }, { "type": "stamina", "value": 1, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "heavy-hit", "name": "Heavy Hit", "description": "Deal 16 damage.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "cost": { "stamina": 4 }, "effects": [{ "type": "damage", "value": 16, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "defend", "name": "Defend", "description": "Gain 10 Armor.", "category": "defense", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "armor", "value": 10, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "cleave", "name": "Cleave", "description": "Deal 10 damage AoE.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "cost": { "stamina": 3 }, "effects": [{ "type": "damage", "value": 10, "target": "enemy" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "brace", "name": "Brace", "description": "Gain 9 Armor. +1 Stamina.", "category": "defense", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "armor", "value": 9, "target": "self" }, { "type": "stamina", "value": 1, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "bloodied-grip", "name": "Bloodied Grip", "description": "Deal 3 damage. +1 Rage stack.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 3, "target": "enemy" }, { "type": "buff", "value": 1, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "iron-resolve", "name": "Iron Resolve", "description": "Gain 10 Armor (effective; +4 if HP <50%).", "category": "defense", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "armor", "value": 10, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "shoulder-check", "name": "Shoulder Check", "description": "Deal 6 damage. Enemy -1 Defense.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 6, "target": "enemy" }, { "type": "debuff", "value": 1, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "whetstone", "name": "Whetstone", "description": "+2 STR for this combat.", "category": "defense", "rarity": "common", "classRestriction": "warrior", "cost": { "defense": 1 }, "effects": [{ "type": "buff", "value": 2, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "jab", "name": "Jab", "description": "Deal 6 damage. +2 Stamina.", "category": "attack", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 6, "target": "enemy" }, { "type": "stamina", "value": 2, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "bandage", "name": "Bandage", "description": "Heal 12 HP (1 HP cost). +1 SPI for combat.", "category": "defense", "rarity": "common", "classRestriction": "warrior", "effects": [{ "type": "heal", "value": 12, "target": "self" }, { "type": "buff", "value": 1, "target": "self", "scale": { "stat": "spi", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "war-cry", "name": "War Cry", "description": "+3 STR for the next 2 attacks.", "category": "defense", "rarity": "common", "classRestriction": "warrior", "cost": { "stamina": 2 }, "effects": [{ "type": "buff", "value": 2, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "counter-strike", "name": "Counter Strike", "description": "Deal 10 damage (8 base + 4 if recently hit, avg ~10).", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 10, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "shield-wall", "name": "Shield Wall", "description": "Gain 20 Armor.", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 3 }, "effects": [{ "type": "armor", "value": 20, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "fortify", "name": "Fortify", "description": "Gain 25 Armor.", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 4 }, "effects": [{ "type": "armor", "value": 25, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "parry", "name": "Parry", "description": "Gain 8 Armor. Deal 5 damage.", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 2 }, "effects": [{ "type": "armor", "value": 8, "target": "self" }, { "type": "damage", "value": 5, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "reckless-charge", "name": "Reckless Charge", "description": "Lose 2 HP, deal 35 damage.", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 35, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "rage-cycle", "name": "Rage Cycle", "description": "Deal 8 damage. +2 Rage stacks.", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 3 }, "effects": [{ "type": "damage", "value": 8, "target": "enemy" }, { "type": "buff", "value": 2, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "bone-splinter", "name": "Bone Splinter", "description": "Deal 5 damage. Apply 4 Bleed.", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 3 }, "effects": [{ "type": "damage", "value": 5, "target": "enemy" }, { "type": "dot", "value": 4, "target": "enemy", "stack": "bleed" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "battle-stance", "name": "Battle Stance", "description": "+3 STR (avg; +1 per 5 HP missing, cap 5).", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "effects": [{ "type": "buff", "value": 3, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "shieldbash", "name": "Shield Bash", "description": "Deal up to 18 damage (= current Armor).", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "defense": 2 }, "effects": [{ "type": "damage", "value": 14, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "wound-reopener", "name": "Wound Reopener", "description": "Deal 4 damage. Reapply 4 Bleed.", "category": "attack", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 4, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "bleed" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "plate-up", "name": "Plate Up", "description": "Gain 15 Armor. +2 VIT for combat.", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "cost": { "stamina": 3 }, "effects": [{ "type": "armor", "value": 15, "target": "self" }, { "type": "buff", "value": 2, "target": "self", "scale": { "stat": "vit", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "rallying-roar", "name": "Rallying Roar", "description": "Drain 1 SPI. +3 STR. +10 Stamina.", "category": "defense", "rarity": "uncommon", "classRestriction": "warrior", "effects": [{ "type": "buff", "value": 3, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }, { "type": "stamina", "value": 10, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "fury", "name": "Fury", "description": "Deal 45 damage. Costs 5 Defense.", "category": "attack", "rarity": "rare", "classRestriction": "warrior", "cost": { "defense": 5 }, "effects": [{ "type": "damage", "value": 45, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "bulwark", "name": "Bulwark", "description": "Gain 35 Armor.", "category": "defense", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 4 }, "effects": [{ "type": "armor", "value": 35, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "berserker", "name": "Berserker", "description": "Deal 70 damage. Costs 8 Stamina + 3 Defense.", "category": "attack", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 8, "defense": 3 }, "effects": [{ "type": "damage", "value": 70, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "execute", "name": "Execute", "description": "Deal 55 damage to lowest-HP enemy.", "category": "attack", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 8 }, "effects": [{ "type": "damage", "value": 55, "target": "enemy" }], "cooldown": 1.0, "targeting": "lowest-hp" },
+    { "id": "crimson-tide", "name": "Crimson Tide", "description": "Deal 27 damage (15 base + 3 per Bleed stack on target, avg 4 stacks).", "category": "attack", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 4 }, "effects": [{ "type": "damage", "value": 27, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "unyielding", "name": "Unyielding", "description": "Gain 32 Armor (20 + 3 per STR, baseline 4 STR).", "category": "defense", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 4 }, "effects": [{ "type": "armor", "value": 32, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "bloodsworn", "name": "Bloodsworn", "description": "Drain 1 STR. Deal 15 damage. +7 Rage stacks.", "category": "attack", "rarity": "rare", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 15, "target": "enemy" }, { "type": "buff", "value": 7, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "aegis-plate", "name": "Aegis Plate", "description": "Gain 40 Armor. (Replaces iron-skin in warrior set; see SUMMARY for Pitfall-9 reconciliation).", "category": "defense", "rarity": "rare", "classRestriction": "warrior", "cost": { "stamina": 5 }, "effects": [{ "type": "armor", "value": 40, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "doom-blade", "name": "Doom Blade", "description": "Deal 75 damage. Costs 6 Defense.", "category": "attack", "rarity": "epic", "classRestriction": "warrior", "cost": { "defense": 6 }, "effects": [{ "type": "damage", "value": 75, "target": "enemy" }], "cooldown": 1.0, "targeting": "single", "unlockSource": "forge", "unlockTier": 5 },
+    { "id": "last-stand", "name": "Last Stand", "description": "Gain 70 Armor. Costs 3 Stamina + 3 Mana.", "category": "defense", "rarity": "epic", "classRestriction": "warrior", "cost": { "stamina": 3, "mana": 3 }, "effects": [{ "type": "armor", "value": 70, "target": "self" }], "cooldown": 1.0, "targeting": "self", "unlockSource": "forge", "unlockTier": 5 },
+    { "id": "worldbreaker", "name": "Worldbreaker", "description": "Once per combat. Lose 3 HP. Deal 120 dmg. If kill: +2 STR permanently this run.", "category": "attack", "rarity": "epic", "classRestriction": "warrior", "effects": [{ "type": "damage", "value": 120, "target": "enemy" }], "cooldown": 1.0, "targeting": "single", "unlockSource": "forge", "unlockTier": 6 },
+
+    { "id": "fireball", "name": "Fireball", "description": "Deal 14 damage. +1 Arcane stack.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 14, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "meditate", "name": "Meditate", "description": "+6 Stamina, +8 Mana.", "category": "magic", "rarity": "common", "classRestriction": "mage", "effects": [{ "type": "stamina", "value": 6, "target": "self" }, { "type": "mana", "value": 8, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "mana-spark", "name": "Mana Spark", "description": "Deal 3 dmg. +1 Arcane stack.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "damage", "value": 9, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "kindle", "name": "Kindle", "description": "Deal 2 dmg. Burn 2 (2 turns). +1 Arcane.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 8, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "burn" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "frost-nip", "name": "Frost Nip", "description": "Deal 3 dmg. Freeze 1. +1 Arcane.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 9, "target": "enemy" }, { "type": "dot", "value": 1, "target": "enemy", "stack": "freeze" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "arcane-bolt", "name": "Arcane Bolt", "description": "Consume 1 Arcane stack. Deal 6 dmg.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 12, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "spark", "name": "Spark", "description": "Deal 4 dmg. Shock 1. +1 Arcane.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 10, "target": "enemy" }, { "type": "dot", "value": 1, "target": "enemy", "stack": "shock" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "flicker", "name": "Flicker", "description": "Deal 2 dmg. +1 Arcane. Heal 1.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "damage", "value": 8, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }, { "type": "heal", "value": 1, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "ember-ward", "name": "Ember Ward", "description": "Gain 5 Armor. Burn 3 on next attacker.", "category": "defense", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "armor", "value": 5, "target": "self" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "siphon", "name": "Siphon", "description": "Deal 6 dmg. Heal 2.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 12, "target": "enemy" }, { "type": "heal", "value": 3, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "candleflame", "name": "Candleflame", "description": "Lose 1 HP. Deal 5 dmg. +1 Arcane.", "category": "magic", "rarity": "common", "classRestriction": "mage", "effects": [{ "type": "damage", "value": 11, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "chill-touch", "name": "Chill Touch", "description": "Deal 5 dmg. Freeze 2. +1 Arcane.", "category": "magic", "rarity": "common", "classRestriction": "mage", "cost": { "mana": 4 }, "effects": [{ "type": "damage", "value": 11, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "freeze" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "heal", "name": "Heal", "description": "Heal 18 HP.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 4 }, "effects": [{ "type": "heal", "value": 23, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "rejuvenate", "name": "Rejuvenate", "description": "Restore 22 Stamina.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "stamina", "value": 22, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "vampiric-touch", "name": "Vampiric Touch", "description": "Deal 11 dmg. Heal 4. +1 Arcane.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 4 }, "effects": [{ "type": "damage", "value": 17, "target": "enemy" }, { "type": "heal", "value": 5, "target": "self" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "haste", "name": "Haste", "description": "Enemy attack +2.0s. +1 Arcane.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "dot", "value": 4, "target": "enemy", "stack": "freeze" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "weaken", "name": "Weaken", "description": "Deal 5 dmg. Enemy -4 Defense. +1 Arcane.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 11, "target": "enemy" }, { "type": "debuff", "value": 4, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "energy-surge", "name": "Energy Surge", "description": "+10 Stamina, +8 Mana.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "effects": [{ "type": "stamina", "value": 10, "target": "self" }, { "type": "mana", "value": 8, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "iron-skin", "name": "Iron Skin", "description": "Gain 18 Armor.", "category": "defense", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "armor", "value": 18, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "arcane-missiles", "name": "Arcane Missiles", "description": "Deal 4 dmg per Arcane stack (3 stacks avg). Keep stacks.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 5 }, "effects": [{ "type": "damage", "value": 30, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "pyre-bolt", "name": "Pyre Bolt", "description": "Deal 10 dmg. Burn 4. +1 Arcane.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 4 }, "effects": [{ "type": "damage", "value": 16, "target": "enemy" }, { "type": "dot", "value": 4, "target": "enemy", "stack": "burn" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "frostbite", "name": "Frostbite", "description": "Deal 5 dmg. Freeze 3. +1 Arcane.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "damage", "value": 11, "target": "enemy" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "freeze" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "spell-thrift", "name": "Spell Thrift", "description": "Next 2 magic cards cost 0 mana. Draw 1.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "effects": [{ "type": "mana", "value": 12, "target": "self" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "arcane-recall", "name": "Arcane Recall", "description": "Consume 2 Arcane stacks. +12 Mana, heal 4.", "category": "magic", "rarity": "uncommon", "classRestriction": "mage", "effects": [{ "type": "mana", "value": 12, "target": "self" }, { "type": "heal", "value": 5, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "arcane-shield", "name": "Arcane Shield", "description": "Gain 20 Armor. +2 Arcane stacks.", "category": "defense", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 2 }, "effects": [{ "type": "armor", "value": 20, "target": "self" }, { "type": "stack", "value": 2, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "mana-drain", "name": "Mana Drain", "description": "Drain 1 SPI. Deal 8 dmg. +7 Mana. +1 Arcane.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "effects": [{ "type": "damage", "value": 14, "target": "enemy" }, { "type": "mana", "value": 7, "target": "self" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "chain-lightning", "name": "Chain Lightning", "description": "Deal 16 dmg. 12 dmg AoE. Shock 1 to all. +1 Arcane.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 6 }, "effects": [{ "type": "damage", "value": 22, "target": "enemy" }, { "type": "dot", "value": 1, "target": "enemy", "stack": "shock" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "poison-cloud", "name": "Poison Cloud", "description": "Deal 8 dmg AoE. -2 Def AoE. Burn 2 AoE.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 5 }, "effects": [{ "type": "damage", "value": 14, "target": "enemy" }, { "type": "debuff", "value": 2, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "burn" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "polymorph", "name": "Polymorph", "description": "Freeze 6 + -4 enemy Defense + 1 Arcane.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 3 }, "effects": [{ "type": "dot", "value": 6, "target": "enemy", "stack": "freeze" }, { "type": "debuff", "value": 4, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "pyroclasm", "name": "Pyroclasm", "description": "Consume up to 5 Arcane stacks. Deal 20 dmg AoE. Burn 3 AoE.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 8 }, "effects": [{ "type": "damage", "value": 26, "target": "enemy" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }], "cooldown": 1.0, "targeting": "aoe", "unlockSource": "forge", "unlockTier": 4 },
+    { "id": "frozen-orb", "name": "Frozen Orb", "description": "Lose 1 HP. Deal 12 dmg AoE. Freeze 3 AoE. +2 Arcane.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 4 }, "effects": [{ "type": "damage", "value": 18, "target": "enemy" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "freeze" }, { "type": "stack", "value": 2, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "mindwarp", "name": "Mindwarp", "description": "Consume all Arcane stacks. 8 dmg/stack AoE; at 10 stacks, stun all 2 turns.", "category": "magic", "rarity": "rare", "classRestriction": "mage", "cost": { "mana": 12 }, "effects": [{ "type": "damage", "value": 46, "target": "enemy" }], "cooldown": 1.0, "targeting": "aoe", "unlockSource": "forge", "unlockTier": 4 },
+    { "id": "soul-rend", "name": "Soul Rend", "description": "Deal 38 dmg. Heal 6. +8 Mana.", "category": "magic", "rarity": "epic", "classRestriction": "mage", "cost": { "mana": 6 }, "effects": [{ "type": "damage", "value": 44, "target": "enemy" }, { "type": "heal", "value": 8, "target": "self" }, { "type": "mana", "value": 8, "target": "self" }], "cooldown": 1.5, "targeting": "single", "unlockSource": "forge", "unlockTier": 5 },
+    { "id": "sacrifice", "name": "Sacrifice", "description": "Lose 3 HP. Deal 40 dmg AoE.", "category": "magic", "rarity": "epic", "classRestriction": "mage", "effects": [{ "type": "damage", "value": 46, "target": "enemy" }], "cooldown": 2.0, "targeting": "aoe", "unlockSource": "forge", "unlockTier": 5 },
+    { "id": "eternal-flame", "name": "Eternal Flame", "description": "Once per combat. Permanently lose 1 maxHP. Burn 8 AoE. Burns never expire this combat.", "category": "magic", "rarity": "epic", "classRestriction": "mage", "effects": [{ "type": "dot", "value": 8, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 6, "target": "enemy" }], "cooldown": 1.5, "targeting": "aoe", "unlockSource": "forge", "unlockTier": 6 },
+
+    { "id": "backstab", "name": "Backstab", "description": "Deal 5 damage. +1 Combo Point.", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 5, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 0.9, "targeting": "single" },
+    { "id": "eviscerate", "name": "Eviscerate", "description": "Consume all CP. Deal 4 dmg per CP.", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "consume_combo", "value": 4, "target": "enemy" }], "cooldown": 1.4, "targeting": "single" },
+    { "id": "shadowstep", "name": "Shadowstep", "description": "Gain Stealth (1 card).", "category": "defense", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "stealth", "value": 1, "target": "self" }], "cooldown": 0.8, "targeting": "self" },
+    { "id": "toxic-coat", "name": "Toxic Coat", "description": "Apply 3 Poison stacks.", "category": "magic", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "dot", "value": 3, "target": "enemy", "stack": "poison" }], "cooldown": 1.2, "targeting": "single" },
+    { "id": "veil-guard", "name": "Veil Guard", "description": "Gain 3 Armor. Dodge next 1 hit.", "category": "defense", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "armor", "value": 3, "target": "self" }, { "type": "stealth", "value": 1, "target": "self" }], "cooldown": 1.2, "targeting": "self" },
+    { "id": "flick-blade", "name": "Flick Blade", "description": "Deal 4 dmg. +1 CP.", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "effects": [{ "type": "damage", "value": 4, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 0.8, "targeting": "single" },
+    { "id": "silken-step", "name": "Silken Step", "description": "Gain 2 Armor. +1 DEX for combat.", "category": "defense", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "armor", "value": 2, "target": "self" }, { "type": "buff", "value": 1, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "venom-flask", "name": "Venom Flask", "description": "Apply 3 Poison AoE.", "category": "magic", "rarity": "common", "classRestriction": "shadowblade", "cost": { "mana": 1 }, "effects": [{ "type": "dot", "value": 3, "target": "enemy", "stack": "poison" }], "cooldown": 1.5, "targeting": "aoe" },
+    { "id": "paring-cut", "name": "Paring Cut", "description": "Deal 4 dmg. Doubles vs poisoned (rider spends 1 CP).", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 4, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "smoke-pellet", "name": "Smoke Pellet", "description": "Gain Stealth (1). Apply 2 Poison.", "category": "defense", "rarity": "common", "classRestriction": "shadowblade", "effects": [{ "type": "stealth", "value": 1, "target": "self" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "poison" }], "cooldown": 1.4, "targeting": "self" },
+    { "id": "nicks-and-cuts", "name": "Nicks & Cuts", "description": "Deal 2 dmg twice. +1 CP.", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 4, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.3, "targeting": "single" },
+    { "id": "blood-tithe", "name": "Blood Tithe", "description": "Lose 1 HP. Deal 8 dmg. +2 CP.", "category": "attack", "rarity": "common", "classRestriction": "shadowblade", "effects": [{ "type": "damage", "value": 8, "target": "enemy" }, { "type": "gain_combo", "value": 2, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "crimson-tally", "name": "Crimson Tally", "description": "Deal 5 dmg. +1 CP. +1 dmg per Poison stack (cap +5).", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 7, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.2, "targeting": "single" },
+    { "id": "serpent-flick", "name": "Serpent Flick", "description": "Deal 4 dmg. Apply 2 Poison.", "category": "magic", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 4, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "poison" }], "cooldown": 1.5, "targeting": "single" },
+    { "id": "dance-of-veils", "name": "Dance of Veils", "description": "Gain Stealth (2). +1 CP.", "category": "defense", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "stealth", "value": 2, "target": "self" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.5, "targeting": "self" },
+    { "id": "blade-flurry", "name": "Blade Flurry", "description": "Deal 4 dmg AoE (×3). +1 CP.", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 12, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.5, "targeting": "aoe" },
+    { "id": "envenom", "name": "Envenom", "description": "Apply 2 Poison. All Poison ticks twice this round.", "category": "magic", "rarity": "uncommon", "classRestriction": "shadowblade", "effects": [{ "type": "dot", "value": 4, "target": "enemy", "stack": "poison" }], "cooldown": 1.8, "targeting": "single" },
+    { "id": "shadow-recursion", "name": "Shadow Recursion", "description": "Deal 5 dmg. +1 CP (+1 if from Stealth).", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 5, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.3, "targeting": "single" },
+    { "id": "garrote", "name": "Garrote", "description": "Deal 6 dmg. Apply 3 Poison.", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 6, "target": "enemy" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "poison" }], "cooldown": 1.3, "targeting": "single" },
+    { "id": "veiled-strike", "name": "Veiled Strike", "description": "Spend 1 CP. Deal 14 dmg (+8 from Stealth).", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "effects": [{ "type": "damage", "value": 14, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "dex-tonic", "name": "DEX Tonic", "description": "+4 DEX for combat.", "category": "magic", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1, "mana": 1 }, "effects": [{ "type": "buff", "value": 4, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.3, "targeting": "self" },
+    { "id": "umbral-marking", "name": "Umbral Marking", "description": "Mark enemy: next finisher +50%.", "category": "magic", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "debuff", "value": 15, "target": "enemy" }], "cooldown": 1.5, "targeting": "single" },
+    { "id": "serrated-edge", "name": "Serrated Edge", "description": "Deal 4 dmg. Apply 1 Poison +1 per existing (cap 4).", "category": "attack", "rarity": "uncommon", "classRestriction": "shadowblade", "cost": { "stamina": 1 }, "effects": [{ "type": "damage", "value": 4, "target": "enemy" }, { "type": "dot", "value": 3, "target": "enemy", "stack": "poison" }], "cooldown": 1.2, "targeting": "single" },
+    { "id": "poison-pact", "name": "Poison Pact", "description": "Lose 1 HP. Apply 7 Poison.", "category": "magic", "rarity": "uncommon", "classRestriction": "shadowblade", "effects": [{ "type": "dot", "value": 7, "target": "enemy", "stack": "poison" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "crimson-edge", "name": "Crimson Edge", "description": "Finisher: 6 dmg per CP. Refund 1 CP on kill.", "category": "attack", "rarity": "rare", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "consume_combo", "value": 6, "target": "enemy" }], "cooldown": 1.5, "targeting": "single", "unlockSource": "forge", "unlockTier": 3 },
+    { "id": "death-blossom", "name": "Death Blossom", "description": "Finisher AoE: 3 dmg per CP to all.", "category": "attack", "rarity": "rare", "classRestriction": "shadowblade", "cost": { "stamina": 3 }, "effects": [{ "type": "consume_combo", "value": 3, "target": "enemy" }], "cooldown": 1.8, "targeting": "aoe", "unlockSource": "forge", "unlockTier": 3 },
+    { "id": "shadowmeld", "name": "Shadowmeld", "description": "Gain Stealth (3). Next attack +12 dmg.", "category": "defense", "rarity": "rare", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "stealth", "value": 3, "target": "self" }, { "type": "buff", "value": 4, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.5, "targeting": "self" },
+    { "id": "coup-de-grace", "name": "Coup de Grâce", "description": "Finisher: 8 dmg/CP vs poisoned, 4 dmg/CP otherwise.", "category": "attack", "rarity": "rare", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "consume_combo", "value": 8, "target": "enemy" }], "cooldown": 1.5, "targeting": "single", "unlockSource": "forge", "unlockTier": 4 },
+    { "id": "widows-kiss", "name": "Widow's Kiss", "description": "Spend 2 CP. Apply 10 Poison. Poison no longer decays this combat.", "category": "magic", "rarity": "rare", "classRestriction": "shadowblade", "effects": [{ "type": "dot", "value": 10, "target": "enemy", "stack": "poison" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.5, "targeting": "single", "unlockSource": "forge", "unlockTier": 3 },
+    { "id": "nightshade-coil", "name": "Nightshade Coil", "description": "Deal 6 dmg. Apply 4 Poison. +1 CP per existing Poison (cap +3).", "category": "attack", "rarity": "rare", "classRestriction": "shadowblade", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 8, "target": "enemy" }, { "type": "dot", "value": 4, "target": "enemy", "stack": "poison" }, { "type": "gain_combo", "value": 2, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "swift-veil", "name": "Swift Veil", "description": "Spend 1 CP. Gain Stealth (3). Next 3 cards' cd halved.", "category": "defense", "rarity": "rare", "classRestriction": "shadowblade", "effects": [{ "type": "stealth", "value": 3, "target": "self" }, { "type": "buff", "value": 3, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "blood-ledger", "name": "Blood Ledger", "description": "Lose 1 HP. +4 DEX per 10 HP missing (cap +12).", "category": "magic", "rarity": "rare", "classRestriction": "shadowblade", "effects": [{ "type": "buff", "value": 12, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.5, "targeting": "self", "unlockSource": "forge", "unlockTier": 3 },
+    { "id": "crimson-recital", "name": "Crimson Recital", "description": "Finisher: 5 dmg/CP × (1 + 0.2×Poison). Lose 5 HP.", "category": "attack", "rarity": "epic", "classRestriction": "shadowblade", "effects": [{ "type": "consume_combo", "value": 15, "target": "enemy" }], "cooldown": 2.0, "targeting": "single", "unlockSource": "forge", "unlockTier": 6 },
+    { "id": "shadow-recursion-prime", "name": "Shadow Recursion Prime", "description": "Requires 3+ CP. Repeat previous attack card. Refund 2 CP if it was a Strike.", "category": "attack", "rarity": "epic", "classRestriction": "shadowblade", "effects": [{ "type": "damage", "value": 28, "target": "enemy" }], "cooldown": 2.2, "targeting": "single", "unlockSource": "forge", "unlockTier": 6 },
+    { "id": "eternal-veil", "name": "Eternal Veil", "description": "Permanently lose 1 maxHP. Gain Stealth (4). All cd -40% during Stealth.", "category": "defense", "rarity": "epic", "classRestriction": "shadowblade", "effects": [{ "type": "stealth", "value": 4, "target": "self" }, { "type": "buff", "value": 5, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.5, "targeting": "self", "unlockSource": "forge", "unlockTier": 6 },
+
+    { "id": "field-bandage", "name": "Field Bandage", "description": "Heal 7 HP.", "category": "defense", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "heal", "value": 7, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "quick-jab", "name": "Quick Jab", "description": "Deal 6 damage. Short cooldown.", "category": "attack", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "damage", "value": 6, "target": "enemy" }], "cooldown": 0.8, "targeting": "single" },
+    { "id": "tower-guard", "name": "Tower Guard", "description": "Gain 10 Armor.", "category": "defense", "rarity": "common", "classRestriction": "neutral", "cost": { "stamina": 2 }, "effects": [{ "type": "armor", "value": 10, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "focus-breath", "name": "Focus Breath", "description": "+6 Stamina, +6 Mana.", "category": "magic", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "stamina", "value": 6, "target": "self" }, { "type": "mana", "value": 6, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "sharpening-stone", "name": "Sharpening Stone", "description": "+2 STR for combat.", "category": "magic", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "buff", "value": 2, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "lucky-coin", "name": "Lucky Coin", "description": "Gain 10 gold. Restore 4 HP.", "category": "magic", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "heal", "value": 4, "target": "self" }, { "type": "stamina", "value": 6, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "dust-kick", "name": "Dust Kick", "description": "Lose 1 HP. Deal 10 dmg. Enemy -3 Defense.", "category": "attack", "rarity": "common", "classRestriction": "neutral", "effects": [{ "type": "damage", "value": 10, "target": "enemy" }, { "type": "debuff", "value": 3, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "kitbash-dagger", "name": "Kitbash Dagger", "description": "Deal 5 dmg. +1 CP.", "category": "attack", "rarity": "common", "classRestriction": "neutral", "cost": { "stamina": 2 }, "effects": [{ "type": "damage", "value": 5, "target": "enemy" }, { "type": "gain_combo", "value": 1, "target": "self" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "heirloom-charm", "name": "Heirloom Charm", "description": "+3 to random STR/DEX/INT for combat.", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "effects": [{ "type": "buff", "value": 3, "target": "self", "scale": { "stat": "str", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "merchant-ledger", "name": "Merchant's Ledger", "description": "Draw 3 cards (4 if shop visited this loop).", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "effects": [{ "type": "stack", "value": 1, "target": "self", "stack": "arcane" }, { "type": "mana", "value": 12, "target": "self" }], "cooldown": 2.0, "targeting": "self" },
+    { "id": "iron-canteen", "name": "Iron Canteen", "description": "Restore 10 Stamina. Gain 6 Armor.", "category": "defense", "rarity": "uncommon", "classRestriction": "neutral", "effects": [{ "type": "stamina", "value": 10, "target": "self" }, { "type": "armor", "value": 6, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "caltrops", "name": "Caltrops", "description": "Deal 6 dmg AoE. Apply 2 Bleed.", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "cost": { "mana": 2 }, "effects": [{ "type": "damage", "value": 6, "target": "enemy" }, { "type": "dot", "value": 2, "target": "enemy", "stack": "bleed" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "second-wind", "name": "Second Wind", "description": "If <50% HP: heal 8, restore 5 Stamina.", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "effects": [{ "type": "heal", "value": 8, "target": "self" }, { "type": "stamina", "value": 5, "target": "self" }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "pocket-grenade", "name": "Pocket Grenade", "description": "Deal 14 dmg AoE.", "category": "attack", "rarity": "uncommon", "classRestriction": "neutral", "cost": { "stamina": 2, "mana": 1 }, "effects": [{ "type": "damage", "value": 14, "target": "enemy" }], "cooldown": 1.0, "targeting": "aoe" },
+    { "id": "featherweight", "name": "Featherweight", "description": "-0.6s cd on next card. +4 DEX for combat.", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "cost": { "mana": 2 }, "effects": [{ "type": "buff", "value": 4, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "signal-flare", "name": "Signal Flare", "description": "Enemy -9 Defense. Draw 1.", "category": "magic", "rarity": "uncommon", "classRestriction": "neutral", "cost": { "mana": 2 }, "effects": [{ "type": "debuff", "value": 9, "target": "enemy" }, { "type": "stack", "value": 1, "target": "self", "stack": "arcane" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "bandits-trinket", "name": "Bandit's Trinket", "description": "Spend up to 12 gold. Deal 1 dmg per gold.", "category": "magic", "rarity": "rare", "classRestriction": "neutral", "effects": [{ "type": "damage", "value": 12, "target": "enemy" }], "cooldown": 1.0, "targeting": "single" },
+    { "id": "worldroot-seed", "name": "Worldroot Seed", "description": "Heal 12. +6 Stamina. +1 VIT permanent if combat won.", "category": "magic", "rarity": "rare", "classRestriction": "neutral", "cost": { "mana": 3 }, "effects": [{ "type": "heal", "value": 12, "target": "self" }, { "type": "stamina", "value": 6, "target": "self" }, { "type": "buff", "value": 2, "target": "self", "scale": { "stat": "vit", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "chronometer", "name": "Chronometer", "description": "Reset all cooldowns. -30% cooldowns rest of combat.", "category": "magic", "rarity": "rare", "classRestriction": "neutral", "cost": { "mana": 3 }, "effects": [{ "type": "buff", "value": 6, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }], "cooldown": 1.0, "targeting": "self" },
+    { "id": "mercenary-contract", "name": "Mercenary Contract", "description": "Lose 1 HP. Draw 5. +4 DEX for combat.", "category": "magic", "rarity": "rare", "classRestriction": "neutral", "effects": [{ "type": "buff", "value": 4, "target": "self", "scale": { "stat": "dex", "per": 1, "value": 1 } }, { "type": "mana", "value": 10, "target": "self" }], "cooldown": 1.0, "targeting": "self" }
   ]
 }

@@ -178,6 +178,16 @@ export class EnemyAI {
    * attacks so iron_will/phoenix fire once for the whole attack.
    */
   private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
+    // Phase 9: Stealth evade — when evadeNextHit is set and the hero has at
+    // least one Stealth charge, the next incoming hit is fully blocked. The
+    // charge is consumed; when charges reach 0 the evade flag clears.
+    if (state.evadeNextHit && state.stealthCharges > 0) {
+      state.stealthCharges -= 1;
+      if (state.stealthCharges === 0) state.evadeNextHit = false;
+      eventBus.emit('combat:evade', { source: 'stealth' });
+      return 0;
+    }
+
     const damage = rawDamage;
     const multiplier = state.heroDefenseMultiplier ?? 1;
     const effectiveDefense = state.heroDefense * multiplier;

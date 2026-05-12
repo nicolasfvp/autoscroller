@@ -30,9 +30,9 @@ describe('TileRegistry', () => {
     expect(config.tilePointCost).toBe(0);
   });
 
-  it('getAllPlaceableTiles returns 7 tile types', () => {
+  it('getAllPlaceableTiles returns 10 tile types (Phase 9: +library/arena/shrine_of_pact)', () => {
     const placeable = getAllPlaceableTiles();
-    expect(placeable).toHaveLength(7);
+    expect(placeable).toHaveLength(10);
     // Should not include basic or boss
     expect(placeable.every(t => t.canPlaceManually)).toBe(true);
   });

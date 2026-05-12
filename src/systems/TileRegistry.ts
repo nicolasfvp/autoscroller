@@ -8,6 +8,8 @@ export interface TileConfig {
   terrain?: TerrainType;
   name: string;
   color: number;
+  /** Optional hex string equivalent of color (Phase 9 design v2 LOCKED palette). */
+  hexColor?: string;
   canPlaceManually: boolean;
   tilePointCost: number;
   icon: string;
@@ -17,6 +19,14 @@ export interface TileConfig {
 export interface TileSlot {
   type: TileSlotType;
   terrain?: TerrainType;
+  /**
+   * Phase 9: tile registry key (e.g. 'library', 'arena', 'shrine_of_pact').
+   * Carried separately from `type` so adjacency resolution can match the
+   * specific registry key for tiles that share an existing `type` umbrella
+   * (e.g. library/arena/shrine_of_pact all use type='event' but need
+   * distinct adjacency keys per design/04 §7).
+   */
+  kind?: string;
   defeatedThisLoop: boolean;
   /** Pre-assigned enemy ID for combat tiles (visible on the world map) */
   enemyId?: string;
@@ -52,6 +62,7 @@ export function createTileSlot(key: string): TileSlot {
   return {
     type: config.type,
     terrain: config.terrain,
+    kind: key,
     defeatedThisLoop: false,
   };
 }

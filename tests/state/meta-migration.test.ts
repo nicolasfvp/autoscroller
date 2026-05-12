@@ -5,16 +5,16 @@ describe('migrateMetaState', () => {
   it('returns a valid default MetaState v4 when passed null', () => {
     const result = migrateMetaState(null);
     const defaults = createDefaultMetaState();
-    expect(result).toEqual(defaults);
-    expect(result.version).toBe(5);
+    expect({ ...result, _wipedFromVersion: undefined }).toEqual({ ...defaults, _wipedFromVersion: undefined });
+    expect(result.version).toBe(6);
     expect(result.materials).toEqual({});
   });
 
   it('returns a valid default MetaState v4 when passed undefined', () => {
     const result = migrateMetaState(undefined);
     const defaults = createDefaultMetaState();
-    expect(result).toEqual(defaults);
-    expect(result.version).toBe(5);
+    expect({ ...result, _wipedFromVersion: undefined }).toEqual({ ...defaults, _wipedFromVersion: undefined });
+    expect(result.version).toBe(6);
   });
 
   it('converts v1 state with metaLoot: 50 to materials: { essence: 50 }', () => {
@@ -40,7 +40,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.materials).toEqual({ essence: 50 });
+    expect(result.materials).toEqual({}); // D-06 wipes materials
   });
 
   it('converts v1 state with metaLoot: 0 to materials: {} (empty)', () => {
@@ -88,7 +88,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.buildings.storehouse).toEqual({ level: 0 });
+    expect(result.buildings.storehouse).toEqual({ level: 0 }); // D-06 wipe also produces 0
   });
 
   it('converts runHistory metaLootEarned to materialsEarned: { essence: N }', () => {
@@ -115,8 +115,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.runHistory[0].materialsEarned).toEqual({ essence: 25 });
-    expect(result.runHistory[1].materialsEarned).toEqual({ essence: 10 });
+    expect(result.runHistory).toEqual([]); // D-06 wipes runHistory
+
   });
 
   it('migrates v2 state to v4 with new fields', () => {
@@ -143,8 +143,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v2State);
-    expect(result.version).toBe(5);
-    expect(result.materials).toEqual({ wood: 10, iron: 5 });
+    expect(result.version).toBe(6);
+    expect(result.materials).toEqual({}); // D-06 wipes materials
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
     expect(result.gameSpeed).toBe(1);
@@ -174,8 +174,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v2State);
-    expect(result.tutorialSeen).toBe(true);
-    expect(result.version).toBe(5);
+    expect(result.tutorialSeen).toBe(false); // D-06 wipes tutorialSeen
+    expect(result.version).toBe(6);
   });
 
   it('sets version: 4 on migrated v1 state', () => {
@@ -199,7 +199,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(5);
+    expect(result.version).toBe(6);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
   });
@@ -225,8 +225,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(5);
-    expect(result.materials).toEqual({ essence: 50 });
+    expect(result.version).toBe(6);
+    expect(result.materials).toEqual({}); // D-06 wipes materials
     expect(result.tutorialSeen).toBe(false);
   });
 
@@ -258,8 +258,8 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v4State);
-    expect(result.version).toBe(5);
-    expect(result.runHistory[0].className).toBe('warrior');
+    expect(result.version).toBe(6);
+    expect(result.runHistory).toEqual([]); // D-06 wipes runHistory
   });
 
   it('preserves existing buildings, unlockedCards, passivesUnlocked, etc.', () => {
@@ -285,13 +285,13 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.buildings.forge.level).toBe(2);
-    expect(result.buildings.library.level).toBe(1);
-    expect(result.buildings.workshop.level).toBe(1);
-    expect(result.unlockedCards).toContain('fury');
-    expect(result.passivesUnlocked).toContain('power_strike');
-    expect(result.unlockedTiles).toContain('swamp');
-    expect(result.classXP.warrior).toBe(100);
-    expect(result.totalRuns).toBe(5);
+    expect(result.buildings.forge.level).toBe(0); // D-06 wipes buildings
+    expect(result.buildings.library.level).toBe(0); // D-06 wipes buildings
+    expect(result.buildings.workshop.level).toBe(0); // D-06 wipes buildings
+    expect(result.unlockedCards).toEqual([]); // D-06 wipes unlocks
+    expect(result.passivesUnlocked).toEqual([]); // D-06 wipes passives
+    expect(result.unlockedTiles).toEqual([]); // D-06 wipes tiles
+    expect(result.classXP.warrior).toBe(0); // D-06 wipes XP
+    expect(result.totalRuns).toBe(0); // D-06 wipes counters
   });
 });

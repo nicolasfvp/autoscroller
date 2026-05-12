@@ -4,34 +4,11 @@ import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
-
-interface ClassOption {
-  id: string;
-  name: string;
-  description: string;
-  spriteKey: string;
-  stats: { hp: number; stamina: number; mana: number };
-  deckHint: string;
-}
-
-const CLASSES: ClassOption[] = [
-  {
-    id: 'warrior',
-    name: 'Warrior',
-    description: 'Balanced melee fighter.\nHigh HP and stamina.',
-    spriteKey: 'hero_idle',
-    stats: { hp: 100, stamina: 50, mana: 30 },
-    deckHint: 'Strikes, Defends, Heavy Hit',
-  },
-  {
-    id: 'mage',
-    name: 'Mage',
-    description: 'Powerful spellcaster.\nHigh mana, low HP.',
-    spriteKey: 'mage_idle',
-    stats: { hp: 70, stamina: 30, mana: 60 },
-    deckHint: 'Fireballs, Heals, Mana Drain',
-  },
-];
+import {
+  CLASS_CARDS as CLASSES,
+  computeCardLayout,
+  type ClassOption,
+} from './CharacterSelectScene.helpers';
 
 export class CharacterSelectScene extends Scene {
   private selectedIndex = 0;
@@ -71,12 +48,14 @@ export class CharacterSelectScene extends Scene {
       resolution: 3,
     }).setOrigin(0.5);
 
-    // Render class cards side by side
-    const cardWidth = 280;
-    const cardHeight = 400;
-    const gap = 40;
-    const totalWidth = CLASSES.length * cardWidth + (CLASSES.length - 1) * gap;
-    const startX = LAYOUT.centerX - totalWidth / 2 + cardWidth / 2;
+    // Phase 9 (Design v2): 3 cards (Warrior, Mage, Shadowblade) require a
+    // downscaled layout per UI-SPEC §Spacing FLAG -- old 280×40 layout
+    // overflows the 800px canvas with 3 cards.
+    const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
+    const cardWidth = layout.cardW;
+    const cardHeight = layout.cardH;
+    const gap = layout.gap;
+    const startX = layout.margin + cardWidth / 2;
 
     CLASSES.forEach((cls, i) => {
       const x = startX + i * (cardWidth + gap);
@@ -153,7 +132,8 @@ export class CharacterSelectScene extends Scene {
       this.highlightSelected();
     });
 
-    // Character sprite preview (animated)
+    // Character sprite preview (animated). Phase 9 (D-08): Shadowblade
+    // reuses mage_idle with a #7E5BEF tint as placeholder art.
     if (this.textures.exists(cls.spriteKey)) {
       const animKey = `select_${cls.id}_idle`;
       if (!this.anims.exists(animKey)) {
@@ -165,11 +145,12 @@ export class CharacterSelectScene extends Scene {
         });
       }
       const sprite = this.add.sprite(0, -90, cls.spriteKey).setScale(3);
+      if (cls.spriteTint !== undefined) sprite.setTint(cls.spriteTint);
       sprite.play(animKey);
       container.add(sprite);
     } else {
-      // Fallback colored square
-      const fallback = this.add.rectangle(0, -90, 64, 64, cls.id === 'warrior' ? 0x4488ff : 0x9944ff);
+      // Fallback colored square (per class fallbackColor)
+      const fallback = this.add.rectangle(0, -90, 64, 64, cls.fallbackColor);
       container.add(fallback);
     }
 

@@ -15,7 +15,7 @@ export interface MetaState {
     storehouse: { level: number };
   };
   materials: Record<string, number>;
-  classXP: { warrior: number; mage: number };
+  classXP: { warrior: number; mage: number; shadowblade: number };
   passivesUnlocked: string[];
   unlockedCards: string[];
   unlockedRelics: string[];
@@ -30,6 +30,10 @@ export interface MetaState {
   gameSpeed: number;     // 1 or 2
   autoSave: boolean;     // default true
   version: number;
+  /** One-shot flag set by migrateMetaState on a v3/v4/v5 -> v6 wipe.
+   *  Plan 4 reads & strips this before MetaPersistence.saveMetaState.
+   *  (Pitfall 5: not part of the persisted shape.) */
+  _wipedFromVersion?: number;
 }
 
 export interface RunHistoryEntry {
@@ -54,7 +58,7 @@ export function createDefaultMetaState(): MetaState {
       storehouse: { level: 0 },
     },
     materials: {},
-    classXP: { warrior: 0, mage: 0 },
+    classXP: { warrior: 0, mage: 0, shadowblade: 0 },
     passivesUnlocked: [],
     unlockedCards: [],
     unlockedRelics: [],
@@ -65,7 +69,7 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 5,
+    version: 6,
   };
 }
 
@@ -115,12 +119,16 @@ export function migrateMetaState(raw: any): MetaState {
   }
 
   // v3 -> v4 migration: add classXP.mage
+  // Phase 9 (CR-02 fix): also widen classXP shape to include shadowblade
+  // so a v3 save migrated forward to v4 doesn't leave the field undefined
+  // before the v6 wipe. (Migrate path defensively backfills all three.)
   if (raw.version === 3) {
     raw = {
       ...raw,
       classXP: {
         warrior: raw.classXP?.warrior ?? 0,
         mage: raw.classXP?.mage ?? 0,
+        shadowblade: raw.classXP?.shadowblade ?? 0,
       },
       version: 4,
     };
@@ -137,6 +145,17 @@ export function migrateMetaState(raw: any): MetaState {
       runHistory: history,
       version: 5,
     };
+  }
+
+  // v3/v4/v5 -> v6 (Phase 9 / Design v2): full save wipe per D-06.
+  // The v2 content rewrite (125 cards / 50 relics / 125 synergies) makes
+  // preserving any prior unlock state meaningless -- a clean slate for v6
+  // players. Re-applies for v3/v4 saves too in case migrate gets called on
+  // an already-wiped fresh state with leftover stale fields.
+  if (raw.version === 3 || raw.version === 4 || raw.version === 5) {
+    const fresh = createDefaultMetaState();
+    fresh._wipedFromVersion = raw.version;
+    return fresh;
   }
 
   return raw as MetaState;

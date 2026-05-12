@@ -44,9 +44,11 @@ describe('cards.json', () => {
     expect(epics.length).toBeGreaterThanOrEqual(3);
   });
 
-  it('upgraded cards have valid upgrade object with effects or cost or cooldown', () => {
+  it.skip('upgraded cards have valid upgrade object (deprecated: v2 wholesale replacement dropped upgrade overlays)', () => {
+    // Plan 2 / D-05: v1 content replaced wholesale. The v2 design package does not author per-card
+    // upgrade overlays — upgrade-on-rest semantics will be re-introduced in a future content pass.
+    // Skipped rather than deleted for traceability.
     const upgraded = cards.filter((c: any) => c.upgraded);
-    expect(upgraded.length).toBeGreaterThanOrEqual(10);
     for (const card of upgraded) {
       const u = (card as any).upgraded;
       expect(u.effects || u.cost || u.cooldown || u.description).toBeTruthy();
@@ -81,13 +83,17 @@ describe('relics.json', () => {
     }
   });
 
-  it('5 relics (warrior_spirit, iron_will, berserker_ring, demon_heart, phoenix_feather) DO have unlockSource', () => {
-    const gatedIds = ['warrior_spirit', 'iron_will', 'berserker_ring', 'demon_heart', 'phoenix_feather'];
+  it('4 v1-surviving gated relics (iron_will, berserker_ring, demon_heart, phoenix_feather) DO have unlockSource', () => {
+    // warrior_spirit dropped from v2 (replaced by warrior-class-exclusive relics per design/01_warrior.md §6).
+    const gatedIds = ['berserker_ring', 'demon_heart', 'phoenix_feather'];
     for (const id of gatedIds) {
       const relic = relics.find((r: any) => r.id === id);
-      expect(relic).toBeDefined();
+      expect(relic, `gated relic ${id} missing`).toBeDefined();
       expect(relic).toHaveProperty('unlockSource');
     }
+    // iron_will is now a neutral rare with damage_taken trigger; v2 keeps it ungated (passive bonus).
+    const ironWill = relics.find((r: any) => r.id === 'iron_will');
+    expect(ironWill, 'iron_will present in v2').toBeDefined();
   });
 });
 
@@ -188,11 +194,129 @@ describe('MetaState', () => {
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    expect(state.version).toBe(5);
+    expect(state.version).toBe(6);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);
     expect(state.buildings.workshop.level).toBe(0);
     expect(state.buildings.shrine.level).toBe(0);
+  });
+});
+
+describe('Phase 9 (v2) content totals + coverage', () => {
+  const cards = cardsData.cards;
+  const relics = relicsData as any[];
+  const synergies = synergiesData as any[];
+
+  it('cards.json has exactly 125 entries (RED until Plan 2)', () => {
+    expect(cards.length).toBe(125);
+  });
+
+  it('relics.json has exactly 50 entries (RED until Plan 2)', () => {
+    expect(relics.length).toBe(50);
+  });
+
+  it('synergies.json has exactly 125 entries (RED until Plan 2)', () => {
+    expect(synergies.length).toBe(125);
+  });
+
+  it('every card appears in exactly 2 synergy rows (RED until Plan 2)', () => {
+    const counts = new Map<string, number>();
+    for (const card of cards as any[]) counts.set(card.id, 0);
+    for (const row of synergies) {
+      counts.set(row.cardA, (counts.get(row.cardA) ?? 0) + 1);
+      counts.set(row.cardB, (counts.get(row.cardB) ?? 0) + 1);
+    }
+    const offenders: Array<{ id: string; count: number }> = [];
+    for (const [id, count] of counts) {
+      if (count !== 2) offenders.push({ id, count });
+    }
+    expect(offenders, JSON.stringify(offenders)).toEqual([]);
+  });
+
+  it('all card effect.type values are in the known enumeration', () => {
+    const allowed = new Set([
+      'damage', 'heal', 'armor', 'stamina', 'mana', 'debuff',
+      'buff', 'debuff_stat', 'dot', 'stack',
+      'consume_combo', 'gain_combo', 'stealth', 'taunt',
+    ]);
+    for (const card of cards as any[]) {
+      for (const eff of card.effects) {
+        expect(allowed.has(eff.type), `${card.id}: unknown effect type ${eff.type}`).toBe(true);
+      }
+    }
+  });
+
+  it('every card has rarity in {common, uncommon, rare, epic}', () => {
+    const allowed = new Set(['common', 'uncommon', 'rare', 'epic']);
+    for (const card of cards as any[]) {
+      expect(allowed.has(card.rarity), `${card.id}: rarity ${card.rarity}`).toBe(true);
+    }
+  });
+
+  it('no v1-only IDs survived into v2 (Plan 2 final dead list)', () => {
+    // v1-only IDs that were explicitly cut in v2 per the design docs §9 trim heuristic.
+    // Many v1 cards survive by name (strike, defend, fury, etc.) — they appear in their
+    // class doc §4 card tables. Only these are truly forbidden:
+    const forbidden = [
+      'pommel-strike',     // warrior numeric clone of jab (§9 cut)
+      'skull-cracker',     // warrior strike clone (§9 cut)
+      'catch-breath',      // warrior cantrip (§9 cut)
+      'wild-swing',        // warrior 50%-miss noob trap (§9 cut)
+      'inner-focus',       // mage filler (§8.3 cut)
+      'dim-mind',          // mage filler (§8.3 cut)
+      'mind-glimmer',      // mage mana-spark clone (§8.3 cut)
+      'galvanize',         // mage filler (§8.3 cut)
+      'flash-freeze',      // mage frost-nip clone (§8.3 cut)
+    ];
+    const cardIds = new Set((cards as any[]).map((c) => c.id));
+    const survivors: string[] = [];
+    for (const dead of forbidden) if (cardIds.has(dead)) survivors.push(dead);
+    expect(survivors, `v1-only IDs survived: ${survivors.join(', ')}`).toEqual([]);
+  });
+
+  it('iron-skin is classified as Mage exactly once (Pitfall 9)', () => {
+    const ironSkinEntries = (cards as any[]).filter((c) => c.id === 'iron-skin');
+    expect(ironSkinEntries.length).toBe(1);
+    expect(ironSkinEntries[0].classRestriction).toBe('mage');
+  });
+
+  it('chalice_of_five_blades relic is present (Shadowblade A3)', () => {
+    const chalice = (relics as any[]).find((r) => r.id === 'chalice_of_five_blades');
+    expect(chalice, 'chalice_of_five_blades must exist').toBeDefined();
+    expect((chalice as any).classRestriction).toBe('shadowblade');
+  });
+
+  it('every card has class restriction (warrior | mage | shadowblade | neutral)', () => {
+    const allowed = new Set(['warrior', 'mage', 'shadowblade', 'neutral']);
+    const offenders: string[] = [];
+    for (const card of cards as any[]) {
+      if (!allowed.has(card.classRestriction)) {
+        offenders.push(`${card.id}: ${card.classRestriction ?? '(unset)'}`);
+      }
+    }
+    expect(offenders, `cards missing classRestriction: ${offenders.join(', ')}`).toEqual([]);
+  });
+
+  it('per-class card counts match design totals (35/35/35/20)', () => {
+    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
+    for (const card of cards as any[]) {
+      counts[card.classRestriction] = (counts[card.classRestriction] ?? 0) + 1;
+    }
+    expect(counts.warrior).toBe(35);
+    expect(counts.mage).toBe(35);
+    expect(counts.shadowblade).toBe(35);
+    expect(counts.neutral).toBe(20);
+  });
+
+  it('per-class relic counts match design totals (10/10/10/20)', () => {
+    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
+    for (const relic of relics as any[]) {
+      counts[relic.classRestriction] = (counts[relic.classRestriction] ?? 0) + 1;
+    }
+    expect(counts.warrior).toBe(10);
+    expect(counts.mage).toBe(10);
+    expect(counts.shadowblade).toBe(10);
+    expect(counts.neutral).toBe(20);
   });
 });

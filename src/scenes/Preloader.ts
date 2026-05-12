@@ -64,11 +64,18 @@ export class Preloader extends Scene {
     this.load.spritesheet('mage_death', 'assets/characters/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
 
     // Monster spritesheets (64x64 per frame, horizontal strips)
+    // Phase 9 (CR-01 fix): monster enemy IDs include 'mage', which used to
+    // collide with the hero Mage spritesheet keys (`mage_idle/attack/death`).
+    // Phaser's loader silently overwrites duplicate keys, so the hero Mage
+    // (and Shadowblade, which reuses the mage_* prefix per D-08) rendered as
+    // the monster sprite. Namespace monster keys with `monster_` to keep the
+    // hero and enemy texture buckets disjoint. Render-site consumers
+    // (TileVisual, CombatScene) resolve enemy keys via `monster_${enemyId}_*`.
     const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
     for (const id of monsterIds) {
-      this.load.spritesheet(`${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet(`monster_${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
@@ -140,10 +147,14 @@ export class Preloader extends Scene {
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
     // Relic Illustrations
+    // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
+    // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic
+    // IDs removed; iron_will retained as a neutral rare"). All remaining
+    // IDs verified to exist in v2 relics.json on 2026-05-11.
     const relicIds = [
       'arcane_crystal', 'berserker_ring', 'blood_pact', 'bronze_scale', 'demon_heart',
       'energy_potion', 'first_strike_amulet', 'iron_will', 'mana_stone', 'phoenix_feather',
-      'spell_focus', 'swift_boots', 'thin_deck_charm', 'vitality_ring', 'warrior_spirit'
+      'swift_boots', 'thin_deck_charm', 'vitality_ring'
     ];
 
     for (const id of relicIds) {
@@ -151,6 +162,11 @@ export class Preloader extends Scene {
     }
 
     // Card Illustrations
+    // Phase 9 (Design v2) audit: every ID below survives in v2 cards.json
+    // (verified via cards.json membership check 2026-05-11). Per D-08 no new
+    // Shadowblade card assets are added in this phase -- v2 cards without
+    // preload entries fall back to the default card visual via the
+    // existing preload-skip path.
     const cardIds = [
       'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
       'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',

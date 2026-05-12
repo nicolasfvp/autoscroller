@@ -5,6 +5,12 @@ import type { RunState } from '../state/RunState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS, REGISTRY_KEYS } from '../state/SceneKeys';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import {
+  consumeWipeFlag,
+  formatWelcomeNotice,
+  SAVE_INCOMPATIBLE_COPY,
+} from './MainMenu.helpers';
 
 export class MainMenu extends Scene {
   private savedRun: RunState | null = null;
@@ -31,6 +37,35 @@ export class MainMenu extends Scene {
     this.savedRun = await saveManager.load();
     this.registry.remove(REGISTRY_KEYS.SAVED_RUN);
     this.confirmOverlay = null;
+
+    // Phase 9 (Design v2) Pitfall 5: consume the one-shot _wipedFromVersion
+    // flag from MetaState, then persist the stripped state so it never
+    // reappears on subsequent boots. Layered with MetaPersistence's own
+    // strip for defense-in-depth.
+    try {
+      const meta = await loadMetaState();
+      const wipedFrom = consumeWipeFlag(meta);
+      if (wipedFrom !== undefined) {
+        await saveMetaState(meta);
+        // Phase 9 (WR-06 fix): defer the visual notice until after the menu's
+        // UI is built. The previous `events.once('create', ...)` line was
+        // dead — the 'create' event fires before this create() runs, so the
+        // callback never fired. A future refactor that hoisted the wipe-flag
+        // consumption would have left both callbacks armed and surfaced a
+        // duplicate notice. delayedCall(50) alone is sufficient.
+        this.time.delayedCall(50, () => this.showWelcomeNotice(wipedFrom));
+      }
+    } catch (err) {
+      console.warn('[MainMenu] wipe-flag consumption failed:', err);
+    }
+
+    // D-07: SaveManager.load() set a global flag if an incompatible RunState
+    // was cleared on boot. Surface the save-incompatible notice once.
+    const g = globalThis as { __runStateClearedOnBoot?: boolean };
+    if (g.__runStateClearedOnBoot) {
+      g.__runStateClearedOnBoot = false;
+      this.time.delayedCall(50, () => this.showSaveIncompatibleNotice());
+    }
 
     // Theme Song
     AudioManager.transitionTo(this, 'theme_song', { volume: 0.4, duration: 1500 });
@@ -178,6 +213,69 @@ export class MainMenu extends Scene {
   private async startNewRun(): Promise<void> {
     await saveManager.clear();
     this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT);
+  }
+
+  /**
+   * Phase 9 (Design v2): inline welcome notice after a v3/v4/v5 -> v6
+   * MetaState wipe migration. NOT a modal -- per UI-SPEC §Copywriting the
+   * wipe is automatic (D-06) and the notice is informational only. Fades in
+   * 400ms, auto-dismisses after 6s.
+   */
+  private showWelcomeNotice(wipedFrom?: number): void {
+    const msg = formatWelcomeNotice(wipedFrom);
+    const text = this.add.text(LAYOUT.centerX, 100, msg, {
+      fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
+      stroke: '#000000', strokeThickness: 3,
+      fontFamily: FONTS.family,
+      wordWrap: { width: 600 }, align: 'center',
+    }).setOrigin(0.5).setDepth(50);
+    text.setAlpha(0);
+    this.tweens.add({ targets: text, alpha: 1, duration: 400 });
+    this.time.delayedCall(6000, () => {
+      this.tweens.add({
+        targets: text, alpha: 0, duration: 400,
+        onComplete: () => text.destroy(),
+      });
+    });
+  }
+
+  /**
+   * Phase 9 (Design v2): save-incompatible notice surfaced when SaveManager
+   * cleared a stale RunState on boot (D-07). Dismissible inline card with
+   * "Continue" CTA per UI-SPEC §Copywriting. NOT a hard modal.
+   */
+  private showSaveIncompatibleNotice(): void {
+    const container = this.add.container(0, 0).setDepth(60);
+
+    // Dim panel (NOT full-screen black — informational, not destructive)
+    const panel = this.add.rectangle(LAYOUT.centerX, 150, 520, 110, 0x222222, 0.9)
+      .setStrokeStyle(2, 0xffaa44, 0.9);
+    container.add(panel);
+
+    const title = this.add.text(LAYOUT.centerX, 120, SAVE_INCOMPATIBLE_COPY.title, {
+      fontSize: '18px', fontStyle: 'bold', color: '#ffaa44',
+      stroke: '#000000', strokeThickness: 3,
+      fontFamily: FONTS.family,
+    }).setOrigin(0.5);
+    container.add(title);
+
+    const body = this.add.text(LAYOUT.centerX, 150, SAVE_INCOMPATIBLE_COPY.body, {
+      fontSize: '13px', color: '#ffffff',
+      stroke: '#000000', strokeThickness: 2,
+      fontFamily: FONTS.family,
+      wordWrap: { width: 480 }, align: 'center',
+    }).setOrigin(0.5);
+    container.add(body);
+
+    const cta = this.add.text(LAYOUT.centerX, 185, SAVE_INCOMPATIBLE_COPY.cta, {
+      fontSize: '16px', fontStyle: 'bold', color: COLORS.accent,
+      stroke: '#000000', strokeThickness: 3,
+      fontFamily: FONTS.family,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    cta.on('pointerover', () => cta.setColor(COLORS.accentHover));
+    cta.on('pointerout', () => cta.setColor(COLORS.accent));
+    cta.on('pointerdown', () => container.destroy(true));
+    container.add(cta);
   }
 
   private cleanup(): void {

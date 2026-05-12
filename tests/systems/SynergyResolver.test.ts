@@ -6,6 +6,11 @@ function slot(type: string, terrain?: string): TileSlot {
   return { type: type as any, terrain: terrain as any, defeatedThisLoop: false };
 }
 
+/** Phase 9 helper: tile with explicit registry `kind` (library/arena/shrine_of_pact). */
+function kindSlot(kind: string): TileSlot {
+  return { type: 'event' as any, kind, defeatedThisLoop: false };
+}
+
 describe('SynergyResolver', () => {
   it('two adjacent forest tiles produce goldDropBonus', () => {
     const tiles = [slot('terrain', 'forest'), slot('terrain', 'forest'), slot('basic')];
@@ -49,13 +54,14 @@ describe('SynergyResolver', () => {
     expect(buffs).toHaveLength(0);
   });
 
-  it('wrap-around is checked: last tile adjacent to first tile', () => {
+  it('adjacency does NOT wrap around: last tile is not adjacent to first tile', () => {
+    // Phase 9 / WR-05 fix: loop is linear (boss is a terminator), so the last
+    // playable tile must not pair with the first one. The middle tile here
+    // breaks any direct adjacency, so no buff should be emitted.
     const tiles = [slot('terrain', 'forest'), slot('basic'), slot('terrain', 'forest')];
     const buffs = resolveAdjacencySynergies(tiles);
-    // last (forest) -> first (forest) should produce goldDropBonus
     const wrapBuff = buffs.find(b => b.tileIndex === 2);
-    expect(wrapBuff).toBeDefined();
-    expect(wrapBuff!.type).toBe('goldDropBonus');
+    expect(wrapBuff).toBeUndefined();
   });
 
   it('order does not matter: swamp+forest same as forest+swamp', () => {
@@ -65,5 +71,55 @@ describe('SynergyResolver', () => {
     const buffsB = resolveAdjacencySynergies(tilesB);
     expect(buffsA[0].type).toBe('tileDropBonus');
     expect(buffsB[0].type).toBe('tileDropBonus');
+  });
+});
+
+describe('Phase 9 — v2 tile adjacency (design/04 §7)', () => {
+  it('library + shop yields cardUpgradeDiscount 0.20 (Scholarly Bargain)', () => {
+    const tiles = [kindSlot('library'), slot('shop'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'cardUpgradeDiscount', value: 0.20 }),
+    );
+  });
+
+  it('library + graveyard yields xpBonus 0.25 (Cursed Knowledge)', () => {
+    const tiles = [kindSlot('library'), slot('terrain', 'graveyard'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'xpBonus', value: 0.25 }),
+    );
+  });
+
+  it('arena + rest yields hpRecoveryBonus 0.20 (Medic Tent)', () => {
+    const tiles = [kindSlot('arena'), slot('rest'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'hpRecoveryBonus', value: 0.20 }),
+    );
+  });
+
+  it('arena + forest yields damageBonus 0.15 (Ambush Crowd)', () => {
+    const tiles = [kindSlot('arena'), slot('terrain', 'forest'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'damageBonus', value: 0.15 }),
+    );
+  });
+
+  it('shrine_of_pact + treasure yields goldDropBonus 0.30 (Richer Pact)', () => {
+    const tiles = [kindSlot('shrine_of_pact'), slot('treasure'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'goldDropBonus', value: 0.30 }),
+    );
+  });
+
+  it('shrine_of_pact + graveyard yields tileDropBonus 0.20 (Necropact)', () => {
+    const tiles = [kindSlot('shrine_of_pact'), slot('terrain', 'graveyard'), slot('basic')];
+    const buffs = resolveAdjacencySynergies(tiles);
+    expect(buffs).toContainEqual(
+      expect.objectContaining({ type: 'tileDropBonus', value: 0.20 }),
+    );
   });
 });

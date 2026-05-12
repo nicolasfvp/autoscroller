@@ -3,6 +3,7 @@
 
 import synergiesData from '../../data/json/synergies.json';
 import type { SynergyDefinition } from '../../data/types';
+import type { CombatState } from './CombatState';
 
 export class SynergySystem {
   private synergies: Map<string, SynergyDefinition>;
@@ -37,5 +38,25 @@ export class SynergySystem {
     }
 
     return synergy;
+  }
+}
+
+/**
+ * Phase 9 (Task 5): synergy bonus types that are NOT routed through
+ * CardResolver.applyEffect — they mutate CombatState directly. Currently
+ * `cooldown_reduction` is the only such type; `nextCardCooldownReduction`
+ * accumulates the shave so the next card's cooldown is shortened.
+ *
+ * Called from CombatEngine.executeCard AFTER CardResolver.resolve so the
+ * synergy first runs through the normal effect dispatcher (no-op for
+ * cooldown_reduction; populated cases for everything else) and THEN this
+ * direct-mutation step picks up the leftover bonus types.
+ */
+export function applyDirectSynergyBonus(
+  synergy: SynergyDefinition,
+  state: CombatState,
+): void {
+  if (synergy.bonus.type === 'cooldown_reduction') {
+    state.nextCardCooldownReduction += synergy.bonus.value;
   }
 }

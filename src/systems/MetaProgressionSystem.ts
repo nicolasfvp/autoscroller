@@ -134,7 +134,10 @@ export function bankRunRewards(
   // B.3: route XP to the correct class bucket. Guard against unknown classes
   // — fall back to warrior with a warning rather than silently dropping XP.
   let resolvedClass = className;
-  if (resolvedClass !== 'warrior' && resolvedClass !== 'mage') {
+  // Phase 9 (CR-02 fix): shadowblade joins warrior/mage as a recognised
+  // class bucket; without this, Shadowblade XP banks routed through the
+  // fallback warning and landed in warrior's bucket.
+  if (resolvedClass !== 'warrior' && resolvedClass !== 'mage' && resolvedClass !== 'shadowblade') {
     console.warn(`[bankRunRewards] unknown className "${className}", falling back to "warrior"`);
     resolvedClass = 'warrior';
   }

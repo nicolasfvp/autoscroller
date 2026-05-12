@@ -1,6 +1,11 @@
 import Phaser from 'phaser';
 import { getRun, type RunState } from '../state/RunState';
 import { FONTS } from './StyleConstants';
+// Re-export Phase 9 helpers from a Phaser-free module so tests can import
+// without booting Phaser. The runtime path here still uses them.
+import { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
+export { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
+export type { StatusRowData } from './LoopHUD.helpers';
 
 const FF = FONTS.family;
 
@@ -26,6 +31,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   private pendingBadge!: Phaser.GameObjects.Text;
   private pendingBg!: Phaser.GameObjects.Graphics;
+
+  // Phase 9 (Design v2): VIT/DEX/INT/SPI status row
+  private statTexts: { vit?: Phaser.GameObjects.Text; dex?: Phaser.GameObjects.Text; int?: Phaser.GameObjects.Text; spi?: Phaser.GameObjects.Text } = {};
 
   // Loop progress bar (between panels)
   private loopProgressFill!: Phaser.GameObjects.Rectangle;
@@ -184,7 +192,74 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.drawShopToggle(true);
 
     this.buildLoopProgressBar(scene);
+    this.buildStatusStatsRow(scene);
     scene.add.existing(this);
+  }
+
+  /**
+   * Phase 9 (Design v2): VIT/DEX/INT/SPI single-row status display.
+   *
+   * Positioned BELOW the left panel (y=124+ region) so it doesn't overlap
+   * gold/loop/HP bar geometry. Universal — renders for all classes.
+   * UI-SPEC §Spacing + §Typography + §Color.
+   */
+  private buildStatusStatsRow(scene: Phaser.Scene): void {
+    const P = LoopHUD;
+    const ROW_X = P.LP_X + 12;
+    const ROW_Y = P.LP_Y + P.LP_H + 32;  // below the pending-cards badge slot
+    const SPACING = 64;  // ≈64px between each stat block (fits 4 in 280px panel)
+
+    const stats: Array<{ code: string; color: number; key: 'vit' | 'dex' | 'int' | 'spi' }> = [
+      { code: 'VIT', color: STATUS_ROW_COLORS.vit, key: 'vit' },
+      { code: 'DEX', color: STATUS_ROW_COLORS.dex, key: 'dex' },
+      { code: 'INT', color: STATUS_ROW_COLORS.int, key: 'int' },
+      { code: 'SPI', color: STATUS_ROW_COLORS.spi, key: 'spi' },
+    ];
+
+    stats.forEach((s, i) => {
+      const x = ROW_X + i * SPACING;
+      // Letter code: 10px bold, colored per stat token, 2px black stroke
+      const code = scene.add.text(x, ROW_Y, s.code, {
+        fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
+        color: '#' + s.color.toString(16).padStart(6, '0'),
+        stroke: '#000000', strokeThickness: 2,
+      }).setOrigin(0, 0.5);
+      this.add(code);
+
+      // Number: 13px bold white, 2px black stroke
+      const num = scene.add.text(x + 28, ROW_Y, '0', {
+        fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
+        color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+      }).setOrigin(0, 0.5);
+      this.add(num);
+      this.statTexts[s.key] = num;
+    });
+  }
+
+  /**
+   * Phase 9 (Design v2): Tween a single status-stat number to a new value.
+   *
+   * 280ms counter tween + 1.1× scale pulse on the changed digit
+   * per UI-SPEC §Interaction Contract.
+   */
+  private applyStatTween(key: 'vit' | 'dex' | 'int' | 'spi', newValue: number): void {
+    const txt = this.statTexts[key];
+    if (!txt) return;
+    const currentValue = parseInt(txt.text, 10);
+    if (!Number.isFinite(currentValue)) {
+      txt.setText(String(newValue));
+      return;
+    }
+    if (currentValue === newValue) return;
+    this.scene.tweens.addCounter({
+      from: currentValue, to: newValue, duration: 280,
+      onUpdate: (tw) => {
+        const v = tw.getValue();
+        txt.setText(String(Math.round(v ?? newValue)));
+      },
+      onComplete: () => { txt.setText(String(newValue)); },
+    });
+    this.scene.tweens.add({ targets: txt, scale: 1.1, duration: 140, yoyo: true });
   }
 
   private buildLoopProgressBar(scene: Phaser.Scene): void {
@@ -234,7 +309,14 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const pct = Math.round(progress * 100);
     this.loopProgressFill.width = (LoopHUD.PROG_W - 24) * progress;
     this.loopProgressText.setText(`${pct}%`);
-    this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / runState.hero.maxHP);
+    // Phase 9 (WR-07 fix): clamp maxHP to 1 before division. A corrupted save
+    // or transient mid-migration state with maxHP === 0 yields NaN, which
+    // Phaser silently propagates into the rectangle's width and breaks the
+    // bar. The text label still shows the raw `currentHP/maxHP` so the
+    // underlying corruption is surfaced to the user, but the bar geometry
+    // stays sane.
+    const maxHPForBar = Math.max(1, runState.hero.maxHP);
+    this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / maxHPForBar);
     this.hpText.setText(`${runState.hero.currentHP}/${runState.hero.maxHP}`);
     this.tpText.setText(`${runState.economy.tilePoints} TP`);
     const MAT: Record<string, string> = { wood: '🪵', stone: '🪨', iron: '⚙', crystal: '💎', bone: '🦴', herbs: '🌿', essence: '✨' };
@@ -243,6 +325,13 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.updateShopToggle(runState.stopAtShop);
     const pending = runState.deck.droppedCards?.length ?? 0;
     this.pendingBadge.setText(pending > 0 ? `📦 ${pending} new cards` : '').setVisible(pending > 0);
+
+    // Phase 9 (Design v2): refresh VIT/DEX/INT/SPI status row from resolveHeroStats.
+    const status = extractStatusRowData(runState);
+    this.applyStatTween('vit', status.vit);
+    this.applyStatTween('dex', status.dex);
+    this.applyStatTween('int', status.int);
+    this.applyStatTween('spi', status.spi);
   }
 
   private updateShopToggle(enabled: boolean): void {

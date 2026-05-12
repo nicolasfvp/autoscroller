@@ -23,6 +23,16 @@ export interface GameEvents {
   'combat:boss-behavior': { type: string; value: number };
   'combat:damage-dealt': { source: string; target: string; amount: number };
 
+  // Phase 9 — Design v2 new combat events.
+  'combat:dot-tick': { stack: string; damage: number; sourceCard: string };
+  'combat:evade': { source: string };
+  'combat:combo-played': { displayName: string; comboPointsAfter: number };
+  'combat:enemy-killed': { enemyId: string };
+  'combat:card-drawn': { cardId: string };
+  'combat:rest-used': { choice: string };
+  'combat:shop-visited': Record<string, never>;
+  'combat:stat-changed': { stat: string; delta: number };
+
   // Hero events
   'hero:damaged': { amount: number; currentHP: number; maxHP: number };
   'hero:healed': { amount: number; currentHP: number };

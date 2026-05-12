@@ -33,6 +33,7 @@ function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): R
       strength: 1,
       defenseMultiplier: 1,
       moveSpeed: 2,
+      vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
     },
     deck: {
       active: deckActive,

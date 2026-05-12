@@ -15,7 +15,11 @@ interface SynergyDef {
 const synergies = synergiesData as SynergyDef[];
 
 function getTileKey(tile: TileSlot): string {
-  return tile.terrain ?? tile.type;
+  // Phase 9: prefer the explicit registry key (`kind`) when present so tiles
+  // like library/arena/shrine_of_pact (which all share type='event') resolve
+  // to their distinct adjacency rows. Fall back to terrain (forest/graveyard/
+  // swamp) and then to the umbrella type for legacy slots.
+  return tile.kind ?? tile.terrain ?? tile.type;
 }
 
 function findSynergy(a: string, b: string): SynergyDef | undefined {
@@ -41,8 +45,14 @@ export function resolveAdjacencySynergies(tiles: TileSlot[]): SynergyBuff[] {
 
   const buffs: SynergyBuff[] = [];
 
-  for (let i = 0; i < playable.length; i++) {
-    const next = playable[(i + 1) % playable.length];
+  // Phase 9 (WR-05 fix): adjacency is LINEAR, not a ring. Stop at the last
+  // playable tile rather than wrapping `boss → first` via modulo. Linear
+  // loop traversal never visits the boss-then-first pair in sequence, so
+  // the wraparound was a phantom free buff the player won by accident of
+  // tile ordering. Buffer-tile exclusion above already preserves the spirit
+  // of the rule; dropping the modulo closes the matching boundary case.
+  for (let i = 0; i < playable.length - 1; i++) {
+    const next = playable[i + 1];
     const keyA = getTileKey(playable[i].tile);
     const keyB = getTileKey(next.tile);
     const synergy = findSynergy(keyA, keyB);
