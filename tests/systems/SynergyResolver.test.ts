@@ -54,13 +54,14 @@ describe('SynergyResolver', () => {
     expect(buffs).toHaveLength(0);
   });
 
-  it('wrap-around is checked: last tile adjacent to first tile', () => {
+  it('adjacency does NOT wrap around: last tile is not adjacent to first tile', () => {
+    // Phase 9 / WR-05 fix: loop is linear (boss is a terminator), so the last
+    // playable tile must not pair with the first one. The middle tile here
+    // breaks any direct adjacency, so no buff should be emitted.
     const tiles = [slot('terrain', 'forest'), slot('basic'), slot('terrain', 'forest')];
     const buffs = resolveAdjacencySynergies(tiles);
-    // last (forest) -> first (forest) should produce goldDropBonus
     const wrapBuff = buffs.find(b => b.tileIndex === 2);
-    expect(wrapBuff).toBeDefined();
-    expect(wrapBuff!.type).toBe('goldDropBonus');
+    expect(wrapBuff).toBeUndefined();
   });
 
   it('order does not matter: swamp+forest same as forest+swamp', () => {
