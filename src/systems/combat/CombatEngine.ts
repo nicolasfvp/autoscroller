@@ -338,9 +338,16 @@ export class CombatEngine {
       anyDotTicked = true;
     }
 
-    // Burn: mage-leaning DoT. INT-scaling per design/00 §3 — baseline +INT.
+    // Burn: mage-leaning DoT. INT-scaling per design/00 §3.
+    // Phase 9 (WR-04 fix): mirror poison's per-stack DEX multiplier shape so
+    // INT scales burn ON EACH STACK rather than as a flat add. Previous
+    // formula `stacks + floor(INT/2)` made high-INT/high-stack burn flatten
+    // out (1 stack @ INT 8 = 5 dmg, 5 stacks @ INT 8 = 9 dmg). New formula
+    // `stacks * (1 + floor(INT/2))` matches poison's `stacks * (1+floor(DEX/4))`
+    // so DoT classes scale symmetrically with their primary stat.
     if (state.burnStacks > 0) {
-      const dmg = state.burnStacks + Math.floor(state.heroIntellect / 2);
+      const intMult = 1 + Math.floor(state.heroIntellect / 2);
+      const dmg = state.burnStacks * intMult;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
