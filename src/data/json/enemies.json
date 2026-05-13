@@ -1,22 +1,22 @@
 [
   {
-    "id": "slime",
-    "name": "Slime",
+    "id": "lost_lizard",
+    "name": "Lost Lizard",
     "type": "normal",
-    "baseHP": 130,
-    "baseDefense": 0,
+    "baseHP": 175,
+    "baseDefense": 2,
     "attack": {
-      "damage": 3,
+      "damage": 2,
       "pattern": "fixed"
     },
-    "attackCooldown": 2500,
+    "attackCooldown": 2795,
     "goldReward": {
       "min": 10,
-      "max": 20
+      "max": 25
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "herbs",
+      "bonusMaterial": "essence",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -25,72 +25,19 @@
     "color": 65280
   },
   {
-    "id": "goblin",
-    "name": "Goblin",
+    "id": "corpse_eater",
+    "name": "Corpse Eater",
     "type": "normal",
-    "baseHP": 100,
-    "baseDefense": 0,
-    "attack": {
-      "damage": 2,
-      "pattern": "random",
-      "specialEffect": "double"
-    },
-    "attackCooldown": 1500,
-    "goldReward": {
-      "min": 15,
-      "max": 25
-    },
-    "materialReward": {
-      "chance": 0.25,
-      "bonusMaterial": "iron",
-      "bonusAmount": {
-        "min": 1,
-        "max": 2
-      }
-    },
-    "color": 9127187
-  },
-  {
-    "id": "orc",
-    "name": "Orc",
-    "type": "normal",
-    "baseHP": 184,
-    "baseDefense": 3,
-    "attack": {
-      "damage": 3,
-      "defense": 2,
-      "pattern": "fixed"
-    },
-    "attackCooldown": 3000,
-    "goldReward": {
-      "min": 20,
-      "max": 30
-    },
-    "materialReward": {
-      "chance": 0.35,
-      "bonusMaterial": "iron",
-      "bonusAmount": {
-        "min": 1,
-        "max": 3
-      }
-    },
-    "color": 5597999
-  },
-  {
-    "id": "mage",
-    "name": "Dark Mage",
-    "type": "normal",
-    "baseHP": 90,
-    "baseDefense": 0,
+    "baseHP": 111,
+    "baseDefense": 2,
     "attack": {
       "damage": 5,
-      "pattern": "conditional",
-      "specialEffect": "debuff"
+      "pattern": "fixed"
     },
-    "attackCooldown": 2200,
+    "attackCooldown": 2032,
     "goldReward": {
-      "min": 25,
-      "max": 35
+      "min": 10,
+      "max": 25
     },
     "materialReward": {
       "chance": 0.3,
@@ -100,53 +47,396 @@
         "max": 2
       }
     },
-    "color": 9662683
+    "color": 8947848
   },
   {
-    "id": "elite_knight",
-    "name": "Elite Knight",
-    "type": "elite",
-    "baseHP": 180,
-    "baseDefense": 5,
+    "id": "headless_fire_horse",
+    "name": "Headless Fire Horse",
+    "type": "normal",
+    "baseHP": 108,
+    "baseDefense": 2,
     "attack": {
-      "damage": 2,
-      "defense": 3,
+      "damage": 4,
       "pattern": "fixed"
     },
-    "attackCooldown": 2800,
+    "attackCooldown": 2827,
     "goldReward": {
-      "min": 50,
-      "max": 80
+      "min": 10,
+      "max": 25
     },
     "materialReward": {
-      "chance": 0.4,
+      "chance": 0.3,
       "bonusMaterial": "essence",
       "bonusAmount": {
         "min": 1,
         "max": 2
       }
     },
-    "color": 12632256
+    "color": 16729088
   },
   {
-    "id": "boss_demon",
-    "name": "Demon Lord",
-    "type": "boss",
-    "bossType": "demon",
-    "baseHP": 250,
+    "id": "pocket_cat",
+    "name": "Pocket Cat",
+    "type": "normal",
+    "baseHP": 163,
     "baseDefense": 1,
     "attack": {
+      "damage": 4,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2215,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 4473924
+  },
+  {
+    "id": "baby_dragon",
+    "name": "Baby Dragon",
+    "type": "normal",
+    "baseHP": 139,
+    "baseDefense": 1,
+    "attack": {
+      "damage": 4,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2255,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 15649962
+  },
+  {
+    "id": "giant_beetle",
+    "name": "Giant Beetle",
+    "type": "normal",
+    "baseHP": 155,
+    "baseDefense": 1,
+    "attack": {
+      "damage": 3,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2813,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 14531481
+  },
+  {
+    "id": "mutated_salamander",
+    "name": "Mutated Salamander",
+    "type": "normal",
+    "baseHP": 177,
+    "baseDefense": 0,
+    "attack": {
       "damage": 5,
-      "defense": 0,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2194,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 16755200
+  },
+  {
+    "id": "ancient_tree",
+    "name": "Ancient Tree",
+    "type": "normal",
+    "baseHP": 112,
+    "baseDefense": 1,
+    "attack": {
+      "damage": 4,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2530,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 2263074
+  },
+  {
+    "id": "giant_spider_2",
+    "name": "Giant Spider 2",
+    "type": "normal",
+    "baseHP": 120,
+    "baseDefense": 2,
+    "attack": {
+      "damage": 2,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2945,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 3355443
+  },
+  {
+    "id": "giant_spider",
+    "name": "Giant Spider",
+    "type": "normal",
+    "baseHP": 160,
+    "baseDefense": 0,
+    "attack": {
+      "damage": 2,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2071,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 2236962
+  },
+  {
+    "id": "mush",
+    "name": "Mush",
+    "type": "normal",
+    "baseHP": 136,
+    "baseDefense": 0,
+    "attack": {
+      "damage": 2,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2052,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 11184725
+  },
+  {
+    "id": "forge_slime",
+    "name": "Forge Slime",
+    "type": "normal",
+    "baseHP": 145,
+    "baseDefense": 2,
+    "attack": {
+      "damage": 2,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2786,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 16724736
+  },
+  {
+    "id": "lava_golen",
+    "name": "Lava Golem",
+    "type": "normal",
+    "baseHP": 165,
+    "baseDefense": 2,
+    "attack": {
+      "damage": 4,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2097,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 13386752
+  },
+  {
+    "id": "mecha_warrior",
+    "name": "Mecha Warrior",
+    "type": "normal",
+    "baseHP": 119,
+    "baseDefense": 2,
+    "attack": {
+      "damage": 2,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2979,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 11184810
+  },
+  {
+    "id": "depths_horror",
+    "name": "Depths Horror",
+    "type": "normal",
+    "baseHP": 105,
+    "baseDefense": 0,
+    "attack": {
+      "damage": 3,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2332,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 2245666
+  },
+  {
+    "id": "toxic_gooze",
+    "name": "Toxic Gooze",
+    "type": "normal",
+    "baseHP": 111,
+    "baseDefense": 1,
+    "attack": {
+      "damage": 3,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2578,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 4521796
+  },
+  {
+    "id": "venomous_kobra",
+    "name": "Venomous Kobra",
+    "type": "normal",
+    "baseHP": 155,
+    "baseDefense": 1,
+    "attack": {
+      "damage": 4,
+      "pattern": "fixed"
+    },
+    "attackCooldown": 2355,
+    "goldReward": {
+      "min": 10,
+      "max": 25
+    },
+    "materialReward": {
+      "chance": 0.3,
+      "bonusMaterial": "essence",
+      "bonusAmount": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    "color": 2280482
+  },
+  {
+    "id": "doom_knight",
+    "name": "Doom Knight",
+    "type": "boss",
+    "bossType": "knight",
+    "baseHP": 1200,
+    "baseDefense": 5,
+    "attack": {
+      "damage": 10,
       "pattern": "scaling"
     },
     "attackCooldown": 2500,
-    "behaviors": [
-      {
-        "type": "drain",
-        "healPercent": 4
-      }
-    ],
+    "behaviors": [],
     "goldReward": {
       "min": 100,
       "max": 150
@@ -159,93 +449,24 @@
         "max": 6
       }
     },
-    "color": 9109504
+    "color": 3355443
   },
   {
-    "id": "boss_tank",
+    "id": "iron_golem",
     "name": "Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 1440,
-    "baseDefense": 10,
-    "attack": {
-      "damage": 5,
-      "defense": 5,
-      "pattern": "scaling"
-    },
-    "attackCooldown": 3000,
-    "behaviors": [
-      {
-        "type": "shield",
-        "interval": 10000,
-        "shieldAmount": 20
-      }
-    ],
-    "goldReward": {
-      "min": 120,
-      "max": 180
-    },
-    "materialReward": {
-      "chance": 1,
-      "bonusMaterial": "essence",
-      "bonusAmount": {
-        "min": 3,
-        "max": 6
-      }
-    },
-    "color": 8421504
-  },
-  {
-    "id": "boss_berserker",
-    "name": "Blood Reaver",
-    "type": "boss",
-    "bossType": "berserker",
-    "baseHP": 720,
-    "baseDefense": 3,
-    "attack": {
-      "damage": 13,
-      "pattern": "random",
-      "specialEffect": "double"
-    },
-    "attackCooldown": 1800,
-    "behaviors": [
-      {
-        "type": "enrage",
-        "hpThreshold": 0.3,
-        "attackSpeedMultiplier": 2
-      }
-    ],
-    "goldReward": {
-      "min": 100,
-      "max": 160
-    },
-    "materialReward": {
-      "chance": 1,
-      "bonusMaterial": "essence",
-      "bonusAmount": {
-        "min": 3,
-        "max": 6
-      }
-    },
-    "color": 11141120
-  },
-  {
-    "id": "boss_mage",
-    "name": "Lich King",
-    "type": "boss",
-    "bossType": "mage",
-    "baseHP": 960,
+    "baseHP": 1500,
     "baseDefense": 5,
     "attack": {
-      "damage": 8,
-      "pattern": "conditional",
-      "specialEffect": "debuff"
+      "damage": 10,
+      "pattern": "scaling"
     },
-    "attackCooldown": 2200,
+    "attackCooldown": 2500,
     "behaviors": [],
     "goldReward": {
-      "min": 110,
-      "max": 170
+      "min": 100,
+      "max": 150
     },
     "materialReward": {
       "chance": 1,
@@ -255,83 +476,33 @@
         "max": 6
       }
     },
-    "color": 6684927
+    "color": 8947848
   },
   {
-    "id": "boss_dragon",
-    "name": "Ancient Dragon",
+    "id": "lizard_king",
+    "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 1100,
-    "baseDefense": 7,
+    "baseHP": 1000,
+    "baseDefense": 5,
     "attack": {
-      "damage": 9,
-      "pattern": "scaling",
-      "specialEffect": "double"
+      "damage": 10,
+      "pattern": "scaling"
     },
-    "attackCooldown": 2200,
-    "behaviors": [
-      {
-        "type": "enrage",
-        "hpThreshold": 0.25,
-        "attackSpeedMultiplier": 1.8
-      },
-      {
-        "type": "multi_hit",
-        "hitCount": 2,
-        "damageMultiplier": 0.6
-      }
-    ],
+    "attackCooldown": 2500,
+    "behaviors": [],
     "goldReward": {
-      "min": 140,
-      "max": 220
+      "min": 100,
+      "max": 150
     },
     "materialReward": {
       "chance": 1,
       "bonusMaterial": "essence",
       "bonusAmount": {
-        "min": 5,
-        "max": 10
+        "min": 3,
+        "max": 6
       }
     },
-    "color": 16744448
-  },
-  {
-    "id": "boss_hydra",
-    "name": "Swamp Hydra",
-    "type": "boss",
-    "bossType": "hydra",
-    "baseHP": 900,
-    "baseDefense": 3,
-    "attack": {
-      "damage": 6,
-      "pattern": "random",
-      "specialEffect": "debuff"
-    },
-    "attackCooldown": 1800,
-    "behaviors": [
-      {
-        "type": "multi_hit",
-        "hitCount": 3,
-        "damageMultiplier": 0.45
-      },
-      {
-        "type": "drain",
-        "healPercent": 30
-      }
-    ],
-    "goldReward": {
-      "min": 120,
-      "max": 190
-    },
-    "materialReward": {
-      "chance": 1,
-      "bonusMaterial": "essence",
-      "bonusAmount": {
-        "min": 4,
-        "max": 8
-      }
-    },
-    "color": 3381555
+    "color": 52224
   }
 ]

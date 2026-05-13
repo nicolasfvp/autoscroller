@@ -30,9 +30,7 @@ export class CombatScene extends Scene {
   // Visual representations
   private heroSprite!: Phaser.GameObjects.Sprite;
   private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
-  private enemyIdleKey = '';
-  private enemyAttackKey = '';
-  private enemyDeathKey = '';
+  private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
   private transitioning = false;
@@ -50,9 +48,9 @@ export class CombatScene extends Scene {
         this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
       }
       if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
-      if (this.enemySprite instanceof Phaser.GameObjects.Sprite) {
-        this.enemySprite.setTint(0xff5555);
-        this.time.delayedCall(200, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite) this.enemySprite.clearTint(); });
+      if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
+        this.enemySprite.setTintFill(0xffffff);
+        this.time.delayedCall(100, () => { if (this.enemySprite) this.enemySprite.clearTint(); });
       }
     }
     this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
@@ -69,9 +67,15 @@ export class CombatScene extends Scene {
     if (this.combatEffects) { this.combatEffects.floatingNumber(200, 320, data.damage, '#ff0000', '-'); this.combatEffects.screenShake(3, 150); }
     this.heroSprite.setTint(0xff0000);
     this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
-    if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyAttackKey)) {
-      this.enemySprite.play(this.enemyAttackKey);
-      this.enemySprite.once('animationcomplete', () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyIdleKey)) this.enemySprite.play(this.enemyIdleKey); });
+    // Enemy no longer plays an attack animation
+    // Just a small visual jump toward the player if it's an image/sprite
+    if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
+      this.tweens.add({
+        targets: this.enemySprite,
+        x: '-=20',
+        yoyo: true,
+        duration: 100
+      });
     }
   };
 
@@ -87,7 +91,13 @@ export class CombatScene extends Scene {
     const heroDeathKey = `${sp}_death`;
 
     if (eventData.result === 'victory') {
-      if (this.enemySprite instanceof Phaser.GameObjects.Sprite && this.anims.exists(this.enemyDeathKey)) this.enemySprite.play(this.enemyDeathKey);
+      if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
+        this.tweens.add({
+          targets: this.enemySprite,
+          alpha: 0,
+          duration: 500
+        });
+      }
     } else {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
     }
@@ -201,16 +211,10 @@ export class CombatScene extends Scene {
       // Phase 9 (CR-01 fix): monster texture keys namespaced `monster_*` to
       // avoid colliding with hero spritesheets (enemy 'mage' vs hero Mage).
       // Source rename in Preloader.ts; render sites here + TileVisual.ts.
-      this.enemyIdleKey = `monster_${enemyDef.id}_idle`;
-      this.enemyAttackKey = `monster_${enemyDef.id}_attack`;
-      this.enemyDeathKey = `monster_${enemyDef.id}_death`;
+      this.enemyTextureKey = `monster_${enemyDef.id}`;
 
-      if (this.textures.exists(this.enemyIdleKey)) {
-        if (!this.anims.exists(this.enemyIdleKey)) this.anims.create({ key: this.enemyIdleKey, frames: this.anims.generateFrameNumbers(this.enemyIdleKey, {}), frameRate: 4, repeat: -1 });
-        if (!this.anims.exists(this.enemyAttackKey)) this.anims.create({ key: this.enemyAttackKey, frames: this.anims.generateFrameNumbers(this.enemyAttackKey, {}), frameRate: 10, repeat: 0 });
-        if (!this.anims.exists(this.enemyDeathKey)) this.anims.create({ key: this.enemyDeathKey, frames: this.anims.generateFrameNumbers(this.enemyDeathKey, {}), frameRate: 8, repeat: 0 });
-        this.enemySprite = this.add.sprite(600, 350, this.enemyIdleKey).setDepth(10).setScale(4);
-        (this.enemySprite as Phaser.GameObjects.Sprite).play(this.enemyIdleKey);
+      if (this.textures.exists(this.enemyTextureKey)) {
+        this.enemySprite = this.add.image(600, 350, this.enemyTextureKey).setDepth(10).setScale(4);
       } else {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }

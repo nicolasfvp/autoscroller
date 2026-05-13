@@ -1,18 +1,64 @@
 {
   "forest": {
-    "base": ["slime", "goblin"],
-    "addAtLoop": { "5": ["orc"], "10": ["elite_knight"] }
+    "base": [
+      "mush",
+      "giant_spider"
+    ],
+    "addAtLoop": {
+      "5": [
+        "giant_spider_2"
+      ],
+      "10": [
+        "ancient_tree"
+      ]
+    }
   },
   "graveyard": {
-    "base": ["mage", "elite_knight"],
-    "addAtLoop": { "5": ["orc"], "10": ["boss_demon"] }
+    "base": [
+      "pocket_cat"
+    ],
+    "addAtLoop": {
+      "5": [
+        "corpse_eater"
+      ],
+      "10": [
+        "headless_fire_horse"
+      ]
+    }
   },
   "swamp": {
-    "base": ["orc", "goblin"],
-    "addAtLoop": { "5": ["mage"], "10": ["elite_knight"] }
+    "base": [
+      "toxic_gooze",
+      "forge_slime"
+    ],
+    "addAtLoop": {
+      "5": [
+        "venomous_kobra",
+        "lava_golen"
+      ],
+      "10": [
+        "depths_horror",
+        "mecha_warrior"
+      ]
+    }
+  },
+  "desert": {
+    "base": [
+      "giant_beetle"
+    ],
+    "addAtLoop": {
+      "5": [
+        "mutated_salamander"
+      ],
+      "10": [
+        "baby_dragon"
+      ]
+    }
   },
   "basic": {
-    "base": ["slime"],
+    "base": [
+      "lost_lizard"
+    ],
     "addAtLoop": {}
   }
 }

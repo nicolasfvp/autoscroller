@@ -63,19 +63,32 @@ export class Preloader extends Scene {
     this.load.spritesheet('mage_attack', 'assets/characters/mage/spritesheets/mage_attack.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('mage_death', 'assets/characters/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
 
-    // Monster spritesheets (64x64 per frame, horizontal strips)
-    // Phase 9 (CR-01 fix): monster enemy IDs include 'mage', which used to
-    // collide with the hero Mage spritesheet keys (`mage_idle/attack/death`).
-    // Phaser's loader silently overwrites duplicate keys, so the hero Mage
-    // (and Shadowblade, which reuses the mage_* prefix per D-08) rendered as
-    // the monster sprite. Namespace monster keys with `monster_` to keep the
-    // hero and enemy texture buckets disjoint. Render-site consumers
-    // (TileVisual, CombatScene) resolve enemy keys via `monster_${enemyId}_*`.
-    const monsterIds = ['slime', 'goblin', 'orc', 'mage', 'elite_knight', 'boss_demon'];
-    for (const id of monsterIds) {
-      this.load.spritesheet(`monster_${id}_idle`, `assets/characters/monsters/${id}/spritesheets/${id}_idle.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`monster_${id}_attack`, `assets/characters/monsters/${id}/spritesheets/${id}_attack.png`, { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet(`monster_${id}_death`, `assets/characters/monsters/${id}/spritesheets/${id}_death.png`, { frameWidth: 64, frameHeight: 64 });
+    // Monster static images
+    const staticMonsters = [
+      { id: 'corpse_eater', folder: 'cemetery', file: 'corpse eater.png' },
+      { id: 'headless_fire_horse', folder: 'cemetery', file: 'headless fire horse.png' },
+      { id: 'pocket_cat', folder: 'cemetery', file: 'pocket cat.png' },
+      { id: 'doom_knight', folder: 'default', file: 'doom knight.png' },
+      { id: 'iron_golem', folder: 'default', file: 'iron golem.png' },
+      { id: 'lizard_king', folder: 'default', file: 'lizard king.png' },
+      { id: 'baby_dragon', folder: 'desert', file: 'baby dragon.png' },
+      { id: 'giant_beetle', folder: 'desert', file: 'giant beetle.png' },
+      { id: 'mutated_salamander', folder: 'desert', file: 'mutated salamander.png' },
+      { id: 'ancient_tree', folder: 'forest', file: 'ancient tree.png' },
+      { id: 'giant_spider_2', folder: 'forest', file: 'giant spider 2.png' },
+      { id: 'giant_spider', folder: 'forest', file: 'giant spider.png' },
+      { id: 'mush', folder: 'forest', file: 'mush.png' },
+      { id: 'forge_slime', folder: 'lava', file: 'forge slime.png' },
+      { id: 'lava_golen', folder: 'lava', file: 'lava golen.png' },
+      { id: 'mecha_warrior', folder: 'lava', file: 'mecha warrior.png' },
+      { id: 'depths_horror', folder: 'swamp', file: 'depths horror.png' },
+      { id: 'toxic_gooze', folder: 'swamp', file: 'toxic gooze.png' },
+      { id: 'venomous_kobra', folder: 'swamp', file: 'venomous kobra.png' },
+      { id: 'lost_lizard', folder: '', file: 'lost_lizard.png' }
+    ];
+    for (const m of staticMonsters) {
+      const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
+      this.load.image(`monster_${m.id}`, path);
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)

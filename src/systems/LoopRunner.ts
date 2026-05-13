@@ -147,7 +147,7 @@ export class LoopRunner {
       case 'boss': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
-        this.emit('combat-start', { enemyId: tile.enemyId ?? 'boss_demon', isBoss: true, tileIndex });
+        this.emit('combat-start', { enemyId: tile.enemyId ?? 'doom_knight', isBoss: true, tileIndex });
         break;
       }
       case 'shop':
@@ -273,9 +273,8 @@ export class LoopRunner {
           break;
         }
         case 'boss': {
-          // Cycle through the 6 boss types as the player progresses, so
-          // every cycle isn't a Boss Demon refight.
-          const BOSS_ROTATION = ['boss_demon', 'boss_tank', 'boss_berserker', 'boss_mage', 'boss_dragon', 'boss_hydra'];
+          // Cycle through the 3 bosses as the player progresses
+          const BOSS_ROTATION = ['doom_knight', 'iron_golem', 'lizard_king'];
           tile.enemyId = BOSS_ROTATION[this.bossKillCount % BOSS_ROTATION.length];
           break;
         }

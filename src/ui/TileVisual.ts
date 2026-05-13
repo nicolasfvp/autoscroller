@@ -87,9 +87,9 @@ export class TileVisual extends Phaser.GameObjects.Container {
     const bgKey = BG_SPRITE_MAP[key];
     if (bgKey && scene.textures.exists(bgKey)) {
       const objectMultipler = isInventory ? 1.1 : 1.15;
-      
+
       this.bgObject = scene.add.image(0, 0, bgKey);
-      
+
       if (isInventory) {
         // Centered for inventory frames
         this.bgObject.setOrigin(0.5, 0.5);
@@ -99,7 +99,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
         this.bgObject.setOrigin(0.5, 1.0);
         this.bgObject.y = size * 0.1;
       }
-      
+
       this.bgObject.setDisplaySize(size * objectMultipler, size * objectMultipler);
       this.add(this.bgObject);
     }
@@ -141,22 +141,12 @@ export class TileVisual extends Phaser.GameObjects.Container {
     // Phase 9 (CR-01 fix): monster texture keys are namespaced `monster_*`
     // to avoid colliding with hero spritesheets (e.g. enemy 'mage' vs hero
     // Mage class). See Preloader.ts monsterIds loop.
-    const idleKey = `monster_${enemyId}_idle`;
-    if (scene.textures.exists(idleKey)) {
-      // Create idle animation if it doesn't exist
-      if (!scene.anims.exists(idleKey)) {
-        scene.anims.create({
-          key: idleKey,
-          frames: scene.anims.generateFrameNumbers(idleKey, {}),
-          frameRate: 4,
-          repeat: -1,
-        });
-      }
-      this.enemySprite = scene.add.sprite(0, -tileSize * 0.15, idleKey);
+    const textureKey = `monster_${enemyId}`;
+    if (scene.textures.exists(textureKey)) {
+      this.enemySprite = scene.add.sprite(0, -tileSize * 0.15, textureKey);
       this.enemySprite.setOrigin(0.5, 1.0);
       this.enemySprite.y = tileSize * 0.2; // Sobe os monstros novamente para parear com a nova altura dos itens
-      this.enemySprite.setScale(tileSize / 26); // reduzido a ~75% de tileSize / 20 
-      this.enemySprite.play(idleKey);
+      this.enemySprite.setScale(tileSize / 32); // reducing scale assuming 64x64 images
       this.add(this.enemySprite);
     } else {
       // Fallback: small colored circle
