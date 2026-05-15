@@ -5,3 +5,5 @@ dist/
 .planning/
 .mcp.json
 *.log
+data/generated/
+

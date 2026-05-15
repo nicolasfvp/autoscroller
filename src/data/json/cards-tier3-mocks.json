@@ -1,0 +1,5945 @@
+{
+  "tier": 3,
+  "cards": [
+    {
+      "id": "t3-agility-agility-agility-agility",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "agility"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-air",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "air"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-agility-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "agility",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-air",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "air"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-air-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "air",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-agility-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "agility",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-air",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "air"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-air-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "air",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-air-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "air",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-attack-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "attack",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-counter-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "counter",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-defense-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "defense",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-agility-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "agility",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-air",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "air"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-air-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "air",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-air-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "air",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-attack-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "attack",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-counter-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "counter",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-defense-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "defense",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-air-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "air",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-attack",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "attack"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-attack-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "attack",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-attack-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "attack",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-counter-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "counter",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-defense-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "defense",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-attack-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "attack",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-counter-counter",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "counter",
+        "counter"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-counter-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "counter",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-counter-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "counter",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-counter-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "counter",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-counter-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "counter",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-counter-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "counter",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-defense-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "defense",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-counter-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "counter",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-defense-defense",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "defense",
+        "defense"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-defense-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "defense",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-defense-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "defense",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-defense-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-defense-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "defense",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-defense-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "defense",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-earth-earth",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "earth",
+        "earth"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-earth-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "earth",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-earth-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "earth",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-earth-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "earth",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-earth-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "earth",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-fire-fire-fire-fire",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "fire",
+        "fire",
+        "fire",
+        "fire"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-fire-fire-fire-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "fire",
+        "fire",
+        "fire",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-fire-fire-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "fire",
+        "fire",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-fire-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "fire",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    },
+    {
+      "id": "t3-water-water-water-water",
+      "name": "???",
+      "description": "Tier 3 — Locked. Reach Forge level 4 to unlock.",
+      "category": "magic",
+      "tier": 3,
+      "elements": [
+        "water",
+        "water",
+        "water",
+        "water"
+      ],
+      "effects": [],
+      "cooldown": 0,
+      "targeting": "single",
+      "rarity": "epic",
+      "locked": true
+    }
+  ]
+}
