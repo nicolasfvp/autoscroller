@@ -30,7 +30,8 @@ describe('BossSystem', () => {
     const run = makeRunState();
     const encounter = triggerBossCombat(run);
     expect(encounter.isBoss).toBe(true);
-    expect(encounter.enemyId).toBe('boss_demon');
+    // BossSystem picks from the boss roster in enemies.json (doom_knight / iron_golem / lizard_king)
+    expect(['doom_knight', 'iron_golem', 'lizard_king']).toContain(encounter.enemyId);
     expect(encounter.scaledStats.hp).toBeGreaterThan(0);
     expect(encounter.scaledStats.damage).toBeGreaterThan(0);
   });

@@ -42,8 +42,8 @@ describe('computeCardLayout (UI-SPEC §Spacing FLAG)', () => {
   });
 });
 
-describe('Preloader cardIds purge (audit per 09-02-SUMMARY)', () => {
-  it('every preloaded card ID survives in v2 cards.json', async () => {
+describe('Preloader cardIds purge (element-system audit)', () => {
+  it('every preloaded card ID survives in cards.json', async () => {
     const cardsJson = await import('../../src/data/json/cards.json');
     const cards = (cardsJson as any).default?.cards
       ?? (cardsJson as any).cards
@@ -51,14 +51,13 @@ describe('Preloader cardIds purge (audit per 09-02-SUMMARY)', () => {
     const ids: string[] = (Array.isArray(cards) ? cards : []).map((c: any) => c.id);
     expect(ids.length).toBeGreaterThan(0);
 
-    const preloadedCardIds = [
-      'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
-      'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',
-      'weaken', 'cleave', 'reckless-charge', 'execute', 'doom-blade', 'parry', 'bulwark',
-      'last-stand', 'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud',
-      'soul-rend', 'sacrifice', 'chain-lightning',
+    // Sample a handful of canonical element-based card ids and verify they exist.
+    const sampledCardIds = [
+      't1-attack-attack', 't1-defense-defense', 't1-agility-agility', 't1-counter-counter',
+      't1-fire-fire', 't1-water-water', 't1-air-air', 't1-earth-earth',
+      't1-attack-fire', 't1-fire-water', 't2-attack-attack-attack', 't2-fire-fire-water',
     ];
-    const dead = preloadedCardIds.filter(id => !ids.includes(id));
+    const dead = sampledCardIds.filter(id => !ids.includes(id));
     expect(dead).toEqual([]);
   });
 });

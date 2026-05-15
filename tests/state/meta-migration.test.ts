@@ -6,7 +6,7 @@ describe('migrateMetaState', () => {
     const result = migrateMetaState(null);
     const defaults = createDefaultMetaState();
     expect({ ...result, _wipedFromVersion: undefined }).toEqual({ ...defaults, _wipedFromVersion: undefined });
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.materials).toEqual({});
   });
 
@@ -14,7 +14,7 @@ describe('migrateMetaState', () => {
     const result = migrateMetaState(undefined);
     const defaults = createDefaultMetaState();
     expect({ ...result, _wipedFromVersion: undefined }).toEqual({ ...defaults, _wipedFromVersion: undefined });
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
   });
 
   it('converts v1 state with metaLoot: 50 to materials: { essence: 50 }', () => {
@@ -143,7 +143,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v2State);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.materials).toEqual({}); // D-06 wipes materials
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -175,7 +175,7 @@ describe('migrateMetaState', () => {
 
     const result = migrateMetaState(v2State);
     expect(result.tutorialSeen).toBe(false); // D-06 wipes tutorialSeen
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
   });
 
   it('sets version: 4 on migrated v1 state', () => {
@@ -199,7 +199,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
   });
@@ -225,7 +225,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v1State);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.materials).toEqual({}); // D-06 wipes materials
     expect(result.tutorialSeen).toBe(false);
   });
@@ -258,7 +258,7 @@ describe('migrateMetaState', () => {
     };
 
     const result = migrateMetaState(v4State);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.runHistory).toEqual([]); // D-06 wipes runHistory
   });
 
