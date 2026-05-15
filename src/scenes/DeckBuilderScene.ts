@@ -32,10 +32,18 @@ const CARD_W = 140;
 const CARD_H = 90;
 const GRID_COLS = 3;
 const GRID_X = 30;
-const GRID_Y = 120;
+const GRID_Y = 150;
 const GRID_GAP = 8;
 const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP;
-const GRID_VIEWPORT_H = 410;
+const GRID_VIEWPORT_H = 380;
+
+// Filter chip row geometry
+const FILTER_Y = 115;
+const FILTER_CHIP_W = 50;
+const FILTER_CHIP_H = 20;
+const FILTER_GAP = 4;
+
+const ALL_ELEMENTS: ElementId[] = ['attack', 'defense', 'agility', 'counter', 'fire', 'water', 'air', 'earth'];
 
 // Deck slot geometry
 const SLOT_X = 510;
@@ -62,6 +70,10 @@ export class DeckBuilderScene extends Scene {
   private gridMask!: Phaser.Display.Masks.GeometryMask;
   private gridScrollY: number = 0;
   private gridMaxScroll: number = 0;
+  private gridHeaderText!: Phaser.GameObjects.Text;
+  private gridScrollHint?: Phaser.GameObjects.Text;
+  private filterContainer!: Phaser.GameObjects.Container;
+  private activeFilters: Set<ElementId> = new Set();
 
   private deckSlotContainers: Phaser.GameObjects.Container[] = [];
   private presetButtons: Phaser.GameObjects.Container[] = [];
@@ -130,12 +142,85 @@ export class DeckBuilderScene extends Scene {
     }).setOrigin(0.5);
 
     this.renderPresetTabs();
+    this.renderFilterChips();
     this.renderCardGrid();
     this.renderDeckPanel();
     this.renderValidationAndActions();
     this.renderTooltip();
     this.bindScroll();
     this.refresh();
+  }
+
+  // ────────────────────────────────────────────────
+  // Element filter chips
+  // ────────────────────────────────────────────────
+
+  private renderFilterChips(): void {
+    this.add.text(GRID_X, FILTER_Y - 16, 'Filter by element:', {
+      fontSize: '11px', fontStyle: 'bold', color: DIM, fontFamily: FF,
+    });
+
+    this.filterContainer = this.add.container(0, 0);
+
+    // 8 element chips
+    ALL_ELEMENTS.forEach((id, idx) => {
+      const x = GRID_X + idx * (FILTER_CHIP_W + FILTER_GAP);
+      const chipContainer = this.add.container(x + FILTER_CHIP_W / 2, FILTER_Y);
+      const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
+      const bg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, color, 0.2)
+        .setStrokeStyle(1, color, 0.6);
+      const label = this.add.text(0, 0, ELEMENTS[id].name.slice(0, 5), {
+        fontSize: '10px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
+      }).setOrigin(0.5);
+      chipContainer.add([bg, label]);
+      chipContainer.setData('elementId', id);
+      bg.setInteractive({ useHandCursor: true });
+      bg.on('pointerdown', () => this.toggleFilter(id));
+      bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
+      bg.on('pointerout',  () => this.refreshChip(chipContainer));
+      this.filterContainer.add(chipContainer);
+    });
+
+    // "All" reset button
+    const allX = GRID_X + 8 * (FILTER_CHIP_W + FILTER_GAP);
+    const allContainer = this.add.container(allX + FILTER_CHIP_W / 2, FILTER_Y);
+    const allBg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, 0x4a4a60, 0.85)
+      .setStrokeStyle(1, 0xffd700, 0.6);
+    const allLabel = this.add.text(0, 0, 'All', {
+      fontSize: '10px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+    }).setOrigin(0.5);
+    allContainer.add([allBg, allLabel]);
+    allBg.setInteractive({ useHandCursor: true });
+    allBg.on('pointerdown', () => { this.activeFilters.clear(); this.rebuildGrid(); this.refreshAllChips(); });
+    allBg.on('pointerover', () => allBg.setStrokeStyle(2, 0xffffff, 1));
+    allBg.on('pointerout',  () => allBg.setStrokeStyle(1, 0xffd700, 0.6));
+  }
+
+  private toggleFilter(id: ElementId): void {
+    if (this.activeFilters.has(id)) this.activeFilters.delete(id);
+    else this.activeFilters.add(id);
+    this.rebuildGrid();
+    this.refreshAllChips();
+  }
+
+  private refreshChip(container: Phaser.GameObjects.Container): void {
+    const id = container.getData('elementId') as ElementId;
+    const bg = container.list[0] as Phaser.GameObjects.Rectangle;
+    const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
+    if (this.activeFilters.has(id)) {
+      bg.setFillStyle(color, 0.85);
+      bg.setStrokeStyle(2, 0xffffff, 1);
+    } else {
+      bg.setFillStyle(color, 0.2);
+      bg.setStrokeStyle(1, color, 0.6);
+    }
+  }
+
+  private refreshAllChips(): void {
+    if (!this.filterContainer) return;
+    this.filterContainer.list.forEach((obj) => {
+      if (obj instanceof Phaser.GameObjects.Container) this.refreshChip(obj);
+    });
   }
 
   // ────────────────────────────────────────────────
@@ -209,11 +294,9 @@ export class DeckBuilderScene extends Scene {
       0x141420, 0.85,
     ).setStrokeStyle(1, 0x4a4a60);
 
-    this.add.text(GRID_X, GRID_Y - 18, 'Available Tier 1 Cards', {
+    this.gridHeaderText = this.add.text(GRID_X, GRID_Y - 18, 'Available Tier 1 Cards', {
       fontSize: '13px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
     });
-
-    const tier1Cards = getAllCards().filter((c) => c.tier === 1);
 
     this.gridContainer = this.add.container(0, 0);
     // Mask so cells outside the viewport don't show
@@ -223,7 +306,33 @@ export class DeckBuilderScene extends Scene {
     this.gridMask = shape.createGeometryMask();
     this.gridContainer.setMask(this.gridMask);
 
-    tier1Cards.forEach((card, idx) => {
+    this.rebuildGrid();
+  }
+
+  private getFilteredCards(): CardDefinition[] {
+    const tier1 = getAllCards().filter((c) => c.tier === 1);
+    if (this.activeFilters.size === 0) return tier1;
+    // Intersection: card must contain ALL selected elements at least once.
+    return tier1.filter((c) => {
+      const elems = (c.elements ?? []) as ElementId[];
+      for (const f of this.activeFilters) {
+        if (!elems.includes(f)) return false;
+      }
+      return true;
+    });
+  }
+
+  private rebuildGrid(): void {
+    // Tear down current cells
+    this.cardCells.forEach((cell) => cell.container.destroy(true));
+    this.cardCells = [];
+    this.gridScrollY = 0;
+    this.gridContainer.setY(0);
+
+    const filtered = this.getFilteredCards();
+    this.gridHeaderText.setText(`Available Tier 1 Cards (${filtered.length})`);
+
+    filtered.forEach((card, idx) => {
       const col = idx % GRID_COLS;
       const row = Math.floor(idx / GRID_COLS);
       const x = GRID_X + col * (CARD_W + GRID_GAP);
@@ -233,15 +342,38 @@ export class DeckBuilderScene extends Scene {
       this.cardCells.push(cell);
     });
 
-    const totalRows = Math.ceil(tier1Cards.length / GRID_COLS);
+    const totalRows = Math.ceil(filtered.length / GRID_COLS);
     const totalH = totalRows * CARD_H + (totalRows - 1) * GRID_GAP;
     this.gridMaxScroll = Math.max(0, totalH - GRID_VIEWPORT_H);
 
-    // Scroll hint
-    if (this.gridMaxScroll > 0) {
-      this.add.text(GRID_X + GRID_VIEWPORT_W / 2, GRID_Y + GRID_VIEWPORT_H + 12, '↕ Scroll the grid with mouse wheel', {
+    if (!this.gridScrollHint) {
+      this.gridScrollHint = this.add.text(GRID_X + GRID_VIEWPORT_W / 2, GRID_Y + GRID_VIEWPORT_H + 8, '↕ Mouse wheel to scroll', {
         fontSize: '10px', color: DIM, fontFamily: FF,
       }).setOrigin(0.5);
+    }
+    this.gridScrollHint.setVisible(this.gridMaxScroll > 0);
+
+    this.updateCellInteractivity();
+  }
+
+  /**
+   * Phaser hit areas don't honor masks — a scrolled-off cell's bg still
+   * intercepts pointer events at its world position. Walk every cell and
+   * toggle setInteractive based on whether the cell is inside the viewport.
+   */
+  private updateCellInteractivity(): void {
+    const viewTop = GRID_Y;
+    const viewBottom = GRID_Y + GRID_VIEWPORT_H;
+    for (const cell of this.cardCells) {
+      const worldY = cell.container.y + this.gridContainer.y;
+      const cellTop = worldY;
+      const cellBottom = worldY + CARD_H;
+      const inView = cellBottom > viewTop && cellTop < viewBottom;
+      if (inView) {
+        if (!cell.bg.input?.enabled) cell.bg.setInteractive({ useHandCursor: true });
+      } else {
+        cell.bg.disableInteractive();
+      }
     }
   }
 
@@ -306,8 +438,18 @@ export class DeckBuilderScene extends Scene {
 
   private bindScroll(): void {
     this.input.on('wheel', (_p: any, _g: any, _dx: number, dy: number) => {
+      // Only scroll when the pointer is over the grid viewport — otherwise the
+      // wheel happens for tooltip area / filter chips etc.
+      const pointer = this.input.activePointer;
+      const inViewport =
+        pointer.x >= GRID_X && pointer.x <= GRID_X + GRID_VIEWPORT_W &&
+        pointer.y >= GRID_Y && pointer.y <= GRID_Y + GRID_VIEWPORT_H;
+      if (!inViewport) return;
+
       this.gridScrollY = Math.max(0, Math.min(this.gridMaxScroll, this.gridScrollY + dy));
       this.gridContainer.setY(-this.gridScrollY);
+      this.hideTooltip();
+      this.updateCellInteractivity();
     });
   }
 
