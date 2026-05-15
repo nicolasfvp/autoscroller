@@ -248,21 +248,36 @@ export class CharacterSelectScene extends Scene {
     });
   }
 
-  private async confirmSelection(): Promise<void> {
-    if (this.transitioning) return;
-    const selected = CLASSES[this.selectedIndex];
-    const meta = await loadMetaState();
+  private deckBuilderOpen = false;
 
-    // Launch the deck builder overlay before starting the run so the player
-    // can pick / save their starter deck (5 cards, 10 elements, class ratio).
-    // On confirm we forward the validated deck to createNewRun. If anything
-    // goes wrong (or the player skips), createNewRun falls back to the
-    // class's default starterDeck. See docs/CARDS_SYSTEM.md §6.
+  private async confirmSelection(): Promise<void> {
+    if (this.transitioning || this.deckBuilderOpen) return;
+    const selected = CLASSES[this.selectedIndex];
+    let meta;
+    try {
+      meta = await loadMetaState();
+    } catch (err) {
+      console.error('[CharacterSelect] loadMetaState failed', err);
+      return;
+    }
+
+    // Launch DeckBuilder as an overlay. We do NOT pause this scene — instead
+    // we set deckBuilderOpen as a re-entry guard so a stray ENTER/click can't
+    // launch a second instance. The overlay covers the canvas with an opaque
+    // backdrop, so visual interference is negligible.
+    this.deckBuilderOpen = true;
+
     this.scene.launch(SCENE_KEYS.DECK_BUILDER, {
       className: selected.id,
       metaState: meta,
       onConfirm: (deck: string[]) => {
-        this.startRun(meta, selected.id, deck);
+        this.deckBuilderOpen = false;
+        // Use a microtask to give the DeckBuilder a tick to call scene.stop
+        // before we mutate the active-scene state with createNewRun().
+        Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
+      },
+      onCancel: () => {
+        this.deckBuilderOpen = false;
       },
     });
   }
@@ -273,8 +288,14 @@ export class CharacterSelectScene extends Scene {
     customStarterDeck?: string[],
   ): Promise<void> {
     if (this.transitioning) return;
-    setRun(createNewRun(meta, 1, className, undefined, customStarterDeck));
-    await saveManager.save(getRun());
+    try {
+      setRun(createNewRun(meta, 1, className, undefined, customStarterDeck));
+      await saveManager.save(getRun());
+    } catch (err) {
+      console.error('[CharacterSelect] startRun failed', err);
+      this.deckBuilderOpen = false;
+      return;
+    }
     // Ensure the DeckBuilder overlay is stopped before we fade out.
     if (this.scene.isActive(SCENE_KEYS.DECK_BUILDER)) {
       this.scene.stop(SCENE_KEYS.DECK_BUILDER);
