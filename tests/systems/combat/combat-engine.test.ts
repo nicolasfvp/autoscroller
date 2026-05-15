@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
-import type { RunState } from '../../../src/state/RunState';
+import { type RunState, setRun, clearRun } from '../../../src/state/RunState';
 import type { EnemyDefinition } from '../../../src/data/types';
 import { loadAllData } from '../../../src/data/DataLoader';
 
@@ -15,9 +15,9 @@ vi.mock('../../../src/core/EventBus', () => ({
   },
 }));
 
-function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): RunState {
+function makeMockRun(deckActive: string[] = ['t1-attack-attack', 't1-defense-defense', 't1-fire-fire']): RunState {
   return {
-    version: 3,
+    version: 5,
     runId: 'test-run',
     seed: 'test-seed',
     generation: 1,
@@ -50,6 +50,7 @@ function makeMockRun(deckActive: string[] = ['strike', 'defend', 'fireball']): R
     combatSpeed: 1,
     mapSpeed: 1,
     pool: { cards: [], relics: [], tiles: [] },
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
   };
 }
 
@@ -77,11 +78,16 @@ describe('CombatEngine', () => {
   beforeEach(() => {
     mockEmit.mockClear();
     const run = makeMockRun();
+    setRun(run);
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
     // Pin deck order for deterministic engine tests
-    state.deckOrder = ['strike', 'defend', 'fireball'];
+    state.deckOrder = ['t1-attack-attack', 't1-defense-defense', 't1-fire-fire'];
     engine = new CombatEngine(state);
+  });
+
+  afterEach?.(() => {
+    clearRun();
   });
 
   it('tick() plays top card when heroCooldownTimer reaches 0 (starts at 0)', () => {
@@ -93,7 +99,7 @@ describe('CombatEngine', () => {
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
     expect(cardPlayedCalls.length).toBe(1);
-    expect(cardPlayedCalls[0][1].cardId).toBe('strike');
+    expect(cardPlayedCalls[0][1].cardId).toBe('t1-attack-attack');
   });
 
   it('heroCooldownTimer set to card.cooldown * 1000 after playing', () => {
@@ -118,17 +124,18 @@ describe('CombatEngine', () => {
 
   it('skips unaffordable card and tries next', () => {
     // Create a deck with expensive card first, then a free card
-    const run = makeMockRun(['berserker', 'strike']); // berserker costs 15 stamina + 5 defense
-    run.hero.currentDefense = 0; // can't afford berserker (needs defense)
+    const run = makeMockRun(['t2-attack-attack-attack', 't1-attack-attack']);
+    run.hero.currentStamina = 0; // can't afford t2-attack-attack-attack (3 stamina)
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
-    // Pin order: berserker first so it gets skipped, then strike plays
-    state.deckOrder = ['berserker', 'strike'];
+    setRun(run);
+    state.heroStamina = 0; // mirror the per-combat state — t2 needs 3 stam, can't pay
+    state.deckOrder = ['t2-attack-attack-attack', 't1-attack-attack'];
     const eng = new CombatEngine(state);
 
     eng.tick(100);
 
-    // berserker should be skipped, strike should be played
+    // t2-attack-attack-attack should be skipped (3 stam cost), t1-attack-attack should be played
     const skippedCalls = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-skipped'
     );
@@ -136,14 +143,14 @@ describe('CombatEngine', () => {
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
     expect(skippedCalls.length).toBe(1);
-    expect(skippedCalls[0][1].cardId).toBe('berserker');
+    expect(skippedCalls[0][1].cardId).toBe('t2-attack-attack-attack');
     expect(playedCalls.length).toBe(1);
-    expect(playedCalls[0][1].cardId).toBe('strike');
+    expect(playedCalls[0][1].cardId).toBe('t1-attack-attack');
   });
 
   it('deck pointer resets to 0 when exhausted', () => {
     // Deck with 1 card -- after playing it, pointer should reset
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     const enemy = makeMockEnemy();
     enemy.baseHP = 500; // won't die quickly
     const state = createCombatState(run, enemy);
@@ -165,7 +172,7 @@ describe('CombatEngine', () => {
   });
 
   it('passive regen adds +2 stamina per 3s, +1 mana per 3s', () => {
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     run.hero.currentStamina = 40; // not full
     run.hero.currentMana = 20; // not full
     const enemy = makeMockEnemy();
@@ -183,7 +190,7 @@ describe('CombatEngine', () => {
 
   it('combat ends with "victory" when enemy HP <= 0', () => {
     // Create a weak enemy that will die from one strike
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     run.hero.strength = 100; // massive damage
     const enemy = makeMockEnemy();
     enemy.baseHP = 5;
@@ -205,7 +212,7 @@ describe('CombatEngine', () => {
 
   it('combat ends with "defeat" when hero HP <= 0', () => {
     // Create powerful enemy that kills hero in one hit
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     run.hero.currentHP = 1;
     const enemy = makeMockEnemy();
     enemy.attack.damage = 100;
@@ -231,31 +238,14 @@ describe('CombatEngine', () => {
     expect(calls[0][1]).toHaveProperty('damage');
   });
 
-  it('emits "combat:synergy-triggered" when synergy fires', () => {
-    // defend -> strike is a warrior synergy
-    const run = makeMockRun(['defend', 'strike']);
-    const enemy = makeMockEnemy();
-    enemy.baseHP = 500;
-    const state = createCombatState(run, enemy);
-    // Pin order so defend plays first, then strike triggers synergy
-    state.deckOrder = ['defend', 'strike'];
-    const eng = new CombatEngine(state);
-
-    // Play defend (first card)
-    eng.tick(100);
-    // Wait for defend cooldown (1.0s = 1000ms)
-    eng.tick(1000);
-    // Should play strike with synergy
-
-    const synergyCalls = mockEmit.mock.calls.filter(
-      (c: unknown[]) => c[0] === 'combat:synergy-triggered'
-    );
-    expect(synergyCalls.length).toBe(1);
-    expect(synergyCalls[0][1].displayName).toBe('Counter Attack!');
+  it.skip('emits "combat:synergy-triggered" when synergy fires (removed in Phase 10)', () => {
+    // The card-pair synergy system was retired when the element-based card
+    // system shipped — synergy now lives in the element combinations
+    // themselves. synergies.json is empty, so no synergy event can fire.
   });
 
   it('emits "combat:end" when combat finishes', () => {
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     run.hero.strength = 200;
     const enemy = makeMockEnemy();
     enemy.baseHP = 1;
@@ -271,7 +261,7 @@ describe('CombatEngine', () => {
   });
 
   it('does not tick further after combat is finished', () => {
-    const run = makeMockRun(['strike']);
+    const run = makeMockRun(['t1-attack-attack']);
     run.hero.strength = 200;
     const enemy = makeMockEnemy();
     enemy.baseHP = 1;
