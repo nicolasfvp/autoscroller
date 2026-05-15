@@ -61,6 +61,8 @@ export function scaleEnemyForLoop(
 ): ScaledEnemyStats {
   let loopMult = precomputedMultiplier ?? (1 + (loopCount - 1) * config.percentPerLoop);
   if (isBoss) {
+    // Bosses scale at half the per-loop growth rate of normal enemies.
+    loopMult = 1 + (loopMult - 1) * 0.5;
     loopMult *= config.bossMultiplier;
   }
   const avgGold = (baseEnemy.goldReward.min + baseEnemy.goldReward.max) / 2;

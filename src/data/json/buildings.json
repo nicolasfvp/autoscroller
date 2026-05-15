@@ -162,8 +162,8 @@
       {
         "level": 2,
         "cost": { "wood": 15, "stone": 15, "iron": 5 },
-        "effect": { "deathRetention": 0.15 },
-        "description": "Retain 15% materials on death"
+        "effect": { "deathRetention": 0.30 },
+        "description": "Retain 30% materials on death"
       },
       {
         "level": 3,
@@ -174,26 +174,26 @@
       {
         "level": 4,
         "cost": { "wood": 30, "stone": 25, "iron": 15 },
-        "effect": { "deathRetention": 0.20 },
-        "description": "Retain 20% materials on death"
+        "effect": { "deathRetention": 0.35 },
+        "description": "Retain 35% materials on death"
       },
       {
         "level": 5,
         "cost": { "wood": 40, "stone": 35, "iron": 25, "crystal": 5 },
-        "effect": { "gatheringBoost": 0.20, "deathRetention": 0.25 },
-        "description": "+20% gathering, retain 25% on death"
+        "effect": { "gatheringBoost": 0.20, "deathRetention": 0.40 },
+        "description": "+20% gathering, retain 40% on death"
       },
       {
         "level": 6,
         "cost": { "wood": 50, "stone": 45, "iron": 35, "crystal": 10 },
-        "effect": { "deathRetention": 0.30 },
-        "description": "Retain 30% materials on death"
+        "effect": { "deathRetention": 0.43 },
+        "description": "Retain 43% materials on death"
       },
       {
         "level": 7,
         "cost": { "wood": 65, "stone": 55, "iron": 45, "crystal": 20, "essence": 5 },
-        "effect": { "gatheringBoost": 0.25, "deathRetention": 0.40 },
-        "description": "+25% gathering, retain 40% on death"
+        "effect": { "gatheringBoost": 0.25, "deathRetention": 0.47 },
+        "description": "+25% gathering, retain 47% on death"
       },
       {
         "level": 8,

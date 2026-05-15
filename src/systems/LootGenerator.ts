@@ -81,12 +81,27 @@ export function rollMaterialDrops(
       break;
     }
     case 'enemy': {
-      const enemy = materialsConfig.enemyBonusDrops[sourceKey as keyof typeof materialsConfig.enemyBonusDrops];
-      if (!enemy) return drops;
-      if (rng.next() < enemy.chance) {
-        const range = enemy.amount.max - enemy.amount.min + 1;
-        const amount = enemy.amount.min + Math.floor(rng.next() * range);
-        drops[enemy.material] = amount;
+      // Prefer the per-enemy materialReward block authored in enemies.json
+      // (where every normal enemy has its own bonusMaterial / chance). Fall
+      // back to materialsConfig.enemyBonusDrops only when an enemy id has no
+      // reward block — keeps the legacy table usable for content not yet
+      // migrated.
+      const enemyDef = (enemiesData as any[]).find(e => e.id === sourceKey);
+      const reward = enemyDef?.materialReward;
+      if (reward && reward.bonusMaterial && reward.bonusAmount) {
+        if (rng.next() < (reward.chance ?? 1)) {
+          const r = reward.bonusAmount.max - reward.bonusAmount.min + 1;
+          const amount = reward.bonusAmount.min + Math.floor(rng.next() * r);
+          drops[reward.bonusMaterial] = (drops[reward.bonusMaterial] ?? 0) + amount;
+        }
+        break;
+      }
+      const legacy = materialsConfig.enemyBonusDrops[sourceKey as keyof typeof materialsConfig.enemyBonusDrops];
+      if (!legacy) return drops;
+      if (rng.next() < legacy.chance) {
+        const range = legacy.amount.max - legacy.amount.min + 1;
+        const amount = legacy.amount.min + Math.floor(rng.next() * range);
+        drops[legacy.material] = amount;
       }
       break;
     }

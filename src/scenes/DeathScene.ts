@@ -118,29 +118,39 @@ export class DeathScene extends Scene {
     const materialsEarned = { ...(run.economy.materials ?? {}) };
     const xpEarned = run.hero.runXP ?? 0;
 
-    const materialsToShow = Object.entries(materialsEarned).filter(([, v]) => v > 0).slice(0, 2);
-    
+    const materialsToShow = Object.entries(materialsEarned).filter(([, v]) => v > 0);
+
     if (materialsToShow.length === 0) {
       this.add.text(startX + 180, currentY, 'None', {
         fontFamily: FONTS.family, fontSize: '16px', color: '#888888'
       }).setOrigin(0, 0.5);
     } else {
-      let barX = startX + 150;
-      for (const [mat, amount] of materialsToShow) {
+      // Two-column layout: up to 3 rows per column so all earned materials are
+      // visible even when the player banked herbs/bone/iron/crystal in one run.
+      const colWidth = 160;
+      const rowHeight = 22;
+      const baseX = startX + 150;
+      const baseY = currentY;
+      materialsToShow.forEach(([mat, amount], i) => {
+        const col = Math.floor(i / 3);
+        const row = i % 3;
+        const cellX = baseX + col * colWidth;
+        const cellY = baseY + row * rowHeight;
         const texture = this.textures.exists(`mat_${mat}`) ? `mat_${mat}` : 'mat_stone';
-        this.add.image(barX - 20, currentY, texture).setDisplaySize(20, 20);
-        
-        panelGfx.fillStyle(0x333333);
-        panelGfx.fillRect(barX, currentY - 5, 60, 10);
-        panelGfx.fillStyle(0x00ff44);
-        panelGfx.fillRect(barX, currentY - 5, 60 * deathRetention, 10);
-        
-        this.add.text(barX + 65, currentY, `${Math.floor(amount * deathRetention)}`, {
-          fontFamily: FONTS.family, fontSize: '14px', color: '#ffffff'
+        this.add.image(cellX - 20, cellY, texture).setDisplaySize(18, 18);
+
+        // Mirror the at-least-1 banking rule so the preview matches the
+        // value the player actually gets in MetaState.
+        let retained = Math.floor(amount * deathRetention);
+        if (retained === 0 && amount > 0 && deathRetention > 0) retained = 1;
+
+        this.add.text(cellX, cellY, `${mat}: ${retained}`, {
+          fontFamily: FONTS.family, fontSize: '13px', color: '#ffffff'
         }).setOrigin(0, 0.5);
-        
-        barX += 130;
-      }
+      });
+      // Shift downstream text past the tallest column.
+      const rowsUsed = Math.min(3, materialsToShow.length);
+      currentY += (rowsUsed - 1) * rowHeight;
     }
 
     // ── Footer Messages ─────────────────────────────────────────

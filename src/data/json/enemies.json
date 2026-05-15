@@ -16,7 +16,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "bone",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -42,7 +42,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "bone",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -68,7 +68,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "crystal",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -94,7 +94,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "herbs",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -120,7 +120,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "crystal",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -146,7 +146,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "iron",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -172,7 +172,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "herbs",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -198,7 +198,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "wood",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -224,7 +224,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "herbs",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -250,7 +250,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "herbs",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -276,7 +276,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "wood",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -302,7 +302,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "iron",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -328,7 +328,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "crystal",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -354,7 +354,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "iron",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -380,7 +380,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "bone",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -406,7 +406,7 @@
     },
     "materialReward": {
       "chance": 0.3,
-      "bonusMaterial": "essence",
+      "bonusMaterial": "herbs",
       "bonusAmount": {
         "min": 1,
         "max": 2
@@ -446,7 +446,7 @@
     "name": "Doom Knight",
     "type": "boss",
     "bossType": "knight",
-    "baseHP": 1200,
+    "baseHP": 950,
     "baseDefense": 5,
     "attack": {
       "damage": 10,
@@ -474,7 +474,7 @@
     "name": "Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 1500,
+    "baseHP": 1200,
     "baseDefense": 5,
     "attack": {
       "damage": 10,
@@ -502,7 +502,7 @@
     "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 1000,
+    "baseHP": 800,
     "baseDefense": 5,
     "attack": {
       "damage": 10,

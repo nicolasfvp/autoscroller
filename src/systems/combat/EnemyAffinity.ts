@@ -4,6 +4,7 @@
 import type { CombatState } from './CombatState';
 import type { ElementId } from '../ElementSystem';
 import { rand } from '../SharedRNG';
+import { applyHeroDamage } from './EnemyAI';
 
 export interface AffinityResult {
   /** Short kind tag (e.g. 'enemy_armor_up', 'hero_burn') for HUD feedback. */
@@ -52,19 +53,22 @@ export function applyEnemyAffinityEffect(
     }
 
     case 'counter': {
-      // Reactive bleed: extra direct HP loss simulating riposte/retaliation.
+      // Reactive bleed: extra HP loss simulating riposte/retaliation. Now
+      // routed through armor (skipRelics=true so the on-attack iron_will/
+      // phoenix already fired by the main hit aren't re-triggered).
       const bleed = 2 * m;
-      state.heroHP = Math.max(0, state.heroHP - bleed);
-      return { type: 'hero_bleed', value: bleed };
+      const dealt = applyHeroDamage(bleed, state, /*skipRelics=*/true);
+      return { type: 'hero_bleed', value: dealt };
     }
 
     case 'fire': {
-      // Burn theme: small extra HP loss + stamina drain (the burn "fades" gear).
+      // Burn theme: small extra HP loss + stamina drain. HP loss respects
+      // armor; stamina drain is a separate utility hit and stays direct.
       const hp = 1 * m;
       const stam = 1 * m;
-      state.heroHP = Math.max(0, state.heroHP - hp);
+      const dealt = applyHeroDamage(hp, state, /*skipRelics=*/true);
       state.heroStamina = Math.max(0, state.heroStamina - stam);
-      return { type: 'hero_burn', value: hp };
+      return { type: 'hero_burn', value: dealt };
     }
 
     case 'water': {

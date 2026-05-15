@@ -86,7 +86,7 @@ export function getStorehouseEffects(storehouseLevel: number): { gatheringBoost:
   // (gatheringBoost=0, deathRetention=0.10) when no tiers apply.
   const building = (buildingsData as any).storehouse;
   let gatheringBoost = 0;
-  let deathRetention = 0.10; // baseline retention until level 2 unlocks one
+  let deathRetention = 0.25; // baseline retention until storehouse upgrades raise it (max 0.50)
   if (building && Array.isArray(building.tiers)) {
     for (const tier of building.tiers) {
       if (tier.level <= storehouseLevel) {
@@ -121,7 +121,11 @@ export function bankRunRewards(
   const boostMult = 1 + (gatheringBoost ?? 0);
   const bankedMaterials: Record<string, number> = {};
   for (const [mat, amount] of Object.entries(materialsEarned)) {
-    const banked = Math.floor(amount * materialMultiplier * boostMult);
+    let banked = Math.floor(amount * materialMultiplier * boostMult);
+    // Guarantee at least 1 banked when the player actually earned some of this
+    // material and the multiplier is non-zero — prevents small drops vanishing
+    // entirely under death retention (e.g. 1 essence * 0.25 = 0 before floor).
+    if (banked === 0 && amount > 0 && materialMultiplier > 0) banked = 1;
     if (banked > 0) {
       updated.materials[mat] = (updated.materials[mat] ?? 0) + banked;
     }
