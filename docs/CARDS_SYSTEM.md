@@ -6,6 +6,40 @@
 
 ---
 
+## 0. Delivery Status (2026-05-15)
+
+This rewrite landed in 5 atomic commits on branch `design/cards-relics-tiles`:
+
+1. `feat(cards): introduce element-driven card system (Tier 1+2 content)` — canonical doc, elements.json, 156 cards (36 Tier 1 + 120 Tier 2), 330 Tier 3 mocks, synergies zeroed, relics 50 → 39
+2. `feat(forge): add Forge/Shard/DeckBuilder systems + UI scenes` — pure logic + Phaser overlays
+3. `refactor: remove Shadowblade class + add state migrations for new system` — reverts to 2 classes, RunState v5 + MetaState v8, type schema extensions, starter decks
+4. `test: align fixtures + design docs with Shadowblade removal` — drops the Shadowblade test file + scrubs class refs from fixtures and design docs
+5. `docs(tech-debt): refresh TECH-DEBT with Phase 10 test fixture status` — catalogs the remaining ~170 stale test fixtures with a work order
+
+**What works:**
+- All 156 implemented cards load cleanly into `cards.json`; IDs are alphabetically canonical (`t1-attack-fire`, `t2-fire-fire-water`, etc.).
+- ShardSystem rolls drops per kill (1-3 / 6-13 / 20-30 by enemy type), auto-converts at 10 shards per element. Class bias (75/25 split) applied.
+- ForgeSystem looks up cards by element multiset, computes gold cost with discount tier, validates inventory + tier-unlock + deck capacity, executes crafting, persists recipes to MetaState.
+- DeckBuilder validates the 5-card / 10-element / class-ratio starter rule.
+- ForgeScene + DeckBuilderScene compile and are registered in `SCENE_KEYS` (`Forge`, `DeckBuilder`).
+- MetaState migrates from v6 → v7 → v8 with backfills for `forgeRecipes` and `deckPresets`.
+- RunState migrates from v3 → v4 → v5 with backfills for `economy.shards` / `economy.elements` and shadowblade → warrior fallback.
+- TypeScript compiles cleanly on the new code (the 30-odd remaining tsc warnings are pre-existing unused-var noise).
+
+**What's left for a follow-up session** (full triage in `TECH-DEBT.md`):
+- ~170 test fixture updates (content totals, EconomyState mocks, removed mechanics).
+- Wire the Forge overlay into LoopHUD / CityHub (currently the scene is registered but has no entry button — open via `this.scene.launch('ForgeScene', { metaState })`).
+- Wire the DeckBuilder into CharacterSelect → run start.
+- `enemy-drops.json` still references v2 card IDs in `cardPool`; the fallback path (random common card) still works.
+- Pixel art for the 156 cards (currently placeholder rendering).
+
+**How to verify:**
+- `npm run build` should compile.
+- `npm test` shows 17 failing files / 171 failing cases — all are fixture debt documented in TECH-DEBT.md §0.
+- `node scripts/merge-cards.mjs` regenerates `cards.json` from `data/generated/` (intermediate files are gitignored).
+
+---
+
 ## 1. Overview
 
 The card system is built from **8 Elements** that combine in multisets to form cards across **3 tiers**.
