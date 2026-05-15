@@ -19,7 +19,7 @@
     {
       "id": "t1-attack-attack",
       "name": "Strike",
-      "description": "Deal 8 damage. +1 Stamina.",
+      "description": "Deal 7 damage. +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -29,7 +29,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 8,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -43,9 +43,12 @@
           "target": "self"
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.1,
       "targeting": "single",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-defense-defense",
@@ -138,7 +141,7 @@
     {
       "id": "t1-fire-fire",
       "name": "Flameburst",
-      "description": "Deal 6 damage. Burn 3.",
+      "description": "Deal 6 damage. Burn 2.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -161,7 +164,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -171,7 +174,7 @@
           }
         }
       ],
-      "cooldown": 1.2,
+      "cooldown": 1.4,
       "targeting": "single",
       "rarity": "common"
     },
@@ -300,7 +303,7 @@
     {
       "id": "t1-agility-counter",
       "name": "Evasive Strike",
-      "description": "Deal 5 damage. +1 Stamina.",
+      "description": "Deal 6 damage. +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -310,7 +313,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 6,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -367,7 +370,7 @@
     {
       "id": "t1-agility-fire",
       "name": "Cinder Dash",
-      "description": "Deal 6 damage. Burn 2.",
+      "description": "Deal 5 damage. Burn 1.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -380,7 +383,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -390,7 +393,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -400,7 +403,7 @@
           }
         }
       ],
-      "cooldown": 0.9,
+      "cooldown": 1,
       "targeting": "single",
       "rarity": "common"
     },
@@ -477,7 +480,8 @@
         "earth"
       ],
       "cost": {
-        "stamina": 1
+        "stamina": 1,
+        "mana": 2
       },
       "effects": [
         {
@@ -497,7 +501,7 @@
           "stack": "freeze"
         }
       ],
-      "cooldown": 1.1,
+      "cooldown": 1.3,
       "targeting": "single",
       "rarity": "common"
     },
@@ -531,14 +535,14 @@
           "target": "self"
         }
       ],
-      "cooldown": 1.1,
+      "cooldown": 1.2,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-attack-defense",
       "name": "Shield Slam",
-      "description": "Deal 6 damage. Gain 6 Armor.",
+      "description": "Deal 5 damage. Gain 6 Armor.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -551,7 +555,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -577,7 +581,7 @@
     {
       "id": "t1-attack-fire",
       "name": "Flame Slash",
-      "description": "Deal 8 damage. Burn 2.",
+      "description": "Deal 8 damage. Burn 1.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -600,7 +604,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -610,14 +614,14 @@
           }
         }
       ],
-      "cooldown": 1.2,
+      "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-attack-water",
       "name": "Tide Bash",
-      "description": "Deal 7 damage. Heal 3 HP.",
+      "description": "Deal 7 damage. Heal 2 HP.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -640,7 +644,7 @@
         },
         {
           "type": "heal",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -656,7 +660,7 @@
     {
       "id": "t1-air-attack",
       "name": "Storm Cleave",
-      "description": "Deal 6 damage AoE.",
+      "description": "Deal 8 damage AoE.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -669,7 +673,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -713,14 +717,14 @@
           "stack": "freeze"
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-counter-defense",
       "name": "Thorn Wall",
-      "description": "Gain 8 Armor. Deal 4 damage.",
+      "description": "Gain 8 Armor. Deal 3 damage.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -743,7 +747,7 @@
         },
         {
           "type": "damage",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -759,7 +763,7 @@
     {
       "id": "t1-counter-fire",
       "name": "Ember Riposte",
-      "description": "Deal 5 damage. Burn 3. Gain 2 Armor.",
+      "description": "Deal 5 damage. Burn 2. Gain 2 Armor.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -782,7 +786,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -903,7 +907,7 @@
     {
       "id": "t1-defense-fire",
       "name": "Ember Ward",
-      "description": "Gain 6 Armor. Burn 3 to enemy.",
+      "description": "Gain 6 Armor. Burn 2 to enemy.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -926,7 +930,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -943,7 +947,7 @@
     {
       "id": "t1-defense-water",
       "name": "Tidal Aegis",
-      "description": "Gain 8 Armor. Heal 4 HP.",
+      "description": "Gain 8 Armor. Heal 3 HP.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -966,7 +970,7 @@
         },
         {
           "type": "heal",
-          "value": 4,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -1081,7 +1085,7 @@
     {
       "id": "t1-air-fire",
       "name": "Wildfire Gust",
-      "description": "Deal 6 damage AoE. Burn 2 AoE.",
+      "description": "Deal 6 damage AoE. Burn 1 AoE.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1104,7 +1108,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -1121,7 +1125,7 @@
     {
       "id": "t1-earth-fire",
       "name": "Magma Shard",
-      "description": "Deal 7 damage. Burn 3. Apply 1 Freeze.",
+      "description": "Deal 5 damage. Burn 2. Apply 1 Freeze.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1134,7 +1138,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 7,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -1144,7 +1148,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -1233,7 +1237,7 @@
     {
       "id": "t1-air-earth",
       "name": "Sandstorm",
-      "description": "Deal 5 damage AoE. Apply 1 Freeze AoE.",
+      "description": "Deal 7 damage AoE. Apply 1 Freeze AoE.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1246,7 +1250,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -1268,7 +1272,7 @@
     {
       "id": "t2-attack-attack-attack",
       "name": "Berserker Frenzy",
-      "description": "Deal 22 damage. Lose 2 HP. +3 Rage stacks for relentless follow-ups.",
+      "description": "Deal 16 damage. Lose 2 HP. +2 Rage stacks for relentless follow-ups.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1279,7 +1283,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 22,
+          "value": 16,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1289,7 +1293,7 @@
         },
         {
           "type": "stack",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "stack": "rage"
         }
@@ -1304,7 +1308,7 @@
     {
       "id": "t2-defense-defense-defense",
       "name": "Aegis Wall",
-      "description": "Gain 28 Armor. +3 VIT for the rest of combat — an unbreakable bulwark.",
+      "description": "Gain 20 Armor. +2 VIT for the rest of combat — an unbreakable bulwark.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1315,7 +1319,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 28,
+          "value": 20,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1325,7 +1329,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1344,7 +1348,7 @@
     {
       "id": "t2-agility-agility-agility",
       "name": "Wind Dancer",
-      "description": "Deal 8 damage three times. +3 DEX for combat. The wind never rests.",
+      "description": "Deal 12 damage. +2 DEX for combat. The wind never rests.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1355,7 +1359,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 24,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -1365,7 +1369,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -1375,7 +1379,7 @@
         },
         {
           "type": "stamina",
-          "value": 2,
+          "value": 1,
           "target": "self"
         }
       ],
@@ -1389,7 +1393,7 @@
     {
       "id": "t2-counter-counter-counter",
       "name": "Mirror Shield",
-      "description": "Gain 14 Armor. Reflect 18 damage to next attacker. +2 Rage stacks on hit.",
+      "description": "Gain 10 Armor. Reflect 9 damage to next attacker. +1 Rage stacks on hit.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1400,7 +1404,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 14,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1410,7 +1414,7 @@
         },
         {
           "type": "damage",
-          "value": 18,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1420,7 +1424,7 @@
         },
         {
           "type": "stack",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "stack": "rage"
         }
@@ -1435,7 +1439,7 @@
     {
       "id": "t2-attack-attack-defense",
       "name": "Vanguard Slash",
-      "description": "Deal 18 damage. Gain 10 Armor. A textbook lead from the frontline.",
+      "description": "Deal 12 damage. Gain 10 Armor. A textbook lead from the frontline.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1446,7 +1450,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1475,7 +1479,7 @@
     {
       "id": "t2-agility-attack-attack",
       "name": "Whirling Strike",
-      "description": "Deal 16 damage AoE. Quick recovery — leaves enemies reeling.",
+      "description": "Deal 12 damage AoE. Quick recovery — leaves enemies reeling.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1486,7 +1490,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1515,7 +1519,7 @@
     {
       "id": "t2-attack-attack-counter",
       "name": "Vengeful Charge",
-      "description": "Deal 20 damage. Reflect 8 damage on the next hit you take.",
+      "description": "Deal 18 damage. Reflect 8 damage on the next hit you take.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1526,7 +1530,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 20,
+          "value": 18,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1536,7 +1540,7 @@
         },
         {
           "type": "stack",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "stack": "rage"
         }
@@ -1551,7 +1555,7 @@
     {
       "id": "t2-attack-defense-defense",
       "name": "Fortress Stance",
-      "description": "Gain 20 Armor. Deal 10 damage to attacker on retaliation. The wall hits back.",
+      "description": "Gain 19 Armor. Deal 5 damage to attacker on retaliation. The wall hits back.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1562,7 +1566,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 20,
+          "value": 19,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1572,7 +1576,7 @@
         },
         {
           "type": "damage",
-          "value": 10,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1631,7 +1635,7 @@
     {
       "id": "t2-counter-defense-defense",
       "name": "Iron Mirror",
-      "description": "Gain 22 Armor. Reflect 12 damage to next attacker. Pain returns in kind.",
+      "description": "Gain 18 Armor. Reflect 6 damage to next attacker. Pain returns in kind.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1642,7 +1646,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 22,
+          "value": 18,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1652,7 +1656,7 @@
         },
         {
           "type": "damage",
-          "value": 12,
+          "value": 6,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1671,7 +1675,7 @@
     {
       "id": "t2-agility-agility-attack",
       "name": "Blitz Strike",
-      "description": "Deal 14 damage AoE. +3 Stamina returned. A blur of steel through the line.",
+      "description": "Deal 11 damage AoE. +3 Stamina returned. A blur of steel through the line.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1682,7 +1686,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 11,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -1828,7 +1832,7 @@
     {
       "id": "t2-counter-counter-defense",
       "name": "Reflective Aegis",
-      "description": "Gain 18 Armor. Reflect 14 damage to next 2 attackers. The shield strikes twice.",
+      "description": "Gain 15 Armor. Reflect 7 damage to next 2 attackers. The shield strikes twice.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1839,7 +1843,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 18,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1849,7 +1853,7 @@
         },
         {
           "type": "damage",
-          "value": 14,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1868,7 +1872,7 @@
     {
       "id": "t2-agility-counter-counter",
       "name": "Quickdraw Counter",
-      "description": "Deal 14 damage. Reflect 6 on next hit. Fast recovery — strike before they blink.",
+      "description": "Deal 13 damage. Reflect 6 on next hit. Fast recovery — strike before they blink.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1879,7 +1883,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 13,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1913,7 +1917,7 @@
     {
       "id": "t2-agility-attack-defense",
       "name": "Knight's Dash",
-      "description": "Deal 14 damage. Gain 12 Armor. +1 Stamina. The complete maneuver.",
+      "description": "Deal 8 damage. Gain 12 Armor. +1 Stamina. The complete maneuver.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1924,7 +1928,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1958,7 +1962,7 @@
     {
       "id": "t2-attack-counter-defense",
       "name": "Templar Strike",
-      "description": "Deal 15 damage. Gain 12 Armor. Heal 8 HP — faith mends what steel breaks.",
+      "description": "Deal 8 damage. Gain 8 Armor. Heal 4 HP — faith mends what steel breaks.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1969,7 +1973,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 15,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -1979,7 +1983,7 @@
         },
         {
           "type": "armor",
-          "value": 12,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1989,7 +1993,7 @@
         },
         {
           "type": "heal",
-          "value": 8,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2008,7 +2012,7 @@
     {
       "id": "t2-agility-attack-counter",
       "name": "Duelist's Edge",
-      "description": "Deal 18 damage. Apply 4 Bleed. +1 Rage stack. The duelist always tastes blood.",
+      "description": "Deal 14 damage. Apply 2 Bleed. +1 Rage stack. The duelist always tastes blood.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2019,7 +2023,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 14,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -2029,7 +2033,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "bleed"
         },
@@ -2050,7 +2054,7 @@
     {
       "id": "t2-agility-counter-defense",
       "name": "Bastion Dance",
-      "description": "Gain 16 Armor. +2 DEX for combat. Reflect 8 damage on next hit.",
+      "description": "Gain 15 Armor. +1 DEX for combat. Reflect 4 damage on next hit.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -2061,7 +2065,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 16,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -2071,7 +2075,7 @@
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2081,7 +2085,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -2100,7 +2104,7 @@
     {
       "id": "t2-fire-fire-fire",
       "name": "Inferno Wave",
-      "description": "Deal 18 damage AoE. Apply 7 Burn AoE.",
+      "description": "Deal 9 damage AoE. Apply 4 Burn AoE.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2111,17 +2115,17 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "int",
             "per": 1,
-            "value": 3
+            "value": 2
           }
         },
         {
           "type": "dot",
-          "value": 7,
+          "value": 4,
           "target": "enemy",
           "stack": "burn"
         }
@@ -2136,7 +2140,7 @@
     {
       "id": "t2-water-water-water",
       "name": "Tidal Surge",
-      "description": "Heal 20 HP. Deal 8 damage AoE. +6 Mana.",
+      "description": "Heal 10 HP. Deal 4 damage AoE. +3 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2147,7 +2151,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 20,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2157,7 +2161,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "spi",
@@ -2167,7 +2171,7 @@
         },
         {
           "type": "mana",
-          "value": 6,
+          "value": 3,
           "target": "self"
         }
       ],
@@ -2181,7 +2185,7 @@
     {
       "id": "t2-air-air-air",
       "name": "Tempest Howl",
-      "description": "Deal 16 damage AoE. Apply 5 Freeze AoE. +2 DEX for combat.",
+      "description": "Deal 8 damage AoE. Apply 3 Freeze AoE. +1 DEX for combat.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2192,23 +2196,23 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "dex",
             "per": 1,
-            "value": 3
+            "value": 2
           }
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2227,7 +2231,7 @@
     {
       "id": "t2-earth-earth-earth",
       "name": "Quake",
-      "description": "Deal 20 damage AoE. Apply 4 Freeze AoE. Gain 12 Armor.",
+      "description": "Deal 10 damage AoE. Apply 1 Freeze AoE. Gain 6 Armor.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2238,23 +2242,23 @@
       "effects": [
         {
           "type": "damage",
-          "value": 20,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "vit",
             "per": 1,
-            "value": 3
+            "value": 2
           }
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 1,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "armor",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -2264,16 +2268,16 @@
         }
       ],
       "cost": {
-        "mana": 5
+        "mana": 6
       },
-      "cooldown": 2.2,
+      "cooldown": 2.5,
       "targeting": "aoe",
       "rarity": "rare"
     },
     {
       "id": "t2-fire-fire-water",
       "name": "Phoenix Bloom",
-      "description": "Heal 14 HP. Deal 8 damage AoE. Apply 5 Burn AoE.",
+      "description": "Heal 7 HP. Deal 4 damage AoE. Apply 3 Burn AoE.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2284,17 +2288,17 @@
       "effects": [
         {
           "type": "heal",
-          "value": 14,
+          "value": 7,
           "target": "self",
           "scale": {
             "stat": "spi",
             "per": 1,
-            "value": 2
+            "value": 1
           }
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2304,7 +2308,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         }
@@ -2319,7 +2323,7 @@
     {
       "id": "t2-air-fire-fire",
       "name": "Wildfire Squall",
-      "description": "Deal 14 damage AoE. Apply 6 Burn AoE. +1 Arcane stack.",
+      "description": "Deal 7 damage AoE. Apply 3 Burn AoE. +1 Arcane stack.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2330,7 +2334,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2340,7 +2344,7 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
@@ -2361,7 +2365,7 @@
     {
       "id": "t2-earth-fire-fire",
       "name": "Magma Crater",
-      "description": "Deal 22 damage. Apply 6 Burn. Apply 3 Freeze (slow).",
+      "description": "Deal 11 damage. Apply 3 Burn. Apply 2 Freeze (slow).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2372,7 +2376,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 22,
+          "value": 11,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2382,13 +2386,13 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         }
@@ -2403,7 +2407,7 @@
     {
       "id": "t2-fire-water-water",
       "name": "Steam Veil",
-      "description": "Heal 16 HP. Deal 10 damage. Apply 4 Burn.",
+      "description": "Heal 8 HP. Deal 7 damage. Apply 2 Burn.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2414,7 +2418,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 16,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2424,7 +2428,7 @@
         },
         {
           "type": "damage",
-          "value": 10,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2434,7 +2438,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -2449,7 +2453,7 @@
     {
       "id": "t2-air-water-water",
       "name": "Misted Sky",
-      "description": "Heal 15 HP. +3 DEX for combat. +5 Mana.",
+      "description": "Heal 10 HP. +2 DEX for combat. +5 Mana.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -2460,7 +2464,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 15,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2470,7 +2474,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2494,7 +2498,7 @@
     {
       "id": "t2-earth-water-water",
       "name": "Mire Shackles",
-      "description": "Heal 12 HP. Apply 5 Freeze AoE. Deal 6 damage AoE.",
+      "description": "Heal 7 HP. Apply 3 Freeze AoE. Deal 3 damage AoE.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2505,7 +2509,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 12,
+          "value": 7,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2515,13 +2519,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "damage",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -2540,7 +2544,7 @@
     {
       "id": "t2-air-air-fire",
       "name": "Galewind Spark",
-      "description": "Deal 15 damage AoE. Apply 3 Burn AoE. +3 DEX.",
+      "description": "Deal 8 damage AoE. Apply 2 Burn AoE. +2 DEX.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2551,23 +2555,23 @@
       "effects": [
         {
           "type": "damage",
-          "value": 15,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "dex",
             "per": 1,
-            "value": 3
+            "value": 2
           }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2586,7 +2590,7 @@
     {
       "id": "t2-air-air-water",
       "name": "Squall",
-      "description": "Deal 12 damage AoE. Heal 6 HP. +8 Mana.",
+      "description": "Deal 6 damage AoE. Heal 3 HP. +7 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2597,7 +2601,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 6,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -2607,7 +2611,7 @@
         },
         {
           "type": "heal",
-          "value": 6,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2617,7 +2621,7 @@
         },
         {
           "type": "mana",
-          "value": 8,
+          "value": 7,
           "target": "self"
         }
       ],
@@ -2631,7 +2635,7 @@
     {
       "id": "t2-air-air-earth",
       "name": "Sandstorm",
-      "description": "Deal 14 damage AoE. Apply 4 Freeze AoE. Enemy -3 Defense AoE.",
+      "description": "Deal 10 damage AoE. Apply 2 Freeze AoE. Enemy -2 Defense AoE.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2642,7 +2646,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -2652,13 +2656,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "debuff",
-          "value": 3,
+          "value": 2,
           "target": "enemy"
         }
       ],
@@ -2672,7 +2676,7 @@
     {
       "id": "t2-earth-earth-fire",
       "name": "Volcanic Crust",
-      "description": "Deal 16 damage. Apply 5 Burn. Gain 14 Armor.",
+      "description": "Deal 8 damage. Apply 3 Burn. Gain 11 Armor.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2683,7 +2687,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2693,13 +2697,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "armor",
-          "value": 14,
+          "value": 11,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -2718,7 +2722,7 @@
     {
       "id": "t2-earth-earth-water",
       "name": "Quicksand",
-      "description": "Apply 6 Freeze. Deal 13 damage. Heal 5 HP.",
+      "description": "Apply 3 Freeze. Deal 12 damage. Heal 3 HP.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2729,13 +2733,13 @@
       "effects": [
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "damage",
-          "value": 13,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -2745,7 +2749,7 @@
         },
         {
           "type": "heal",
-          "value": 5,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2764,7 +2768,7 @@
     {
       "id": "t2-air-earth-earth",
       "name": "Avalanche",
-      "description": "Deal 17 damage AoE. Apply 5 Freeze AoE (stun chance).",
+      "description": "Deal 9 damage AoE. Apply 3 Freeze AoE (stun chance).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2775,7 +2779,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 17,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -2785,7 +2789,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
@@ -2806,7 +2810,7 @@
     {
       "id": "t2-air-fire-water",
       "name": "Mistral Burst",
-      "description": "Heal 10 HP. Deal 9 damage. Apply 4 Burn. +2 DEX.",
+      "description": "Heal 5 HP. Deal 9 damage. Apply 2 Burn. +1 DEX.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2817,7 +2821,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 10,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2837,13 +2841,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2862,7 +2866,7 @@
     {
       "id": "t2-earth-fire-water",
       "name": "Alchemic Pulse",
-      "description": "Heal 12 HP. Deal 12 damage. Gain 10 Armor. Apply 3 Burn.",
+      "description": "Heal 6 HP. Deal 6 damage. Gain 5 Armor. Apply 2 Burn.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2873,17 +2877,17 @@
       "effects": [
         {
           "type": "heal",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "spi",
             "per": 1,
-            "value": 2
+            "value": 1
           }
         },
         {
           "type": "damage",
-          "value": 12,
+          "value": 6,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2893,7 +2897,7 @@
         },
         {
           "type": "armor",
-          "value": 10,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -2903,7 +2907,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -2918,7 +2922,7 @@
     {
       "id": "t2-air-earth-fire",
       "name": "Desert Storm",
-      "description": "Deal 13 damage AoE. Apply 6 Burn AoE. Apply 3 Freeze AoE.",
+      "description": "Deal 7 damage AoE. Apply 3 Burn AoE. Apply 2 Freeze AoE.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2929,7 +2933,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 13,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -2939,13 +2943,13 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         }
@@ -2960,7 +2964,7 @@
     {
       "id": "t2-air-earth-water",
       "name": "Rainforest Bloom",
-      "description": "Heal 15 HP AoE allies. Apply 4 Freeze AoE. +2 DEX.",
+      "description": "Heal 8 HP AoE allies. Apply 2 Freeze AoE. +1 DEX.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2971,7 +2975,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 15,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -2981,13 +2985,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -2997,7 +3001,7 @@
         },
         {
           "type": "mana",
-          "value": 4,
+          "value": 3,
           "target": "self"
         }
       ],
@@ -3011,7 +3015,7 @@
     {
       "id": "t2-attack-attack-fire",
       "name": "Flame Charge",
-      "description": "Deal 20 damage. Apply 3 Burn stacks. A blazing forward thrust.",
+      "description": "Deal 15 damage. Apply 2 Burn stacks. A blazing forward thrust.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3022,7 +3026,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 20,
+          "value": 15,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3032,7 +3036,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -3052,7 +3056,7 @@
     {
       "id": "t2-attack-attack-water",
       "name": "Tide Slash",
-      "description": "Deal 18 damage. Restore 8 HP — the wave nourishes as it strikes.",
+      "description": "Deal 15 damage. Restore 4 HP — the wave nourishes as it strikes.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3063,7 +3067,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 15,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3073,7 +3077,7 @@
         },
         {
           "type": "heal",
-          "value": 8,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -3093,7 +3097,7 @@
     {
       "id": "t2-air-attack-attack",
       "name": "Gust Strike",
-      "description": "Deal 16 damage to all enemies. +1 DEX as the wind lifts your blade.",
+      "description": "Deal 12 damage to all enemies. +1 DEX as the wind lifts your blade.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3104,7 +3108,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3133,7 +3137,7 @@
     {
       "id": "t2-attack-attack-earth",
       "name": "Stoneform Hammer",
-      "description": "Deal 22 damage. Apply 2 Freeze to slow the foe. Earth answers steel.",
+      "description": "Deal 17 damage. Apply 1 Freeze to slow the foe. Earth answers steel.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3144,7 +3148,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 22,
+          "value": 17,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3154,7 +3158,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "freeze",
           "scale": {
@@ -3174,7 +3178,7 @@
     {
       "id": "t2-defense-defense-fire",
       "name": "Inferno Wall",
-      "description": "Gain 22 Armor. Retaliate 5 fire damage and 2 Burn against the next attacker.",
+      "description": "Gain 20 Armor. Retaliate 5 fire damage and 1 Burn against the next attacker.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3185,7 +3189,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 22,
+          "value": 20,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -3195,7 +3199,7 @@
         },
         {
           "type": "damage",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -3205,7 +3209,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn"
         }
@@ -3220,7 +3224,7 @@
     {
       "id": "t2-defense-defense-water",
       "name": "Reef Shield",
-      "description": "Gain 20 Armor. Restore 8 HP. The tide guards what it loves.",
+      "description": "Gain 20 Armor. Restore 4 HP. The tide guards what it loves.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3241,7 +3245,7 @@
         },
         {
           "type": "heal",
-          "value": 8,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -3301,7 +3305,7 @@
     {
       "id": "t2-defense-defense-earth",
       "name": "Boulder Stance",
-      "description": "Gain 28 Armor. +2 VIT — set your feet, become the mountain.",
+      "description": "Gain 23 Armor. +1 VIT — set your feet, become the mountain.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3312,7 +3316,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 28,
+          "value": 23,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -3322,7 +3326,7 @@
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -3341,7 +3345,7 @@
     {
       "id": "t2-agility-agility-fire",
       "name": "Spark Flurry",
-      "description": "Deal 14 damage. Apply 2 Burn. Quick recovery — sparks chain into flames.",
+      "description": "Deal 14 damage. Apply 1 Burn. Quick recovery — sparks chain into flames.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3362,7 +3366,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -3427,7 +3431,7 @@
     {
       "id": "t2-agility-agility-air",
       "name": "Whirlwind",
-      "description": "Deal 12 damage to all enemies. +1 DEX. A spinning storm of steel.",
+      "description": "Deal 11 damage to all enemies. +1 DEX. A spinning storm of steel.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3438,7 +3442,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 11,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -3553,7 +3557,7 @@
     {
       "id": "t2-counter-counter-water",
       "name": "Tideturn Riposte",
-      "description": "Reflect 14 damage. Restore 6 HP — the wave returns, then heals you.",
+      "description": "Reflect 14 damage. Restore 5 HP — the wave returns, then heals you.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3574,7 +3578,7 @@
         },
         {
           "type": "heal",
-          "value": 6,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -3675,7 +3679,7 @@
     {
       "id": "t2-attack-defense-fire",
       "name": "Templar Flame",
-      "description": "Deal 14 damage. Gain 8 Armor. Apply 2 Burn — the holy fire both shields and scorches.",
+      "description": "Deal 10 damage. Gain 8 Armor. Apply 1 Burn — the holy fire both shields and scorches.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3686,7 +3690,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3706,7 +3710,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -3726,7 +3730,7 @@
     {
       "id": "t2-attack-defense-water",
       "name": "Paladin Strike",
-      "description": "Deal 14 damage. Gain 6 Armor. Restore 5 HP. Faith, steel, and water.",
+      "description": "Deal 10 damage. Gain 6 Armor. Restore 3 HP. Faith, steel, and water.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3737,7 +3741,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3757,7 +3761,7 @@
         },
         {
           "type": "heal",
-          "value": 5,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -3777,7 +3781,7 @@
     {
       "id": "t2-air-attack-defense",
       "name": "Aegis Dash",
-      "description": "Deal 12 damage. Gain 10 Armor. +1 DEX — leap in, plant your guard.",
+      "description": "Deal 8 damage. Gain 10 Armor. +1 DEX — leap in, plant your guard.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3788,7 +3792,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3827,7 +3831,7 @@
     {
       "id": "t2-attack-defense-earth",
       "name": "Earthbound Slam",
-      "description": "Deal 14 damage. Gain 12 Armor. Apply 1 Freeze — the earth strikes both ways.",
+      "description": "Deal 7 damage. Gain 11 Armor. Apply 1 Freeze — the earth strikes both ways.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3838,7 +3842,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3848,7 +3852,7 @@
         },
         {
           "type": "armor",
-          "value": 12,
+          "value": 11,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -3964,7 +3968,7 @@
     {
       "id": "t2-agility-air-attack",
       "name": "Sky Slash",
-      "description": "Deal 16 damage. +1 DEX. A diving cut that splits the air.",
+      "description": "Deal 15 damage. +1 DEX. A diving cut that splits the air.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3975,7 +3979,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 15,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -4045,7 +4049,7 @@
     {
       "id": "t2-attack-counter-fire",
       "name": "Flame Riposte",
-      "description": "Deal 14 damage. Reflect 6 fire damage and 2 Burn to the next attacker.",
+      "description": "Deal 11 damage. Reflect 6 fire damage and 1 Burn to the next attacker.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4056,7 +4060,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 11,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4076,7 +4080,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -4096,7 +4100,7 @@
     {
       "id": "t2-attack-counter-water",
       "name": "Tideborn Vengeance",
-      "description": "Deal 12 damage. Reflect 8 damage. Restore 5 HP — strike, return, sustain.",
+      "description": "Deal 7 damage. Reflect 8 damage. Restore 3 HP — strike, return, sustain.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4107,7 +4111,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4127,7 +4131,7 @@
         },
         {
           "type": "heal",
-          "value": 5,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -4147,7 +4151,7 @@
     {
       "id": "t2-air-attack-counter",
       "name": "Skyfall Riposte",
-      "description": "Deal 14 damage. Reflect 8 damage. +1 DEX — gravity sides with you.",
+      "description": "Deal 9 damage. Reflect 8 damage. +1 DEX — gravity sides with you.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4158,7 +4162,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4197,7 +4201,7 @@
     {
       "id": "t2-attack-counter-earth",
       "name": "Stone Riposte",
-      "description": "Deal 14 damage. Reflect 10 damage. Apply 1 Freeze — slabs strike both ways.",
+      "description": "Deal 7 damage. Reflect 10 damage. Apply 1 Freeze — slabs strike both ways.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4208,7 +4212,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4434,7 +4438,7 @@
     {
       "id": "t2-counter-defense-fire",
       "name": "Pyre Sentinel",
-      "description": "Gain 16 Armor. Reflect 8 damage and apply 2 Burn to the next attacker.",
+      "description": "Gain 16 Armor. Reflect 4 damage and apply 1 Burn to the next attacker.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4455,7 +4459,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4465,7 +4469,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -4485,7 +4489,7 @@
     {
       "id": "t2-counter-defense-water",
       "name": "Tidewatcher",
-      "description": "Gain 14 Armor. Reflect 6 damage. Restore 6 HP — the tide watches over its keeper.",
+      "description": "Gain 14 Armor. Reflect 4 damage. Restore 3 HP — the tide watches over its keeper.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4506,7 +4510,7 @@
         },
         {
           "type": "damage",
-          "value": 6,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4516,7 +4520,7 @@
         },
         {
           "type": "heal",
-          "value": 6,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -4536,7 +4540,7 @@
     {
       "id": "t2-air-counter-defense",
       "name": "Skyward Bastion",
-      "description": "Gain 14 Armor. Reflect 8 damage. +1 DEX — high ground in every direction.",
+      "description": "Gain 14 Armor. Reflect 5 damage. +1 DEX — high ground in every direction.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4557,7 +4561,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4586,7 +4590,7 @@
     {
       "id": "t2-counter-defense-earth",
       "name": "Bulwark Quake",
-      "description": "Gain 20 Armor. Reflect 8 damage and apply 2 Freeze — the wall pushes back.",
+      "description": "Gain 15 Armor. Reflect 4 damage and apply 1 Freeze — the wall pushes back.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4597,7 +4601,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 20,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -4607,7 +4611,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4617,7 +4621,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "freeze",
           "scale": {
@@ -4804,7 +4808,7 @@
     {
       "id": "t2-attack-fire-fire",
       "name": "Inferno Strike",
-      "description": "Deal 20 damage AoE. Apply 7 Burn AoE. +1 Arcane stack.",
+      "description": "Deal 10 damage AoE. Apply 3 Burn AoE. +1 Arcane stack.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4815,17 +4819,17 @@
       "effects": [
         {
           "type": "damage",
-          "value": 20,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "int",
             "per": 1,
-            "value": 3
+            "value": 2
           }
         },
         {
           "type": "dot",
-          "value": 7,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
@@ -4837,16 +4841,16 @@
         }
       ],
       "cost": {
-        "mana": 4
+        "mana": 6
       },
-      "cooldown": 1.6,
+      "cooldown": 2.1,
       "targeting": "aoe",
       "rarity": "rare"
     },
     {
       "id": "t2-attack-water-water",
       "name": "Tidal Charge",
-      "description": "Deal 16 damage. Heal 18 HP. A surging wave crashes through the line.",
+      "description": "Deal 8 damage. Heal 9 HP. A surging wave crashes through the line.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -4857,7 +4861,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4867,7 +4871,7 @@
         },
         {
           "type": "heal",
-          "value": 18,
+          "value": 9,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -4886,7 +4890,7 @@
     {
       "id": "t2-air-air-attack",
       "name": "Cyclone Slash",
-      "description": "Deal 18 damage AoE. +3 DEX for combat. Quick recovery.",
+      "description": "Deal 10 damage AoE. +2 DEX for combat. Quick recovery.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4897,7 +4901,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -4907,7 +4911,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -4926,7 +4930,7 @@
     {
       "id": "t2-attack-earth-earth",
       "name": "Earthshock",
-      "description": "Deal 22 damage. Apply 6 Freeze (slow). Gain 8 Armor.",
+      "description": "Deal 11 damage. Apply 3 Freeze (slow). Gain 6 Armor.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4937,7 +4941,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 22,
+          "value": 11,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -4947,13 +4951,13 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "armor",
-          "value": 8,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -4972,7 +4976,7 @@
     {
       "id": "t2-attack-fire-water",
       "name": "Phoenix Charge",
-      "description": "Deal 14 damage. Heal 10 HP. Apply 4 Burn.",
+      "description": "Deal 9 damage. Heal 5 HP. Apply 2 Burn.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -4983,7 +4987,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -4993,7 +4997,7 @@
         },
         {
           "type": "heal",
-          "value": 10,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5003,7 +5007,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -5018,7 +5022,7 @@
     {
       "id": "t2-air-attack-fire",
       "name": "Wildfire Strike",
-      "description": "Deal 16 damage AoE. Apply 5 Burn AoE. +2 DEX for combat.",
+      "description": "Deal 8 damage AoE. Apply 3 Burn AoE. +1 DEX for combat.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5029,23 +5033,23 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "int",
             "per": 1,
-            "value": 2
+            "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5064,7 +5068,7 @@
     {
       "id": "t2-attack-earth-fire",
       "name": "Magma Slash",
-      "description": "Deal 18 damage. Apply 5 Burn. Apply 3 Freeze (slow).",
+      "description": "Deal 13 damage. Apply 3 Burn. Apply 2 Freeze (slow).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5075,7 +5079,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 13,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -5085,13 +5089,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         }
@@ -5106,7 +5110,7 @@
     {
       "id": "t2-air-attack-water",
       "name": "Misted Strike",
-      "description": "Deal 14 damage. Heal 12 HP. +2 DEX for combat.",
+      "description": "Deal 8 damage. Heal 6 HP. +1 DEX for combat.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5117,7 +5121,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -5127,7 +5131,7 @@
         },
         {
           "type": "heal",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5137,7 +5141,7 @@
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5156,7 +5160,7 @@
     {
       "id": "t2-attack-earth-water",
       "name": "Mire Strike",
-      "description": "Deal 17 damage. Apply 5 Freeze (slow). Heal 6 HP.",
+      "description": "Deal 12 damage. Apply 3 Freeze (slow). Heal 3 HP.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5167,7 +5171,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 17,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -5177,13 +5181,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "heal",
-          "value": 6,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5202,7 +5206,7 @@
     {
       "id": "t2-air-attack-earth",
       "name": "Sandstorm Slash",
-      "description": "Deal 16 damage AoE. Apply 5 Freeze AoE (slow). Enemy -2 Defense.",
+      "description": "Deal 9 damage AoE. Apply 3 Freeze AoE (slow). Enemy -1 Defense.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5213,7 +5217,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -5223,13 +5227,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "debuff",
-          "value": 2,
+          "value": 1,
           "target": "enemy"
         }
       ],
@@ -5243,7 +5247,7 @@
     {
       "id": "t2-defense-fire-fire",
       "name": "Phoenix Wall",
-      "description": "Gain 16 Armor. Reflect 8 damage. Apply 5 Burn to attacker.",
+      "description": "Gain 15 Armor. Reflect 4 damage. Apply 3 Burn to attacker.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5254,7 +5258,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 16,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5264,7 +5268,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -5274,7 +5278,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         }
@@ -5289,7 +5293,7 @@
     {
       "id": "t2-defense-water-water",
       "name": "Healing Bulwark",
-      "description": "Gain 18 Armor. Heal 16 HP. A tide of restoration.",
+      "description": "Gain 14 Armor. Heal 8 HP. A tide of restoration.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5300,7 +5304,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 18,
+          "value": 14,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5310,7 +5314,7 @@
         },
         {
           "type": "heal",
-          "value": 16,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5369,7 +5373,7 @@
     {
       "id": "t2-defense-earth-earth",
       "name": "Stoneform",
-      "description": "Gain 25 Armor. +3 VIT for combat. Become an immovable bastion.",
+      "description": "Gain 24 Armor. +2 VIT for combat. Become an immovable bastion.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5380,7 +5384,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 25,
+          "value": 24,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5390,7 +5394,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5409,7 +5413,7 @@
     {
       "id": "t2-defense-fire-water",
       "name": "Steam Aegis",
-      "description": "Gain 14 Armor. Heal 10 HP. Deal 6 damage AoE.",
+      "description": "Gain 12 Armor. Heal 5 HP. Deal 3 damage AoE.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5420,7 +5424,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 14,
+          "value": 12,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5430,7 +5434,7 @@
         },
         {
           "type": "heal",
-          "value": 10,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5440,7 +5444,7 @@
         },
         {
           "type": "damage",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -5459,7 +5463,7 @@
     {
       "id": "t2-air-defense-fire",
       "name": "Galefire Wall",
-      "description": "Gain 12 Armor. Reflect 6 damage. Apply 4 Burn to attacker.",
+      "description": "Gain 12 Armor. Reflect 6 damage. Apply 2 Burn to attacker.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5490,7 +5494,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -5505,7 +5509,7 @@
     {
       "id": "t2-defense-earth-fire",
       "name": "Magma Plate",
-      "description": "Gain 18 Armor. Reflect 8 damage. Apply 5 Burn to attacker.",
+      "description": "Gain 15 Armor. Reflect 4 damage. Apply 3 Burn to attacker.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5516,7 +5520,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 18,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5526,7 +5530,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -5536,7 +5540,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         }
@@ -5551,7 +5555,7 @@
     {
       "id": "t2-air-defense-water",
       "name": "Cooling Veil",
-      "description": "Gain 12 Armor. Heal 12 HP. +2 DEX for combat.",
+      "description": "Gain 10 Armor. Heal 6 HP. +1 DEX for combat.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5562,7 +5566,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 12,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5572,7 +5576,7 @@
         },
         {
           "type": "heal",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5582,7 +5586,7 @@
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5601,7 +5605,7 @@
     {
       "id": "t2-defense-earth-water",
       "name": "Mire Shield",
-      "description": "Gain 16 Armor. Apply 5 Freeze AoE (slow). Heal 6 HP.",
+      "description": "Gain 15 Armor. Apply 3 Freeze AoE (slow). Heal 3 HP.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5612,7 +5616,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 16,
+          "value": 15,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -5622,13 +5626,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "heal",
-          "value": 6,
+          "value": 3,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5692,7 +5696,7 @@
     {
       "id": "t2-agility-fire-fire",
       "name": "Flame Sprint",
-      "description": "Deal 12 damage AoE. Apply 6 Burn AoE. +1 Stamina.",
+      "description": "Deal 8 damage AoE. Apply 3 Burn AoE. +1 Stamina.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5703,7 +5707,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "int",
@@ -5713,7 +5717,7 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
@@ -5733,7 +5737,7 @@
     {
       "id": "t2-agility-water-water",
       "name": "Tide Dancer",
-      "description": "Heal 14 HP. +3 DEX for combat. +4 Mana.",
+      "description": "Heal 10 HP. +2 DEX for combat. +4 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5744,7 +5748,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 14,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -5754,7 +5758,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5778,7 +5782,7 @@
     {
       "id": "t2-agility-air-air",
       "name": "Wind Strider",
-      "description": "Deal 10 damage AoE. +4 DEX for combat. +1 Stamina.",
+      "description": "Deal 9 damage AoE. +2 DEX for combat. +1 Stamina.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5789,7 +5793,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 10,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -5799,7 +5803,7 @@
         },
         {
           "type": "buff",
-          "value": 4,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5823,7 +5827,7 @@
     {
       "id": "t2-agility-earth-earth",
       "name": "Quake Dash",
-      "description": "Deal 14 damage AoE. Apply 4 Freeze AoE (slow). +1 Stamina.",
+      "description": "Deal 10 damage AoE. Apply 2 Freeze AoE (slow). +1 Stamina.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5834,7 +5838,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "vit",
@@ -5844,7 +5848,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         },
@@ -5864,7 +5868,7 @@
     {
       "id": "t2-agility-fire-water",
       "name": "Mistral Dance",
-      "description": "Heal 10 HP. Apply 4 Burn. +2 DEX for combat.",
+      "description": "Heal 10 HP. Apply 2 Burn. +2 DEX for combat.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5885,7 +5889,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
@@ -5910,7 +5914,7 @@
     {
       "id": "t2-agility-air-fire",
       "name": "Spark Dance",
-      "description": "Deal 12 damage AoE. Apply 4 Burn AoE. +3 DEX for combat.",
+      "description": "Deal 7 damage AoE. Apply 2 Burn AoE. +2 DEX for combat.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5921,7 +5925,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -5931,13 +5935,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -5956,7 +5960,7 @@
     {
       "id": "t2-agility-earth-fire",
       "name": "Magma Dancer",
-      "description": "Deal 14 damage. Apply 4 Burn. Apply 3 Freeze (slow).",
+      "description": "Deal 14 damage. Apply 2 Burn. Apply 2 Freeze (slow).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5977,13 +5981,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         }
@@ -5998,7 +6002,7 @@
     {
       "id": "t2-agility-air-water",
       "name": "Cloud Dance",
-      "description": "Heal 12 HP. +3 DEX for combat. +3 Mana.",
+      "description": "Heal 10 HP. +2 DEX for combat. +3 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6009,7 +6013,7 @@
       "effects": [
         {
           "type": "heal",
-          "value": 12,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6019,7 +6023,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -6043,7 +6047,7 @@
     {
       "id": "t2-agility-earth-water",
       "name": "Mire Dancer",
-      "description": "Deal 10 damage. Apply 5 Freeze (slow). Heal 8 HP.",
+      "description": "Deal 9 damage. Apply 3 Freeze (slow). Heal 4 HP.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6054,7 +6058,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 10,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -6064,13 +6068,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "heal",
-          "value": 8,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6089,7 +6093,7 @@
     {
       "id": "t2-agility-air-earth",
       "name": "Sandstrider",
-      "description": "Deal 12 damage AoE. Apply 4 Freeze AoE (slow). +3 DEX for combat.",
+      "description": "Deal 8 damage AoE. Apply 2 Freeze AoE (slow). +2 DEX for combat.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -6100,7 +6104,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -6110,13 +6114,13 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -6135,7 +6139,7 @@
     {
       "id": "t2-counter-fire-fire",
       "name": "Pyromancer's Vengeance",
-      "description": "Reflect 16 damage. Apply 7 Burn to attacker. +1 Rage stack.",
+      "description": "Reflect 13 damage. Apply 4 Burn to attacker. +1 Rage stack.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6146,7 +6150,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 16,
+          "value": 13,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -6156,7 +6160,7 @@
         },
         {
           "type": "dot",
-          "value": 7,
+          "value": 4,
           "target": "enemy",
           "stack": "burn"
         },
@@ -6177,7 +6181,7 @@
     {
       "id": "t2-counter-water-water",
       "name": "Tideturn Healer",
-      "description": "Reflect 10 damage. Heal 18 HP. +3 Mana.",
+      "description": "Reflect 5 damage. Heal 9 HP. +3 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6188,7 +6192,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 10,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -6198,7 +6202,7 @@
         },
         {
           "type": "heal",
-          "value": 18,
+          "value": 9,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6222,7 +6226,7 @@
     {
       "id": "t2-air-air-counter",
       "name": "Skyborn Riposte",
-      "description": "Reflect 14 damage. +3 DEX for combat. +1 Rage stack.",
+      "description": "Reflect 14 damage. +2 DEX for combat. +1 Rage stack.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6243,7 +6247,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -6268,7 +6272,7 @@
     {
       "id": "t2-counter-earth-earth",
       "name": "Earthbound Vengeance",
-      "description": "Reflect 18 damage. Apply 6 Freeze (slow). Gain 10 Armor.",
+      "description": "Reflect 9 damage. Apply 3 Freeze (slow). Gain 10 Armor.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6279,7 +6283,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -6289,7 +6293,7 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
@@ -6314,7 +6318,7 @@
     {
       "id": "t2-counter-fire-water",
       "name": "Steam Counter",
-      "description": "Reflect 10 damage. Heal 10 HP. Apply 4 Burn to attacker.",
+      "description": "Reflect 10 damage. Heal 6 HP. Apply 2 Burn to attacker.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6335,7 +6339,7 @@
         },
         {
           "type": "heal",
-          "value": 10,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6345,7 +6349,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -6360,7 +6364,7 @@
     {
       "id": "t2-air-counter-fire",
       "name": "Spark Counter",
-      "description": "Reflect 12 damage. Apply 5 Burn to attacker. +2 DEX for combat.",
+      "description": "Reflect 12 damage. Apply 3 Burn to attacker. +1 DEX for combat.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6381,13 +6385,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "buff",
-          "value": 2,
+          "value": 1,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -6406,7 +6410,7 @@
     {
       "id": "t2-counter-earth-fire",
       "name": "Volcanic Counter",
-      "description": "Reflect 14 damage. Apply 5 Burn. Apply 3 Freeze (slow).",
+      "description": "Reflect 13 damage. Apply 3 Burn. Apply 2 Freeze (slow).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6417,7 +6421,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 14,
+          "value": 13,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -6427,13 +6431,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         }
@@ -6448,7 +6452,7 @@
     {
       "id": "t2-air-counter-water",
       "name": "Cooling Counter",
-      "description": "Reflect 8 damage. Heal 12 HP. +3 DEX for combat.",
+      "description": "Reflect 8 damage. Heal 6 HP. +2 DEX for combat.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6469,7 +6473,7 @@
         },
         {
           "type": "heal",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6479,7 +6483,7 @@
         },
         {
           "type": "buff",
-          "value": 3,
+          "value": 2,
           "target": "self",
           "scale": {
             "stat": "dex",
@@ -6498,7 +6502,7 @@
     {
       "id": "t2-counter-earth-water",
       "name": "Mire Counter",
-      "description": "Reflect 12 damage. Apply 5 Freeze (slow). Heal 8 HP.",
+      "description": "Reflect 10 damage. Apply 3 Freeze (slow). Heal 4 HP.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6509,7 +6513,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -6519,13 +6523,13 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "freeze"
         },
         {
           "type": "heal",
-          "value": 8,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
@@ -6544,7 +6548,7 @@
     {
       "id": "t2-air-counter-earth",
       "name": "Sandborn Riposte",
-      "description": "Reflect 12 damage. Apply 4 Freeze (slow). +2 DEX for combat.",
+      "description": "Reflect 12 damage. Apply 2 Freeze (slow). +2 DEX for combat.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6565,7 +6569,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "freeze"
         },

@@ -109,6 +109,80 @@ Within each tier, aim for:
 - Tier 2 damage card: ~12-25 dmg or 20-40 burst with stat scaling, CD ~1.0-2.0s
 - Tier 3 damage card: 35+ dmg or significant utility combo, CD ~1.5-3.0s
 
+### Power band targets (enforced by `scripts/audit-card-balance.mjs`)
+
+Each card carries an implied "power score" computed from its effects, costs,
+and cooldown. The score is a rough proxy for how impactful the card is in
+combat. Within each tier, all cards should land inside a tight numeric band
+so that no card in a tier is a strict outlier.
+
+**Score formula** (also embedded in `scripts/audit-card-balance.mjs`):
+
+| Component | Contribution |
+|---|---|
+| `damage` | +1 per point (×1.4 if `targeting === "aoe"`) |
+| `armor` | +0.8 per point |
+| `heal` | +1.2 per point |
+| `dot` (any stack) | +2 per stack (×1.4 if AoE) |
+| `buff` (stat) | +1.5 per +stat |
+| `stack` (rage/arcane) | +2 per stack |
+| `debuff` (enemy -def) | +1.2 per point (×1.4 if AoE) |
+| `stamina`/`mana` gain (self) | +1 per point |
+| Stat scaling | +1.5 per `scale.value` unit |
+| `stamina` cost | −0.6 per point |
+| `mana` cost | −0.6 per point |
+| `defense` cost | −0.8 per point |
+| Cooldown > 1.0s | −0.3 per 0.1s above baseline |
+| Cooldown < 1.0s | +1 per 0.1s below baseline |
+
+**Tier bands:**
+
+| Tier | Power band (`[low, high]`) |
+|---|---|
+| 1 | `[4, 12]` |
+| 2 | `[10, 22]` |
+| 3 | (not yet defined — mocks are still locked) |
+
+**Hard caps inside a tier (regardless of band):**
+
+| | Tier 1 | Tier 2 |
+|---|---|---|
+| Max total DoT stacks per card | 3 | 6 |
+| Max heal value per card | 12 HP | 22 HP |
+
+### Cross-tier ordering rule (no inversions)
+
+> **A Tier-2 card must score strictly higher than every Tier-1 card it could replace.**
+> In particular, every Tier-2 card with 3 elements must outscore the
+> Tier-1 card whose 2-element multiset is the "dominant pair" of those
+> three elements. **No Tier-1 card may strictly dominate any Tier-2 card**
+> across cost, cooldown, and impact axes simultaneously.
+
+The motivating real bug this rule catches: an old `t1-earth-water` "Mud Throw"
+that dealt 5 damage + 2 freeze for 1 mana at CD 1.2s used to outclass the
+Tier-2 `t2-air-air-earth` "Sandstorm" (5 damage AoE + 1 freeze AoE for 2
+mana at CD 1.4s). After this audit, Sandstorm clearly outclasses Mud
+Throw on every meaningful axis.
+
+Likewise **no Tier-1 card may strictly dominate another Tier-1 card** —
+i.e. there must be no Tier-1 pair `(a, b)` where `a` is cheaper-or-same on
+both cost and CD AND equal-or-better on every impact axis AND strictly
+better on at least one.
+
+### How to run the audit
+
+```
+node scripts/audit-card-balance.mjs
+```
+
+Expected output: `outOfBand: 0`, `violations: 0`. The script exits non-zero
+if any card violates the bands, the caps, or the cross-tier ordering rule.
+
+If you change a card's numbers, re-run the auditor. If it complains, run
+`node scripts/rebalance-cards.mjs` to auto-tune. The rebalancer preserves
+each card's identity (it will never reduce an effect below 25% of its
+original value) and prefers small CD/cost tweaks over deleting effects.
+
 ---
 
 ## 4. Shard & Element Inventory
