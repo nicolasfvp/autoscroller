@@ -418,4 +418,62 @@ When generating cards, follow these rules:
 
 ---
 
+## 16. Enemy Element Affinity
+
+Every enemy in `enemies.json` carries an optional `affinity: ElementId` field. The affinity does **not** alter the enemy's base damage formula — it fires a secondary effect each time the enemy lands an attack, giving each enemy a distinct identity beyond raw stats.
+
+### Affinity effects
+
+Boss variants double every magnitude (`m = 2` instead of `m = 1`). Caps prevent runaway over a long fight.
+
+| Affinity | On-hit effect | Boss flavor |
+|---|---|---|
+| `attack`  | No secondary (raw damage budget is the identity). | Same — boss base damage carries it. |
+| `defense` | Enemy gains +3 armor per hit, cap 25 (boss: +6 / cap 60). | Forces hero to bring armor-shred or burst. |
+| `agility` | Enemy attack cooldown shrinks 100 ms per hit (boss: 200 ms), floor 500 ms. | Fight gets faster as enemy ramps. |
+| `counter` | Hero takes 2 extra HP loss after the hit (boss: 4). | Punishes greedy attackers. |
+| `fire`    | Hero loses 1 HP + 1 stamina (boss: 2 / 2). | Burn fades out resources. |
+| `water`   | Enemy heals 4 HP (boss: 8) clamped to maxHP. | Fight stretches; pressure tank builds. |
+| `air`     | Hero loses 1 mana; 15% stun chance (boss: 2 mana / 30% stun). | Disrupts mage cycle. |
+| `earth`   | Hero loses 2 stamina + enemy gains 1 armor, cap 15 (boss: 4 / +2 / cap 40). | Slows and turtles. |
+
+### Roster assignments (current 20 enemies)
+
+| Enemy | Affinity | Rationale |
+|---|---|---|
+| Lost Lizard | defense | Slow HP tank |
+| Corpse Eater | counter | Undead retaliation |
+| Headless Fire Horse | fire | Fire flavor |
+| Pocket Cat | agility | Fast scrappy |
+| Baby Dragon | fire | Fire breath |
+| Giant Beetle | defense | Chitin armor |
+| Mutated Salamander | water | Regenerative amphibian |
+| Ancient Tree | earth | Earth elemental |
+| Giant Spider (×2) | water | Venom flavor |
+| Mush | earth | Spore slow |
+| Forge Slime | fire | Forge heat |
+| Lava Golem | fire | Lava |
+| Mecha Warrior | defense | Armored construct |
+| Depths Horror | air | Disorienting psychic |
+| Toxic Gooze | water | Toxin |
+| Venomous Kobra | air | Quick venom strike |
+| Doom Knight (boss) | counter | Reflective dark knight |
+| Iron Golem (boss) | defense | Tank armor stacker |
+| Lizard King (boss) | attack | Raw damage boss |
+
+Distribution: 4 defense / 4 fire / 4 water / 2 earth / 2 air / 2 counter / 1 agility / 1 attack.
+
+### Implementation files
+- `src/data/types.ts` — `EnemyDefinition.affinity?: ElementId`
+- `src/systems/combat/EnemyAffinity.ts` — `applyEnemyAffinityEffect()`
+- `src/systems/combat/CombatState.ts` — `enemyAffinity: ElementId | null`, `enemyType` fields
+- `src/systems/combat/EnemyAI.ts` — calls affinity post-damage on both single-hit and multi-hit paths
+- `src/core/EventBus.ts` — new `'combat:enemy-affinity'` event for HUD feedback
+- `scripts/assign-enemy-affinities.mjs` — bulk-applies the roster table above
+
+### Future: type advantage
+Not yet implemented — but the door is open for a "cards of element X deal +30% damage to enemies with affinity Y" rule. Add a `weakTo: ElementId[]` field to enemy defs and read it in `CardResolver.applyEffect`.
+
+---
+
 **End of canonical spec.** Generation agents work from this file. Updates to this file ARE updates to the design.

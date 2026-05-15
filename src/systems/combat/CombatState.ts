@@ -3,6 +3,7 @@
 
 import type { RunState } from '../../state/RunState';
 import type { EnemyDefinition, BossBehavior } from '../../data/types';
+import type { ElementId } from '../ElementSystem';
 import { applyPassiveRelics, applyOnCombatStartRelics } from './RelicSystem';
 import { resolveHeroStats } from '../hero/HeroStatsResolver';
 import { resolvePassives, applyPassiveModifiersToCombatState } from '../hero/PassiveSkillSystem';
@@ -23,6 +24,7 @@ export interface CombatState {
 
   enemyId: string;
   enemyName: string;
+  enemyType: 'normal' | 'elite' | 'boss';
   enemyHP: number;
   enemyMaxHP: number;
   enemyDefense: number;
@@ -30,6 +32,8 @@ export interface CombatState {
   enemyAttackCooldown: number;
   enemyPattern: string;
   enemySpecialEffect: string | null;
+  /** Phase 10: element affinity for the on-hit secondary effect. */
+  enemyAffinity: ElementId | null;
 
   /** IDs of relics currently active in this combat */
   activeRelicIds: string[];
@@ -102,6 +106,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
 
     enemyId: enemy.id,
     enemyName: enemy.name,
+    enemyType: enemy.type,
     enemyHP: enemy.baseHP,
     enemyMaxHP: enemy.baseHP,
     enemyDefense: enemy.baseDefense,
@@ -109,6 +114,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     enemyAttackCooldown: enemy.attackCooldown ?? 2000,
     enemyPattern: enemy.attack.pattern,
     enemySpecialEffect: enemy.attack.specialEffect ?? null,
+    enemyAffinity: enemy.affinity ?? null,
 
     activeRelicIds: [...(run.relics ?? [])],
     activePassives: [],

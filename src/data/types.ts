@@ -115,6 +115,9 @@ export interface EnemyDefinition {
   color: number;
   bossType?: string;
   behaviors?: BossBehavior[];
+  /** Elemental affinity (Phase 10). Applies a secondary effect on each attack
+   *  keyed to the element identity. Bosses use a 2x effect multiplier. */
+  affinity?: ElementId;
   materialReward?: {
     chance: number;
     bonusMaterial: string;
