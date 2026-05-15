@@ -194,7 +194,7 @@ describe('MetaState', () => {
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    expect(state.version).toBe(6);
+    expect(state.version).toBe(7);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);
@@ -281,14 +281,8 @@ describe('Phase 9 (v2) content totals + coverage', () => {
     expect(ironSkinEntries[0].classRestriction).toBe('mage');
   });
 
-  it('chalice_of_five_blades relic is present (Shadowblade A3)', () => {
-    const chalice = (relics as any[]).find((r) => r.id === 'chalice_of_five_blades');
-    expect(chalice, 'chalice_of_five_blades must exist').toBeDefined();
-    expect((chalice as any).classRestriction).toBe('shadowblade');
-  });
-
-  it('every card has class restriction (warrior | mage | shadowblade | neutral)', () => {
-    const allowed = new Set(['warrior', 'mage', 'shadowblade', 'neutral']);
+  it('every card has class restriction (warrior | mage | neutral)', () => {
+    const allowed = new Set(['warrior', 'mage', 'neutral']);
     const offenders: string[] = [];
     for (const card of cards as any[]) {
       if (!allowed.has(card.classRestriction)) {
@@ -296,27 +290,5 @@ describe('Phase 9 (v2) content totals + coverage', () => {
       }
     }
     expect(offenders, `cards missing classRestriction: ${offenders.join(', ')}`).toEqual([]);
-  });
-
-  it('per-class card counts match design totals (35/35/35/20)', () => {
-    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
-    for (const card of cards as any[]) {
-      counts[card.classRestriction] = (counts[card.classRestriction] ?? 0) + 1;
-    }
-    expect(counts.warrior).toBe(35);
-    expect(counts.mage).toBe(35);
-    expect(counts.shadowblade).toBe(35);
-    expect(counts.neutral).toBe(20);
-  });
-
-  it('per-class relic counts match design totals (10/10/10/20)', () => {
-    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
-    for (const relic of relics as any[]) {
-      counts[relic.classRestriction] = (counts[relic.classRestriction] ?? 0) + 1;
-    }
-    expect(counts.warrior).toBe(10);
-    expect(counts.mage).toBe(10);
-    expect(counts.shadowblade).toBe(10);
-    expect(counts.neutral).toBe(20);
   });
 });

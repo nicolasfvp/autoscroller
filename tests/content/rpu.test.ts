@@ -49,34 +49,6 @@ export const RPU_EXCEPTIONS: Set<string> = new Set([
   "poison-cloud", // AoE rare; conservative single-target scoring → structural low (design §9.1 12.0 R)
   "mindwarp", // AoE all-stacks finisher; conservative single-target scoring → structural low
 
-  // -- Shadowblade — design/03_shadowblade.md §10.3 --
-  // 8 documented exceptions (starter tempo + finisher structural + iconic):
-  "backstab", // starter tempo discount
-  "eviscerate", // starter finisher; finisher structural
-  "toxic-coat", // starter ramp; tempo discount
-  "crimson-edge", // finisher structural — iconic
-  "death-blossom", // AoE finisher structural — iconic
-  "coup-de-grace", // finisher structural — iconic
-  "crimson-recital", // iconic epic finisher with HP cost
-  "eternal-veil", // iconic epic, permanent run-scoped maxHP loss
-  // Accepted ceiling (§10.5):
-  "shadow-recursion-prime", // mildly over epic ceiling (20.0 vs 19.0); kept at 2.2s cd as iconic loop
-  // Plus cost-shape exceptions where HP/CP-spend cost can't be priced in card.cost:
-  "shadowstep", // starter stealth utility; defensive floor-bound (§10.5 §9.2 — "floor-bound, accept")
-  "veil-guard", // starter defense + dodge; defensive floor-bound (§10.5)
-  "silken-step", // common defense + DEX buff; floor-bound (§10.5)
-  "paring-cut", // opt-in CP-spend rider (cost not in card.cost); §9.2 "neutral by design"
-  "blood-tithe", // HP/1 cost (§5.1 — HP-cost common)
-  "dance-of-veils", // defensive edge case; §10.4 below uncommon by 0.5
-  "shadow-recursion", // defensive Stealth-rider; §10.4 below uncommon by 1.5 (rider lifts it)
-  "veiled-strike", // 0E + 1 CP-spend; structural CP cost not in card.cost
-  "poison-pact", // HP/1 cost
-  "shadowmeld", // rare stealth with next-attack rider; design §10 has it at 11.7 in band, +0.5 over
-  "widows-kiss", // 0E + 2 CP-spend; CP cost not encodable; iconic build-enabler
-  "nightshade-coil", // CP-rider over-counted by metric (1 CP base; design counts conditional)
-  "swift-veil", // 0E + 1 CP-spend; CP cost not encodable; iconic tempo engine
-  "blood-ledger", // HP/1 + ceiling-buff (cap +12 only at low HP) — design §10 at 11.3
-
   // -- Neutral — design/04_neutral_and_combos.md §9 --
   // §9.1 declares "20 of 20 in band" but again HP / VIT-rider costs not modeled.
   // Whitelist the HP-cost and stat-rider rares per §3:
@@ -199,22 +171,6 @@ describe("RPU exception register hygiene", () => {
       if (!cardIds.has(id)) stale.push(id);
     }
     expect(stale, `Stale RPU exceptions: ${stale.join(", ")}`).toEqual([]);
-  });
-
-  it("contains all 8 documented Shadowblade exceptions", () => {
-    const sbExceptions = [
-      "backstab",
-      "eviscerate",
-      "toxic-coat",
-      "crimson-edge",
-      "death-blossom",
-      "coup-de-grace",
-      "crimson-recital",
-      "eternal-veil",
-    ];
-    for (const id of sbExceptions) {
-      expect(RPU_EXCEPTIONS.has(id), `Missing exception: ${id}`).toBe(true);
-    }
   });
 
   it("contains all 3 documented Mage exceptions", () => {

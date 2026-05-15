@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { createDefaultMetaState, migrateMetaState } from '../../src/state/MetaState';
 
-describe('MetaState v5 defaults', () => {
-  it('createDefaultMetaState returns version 5', () => {
-    expect(createDefaultMetaState().version).toBe(6);
+describe('MetaState v8 defaults', () => {
+  it('createDefaultMetaState returns version 8', () => {
+    expect(createDefaultMetaState().version).toBe(8);
   });
 
   it('createDefaultMetaState has tutorialSeen === false', () => {
@@ -50,7 +50,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v2);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
     expect(result.gameSpeed).toBe(1);
@@ -104,7 +104,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.materials).toEqual({}); // post-D-06 wipe
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -138,7 +138,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v4);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
   });
 
   it("v5 object now wipes to v6 fresh defaults (D-06)", () => {
@@ -167,7 +167,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v5) as any;
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.unlockedCards).toEqual([]);
     expect(result._wipedFromVersion).toBe(5);
   });
@@ -203,11 +203,11 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
     };
 
     const result = migrateMetaState(v5);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result.unlockedCards).toEqual([]);
     expect(result.unlockedRelics).toEqual([]);
     expect(result.unlockedTiles).toEqual([]);
-    expect(result.classXP).toEqual({ warrior: 0, mage: 0, shadowblade: 0 });
+    expect(result.classXP).toEqual({ warrior: 0, mage: 0 });
     expect(result.buildings.forge.level).toBe(0);
     expect(result.materials).toEqual({});
     expect(result.passivesUnlocked).toEqual([]);
@@ -241,7 +241,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 4,
     };
     const result = migrateMetaState(v4) as any;
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result._wipedFromVersion).toBe(5);  // wiped from the post-v4->v5 chain state
     expect(result.unlockedCards).toEqual([]);
   });
@@ -261,7 +261,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 3,
     };
     const result = migrateMetaState(v3) as any;
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
     expect(result._wipedFromVersion).toBe(5);
   });
 
@@ -277,7 +277,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 1,
     };
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(6);
+    expect(result.version).toBe(8);
   });
 
   it('createDefaultMetaState() does NOT carry _wipedFromVersion', () => {
@@ -285,7 +285,34 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
     expect(fresh._wipedFromVersion).toBeUndefined();
   });
 
-  it('createDefaultMetaState() returns version 6', () => {
-    expect(createDefaultMetaState().version).toBe(6);
+  it('createDefaultMetaState() returns version 8', () => {
+    expect(createDefaultMetaState().version).toBe(8);
+  });
+});
+
+describe('v6 -> v7 (Shadowblade removal)', () => {
+  it('v6 save drops classXP.shadowblade and resets selectedClass', () => {
+    const v6: any = {
+      ...createDefaultMetaState(),
+      classXP: { warrior: 100, mage: 50, shadowblade: 25 },
+      selectedClass: 'shadowblade',
+      version: 6,
+    };
+    const result = migrateMetaState(v6) as any;
+    expect(result.version).toBe(8);
+    expect(result.classXP).toEqual({ warrior: 100, mage: 50 });
+    expect('shadowblade' in result.classXP).toBe(false);
+    expect(result.selectedClass).toBe('warrior');
+  });
+
+  it('v6 save with no selectedClass leaves it undefined', () => {
+    const v6: any = {
+      ...createDefaultMetaState(),
+      classXP: { warrior: 100, mage: 50, shadowblade: 25 },
+      version: 6,
+    };
+    const result = migrateMetaState(v6) as any;
+    expect(result.version).toBe(8);
+    expect(result.classXP).toEqual({ warrior: 100, mage: 50 });
   });
 });

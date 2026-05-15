@@ -280,7 +280,7 @@ These three sample audits show the v2 numbers were authored more by "feel" than 
 
 ### 10.7 Stat scaling
 
-Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's baseline stat value** for that stat. Shadowblade has DEX 8, so a "+2 dmg per DEX" card adds 16 R at baseline. Late-game stacking lets it overperform — that's intentional and is the *reward for investing in the build*.
+Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's baseline stat value** for that stat. Late-game stacking lets it overperform — that's intentional and is the *reward for investing in the build*.
 
 ---
 
@@ -289,5 +289,4 @@ Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's
 The detailed cards/relics live in:
 - `01_warrior.md` — 35 cards + 10 relics
 - `02_mage.md` — 35 cards + 10 relics
-- `03_shadowblade.md` — 35 cards + 10 relics
 - `04_neutral_and_combos.md` — 20 cards + 20 relics + new tiles
