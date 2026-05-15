@@ -5,10 +5,8 @@
 > §5 (combos), §6 (relic charter), §7 (new tiles), §8 (validation), §9 (trim heuristic).
 > v2 trims v1's 30 cards → 20 and 30 relics → 20. Combos collapse from 88 rows to exactly 20
 > (each neutral appearing in exactly 2 rows per framework §5.1).
-> Class card IDs referenced here are drawn from `src/data/json/cards.json` (existing 30) plus
-> the Shadowblade starter cards named in framework §4.3 (`eviscerate`, `backstab`, `shadowstep`,
-> `toxic-coat`). The class docs `01_warrior.md` / `02_mage.md` / `03_shadowblade.md` will harden
-> those IDs.
+> Class card IDs referenced here are drawn from `src/data/json/cards.json` (existing 30).
+> The class docs `01_warrior.md` / `02_mage.md` harden those IDs.
 
 ---
 
@@ -17,8 +15,8 @@
 Neutrals are **the glue**. They exist for three reasons:
 
 - **Mono-resource fragility.** Warrior decks suffocate without stamina restores; Mage decks
-  brick when mana drops; Shadowblade hands grief when stealth windows miss. Neutrals provide
-  universal off-ramps — heal a little, cycle a card, gain flat armor.
+  brick when mana drops. Neutrals provide universal off-ramps — heal a little, cycle a card,
+  gain flat armor.
 - **Cross-class bridges.** Neutrals are the bridge surface where Warrior `bulwark` can talk to
   Mage `meditate` through a shared neutral like `field_bandage`. The framework §5.1 rule that
   every card has *exactly 2 combos* turns neutrals into a 2-regular cycle (§6 of this doc).

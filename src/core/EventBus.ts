@@ -26,7 +26,7 @@ export interface GameEvents {
   // Phase 9 — Design v2 new combat events.
   'combat:dot-tick': { stack: string; damage: number; sourceCard: string };
   'combat:evade': { source: string };
-  'combat:combo-played': { displayName: string; comboPointsAfter: number };
+  'combat:combo-played': { displayName: string };
   'combat:enemy-killed': { enemyId: string };
   'combat:card-drawn': { cardId: string };
   'combat:rest-used': { choice: string };

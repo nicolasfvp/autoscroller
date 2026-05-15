@@ -423,7 +423,7 @@ Cards not listed below were already in band at authored numbers.
 
 ## 10. Open Questions for Engine Wiring (not blocking design)
 
-- Rage stack decay: persist across combats or reset? Recommend **reset on combat end** (mirror Shadowblade combo points per framework §4.3).
+- Rage stack decay: persist across combats or reset? Recommend **reset on combat end** per framework §4.3.
 - Bleed tick rate: 1/sec while in combat; off out of combat.
 - "Temp STR / VIT / DEX / SPI this combat" buffs need an engine concept of combat-scoped stat deltas — flag for engine phase.
 - Worldbreaker permanent +2 STR is a *meta* effect — survives the combat but stays for the run. Engine needs a per-run stat delta layer separate from per-combat.

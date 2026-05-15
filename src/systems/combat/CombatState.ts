@@ -62,16 +62,8 @@ export interface CombatState {
   heroIntellect: number;
   heroSpirit: number;
 
-  // ── Phase 9: Shadowblade resources ───────────────────────────────────
-  comboPoints: number;
-  comboPointsCap: number;       // default 5; chalice-of-five-blades -> 8
-  stealthCharges: number;
-  stealthCap: number;           // default 4
-  evadeNextHit: boolean;        // 1-hit dodge guarantee while stealth charges > 0
-
   // ── Phase 9: DoT + status stack pools (reset per combat) ─────────────
   poisonStacks: number;
-  poisonDecayDisabled: boolean; // widows-kiss / empress-fang flip this
   bleedStacks: number;
   burnStacks: number;
   freezeStacks: number;
@@ -135,16 +127,8 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     heroIntellect: 0,
     heroSpirit: 0,
 
-    // -- Phase 9: Shadowblade resources --
-    comboPoints: 0,
-    comboPointsCap: 5,
-    stealthCharges: 0,
-    stealthCap: 4,
-    evadeNextHit: false,
-
     // -- Phase 9: DoT + status stack pools --
     poisonStacks: 0,
-    poisonDecayDisabled: false,
     bleedStacks: 0,
     burnStacks: 0,
     freezeStacks: 0,

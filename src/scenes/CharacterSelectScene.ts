@@ -48,9 +48,6 @@ export class CharacterSelectScene extends Scene {
       resolution: 3,
     }).setOrigin(0.5);
 
-    // Phase 9 (Design v2): 3 cards (Warrior, Mage, Shadowblade) require a
-    // downscaled layout per UI-SPEC §Spacing FLAG -- old 280×40 layout
-    // overflows the 800px canvas with 3 cards.
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
     const cardWidth = layout.cardW;
     const cardHeight = layout.cardH;
@@ -132,8 +129,7 @@ export class CharacterSelectScene extends Scene {
       this.highlightSelected();
     });
 
-    // Character sprite preview (animated). Phase 9 (D-08): Shadowblade
-    // reuses mage_idle with a #7E5BEF tint as placeholder art.
+    // Character sprite preview (animated).
     if (this.textures.exists(cls.spriteKey)) {
       const animKey = `select_${cls.id}_idle`;
       if (!this.anims.exists(animKey)) {

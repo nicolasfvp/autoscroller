@@ -13,7 +13,6 @@ Conceptual design only. No JSON, no engine wiring. Five documents in this folder
 | 00 | [`00_framework.md`](00_framework.md) | The contract — status system, mechanics charter, **rarity philosophy (v2)**, combo rules, schema additions |
 | 01 | [`01_warrior.md`](01_warrior.md) | Warrior — 35 cards + 10 relics + 35 combos |
 | 02 | [`02_mage.md`](02_mage.md) | Mage — 35 cards + 10 relics + 35 combos |
-| 03 | [`03_shadowblade.md`](03_shadowblade.md) | **NEW CLASS** Shadowblade — 35 cards + 10 relics + class def + 35 combos |
 | 04 | [`04_neutral_and_combos.md`](04_neutral_and_combos.md) | 20 neutral cards + 20 neutral relics + 20 combos + 3 new tiles + 6 adjacencies |
 
 ---
@@ -22,8 +21,8 @@ Conceptual design only. No JSON, no engine wiring. Five documents in this folder
 
 | Bucket | v1 | **v2** | Source |
 |---|---|---|---|
-| Classes | 3 (added Shadowblade) | 3 | 03 |
-| Cards per class | 50 | **35** | 01, 02, 03 |
+| Classes | 2 (Warrior, Mage) | 2 | — |
+| Cards per class | 50 | **35** | 01, 02 |
 | Neutral cards | 30 | **20** | 04 |
 | **Total cards** | 180 | **125** (was 30) | — |
 | Class-exclusive relics | 30 | **30** (10 × 3) | 01, 02, 03 |
@@ -39,9 +38,8 @@ Conceptual design only. No JSON, no engine wiring. Five documents in this folder
 Per-doc combo row totals (each row = one entry in `synergies.json`):
 - Warrior internal: **35**
 - Mage internal: **35**
-- Shadowblade internal: **35**
 - Neutral internal: **20**
-- **Grand total: 125 synergy rows**
+- **Grand total: 90 synergy rows**
 
 ---
 
@@ -51,7 +49,6 @@ Per-doc combo row totals (each row = one entry in `synergies.json`):
 |---|---|---|---|---|
 | **Warrior** | Stamina cycle | Armor / Defense pivot | Rage / Strength stacks | Bleed DoT |
 | **Mage** | Mana cycle | Arcane Stacks (1–10) | Elemental statuses (Burn / Freeze / Shock) | Lifesteal / Heal |
-| **Shadowblade** | Combo Points (0–5) | Poison stacks | Stealth / Evade window | Energy (cheap tempo) |
 
 Each class doc verifies ≥5 cards touch each primary (lowered floor from v1's 6, since set is now 35).
 
@@ -73,8 +70,6 @@ Examples shipped:
 - Mage uncommon free: `spell-thrift`
 - Mage rare free with SPI drain: `mana-drain`
 - Mage epic with permanent maxHP loss, no resource cost: `eternal-flame`
-- Shadowblade common dual cost: `paring-cut` (1 Energy + 1 CP)
-- Shadowblade rare free with CP consumption: `widows-kiss`, `swift-veil`
 
 See `00_framework.md` §2 for the full table; each detail doc proves this with a "cost shape varied per rarity tier" check in its validation pass.
 
@@ -101,12 +96,12 @@ Used by cards in three ways: scale damage, temporary buff/drain ("+2 DEX this co
 
 The framework and class docs assume these JSON-schema extensions. None are wired today:
 
-1. `CardEffect.type` adds: `'buff' | 'debuff_stat' | 'dot' | 'stack' | 'consume_combo' | 'gain_combo' | 'stealth' | 'taunt'`
+1. `CardEffect.type` adds: `'buff' | 'debuff_stat' | 'dot' | 'stack' | 'taunt'`
 2. `CardEffect.scale?: { stat: 'str'|'vit'|'dex'|'int'|'spi'; per: number; value: number }`
 3. `HeroStats` gains `vitality`, `dexterity`, `intellect`, `spirit` (numbers, default 0)
-4. `CombatState` gains `comboPoints`, `poisonStacks`, `arcaneStacks`, `rageStacks`, `bleedStacks`, `burnStacks`, `freezeStacks`, `shockStacks`, `stealthCharges`, `evadeNextHit` (transient, reset on combat end)
-5. `SynergyDefinition.bonus.type` adds: `'dot' | 'combo_point' | 'stealth' | 'stat_buff' | 'cooldown_reduction'`
-6. `RelicDefinition.trigger` adds: `'enemy_killed' | 'card_drawn' | 'rest_used' | 'shop_visited' | 'stat_changed' | 'combo_played' | 'dot_tick'`
+4. `CombatState` gains `poisonStacks`, `arcaneStacks`, `rageStacks`, `bleedStacks`, `burnStacks`, `freezeStacks`, `shockStacks` (transient, reset on combat end)
+5. `SynergyDefinition.bonus.type` adds: `'dot' | 'stat_buff' | 'cooldown_reduction'`
+6. `RelicDefinition.trigger` adds: `'enemy_killed' | 'card_drawn' | 'rest_used' | 'shop_visited' | 'stat_changed' | 'dot_tick'`
 7. `RunState.hero.statDeltas?` — per-run additive stat layer separate from per-combat buffs (needed by cards that grant permanent in-run stat shifts)
 8. Tile registry gains `library`, `arena`, `shrine_of_pact` tile types + 6 adjacency rules
 9. Tile adjacency buff type `cardUpgradeDiscount` (used by Library+Shop)
@@ -117,11 +112,9 @@ The framework and class docs assume these JSON-schema extensions. None are wired
 
 1. **Per-combat vs per-run stat layers** — temp buffs need a separate layer from permanent shifts. `RunState.hero.statDeltas` is the proposed home.
 2. **Stack tick cadence** — DoTs (Bleed, Poison, Burn) tick every card play (recommend).
-3. **Combo Point persistence** — Shadowblade CP resets on combat end.
-4. **Mage stack cap** — Arcane Stacks cap at 10; overflow rules deferred.
-5. **Stealth + AoE interaction** — recommend: stealth bonus damage applies once, to the primary target only.
-6. **Cross-class combo flatness (v2 emergent)** — Each class's 35 combo rows are entirely internal to that class, and the 20 neutral combo rows are neutral-to-neutral. Per framework §5.1's spirit, neutrals were supposed to act as cross-class bridges. To restore that, the engine implementation should *occasionally* substitute a class-locked combo row with a neutral-bridge row (e.g. swap a warrior-warrior combo for a warrior-neutral combo, keeping each card's "exactly 2 appearances" invariant). Flagged for a balance pass.
-7. **Iron Skin classification** — still lives in the magic category but is paid in mana; appears in both Warrior and Mage v2 sets. Recommend: keep as Mage card; if Warrior wants it, let the Forge offer it cross-class.
+3. **Mage stack cap** — Arcane Stacks cap at 10; overflow rules deferred.
+4. **Cross-class combo flatness (v2 emergent)** — Each class's 35 combo rows are entirely internal to that class, and the 20 neutral combo rows are neutral-to-neutral. Per framework §5.1's spirit, neutrals were supposed to act as cross-class bridges. To restore that, the engine implementation should *occasionally* substitute a class-locked combo row with a neutral-bridge row (e.g. swap a warrior-warrior combo for a warrior-neutral combo, keeping each card's "exactly 2 appearances" invariant). Flagged for a balance pass.
+5. **Iron Skin classification** — still lives in the magic category but is paid in mana; appears in both Warrior and Mage v2 sets. Recommend: keep as Mage card; if Warrior wants it, let the Forge offer it cross-class.
 
 ---
 
@@ -131,9 +124,8 @@ The framework and class docs assume these JSON-schema extensions. None are wired
 - **Card art / audio direction** — out of scope.
 - **Event content** — only tiles/cards/relics were scoped.
 - **Boss design** — covered today by `EnemyDefinitions` + `BossSystem`.
-- **Shadowblade sprite assets** — class def in 03 §3 but the asset folder + `CLASS_SPRITE_PREFIX` entry is engineering's call.
 - **Final balance numbers** — every number is a starting point against the existing power band. Real balance comes from playtesting.
 
 ---
 
-*v2 answers the revised brief: 50 relics, 1 new class, 105 class cards (35 each), 20 neutrals, exactly 2 combos per card, ≥3 core mechanics per class, rarity decoupled from cost shape, status-system integration. All four detail docs validate themselves against the framework's v2 checklist.*
+*v2 answers the revised brief: 40 relics, 2 classes, 70 class cards (35 each), 20 neutrals, exactly 2 combos per card, ≥3 core mechanics per class, rarity decoupled from cost shape, status-system integration. All three detail docs validate themselves against the framework's v2 checklist.*

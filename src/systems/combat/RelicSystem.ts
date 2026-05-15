@@ -243,9 +243,9 @@ export function applyDamageTakenRelics(relicIds: string[], actualDamage: number,
 // ── Phase 9: generic trigger dispatch (Task 5) ────────────────
 
 /**
- * Phase 9 Task 5: generic trigger dispatcher for the 7 new RelicTrigger
+ * Phase 9 Task 5: generic trigger dispatcher for the 6 new RelicTrigger
  * values (enemy_killed, card_drawn, rest_used, shop_visited, stat_changed,
- * combo_played, dot_tick).
+ * dot_tick).
  *
  * Resolves any relic whose `trigger` matches and applies its `effectType` to
  * the supplied CombatState. Effect-type handling here intentionally
@@ -288,21 +288,8 @@ export function dispatchTriggerRelics(
         state.enemyHP -= v;
         break;
       }
-      case 'gain_combo': {
-        state.comboPoints = Math.min(state.comboPointsCap, state.comboPoints + (relic.value ?? 0));
-        break;
-      }
-      case 'gain_stealth': {
-        state.stealthCharges = Math.min(state.stealthCap, state.stealthCharges + (relic.value ?? 0));
-        if (state.stealthCharges > 0) state.evadeNextHit = true;
-        break;
-      }
       case 'add_poison': {
         state.poisonStacks += (relic.value ?? 0);
-        break;
-      }
-      case 'disable_poison_decay': {
-        state.poisonDecayDisabled = true;
         break;
       }
       default: {

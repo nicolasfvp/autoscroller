@@ -10,6 +10,8 @@ import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
 import enemyDropsData from '../data/json/enemy-drops.json';
 import { rand } from './SharedRNG';
 import type { SynergyBuff } from './SynergyResolver';
+import { rollShardDrops, addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
+import { ELEMENTS, type ElementId } from './ElementSystem';
 
 // B.1: tile-adjacency loot buffs. goldDropBonus / tileDropBonus uplift the
 // rolled gold and tile drop counts at combat resolution time.
@@ -101,6 +103,27 @@ export function generateAndApplyCombatLoot(
         entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
       }
     }
+  }
+
+  // Shard drops — element-typed loot per kill. Class bias decides physical vs
+  // elemental category; auto-conversion (10 shards -> 1 element) runs in place.
+  const shardEnemyType = (enemyType === 'elite' || enemyType === 'boss') ? enemyType : 'normal';
+  const heroClass = run.hero.className ?? 'warrior';
+  const shardDelta: ShardInventory = rollShardDrops(shardEnemyType, heroClass);
+  if (!run.economy.shards) run.economy.shards = {};
+  if (!run.economy.elements) run.economy.elements = {};
+  const elementsAdded: ElementInventory = addShardsAndConvert(
+    run.economy.shards as ShardInventory,
+    run.economy.elements as ElementInventory,
+    shardDelta,
+  );
+  for (const id of Object.keys(shardDelta) as ElementId[]) {
+    const n = shardDelta[id] ?? 0;
+    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name} shard`, color: ELEMENTS[id].color });
+  }
+  for (const id of Object.keys(elementsAdded) as ElementId[]) {
+    const n = elementsAdded[id] ?? 0;
+    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name}!`, color: ELEMENTS[id].color });
   }
 
   // Tile drops (rare; 15% chance per terrain combat). Writes to the

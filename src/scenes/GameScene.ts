@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { getRun } from '../state/RunState';
+import { getRun, type RunState } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { LoopRunner, TILE_SIZE, type LoopRunState } from '../systems/LoopRunner';
 import { getDifficultyConfig } from '../systems/DifficultyScaler';

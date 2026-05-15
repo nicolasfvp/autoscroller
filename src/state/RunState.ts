@@ -98,6 +98,10 @@ export interface EconomyState {
   tileInventory: Record<string, number>;
   /** Materials accumulated during the current run (banked at run end) */
   materials: Record<string, number>;
+  /** Element-typed shard counters (per-run). 10 shards auto-convert to 1 element-unit. */
+  shards?: Record<string, number>;
+  /** Element-unit counters (per-run). Consumed by Forge to craft cards. */
+  elements?: Record<string, number>;
   /** Removals used in the current shop visit (for escalating remove prices). Reset on shop open. */
   removalsThisShop?: number;
   /** Reorders used in the current shop visit (for escalating reorder prices). Reset on shop open. */
@@ -155,7 +159,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 4;
+export const RUN_STATE_VERSION = 5;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.
@@ -238,6 +242,17 @@ export function migrateRunState(raw: any): RunState | null {
     }
     raw.version = 4;
   }
+  // v4 -> v5 (element/shard system): backfill economy.shards and economy.elements.
+  // Pre-element saves get zeroed inventories.
+  if (raw.version === 4) {
+    if (raw.economy) {
+      if (!raw.economy.shards) raw.economy.shards = {};
+      if (!raw.economy.elements) raw.economy.elements = {};
+    }
+    // Shadowblade removal: any save with className=shadowblade reverts to warrior.
+    if (raw.hero?.className === 'shadowblade') raw.hero.className = 'warrior';
+    raw.version = 5;
+  }
   return raw as RunState;
 }
 
@@ -298,10 +313,12 @@ export function createNewRun(
       bossesDefeated: 0,
     },
     economy: {
-      gold: 0,
+      gold: 50,
       tilePoints: 2,
       tileInventory: {},
       materials: {},
+      shards: {},
+      elements: {},
       // Cache Storehouse gathering boost so CombatLoot can multiply drops
       // without an async metaState read on every combat.
       gatheringBoost: getStorehouseEffects(meta.buildings.storehouse.level).gatheringBoost,

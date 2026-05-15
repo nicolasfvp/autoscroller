@@ -21,11 +21,15 @@ export const WARRIOR_BASE_STATS = {
 };
 
 // -- Starter Deck --
+// 5 Tier-1 cards totalling 10 elements (9 physical + 1 elemental).
+// Class element-budget rule (warrior: 7-10 physical / 0-3 elemental).
 
 export const WARRIOR_STARTER_DECK: string[] = [
-  'defend', 'strike', 'defend', 'strike',
-  'heavy-hit', 'defend', 'strike', 'defend',
-  'strike', 'fireball',
+  't1-attack-attack',
+  't1-defense-defense',
+  't1-attack-defense',
+  't1-agility-agility',
+  't1-attack-fire',
 ];
 
 // -- Class Definition --
