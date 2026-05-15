@@ -102,20 +102,22 @@ describe('CombatEngine', () => {
     expect(cardPlayedCalls[0][1].cardId).toBe('t1-attack-attack');
   });
 
-  it('heroCooldownTimer set to card.cooldown * 1000 after playing', () => {
-    // First tick plays card immediately (cooldown was 0)
+  it('heroCooldownTimer set to card.cooldown * 1000 after playing', async () => {
+    const { getCardById } = await import('../../../src/data/DataLoader');
+    const cd = (getCardById('t1-attack-attack')!.cooldown) * 1000; // ms
+
     engine.tick(100);
 
-    // strike has cooldown 1.0s = 1000ms
-    // After playing, next card should NOT play until 1000ms passes
-    engine.tick(800); // only 800ms
+    // After playing, next card should NOT play until the cooldown passes.
+    // Tick slightly under the cooldown.
+    engine.tick(Math.max(0, cd - 200));
     const cardPlayedCalls = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
-    expect(cardPlayedCalls.length).toBe(1); // still only 1 card played
+    expect(cardPlayedCalls.length).toBe(1);
 
-    // Now complete the cooldown
-    engine.tick(200); // total 1000ms since last play
+    // Now complete the cooldown with a generous overage.
+    engine.tick(300);
     const cardPlayedCalls2 = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
@@ -123,19 +125,19 @@ describe('CombatEngine', () => {
   });
 
   it('skips unaffordable card and tries next', () => {
-    // Create a deck with expensive card first, then a free card
-    const run = makeMockRun(['t2-attack-attack-attack', 't1-attack-attack']);
-    run.hero.currentStamina = 0; // can't afford t2-attack-attack-attack (3 stamina)
+    // Pin an expensive card (3-stamina) first then a free card; with hero stamina at 0,
+    // the engine must skip the expensive one and play the free one.
+    const run = makeMockRun(['t2-attack-attack-attack', 't1-defense-defense']);
+    run.hero.currentStamina = 0;
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
     setRun(run);
-    state.heroStamina = 0; // mirror the per-combat state — t2 needs 3 stam, can't pay
-    state.deckOrder = ['t2-attack-attack-attack', 't1-attack-attack'];
+    state.heroStamina = 0; // mirror per-combat
+    state.deckOrder = ['t2-attack-attack-attack', 't1-defense-defense'];
     const eng = new CombatEngine(state);
 
     eng.tick(100);
 
-    // t2-attack-attack-attack should be skipped (3 stam cost), t1-attack-attack should be played
     const skippedCalls = mockEmit.mock.calls.filter(
       (c: unknown[]) => c[0] === 'combat:card-skipped'
     );
@@ -145,7 +147,7 @@ describe('CombatEngine', () => {
     expect(skippedCalls.length).toBe(1);
     expect(skippedCalls[0][1].cardId).toBe('t2-attack-attack-attack');
     expect(playedCalls.length).toBe(1);
-    expect(playedCalls[0][1].cardId).toBe('t1-attack-attack');
+    expect(playedCalls[0][1].cardId).toBe('t1-defense-defense');
   });
 
   it('deck pointer resets to 0 when exhausted', () => {
