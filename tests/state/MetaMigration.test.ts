@@ -25,6 +25,28 @@ describe('MetaState v8 defaults', () => {
   it('createDefaultMetaState has autoSave === true', () => {
     expect(createDefaultMetaState().autoSave).toBe(true);
   });
+
+  it('createDefaultMetaState has forgeRecipes as empty array', () => {
+    const state = createDefaultMetaState();
+    expect(Array.isArray(state.forgeRecipes)).toBe(true);
+    expect(state.forgeRecipes.length).toBe(0);
+  });
+
+  it('createDefaultMetaState has deckPresets with warrior and mage arrays of length 5', () => {
+    const state = createDefaultMetaState();
+    expect(state.deckPresets).toBeDefined();
+    expect(typeof state.deckPresets).toBe('object');
+    expect(Array.isArray(state.deckPresets.warrior)).toBe(true);
+    expect(Array.isArray(state.deckPresets.mage)).toBe(true);
+    expect(state.deckPresets.warrior.length).toBe(5);
+    expect(state.deckPresets.mage.length).toBe(5);
+  });
+
+  it('createDefaultMetaState populates the first preset cardIds for each class', () => {
+    const state = createDefaultMetaState();
+    expect(state.deckPresets.warrior[0].cardIds.length).toBeGreaterThan(0);
+    expect(state.deckPresets.mage[0].cardIds.length).toBeGreaterThan(0);
+  });
 });
 
 describe('MetaState v5 migration paths', () => {
@@ -314,5 +336,61 @@ describe('v6 -> v7 (Shadowblade removal)', () => {
     const result = migrateMetaState(v6) as any;
     expect(result.version).toBe(8);
     expect(result.classXP).toEqual({ warrior: 100, mage: 50 });
+  });
+});
+
+describe('v7 -> v8 migration (element/forge additions)', () => {
+  it('v7 save backfills forgeRecipes and deckPresets', () => {
+    const v7: any = {
+      buildings: {
+        forge: { level: 0 }, library: { level: 0 }, tavern: { level: 0 },
+        workshop: { level: 0 }, shrine: { level: 0 }, storehouse: { level: 0 },
+      },
+      materials: {},
+      classXP: { warrior: 0, mage: 0 },
+      passivesUnlocked: [],
+      unlockedCards: [],
+      unlockedRelics: [],
+      unlockedTiles: [],
+      runHistory: [],
+      totalRuns: 0,
+      tutorialSeen: false,
+      audioPrefs: { sfxVolume: 1, sfxEnabled: true },
+      gameSpeed: 1,
+      autoSave: true,
+      version: 7,
+    };
+
+    const result = migrateMetaState(v7);
+    expect(result.version).toBe(8);
+    expect(Array.isArray(result.forgeRecipes)).toBe(true);
+    expect(result.forgeRecipes.length).toBe(0);
+    expect(result.deckPresets).toBeDefined();
+    expect(typeof result.deckPresets).toBe('object');
+    expect(Array.isArray(result.deckPresets.warrior)).toBe(true);
+    expect(Array.isArray(result.deckPresets.mage)).toBe(true);
+    expect(result.deckPresets.warrior.length).toBe(5);
+    expect(result.deckPresets.mage.length).toBe(5);
+    // First preset (default starter) has populated cardIds.
+    expect(result.deckPresets.warrior[0].cardIds.length).toBeGreaterThan(0);
+    expect(result.deckPresets.mage[0].cardIds.length).toBeGreaterThan(0);
+  });
+
+  it('v7 save preserves existing forgeRecipes if present', () => {
+    const existingRecipes = [
+      { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't1-fire-fire', firstForgedAt: 12345 },
+    ];
+    const v7: any = {
+      ...createDefaultMetaState(),
+      forgeRecipes: existingRecipes,
+      version: 7,
+    };
+    // Drop deckPresets to ensure migration backfills them.
+    delete v7.deckPresets;
+
+    const result = migrateMetaState(v7);
+    expect(result.version).toBe(8);
+    expect(result.forgeRecipes).toEqual(existingRecipes);
+    expect(result.deckPresets.warrior.length).toBe(5);
   });
 });

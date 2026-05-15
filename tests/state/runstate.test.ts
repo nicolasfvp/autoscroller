@@ -6,6 +6,7 @@ import {
   setRun,
   hasActiveRun,
   clearRun,
+  migrateRunState,
 } from '../../src/state/RunState';
 
 describe('RunState', () => {
@@ -71,27 +72,91 @@ describe('RunState', () => {
   });
 });
 
-describe('RunState v4 (Phase 9) — stat axes + statDeltas wiring', () => {
-  it('RUN_STATE_VERSION is 4 (Phase 9 stat axes added)', () => {
-    // Import inline to avoid colliding with the existing top-level imports.
-    // (vitest hoists describe but locally-scoped imports work too.)
-    
-    expect(RUN_STATE_VERSION).toBe(4);
+describe('RunState v5 (element/shard system) — stat axes + statDeltas wiring', () => {
+  it('RUN_STATE_VERSION is 5 (element/shard inventory added)', () => {
+    expect(RUN_STATE_VERSION).toBe(5);
   });
 
   it('createNewRun has hero.statDeltas === {} (new run never has deltas)', () => {
-    
     const run = createNewRun(undefined, 1, 'warrior');
     expect(run.hero.statDeltas).toEqual({});
   });
 
   it('createNewRun for warrior has vitality/dexterity/intellect/spirit === 0', () => {
-
     const run = createNewRun(undefined, 1, 'warrior');
     expect(run.hero.vitality).toBe(0);
     expect(run.hero.dexterity).toBe(0);
     expect(run.hero.intellect).toBe(0);
     expect(run.hero.spirit).toBe(0);
+  });
+});
+
+describe('RunState v4 -> v5 migration (element/shard + shadowblade fallback)', () => {
+  it('v4 save backfills economy.shards and economy.elements as objects', () => {
+    const v4: any = {
+      version: 4,
+      runId: 'test-run',
+      seed: 'test-seed',
+      generation: 1,
+      startedAt: 0,
+      hero: {
+        maxHP: 100, currentHP: 100, maxStamina: 50, currentStamina: 50,
+        maxMana: 30, currentMana: 30, currentDefense: 0, strength: 1,
+        defenseMultiplier: 1, moveSpeed: 2, className: 'warrior',
+        vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
+      },
+      deck: { active: [], inventory: {}, upgraded: [], droppedCards: [] },
+      loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20, bossesDefeated: 0 },
+      economy: { gold: 50, tilePoints: 2, tileInventory: {}, materials: {} },
+      relics: [],
+      stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
+      isInCombat: false,
+      currentScene: 'GameScene',
+      stopAtShop: true,
+      combatSpeed: 1,
+      mapSpeed: 1,
+      pool: { cards: [], relics: [], tiles: [] },
+    };
+
+    const result = migrateRunState(v4);
+    expect(result).not.toBeNull();
+    expect(result!.version).toBe(5);
+    expect(typeof result!.economy.shards).toBe('object');
+    expect(typeof result!.economy.elements).toBe('object');
+    expect(result!.economy.shards).toEqual({});
+    expect(result!.economy.elements).toEqual({});
+  });
+
+  it('v4 save with hero.className === "shadowblade" falls back to "warrior"', () => {
+    const v4: any = {
+      version: 4,
+      runId: 'test-run',
+      seed: 'test-seed',
+      generation: 1,
+      startedAt: 0,
+      hero: {
+        maxHP: 100, currentHP: 100, maxStamina: 50, currentStamina: 50,
+        maxMana: 30, currentMana: 30, currentDefense: 0, strength: 1,
+        defenseMultiplier: 1, moveSpeed: 2, className: 'shadowblade',
+        vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
+      },
+      deck: { active: [], inventory: {}, upgraded: [], droppedCards: [] },
+      loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20, bossesDefeated: 0 },
+      economy: { gold: 50, tilePoints: 2, tileInventory: {}, materials: {} },
+      relics: [],
+      stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
+      isInCombat: false,
+      currentScene: 'GameScene',
+      stopAtShop: true,
+      combatSpeed: 1,
+      mapSpeed: 1,
+      pool: { cards: [], relics: [], tiles: [] },
+    };
+
+    const result = migrateRunState(v4);
+    expect(result).not.toBeNull();
+    expect(result!.version).toBe(5);
+    expect(result!.hero.className).toBe('warrior');
   });
 });
 
