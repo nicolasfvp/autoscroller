@@ -23,11 +23,13 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     heroClass: 'warrior',
     deckOrder: [],
     enemyId: 'slime', enemyName: 'Slime',
+    enemyType: 'normal',
     enemyHP: 100, enemyMaxHP: 100,
     enemyDefense: 0, enemyDamage: 10,
     enemyAttackCooldown: 2000,
     enemyPattern: 'fixed',
     enemySpecialEffect: null,
+    enemyAffinity: null,
     activePassives: [],
     heroStunned: false,
     upgraded: [],
@@ -38,8 +40,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     _bloodPactBonus: 0,
     phoenixUsed: false,
     heroVitality: 0, heroDexterity: 0, heroIntellect: 0, heroSpirit: 0,
-    comboPoints: 0, comboPointsCap: 5, stealthCharges: 0, stealthCap: 4, evadeNextHit: false,
-    poisonStacks: 0, poisonDecayDisabled: false, bleedStacks: 0, burnStacks: 0,
+    poisonStacks: 0, bleedStacks: 0, burnStacks: 0,
     freezeStacks: 0, shockStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
@@ -239,6 +240,68 @@ describe('EnemyAI', () => {
       ai.tick(2000, state, stats);
       expect(state.heroHP).toBe(90);
       expect(stats.damageReceived).toBe(10);
+    });
+  });
+
+  // ── Phase 10: Enemy element affinity (CARDS_SYSTEM §16) ─────
+  describe('enemy element affinity', () => {
+    it("fire affinity emits a 'combat:enemy-affinity' event after a landed hit", async () => {
+      const { eventBus } = await import('../../../src/core/EventBus');
+      (eventBus.emit as any).mockClear();
+
+      state = makeState({
+        enemyAffinity: 'fire',
+        enemyType: 'normal',
+        enemyDamage: 10, heroDefense: 0, heroHP: 100,
+        enemyAttackCooldown: 2000,
+      });
+      stats = createEmptyCombatStats('slime', 'Slime');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+
+      // Burn (fire affinity, non-boss): hp = 1*1, stamina = 1*1
+      expect(state.heroHP).toBe(89); // 100 - 10 base - 1 burn
+      expect(state.heroStamina).toBe(49); // 50 - 1 burn drain
+
+      const affinityCalls = (eventBus.emit as any).mock.calls.filter(
+        (c: any[]) => c[0] === 'combat:enemy-affinity',
+      );
+      expect(affinityCalls).toHaveLength(1);
+      expect(affinityCalls[0][1]).toEqual(
+        expect.objectContaining({ affinity: 'fire', type: 'hero_burn', value: 1 }),
+      );
+    });
+
+    it('boss with defense affinity applies doubled armor magnitude per landed hit', () => {
+      state = makeState({
+        enemyAffinity: 'defense',
+        enemyType: 'boss',
+        enemyDefense: 0,
+        enemyDamage: 5, heroDefense: 0, heroHP: 100,
+        enemyAttackCooldown: 2000,
+      });
+      stats = createEmptyCombatStats('boss', 'Boss');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+
+      // Boss multiplier (m=2) for defense affinity grants 3 * 2 = 6 armor.
+      expect(state.enemyDefense).toBe(6);
+    });
+
+    it('normal enemy with defense affinity applies half the armor magnitude (m=1)', () => {
+      state = makeState({
+        enemyAffinity: 'defense',
+        enemyType: 'normal',
+        enemyDefense: 0,
+        enemyDamage: 5, heroDefense: 0, heroHP: 100,
+        enemyAttackCooldown: 2000,
+      });
+      stats = createEmptyCombatStats('slime', 'Slime');
+      ai = new EnemyAI(state);
+      ai.tick(2000, state, stats);
+
+      // Non-boss (m=1) gains 3 * 1 = 3 armor — exactly half the boss value.
+      expect(state.enemyDefense).toBe(3);
     });
   });
 });

@@ -13,11 +13,13 @@ function makeMinimalState(overrides: Partial<CombatState> = {}): CombatState {
     heroClass: 'warrior',
     deckOrder: [],
     enemyId: 'slime', enemyName: 'Slime',
+    enemyType: 'normal',
     enemyHP: 100, enemyMaxHP: 100,
     enemyDefense: 0, enemyDamage: 8,
     enemyAttackCooldown: 2500,
     enemyPattern: 'fixed',
     enemySpecialEffect: null,
+    enemyAffinity: null,
     activePassives: [],
     heroStunned: false,
     upgraded: [],
@@ -35,16 +37,21 @@ function makeMinimalState(overrides: Partial<CombatState> = {}): CombatState {
   };
 }
 
+// Synergies were replaced by element combinations (synergies.json is now []).
+// SynergySystem.check() always returns null because no synergies are loaded.
+// Direct-mutation bonuses (cooldown_reduction, etc.) still go through
+// applyDirectSynergyBonus and are tested below with synthesized definitions.
 describe('SynergySystem', () => {
   const system = new SynergySystem();
 
-  it('returns null for an undefined card pair (order matters / non-existent IDs)', () => {
-    expect(system.check('strike', 'defend', 'warrior')).toBeNull();
-    expect(system.check('strike', 'strike', 'warrior')).toBeNull();
+  it('returns null for any card pair (synergies replaced by element combinations)', () => {
+    expect(system.check('t1-attack-attack', 't1-defense-defense', 'warrior')).toBeNull();
+    expect(system.check('t1-attack-attack', 't1-attack-attack', 'warrior')).toBeNull();
+    expect(system.check('t1-fire-fire', 't1-water-water', 'mage')).toBeNull();
   });
 
   it('returns null when lastPlayedCardId is null', () => {
-    const result = system.check(null, 'strike', 'warrior');
+    const result = system.check(null, 't1-attack-attack', 'warrior');
     expect(result).toBeNull();
   });
 });

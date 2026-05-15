@@ -48,6 +48,7 @@ function makeMockRun(overrides?: Partial<{
     combatSpeed: 1,
     mapSpeed: 1,
     pool: { cards: [], relics: [], tiles: [] },
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
   };
 }
 
