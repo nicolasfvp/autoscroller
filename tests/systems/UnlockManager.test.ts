@@ -1,75 +1,83 @@
 import { describe, it, expect } from 'vitest';
 import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../../src/systems/UnlockManager';
 
+// In the element-based card system there are 156 implemented cards, none of
+// which carry an unlockSource — so every card is universally available
+// regardless of metaUnlockedCards.
+// Relics: 39 total, 28 always-available, 11 forge-gated.
+const TOTAL_CARDS = 156;
+const TOTAL_RELICS = 39;
+const ALWAYS_AVAILABLE_RELICS = 28;
+const GATED_RELIC_IDS = [
+  'wargods_mantle', 'bloodgorged_heart', 'the_last_banner',
+  'tempest_resonator', 'tideheart_amulet', 'archon_codex',
+  'blood_pact', 'berserker_ring', 'crown_of_pact',
+  'phoenix_feather', 'demon_heart',
+];
+
 describe('UnlockManager', () => {
   describe('getAvailableCards', () => {
-    it('returns only cards with no unlockSource when unlockedCards is empty', () => {
+    it('returns all cards when unlockedCards is empty (no unlockSource gates)', () => {
       const cards = getAvailableCards([]);
-      // Cards without unlockSource: strike, heavy-hit, defend, fireball, cleave, meditate = 6 starters
-      expect(cards.length).toBe(6);
+      // All 156 cards have no unlockSource → always available.
+      expect(cards.length).toBe(TOTAL_CARDS);
       const ids = cards.map(c => c.id);
-      expect(ids).toContain('strike');
-      expect(ids).toContain('heavy-hit');
-      expect(ids).toContain('defend');
-      expect(ids).toContain('fireball');
-      expect(ids).toContain('cleave');
-      expect(ids).toContain('meditate');
-      // Should NOT contain gated cards
-      expect(ids).not.toContain('fury');
-      expect(ids).not.toContain('berserker');
+      // Spot-check a representative Tier 1 spread (pure-element + mixed).
+      expect(ids).toContain('t1-attack-attack');
+      expect(ids).toContain('t1-defense-defense');
+      expect(ids).toContain('t1-fire-fire');
+      expect(ids).toContain('t1-water-water');
+      expect(ids).toContain('t1-attack-fire');
+      expect(ids).toContain('t1-agility-defense');
     });
 
-    it('returns starters plus fury when unlockedCards includes fury', () => {
-      const cards = getAvailableCards(['fury']);
+    it('still returns all cards even when unlockedCards lists specific ids', () => {
+      const cards = getAvailableCards(['t1-attack-attack']);
       const ids = cards.map(c => c.id);
-      expect(ids).toContain('strike');
-      expect(ids).toContain('fury');
-      expect(cards.length).toBe(7); // 6 starters + fury
+      expect(ids).toContain('t1-attack-attack');
+      expect(ids).toContain('t1-fire-fire');
+      // Listing an id is a no-op when no card is gated — pool is still 156.
+      expect(cards.length).toBe(TOTAL_CARDS);
     });
 
-    it('returns all 30 cards when all gated cards are unlocked', () => {
-      const allGatedIds = [
-        'fury', 'berserker', 'shield-wall', 'fortify', 'iron-skin',
-        'heal', 'arcane-shield', 'rejuvenate', 'mana-drain', 'weaken',
-        'counter-strike', 'reckless-charge', 'execute', 'chain-lightning',
-        'doom-blade', 'parry', 'bulwark', 'last-stand', 'vampiric-touch',
-        'haste', 'energy-surge', 'poison-cloud', 'soul-rend', 'sacrifice',
+    it('returns all 156 cards regardless of the gated list contents', () => {
+      const someIds = [
+        't1-attack-attack', 't1-defense-defense', 't1-fire-fire',
+        't2-attack-attack-attack', 't2-fire-fire-fire',
       ];
-      const cards = getAvailableCards(allGatedIds);
-      expect(cards.length).toBe(30);
+      const cards = getAvailableCards(someIds);
+      expect(cards.length).toBe(TOTAL_CARDS);
     });
   });
 
   describe('getAvailableRelics', () => {
     it('returns only relics with no unlockSource when unlockedRelics is empty', () => {
       const relics = getAvailableRelics([]);
-      // bronze_scale, energy_potion, arcane_crystal, vitality_ring, mana_stone = 5 always available
-      expect(relics.length).toBe(5);
+      // 28 always-available relics (those without unlockSource).
+      expect(relics.length).toBe(ALWAYS_AVAILABLE_RELICS);
       const ids = relics.map(r => r.id);
+      // Spot-check a few always-available relics.
       expect(ids).toContain('bronze_scale');
       expect(ids).toContain('energy_potion');
       expect(ids).toContain('arcane_crystal');
       expect(ids).toContain('vitality_ring');
       expect(ids).toContain('mana_stone');
+      // Gated relics should NOT be in the default pool.
+      expect(ids).not.toContain('phoenix_feather');
+      expect(ids).not.toContain('demon_heart');
     });
 
-    it('returns starters plus warrior_spirit when unlocked', () => {
-      const relics = getAvailableRelics(['warrior_spirit']);
-      expect(relics.length).toBe(6);
+    it('returns starters plus phoenix_feather when unlocked', () => {
+      const relics = getAvailableRelics(['phoenix_feather']);
+      expect(relics.length).toBe(ALWAYS_AVAILABLE_RELICS + 1);
       const ids = relics.map(r => r.id);
       expect(ids).toContain('bronze_scale');
-      expect(ids).toContain('warrior_spirit');
+      expect(ids).toContain('phoenix_feather');
     });
 
-    it('returns all 15 relics when all gated relics are unlocked', () => {
-      const allGatedIds = [
-        'warrior_spirit', 'iron_will', 'berserker_ring',
-        'demon_heart', 'phoenix_feather', 'swift_boots',
-        'thin_deck_charm', 'spell_focus', 'first_strike_amulet',
-        'blood_pact',
-      ];
-      const relics = getAvailableRelics(allGatedIds);
-      expect(relics.length).toBe(15);
+    it('returns all 39 relics when all gated relics are unlocked', () => {
+      const relics = getAvailableRelics(GATED_RELIC_IDS);
+      expect(relics.length).toBe(TOTAL_RELICS);
     });
   });
 
