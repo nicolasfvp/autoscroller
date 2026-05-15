@@ -2,7 +2,7 @@
 // Hero panel (left) | Cooldown arc (center) | Enemy panel (right)
 
 import type { CombatState } from '../systems/combat/CombatState';
-import { FONTS } from './StyleConstants';
+import { FONTS, SHADOWBLADE_PALETTE } from './StyleConstants';
 
 /**
  * Pure visibility logic for HUD widgets. Extracted so the toggle logic is
@@ -25,7 +25,7 @@ const FF = FONTS.family;
 const STROKE = { stroke: '#000000', strokeThickness: 3 };
 
 // Panel geometry
-const LP = { x: 8,   y: 8,  w: 238, h: 132 };   // Hero (left)
+const LP = { x: 8,   y: 8,  w: 238, h: 188 };   // Hero (left) — armor row + STR/VIT/DEX/INT/SPI row
 const RP = { x: 554, y: 8,  w: 238, h: 70 };    // Enemy (right, tightly packed)
 const BAR_W = LP.w - 28;                         // 210px bar width
 
@@ -40,6 +40,14 @@ export class CombatHUD {
   private hpText!:     Phaser.GameObjects.Text;
   private staminaText!:Phaser.GameObjects.Text;
   private manaText!:   Phaser.GameObjects.Text;
+
+  // Hero armor readout (below HP). Shown only when armor > 0.
+  private armorIcon!:   Phaser.GameObjects.Text;
+  private armorValue!: Phaser.GameObjects.Text;
+
+  // Hero attribute readouts (STR/VIT/DEX/INT/SPI). Live-update from CombatState.
+  private statTexts: { [k: string]: Phaser.GameObjects.Text } = {};
+  private displayedStats: Record<string, number> = { str: -1, vit: -1, dex: -1, int: -1, spi: -1 };
 
   // Enemy
   private enemyNameText!: Phaser.GameObjects.Text;
@@ -87,23 +95,63 @@ export class CombatHUD {
     this.container.add(lpBg);
 
     const bx = LP.x + 14;   // bar left edge
-    const by = LP.y + 38;   // first bar center Y
-    const gap = 36;
+    const hpY     = LP.y + 38;
+    const armorY  = LP.y + 66;
+    const staY    = LP.y + 92;
+    const mpY     = LP.y + 124;
 
     // HP
-    this.buildBar(bx, by,         BAR_W, 28, 0x22cc44, '♥ HP');
+    this.buildBar(bx, hpY, BAR_W, 28, 0x22cc44, '♥ HP');
     this.hpBar  = this.getLastFill();
-    this.hpText = this.buildBarLabel(bx + BAR_W / 2, by);
+    this.hpText = this.buildBarLabel(bx + BAR_W / 2, hpY);
+
+    // Armor (icon + numeric value, no bar — armor has no max).
+    this.armorIcon = s.add.text(bx + 4, armorY, '🛡 ARMOR', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#9fd6ff', ...STROKE, strokeThickness: 2,
+    }).setOrigin(0, 0.5);
+    this.armorValue = s.add.text(bx + BAR_W - 4, armorY, '0', {
+      fontFamily: FF, fontSize: '14px', fontStyle: 'bold',
+      color: '#dbeeff', ...STROKE, strokeThickness: 2,
+    }).setOrigin(1, 0.5);
+    this.armorIcon.setVisible(false);
+    this.armorValue.setVisible(false);
+    this.container.add([this.armorIcon, this.armorValue]);
 
     // Stamina
-    this.buildBar(bx, by + gap,   BAR_W, 22, 0xf0a020, '⚡ STA');
+    this.buildBar(bx, staY, BAR_W, 22, 0xf0a020, '⚡ STA');
     this.staminaBar  = this.getLastFill();
-    this.staminaText = this.buildBarLabel(bx + BAR_W / 2, by + gap);
+    this.staminaText = this.buildBarLabel(bx + BAR_W / 2, staY);
 
     // Mana
-    this.buildBar(bx, by + gap*2, BAR_W, 22, 0x9966ff, '✦ MP');
+    this.buildBar(bx, mpY, BAR_W, 22, 0x9966ff, '✦ MP');
     this.manaBar  = this.getLastFill();
-    this.manaText = this.buildBarLabel(bx + BAR_W / 2, by + gap * 2);
+    this.manaText = this.buildBarLabel(bx + BAR_W / 2, mpY);
+
+    // Attribute row: STR / VIT / DEX / INT / SPI
+    const statRowY = LP.y + 164;
+    const stats: Array<{ key: 'str' | 'vit' | 'dex' | 'int' | 'spi'; code: string; color: number }> = [
+      { key: 'str', code: 'STR', color: 0xff8844 },
+      { key: 'vit', code: 'VIT', color: SHADOWBLADE_PALETTE.vit },
+      { key: 'dex', code: 'DEX', color: SHADOWBLADE_PALETTE.dex },
+      { key: 'int', code: 'INT', color: SHADOWBLADE_PALETTE.int },
+      { key: 'spi', code: 'SPI', color: SHADOWBLADE_PALETTE.spi },
+    ];
+    const cellW = BAR_W / stats.length;
+    stats.forEach((stat, i) => {
+      const cellX = bx + cellW * i;
+      const codeText = s.add.text(cellX + 4, statRowY, stat.code, {
+        fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
+        color: '#' + stat.color.toString(16).padStart(6, '0'),
+        ...STROKE, strokeThickness: 2,
+      }).setOrigin(0, 0.5);
+      const valText = s.add.text(cellX + cellW - 4, statRowY, '0', {
+        fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
+        color: '#ffffff', ...STROKE, strokeThickness: 2,
+      }).setOrigin(1, 0.5);
+      this.container.add([codeText, valText]);
+      this.statTexts[stat.key] = valText;
+    });
   }
 
   private buildBar(
@@ -225,6 +273,29 @@ export class CombatHUD {
       this.targetMana = newMP;
       this.tweenBar('mana', from, newMP, state.heroMaxMana,
         this.manaBar, this.manaText, () => 0x9966ff);
+    }
+
+    // Armor readout: hidden when zero, shown otherwise.
+    const armor = Math.max(0, Math.floor(state.heroDefense ?? 0));
+    const armorVisible = armor > 0;
+    this.armorIcon.setVisible(armorVisible);
+    this.armorValue.setVisible(armorVisible);
+    if (armorVisible) this.armorValue.setText(String(armor));
+
+    // Attribute readouts.
+    const attrValues: Record<string, number> = {
+      str: state.heroStrength ?? 0,
+      vit: state.heroVitality ?? 0,
+      dex: state.heroDexterity ?? 0,
+      int: state.heroIntellect ?? 0,
+      spi: state.heroSpirit ?? 0,
+    };
+    for (const key of Object.keys(attrValues)) {
+      const v = attrValues[key];
+      if (v !== this.displayedStats[key]) {
+        this.displayedStats[key] = v;
+        this.statTexts[key]?.setText(String(v));
+      }
     }
 
     // Enemy

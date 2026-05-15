@@ -1,6 +1,6 @@
 {
   "percentPerLoop": 0.12,
-  "bossMultiplier": 2.0,
+  "bossMultiplier": 1.0,
   "basicTileCombatChance": 0.18,
   "baseSpeed": 240,
   "speedScalePerLoop": 1.02,
@@ -12,7 +12,7 @@
   },
   "baseTilePointsPerLoop": 2,
   "tilePointScalePerLoop": 0,
-  "deathMaterialPercent": 0.10,
+  "deathMaterialPercent": 0.25,
   "deathXpPercent": 0,
   "resourceResetPercent": 0.5,
   "pricing": {

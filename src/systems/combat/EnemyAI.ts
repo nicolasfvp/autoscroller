@@ -198,25 +198,34 @@ export class EnemyAI {
    * attacks so iron_will/phoenix fire once for the whole attack.
    */
   private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-    const damage = rawDamage;
-    const multiplier = state.heroDefenseMultiplier ?? 1;
-    const effectiveDefense = state.heroDefense * multiplier;
-
-    const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
-    // Armor consumed at face value — multiplier only shifts how much damage
-    // each point of armor blocks, not how fast armor itself depletes.
-    state.heroDefense = Math.max(0, state.heroDefense - damage);
-
-    if (remaining > 0) {
-      state.heroHP = Math.max(0, state.heroHP - remaining);
-
-      // Apply damage_taken relics (iron_will, phoenix_feather) unless caller
-      // is batching them (multi-hit attacks invoke them once at the end).
-      if (!skipRelics) {
-        applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
-      }
-    }
-
-    return remaining;
+    return applyHeroDamage(rawDamage, state, skipRelics);
   }
+}
+
+/**
+ * Shared hero-damage helper: routes any HP loss through armor, applying the
+ * defenseMultiplier and the damage_taken relics. Exported so all damage
+ * sources (basic attacks, affinity bleed/burn, card self-damage) share one
+ * code path — armor must always be considered.
+ */
+export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
+  const damage = Math.max(0, Math.floor(rawDamage));
+  if (damage === 0) return 0;
+  const multiplier = state.heroDefenseMultiplier ?? 1;
+  const effectiveDefense = state.heroDefense * multiplier;
+
+  const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
+  // Armor consumed at face value — multiplier only shifts how much damage
+  // each point of armor blocks, not how fast armor itself depletes.
+  state.heroDefense = Math.max(0, state.heroDefense - damage);
+
+  if (remaining > 0) {
+    state.heroHP = Math.max(0, state.heroHP - remaining);
+
+    if (!skipRelics) {
+      applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
+    }
+  }
+
+  return remaining;
 }

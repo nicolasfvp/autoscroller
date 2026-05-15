@@ -23,7 +23,9 @@ export function resolveRunEnd(
   const { deathRetention } = getStorehouseEffects(storehouseLevel);
   const retainedMaterials: Record<string, number> = {};
   for (const [mat, amount] of Object.entries(currentMaterials)) {
-    retainedMaterials[mat] = Math.floor(amount * deathRetention);
+    let retained = Math.floor(amount * deathRetention);
+    if (retained === 0 && amount > 0 && deathRetention > 0) retained = 1;
+    retainedMaterials[mat] = retained;
   }
   return {
     exitType: 'death',

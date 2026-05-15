@@ -27,14 +27,15 @@ describe('DifficultyScaler', () => {
     expect(stats.goldReward).toBe(19);
   });
 
-  it('boss multiplier stacks on top of loop multiplier', () => {
+  it('bosses use half the per-loop growth rate and the boss multiplier', () => {
     const stats = scaleEnemyForLoop(baseEnemy, 5, true);
-    // loopMult = 1.48 * 2.0 = 2.96
-    expect(stats.hp).toBe(296);
-    expect(stats.damage).toBe(29); // floor(10 * 2.96)
-    expect(stats.defense).toBe(14); // floor(5 * 2.96)
-    // goldReward = floor(15 * log2(2.96 + 1)) = floor(15 * 1.98542) = 29
-    expect(stats.goldReward).toBe(29);
+    // normal loopMult = 1.48; boss halves the growth: 1 + 0.48*0.5 = 1.24
+    // then * bossMultiplier (1.0) = 1.24
+    expect(stats.hp).toBe(124);
+    expect(stats.damage).toBe(12); // floor(10 * 1.24)
+    expect(stats.defense).toBe(6); // floor(5 * 1.24)
+    // goldReward = floor(15 * log2(1.24 + 1)) = floor(15 * 1.16282) = 17
+    expect(stats.goldReward).toBe(17);
   });
 
   it('getLoopSpeed returns base speed at loop 1', () => {
@@ -52,7 +53,7 @@ describe('DifficultyScaler', () => {
   it('getDifficultyConfig returns full config', () => {
     const cfg = getDifficultyConfig();
     expect(cfg.percentPerLoop).toBe(0.12);
-    expect(cfg.bossMultiplier).toBe(2.0);
+    expect(cfg.bossMultiplier).toBe(1.0);
     expect(cfg.bossEveryNLoops).toBe(5);
     expect(cfg.baseLoopLength).toBe(15);
   });

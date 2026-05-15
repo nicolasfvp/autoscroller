@@ -5,6 +5,7 @@ import type { CardDefinition, SynergyDefinition, StatId, StackId } from '../../d
 import type { CombatState } from './CombatState';
 import type { SynergyBuff } from '../SynergyResolver';
 import { readStat } from '../hero/HeroStatsResolver';
+import { applyHeroDamage } from './EnemyAI';
 
 export interface ResolveResult {
   totalDamage: number;
@@ -133,10 +134,11 @@ export class CardResolver {
       case 'damage': {
         if (target === 'self') {
           // Self-damage cards bypass strength scaling and enemy defense —
-          // value is the literal HP loss the hero takes. (Use resolvedValue
-          // so DEX/INT scaling on self-cost cards still tracks the formula.)
+          // value is the literal HP loss the hero takes. Routed through
+          // applyHeroDamage so the player's current armor still absorbs it
+          // (all damage paths now respect armor).
           const selfDamage = Math.max(0, Math.floor(resolvedValue));
-          state.heroHP = Math.max(0, state.heroHP - selfDamage);
+          applyHeroDamage(selfDamage, state, /*skipRelics=*/true);
           break;
         }
 
@@ -218,10 +220,12 @@ export class CardResolver {
         // Per-combat additive buff to a CombatState stat axis. Critical
         // boundary (T-09-03-01): mutate state.heroXxx ONLY, NEVER run.hero.
         const which: StatId = scale?.stat ?? 'str';
-        // For stat_buff synergies, value carries the magnitude (scale.value=0
-        // by shim). For card buff effects, resolvedValue may include the
-        // scale boost; either way the per-axis write is the same.
-        const magnitude = resolvedValue;
+        // Buff magnitude is always the base `value` — never resolvedValue.
+        // The `scale.stat` here names the *target* stat, not a scaling axis;
+        // applying the resolved (scaled) value re-enters the same stat each
+        // play and produces exponential self-feedback (Stoneskin/Dancer's
+        // Guard buffing VIT/DEX off their own current VIT/DEX).
+        const magnitude = value;
         switch (which) {
           case 'str': state.heroStrength += magnitude; break;
           case 'vit': state.heroVitality += magnitude; break;
