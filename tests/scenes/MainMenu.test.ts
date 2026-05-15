@@ -66,12 +66,12 @@ describe('SAVE_INCOMPATIBLE_COPY (UI-SPEC §Copywriting)', () => {
 });
 
 describe('migrateMetaState ↔ wipe flag round-trip (Pitfall 5)', () => {
-  it('migrating any pre-v6 save lands at v6 with the wipe flag set', () => {
-    // The migration chain promotes v3→v4→v5→v6; the wipe captures the
-    // version IMMEDIATELY BEFORE the wipe block (so always 5 after chain).
+  it('migrating any pre-v6 save lands at the current default version with the wipe flag set', () => {
+    // The migration chain promotes v3→v4→v5→wipe→v8; the wipe captures the
+    // version IMMEDIATELY BEFORE the wipe block (so always 3-5 after chain).
     const v3 = { ...createDefaultMetaState(), version: 3 };
     const migrated = migrateMetaState(v3);
-    expect(migrated.version).toBe(6);
+    expect(migrated.version).toBe(8);
     expect(migrated._wipedFromVersion).toBeGreaterThanOrEqual(3);
     expect(migrated._wipedFromVersion).toBeLessThanOrEqual(5);
   });
@@ -79,7 +79,7 @@ describe('migrateMetaState ↔ wipe flag round-trip (Pitfall 5)', () => {
   it('migrating a v5 save sets _wipedFromVersion = 5', () => {
     const v5 = { ...createDefaultMetaState(), version: 5 };
     const migrated = migrateMetaState(v5);
-    expect(migrated.version).toBe(6);
+    expect(migrated.version).toBe(8);
     expect(migrated._wipedFromVersion).toBe(5);
   });
 

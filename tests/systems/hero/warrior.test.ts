@@ -29,16 +29,14 @@ describe('WarriorClass', () => {
   });
 
   describe('WARRIOR_STARTER_DECK', () => {
-    it('contains 10 card IDs', () => {
-      expect(WARRIOR_STARTER_DECK).toHaveLength(10);
+    it('contains 5 card IDs (element system)', () => {
+      expect(WARRIOR_STARTER_DECK).toHaveLength(5);
     });
 
-    it('matches existing starter deck composition', () => {
-      expect(WARRIOR_STARTER_DECK).toEqual([
-        'defend', 'strike', 'defend', 'strike',
-        'heavy-hit', 'defend', 'strike', 'defend',
-        'strike', 'fireball',
-      ]);
+    it('uses element-based card IDs (t1-*)', () => {
+      for (const id of WARRIOR_STARTER_DECK) {
+        expect(id).toMatch(/^t1-/);
+      }
     });
   });
 

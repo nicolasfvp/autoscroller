@@ -5,10 +5,8 @@
 > §5 (combos), §6 (relic charter), §7 (new tiles), §8 (validation), §9 (trim heuristic).
 > v2 trims v1's 30 cards → 20 and 30 relics → 20. Combos collapse from 88 rows to exactly 20
 > (each neutral appearing in exactly 2 rows per framework §5.1).
-> Class card IDs referenced here are drawn from `src/data/json/cards.json` (existing 30) plus
-> the Shadowblade starter cards named in framework §4.3 (`eviscerate`, `backstab`, `shadowstep`,
-> `toxic-coat`). The class docs `01_warrior.md` / `02_mage.md` / `03_shadowblade.md` will harden
-> those IDs.
+> Class card IDs referenced here are drawn from `src/data/json/cards.json` (existing 30).
+> The class docs `01_warrior.md` / `02_mage.md` harden those IDs.
 
 ---
 
@@ -17,8 +15,8 @@
 Neutrals are **the glue**. They exist for three reasons:
 
 - **Mono-resource fragility.** Warrior decks suffocate without stamina restores; Mage decks
-  brick when mana drops; Shadowblade hands grief when stealth windows miss. Neutrals provide
-  universal off-ramps — heal a little, cycle a card, gain flat armor.
+  brick when mana drops. Neutrals provide universal off-ramps — heal a little, cycle a card,
+  gain flat armor.
 - **Cross-class bridges.** Neutrals are the bridge surface where Warrior `bulwark` can talk to
   Mage `meditate` through a shared neutral like `field_bandage`. The framework §5.1 rule that
   every card has *exactly 2 combos* turns neutrals into a 2-regular cycle (§6 of this doc).
@@ -172,7 +170,7 @@ neutral because nothing in its text references a class mechanic. Pairs natively 
 
 ### Berserker Ring (epic, passive — reused)
 +50% STR, −20% Max HP. Already exists. Loved by Warrior, but `apprentice_grimoire` analogs in
-Mage and `kitbash_dagger` Shadowblades use the flat STR too (framework §2 — STR adds flat damage
+Mage and `kitbash_dagger` decks use the flat STR too (framework §2 — STR adds flat damage
 to physical effects). The −20% Max HP downside is the rarity-band consequence: epic-tier currency
 move (+50% damage) bought with a hard, run-scoped penalty.
 
@@ -207,28 +205,27 @@ playable by *all three* classes (neutrals belong to every deck pool).
 | 2 | `second_wind` | `worldroot_seed` | heal +5 self | "Bloom & Rally!" | any |
 | 3 | `worldroot_seed` | `iron_canteen` | stamina +4 self | "Deep Roots!" | Warrior / any |
 | 4 | `iron_canteen` | `focus_breath` | mana +3 self | "Steady Draw!" | Mage / any |
-| 5 | `focus_breath` | `featherweight` | cooldown_reduction 0.3s | "Quick Cycle!" | Mage / Shadowblade |
-| 6 | `featherweight` | `chronometer` | cooldown_reduction 0.4s | "Time Slip!" | Mage / Shadowblade |
+| 5 | `focus_breath` | `featherweight` | cooldown_reduction 0.3s | "Quick Cycle!" | Mage / any |
+| 6 | `featherweight` | `chronometer` | cooldown_reduction 0.4s | "Time Slip!" | Mage / any |
 | 7 | `chronometer` | `mercenary_contract` | cost_waive (next card) | "Paid Speed!" | any |
 | 8 | `mercenary_contract` | `merchant_ledger` | cost_waive (next card) | "Hired Hand!" | any |
 | 9 | `merchant_ledger` | `bandits_trinket` | damage +6 enemy | "Cutpurse Cycle!" | any |
 | 10 | `bandits_trinket` | `lucky_coin` | damage +4 enemy | "Spendthrift!" | any |
 | 11 | `lucky_coin` | `quick_jab` | damage +3 enemy | "Found Money!" | any |
-| 12 | `quick_jab` | `kitbash_dagger` | combo_point +1 self | "Double Tap!" | Shadowblade / any |
-| 13 | `kitbash_dagger` | `sharpening_stone` | damage +4 enemy | "Edge Honed!" | Warrior / Shadowblade |
+| 12 | `quick_jab` | `kitbash_dagger` | combo_point +1 self | "Double Tap!" | any |
+| 13 | `kitbash_dagger` | `sharpening_stone` | damage +4 enemy | "Edge Honed!" | Warrior / any |
 | 14 | `sharpening_stone` | `pocket_grenade` | damage +4 enemy aoe | "Sharp Boom!" | Warrior / any |
 | 15 | `pocket_grenade` | `caltrops` | dot +1 aoe (2 ticks) | "Trapyard!" | any |
-| 16 | `caltrops` | `signal_flare` | dot +2 (3 ticks) | "Marked Trail!" | Mage / Shadowblade |
-| 17 | `signal_flare` | `dust_kick` | damage +3 enemy | "Sand & Spotter!" | Shadowblade / any |
+| 16 | `caltrops` | `signal_flare` | dot +2 (3 ticks) | "Marked Trail!" | Mage / any |
+| 17 | `signal_flare` | `dust_kick` | damage +3 enemy | "Sand & Spotter!" | any |
 | 18 | `dust_kick` | `tower_guard` | armor +2 self | "Sand In Hand!" | Warrior / any |
 | 19 | `tower_guard` | `heirloom_charm` | stat_buff +1 random | "Charmed Guard!" | any |
 | 20 | `heirloom_charm` | `field_bandage` | heal +3 self | "Family Care!" | any |
 
 **Bonus-type coverage** (framework §5.1 list): `damage` (#9–11, 13, 14, 17), `armor` (#18),
 `heal` (#1, 2, 20), `stamina` (#3), `mana` (#4), `cost_waive` (#7, 8), `dot` (#15, 16),
-`combo_point` (#12), `cooldown_reduction` (#5, 6), `stat_buff` (#19). 10 of 11 bonus types used.
-`stealth` is not used in the neutral table — it belongs to the Shadowblade-internal combo set in
-`03_shadowblade.md`.
+`cooldown_reduction` (#5, 6), `stat_buff` (#19). Note: row #12 was authored against the legacy
+`combo_point` bonus type and now needs re-pointing during a content refresh pass.
 
 ### Appearance-count audit
 
@@ -372,7 +369,7 @@ v1 had 30 cards. The 10 cut:
 5. `mind_anchor` — clone of `focus_breath` / `iron_canteen` (resource refill + stat).
 6. `apprentice_grimoire` — class-coded filler; INT scaling moves into Mage exclusive set.
 7. `siegecraft` — clone of `iron_canteen` (armor + stamina + stat).
-8. `hangman_rope` — combo-orphan once `eviscerate`-only partners cut; folded into Shadowblade.
+8. `hangman_rope` — combo-orphan once class-restricted partners cut; folded out of the neutral set.
 9. `relic_fragment` — combo orphan + numeric clone of `heirloom_charm` (stat picker variant).
 10. `oathbreaker_blade` — combo-bloat rare; "noob trap" role covered by `mercenary_contract`'s
     HP cost and `bandits_trinket`'s gold drain.

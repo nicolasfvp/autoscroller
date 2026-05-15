@@ -140,6 +140,6 @@ describe('SaveManager — D-07 incompatible save guard (Phase 9)', () => {
     // never fires the guard (returns a valid migrated state).
     const loaded = await manager.load();
     expect(loaded).not.toBeNull();
-    expect(loaded!.version).toBe(4);
+    expect(loaded!.version).toBe(5);
   });
 });

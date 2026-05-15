@@ -1,15 +1,13 @@
 // Phase 9 (Design v2): Phaser-free helpers for CharacterSelectScene.
 // Class catalog + layout math extracted so unit tests can validate the
-// LOCKED layout dimensions and the Shadowblade copy without booting Phaser.
-
-import { SHADOWBLADE_PALETTE } from '../ui/StyleConstants';
+// LOCKED layout dimensions without booting Phaser.
 
 export interface ClassOption {
   id: string;
   name: string;
   description: string;
   spriteKey: string;
-  /** Phase 9: optional tint for placeholder visuals (Shadowblade per D-08). */
+  /** Phase 9: optional tint for placeholder visuals. */
   spriteTint?: number;
   /** Phase 9: fallback colored rect when sprite texture not loaded. */
   fallbackColor: number;
@@ -18,8 +16,7 @@ export interface ClassOption {
 }
 
 /**
- * The three v2 selectable classes. Shadowblade is unlocked by default
- * on first boot per D-10 (no XP/material gate).
+ * The two selectable classes.
  */
 export const CLASS_CARDS: ClassOption[] = [
   {
@@ -40,19 +37,6 @@ export const CLASS_CARDS: ClassOption[] = [
     stats: { hp: 70, stamina: 30, mana: 60 },
     deckHint: 'Fireballs, Heals, Mana Drain',
   },
-  {
-    id: 'shadowblade',
-    name: 'Shadowblade',
-    description: 'Stealth assassin.\nBuilds Combo Points, detonates finishers.',
-    // D-08 placeholder: tint mage_idle with Shadowblade purple
-    spriteKey: 'mage_idle',
-    spriteTint: SHADOWBLADE_PALETTE.shadowblade,
-    fallbackColor: SHADOWBLADE_PALETTE.shadowblade,
-    // Shadowblade base stats from design/03 §2 / ShadowbladeClass.ts:
-    // maxHP 60, maxStamina (energy) 50, maxMana 0
-    stats: { hp: 60, stamina: 50, mana: 0 },
-    deckHint: 'Backstab, Toxic Coat, Veil Guard',
-  },
 ];
 
 export function getClassCards(): ClassOption[] {
@@ -69,10 +53,8 @@ export interface CardLayout {
 }
 
 /**
- * UI-SPEC §Spacing FLAG: 3 cards × 230px wide + 2 × 24px gap = 738px,
- * fits in 800px canvas with 31px margin each side.
- *
- * Old v1 layout (2 cards × 280 + 1 × 40 = 600px) does not fit 3 cards.
+ * UI-SPEC §Spacing FLAG: cards are 230px wide with 24px gaps. With 2 classes
+ * the layout fits comfortably inside the 800px canvas.
  */
 export function computeCardLayout(canvasWidth = 800, classCount = CLASS_CARDS.length): CardLayout {
   const cardW = 230;

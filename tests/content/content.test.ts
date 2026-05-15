@@ -25,23 +25,32 @@ describe('cards.json', () => {
     }
   });
 
-  it('starter cards (strike, defend, heavy-hit, fireball) have no unlockSource field', () => {
-    const starterIds = ['strike', 'defend', 'heavy-hit', 'fireball'];
-    for (const id of starterIds) {
-      const card = cards.find((c: any) => c.id === id);
-      expect(card).toBeDefined();
-      expect(card).not.toHaveProperty('unlockSource');
+  it('every Tier 1 card has tier === 1 and every Tier 2 card has tier === 2', () => {
+    // Element-based system (post-Phase 10): cards are tagged by tier.
+    // Verify the canonical t1-/t2- prefix matches the tier field.
+    const offenders: string[] = [];
+    for (const card of cards as any[]) {
+      if (card.id.startsWith('t1-') && card.tier !== 1) {
+        offenders.push(`${card.id}: tier=${card.tier}, expected 1`);
+      } else if (card.id.startsWith('t2-') && card.tier !== 2) {
+        offenders.push(`${card.id}: tier=${card.tier}, expected 2`);
+      }
     }
+    expect(offenders, offenders.join('; ')).toEqual([]);
   });
 
-  it('has starterDeckIds top-level array', () => {
-    expect(Array.isArray(cardsData.starterDeckIds)).toBe(true);
-    expect(cardsData.starterDeckIds.length).toBe(10);
+  it('has starterDecks.warrior and starterDecks.mage (both length 5)', () => {
+    const sd = (cardsData as any).starterDecks;
+    expect(sd).toBeDefined();
+    expect(Array.isArray(sd.warrior)).toBe(true);
+    expect(sd.warrior.length).toBe(5);
+    expect(Array.isArray(sd.mage)).toBe(true);
+    expect(sd.mage.length).toBe(5);
   });
 
-  it('has at least 3 epic rarity cards', () => {
-    const epics = cards.filter((c: any) => c.rarity === 'epic');
-    expect(epics.length).toBeGreaterThanOrEqual(3);
+  it('has at least 3 cards with rarity rare or higher', () => {
+    const strong = cards.filter((c: any) => c.rarity === 'rare' || c.rarity === 'epic');
+    expect(strong.length).toBeGreaterThanOrEqual(3);
   });
 
   it.skip('upgraded cards have valid upgrade object (deprecated: v2 wholesale replacement dropped upgrade overlays)', () => {
@@ -105,8 +114,9 @@ describe('enemies.json', () => {
   });
 
   it('boss variants have bossType field', () => {
+    // Phase 10: roster trimmed to 3 boss variants (doom_knight, iron_golem, lizard_king).
     const bossVariants = enemies.filter((e: any) => e.bossType);
-    expect(bossVariants.length).toBeGreaterThanOrEqual(5);
+    expect(bossVariants.length).toBeGreaterThanOrEqual(3);
   });
 
   it('boss enemies with bossType have behaviors array', () => {
@@ -150,8 +160,8 @@ describe('buildings.json', () => {
 });
 
 describe('synergies.json', () => {
-  it('has >= 10 synergy pairs', () => {
-    expect((synergiesData as any[]).length).toBeGreaterThanOrEqual(10);
+  it('is empty in Phase 10 (synergy system replaced by element combinations)', () => {
+    expect((synergiesData as any[]).length).toBe(0);
   });
 });
 
@@ -183,6 +193,9 @@ describe('MetaState', () => {
     expect(state).toHaveProperty('unlockedTiles');
     expect(state).toHaveProperty('runHistory');
     expect(state).toHaveProperty('version');
+    // Phase 10 new fields (element/forge system):
+    expect(state).toHaveProperty('forgeRecipes');
+    expect(state).toHaveProperty('deckPresets');
   });
 
   it('default state has correct initial values', () => {
@@ -194,44 +207,45 @@ describe('MetaState', () => {
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    expect(state.version).toBe(6);
+    // Phase 10 / Design v3: bumped to v8 with forgeRecipes + deckPresets.
+    expect(state.version).toBe(8);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);
     expect(state.buildings.workshop.level).toBe(0);
     expect(state.buildings.shrine.level).toBe(0);
+    // Phase 10 element/forge system fields:
+    expect(state.forgeRecipes).toEqual([]);
+    expect(state.deckPresets).toBeDefined();
+    expect(Array.isArray(state.deckPresets.warrior)).toBe(true);
+    expect(Array.isArray(state.deckPresets.mage)).toBe(true);
   });
 });
 
-describe('Phase 9 (v2) content totals + coverage', () => {
+describe('Phase 10 (element system) content totals + coverage', () => {
   const cards = cardsData.cards;
   const relics = relicsData as any[];
-  const synergies = synergiesData as any[];
 
-  it('cards.json has exactly 125 entries (RED until Plan 2)', () => {
-    expect(cards.length).toBe(125);
+  it('cards.json has exactly 156 entries (36 Tier 1 + 120 Tier 2)', () => {
+    expect(cards.length).toBe(156);
   });
 
-  it('relics.json has exactly 50 entries (RED until Plan 2)', () => {
-    expect(relics.length).toBe(50);
+  it('cards.json contains exactly 36 Tier 1 cards', () => {
+    const t1 = (cards as any[]).filter((c) => c.tier === 1);
+    expect(t1.length).toBe(36);
   });
 
-  it('synergies.json has exactly 125 entries (RED until Plan 2)', () => {
-    expect(synergies.length).toBe(125);
+  it('cards.json contains exactly 120 Tier 2 cards', () => {
+    const t2 = (cards as any[]).filter((c) => c.tier === 2);
+    expect(t2.length).toBe(120);
   });
 
-  it('every card appears in exactly 2 synergy rows (RED until Plan 2)', () => {
-    const counts = new Map<string, number>();
-    for (const card of cards as any[]) counts.set(card.id, 0);
-    for (const row of synergies) {
-      counts.set(row.cardA, (counts.get(row.cardA) ?? 0) + 1);
-      counts.set(row.cardB, (counts.get(row.cardB) ?? 0) + 1);
-    }
-    const offenders: Array<{ id: string; count: number }> = [];
-    for (const [id, count] of counts) {
-      if (count !== 2) offenders.push({ id, count });
-    }
-    expect(offenders, JSON.stringify(offenders)).toEqual([]);
+  it('relics.json has exactly 39 entries', () => {
+    expect(relics.length).toBe(39);
+  });
+
+  it('synergies.json has exactly 0 entries (system removed)', () => {
+    expect((synergiesData as any[]).length).toBe(0);
   });
 
   it('all card effect.type values are in the known enumeration', () => {
@@ -254,69 +268,16 @@ describe('Phase 9 (v2) content totals + coverage', () => {
     }
   });
 
-  it('no v1-only IDs survived into v2 (Plan 2 final dead list)', () => {
-    // v1-only IDs that were explicitly cut in v2 per the design docs §9 trim heuristic.
-    // Many v1 cards survive by name (strike, defend, fury, etc.) — they appear in their
-    // class doc §4 card tables. Only these are truly forbidden:
-    const forbidden = [
-      'pommel-strike',     // warrior numeric clone of jab (§9 cut)
-      'skull-cracker',     // warrior strike clone (§9 cut)
-      'catch-breath',      // warrior cantrip (§9 cut)
-      'wild-swing',        // warrior 50%-miss noob trap (§9 cut)
-      'inner-focus',       // mage filler (§8.3 cut)
-      'dim-mind',          // mage filler (§8.3 cut)
-      'mind-glimmer',      // mage mana-spark clone (§8.3 cut)
-      'galvanize',         // mage filler (§8.3 cut)
-      'flash-freeze',      // mage frost-nip clone (§8.3 cut)
-    ];
-    const cardIds = new Set((cards as any[]).map((c) => c.id));
-    const survivors: string[] = [];
-    for (const dead of forbidden) if (cardIds.has(dead)) survivors.push(dead);
-    expect(survivors, `v1-only IDs survived: ${survivors.join(', ')}`).toEqual([]);
-  });
-
-  it('iron-skin is classified as Mage exactly once (Pitfall 9)', () => {
-    const ironSkinEntries = (cards as any[]).filter((c) => c.id === 'iron-skin');
-    expect(ironSkinEntries.length).toBe(1);
-    expect(ironSkinEntries[0].classRestriction).toBe('mage');
-  });
-
-  it('chalice_of_five_blades relic is present (Shadowblade A3)', () => {
-    const chalice = (relics as any[]).find((r) => r.id === 'chalice_of_five_blades');
-    expect(chalice, 'chalice_of_five_blades must exist').toBeDefined();
-    expect((chalice as any).classRestriction).toBe('shadowblade');
-  });
-
-  it('every card has class restriction (warrior | mage | shadowblade | neutral)', () => {
-    const allowed = new Set(['warrior', 'mage', 'shadowblade', 'neutral']);
+  it('every card is class-neutral (no classRestriction or classRestriction === "neutral")', () => {
+    // Phase 10 / Design v3 §7: cards are universal. classRestriction defaults to "neutral"
+    // (or is omitted). Per-class identity comes from shard drop bias + starter deck presets.
     const offenders: string[] = [];
     for (const card of cards as any[]) {
-      if (!allowed.has(card.classRestriction)) {
-        offenders.push(`${card.id}: ${card.classRestriction ?? '(unset)'}`);
+      const cr = card.classRestriction;
+      if (cr !== undefined && cr !== 'neutral') {
+        offenders.push(`${card.id}: classRestriction=${cr}`);
       }
     }
-    expect(offenders, `cards missing classRestriction: ${offenders.join(', ')}`).toEqual([]);
-  });
-
-  it('per-class card counts match design totals (35/35/35/20)', () => {
-    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
-    for (const card of cards as any[]) {
-      counts[card.classRestriction] = (counts[card.classRestriction] ?? 0) + 1;
-    }
-    expect(counts.warrior).toBe(35);
-    expect(counts.mage).toBe(35);
-    expect(counts.shadowblade).toBe(35);
-    expect(counts.neutral).toBe(20);
-  });
-
-  it('per-class relic counts match design totals (10/10/10/20)', () => {
-    const counts: Record<string, number> = { warrior: 0, mage: 0, shadowblade: 0, neutral: 0 };
-    for (const relic of relics as any[]) {
-      counts[relic.classRestriction] = (counts[relic.classRestriction] ?? 0) + 1;
-    }
-    expect(counts.warrior).toBe(10);
-    expect(counts.mage).toBe(10);
-    expect(counts.shadowblade).toBe(10);
-    expect(counts.neutral).toBe(20);
+    expect(offenders, offenders.join('; ')).toEqual([]);
   });
 });

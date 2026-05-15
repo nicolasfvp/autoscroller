@@ -3,12 +3,14 @@
     "cardDrops": {
       "enemyType": "Lost Lizard",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit",
-        "shield-wall",
-        "fireball",
-        "heal"
+        "t1-defense-defense",
+        "t1-attack-defense",
+        "t1-defense-earth",
+        "t1-defense-water",
+        "t1-counter-defense",
+        "t1-attack-attack",
+        "t2-defense-defense-defense",
+        "t2-attack-defense-defense"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -27,11 +29,14 @@
     "cardDrops": {
       "enemyType": "Corpse Eater",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit",
-        "berserker",
-        "counter-strike"
+        "t1-counter-counter",
+        "t1-attack-counter",
+        "t1-counter-defense",
+        "t1-counter-fire",
+        "t1-counter-water",
+        "t1-attack-attack",
+        "t2-counter-counter-counter",
+        "t2-attack-counter-counter"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -56,10 +61,15 @@
     "cardDrops": {
       "enemyType": "Headless Fire Horse",
       "cardPool": [
-        "fireball",
-        "heal",
-        "arcane-shield",
-        "chain-lightning"
+        "t1-fire-fire",
+        "t1-attack-fire",
+        "t1-fire-water",
+        "t1-air-fire",
+        "t1-earth-fire",
+        "t1-agility-fire",
+        "t1-attack-attack",
+        "t2-fire-fire-fire",
+        "t2-attack-fire-fire"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -84,10 +94,20 @@
     "cardDrops": {
       "enemyType": "Doom Knight",
       "cardPool": [
-        "heavy-hit",
-        "shield-wall",
-        "fortify",
-        "berserker"
+        "t1-counter-counter",
+        "t1-attack-counter",
+        "t1-counter-defense",
+        "t1-counter-fire",
+        "t1-counter-water",
+        "t1-counter-earth",
+        "t1-agility-counter",
+        "t1-air-counter",
+        "t1-attack-attack",
+        "t1-defense-defense",
+        "t2-counter-counter-counter",
+        "t2-attack-counter-counter",
+        "t2-counter-counter-defense",
+        "t2-attack-attack-counter"
       ],
       "minDrops": 2,
       "maxDrops": 2,
@@ -118,11 +138,20 @@
     "cardDrops": {
       "enemyType": "Iron Golem",
       "cardPool": [
-        "bulwark",
-        "iron-skin",
-        "shield-wall",
-        "fortify",
-        "last-stand"
+        "t1-defense-defense",
+        "t1-attack-defense",
+        "t1-defense-earth",
+        "t1-defense-water",
+        "t1-defense-fire",
+        "t1-counter-defense",
+        "t1-agility-defense",
+        "t1-air-defense",
+        "t1-attack-attack",
+        "t1-counter-counter",
+        "t2-defense-defense-defense",
+        "t2-attack-defense-defense",
+        "t2-counter-defense-defense",
+        "t2-defense-defense-earth"
       ],
       "minDrops": 2,
       "maxDrops": 3,
@@ -159,12 +188,20 @@
     "cardDrops": {
       "enemyType": "Lizard King",
       "cardPool": [
-        "doom-blade",
-        "fury",
-        "fireball",
-        "chain-lightning",
-        "execute",
-        "soul-rend"
+        "t1-attack-attack",
+        "t1-attack-counter",
+        "t1-attack-defense",
+        "t1-attack-fire",
+        "t1-attack-water",
+        "t1-attack-earth",
+        "t1-agility-attack",
+        "t1-air-attack",
+        "t1-defense-defense",
+        "t1-fire-fire",
+        "t2-attack-attack-attack",
+        "t2-attack-attack-counter",
+        "t2-attack-attack-fire",
+        "t2-attack-attack-defense"
       ],
       "minDrops": 3,
       "maxDrops": 3,
@@ -207,9 +244,13 @@
     "cardDrops": {
       "enemyType": "Pocket Cat",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-agility-agility",
+        "t1-agility-attack",
+        "t1-agility-air",
+        "t1-agility-counter",
+        "t1-agility-defense",
+        "t1-attack-attack",
+        "t2-agility-agility-agility"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -228,9 +269,14 @@
     "cardDrops": {
       "enemyType": "Baby Dragon",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-fire-fire",
+        "t1-attack-fire",
+        "t1-air-fire",
+        "t1-fire-water",
+        "t1-earth-fire",
+        "t1-attack-attack",
+        "t2-fire-fire-fire",
+        "t2-attack-fire-fire"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -249,9 +295,14 @@
     "cardDrops": {
       "enemyType": "Giant Beetle",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-defense-defense",
+        "t1-attack-defense",
+        "t1-defense-earth",
+        "t1-defense-water",
+        "t1-counter-defense",
+        "t1-attack-attack",
+        "t2-defense-defense-defense",
+        "t2-attack-defense-defense"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -270,9 +321,15 @@
     "cardDrops": {
       "enemyType": "Mutated Salamander",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-water-water",
+        "t1-attack-water",
+        "t1-defense-water",
+        "t1-fire-water",
+        "t1-earth-water",
+        "t1-counter-water",
+        "t1-attack-attack",
+        "t2-water-water-water",
+        "t2-attack-water-water"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -291,9 +348,15 @@
     "cardDrops": {
       "enemyType": "Ancient Tree",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-earth-earth",
+        "t1-attack-earth",
+        "t1-defense-earth",
+        "t1-earth-water",
+        "t1-earth-fire",
+        "t1-air-earth",
+        "t1-attack-attack",
+        "t2-earth-earth-earth",
+        "t2-attack-earth-earth"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -312,9 +375,15 @@
     "cardDrops": {
       "enemyType": "Giant Spider 2",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-water-water",
+        "t1-attack-water",
+        "t1-defense-water",
+        "t1-air-water",
+        "t1-fire-water",
+        "t1-agility-water",
+        "t1-attack-attack",
+        "t2-water-water-water",
+        "t2-attack-water-water"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -333,9 +402,15 @@
     "cardDrops": {
       "enemyType": "Giant Spider",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-water-water",
+        "t1-attack-water",
+        "t1-defense-water",
+        "t1-air-water",
+        "t1-fire-water",
+        "t1-agility-water",
+        "t1-attack-attack",
+        "t2-water-water-water",
+        "t2-attack-water-water"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -354,9 +429,15 @@
     "cardDrops": {
       "enemyType": "Mush",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-earth-earth",
+        "t1-attack-earth",
+        "t1-defense-earth",
+        "t1-earth-water",
+        "t1-air-earth",
+        "t1-agility-earth",
+        "t1-attack-attack",
+        "t2-earth-earth-earth",
+        "t2-attack-earth-earth"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -375,9 +456,15 @@
     "cardDrops": {
       "enemyType": "Forge Slime",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-fire-fire",
+        "t1-attack-fire",
+        "t1-fire-water",
+        "t1-earth-fire",
+        "t1-defense-fire",
+        "t1-counter-fire",
+        "t1-attack-attack",
+        "t2-fire-fire-fire",
+        "t2-attack-fire-fire"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -396,9 +483,15 @@
     "cardDrops": {
       "enemyType": "Lava Golem",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-fire-fire",
+        "t1-attack-fire",
+        "t1-earth-fire",
+        "t1-defense-fire",
+        "t1-fire-water",
+        "t1-counter-fire",
+        "t1-attack-attack",
+        "t2-fire-fire-fire",
+        "t2-earth-fire-fire"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -417,9 +510,15 @@
     "cardDrops": {
       "enemyType": "Mecha Warrior",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-defense-defense",
+        "t1-attack-defense",
+        "t1-defense-earth",
+        "t1-defense-fire",
+        "t1-defense-water",
+        "t1-counter-defense",
+        "t1-attack-attack",
+        "t2-defense-defense-defense",
+        "t2-attack-defense-defense"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -438,9 +537,15 @@
     "cardDrops": {
       "enemyType": "Depths Horror",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-air-air",
+        "t1-air-attack",
+        "t1-air-water",
+        "t1-air-earth",
+        "t1-air-fire",
+        "t1-agility-air",
+        "t1-attack-attack",
+        "t2-air-air-air",
+        "t2-air-air-attack"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -459,9 +564,15 @@
     "cardDrops": {
       "enemyType": "Toxic Gooze",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-water-water",
+        "t1-attack-water",
+        "t1-defense-water",
+        "t1-earth-water",
+        "t1-air-water",
+        "t1-counter-water",
+        "t1-attack-attack",
+        "t2-water-water-water",
+        "t2-attack-water-water"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -480,9 +591,15 @@
     "cardDrops": {
       "enemyType": "Venomous Kobra",
       "cardPool": [
-        "strike",
-        "defend",
-        "heavy-hit"
+        "t1-air-air",
+        "t1-air-attack",
+        "t1-agility-air",
+        "t1-air-water",
+        "t1-air-fire",
+        "t1-air-counter",
+        "t1-attack-attack",
+        "t2-air-air-air",
+        "t2-air-air-attack"
       ],
       "minDrops": 1,
       "maxDrops": 1,

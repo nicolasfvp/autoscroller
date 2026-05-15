@@ -1,11 +1,18 @@
 import Phaser from 'phaser';
 import { getRun, type RunState } from '../state/RunState';
 import { FONTS } from './StyleConstants';
+import { ALL_ELEMENT_IDS, ELEMENTS, type ElementId } from '../systems/ElementSystem';
 // Re-export Phase 9 helpers from a Phaser-free module so tests can import
 // without booting Phaser. The runtime path here still uses them.
 import { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
 export { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
 export type { StatusRowData } from './LoopHUD.helpers';
+
+interface ElementBadgeRefs {
+  id: ElementId;
+  bg: Phaser.GameObjects.Rectangle;
+  counter: Phaser.GameObjects.Text;
+}
 
 const FF = FONTS.family;
 
@@ -34,6 +41,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   // Phase 9 (Design v2): VIT/DEX/INT/SPI status row
   private statTexts: { vit?: Phaser.GameObjects.Text; dex?: Phaser.GameObjects.Text; int?: Phaser.GameObjects.Text; spi?: Phaser.GameObjects.Text } = {};
+
+  // Phase 10: per-element shard + element-unit counter row (sits below the panels)
+  private elementBadges: ElementBadgeRefs[] = [];
 
   // Loop progress bar (between panels)
   private loopProgressFill!: Phaser.GameObjects.Rectangle;
@@ -193,7 +203,72 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
     this.buildLoopProgressBar(scene);
     this.buildStatusStatsRow(scene);
+    this.buildElementsRow(scene);
     scene.add.existing(this);
+  }
+
+  /**
+   * Phase 10: full-width element bar showing per-element shard + element-unit counters.
+   * Each of the 8 elements gets a colored badge with format "ABV  S+E" where S is
+   * the current shard count (0–9, auto-converts at 10) and E is the converted
+   * element-unit count. Sits below the top panels at y ~ 168, above the game viewport.
+   */
+  private buildElementsRow(scene: Phaser.Scene): void {
+    const Y = 168;
+    const H = 22;
+    const PANEL_W = 780;
+    const PANEL_X = 10;
+
+    // Background plate
+    const plate = scene.add.rectangle(
+      PANEL_X + PANEL_W / 2, Y + H / 2,
+      PANEL_W, H + 4,
+      0x0a0a14, 0.78,
+    ).setStrokeStyle(1, 0x4a4a60);
+    this.add(plate);
+
+    const BADGE_W = (PANEL_W - 4 - 7 * 4) / 8; // 8 cells, 7 gaps of 4px, 2px padding each side
+    const GAP = 4;
+
+    ALL_ELEMENT_IDS.forEach((id, i) => {
+      const x = PANEL_X + 2 + i * (BADGE_W + GAP);
+      const elem = ELEMENTS[id];
+      const color = parseInt(elem.color.replace('#', ''), 16);
+
+      const bg = scene.add.rectangle(x + BADGE_W / 2, Y + H / 2, BADGE_W, H, color, 0.22)
+        .setStrokeStyle(1, color, 0.7);
+      this.add(bg);
+
+      // 3-letter element code
+      const code = scene.add.text(x + 6, Y + H / 2, elem.name.slice(0, 3).toUpperCase(), {
+        fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
+        color: '#ffffff', stroke: '#000', strokeThickness: 2,
+      }).setOrigin(0, 0.5);
+      this.add(code);
+
+      // counter "S+E" — S in white, E in gold via tinted span
+      const counter = scene.add.text(x + BADGE_W - 6, Y + H / 2, '0+0', {
+        fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+        color: '#ffd700', stroke: '#000', strokeThickness: 2,
+      }).setOrigin(1, 0.5);
+      this.add(counter);
+
+      this.elementBadges.push({ id, bg, counter });
+    });
+  }
+
+  private updateElementsRow(runState: RunState): void {
+    const shards = (runState.economy.shards ?? {}) as Record<string, number>;
+    const elements = (runState.economy.elements ?? {}) as Record<string, number>;
+    for (const badge of this.elementBadges) {
+      const s = shards[badge.id] ?? 0;
+      const e = elements[badge.id] ?? 0;
+      badge.counter.setText(`${s}+${e}`);
+      // Dim the badge when both counters are zero — keeps the eye on what the
+      // player has actually collected.
+      const empty = s === 0 && e === 0;
+      badge.bg.setFillStyle(badge.bg.fillColor, empty ? 0.1 : 0.28);
+    }
   }
 
   /**
@@ -332,6 +407,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.applyStatTween('dex', status.dex);
     this.applyStatTween('int', status.int);
     this.applyStatTween('spi', status.spi);
+
+    // Phase 10: refresh per-element shard + element-unit badges.
+    this.updateElementsRow(runState);
   }
 
   private updateShopToggle(enabled: boolean): void {

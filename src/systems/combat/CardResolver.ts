@@ -184,38 +184,6 @@ export class CardResolver {
 
       // -- Phase 9 (Design v2) new effect types --
 
-      case 'gain_combo': {
-        state.comboPoints = Math.min(
-          state.comboPointsCap,
-          state.comboPoints + resolvedValue,
-        );
-        break;
-      }
-
-      case 'consume_combo': {
-        const cp = state.comboPoints;
-        // Finisher damage = base * CP. Run through the same damage pipeline
-        // (strength + buffs + defense) as a normal damage hit. value/cp=0 is
-        // a valid (whiff) finisher per RESEARCH Pattern.
-        const buffMult = getDamageBuffMultiplier();
-        const baseDmg = resolvedValue * cp * state.heroStrength * damageMultiplier * buffMult;
-        const raw = baseDmg > 0 ? Math.max(1, Math.floor(baseDmg - state.enemyDefense)) : 0;
-        state.enemyHP -= raw;
-        result.totalDamage += raw;
-        state.comboPoints = 0;
-        break;
-      }
-
-      case 'stealth': {
-        // Stealth charge + 1-hit dodge guarantee per RESEARCH Pattern.
-        state.stealthCharges = Math.min(
-          state.stealthCap,
-          state.stealthCharges + resolvedValue,
-        );
-        if (state.stealthCharges > 0) state.evadeNextHit = true;
-        break;
-      }
-
       case 'dot': {
         // Discriminate by effect.stack (default: poison).
         const which: StackId = stack ?? 'poison';
@@ -296,8 +264,6 @@ function mapBonusToEffectType(bonusType: string): string {
     case 'debuff':
       return bonusType;
     // Phase 9
-    case 'combo_point': return 'gain_combo';
-    case 'stealth': return 'stealth';
     case 'dot': return 'dot';
     case 'stat_buff': return 'buff';
     // cooldown_reduction is handled outside CardResolver (CombatEngine) —

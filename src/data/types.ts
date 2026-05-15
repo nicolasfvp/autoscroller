@@ -26,8 +26,7 @@ export interface CardEffect {
     // Existing (v1)
     | "damage" | "heal" | "armor" | "stamina" | "mana" | "debuff"
     // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
-    | "buff" | "debuff_stat" | "dot" | "stack"
-    | "consume_combo" | "gain_combo" | "stealth" | "taunt";
+    | "buff" | "debuff_stat" | "dot" | "stack" | "taunt";
   value: number;
   target: "enemy" | "self";
   /** Optional stat scaling: adds floor(stat / per) * value to the resolved value. */
@@ -42,6 +41,13 @@ export interface CardUpgrade {
   cooldown?: number;
   description?: string;
 }
+
+/** Element-based card system identifiers. See docs/CARDS_SYSTEM.md. */
+export type ElementId =
+  | "attack" | "defense" | "agility" | "counter"
+  | "fire" | "water" | "air" | "earth";
+
+export type CardTier = 1 | 2 | 3;
 
 export interface CardDefinition {
   id: string;
@@ -62,7 +68,13 @@ export interface CardDefinition {
   /** Card rarity tier */
   rarity: "common" | "uncommon" | "rare" | "epic";
   /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
-  classRestriction?: "warrior" | "mage" | "shadowblade" | "neutral";
+  classRestriction?: "warrior" | "mage" | "neutral";
+  /** Element multiset that crafted this card (2-4 elements). Optional for legacy cards. */
+  elements?: ElementId[];
+  /** Tier 1 (2 elements), 2 (3 elements), or 3 (4 elements). Optional for legacy cards. */
+  tier?: CardTier;
+  /** True for Tier-3 mock placeholders not yet implemented. */
+  locked?: boolean;
 }
 
 // -- Enemy Types --
@@ -103,6 +115,9 @@ export interface EnemyDefinition {
   color: number;
   bossType?: string;
   behaviors?: BossBehavior[];
+  /** Elemental affinity (Phase 10). Applies a secondary effect on each attack
+   *  keyed to the element identity. Bosses use a 2x effect multiplier. */
+  affinity?: ElementId;
   materialReward?: {
     chance: number;
     bonusMaterial: string;
@@ -120,7 +135,7 @@ export interface SynergyDefinition {
       // Existing (v1)
       | "damage" | "armor" | "heal" | "stamina" | "mana" | "cost_waive"
       // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
-      | "dot" | "combo_point" | "stealth" | "stat_buff" | "cooldown_reduction";
+      | "dot" | "stat_buff" | "cooldown_reduction";
     value: number;
     target: "enemy" | "self";
     /** Used by stat_buff: which stat axis to buff. */
@@ -151,7 +166,7 @@ export type RelicTrigger =
   | "combat_start" | "turn_start" | "card_played" | "damage_taken" | "heal" | "passive"
   // NEW (v2 / Phase 9) -- Plan 3 implements dispatch
   | "enemy_killed" | "card_drawn" | "rest_used" | "shop_visited" | "stat_changed"
-  | "combo_played" | "dot_tick";
+  | "dot_tick";
 
 export interface RelicDefinition {
   id: string;
@@ -171,7 +186,7 @@ export interface RelicDefinition {
   unlockSource?: string;
   unlockTier?: number;
   /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
-  classRestriction?: "warrior" | "mage" | "shadowblade" | "neutral";
+  classRestriction?: "warrior" | "mage" | "neutral";
 }
 
 // -- Pricing & Economy Types --

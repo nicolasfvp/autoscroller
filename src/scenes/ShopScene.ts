@@ -5,6 +5,23 @@ import { getCardById, getRelicById } from '../data/DataLoader';
 import { FONTS } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import {
+  ELEMENTS,
+  PHYSICAL_ELEMENTS,
+  ELEMENTAL_ELEMENTS,
+  type ElementId,
+} from '../systems/ElementSystem';
+import {
+  findCardForElements,
+  getForgeGoldCost,
+  isTierUnlocked,
+  validateForge,
+  executeForge,
+  discoverRecipe,
+} from '../systems/ForgeSystem';
+import type { ElementInventory } from '../systems/ShardSystem';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import type { MetaState } from '../state/MetaState';
 
 // ── Design tokens ────────────────────────────────────────────
 const FF    = FONTS.family;
@@ -21,13 +38,14 @@ const PANEL_LEFT  = PANEL_CX - PANEL_W / 2;
 const PANEL_RIGHT = PANEL_CX + PANEL_W / 2;
 const PAD         = 16;
 
-type ShopCategory = 'buyCards' | 'upgrade' | 'remove' | 'relics';
+type ShopCategory = 'buyCards' | 'upgrade' | 'remove' | 'relics' | 'forge';
 
 const CATEGORIES: { key: ShopCategory; icon: string; label: string; desc: string }[] = [
   { key: 'buyCards',  icon: '🃏', label: 'Buy Cards',     desc: 'Expand your deck with new cards' },
   { key: 'upgrade',   icon: '⬆',  label: 'Upgrade Cards', desc: 'Power up cards you already own' },
   { key: 'remove',    icon: '🗑',  label: 'Remove Cards',  desc: 'Thin your deck for consistency' },
   { key: 'relics',    icon: '💎', label: 'Buy Relics',    desc: 'Passive artifacts with powerful effects' },
+  { key: 'forge',     icon: '⚒',  label: 'Forge',          desc: 'Craft a card from elements you collected' },
 ];
 
 function colX(col: number, cols: number, itemW: number, gapW: number): number {
@@ -58,6 +76,8 @@ export class ShopScene extends Scene {
   private tpText!: Phaser.GameObjects.Text;
   private menuContainer!: Phaser.GameObjects.Container;
   private modalContainer!: Phaser.GameObjects.Container;
+  private metaState: MetaState | null = null;
+  private forgeSlots: ElementId[] = [];
 
   constructor() { super(SCENE_KEYS.SHOP); }
 
@@ -67,6 +87,9 @@ export class ShopScene extends Scene {
       const run = getRun();
       run.economy.removalsThisShop = 0;
       run.economy.reordersThisShop = 0;
+
+      // Fire-and-forget meta load; forge modal falls back to lv 0 if not ready.
+      loadMetaState().then((m) => { this.metaState = m; }).catch(() => { /* ignore */ });
 
       this.scene.bringToTop();
 
@@ -174,6 +197,7 @@ export class ShopScene extends Scene {
       case 'upgrade': this.modalUpgrade(); break;
       case 'remove': this.modalRemove(); break;
       case 'relics': this.modalRelics(); break;
+      case 'forge': this.modalForge(); break;
     }
 
     const back = this.add.text(PANEL_CX, 574, '← Back to Shop', { fontSize: '16px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF, stroke: '#000', strokeThickness: 3 }).setOrigin(0.5).setInteractive({ useHandCursor: true });
@@ -271,6 +295,191 @@ export class ShopScene extends Scene {
     });
   }
 
+  private modalForge(): void {
+    const run = getRun();
+    const forgeLevel = this.metaState?.buildings?.forge?.level ?? 0;
+    const discount = Math.round([0, 0, 10, 15, 20, 25, 30][Math.min(forgeLevel, 6)]);
+
+    this.modalTitle(`⚒ Forge — Lv ${forgeLevel} (−${discount}% gold)`);
+
+    // ── Element inventory grid (8 buttons, 2 rows × 4 cols) ────────
+    // Each cell shows: element name + BIG element-unit count + small "+N shards" caption.
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const shardInv = (run.economy.shards ?? {}) as Record<string, number>;
+    const invStartY = 100;
+    const cellW = 100;
+    const cellH = 46;
+    const rowGap = 4;
+    const colGap = 6;
+    [PHYSICAL_ELEMENTS, ELEMENTAL_ELEMENTS].forEach((row, rowIdx) => {
+      row.forEach((id, colIdx) => {
+        const x = colX(colIdx, 4, cellW, colGap);
+        const y = invStartY + rowIdx * (cellH + rowGap) + cellH / 2;
+        const elem = ELEMENTS[id];
+        const elemColor = parseInt(elem.color.replace('#', ''), 16);
+        const elements = elementInv[id] ?? 0;
+        const shards = shardInv[id] ?? 0;
+        const usable = elements > 0 && this.forgeSlots.length < 4;
+        const bg = this.add.rectangle(x, y, cellW, cellH, elemColor, usable ? 0.4 : 0.18)
+          .setStrokeStyle(1.5, elemColor, usable ? 0.95 : 0.4);
+        if (usable) {
+          bg.setInteractive({ useHandCursor: true });
+          bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
+          bg.on('pointerout',  () => bg.setStrokeStyle(1.5, elemColor, 0.95));
+          bg.on('pointerdown', () => { this.forgeSlots.push(id); this.refreshForgeModal(); });
+        }
+        const name = this.add.text(x - cellW / 2 + 6, y - cellH / 2 + 4, elem.name, {
+          fontSize: '11px', fontStyle: 'bold', color: usable ? WHITE : DIM, fontFamily: FF,
+        });
+        const cnt = this.add.text(x + cellW / 2 - 6, y - cellH / 2 + 4, `${elements}`, {
+          fontSize: '16px', fontStyle: 'bold', color: usable ? GOLD : DIM, fontFamily: FF,
+        }).setOrigin(1, 0);
+        const shardLine = this.add.text(x + cellW / 2 - 6, y + cellH / 2 - 4, `+${shards}/10 shards`, {
+          fontSize: '9px', color: shards > 0 ? '#c0c0c0' : DIM, fontFamily: FF,
+        }).setOrigin(1, 1);
+        this.modalContainer.add([bg, name, cnt, shardLine]);
+      });
+    });
+
+    // ── Slot row (4 slots) ──────────────────────────────────────────
+    const slotsY = invStartY + 2 * (cellH + rowGap) + 14;
+    const slotW = 100;
+    const slotH = 36;
+    const slotGap = 6;
+    this.add.text(PANEL_CX, slotsY - 14, 'Recipe', {
+      fontSize: '12px', fontStyle: 'bold', color: DIM, fontFamily: FF,
+    }).setOrigin(0.5).setData('_forgeUI', true);
+    for (let i = 0; i < 4; i++) {
+      const x = colX(i, 4, slotW, slotGap);
+      const y = slotsY + slotH / 2;
+      const id = this.forgeSlots[i];
+      const fill = id ? parseInt(ELEMENTS[id].color.replace('#', ''), 16) : 0x1e1008;
+      const slot = this.add.rectangle(x, y, slotW, slotH, fill, id ? 0.55 : 0.6)
+        .setStrokeStyle(1.5, id ? 0xffffff : 0x4a3020, id ? 0.7 : 0.5);
+      const label = this.add.text(x, y, id ? ELEMENTS[id].name : 'empty', {
+        fontSize: '12px', fontStyle: 'bold', color: id ? WHITE : DIM, fontFamily: FF,
+      }).setOrigin(0.5);
+      if (id) {
+        slot.setInteractive({ useHandCursor: true });
+        slot.on('pointerdown', () => { this.forgeSlots.splice(i, 1); this.refreshForgeModal(); });
+      }
+      this.modalContainer.add([slot, label]);
+    }
+
+    // ── Preview area ────────────────────────────────────────────────
+    const previewY = slotsY + slotH + 24;
+    this.modalContainer.add(
+      this.add.rectangle(PANEL_CX, previewY + 40, PANEL_W - 30, 100, 0x130800, 0.6)
+        .setStrokeStyle(1.5, 0x7a4820),
+    );
+
+    const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
+    const tier = (this.forgeSlots.length - 1) as 1 | 2 | 3;
+    const cost = this.forgeSlots.length >= 2 ? getForgeGoldCost(tier, forgeLevel) : 0;
+    const deckSize = run.deck.active.length + run.deck.droppedCards.length;
+    const validation = this.forgeSlots.length >= 2
+      ? validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15)
+      : null;
+
+    let nameText = 'Pick 2-4 elements';
+    let descText = 'Tap an element above to add to the recipe.';
+    let costText = '';
+    let statusText = '';
+    let statusColor = GOLD;
+
+    if (card) {
+      nameText = card.name;
+      descText = card.description ?? '';
+      costText = `Cost: ${cost} gold + ${this.forgeSlots.length} elements`;
+      if (validation && !validation.ok) {
+        statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
+        statusColor = RED;
+      } else if (!isTierUnlocked(tier, forgeLevel)) {
+        statusText = `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4}`;
+        statusColor = RED;
+      } else {
+        statusText = 'Ready to forge';
+        statusColor = '#88ff88';
+      }
+    } else if (this.forgeSlots.length >= 2) {
+      nameText = '???';
+      descText = 'No card matches that combination.';
+      statusColor = RED;
+    }
+
+    this.modalContainer.add([
+      this.add.text(PANEL_CX, previewY, nameText, {
+        fontSize: '14px', fontStyle: 'bold', color: card ? GOLD : DIM, fontFamily: FF,
+      }).setOrigin(0.5),
+      this.add.text(PANEL_CX, previewY + 22, descText, {
+        fontSize: '11px', color: WHITE, fontFamily: FF, align: 'center',
+        wordWrap: { width: PANEL_W - 50 },
+      }).setOrigin(0.5),
+      this.add.text(PANEL_CX, previewY + 62, costText, {
+        fontSize: '12px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+      }).setOrigin(0.5),
+      this.add.text(PANEL_CX, previewY + 82, statusText, {
+        fontSize: '11px', fontStyle: 'bold', color: statusColor, fontFamily: FF,
+      }).setOrigin(0.5),
+    ]);
+
+    // ── Action buttons (Clear / Forge) ──────────────────────────────
+    const actionsY = previewY + 110;
+    const clearBtn = this.add.text(PANEL_CX - 80, actionsY, '↺ Clear', {
+      fontSize: '14px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF,
+      stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    clearBtn.on('pointerover', () => clearBtn.setColor(WHITE));
+    clearBtn.on('pointerout',  () => clearBtn.setColor('#aaddff'));
+    clearBtn.on('pointerdown', () => { this.forgeSlots = []; this.refreshForgeModal(); });
+
+    const forgeable = !!(card && validation && validation.ok);
+    const forgeBtn = this.add.text(PANEL_CX + 80, actionsY, '⚒ Forge', {
+      fontSize: '16px', fontStyle: 'bold', color: forgeable ? GOLD : DIM, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5);
+    if (forgeable) {
+      forgeBtn.setInteractive({ useHandCursor: true });
+      forgeBtn.on('pointerover', () => forgeBtn.setColor(WHITE));
+      forgeBtn.on('pointerout',  () => forgeBtn.setColor(GOLD));
+      forgeBtn.on('pointerdown', () => this.executeForgeAction());
+    }
+    this.modalContainer.add([clearBtn, forgeBtn]);
+  }
+
+  private refreshForgeModal(): void {
+    this.closeModal();
+    this.openModal('forge');
+  }
+
+  private executeForgeAction(): void {
+    const run = getRun();
+    const forgeLevel = this.metaState?.buildings?.forge?.level ?? 0;
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const deckSize = run.deck.active.length + run.deck.droppedCards.length;
+    const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);
+    if (!validation.ok) return;
+    const knownRecipes = this.metaState?.forgeRecipes ?? [];
+    const result = executeForge(
+      this.forgeSlots,
+      elementInv,
+      (amt) => { run.economy.gold -= amt; },
+      forgeLevel,
+      knownRecipes as any,
+    );
+    run.deck.droppedCards.push(result.cardId);
+
+    if (result.isNewRecipe && this.metaState) {
+      this.metaState.forgeRecipes = discoverRecipe(knownRecipes as any, this.forgeSlots, result.cardId) as any;
+      saveMetaState(this.metaState).catch(() => { /* ignore */ });
+    }
+
+    AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+    this.forgeSlots = [];
+    this.refreshForgeModal();
+    this.refreshBalances();
+  }
+
   private modalTitle(text: string): void {
     const bar = this.add.rectangle(PANEL_CX, 60, PANEL_W - 12, 38, 0x3a2008, 0.9).setStrokeStyle(1.5, 0x9a6030);
     const t = this.add.text(PANEL_CX, 60, text, { fontSize: '18px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 3 }).setOrigin(0.5).setShadow(1, 1, '#000', 2, true, true);
@@ -302,5 +511,17 @@ export class ShopScene extends Scene {
       this.modalContainer.destroy(true);
       this.modalContainer = null as any;
     }
+  }
+}
+
+function forgeReason(reason: string, tier: number, forgeLevel: number): string {
+  switch (reason) {
+    case 'tier_locked':
+      return `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4} (currently ${forgeLevel}).`;
+    case 'no_card':                return 'No card matches that combination.';
+    case 'insufficient_elements':  return 'Not enough element units.';
+    case 'insufficient_gold':      return 'Not enough gold.';
+    case 'deck_full':              return 'Deck full (max 15 cards).';
+    default:                       return '';
   }
 }

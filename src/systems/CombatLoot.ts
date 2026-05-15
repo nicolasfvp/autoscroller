@@ -3,13 +3,11 @@
 // Zero Phaser dependency.
 
 import type { RunState } from '../state/RunState';
-import { getAllCards } from '../data/DataLoader';
-import type { CardDefinition } from '../data/types';
 import { addPendingLoot } from './PendingLoot';
 import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
-import enemyDropsData from '../data/json/enemy-drops.json';
-import { rand } from './SharedRNG';
 import type { SynergyBuff } from './SynergyResolver';
+import { rollShardDrops, addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
+import { ELEMENTS, type ElementId } from './ElementSystem';
 
 // B.1: tile-adjacency loot buffs. goldDropBonus / tileDropBonus uplift the
 // rolled gold and tile drop counts at combat resolution time.
@@ -27,17 +25,7 @@ function sumBuff(type: string): number {
   return total;
 }
 
-interface CardDropTable {
-  cardPool: string[];
-  minDrops: number;
-  maxDrops: number;
-}
-
-interface EnemyDropEntry {
-  cardDrops?: CardDropTable;
-}
-
-const dropTables = enemyDropsData as Record<string, EnemyDropEntry>;
+// Card drops removed in Phase 10 — enemies award shards only.
 
 /**
  * Generate and apply combat loot after a victory.
@@ -48,7 +36,7 @@ const dropTables = enemyDropsData as Record<string, EnemyDropEntry>;
  */
 export function generateAndApplyCombatLoot(
   run: RunState,
-  enemyName: string,
+  _enemyName: string,
   enemyId: string,
   enemyType: string,
   terrain: string,
@@ -103,6 +91,27 @@ export function generateAndApplyCombatLoot(
     }
   }
 
+  // Shard drops — element-typed loot per kill. Class bias decides physical vs
+  // elemental category; auto-conversion (10 shards -> 1 element) runs in place.
+  const shardEnemyType = (enemyType === 'elite' || enemyType === 'boss') ? enemyType : 'normal';
+  const heroClass = run.hero.className ?? 'warrior';
+  const shardDelta: ShardInventory = rollShardDrops(shardEnemyType, heroClass);
+  if (!run.economy.shards) run.economy.shards = {};
+  if (!run.economy.elements) run.economy.elements = {};
+  const elementsAdded: ElementInventory = addShardsAndConvert(
+    run.economy.shards as ShardInventory,
+    run.economy.elements as ElementInventory,
+    shardDelta,
+  );
+  for (const id of Object.keys(shardDelta) as ElementId[]) {
+    const n = shardDelta[id] ?? 0;
+    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name} shard`, color: ELEMENTS[id].color });
+  }
+  for (const id of Object.keys(elementsAdded) as ElementId[]) {
+    const n = elementsAdded[id] ?? 0;
+    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name}!`, color: ELEMENTS[id].color });
+  }
+
   // Tile drops (rare; 15% chance per terrain combat). Writes to the
   // canonical RunState tile inventory; LoopRunState rehydrates from there
   // on next GameScene.create / planning entry. tileDropBonus uplifts count.
@@ -115,31 +124,9 @@ export function generateAndApplyCombatLoot(
     entries.push({ label: `+${finalCount} ${drop.tileType} tile`, color: '#80ffd0' });
   }
 
-  // Card drop from enemy-specific pool
-  const dropTable = dropTables[enemyName];
-  if (dropTable?.cardDrops) {
-    const { cardPool, minDrops, maxDrops } = dropTable.cardDrops;
-    const dropCount = minDrops + Math.floor(rand() * (maxDrops - minDrops + 1));
-
-    const allCards = getAllCards();
-    const validPool = cardPool.filter(id => allCards.some((c: CardDefinition) => c.id === id));
-
-    for (let i = 0; i < dropCount && validPool.length > 0; i++) {
-      const cardId = validPool[Math.floor(rand() * validPool.length)];
-      run.deck.droppedCards.push(cardId);
-      const cardDef = allCards.find((c: CardDefinition) => c.id === cardId);
-      const cardName = cardDef?.name ?? cardId;
-      entries.push({ label: `+Card: ${cardName}`, color: '#ffffff' });
-    }
-  } else {
-    const allCards = getAllCards();
-    const commons = allCards.filter((c: CardDefinition & { rarity?: string }) => c.rarity === 'common');
-    if (commons.length > 0) {
-      const card = commons[Math.floor(rand() * commons.length)];
-      run.deck.droppedCards.push(card.id);
-      entries.push({ label: `+Card: ${card.name}`, color: '#ffffff' });
-    }
-  }
+  // Card drops removed in Phase 10 — enemies award gold + materials + shards only.
+  // Players build new cards by forging element units at the in-loop Forge.
+  // (enemy-drops.json cardPool data preserved for future reference but unused.)
 
   addPendingLoot(entries);
 }

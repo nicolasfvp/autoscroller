@@ -48,9 +48,6 @@ export class CharacterSelectScene extends Scene {
       resolution: 3,
     }).setOrigin(0.5);
 
-    // Phase 9 (Design v2): 3 cards (Warrior, Mage, Shadowblade) require a
-    // downscaled layout per UI-SPEC §Spacing FLAG -- old 280×40 layout
-    // overflows the 800px canvas with 3 cards.
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
     const cardWidth = layout.cardW;
     const cardHeight = layout.cardH;
@@ -132,8 +129,7 @@ export class CharacterSelectScene extends Scene {
       this.highlightSelected();
     });
 
-    // Character sprite preview (animated). Phase 9 (D-08): Shadowblade
-    // reuses mage_idle with a #7E5BEF tint as placeholder art.
+    // Character sprite preview (animated).
     if (this.textures.exists(cls.spriteKey)) {
       const animKey = `select_${cls.id}_idle`;
       if (!this.anims.exists(animKey)) {
@@ -252,11 +248,58 @@ export class CharacterSelectScene extends Scene {
     });
   }
 
+  private deckBuilderOpen = false;
+
   private async confirmSelection(): Promise<void> {
+    if (this.transitioning || this.deckBuilderOpen) return;
     const selected = CLASSES[this.selectedIndex];
-    const meta = await loadMetaState();
-    setRun(createNewRun(meta, 1, selected.id));
-    await saveManager.save(getRun());
+    let meta;
+    try {
+      meta = await loadMetaState();
+    } catch (err) {
+      console.error('[CharacterSelect] loadMetaState failed', err);
+      return;
+    }
+
+    // Launch DeckBuilder as an overlay. We do NOT pause this scene — instead
+    // we set deckBuilderOpen as a re-entry guard so a stray ENTER/click can't
+    // launch a second instance. The overlay covers the canvas with an opaque
+    // backdrop, so visual interference is negligible.
+    this.deckBuilderOpen = true;
+
+    this.scene.launch(SCENE_KEYS.DECK_BUILDER, {
+      className: selected.id,
+      metaState: meta,
+      onConfirm: (deck: string[]) => {
+        this.deckBuilderOpen = false;
+        // Use a microtask to give the DeckBuilder a tick to call scene.stop
+        // before we mutate the active-scene state with createNewRun().
+        Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
+      },
+      onCancel: () => {
+        this.deckBuilderOpen = false;
+      },
+    });
+  }
+
+  private async startRun(
+    meta: Awaited<ReturnType<typeof loadMetaState>>,
+    className: string,
+    customStarterDeck?: string[],
+  ): Promise<void> {
+    if (this.transitioning) return;
+    try {
+      setRun(createNewRun(meta, 1, className, undefined, customStarterDeck));
+      await saveManager.save(getRun());
+    } catch (err) {
+      console.error('[CharacterSelect] startRun failed', err);
+      this.deckBuilderOpen = false;
+      return;
+    }
+    // Ensure the DeckBuilder overlay is stopped before we fade out.
+    if (this.scene.isActive(SCENE_KEYS.DECK_BUILDER)) {
+      this.scene.stop(SCENE_KEYS.DECK_BUILDER);
+    }
     this.fadeToScene(SCENE_KEYS.TUTORIAL);
   }
 }

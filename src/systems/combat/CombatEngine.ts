@@ -196,11 +196,8 @@ export class CombatEngine {
     // directly (CardResolver.applyEffect is a no-op for that bonus type).
     if (synergy) {
       applyDirectSynergyBonus(synergy, this.state);
-      // combo_played relic trigger fires whenever a synergy resolves.
-      dispatchTriggerRelics('combo_played', this.state.activeRelicIds ?? [], this.state);
       eventBus.emit('combat:combo-played', {
         displayName: synergy.displayName,
-        comboPointsAfter: this.state.comboPoints,
       });
     }
 
@@ -299,8 +296,7 @@ export class CombatEngine {
    * INDEX §7 #2 + RESEARCH A2). Per-tick damage = stacks * (1 + floor(DEX/4))
    * for poison. Bleed / burn / freeze / shock follow the same shape per
    * design/00 §3 with class-internal formulas. After the tick, each stack
-   * decays by 1 unless state.poisonDecayDisabled (widows-kiss / empress-fang
-   * relics flip this on).
+   * decays by 1.
    */
   private tickActiveDoTs(triggeringCardId: string): void {
     const state = this.state;
@@ -322,7 +318,7 @@ export class CombatEngine {
       eventBus.emit('combat:dot-tick', {
         stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
       });
-      if (!state.poisonDecayDisabled) state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      state.poisonStacks = Math.max(0, state.poisonStacks - 1);
       anyDotTicked = true;
     }
 
@@ -380,15 +376,6 @@ export class CombatEngine {
     // play" cadence (INDEX §7 #2) and avoids over-firing for multi-DoT stacks.
     if (anyDotTicked) {
       dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
-    }
-
-    // Shadowblade class branch: combo_played trigger fires when a synergy
-    // resolved AND poison just ticked (Task 5 wires the relic dispatch).
-    if (state.heroClass === 'shadowblade') {
-      // Class-specific hooks go here. Currently the only Shadowblade-specific
-      // tick logic is the poison cadence above (DEX-scaled per RESEARCH A2);
-      // additional hooks (e.g. Stealth refresh on N CP spent) are deferred
-      // to a future balance pass.
     }
   }
 

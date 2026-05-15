@@ -3,6 +3,7 @@
 
 import type { RunState } from '../../state/RunState';
 import type { EnemyDefinition, BossBehavior } from '../../data/types';
+import type { ElementId } from '../ElementSystem';
 import { applyPassiveRelics, applyOnCombatStartRelics } from './RelicSystem';
 import { resolveHeroStats } from '../hero/HeroStatsResolver';
 import { resolvePassives, applyPassiveModifiersToCombatState } from '../hero/PassiveSkillSystem';
@@ -23,6 +24,7 @@ export interface CombatState {
 
   enemyId: string;
   enemyName: string;
+  enemyType: 'normal' | 'elite' | 'boss';
   enemyHP: number;
   enemyMaxHP: number;
   enemyDefense: number;
@@ -30,6 +32,8 @@ export interface CombatState {
   enemyAttackCooldown: number;
   enemyPattern: string;
   enemySpecialEffect: string | null;
+  /** Phase 10: element affinity for the on-hit secondary effect. */
+  enemyAffinity: ElementId | null;
 
   /** IDs of relics currently active in this combat */
   activeRelicIds: string[];
@@ -62,16 +66,8 @@ export interface CombatState {
   heroIntellect: number;
   heroSpirit: number;
 
-  // ── Phase 9: Shadowblade resources ───────────────────────────────────
-  comboPoints: number;
-  comboPointsCap: number;       // default 5; chalice-of-five-blades -> 8
-  stealthCharges: number;
-  stealthCap: number;           // default 4
-  evadeNextHit: boolean;        // 1-hit dodge guarantee while stealth charges > 0
-
   // ── Phase 9: DoT + status stack pools (reset per combat) ─────────────
   poisonStacks: number;
-  poisonDecayDisabled: boolean; // widows-kiss / empress-fang flip this
   bleedStacks: number;
   burnStacks: number;
   freezeStacks: number;
@@ -110,6 +106,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
 
     enemyId: enemy.id,
     enemyName: enemy.name,
+    enemyType: enemy.type,
     enemyHP: enemy.baseHP,
     enemyMaxHP: enemy.baseHP,
     enemyDefense: enemy.baseDefense,
@@ -117,6 +114,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     enemyAttackCooldown: enemy.attackCooldown ?? 2000,
     enemyPattern: enemy.attack.pattern,
     enemySpecialEffect: enemy.attack.specialEffect ?? null,
+    enemyAffinity: enemy.affinity ?? null,
 
     activeRelicIds: [...(run.relics ?? [])],
     activePassives: [],
@@ -135,16 +133,8 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     heroIntellect: 0,
     heroSpirit: 0,
 
-    // -- Phase 9: Shadowblade resources --
-    comboPoints: 0,
-    comboPointsCap: 5,
-    stealthCharges: 0,
-    stealthCap: 4,
-    evadeNextHit: false,
-
     // -- Phase 9: DoT + status stack pools --
     poisonStacks: 0,
-    poisonDecayDisabled: false,
     bleedStacks: 0,
     burnStacks: 0,
     freezeStacks: 0,

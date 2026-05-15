@@ -19,14 +19,18 @@ export interface GameEvents {
     multiHit?: boolean;
     /** Number of hits when multiHit is true */
     hitCount?: number;
+    /** Phase 10: optional affinity-fired secondary effect ({type, value}). */
+    affinityFx?: { type: string; value: number } | null;
   };
+  /** Phase 10: enemy element-affinity secondary effect fired after a landed attack. */
+  'combat:enemy-affinity': { affinity: string; type: string; value: number };
   'combat:boss-behavior': { type: string; value: number };
   'combat:damage-dealt': { source: string; target: string; amount: number };
 
   // Phase 9 — Design v2 new combat events.
   'combat:dot-tick': { stack: string; damage: number; sourceCard: string };
   'combat:evade': { source: string };
-  'combat:combo-played': { displayName: string; comboPointsAfter: number };
+  'combat:combo-played': { displayName: string };
   'combat:enemy-killed': { enemyId: string };
   'combat:card-drawn': { cardId: string };
   'combat:rest-used': { choice: string };

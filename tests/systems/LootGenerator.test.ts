@@ -86,26 +86,26 @@ describe('LootGenerator', () => {
   });
 
   describe('getEnemyPoolForTerrain', () => {
-    it('forest base pool has slime and goblin', () => {
+    it('forest base pool has mush and giant_spider', () => {
       const pool = getEnemyPoolForTerrain('forest', 1);
-      expect(pool).toEqual(['slime', 'goblin']);
+      expect(pool).toEqual(['mush', 'giant_spider']);
     });
 
-    it('forest pool expands at loop 5 with orc', () => {
+    it('forest pool expands at loop 5 with giant_spider_2', () => {
       const pool = getEnemyPoolForTerrain('forest', 5);
-      expect(pool).toContain('orc');
+      expect(pool).toContain('giant_spider_2');
       expect(pool).toHaveLength(3);
     });
 
-    it('forest pool expands at loop 10 with elite_knight', () => {
+    it('forest pool expands at loop 10 with ancient_tree', () => {
       const pool = getEnemyPoolForTerrain('forest', 10);
-      expect(pool).toContain('elite_knight');
+      expect(pool).toContain('ancient_tree');
       expect(pool).toHaveLength(4);
     });
 
-    it('basic terrain has only slime', () => {
+    it('basic terrain has only lost_lizard', () => {
       const pool = getEnemyPoolForTerrain('basic', 1);
-      expect(pool).toEqual(['slime']);
+      expect(pool).toEqual(['lost_lizard']);
     });
 
     it('unknown terrain returns empty array', () => {
@@ -113,9 +113,9 @@ describe('LootGenerator', () => {
       expect(pool).toEqual([]);
     });
 
-    it('graveyard base pool has mage and elite_knight', () => {
+    it('graveyard base pool has pocket_cat', () => {
       const pool = getEnemyPoolForTerrain('graveyard', 1);
-      expect(pool).toEqual(['mage', 'elite_knight']);
+      expect(pool).toEqual(['pocket_cat']);
     });
   });
 

@@ -7,6 +7,7 @@ import type { CombatStats } from './CombatStats';
 import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
+import { applyEnemyAffinityEffect } from './EnemyAffinity';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -119,7 +120,16 @@ export class EnemyAI {
         state.heroDefense = Math.max(0, state.heroDefense - 1);
       }
 
-      eventBus.emit('combat:enemy-attack', { damage: totalDamage, specialEffect, multiHit: true, hitCount: multiHit.hitCount });
+      // Phase 10: element affinity (fires once per multi-hit attack)
+      let mhAffinityFx = null;
+      if (state.enemyAffinity) {
+        mhAffinityFx = applyEnemyAffinityEffect(state, state.enemyAffinity, state.enemyType === 'boss');
+        if (mhAffinityFx) {
+          eventBus.emit('combat:enemy-affinity', { affinity: state.enemyAffinity, ...mhAffinityFx });
+        }
+      }
+
+      eventBus.emit('combat:enemy-attack', { damage: totalDamage, specialEffect, multiHit: true, hitCount: multiHit.hitCount, affinityFx: mhAffinityFx });
       return;
     }
 
@@ -146,7 +156,17 @@ export class EnemyAI {
       state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
     }
 
-    eventBus.emit('combat:enemy-attack', { damage: actualDamage, specialEffect });
+    // Phase 10: element affinity secondary effect — fires on every landed
+    // attack. Bosses get a 2x multiplier; effects are capped to prevent runaway.
+    let affinityFx = null;
+    if (state.enemyAffinity) {
+      affinityFx = applyEnemyAffinityEffect(state, state.enemyAffinity, state.enemyType === 'boss');
+      if (affinityFx) {
+        eventBus.emit('combat:enemy-affinity', { affinity: state.enemyAffinity, ...affinityFx });
+      }
+    }
+
+    eventBus.emit('combat:enemy-attack', { damage: actualDamage, specialEffect, affinityFx });
   }
 
   private calculateDamage(state: CombatState, stats: CombatStats): number {
@@ -178,16 +198,6 @@ export class EnemyAI {
    * attacks so iron_will/phoenix fire once for the whole attack.
    */
   private applyDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-    // Phase 9: Stealth evade — when evadeNextHit is set and the hero has at
-    // least one Stealth charge, the next incoming hit is fully blocked. The
-    // charge is consumed; when charges reach 0 the evade flag clears.
-    if (state.evadeNextHit && state.stealthCharges > 0) {
-      state.stealthCharges -= 1;
-      if (state.stealthCharges === 0) state.evadeNextHit = false;
-      eventBus.emit('combat:evade', { source: 'stealth' });
-      return 0;
-    }
-
     const damage = rawDamage;
     const multiplier = state.heroDefenseMultiplier ?? 1;
     const effectiveDefense = state.heroDefense * multiplier;

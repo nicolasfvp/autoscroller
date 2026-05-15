@@ -3,16 +3,16 @@
     "id": "lost_lizard",
     "name": "Lost Lizard",
     "type": "normal",
-    "baseHP": 175,
-    "baseDefense": 2,
+    "baseHP": 45,
+    "baseDefense": 0,
     "attack": {
-      "damage": 2,
+      "damage": 1,
       "pattern": "fixed"
     },
-    "attackCooldown": 2795,
+    "attackCooldown": 3500,
     "goldReward": {
-      "min": 10,
-      "max": 25
+      "min": 5,
+      "max": 12
     },
     "materialReward": {
       "chance": 0.3,
@@ -22,7 +22,8 @@
         "max": 2
       }
     },
-    "color": 65280
+    "color": 65280,
+    "affinity": "attack"
   },
   {
     "id": "corpse_eater",
@@ -47,7 +48,8 @@
         "max": 2
       }
     },
-    "color": 8947848
+    "color": 8947848,
+    "affinity": "counter"
   },
   {
     "id": "headless_fire_horse",
@@ -72,7 +74,8 @@
         "max": 2
       }
     },
-    "color": 16729088
+    "color": 16729088,
+    "affinity": "fire"
   },
   {
     "id": "pocket_cat",
@@ -97,7 +100,8 @@
         "max": 2
       }
     },
-    "color": 4473924
+    "color": 4473924,
+    "affinity": "agility"
   },
   {
     "id": "baby_dragon",
@@ -122,7 +126,8 @@
         "max": 2
       }
     },
-    "color": 15649962
+    "color": 15649962,
+    "affinity": "fire"
   },
   {
     "id": "giant_beetle",
@@ -147,7 +152,8 @@
         "max": 2
       }
     },
-    "color": 14531481
+    "color": 14531481,
+    "affinity": "defense"
   },
   {
     "id": "mutated_salamander",
@@ -172,7 +178,8 @@
         "max": 2
       }
     },
-    "color": 16755200
+    "color": 16755200,
+    "affinity": "water"
   },
   {
     "id": "ancient_tree",
@@ -197,7 +204,8 @@
         "max": 2
       }
     },
-    "color": 2263074
+    "color": 2263074,
+    "affinity": "earth"
   },
   {
     "id": "giant_spider_2",
@@ -222,7 +230,8 @@
         "max": 2
       }
     },
-    "color": 3355443
+    "color": 3355443,
+    "affinity": "water"
   },
   {
     "id": "giant_spider",
@@ -247,7 +256,8 @@
         "max": 2
       }
     },
-    "color": 2236962
+    "color": 2236962,
+    "affinity": "water"
   },
   {
     "id": "mush",
@@ -272,7 +282,8 @@
         "max": 2
       }
     },
-    "color": 11184725
+    "color": 11184725,
+    "affinity": "earth"
   },
   {
     "id": "forge_slime",
@@ -297,7 +308,8 @@
         "max": 2
       }
     },
-    "color": 16724736
+    "color": 16724736,
+    "affinity": "fire"
   },
   {
     "id": "lava_golen",
@@ -322,7 +334,8 @@
         "max": 2
       }
     },
-    "color": 13386752
+    "color": 13386752,
+    "affinity": "fire"
   },
   {
     "id": "mecha_warrior",
@@ -347,7 +360,8 @@
         "max": 2
       }
     },
-    "color": 11184810
+    "color": 11184810,
+    "affinity": "defense"
   },
   {
     "id": "depths_horror",
@@ -372,7 +386,8 @@
         "max": 2
       }
     },
-    "color": 2245666
+    "color": 2245666,
+    "affinity": "air"
   },
   {
     "id": "toxic_gooze",
@@ -397,7 +412,8 @@
         "max": 2
       }
     },
-    "color": 4521796
+    "color": 4521796,
+    "affinity": "water"
   },
   {
     "id": "venomous_kobra",
@@ -422,7 +438,8 @@
         "max": 2
       }
     },
-    "color": 2280482
+    "color": 2280482,
+    "affinity": "air"
   },
   {
     "id": "doom_knight",
@@ -449,7 +466,8 @@
         "max": 6
       }
     },
-    "color": 3355443
+    "color": 3355443,
+    "affinity": "counter"
   },
   {
     "id": "iron_golem",
@@ -476,7 +494,8 @@
         "max": 6
       }
     },
-    "color": 8947848
+    "color": 8947848,
+    "affinity": "defense"
   },
   {
     "id": "lizard_king",
@@ -503,6 +522,7 @@
         "max": 6
       }
     },
-    "color": 52224
+    "color": 52224,
+    "affinity": "attack"
   }
 ]

@@ -68,7 +68,7 @@ describe('Phase 9 save migration (D-06 + D-07)', () => {
     // and DOES NOT trigger the guard. The guard's primary use is for future-incompatible saves.
   });
 
-  it('D-07: SaveManager.load with v1 save migrates to v4 and returns valid state', async () => {
+  it('D-07: SaveManager.load with v1 save migrates to current and returns valid state', async () => {
     await set(SAVE_KEY, {
       version: 1, runId: 'old', seed: 'old',
       hero: { maxHP: 100, currentHP: 50, maxStamina: 50, currentStamina: 50, maxMana: 30, currentMana: 30, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
@@ -86,7 +86,7 @@ describe('Phase 9 save migration (D-06 + D-07)', () => {
     expect(loaded!.hero.statDeltas).toEqual({});
   });
 
-  it('D-06: MetaState v3 chain ends at v6 wipe (delegated assertion)', () => {
+  it('D-06: MetaState v3 chain ends at current default version (delegated assertion)', () => {
     const v3: any = {
       buildings: { forge: { level: 0 }, library: { level: 0 }, tavern: { level: 0 }, workshop: { level: 0 }, shrine: { level: 0 }, storehouse: { level: 0 } },
       materials: {}, classXP: { warrior: 0 },
@@ -98,7 +98,7 @@ describe('Phase 9 save migration (D-06 + D-07)', () => {
       version: 3,
     };
     const migrated = migrateMetaState(v3) as any;
-    expect(migrated.version).toBe(6);
+    expect(migrated.version).toBe(8);
     expect(migrated._wipedFromVersion).toBe(5);
   });
 });

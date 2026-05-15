@@ -13,7 +13,7 @@
 
 | Bucket | Target | Notes |
 |---|---|---|
-| Cards / class | **35** | Warrior + Mage + **Shadowblade** (new) |
+| Cards / class | **35** | Warrior + Mage |
 | Neutral cards | **20** | Playable by any class |
 | Total cards | **125** | from current 30 |
 | Relics / class | **10** exclusive | Synergize with that class's core mechanics |
@@ -109,14 +109,6 @@ Every class must have **≥3 primary mechanics** plus optional micros. A primary
 3. **Elemental statuses** — Burn (DoT), Freeze (cooldown↑ on enemy), Shock (cost-bender).
 4. *(micro)* **Heal/Lifesteal** — INT-scaling, niche.
 
-### 4.3 Shadowblade — "Veil & Edge"
-1. **Combo Points (0–5)** — built by Strike-tier cards, spent by Finishers.
-2. **Poison stacks** — DoT applied via cards/relics; scales with DEX.
-3. **Stealth / Evade window** — short window: hero auto-dodges 1 enemy hit AND next attack from stealth deals +X.
-4. *(micro)* **Energy** — existing Stamina field renamed; cheap costs (1–3).
-
-Shadowblade base stats: maxHP 60, maxStamina ("Energy") 50, maxMana 20, STR 1, DEX 8, INT 1, VIT 0, SPI 0.
-
 ---
 
 ## 5. Combo (synergy pair) system
@@ -132,7 +124,7 @@ It triggers when **B is played within ~1 card after A**.
 ### 5.1 Rules
 - **Coverage rule**: every card appears in **exactly 2** combo rows. No more, no less.
 - **Class-locked combos** mostly stay within the class set; cross-class combos use neutral cards as a bridge.
-- **Bonus types**: existing `damage | armor | heal | stamina | mana | cost_waive` plus new `dot | combo_point | stealth | stat_buff | cooldown_reduction`.
+- **Bonus types**: existing `damage | armor | heal | stamina | mana | cost_waive` plus new `dot | stat_buff | cooldown_reduction`.
 - **Display names** read like move-list calls: "Crimson Edge!", "Stormcradle!".
 - **Cross-class neutrals**: each neutral's 2 combos pair it with class cards (typically one neutral combos with a class card, the other neutral combos either with another class card or a neutral).
 
@@ -288,7 +280,7 @@ These three sample audits show the v2 numbers were authored more by "feel" than 
 
 ### 10.7 Stat scaling
 
-Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's baseline stat value** for that stat. Shadowblade has DEX 8, so a "+2 dmg per DEX" card adds 16 R at baseline. Late-game stacking lets it overperform — that's intentional and is the *reward for investing in the build*.
+Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's baseline stat value** for that stat. Late-game stacking lets it overperform — that's intentional and is the *reward for investing in the build*.
 
 ---
 
@@ -297,5 +289,4 @@ Cards that scale off a stat (e.g. `+2 dmg per DEX`) compute RPU at **the class's
 The detailed cards/relics live in:
 - `01_warrior.md` — 35 cards + 10 relics
 - `02_mage.md` — 35 cards + 10 relics
-- `03_shadowblade.md` — 35 cards + 10 relics
 - `04_neutral_and_combos.md` — 20 cards + 20 relics + new tiles

@@ -16,7 +16,7 @@ function makeRun(overrides: Partial<RunState['hero']> = {}): RunState {
       strength: 5, defenseMultiplier: 1,
       vitality: 10, dexterity: 8, intellect: 4, spirit: 6,
       statDeltas: {},
-      className: 'shadowblade',
+      className: 'warrior',
       ...overrides,
     },
   } as unknown as RunState;

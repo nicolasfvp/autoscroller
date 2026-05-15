@@ -5,6 +5,20 @@ export interface MaterialDefinition {
   rarity: 'common' | 'uncommon' | 'rare';
 }
 
+/** Meta-persistent forge recipe (discovered combinations). */
+export interface ForgeRecipeEntry {
+  key: string;
+  elements: string[];
+  cardId: string;
+  firstForgedAt: number;
+}
+
+/** Saveable starter-deck preset. */
+export interface DeckPresetEntry {
+  name: string;
+  cardIds: string[];
+}
+
 export interface MetaState {
   buildings: {
     forge: { level: number };
@@ -15,7 +29,7 @@ export interface MetaState {
     storehouse: { level: number };
   };
   materials: Record<string, number>;
-  classXP: { warrior: number; mage: number; shadowblade: number };
+  classXP: { warrior: number; mage: number };
   passivesUnlocked: string[];
   unlockedCards: string[];
   unlockedRelics: string[];
@@ -30,11 +44,32 @@ export interface MetaState {
   gameSpeed: number;     // 1 or 2
   autoSave: boolean;     // default true
   version: number;
+  /** Discovered forge recipes (element multisets) — meta-persistent. */
+  forgeRecipes: ForgeRecipeEntry[];
+  /** Saved starter-deck presets, 5 per class. */
+  deckPresets: Record<string, DeckPresetEntry[]>;
   /** One-shot flag set by migrateMetaState on a v3/v4/v5 -> v6 wipe.
    *  Plan 4 reads & strips this before MetaPersistence.saveMetaState.
    *  (Pitfall 5: not part of the persisted shape.) */
   _wipedFromVersion?: number;
 }
+
+const DEFAULT_PRESETS: Record<string, DeckPresetEntry[]> = {
+  warrior: [
+    { name: 'Default Warrior', cardIds: ['t1-attack-attack', 't1-defense-defense', 't1-attack-defense', 't1-agility-agility', 't1-attack-fire'] },
+    { name: 'Preset 2', cardIds: [] },
+    { name: 'Preset 3', cardIds: [] },
+    { name: 'Preset 4', cardIds: [] },
+    { name: 'Preset 5', cardIds: [] },
+  ],
+  mage: [
+    { name: 'Default Mage', cardIds: ['t1-fire-fire', 't1-water-water', 't1-fire-water', 't1-air-earth', 't1-attack-fire'] },
+    { name: 'Preset 2', cardIds: [] },
+    { name: 'Preset 3', cardIds: [] },
+    { name: 'Preset 4', cardIds: [] },
+    { name: 'Preset 5', cardIds: [] },
+  ],
+};
 
 export interface RunHistoryEntry {
   seed: string;
@@ -58,7 +93,7 @@ export function createDefaultMetaState(): MetaState {
       storehouse: { level: 0 },
     },
     materials: {},
-    classXP: { warrior: 0, mage: 0, shadowblade: 0 },
+    classXP: { warrior: 0, mage: 0 },
     passivesUnlocked: [],
     unlockedCards: [],
     unlockedRelics: [],
@@ -69,7 +104,9 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 6,
+    version: 8,
+    forgeRecipes: [],
+    deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
   };
 }
 
@@ -119,16 +156,12 @@ export function migrateMetaState(raw: any): MetaState {
   }
 
   // v3 -> v4 migration: add classXP.mage
-  // Phase 9 (CR-02 fix): also widen classXP shape to include shadowblade
-  // so a v3 save migrated forward to v4 doesn't leave the field undefined
-  // before the v6 wipe. (Migrate path defensively backfills all three.)
   if (raw.version === 3) {
     raw = {
       ...raw,
       classXP: {
         warrior: raw.classXP?.warrior ?? 0,
         mage: raw.classXP?.mage ?? 0,
-        shadowblade: raw.classXP?.shadowblade ?? 0,
       },
       version: 4,
     };
@@ -152,10 +185,39 @@ export function migrateMetaState(raw: any): MetaState {
   // preserving any prior unlock state meaningless -- a clean slate for v6
   // players. Re-applies for v3/v4 saves too in case migrate gets called on
   // an already-wiped fresh state with leftover stale fields.
+  // Wipe returns a v7 default (post-Shadowblade-removal); skip the
+  // v6->v7 step below since the fresh state is already v7.
   if (raw.version === 3 || raw.version === 4 || raw.version === 5) {
     const fresh = createDefaultMetaState();
     fresh._wipedFromVersion = raw.version;
     return fresh;
+  }
+
+  // v6 -> v7 migration: Shadowblade class removed. Drop classXP.shadowblade
+  // and reset any selectedClass === "shadowblade" to "warrior".
+  if (raw.version === 6) {
+    const classXP = raw.classXP ?? {};
+    if ('shadowblade' in classXP) delete classXP.shadowblade;
+    raw.classXP = {
+      warrior: classXP.warrior ?? 0,
+      mage: classXP.mage ?? 0,
+    };
+    if (raw.selectedClass === 'shadowblade') raw.selectedClass = 'warrior';
+    raw.version = 7;
+  }
+
+  // v7 -> v8 migration: element/forge system additions.
+  // Backfill forgeRecipes (empty list) and deckPresets (defaults per class).
+  if (raw.version === 7) {
+    if (!Array.isArray(raw.forgeRecipes)) raw.forgeRecipes = [];
+    if (!raw.deckPresets || typeof raw.deckPresets !== 'object') {
+      raw.deckPresets = JSON.parse(JSON.stringify(DEFAULT_PRESETS));
+    } else {
+      // Ensure both classes have arrays.
+      if (!Array.isArray(raw.deckPresets.warrior)) raw.deckPresets.warrior = JSON.parse(JSON.stringify(DEFAULT_PRESETS.warrior));
+      if (!Array.isArray(raw.deckPresets.mage)) raw.deckPresets.mage = JSON.parse(JSON.stringify(DEFAULT_PRESETS.mage));
+    }
+    raw.version = 8;
   }
 
   return raw as MetaState;

@@ -19,12 +19,15 @@ export const MAGE_BASE_STATS = {
 };
 
 // -- Starter Deck --
-// Magic-heavy deck: more spells, fewer physical cards
+// 5 Tier-1 cards totalling 10 elements (1 physical + 9 elemental).
+// Class element-budget rule (mage: 0-3 physical / 7-10 elemental).
 
 export const MAGE_STARTER_DECK: string[] = [
-  'fireball', 'fireball', 'strike',
-  'heal', 'fireball', 'defend',
-  'strike',
+  't1-fire-fire',
+  't1-water-water',
+  't1-fire-water',
+  't1-air-earth',
+  't1-attack-fire',
 ];
 
 // -- Class Definition --

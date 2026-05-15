@@ -107,9 +107,19 @@ export class TavernPanelScene extends Scene {
       // RNG via run.seed in GameScene.
       const rng = new SeededRNG(seedValue);
 
-      // Create a new run preserving the chosen class
-      const chosenClass = hasActiveRun() ? (getRun().hero.className ?? 'warrior') : 'warrior';
-      const run = createNewRun(this.metaState, 1, chosenClass, rng.seed);
+      // Preserve the chosen class AND deck from an existing run. The
+      // common path here is the first-run flow: the player just built
+      // their starter deck via CharacterSelect → DeckBuilder, which
+      // created a run with run.deck.active = customStarterDeck. Tavern
+      // then bridges that run into the loop. Without forwarding the deck
+      // through createNewRun's customStarterDeck arg, the deck silently
+      // resets to class defaults (shuffled). After Death/BossExit, the
+      // previous run is already cleared, so hasActiveRun=false and we
+      // fall back to class defaults — preserving the existing semantics.
+      const existing = hasActiveRun() ? getRun() : null;
+      const chosenClass = existing ? (existing.hero.className ?? 'warrior') : 'warrior';
+      const customDeck = existing?.deck.active;
+      const run = createNewRun(this.metaState, 1, chosenClass, rng.seed, customDeck);
       setRun(run);
 
       // Stop this overlay and CityHub, start RunTransitionScene

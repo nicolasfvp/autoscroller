@@ -31,21 +31,17 @@ export const LAYOUT = {
 } as const;
 
 /**
- * Phase 9 (Design v2): Shadowblade + status-stat + new-tile semantic palette.
+ * Phase 9 (Design v2): status-stat + new-tile semantic palette.
  *
  * Each entry is a single-use semantic token (never reused as a generic accent).
  * Hex values are LOCKED by design/04_neutral_and_combos.md §7 (tiles) and the
- * Phase 9 UI-SPEC §Color (Shadowblade resources + VIT/DEX/INT/SPI codes).
+ * Phase 9 UI-SPEC §Color (VIT/DEX/INT/SPI codes).
  *
  * DO NOT modify the existing COLORS / FONTS / LAYOUT exports above -- those are
- * the v1 design system. SHADOWBLADE_PALETTE is the v2 extension.
+ * the v1 design system. SHADOWBLADE_PALETTE is the v2 extension. (Name kept
+ * for back-compat; Shadowblade-specific entries removed.)
  */
 export const SHADOWBLADE_PALETTE = {
-  shadowblade: 0x7E5BEF,
-  comboPoint: 0xE03A6B,
-  comboPointEmpty: 0x3a1a26,
-  stealth: 0xc8a8ff,
-  poison: 0x6BBF59,
   vit: 0xff6666,
   dex: 0xf0a020,
   int: 0x9966ff,

@@ -22,6 +22,8 @@ import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
 import { GlobalSound } from './scenes/GlobalSound'
 import { RunTransitionScene } from './scenes/RunTransitionScene'
+import { ForgeScene } from './scenes/ForgeScene'
+import { DeckBuilderScene } from './scenes/DeckBuilderScene'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -60,7 +62,9 @@ const config: Phaser.Types.Core.GameConfig = {
         TavernPanelScene,
         CollectionScene,
         GlobalSound,
-        RunTransitionScene
+        RunTransitionScene,
+        ForgeScene,
+        DeckBuilderScene
     ]
 }
 

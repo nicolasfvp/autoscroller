@@ -29,13 +29,14 @@ let relics: RelicDefinition[] | null = null;
 let difficulty: Record<string, DifficultyConfig> | null = null;
 let heroStats: HeroStatsConfig | null = null;
 let enemyDrops: Record<string, EnemyDropTable> | null = null;
-let starterDeckIds: string[] | null = null;
+let starterDecks: Record<string, string[]> | null = null;
 
 // ── Load all data ───────────────────────────────────────────
 
 export function loadAllData(): void {
-  cards = cardsData.cards as CardDefinition[];
-  starterDeckIds = cardsData.starterDeckIds as string[];
+  const raw = cardsData as { cards: CardDefinition[]; starterDecks?: Record<string, string[]>; starterDeckIds?: string[] };
+  cards = raw.cards;
+  starterDecks = raw.starterDecks ?? (raw.starterDeckIds ? { warrior: raw.starterDeckIds } : {});
   enemies = enemiesData as EnemyDefinition[];
   tiles = tilesData as TileTypeConfig[];
   relics = relicsData as RelicDefinition[];
@@ -55,9 +56,13 @@ export function getCardById(id: string): CardDefinition | undefined {
   return getAllCards().find((c) => c.id === id);
 }
 
-export function getStarterDeckIds(): string[] {
-  if (!starterDeckIds) throw new Error('Data not loaded -- call loadAllData() first');
-  return starterDeckIds;
+export function getStarterDeckIds(className: string = 'warrior'): string[] {
+  if (!starterDecks) throw new Error('Data not loaded -- call loadAllData() first');
+  return starterDecks[className] ?? starterDecks.warrior ?? [];
+}
+
+export function getStarterDeckForClass(className: string): string[] {
+  return getStarterDeckIds(className);
 }
 
 // ── Enemy accessors ─────────────────────────────────────────

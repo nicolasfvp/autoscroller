@@ -48,6 +48,7 @@ function makeMockRun(overrides?: Partial<{
     combatSpeed: 1,
     mapSpeed: 1,
     pool: { cards: [], relics: [], tiles: [] },
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
   };
 }
 
@@ -201,25 +202,12 @@ describe('CombatState', () => {
 });
 
 describe('CombatState — Phase 9 transient fields', () => {
-  it('initializes Shadowblade resources (comboPoints/stealth/evade) at defaults', () => {
-    const run = makeMockRun();
-    const enemy = makeMockEnemy();
-    const state = createCombatState(run, enemy);
-
-    expect(state.comboPoints).toBe(0);
-    expect(state.comboPointsCap).toBe(5);
-    expect(state.stealthCharges).toBe(0);
-    expect(state.stealthCap).toBe(4);
-    expect(state.evadeNextHit).toBe(false);
-  });
-
   it('initializes all elemental stack pools at 0', () => {
     const run = makeMockRun();
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
 
     expect(state.poisonStacks).toBe(0);
-    expect(state.poisonDecayDisabled).toBe(false);
     expect(state.bleedStacks).toBe(0);
     expect(state.burnStacks).toBe(0);
     expect(state.freezeStacks).toBe(0);

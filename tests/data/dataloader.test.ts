@@ -22,11 +22,12 @@ describe('DataLoader', () => {
     expect(getAllCards().length).toBeGreaterThanOrEqual(14);
   });
 
-  it('getCardById("strike") returns a card', () => {
-    const card = getCardById('strike');
+  it('getCardById("t1-attack-attack") returns a card', () => {
+    const card = getCardById('t1-attack-attack');
     expect(card).toBeDefined();
-    expect(card!.id).toBe('strike');
-    expect(card!.name).toBe('Strike');
+    expect(card!.id).toBe('t1-attack-attack');
+    expect(typeof card!.name).toBe('string');
+    expect(card!.name.length).toBeGreaterThan(0);
   });
 
   it('every card has cooldown and targeting fields', () => {
@@ -38,21 +39,22 @@ describe('DataLoader', () => {
     }
   });
 
-  it('getStarterDeckIds() returns non-empty array', () => {
-    const ids = getStarterDeckIds();
-    expect(ids.length).toBeGreaterThan(0);
-    expect(ids).toContain('strike');
-    expect(ids).toContain('defend');
+  it('getStarterDeckIds() returns non-empty array (element-based)', () => {
+    const ids = getStarterDeckIds('warrior');
+    expect(ids.length).toBe(5);
+    for (const id of ids) {
+      expect(id).toMatch(/^t1-/);
+    }
   });
 
   it('getAllEnemies() returns at least 6 enemies', () => {
     expect(getAllEnemies().length).toBeGreaterThanOrEqual(6);
   });
 
-  it('getEnemyById("slime") returns Slime', () => {
-    const enemy = getEnemyById('slime');
+  it('getEnemyById("forge_slime") returns Forge Slime', () => {
+    const enemy = getEnemyById('forge_slime');
     expect(enemy).toBeDefined();
-    expect(enemy!.name).toBe('Slime');
+    expect(enemy!.name).toBe('Forge Slime');
   });
 
   it('getAllTiles() returns at least 8 tile configs', () => {
@@ -76,8 +78,9 @@ describe('DataLoader', () => {
     expect(stats.maxMana).toBe(30);
   });
 
-  it('getEnemyDropTable("Slime") returns drop config', () => {
-    const table = getEnemyDropTable('Slime');
+  it('getEnemyDropTable("Forge Slime") returns drop config', () => {
+    // enemy-drops.json is keyed by display name, not id
+    const table = getEnemyDropTable('Forge Slime');
     expect(table).toBeDefined();
     expect(table!.cardDrops.cardPool.length).toBeGreaterThan(0);
   });

@@ -176,10 +176,9 @@ export class Preloader extends Scene {
 
     // Card Illustrations
     // Phase 9 (Design v2) audit: every ID below survives in v2 cards.json
-    // (verified via cards.json membership check 2026-05-11). Per D-08 no new
-    // Shadowblade card assets are added in this phase -- v2 cards without
-    // preload entries fall back to the default card visual via the
-    // existing preload-skip path.
+    // (verified via cards.json membership check 2026-05-11). v2 cards
+    // without preload entries fall back to the default card visual via
+    // the existing preload-skip path.
     const cardIds = [
       'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
       'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',
