@@ -3,16 +3,16 @@
     "id": "lost_lizard",
     "name": "Lost Lizard",
     "type": "normal",
-    "baseHP": 175,
-    "baseDefense": 2,
+    "baseHP": 45,
+    "baseDefense": 0,
     "attack": {
-      "damage": 2,
+      "damage": 1,
       "pattern": "fixed"
     },
-    "attackCooldown": 2795,
+    "attackCooldown": 3500,
     "goldReward": {
-      "min": 10,
-      "max": 25
+      "min": 5,
+      "max": 12
     },
     "materialReward": {
       "chance": 0.3,
@@ -23,7 +23,7 @@
       }
     },
     "color": 65280,
-    "affinity": "defense"
+    "affinity": "attack"
   },
   {
     "id": "corpse_eater",
