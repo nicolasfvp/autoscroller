@@ -1,0 +1,119 @@
+{
+  "elements": [
+    {
+      "id": "attack",
+      "name": "Attack",
+      "category": "physical",
+      "primaryStat": "str",
+      "identity": "Direct damage, rage stacks",
+      "color": "#DC2626",
+      "icon": "sword"
+    },
+    {
+      "id": "defense",
+      "name": "Defense",
+      "category": "physical",
+      "primaryStat": "vit",
+      "identity": "Armor, mitigation, taunt",
+      "color": "#6B7280",
+      "icon": "shield"
+    },
+    {
+      "id": "agility",
+      "name": "Agility",
+      "category": "physical",
+      "primaryStat": "dex",
+      "identity": "Cooldown reduction, dodge",
+      "color": "#FACC15",
+      "icon": "feather"
+    },
+    {
+      "id": "counter",
+      "name": "Counter",
+      "category": "physical",
+      "primaryStat": "str",
+      "identity": "Reflect damage, retaliate, gain on hit",
+      "color": "#B91C1C",
+      "icon": "crossed-swords"
+    },
+    {
+      "id": "fire",
+      "name": "Fire",
+      "category": "elemental",
+      "primaryStat": "int",
+      "identity": "Burn DoT, sustained damage",
+      "color": "#F97316",
+      "icon": "flame"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "category": "elemental",
+      "primaryStat": "spi",
+      "identity": "Heal, shield, freeze",
+      "color": "#0EA5E9",
+      "icon": "droplet"
+    },
+    {
+      "id": "air",
+      "name": "Air",
+      "category": "elemental",
+      "primaryStat": "dex",
+      "identity": "Speed, multi-strike, weakness",
+      "color": "#C4B5FD",
+      "icon": "wind"
+    },
+    {
+      "id": "earth",
+      "name": "Earth",
+      "category": "elemental",
+      "primaryStat": "vit",
+      "identity": "Stun, slow, elemental armor",
+      "color": "#92400E",
+      "icon": "rock"
+    }
+  ],
+  "shardConversion": {
+    "shardsPerElement": 10,
+    "autoConvert": true
+  },
+  "dropRates": {
+    "normal": { "min": 1, "max": 3 },
+    "elite": { "min": 6, "max": 13 },
+    "boss": { "min": 20, "max": 30 }
+  },
+  "classBias": {
+    "warrior": { "physical": 0.75, "elemental": 0.25 },
+    "mage": { "physical": 0.25, "elemental": 0.75 }
+  },
+  "forgeCost": {
+    "tier1": 75,
+    "tier2": 200,
+    "tier3": 500
+  },
+  "forgeDiscountByLevel": {
+    "0": 0,
+    "1": 0,
+    "2": 0.10,
+    "3": 0.15,
+    "4": 0.20,
+    "5": 0.25,
+    "6": 0.30
+  },
+  "forgeTierUnlock": {
+    "tier1": 0,
+    "tier2": 2,
+    "tier3": 4
+  },
+  "deckRules": {
+    "min": 5,
+    "max": 15,
+    "starterSize": 5,
+    "starterElementBudget": 10,
+    "classRatios": {
+      "warrior": { "physicalMin": 7, "physicalMax": 10, "elementalMin": 0, "elementalMax": 3 },
+      "mage": { "physicalMin": 0, "physicalMax": 3, "elementalMin": 7, "elementalMax": 10 }
+    },
+    "presetsPerClass": 5
+  }
+}
