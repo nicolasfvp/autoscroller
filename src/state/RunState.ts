@@ -301,9 +301,14 @@ export function createNewRun(
       statDeltas: {},
     },
     deck: (() => {
-      // Deterministic starter shuffle: bind to (runSeed, runId) so a fresh run
-      // with a user-chosen seed shuffles the starter deck the same way each time.
-      const active = new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...starterDeck]);
+      // Custom decks built in the DeckBuilder preserve order (the player picked
+      // a specific 5-card sequence). Class-default starters still get a
+      // deterministic shuffle keyed off (runSeed, runId) so each run feels
+      // slightly different even without customization.
+      const usedCustom = !!(customStarterDeck && customStarterDeck.length > 0);
+      const active = usedCustom
+        ? [...starterDeck]
+        : new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...starterDeck]);
       return {
         active,
         inventory: {},
