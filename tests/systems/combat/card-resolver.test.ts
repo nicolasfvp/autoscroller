@@ -13,11 +13,13 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     heroClass: 'warrior',
     deckOrder: [],
     enemyId: 'slime', enemyName: 'Slime',
+    enemyType: 'normal',
     enemyHP: 100, enemyMaxHP: 100,
     enemyDefense: 0, enemyDamage: 8,
     enemyAttackCooldown: 2500,
     enemyPattern: 'fixed',
     enemySpecialEffect: null,
+    enemyAffinity: null,
     activePassives: [],
     heroStunned: false,
     upgraded: [],
@@ -28,8 +30,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     _bloodPactBonus: 0,
     phoenixUsed: false,
     heroVitality: 0, heroDexterity: 0, heroIntellect: 0, heroSpirit: 0,
-    comboPoints: 0, comboPointsCap: 5, stealthCharges: 0, stealthCap: 4, evadeNextHit: false,
-    poisonStacks: 0, poisonDecayDisabled: false, bleedStacks: 0, burnStacks: 0,
+    poisonStacks: 0, bleedStacks: 0, burnStacks: 0,
     freezeStacks: 0, shockStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
@@ -38,7 +39,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
 
 function makeCard(overrides: Partial<CardDefinition> = {}): CardDefinition {
   return {
-    id: 'strike', name: 'Strike', description: 'Deal 10 damage.',
+    id: 't1-attack-attack', name: 'Strike', description: 'Deal 10 damage.',
     category: 'attack',
     effects: [{ type: 'damage', value: 10, target: 'enemy' }],
     cooldown: 1.2, targeting: 'single', rarity: 'common',
