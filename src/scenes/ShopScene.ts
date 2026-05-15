@@ -303,10 +303,12 @@ export class ShopScene extends Scene {
     this.modalTitle(`⚒ Forge — Lv ${forgeLevel} (−${discount}% gold)`);
 
     // ── Element inventory grid (8 buttons, 2 rows × 4 cols) ────────
+    // Each cell shows: element name + BIG element-unit count + small "+N shards" caption.
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const shardInv = (run.economy.shards ?? {}) as Record<string, number>;
     const invStartY = 100;
     const cellW = 100;
-    const cellH = 38;
+    const cellH = 46;
     const rowGap = 4;
     const colGap = 6;
     [PHYSICAL_ELEMENTS, ELEMENTAL_ELEMENTS].forEach((row, rowIdx) => {
@@ -315,8 +317,9 @@ export class ShopScene extends Scene {
         const y = invStartY + rowIdx * (cellH + rowGap) + cellH / 2;
         const elem = ELEMENTS[id];
         const elemColor = parseInt(elem.color.replace('#', ''), 16);
-        const count = elementInv[id] ?? 0;
-        const usable = count > 0 && this.forgeSlots.length < 4;
+        const elements = elementInv[id] ?? 0;
+        const shards = shardInv[id] ?? 0;
+        const usable = elements > 0 && this.forgeSlots.length < 4;
         const bg = this.add.rectangle(x, y, cellW, cellH, elemColor, usable ? 0.4 : 0.18)
           .setStrokeStyle(1.5, elemColor, usable ? 0.95 : 0.4);
         if (usable) {
@@ -325,13 +328,16 @@ export class ShopScene extends Scene {
           bg.on('pointerout',  () => bg.setStrokeStyle(1.5, elemColor, 0.95));
           bg.on('pointerdown', () => { this.forgeSlots.push(id); this.refreshForgeModal(); });
         }
-        const name = this.add.text(x - cellW / 2 + 6, y - 7, elem.name, {
+        const name = this.add.text(x - cellW / 2 + 6, y - cellH / 2 + 4, elem.name, {
           fontSize: '11px', fontStyle: 'bold', color: usable ? WHITE : DIM, fontFamily: FF,
         });
-        const cnt = this.add.text(x + cellW / 2 - 6, y - 8, `${count}`, {
-          fontSize: '14px', fontStyle: 'bold', color: usable ? GOLD : DIM, fontFamily: FF,
+        const cnt = this.add.text(x + cellW / 2 - 6, y - cellH / 2 + 4, `${elements}`, {
+          fontSize: '16px', fontStyle: 'bold', color: usable ? GOLD : DIM, fontFamily: FF,
         }).setOrigin(1, 0);
-        this.modalContainer.add([bg, name, cnt]);
+        const shardLine = this.add.text(x + cellW / 2 - 6, y + cellH / 2 - 4, `+${shards}/10 shards`, {
+          fontSize: '9px', color: shards > 0 ? '#c0c0c0' : DIM, fontFamily: FF,
+        }).setOrigin(1, 1);
+        this.modalContainer.add([bg, name, cnt, shardLine]);
       });
     });
 
