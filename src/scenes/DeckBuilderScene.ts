@@ -631,6 +631,16 @@ export class DeckBuilderScene extends Scene {
 
   private confirmDeck(): void {
     const v = validateStarterDeck(this.currentDeck, this.className);
+    // [DECK-DIAG] Temporary diagnostic — verify the deck handed to the parent
+    // scene matches the preset the player selected. Remove once the preset →
+    // run plumbing is confirmed stable.
+    console.warn('[DECK-DIAG] confirmDeck', {
+      className: this.className,
+      currentDeck: [...this.currentDeck],
+      selectedPreset: this.selectedPresetIndex,
+      valid: v.valid,
+      errors: v.errors,
+    });
     if (!v.valid) return;
     const cb = this.onConfirm;
     this.onConfirm = null; // guard double-fire

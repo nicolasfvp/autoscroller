@@ -288,8 +288,19 @@ export class CharacterSelectScene extends Scene {
     customStarterDeck?: string[],
   ): Promise<void> {
     if (this.transitioning) return;
+    // [DECK-DIAG] Temporary diagnostic — confirm the custom deck made it
+    // across the scene boundary from DeckBuilder before createNewRun runs.
+    console.warn('[DECK-DIAG] startRun', {
+      className,
+      customStarterDeck: customStarterDeck ? [...customStarterDeck] : customStarterDeck,
+      customStarterDeckLength: customStarterDeck?.length,
+    });
     try {
       setRun(createNewRun(meta, 1, className, undefined, customStarterDeck));
+      // [DECK-DIAG] Log the deck that the run actually persisted, so we can
+      // tell if createNewRun consumed the custom deck or fell back.
+      const r = getRun();
+      console.warn('[DECK-DIAG] post-createNewRun deck.active', [...r.deck.active]);
       await saveManager.save(getRun());
     } catch (err) {
       console.error('[CharacterSelect] startRun failed', err);
