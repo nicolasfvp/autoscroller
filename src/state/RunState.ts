@@ -263,12 +263,18 @@ export function createNewRun(
   generation: number = 1,
   className: string = 'warrior',
   seed?: string,
+  customStarterDeck?: string[],
 ): RunState {
   const meta = metaState ?? createDefaultMetaState();
   const classDef = getClassDef(className);
   const stats = classDef.baseStats;
   const runId = nanoid();
   const runSeed = seed && seed.length > 0 ? seed : Date.now().toString(36);
+  // Use the player-customized starter deck if provided; fall back to the
+  // class's default starterDeck otherwise (see docs/CARDS_SYSTEM.md §6).
+  const starterDeck = (customStarterDeck && customStarterDeck.length > 0)
+    ? customStarterDeck
+    : classDef.starterDeck;
   return {
     version: RUN_STATE_VERSION,
     runId,
@@ -297,7 +303,7 @@ export function createNewRun(
     deck: (() => {
       // Deterministic starter shuffle: bind to (runSeed, runId) so a fresh run
       // with a user-chosen seed shuffles the starter deck the same way each time.
-      const active = new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...classDef.starterDeck]);
+      const active = new SeededRNG(`${runSeed}-${runId}-initial-deck`).shuffle([...starterDeck]);
       return {
         active,
         inventory: {},

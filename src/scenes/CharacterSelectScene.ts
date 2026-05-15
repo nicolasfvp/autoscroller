@@ -249,10 +249,36 @@ export class CharacterSelectScene extends Scene {
   }
 
   private async confirmSelection(): Promise<void> {
+    if (this.transitioning) return;
     const selected = CLASSES[this.selectedIndex];
     const meta = await loadMetaState();
-    setRun(createNewRun(meta, 1, selected.id));
+
+    // Launch the deck builder overlay before starting the run so the player
+    // can pick / save their starter deck (5 cards, 10 elements, class ratio).
+    // On confirm we forward the validated deck to createNewRun. If anything
+    // goes wrong (or the player skips), createNewRun falls back to the
+    // class's default starterDeck. See docs/CARDS_SYSTEM.md §6.
+    this.scene.launch(SCENE_KEYS.DECK_BUILDER, {
+      className: selected.id,
+      metaState: meta,
+      onConfirm: (deck: string[]) => {
+        this.startRun(meta, selected.id, deck);
+      },
+    });
+  }
+
+  private async startRun(
+    meta: Awaited<ReturnType<typeof loadMetaState>>,
+    className: string,
+    customStarterDeck?: string[],
+  ): Promise<void> {
+    if (this.transitioning) return;
+    setRun(createNewRun(meta, 1, className, undefined, customStarterDeck));
     await saveManager.save(getRun());
+    // Ensure the DeckBuilder overlay is stopped before we fade out.
+    if (this.scene.isActive(SCENE_KEYS.DECK_BUILDER)) {
+      this.scene.stop(SCENE_KEYS.DECK_BUILDER);
+    }
     this.fadeToScene(SCENE_KEYS.TUTORIAL);
   }
 }
