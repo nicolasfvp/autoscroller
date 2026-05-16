@@ -3,10 +3,10 @@
     "id": "lost_lizard",
     "name": "Lost Lizard",
     "type": "normal",
-    "baseHP": 45,
+    "baseHP": 68,
     "baseDefense": 0,
     "attack": {
-      "damage": 1,
+      "damage": 2,
       "pattern": "fixed"
     },
     "attackCooldown": 3500,
@@ -29,10 +29,10 @@
     "id": "corpse_eater",
     "name": "Corpse Eater",
     "type": "normal",
-    "baseHP": 111,
+    "baseHP": 167,
     "baseDefense": 2,
     "attack": {
-      "damage": 5,
+      "damage": 8,
       "pattern": "fixed"
     },
     "attackCooldown": 2032,
@@ -55,10 +55,10 @@
     "id": "headless_fire_horse",
     "name": "Headless Fire Horse",
     "type": "normal",
-    "baseHP": 108,
+    "baseHP": 162,
     "baseDefense": 2,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2827,
@@ -81,10 +81,10 @@
     "id": "pocket_cat",
     "name": "Pocket Cat",
     "type": "normal",
-    "baseHP": 163,
+    "baseHP": 245,
     "baseDefense": 1,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2215,
@@ -107,10 +107,10 @@
     "id": "baby_dragon",
     "name": "Baby Dragon",
     "type": "normal",
-    "baseHP": 139,
+    "baseHP": 209,
     "baseDefense": 1,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2255,
@@ -133,10 +133,10 @@
     "id": "giant_beetle",
     "name": "Giant Beetle",
     "type": "normal",
-    "baseHP": 155,
+    "baseHP": 233,
     "baseDefense": 1,
     "attack": {
-      "damage": 3,
+      "damage": 5,
       "pattern": "fixed"
     },
     "attackCooldown": 2813,
@@ -159,10 +159,10 @@
     "id": "mutated_salamander",
     "name": "Mutated Salamander",
     "type": "normal",
-    "baseHP": 177,
+    "baseHP": 266,
     "baseDefense": 0,
     "attack": {
-      "damage": 5,
+      "damage": 8,
       "pattern": "fixed"
     },
     "attackCooldown": 2194,
@@ -185,10 +185,10 @@
     "id": "ancient_tree",
     "name": "Ancient Tree",
     "type": "normal",
-    "baseHP": 112,
+    "baseHP": 168,
     "baseDefense": 1,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2530,
@@ -211,10 +211,10 @@
     "id": "giant_spider_2",
     "name": "Giant Spider 2",
     "type": "normal",
-    "baseHP": 120,
+    "baseHP": 180,
     "baseDefense": 2,
     "attack": {
-      "damage": 2,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2945,
@@ -237,10 +237,10 @@
     "id": "giant_spider",
     "name": "Giant Spider",
     "type": "normal",
-    "baseHP": 160,
+    "baseHP": 240,
     "baseDefense": 0,
     "attack": {
-      "damage": 2,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2071,
@@ -263,10 +263,10 @@
     "id": "mush",
     "name": "Mush",
     "type": "normal",
-    "baseHP": 136,
+    "baseHP": 204,
     "baseDefense": 0,
     "attack": {
-      "damage": 2,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2052,
@@ -289,10 +289,10 @@
     "id": "forge_slime",
     "name": "Forge Slime",
     "type": "normal",
-    "baseHP": 145,
+    "baseHP": 218,
     "baseDefense": 2,
     "attack": {
-      "damage": 2,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2786,
@@ -315,10 +315,10 @@
     "id": "lava_golen",
     "name": "Lava Golem",
     "type": "normal",
-    "baseHP": 165,
+    "baseHP": 248,
     "baseDefense": 2,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2097,
@@ -341,10 +341,10 @@
     "id": "mecha_warrior",
     "name": "Mecha Warrior",
     "type": "normal",
-    "baseHP": 119,
+    "baseHP": 179,
     "baseDefense": 2,
     "attack": {
-      "damage": 2,
+      "damage": 3,
       "pattern": "fixed"
     },
     "attackCooldown": 2979,
@@ -367,10 +367,10 @@
     "id": "depths_horror",
     "name": "Depths Horror",
     "type": "normal",
-    "baseHP": 105,
+    "baseHP": 158,
     "baseDefense": 0,
     "attack": {
-      "damage": 3,
+      "damage": 5,
       "pattern": "fixed"
     },
     "attackCooldown": 2332,
@@ -393,10 +393,10 @@
     "id": "toxic_gooze",
     "name": "Toxic Gooze",
     "type": "normal",
-    "baseHP": 111,
+    "baseHP": 167,
     "baseDefense": 1,
     "attack": {
-      "damage": 3,
+      "damage": 5,
       "pattern": "fixed"
     },
     "attackCooldown": 2578,
@@ -419,10 +419,10 @@
     "id": "venomous_kobra",
     "name": "Venomous Kobra",
     "type": "normal",
-    "baseHP": 155,
+    "baseHP": 233,
     "baseDefense": 1,
     "attack": {
-      "damage": 4,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2355,
@@ -446,11 +446,11 @@
     "name": "Doom Knight",
     "type": "boss",
     "bossType": "knight",
-    "baseHP": 950,
+    "baseHP": 550,
     "baseDefense": 5,
     "attack": {
       "damage": 10,
-      "pattern": "scaling"
+      "pattern": "fixed"
     },
     "attackCooldown": 2500,
     "behaviors": [],
@@ -474,11 +474,11 @@
     "name": "Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 1200,
+    "baseHP": 700,
     "baseDefense": 5,
     "attack": {
-      "damage": 10,
-      "pattern": "scaling"
+      "damage": 12,
+      "pattern": "fixed"
     },
     "attackCooldown": 2500,
     "behaviors": [],
@@ -502,11 +502,11 @@
     "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 800,
+    "baseHP": 450,
     "baseDefense": 5,
     "attack": {
-      "damage": 10,
-      "pattern": "scaling"
+      "damage": 14,
+      "pattern": "fixed"
     },
     "attackCooldown": 2500,
     "behaviors": [],
