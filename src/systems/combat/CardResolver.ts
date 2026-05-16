@@ -167,16 +167,19 @@ export class CardResolver {
     state: CombatState,
     result: ResolveResult,
     damageMultiplier: number = 1.0,
-    scale?: { stat: StatId; per: number; value: number },
+    scale?: { stat: StatId; per: number; value: number; source?: 'stat' | 'armor' },
     stack?: StackId,
     card?: CardDefinition,
     pierceArmor: boolean = false,
     rawEffect?: CardEffect,
   ): void {
     // Phase 9 stat scaling: resolvedValue = value + floor(statValue / per) * value
+    // Tier-2: scale.source:"armor" reads current hero armor instead of a stat.
     let resolvedValue = value;
     if (scale && scale.per > 0 && scale.value !== 0) {
-      const statValue = readStat(state, scale.stat);
+      const statValue = scale.source === 'armor'
+        ? state.heroDefense
+        : readStat(state, scale.stat);
       resolvedValue = value + Math.floor(statValue / scale.per) * scale.value;
     }
 
@@ -204,13 +207,16 @@ export class CardResolver {
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
         // pierce_armor skips the enemy-defense subtraction step.
-        const raw = baseDmg > 0
+        const perHit = baseDmg > 0
           ? (pierceArmor
               ? Math.max(1, Math.floor(baseDmg))
               : Math.max(1, Math.floor(baseDmg - effectiveEnemyDef)))
           : 0;
-        state.enemyHP -= raw;
-        result.totalDamage += raw;
+        // Tier-2: multi_hit:N applies the damage N+1 times in one effect.
+        const totalHits = 1 + Math.max(0, rawEffect?.multi_hit ?? 0);
+        const totalRaw = perHit * totalHits;
+        state.enemyHP -= totalRaw;
+        result.totalDamage += totalRaw;
         break;
       }
       case 'heal': {
@@ -270,7 +276,35 @@ export class CardResolver {
 
       case 'stack': {
         // Pitfall 8: arcane caps at arcaneStacksCap with silent truncation.
+        // Tier-2 consume_stack: negative values that consume up to |value|
+        // from the named target's current pool (clamped to existing count).
+        // Used for threshold-and-spend payoffs (rage vents, burn detonators).
         const which: StackId = stack ?? 'arcane';
+        if (rawEffect?.consume_stack && resolvedValue < 0) {
+          const wantConsume = -resolvedValue;
+          const consumeFrom = (cur: number) => Math.max(0, cur - Math.min(cur, wantConsume));
+          if (target === 'enemy') {
+            switch (which) {
+              case 'poison': state.poisonStacks = consumeFrom(state.poisonStacks); break;
+              case 'bleed': state.bleedStacks = consumeFrom(state.bleedStacks); break;
+              case 'burn': state.burnStacks = consumeFrom(state.burnStacks); break;
+              case 'freeze': state.freezeStacks = consumeFrom(state.freezeStacks); break;
+              case 'shock': state.shockStacks = consumeFrom(state.shockStacks); break;
+              case 'arcane': state.arcaneStacks = consumeFrom(state.arcaneStacks); break;
+              case 'rage': state.rageStacks = consumeFrom(state.rageStacks); break;
+            }
+          } else {
+            // self consume — rage / bleed / burn pools live on hero side
+            switch (which) {
+              case 'rage': state.rageStacks = consumeFrom(state.rageStacks); break;
+              case 'burn': state.heroBurnStacks = consumeFrom(state.heroBurnStacks); break;
+              case 'bleed': state.heroBleedStacks = consumeFrom(state.heroBleedStacks); break;
+              case 'arcane': state.arcaneStacks = consumeFrom(state.arcaneStacks); break;
+              default: break;
+            }
+          }
+          break;
+        }
         switch (which) {
           case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + resolvedValue); break;
           case 'rage': state.rageStacks += resolvedValue; break;

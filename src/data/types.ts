@@ -48,12 +48,28 @@ export interface CardEffect {
     | "aura";
   value: number;
   target: "enemy" | "self" | "self_dot";
-  /** Optional stat scaling: adds floor(stat / per) * value to the resolved value. */
-  scale?: { stat: StatId; per: number; value: number };
+  /**
+   * Optional stat scaling: adds floor(stat / per) * value to the resolved value.
+   * Tier-2: `source: "armor"` reads target's current armor instead of a stat axis
+   * (enables Body Slam — damage equal to current armor).
+   */
+  scale?: { stat: StatId; per: number; value: number; source?: "stat" | "armor" };
   /** Disambiguates which stack to apply for type="dot" or type="stack". */
   stack?: StackId;
   /** Damage variant: skip enemy defense subtraction. */
   pierce_armor?: boolean;
+  /**
+   * Tier-2: multi-hit damage. multi_hit:N means N additional hits beyond the
+   * first, so multi_hit:2 = 3 total damage applications. Each hit re-applies
+   * STR scaling, condition gates, and pierce_armor.
+   */
+  multi_hit?: number;
+  /**
+   * Tier-2: on a stack effect with negative value, consume up to |value| stacks
+   * from the target. The pre-consume stack count is what subsequent `per_stack`
+   * reads use, so an effects[] array can read-then-consume atomically.
+   */
+  consume_stack?: boolean;
   /** Gate / multiplier: see CardEffectCondition. */
   condition?: CardEffectCondition;
   /** Aura: lifetime in ms before this effect decays off the target. */
@@ -61,7 +77,9 @@ export interface CardEffect {
   /** Aura modifier (stat or cd_reduction) carried while the aura is alive. */
   modifier?: { kind: AuraModifierKind; value: number };
   /** Aura: trigger name that fires the `then` effect once, then removes the aura. */
-  trigger?: "on_armor_break";
+  trigger?: "on_armor_break" | "on_hp_pct_below";
+  /** Aura: threshold for on_hp_pct_below trigger (0-100, hero HP %). */
+  threshold?: number;
   /** Aura: effect to apply once when `trigger` fires. */
   then?: CardEffect;
 }
