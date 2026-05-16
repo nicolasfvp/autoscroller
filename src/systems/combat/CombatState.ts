@@ -82,6 +82,14 @@ export interface CombatState {
    * CombatEngine.playNextCard immediately after that card resolves.
    */
   nextCardCooldownReduction: number;
+
+  /**
+   * Per-card running total of stat-buff magnitude already applied this
+   * combat. CardResolver clamps further buffs against tier-based caps so
+   * one card cycled many times through the deck (Stoneskin, Dancer's Guard)
+   * can't snowball a stat indefinitely. Resets at combat start.
+   */
+  buffMagnitudePerCard: Record<string, number>;
 }
 
 /**
@@ -143,6 +151,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     arcaneStacksCap: 10,
     rageStacks: 0,
     nextCardCooldownReduction: 0,
+    buffMagnitudePerCard: {},
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --

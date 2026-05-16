@@ -79,6 +79,7 @@ export class CardResolver {
       this.applyEffect(
         effect.type, effect.value, effect.target, state, result,
         extraDamageMultiplier, effect.scale, effect.stack,
+        card,
       );
     }
 
@@ -102,6 +103,7 @@ export class CardResolver {
         extraDamageMultiplier,
         scaleShim,
         bonus.stack,
+        card,
       );
     }
 
@@ -122,6 +124,7 @@ export class CardResolver {
     damageMultiplier: number = 1.0,
     scale?: { stat: StatId; per: number; value: number },
     stack?: StackId,
+    card?: CardDefinition,
   ): void {
     // Phase 9 stat scaling: resolvedValue = value + floor(statValue / per) * value
     let resolvedValue = value;
@@ -225,7 +228,19 @@ export class CardResolver {
         // applying the resolved (scaled) value re-enters the same stat each
         // play and produces exponential self-feedback (Stoneskin/Dancer's
         // Guard buffing VIT/DEX off their own current VIT/DEX).
-        const magnitude = value;
+        //
+        // Per-card per-battle cap: tier 1 -> 5, tier 2 -> 10. Higher tiers
+        // and untagged cards stay uncapped. Without this, a deck that cycles
+        // a +1 VIT card many times still snowballs across long boss fights.
+        let magnitude = value;
+        if (card?.id) {
+          const tierCap = card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
+          const already = state.buffMagnitudePerCard[card.id] ?? 0;
+          const remaining = Math.max(0, tierCap - already);
+          magnitude = Math.min(magnitude, remaining);
+          if (magnitude <= 0) break;
+          state.buffMagnitudePerCard[card.id] = already + magnitude;
+        }
         switch (which) {
           case 'str': state.heroStrength += magnitude; break;
           case 'vit': state.heroVitality += magnitude; break;
