@@ -29,7 +29,10 @@ export interface CombatState {
   enemyMaxHP: number;
   enemyDefense: number;
   enemyDamage: number;
+  /** Current attack cooldown in ms (may be temporarily shaved by agility affinity; decays back to base). */
   enemyAttackCooldown: number;
+  /** Base attack cooldown (unchanging during combat) — decay target for the agility shave. */
+  enemyBaseAttackCooldown: number;
   enemyPattern: string;
   enemySpecialEffect: string | null;
   /** Phase 10: element affinity for the on-hit secondary effect. */
@@ -120,6 +123,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     enemyDefense: enemy.baseDefense,
     enemyDamage: enemy.attack.damage,
     enemyAttackCooldown: enemy.attackCooldown ?? 2000,
+    enemyBaseAttackCooldown: enemy.attackCooldown ?? 2000,
     enemyPattern: enemy.attack.pattern,
     enemySpecialEffect: enemy.attack.specialEffect ?? null,
     enemyAffinity: enemy.affinity ?? null,

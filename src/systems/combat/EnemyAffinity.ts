@@ -46,10 +46,15 @@ export function applyEnemyAffinityEffect(
     }
 
     case 'agility': {
-      // Speed identity: enemy attack cooldown shrinks (capped at 500ms).
+      // Speed identity: enemy attack cooldown shrinks temporarily (floored at
+      // 800ms). The shave is added to the current cooldown, which decays back
+      // toward enemyBaseAttackCooldown over time in EnemyAI.tick() — so the
+      // speedup is a temporary buff, not a permanent ratchet.
       const shave = 100 * m;
-      state.enemyAttackCooldown = Math.max(500, state.enemyAttackCooldown - shave);
-      return { type: 'enemy_speedup', value: shave };
+      const before = state.enemyAttackCooldown;
+      state.enemyAttackCooldown = Math.max(800, before - shave);
+      const applied = before - state.enemyAttackCooldown;
+      return { type: 'enemy_speedup', value: applied };
     }
 
     case 'counter': {
