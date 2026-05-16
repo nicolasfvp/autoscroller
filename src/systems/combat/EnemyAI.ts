@@ -8,6 +8,7 @@ import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
+import { fireTrigger, applyTriggeredPayload } from './StatusEffects';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -228,7 +229,21 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
   const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
   // Armor consumed at face value — multiplier only shifts how much damage
   // each point of armor blocks, not how fast armor itself depletes.
+  const armorBefore = state.heroDefense;
   state.heroDefense = Math.max(0, state.heroDefense - damage);
+
+  // on_armor_break: triggered auras armed on the hero fire their `then`
+  // payload when armor transitions from >0 to 0.
+  if (armorBefore > 0 && state.heroDefense === 0 && state.heroAuras && state.heroAuras.length > 0) {
+    const payloads = fireTrigger(state.heroAuras, 'on_armor_break');
+    for (const p of payloads) {
+      const r = applyTriggeredPayload(state, p);
+      // Triggered damage goes to a transient bucket; not added to per-card
+      // result tracking here. Stats are summed via the global combat:enemy-attack
+      // path; trigger damage is incidental and small.
+      void r;
+    }
+  }
 
   if (remaining > 0) {
     state.heroHP = Math.max(0, state.heroHP - remaining);

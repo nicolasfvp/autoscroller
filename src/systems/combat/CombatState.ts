@@ -7,6 +7,7 @@ import type { ElementId } from '../ElementSystem';
 import { applyPassiveRelics, applyOnCombatStartRelics } from './RelicSystem';
 import { resolveHeroStats } from '../hero/HeroStatsResolver';
 import { resolvePassives, applyPassiveModifiersToCombatState } from '../hero/PassiveSkillSystem';
+import type { ActiveAura } from './StatusEffects';
 
 export interface CombatState {
   heroHP: number;
@@ -93,6 +94,24 @@ export interface CombatState {
    * can't snowball a stat indefinitely. Resets at combat start.
    */
   buffMagnitudePerCard: Record<string, number>;
+
+  /**
+   * Tier-1 redesign: time-decaying status effects. heroAuras host modifier
+   * auras (e.g. +1 DEX for 5s, cd_reduction 25% for 5s) and triggered auras
+   * (e.g. on_armor_break → deal 4 damage). enemyAuras hold debuffs like
+   * timed enemy-defense reductions. Both lists are ticked each combat
+   * frame; expired entries self-prune.
+   */
+  heroAuras: ActiveAura[];
+  enemyAuras: ActiveAura[];
+
+  /**
+   * Self-DoT pools for cards that pay HP-over-time as a cost (e.g.
+   * Tide-Tempered Blade applies 1 burn to the hero). Ticked alongside
+   * enemy DoTs on the same cadence.
+   */
+  heroBurnStacks: number;
+  heroBleedStacks: number;
 }
 
 /**
@@ -156,6 +175,10 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     rageStacks: 0,
     nextCardCooldownReduction: 0,
     buffMagnitudePerCard: {},
+    heroAuras: [],
+    enemyAuras: [],
+    heroBurnStacks: 0,
+    heroBleedStacks: 0,
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --

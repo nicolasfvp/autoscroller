@@ -253,6 +253,8 @@ describe('Phase 10 (element system) content totals + coverage', () => {
       'damage', 'heal', 'armor', 'stamina', 'mana', 'debuff',
       'buff', 'debuff_stat', 'dot', 'stack',
       'consume_combo', 'gain_combo', 'stealth', 'taunt',
+      // Tier-1 redesign: time-decaying status effect on hero/enemy.
+      'aura',
     ]);
     for (const card of cards as any[]) {
       for (const eff of card.effects) {

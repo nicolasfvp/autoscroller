@@ -7,17 +7,18 @@ import type { CardDefinition } from '../../data/types';
 import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
 import { CardResolver } from './CardResolver';
-import { EnemyAI } from './EnemyAI';
+import { EnemyAI, applyHeroDamage } from './EnemyAI';
 import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
 import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
+import { tickAuras, getCdReductionFactor } from './StatusEffects';
 import { rand } from '../SharedRNG';
 import { getRun } from '../../state/RunState';
 
 /** Passive regen interval in milliseconds */
-const REGEN_INTERVAL = 3000;
+const REGEN_INTERVAL = 4500;
 /** Stamina restored per regen tick */
-const STAMINA_REGEN = 2;
+const STAMINA_REGEN = 1;
 /** Mana restored per regen tick */
 const MANA_REGEN = 1;
 /** Retry delay when all cards are unaffordable */
@@ -91,6 +92,11 @@ export class CombatEngine {
 
     // Passive regen
     this.applyPassiveRegen(deltaMs);
+
+    // Decay any time-limited auras on hero and enemy. Expired entries prune
+    // themselves; cd_reduction recalculation happens lazily on next card play.
+    tickAuras(this.state.heroAuras, deltaMs);
+    tickAuras(this.state.enemyAuras, deltaMs);
   }
 
   private playNextCard(): void {
@@ -273,9 +279,12 @@ export class CombatEngine {
     if (cooldownShave > 0) {
       this.state.nextCardCooldownReduction = 0;
     }
+    // Air-element cd_reduction auras apply on top of DEX scaling; capped to a
+    // floor of 40% of the base cooldown (60% max reduction, soft cap above 30%).
+    const auraCdFactor = getCdReductionFactor(this.state.heroAuras);
     this.heroCooldownTimer = Math.max(
       0,
-      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0),
+      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor,
     );
 
     // Emit event
@@ -376,6 +385,19 @@ export class CombatEngine {
     // play" cadence (INDEX §7 #2) and avoids over-firing for multi-DoT stacks.
     if (anyDotTicked) {
       dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
+    }
+
+    // Tier-1 redesign: hero burn / bleed stacks (self_dot cost) tick once per
+    // card play. Routed through applyHeroDamage so the hero's current armor
+    // can absorb the tick — consistent with the "all damage respects armor"
+    // rule. Each stack decays by 1 after the tick.
+    if (state.heroBurnStacks > 0) {
+      applyHeroDamage(state.heroBurnStacks, state, /*skipRelics=*/true);
+      state.heroBurnStacks = Math.max(0, state.heroBurnStacks - 1);
+    }
+    if (state.heroBleedStacks > 0) {
+      applyHeroDamage(state.heroBleedStacks, state, /*skipRelics=*/true);
+      state.heroBleedStacks = Math.max(0, state.heroBleedStacks - 1);
     }
   }
 

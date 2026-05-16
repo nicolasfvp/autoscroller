@@ -19,7 +19,7 @@
     {
       "id": "t1-attack-attack",
       "name": "Strike",
-      "description": "Deal 7 damage. +1 Stamina.",
+      "description": "Deal 7. Restore 1 stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -33,7 +33,7 @@
           "target": "enemy",
           "scale": {
             "stat": "str",
-            "per": 1,
+            "per": 2,
             "value": 1
           }
         },
@@ -43,7 +43,7 @@
           "target": "self"
         }
       ],
-      "cooldown": 1.1,
+      "cooldown": 1,
       "targeting": "single",
       "rarity": "common",
       "cost": {
@@ -52,8 +52,8 @@
     },
     {
       "id": "t1-defense-defense",
-      "name": "Bulwark",
-      "description": "Gain 12 Armor.",
+      "name": "Bulwark Vow",
+      "description": "Gain 6 armor (scales VIT). On break: +2 rage.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -63,23 +63,39 @@
       "effects": [
         {
           "type": "armor",
-          "value": 12,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
-            "value": 1
+            "per": 2,
+            "value": 4
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
+          "then": {
+            "type": "stack",
+            "value": 2,
+            "target": "self",
+            "stack": "rage"
           }
         }
       ],
-      "cooldown": 1.1,
+      "cooldown": 1.6,
       "targeting": "self",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-agility-agility",
-      "name": "Quickstep",
-      "description": "Deal 5 damage. +2 Stamina.",
+      "name": "Flurry Step",
+      "description": "Hit twice; second swing scales DEX.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -89,28 +105,31 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 4,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "dex",
-            "per": 1,
+            "per": 3,
             "value": 1
           }
-        },
-        {
-          "type": "stamina",
-          "value": 2,
-          "target": "self"
         }
       ],
-      "cooldown": 0.8,
+      "cooldown": 0.9,
       "targeting": "single",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-counter-counter",
-      "name": "Riposte",
-      "description": "Deal 7 damage. Gain 4 Armor.",
+      "name": "Vengeful Riposte",
+      "description": "Deal 6 (pierces armor below 50% HP). Bleed 4.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -120,58 +139,62 @@
       "effects": [
         {
           "type": "damage",
-          "value": 7,
+          "value": 6,
           "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
+          "pierce_armor": true,
+          "condition": {
+            "hero_hp_pct_below": 50
           }
         },
         {
-          "type": "armor",
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "condition": {
+            "hero_hp_pct_atleast": 50
+          }
+        },
+        {
+          "type": "dot",
           "value": 4,
-          "target": "self"
+          "target": "enemy",
+          "stack": "bleed"
         }
       ],
-      "cooldown": 1.1,
+      "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-fire-fire",
-      "name": "Flameburst",
-      "description": "Deal 6 damage. Burn 2.",
+      "name": "Pyre",
+      "description": "Deal 4 + 2 per burn stack. Burn 5.",
       "category": "magic",
       "tier": 1,
       "elements": [
         "fire",
         "fire"
       ],
-      "cost": {
-        "mana": 2
-      },
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 4,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 2,
           "target": "enemy",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
+          "condition": {
+            "enemy_has_stack": "burn",
+            "per_stack": true
           }
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 5,
           "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
+          "stack": "burn"
         }
       ],
       "cooldown": 1.4,
@@ -180,37 +203,49 @@
     },
     {
       "id": "t1-water-water",
-      "name": "Healwave",
-      "description": "Heal 10 HP.",
+      "name": "Wellspring",
+      "description": "Heal 4 (scales SPI). Restore 2 mana. +2 SPI aura.",
       "category": "magic",
       "tier": 1,
       "elements": [
         "water",
         "water"
       ],
-      "cost": {
-        "mana": 2
-      },
       "effects": [
         {
           "type": "heal",
-          "value": 10,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "spi",
-            "per": 1,
-            "value": 1
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "mana",
+          "value": 2,
+          "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "spi",
+            "value": 2
           }
         }
       ],
-      "cooldown": 1.2,
+      "cooldown": 1.5,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-air-air",
-      "name": "Gust",
-      "description": "Deal 5 damage. +1 Mana.",
+      "name": "Tailwind",
+      "description": "Deal 4. Next cards cooldown -25% (5s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -220,28 +255,31 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "dex",
-            "per": 1,
-            "value": 1
-          }
+          "value": 4,
+          "target": "enemy"
         },
         {
-          "type": "mana",
-          "value": 1,
-          "target": "self"
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.25
+          }
         }
       ],
-      "cooldown": 0.8,
+      "cooldown": 1.2,
       "targeting": "single",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      }
     },
     {
       "id": "t1-earth-earth",
-      "name": "Stoneskin",
-      "description": "Gain 10 Armor. +1 VIT for combat.",
+      "name": "Avalanche",
+      "description": "Gain 14 armor (scales VIT). Deal 12 (scales VIT).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -251,33 +289,36 @@
       "effects": [
         {
           "type": "armor",
-          "value": 10,
+          "value": 14,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
-            "value": 1
+            "per": 2,
+            "value": 2
           }
         },
         {
-          "type": "buff",
-          "value": 1,
-          "target": "self",
+          "type": "damage",
+          "value": 12,
+          "target": "enemy",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 2,
             "value": 1
           }
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 2.8,
       "targeting": "self",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 2
+      }
     },
     {
       "id": "t1-agility-attack",
-      "name": "Swift Slash",
-      "description": "Deal 7 damage.",
+      "name": "Quickstrike",
+      "description": "Deal 6 (scales DEX).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -287,23 +328,26 @@
       "effects": [
         {
           "type": "damage",
-          "value": 7,
+          "value": 6,
           "target": "enemy",
           "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
+            "stat": "dex",
+            "per": 2,
+            "value": 2
           }
         }
       ],
-      "cooldown": 0.9,
+      "cooldown": 0.8,
       "targeting": "single",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-agility-counter",
-      "name": "Evasive Strike",
-      "description": "Deal 6 damage. +1 Stamina.",
+      "name": "Sidestep & Slash",
+      "description": "Deal 5; +5 below 60% HP. Bleed 2. Restore 1 stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -313,13 +357,22 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 5,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 5,
           "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
+          "condition": {
+            "hero_hp_pct_below": 60
           }
+        },
+        {
+          "type": "dot",
+          "value": 2,
+          "target": "enemy",
+          "stack": "bleed"
         },
         {
           "type": "stamina",
@@ -327,14 +380,14 @@
           "target": "self"
         }
       ],
-      "cooldown": 0.9,
+      "cooldown": 1.1,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-agility-defense",
-      "name": "Dancer's Guard",
-      "description": "Gain 7 Armor. +1 DEX for combat.",
+      "name": "Parrying Stance",
+      "description": "Gain 5 armor (scales DEX). Restore 1 stamina. On break: deal 4.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -344,73 +397,72 @@
       "effects": [
         {
           "type": "armor",
-          "value": 7,
+          "value": 5,
           "target": "self",
           "scale": {
-            "stat": "vit",
-            "per": 1,
+            "stat": "dex",
+            "per": 2,
             "value": 1
           }
         },
         {
-          "type": "buff",
+          "type": "stamina",
           "value": 1,
+          "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
           "target": "self",
-          "scale": {
-            "stat": "dex",
-            "per": 1,
-            "value": 1
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
+          "then": {
+            "type": "damage",
+            "value": 4,
+            "target": "enemy"
           }
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.3,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-agility-fire",
-      "name": "Cinder Dash",
-      "description": "Deal 5 damage. Burn 1.",
+      "name": "Flame Dart",
+      "description": "Deal 5 to random foe (scales DEX). Burn 3.",
       "category": "magic",
       "tier": 1,
       "elements": [
         "agility",
         "fire"
       ],
-      "cost": {
-        "mana": 1
-      },
       "effects": [
         {
           "type": "damage",
           "value": 5,
           "target": "enemy",
           "scale": {
-            "stat": "int",
-            "per": 1,
+            "stat": "dex",
+            "per": 3,
             "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 1,
+          "value": 3,
           "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
+          "stack": "burn"
         }
       ],
-      "cooldown": 1,
-      "targeting": "single",
+      "cooldown": 1.1,
+      "targeting": "random",
       "rarity": "common"
     },
     {
       "id": "t1-agility-water",
-      "name": "Mist Touch",
-      "description": "Heal 6 HP. +1 Stamina.",
+      "name": "Mist Step",
+      "description": "Heal 3. Restore 1 stamina. +1 DEX aura. Drain 1 enemy mana.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -420,28 +472,38 @@
       "effects": [
         {
           "type": "heal",
-          "value": 6,
-          "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
+          "value": 3,
+          "target": "self"
         },
         {
           "type": "stamina",
           "value": 1,
           "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "dex",
+            "value": 1
+          }
+        },
+        {
+          "type": "mana",
+          "value": -1,
+          "target": "enemy"
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.3,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-agility-air",
-      "name": "Zephyr Step",
-      "description": "Deal 5 damage. +2 Stamina.",
+      "name": "Gale Cut",
+      "description": "Deal 5. Next cards cooldown -15% (4s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -452,404 +514,39 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "dex",
-            "per": 1,
-            "value": 1
-          }
+          "target": "enemy"
         },
         {
-          "type": "stamina",
-          "value": 2,
-          "target": "self"
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 4000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.15
+          }
         }
       ],
-      "cooldown": 0.8,
+      "cooldown": 1,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-agility-earth",
-      "name": "Rolling Stone",
-      "description": "Deal 6 damage. Apply 1 Freeze (slow).",
+      "name": "Tremor Dash",
+      "description": "Deal 5. Gain 4 armor. Restore 1 stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
         "agility",
         "earth"
       ],
-      "cost": {
-        "stamina": 1,
-        "mana": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "scale": {
-            "stat": "vit",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 1,
-          "target": "enemy",
-          "stack": "freeze"
-        }
-      ],
-      "cooldown": 1.3,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-attack-counter",
-      "name": "Vengeful Blow",
-      "description": "Deal 9 damage. Gain 3 Armor.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "counter"
-      ],
-      "cost": {
-        "stamina": 1
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 9,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "armor",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1.2,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-attack-defense",
-      "name": "Shield Slam",
-      "description": "Deal 5 damage. Gain 6 Armor.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "defense"
-      ],
-      "cost": {
-        "stamina": 1
-      },
       "effects": [
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
+          "target": "enemy"
         },
-        {
-          "type": "armor",
-          "value": 6,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.2,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-attack-fire",
-      "name": "Flame Slash",
-      "description": "Deal 8 damage. Burn 1.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "fire"
-      ],
-      "cost": {
-        "mana": 1
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 8,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 1,
-          "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-attack-water",
-      "name": "Tide Bash",
-      "description": "Deal 7 damage. Heal 2 HP.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "water"
-      ],
-      "cost": {
-        "stamina": 1
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "heal",
-          "value": 2,
-          "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.1,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-air-attack",
-      "name": "Storm Cleave",
-      "description": "Deal 8 damage AoE.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "air",
-        "attack"
-      ],
-      "cost": {
-        "stamina": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 8,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.1,
-      "targeting": "aoe",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-attack-earth",
-      "name": "Crushing Blow",
-      "description": "Deal 8 damage. Apply 2 Freeze (slow).",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "earth"
-      ],
-      "cost": {
-        "stamina": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 8,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "freeze"
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-counter-defense",
-      "name": "Thorn Wall",
-      "description": "Gain 8 Armor. Deal 3 damage.",
-      "category": "defense",
-      "tier": 1,
-      "elements": [
-        "counter",
-        "defense"
-      ],
-      "cost": {
-        "stamina": 1
-      },
-      "effects": [
-        {
-          "type": "armor",
-          "value": 8,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "damage",
-          "value": 3,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.2,
-      "targeting": "self",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-counter-fire",
-      "name": "Ember Riposte",
-      "description": "Deal 5 damage. Burn 2. Gain 2 Armor.",
-      "category": "magic",
-      "tier": 1,
-      "elements": [
-        "counter",
-        "fire"
-      ],
-      "cost": {
-        "mana": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "armor",
-          "value": 2,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1.2,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-counter-water",
-      "name": "Soothing Reflect",
-      "description": "Heal 5 HP. Gain 3 Armor.",
-      "category": "magic",
-      "tier": 1,
-      "elements": [
-        "counter",
-        "water"
-      ],
-      "cost": {
-        "mana": 1
-      },
-      "effects": [
-        {
-          "type": "heal",
-          "value": 5,
-          "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "armor",
-          "value": 3,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1.2,
-      "targeting": "self",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-air-counter",
-      "name": "Wind Parry",
-      "description": "Gain 4 Armor. +1 Stamina.",
-      "category": "defense",
-      "tier": 1,
-      "elements": [
-        "air",
-        "counter"
-      ],
-      "effects": [
         {
           "type": "armor",
           "value": 4,
@@ -861,14 +558,417 @@
           "target": "self"
         }
       ],
-      "cooldown": 0.9,
+      "cooldown": 1.6,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-attack-counter",
+      "name": "Brutal Reprisal",
+      "description": "Deal 7 (pierces armor below 40% HP). Scales STR.",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "counter"
+      ],
+      "cost": {
+        "stamina": 2
+      },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 7,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 2
+          },
+          "pierce_armor": true,
+          "condition": {
+            "hero_hp_pct_below": 40
+          }
+        },
+        {
+          "type": "damage",
+          "value": 7,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 2
+          },
+          "condition": {
+            "hero_hp_pct_atleast": 40
+          }
+        }
+      ],
+      "cooldown": 1.5,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-attack-defense",
+      "name": "Shield Bash",
+      "description": "Spend 4 armor: deal 8 (scales STR). Taunt.",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "defense"
+      ],
+      "cost": {
+        "defense": 4
+      },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 8,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "taunt",
+          "value": 1,
+          "target": "enemy"
+        }
+      ],
+      "cooldown": 1.5,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-attack-fire",
+      "name": "Searing Cleave",
+      "description": "Deal 6 (+4 if burning). Burn 4.",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "fire"
+      ],
+      "cost": {
+        "stamina": 1
+      },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 4,
+          "target": "enemy",
+          "condition": {
+            "enemy_has_stack": "burn"
+          }
+        },
+        {
+          "type": "dot",
+          "value": 4,
+          "target": "enemy",
+          "stack": "burn"
+        }
+      ],
+      "cooldown": 1.3,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-attack-water",
+      "name": "Tide-Tempered Blade",
+      "description": "Deal 6 (scales STR). Heal 2. Self-burn 1.",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
+        },
+        {
+          "type": "heal",
+          "value": 2,
+          "target": "self"
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "self_dot",
+          "stack": "burn"
+        }
+      ],
+      "cooldown": 1.4,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-air-attack",
+      "name": "Stormstrike",
+      "description": "Deal 6 (scales STR). Next cards cooldown -20% (5s).",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "air",
+        "attack"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.2
+          }
+        }
+      ],
+      "cooldown": 1.4,
+      "targeting": "aoe",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-attack-earth",
+      "name": "Crushing Blow",
+      "description": "Deal 10 (scales STR). Gain 5 armor. -2 enemy defense (8s).",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "earth"
+      ],
+      "cost": {
+        "stamina": 2
+      },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 10,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "armor",
+          "value": 5,
+          "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "enemy",
+          "ttl_ms": 8000,
+          "modifier": {
+            "kind": "def",
+            "value": -2
+          }
+        }
+      ],
+      "cooldown": 2.2,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-counter-defense",
+      "name": "Iron Reckoning",
+      "description": "Gain 5 armor (scales VIT). +2 rage. On break: deal 6 (scales rage).",
+      "category": "defense",
+      "tier": 1,
+      "elements": [
+        "counter",
+        "defense"
+      ],
+      "cost": {
+        "stamina": 1
+      },
+      "effects": [
+        {
+          "type": "armor",
+          "value": 5,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "stack",
+          "value": 2,
+          "target": "self",
+          "stack": "rage"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
+          "then": {
+            "type": "damage",
+            "value": 6,
+            "target": "enemy",
+            "scale": {
+              "stat": "rage",
+              "per": 1,
+              "value": 1
+            }
+          }
+        }
+      ],
+      "cooldown": 1.7,
+      "targeting": "self",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-counter-fire",
+      "name": "Flickering Vengeance",
+      "description": "Burn 5; +3 burn below 60% HP. Bleed 2.",
+      "category": "magic",
+      "tier": 1,
+      "elements": [
+        "counter",
+        "fire"
+      ],
+      "effects": [
+        {
+          "type": "dot",
+          "value": 5,
+          "target": "enemy",
+          "stack": "burn"
+        },
+        {
+          "type": "dot",
+          "value": 3,
+          "target": "enemy",
+          "stack": "burn",
+          "condition": {
+            "hero_hp_pct_below": 60
+          }
+        },
+        {
+          "type": "dot",
+          "value": 2,
+          "target": "enemy",
+          "stack": "bleed"
+        }
+      ],
+      "cooldown": 1.4,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-counter-water",
+      "name": "Bloodtide Mend",
+      "description": "Heal 5 (scales SPI); +4 below 50% HP. Self-bleed 2.",
+      "category": "magic",
+      "tier": 1,
+      "elements": [
+        "counter",
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "heal",
+          "value": 5,
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "heal",
+          "value": 4,
+          "target": "self",
+          "condition": {
+            "hero_hp_pct_below": 50
+          }
+        },
+        {
+          "type": "dot",
+          "value": 2,
+          "target": "self_dot",
+          "stack": "bleed"
+        }
+      ],
+      "cooldown": 1.5,
+      "targeting": "self",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-air-counter",
+      "name": "Hollow Echo",
+      "description": "Deal 5; +3 below 50% HP. Next cards cooldown -15% (4s).",
+      "category": "defense",
+      "tier": 1,
+      "elements": [
+        "air",
+        "counter"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "enemy",
+          "condition": {
+            "hero_hp_pct_below": 50
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 4000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.15
+          }
+        }
+      ],
+      "cooldown": 1.3,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-counter-earth",
-      "name": "Stone Riposte",
-      "description": "Gain 9 Armor. Deal 3 damage.",
+      "name": "Thornwall",
+      "description": "Gain 8 armor (scales VIT). Deal 5. On break: deal 6.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -881,33 +981,40 @@
       "effects": [
         {
           "type": "armor",
-          "value": 9,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 2,
             "value": 1
           }
         },
         {
           "type": "damage",
-          "value": 3,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 1,
-            "value": 1
+          "value": 5,
+          "target": "enemy"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
+          "then": {
+            "type": "damage",
+            "value": 6,
+            "target": "enemy"
           }
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-defense-fire",
-      "name": "Ember Ward",
-      "description": "Gain 6 Armor. Burn 2 to enemy.",
+      "name": "Forge Aegis",
+      "description": "Gain 6 armor (scales VIT). Burn 3.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -915,7 +1022,7 @@
         "fire"
       ],
       "cost": {
-        "mana": 1
+        "stamina": 1
       },
       "effects": [
         {
@@ -924,30 +1031,25 @@
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 2,
             "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 3,
           "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
+          "stack": "burn"
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 1.6,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-defense-water",
-      "name": "Tidal Aegis",
-      "description": "Gain 8 Armor. Heal 3 HP.",
+      "name": "Vow of the Tide",
+      "description": "Gain 5 armor (scales VIT). Heal 3. Restore 1 stamina. +1 SPI aura.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -955,38 +1057,48 @@
         "water"
       ],
       "cost": {
-        "mana": 2
+        "mana": 1
       },
       "effects": [
         {
           "type": "armor",
-          "value": 8,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 3,
             "value": 1
           }
         },
         {
           "type": "heal",
           "value": 3,
+          "target": "self"
+        },
+        {
+          "type": "stamina",
+          "value": 1,
+          "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
           "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "spi",
             "value": 1
           }
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 1.6,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-air-defense",
-      "name": "Breeze Veil",
-      "description": "Gain 6 Armor. +1 Stamina.",
+      "name": "Cyclone Ward",
+      "description": "Gain 5 armor (scales VIT). Next cards cooldown -15% (4s).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -996,28 +1108,33 @@
       "effects": [
         {
           "type": "armor",
-          "value": 6,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 3,
             "value": 1
           }
         },
         {
-          "type": "stamina",
-          "value": 1,
-          "target": "self"
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 4000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.15
+          }
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.4,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-defense-earth",
-      "name": "Stone Guard",
-      "description": "Gain 13 Armor.",
+      "name": "Bramble Bulwark",
+      "description": "Gain 8 armor (scales VIT). Deal 6 piercing if armored ≥10.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1030,23 +1147,32 @@
       "effects": [
         {
           "type": "armor",
-          "value": 13,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
-            "per": 1,
+            "per": 2,
             "value": 1
+          }
+        },
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "pierce_armor": true,
+          "condition": {
+            "self_armor_atleast": 10
           }
         }
       ],
-      "cooldown": 1.4,
+      "cooldown": 2,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-fire-water",
-      "name": "Steam Burst",
-      "description": "Deal 5 damage. Heal 4 HP.",
+      "name": "Steam Surge",
+      "description": "Deal 4 (+4 if burning). Heal 4. Restore 1 stamina.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1054,160 +1180,46 @@
         "water"
       ],
       "cost": {
-        "mana": 2
+        "mana": 1
       },
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 4,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 4,
           "target": "enemy",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
+          "condition": {
+            "enemy_has_stack": "burn"
           }
         },
         {
           "type": "heal",
           "value": 4,
-          "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
+          "target": "self"
+        },
+        {
+          "type": "stamina",
+          "value": 1,
+          "target": "self"
         }
       ],
-      "cooldown": 1.2,
+      "cooldown": 1.3,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-air-fire",
-      "name": "Wildfire Gust",
-      "description": "Deal 6 damage AoE. Burn 1 AoE.",
+      "name": "Firestorm",
+      "description": "AoE deal 4. Burn 3 AoE. Drain 1 enemy stamina.",
       "category": "magic",
       "tier": 1,
       "elements": [
         "air",
         "fire"
-      ],
-      "cost": {
-        "mana": 3
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 1,
-          "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        }
-      ],
-      "cooldown": 1.3,
-      "targeting": "aoe",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-earth-fire",
-      "name": "Magma Shard",
-      "description": "Deal 5 damage. Burn 2. Apply 1 Freeze.",
-      "category": "magic",
-      "tier": 1,
-      "elements": [
-        "earth",
-        "fire"
-      ],
-      "cost": {
-        "mana": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "burn",
-          "scale": {
-            "stat": "int",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 1,
-          "target": "enemy",
-          "stack": "freeze"
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-air-water",
-      "name": "Mist Veil",
-      "description": "Heal 6 HP. +1 Mana.",
-      "category": "magic",
-      "tier": 1,
-      "elements": [
-        "air",
-        "water"
-      ],
-      "effects": [
-        {
-          "type": "heal",
-          "value": 6,
-          "target": "self",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
-        },
-        {
-          "type": "mana",
-          "value": 1,
-          "target": "self"
-        }
-      ],
-      "cooldown": 1,
-      "targeting": "self",
-      "rarity": "common"
-    },
-    {
-      "id": "t1-earth-water",
-      "name": "Mud Throw",
-      "description": "Deal 5 damage. Apply 2 Freeze.",
-      "category": "magic",
-      "tier": 1,
-      "elements": [
-        "earth",
-        "water"
       ],
       "cost": {
         "mana": 1
@@ -1215,29 +1227,139 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
-          "target": "enemy",
-          "scale": {
-            "stat": "spi",
-            "per": 1,
-            "value": 1
-          }
+          "value": 4,
+          "target": "enemy"
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 3,
           "target": "enemy",
-          "stack": "freeze"
+          "stack": "burn"
+        },
+        {
+          "type": "stamina",
+          "value": -1,
+          "target": "enemy"
         }
       ],
-      "cooldown": 1.2,
+      "cooldown": 1.8,
+      "targeting": "aoe",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-earth-fire",
+      "name": "Magma Vein",
+      "description": "Gain 7 armor. Deal 8. Burn 4.",
+      "category": "magic",
+      "tier": 1,
+      "elements": [
+        "earth",
+        "fire"
+      ],
+      "cost": {
+        "mana": 2
+      },
+      "effects": [
+        {
+          "type": "armor",
+          "value": 7,
+          "target": "self"
+        },
+        {
+          "type": "damage",
+          "value": 8,
+          "target": "enemy"
+        },
+        {
+          "type": "dot",
+          "value": 4,
+          "target": "enemy",
+          "stack": "burn"
+        }
+      ],
+      "cooldown": 2.3,
+      "targeting": "single",
+      "rarity": "common"
+    },
+    {
+      "id": "t1-air-water",
+      "name": "Misting Veil",
+      "description": "Heal 3. Next cards cooldown -20% (5s). +1 INT aura.",
+      "category": "magic",
+      "tier": 1,
+      "elements": [
+        "air",
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "heal",
+          "value": 3,
+          "target": "self"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.2
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "int",
+            "value": 1
+          }
+        }
+      ],
+      "cooldown": 1.4,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      }
+    },
+    {
+      "id": "t1-earth-water",
+      "name": "Mire Bloom",
+      "description": "Gain 6 armor. Heal 4. Deal 5.",
+      "category": "magic",
+      "tier": 1,
+      "elements": [
+        "earth",
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 6,
+          "target": "self"
+        },
+        {
+          "type": "heal",
+          "value": 4,
+          "target": "self"
+        },
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy"
+        }
+      ],
+      "cooldown": 1.8,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-air-earth",
-      "name": "Sandstorm",
-      "description": "Deal 7 damage AoE. Apply 1 Freeze AoE.",
+      "name": "Sandstorm Wall",
+      "description": "Gain 5 armor. Deal 4. Next cards cooldown -15% (4s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1245,27 +1367,31 @@
         "earth"
       ],
       "cost": {
-        "mana": 2
+        "mana": 1
       },
       "effects": [
         {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy",
-          "scale": {
-            "stat": "vit",
-            "per": 1,
-            "value": 1
-          }
+          "type": "armor",
+          "value": 5,
+          "target": "self"
         },
         {
-          "type": "dot",
-          "value": 1,
-          "target": "enemy",
-          "stack": "freeze"
+          "type": "damage",
+          "value": 4,
+          "target": "enemy"
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 4000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.15
+          }
         }
       ],
-      "cooldown": 1.4,
+      "cooldown": 1.8,
       "targeting": "aoe",
       "rarity": "common"
     },

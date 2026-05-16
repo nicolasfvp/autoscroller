@@ -1,11 +1,12 @@
 // Card effect application with cost payment and targeting.
 // Zero Phaser imports.
 
-import type { CardDefinition, SynergyDefinition, StatId, StackId } from '../../data/types';
+import type { CardDefinition, CardEffect, CardEffectCondition, SynergyDefinition, StatId, StackId } from '../../data/types';
 import type { CombatState } from './CombatState';
 import type { SynergyBuff } from '../SynergyResolver';
 import { readStat } from '../hero/HeroStatsResolver';
 import { applyHeroDamage } from './EnemyAI';
+import { createAura, sumModifier } from './StatusEffects';
 
 export interface ResolveResult {
   totalDamage: number;
@@ -76,11 +77,7 @@ export class CardResolver {
 
     // Apply each card effect (Phase 9: pass scale + stack for new effect types)
     for (const effect of effectiveEffects) {
-      this.applyEffect(
-        effect.type, effect.value, effect.target, state, result,
-        extraDamageMultiplier, effect.scale, effect.stack,
-        card,
-      );
+      this.applyCardEffect(effect, state, result, extraDamageMultiplier, card);
     }
 
     // Apply synergy bonus effect (if not cost_waive). Phase 9 (D-13 b) routes
@@ -94,20 +91,68 @@ export class CardResolver {
         bonus.type === 'stat_buff' && bonus.stat
           ? { stat: bonus.stat, per: 1, value: 0 } // carries stat axis for `buff` case
           : undefined;
-      this.applyEffect(
-        effectType,
-        bonus.value,
-        bonus.target as 'enemy' | 'self',
-        state,
-        result,
-        extraDamageMultiplier,
-        scaleShim,
-        bonus.stack,
-        card,
-      );
+      const synergyEffect: CardEffect = {
+        type: effectType as CardEffect['type'],
+        value: bonus.value,
+        target: bonus.target as CardEffect['target'],
+        scale: scaleShim,
+        stack: bonus.stack as StackId | undefined,
+      };
+      this.applyCardEffect(synergyEffect, state, result, extraDamageMultiplier, card);
     }
 
     return result;
+  }
+
+  /**
+   * Wrapper around applyEffect that evaluates the optional `condition` block
+   * before dispatch. A condition either gates the effect entirely (skip if
+   * predicate fails) OR multiplies its value by an enemy-stack count when
+   * `per_stack` is true. Threaded through so synergy bonuses share the same
+   * path.
+   */
+  private applyCardEffect(
+    effect: CardEffect,
+    state: CombatState,
+    result: ResolveResult,
+    damageMultiplier: number,
+    card?: CardDefinition,
+  ): void {
+    const cond = effect.condition;
+    let effectiveValue = effect.value;
+
+    if (cond) {
+      if (cond.enemy_has_stack !== undefined) {
+        const stacks = readStackCount(state, cond.enemy_has_stack, 'enemy');
+        if (!cond.per_stack) {
+          if (stacks <= 0) return;
+        } else {
+          if (stacks <= 0) return;
+          effectiveValue *= stacks;
+        }
+      }
+      if (cond.self_has_stack !== undefined) {
+        const stacks = readStackCount(state, cond.self_has_stack, 'self');
+        if (stacks <= 0) return;
+      }
+      if (cond.hero_hp_pct_below !== undefined) {
+        const pct = (state.heroHP / Math.max(1, state.heroMaxHP)) * 100;
+        if (pct >= cond.hero_hp_pct_below) return;
+      }
+      if (cond.hero_hp_pct_atleast !== undefined) {
+        const pct = (state.heroHP / Math.max(1, state.heroMaxHP)) * 100;
+        if (pct < cond.hero_hp_pct_atleast) return;
+      }
+      if (cond.self_armor_atleast !== undefined) {
+        if (state.heroDefense < cond.self_armor_atleast) return;
+      }
+    }
+
+    this.applyEffect(
+      effect.type, effectiveValue, effect.target, state, result,
+      damageMultiplier, effect.scale, effect.stack, card,
+      effect.pierce_armor, effect,
+    );
   }
 
   /**
@@ -125,6 +170,8 @@ export class CardResolver {
     scale?: { stat: StatId; per: number; value: number },
     stack?: StackId,
     card?: CardDefinition,
+    pierceArmor: boolean = false,
+    rawEffect?: CardEffect,
   ): void {
     // Phase 9 stat scaling: resolvedValue = value + floor(statValue / per) * value
     let resolvedValue = value;
@@ -153,7 +200,15 @@ export class CardResolver {
         // metadata on magic cards — keeps the resolver category-agnostic.
         const buffMult = getDamageBuffMultiplier();
         const baseDmg = resolvedValue * state.heroStrength * damageMultiplier * buffMult;
-        const raw = baseDmg > 0 ? Math.max(1, Math.floor(baseDmg - state.enemyDefense)) : 0;
+        // Enemy defense is the base value plus any timed 'def' aura modifiers
+        // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
+        const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
+        // pierce_armor skips the enemy-defense subtraction step.
+        const raw = baseDmg > 0
+          ? (pierceArmor
+              ? Math.max(1, Math.floor(baseDmg))
+              : Math.max(1, Math.floor(baseDmg - effectiveEnemyDef)))
+          : 0;
         state.enemyHP -= raw;
         result.totalDamage += raw;
         break;
@@ -192,6 +247,15 @@ export class CardResolver {
       case 'dot': {
         // Discriminate by effect.stack (default: poison).
         const which: StackId = stack ?? 'poison';
+        // target='self_dot' routes the stack onto the hero as an HP-over-time
+        // cost (Tide-Tempered Blade / Bloodtide Mend). Only burn and bleed
+        // are wired to hero pools; other stacks fall through as a no-op when
+        // self-targeted because they'd require new hero pools.
+        if (target === 'self_dot') {
+          if (which === 'burn') state.heroBurnStacks += resolvedValue;
+          else if (which === 'bleed') state.heroBleedStacks += resolvedValue;
+          break;
+        }
         switch (which) {
           case 'poison': state.poisonStacks += resolvedValue; break;
           case 'bleed': state.bleedStacks += resolvedValue; break;
@@ -263,8 +327,58 @@ export class CardResolver {
         // `taunt` effects compiles and runs without throwing.
         break;
       }
+
+      case 'aura': {
+        // Time-decaying status effect. Modifier auras add a value to a stat
+        // axis or `cd_reduction` while alive; triggered auras (e.g.
+        // on_armor_break) sit armed and fire their `then` effect once.
+        if (!rawEffect) break;
+        const aura = createAura(rawEffect);
+        if (target === 'enemy') state.enemyAuras.push(aura);
+        else state.heroAuras.push(aura);
+        break;
+      }
     }
   }
+}
+
+/** Read the current stack count of a named DoT/stack on the named target. */
+function readStackCount(state: CombatState, which: StackId, side: 'self' | 'enemy'): number {
+  if (side === 'self') {
+    switch (which) {
+      case 'burn': return state.heroBurnStacks;
+      case 'bleed': return state.heroBleedStacks;
+      case 'rage': return state.rageStacks;
+      case 'arcane': return state.arcaneStacks;
+      default: return 0;
+    }
+  }
+  switch (which) {
+    case 'poison': return state.poisonStacks;
+    case 'bleed': return state.bleedStacks;
+    case 'burn': return state.burnStacks;
+    case 'freeze': return state.freezeStacks;
+    case 'shock': return state.shockStacks;
+    case 'arcane': return state.arcaneStacks;
+    case 'rage': return state.rageStacks;
+  }
+  return 0;
+}
+
+/**
+ * Read an aura-modified stat. Stat reads in CardResolver `scale` paths and
+ * EnemyAI `getEffectiveStat` should consult this so timed +DEX / +VIT auras
+ * actually feed scaling.
+ */
+export function getEffectiveStat(state: CombatState, stat: 'str' | 'vit' | 'dex' | 'int' | 'spi'): number {
+  const baseMap: Record<string, number> = {
+    str: state.heroStrength,
+    vit: state.heroVitality,
+    dex: state.heroDexterity,
+    int: state.heroIntellect,
+    spi: state.heroSpirit,
+  };
+  return baseMap[stat] + sumModifier(state.heroAuras, stat as 'str' | 'vit' | 'dex' | 'int' | 'spi');
 }
 
 /**

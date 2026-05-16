@@ -12,6 +12,8 @@
 
 import type { RunState } from '../../state/RunState';
 import type { StatId } from '../../data/types';
+import type { ActiveAura } from '../combat/StatusEffects';
+import { sumModifier } from '../combat/StatusEffects';
 
 export interface ResolvedHeroStats {
   maxHP: number;
@@ -53,14 +55,21 @@ export function readStat(
     heroDexterity: number;
     heroIntellect: number;
     heroSpirit: number;
+    /** Optional: aura modifiers add to the resolved value when present. */
+    heroAuras?: ActiveAura[];
   },
   stat: StatId,
 ): number {
+  let base: number;
   switch (stat) {
-    case 'str': return state.heroStrength;
-    case 'vit': return state.heroVitality;
-    case 'dex': return state.heroDexterity;
-    case 'int': return state.heroIntellect;
-    case 'spi': return state.heroSpirit;
+    case 'str': base = state.heroStrength; break;
+    case 'vit': base = state.heroVitality; break;
+    case 'dex': base = state.heroDexterity; break;
+    case 'int': base = state.heroIntellect; break;
+    case 'spi': base = state.heroSpirit; break;
   }
+  if (state.heroAuras && state.heroAuras.length > 0) {
+    base += sumModifier(state.heroAuras, stat);
+  }
+  return base;
 }

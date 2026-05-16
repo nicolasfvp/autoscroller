@@ -21,18 +21,49 @@ export interface CardCost {
   defense?: number;
 }
 
+export type AuraModifierKind = "str" | "vit" | "dex" | "int" | "spi" | "def" | "cd_reduction";
+
+export interface CardEffectCondition {
+  /** Effect only fires (or value multiplied) when enemy has the given stack. */
+  enemy_has_stack?: StackId;
+  /** Effect only fires when hero has the given stack. */
+  self_has_stack?: StackId;
+  /** Effect only fires when hero current HP % is strictly below this number. */
+  hero_hp_pct_below?: number;
+  /** Effect only fires when hero current HP % is >= this number. */
+  hero_hp_pct_atleast?: number;
+  /** Effect only fires when hero armor is >= this number. */
+  self_armor_atleast?: number;
+  /** Multiplies the effect value by the number of stacks named in enemy_has_stack. */
+  per_stack?: boolean;
+}
+
 export interface CardEffect {
   type:
     // Existing (v1)
     | "damage" | "heal" | "armor" | "stamina" | "mana" | "debuff"
     // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
-    | "buff" | "debuff_stat" | "dot" | "stack" | "taunt";
+    | "buff" | "debuff_stat" | "dot" | "stack" | "taunt"
+    // NEW (Tier-1 redesign): time-decaying status effect on hero or enemy.
+    | "aura";
   value: number;
-  target: "enemy" | "self";
+  target: "enemy" | "self" | "self_dot";
   /** Optional stat scaling: adds floor(stat / per) * value to the resolved value. */
   scale?: { stat: StatId; per: number; value: number };
   /** Disambiguates which stack to apply for type="dot" or type="stack". */
   stack?: StackId;
+  /** Damage variant: skip enemy defense subtraction. */
+  pierce_armor?: boolean;
+  /** Gate / multiplier: see CardEffectCondition. */
+  condition?: CardEffectCondition;
+  /** Aura: lifetime in ms before this effect decays off the target. */
+  ttl_ms?: number;
+  /** Aura modifier (stat or cd_reduction) carried while the aura is alive. */
+  modifier?: { kind: AuraModifierKind; value: number };
+  /** Aura: trigger name that fires the `then` effect once, then removes the aura. */
+  trigger?: "on_armor_break";
+  /** Aura: effect to apply once when `trigger` fires. */
+  then?: CardEffect;
 }
 
 export interface CardUpgrade {

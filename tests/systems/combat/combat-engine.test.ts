@@ -127,13 +127,15 @@ describe('CombatEngine', () => {
   it('skips unaffordable card and tries next', () => {
     // Pin an expensive card (3-stamina) first then a free card; with hero stamina at 0,
     // the engine must skip the expensive one and play the free one.
-    const run = makeMockRun(['t2-attack-attack-attack', 't1-defense-defense']);
+    // Tier-1 redesign: Pyre (t1-fire-fire) is one of the free cards in the
+    // new set, used here instead of Bulwark Vow (now costs 1 stamina).
+    const run = makeMockRun(['t2-attack-attack-attack', 't1-fire-fire']);
     run.hero.currentStamina = 0;
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
     setRun(run);
     state.heroStamina = 0; // mirror per-combat
-    state.deckOrder = ['t2-attack-attack-attack', 't1-defense-defense'];
+    state.deckOrder = ['t2-attack-attack-attack', 't1-fire-fire'];
     const eng = new CombatEngine(state);
 
     eng.tick(100);
@@ -147,7 +149,7 @@ describe('CombatEngine', () => {
     expect(skippedCalls.length).toBe(1);
     expect(skippedCalls[0][1].cardId).toBe('t2-attack-attack-attack');
     expect(playedCalls.length).toBe(1);
-    expect(playedCalls[0][1].cardId).toBe('t1-defense-defense');
+    expect(playedCalls[0][1].cardId).toBe('t1-fire-fire');
   });
 
   it('deck pointer resets to 0 when exhausted', () => {

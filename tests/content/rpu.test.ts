@@ -71,14 +71,18 @@ describe("Phase 10 card pool — structural sanity", () => {
     expect(offenders, offenders.join("; ")).toEqual([]);
   });
 
-  it("at least 80% of Tier 1 cards carry a stat-scale on some effect (per §15)", () => {
-    // §15 generation rule: most cards should have at least one effect with `scale`.
-    // We expect near-total coverage; allow a few hand-tuned exceptions (e.g. pure
-    // utility/generator cards where scaling would distort the budget).
-    const withScale = tier1.filter((c) =>
-      c.effects.some((e: any) => e.scale && e.scale.stat),
+  it("at least 50% of Tier 1 cards carry a stat-scale OR a condition gate", () => {
+    // Original §15 rule required ≥80% scale coverage. The Tier-1 redesign
+    // shifts mechanical weight from stat scaling to state-based `condition`
+    // gates (enemy_has_stack, hero_hp_pct_below, self_armor_atleast). Either
+    // mechanism counts as a real differentiator beyond raw numbers, so the
+    // updated rule accepts both — and lowers the floor since the design now
+    // intentionally ships several pure-numbers cards (Strike, Flurry Step)
+    // as the cheap baseline.
+    const withDifferentiator = tier1.filter((c) =>
+      c.effects.some((e: any) => (e.scale && e.scale.stat) || e.condition),
     );
-    expect(withScale.length / tier1.length).toBeGreaterThanOrEqual(0.8);
+    expect(withDifferentiator.length / tier1.length).toBeGreaterThanOrEqual(0.5);
   });
 
   it("at least 90% of Tier 2 cards carry a stat-scale on some effect (per §15)", () => {
