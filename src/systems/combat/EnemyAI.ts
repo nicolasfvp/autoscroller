@@ -20,6 +20,17 @@ export class EnemyAI {
   tick(deltaMs: number, state: CombatState, stats: CombatStats): void {
     this.cooldownTimer -= deltaMs;
 
+    // Agility affinity gives a temporary cooldown shave; decay it back toward
+    // the enemy's base cooldown so the speedup fades instead of ratcheting
+    // forever. Rate: 100ms recovered per 1000ms of real time.
+    if (state.enemyAttackCooldown < state.enemyBaseAttackCooldown) {
+      const recover = deltaMs * 0.1;
+      state.enemyAttackCooldown = Math.min(
+        state.enemyBaseAttackCooldown,
+        state.enemyAttackCooldown + recover,
+      );
+    }
+
     if (this.cooldownTimer <= 0) {
       this.attack(state, stats);
       this.cooldownTimer += this.getEffectiveCooldown(state);
