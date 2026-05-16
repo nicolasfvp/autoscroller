@@ -8,7 +8,7 @@ import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
-import { fireTrigger, applyTriggeredPayload } from './StatusEffects';
+import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers } from './StatusEffects';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -250,6 +250,16 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
 
     if (!skipRelics) {
       applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
+    }
+
+    // Tier-2 on_hp_pct_below trigger: any aura whose threshold the hero just
+    // crossed downward fires its payload once.
+    if (state.heroAuras && state.heroAuras.length > 0) {
+      const heroHpPct = (state.heroHP / Math.max(1, state.heroMaxHP)) * 100;
+      const hpPayloads = fireHpThresholdTriggers(state.heroAuras, heroHpPct);
+      for (const p of hpPayloads) {
+        applyTriggeredPayload(state, p);
+      }
     }
   }
 

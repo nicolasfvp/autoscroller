@@ -12,7 +12,7 @@
 import type { CardEffect, AuraModifierKind, StackId } from '../../data/types';
 import type { CombatState } from './CombatState';
 
-export type AuraTrigger = "on_armor_break";
+export type AuraTrigger = "on_armor_break" | "on_hp_pct_below";
 
 export interface ActiveAura {
   /** Remaining lifetime in milliseconds. Decremented every tick. */
@@ -21,6 +21,8 @@ export interface ActiveAura {
   modifier?: { kind: AuraModifierKind; value: number };
   /** Armed trigger — when fired, `then` is applied once and the aura is removed. */
   trigger?: AuraTrigger;
+  /** Threshold (0-100, hero HP %) for on_hp_pct_below triggers. */
+  threshold?: number;
   /** Effect applied when `trigger` fires. */
   then?: CardEffect;
 }
@@ -32,8 +34,27 @@ export function createAura(effect: CardEffect): ActiveAura {
     remainingMs: effect.ttl_ms ?? 5000,
     modifier: effect.modifier,
     trigger: effect.trigger,
+    threshold: effect.threshold,
     then: effect.then,
   };
+}
+
+/**
+ * Fire any on_hp_pct_below auras whose threshold the hero's HP just crossed.
+ * Returns the `then` effects to be applied by the caller (CardResolver path).
+ * Triggered auras self-remove.
+ */
+export function fireHpThresholdTriggers(auras: ActiveAura[] | undefined | null, heroHpPct: number): CardEffect[] {
+  const fired: CardEffect[] = [];
+  if (!auras) return fired;
+  for (let i = auras.length - 1; i >= 0; i--) {
+    const a = auras[i];
+    if (a.trigger === 'on_hp_pct_below' && a.then && a.threshold !== undefined && heroHpPct < a.threshold) {
+      fired.push(a.then);
+      auras.splice(i, 1);
+    }
+  }
+  return fired;
 }
 
 /** Tick decay: subtract `deltaMs` from every aura and prune expired ones. */
