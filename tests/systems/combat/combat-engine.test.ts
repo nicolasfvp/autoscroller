@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
+<<<<<<< HEAD
 import { type RunState, setRun, clearRun } from '../../../src/state/RunState';
+=======
+import type { RunState } from '../../../src/state/RunState';
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
 import type { EnemyDefinition } from '../../../src/data/types';
 import { loadAllData } from '../../../src/data/DataLoader';
 

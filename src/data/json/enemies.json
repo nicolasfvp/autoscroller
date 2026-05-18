@@ -479,7 +479,12 @@
     "baseDefense": 1,
     "attack": {
       "damage": 4,
+<<<<<<< HEAD
       "pattern": "fixed"
+=======
+      "defense": 0,
+      "pattern": "scaling"
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     },
     "attackCooldown": 2800,
     "behaviors": [
@@ -509,12 +514,22 @@
     "type": "boss",
     "bossType": "tank",
     "baseHP": 700,
+<<<<<<< HEAD
     "baseDefense": 5,
     "attack": {
       "damage": 12,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
+=======
+    "baseDefense": 8,
+    "attack": {
+      "damage": 4,
+      "defense": 4,
+      "pattern": "scaling"
+    },
+    "attackCooldown": 3200,
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     "behaviors": [
       {
         "type": "shield",
@@ -546,7 +561,12 @@
     "baseDefense": 3,
     "attack": {
       "damage": 10,
+<<<<<<< HEAD
       "pattern": "fixed"
+=======
+      "pattern": "random",
+      "specialEffect": "double"
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     },
     "attackCooldown": 2000,
     "behaviors": [
@@ -579,7 +599,12 @@
     "baseDefense": 4,
     "attack": {
       "damage": 7,
+<<<<<<< HEAD
       "pattern": "fixed"
+=======
+      "pattern": "conditional",
+      "specialEffect": "debuff"
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     },
     "attackCooldown": 2400,
     "behaviors": [],
@@ -602,6 +627,7 @@
     "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
+<<<<<<< HEAD
     "baseHP": 450,
     "baseDefense": 5,
     "attack": {
@@ -609,6 +635,16 @@
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
+=======
+    "baseHP": 1200,
+    "baseDefense": 6,
+    "attack": {
+      "damage": 8,
+      "pattern": "scaling",
+      "specialEffect": "double"
+    },
+    "attackCooldown": 2400,
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     "behaviors": [
       {
         "type": "enrage",
@@ -645,7 +681,12 @@
     "baseDefense": 3,
     "attack": {
       "damage": 5,
+<<<<<<< HEAD
       "pattern": "fixed"
+=======
+      "pattern": "random",
+      "specialEffect": "debuff"
+>>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
     },
     "attackCooldown": 2000,
     "behaviors": [

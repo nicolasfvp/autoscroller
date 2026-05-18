@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assets a Criar — Autoscroller</title>
+  <style>
+    :root {
+      --bg: #0f0f14;
+      --surface: #1a1a24;
+      --surface2: #22222f;
+      --border: #2e2e42;
+      --text: #d4d4e8;
+      --muted: #7070a0;
+      --common: #8aad6a;
+      --medium: #6aa8d4;
+      --advanced: #c07bdb;
+      --epic: #e89940;
+      --enemy: #e05555;
+      --accent: #4a90d9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 32px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    header h1 { font-size: 22px; font-weight: 700; color: var(--accent); }
+    header p { color: var(--muted); margin-top: 4px; font-size: 13px; }
+
+    .stats {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      padding: 16px 32px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; }
+    .stat span { display: block; font-size: 22px; font-weight: 700; color: var(--accent); }
+    .stat label { color: var(--muted); font-size: 12px; }
+
+    main { padding: 24px 32px; }
+
+    .section { margin-bottom: 48px; }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-header h2 { font-size: 18px; }
+    .badge {
+      padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .badge-common  { background: #1d2e16; color: var(--common); border: 1px solid var(--common); }
+    .badge-medium  { background: #162231; color: var(--medium); border: 1px solid var(--medium); }
+    .badge-advanced{ background: #241830; color: var(--advanced); border: 1px solid var(--advanced); }
+    .badge-epic    { background: #2e1e0a; color: var(--epic); border: 1px solid var(--epic); }
+    .badge-enemy   { background: #2e0a0a; color: var(--enemy); border: 1px solid var(--enemy); }
+    .count { color: var(--muted); font-size: 14px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--accent); }
+
+    .card-top { display: flex; align-items: flex-start; gap: 10px; }
+    .card-id {
+      font-family: monospace; font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 5px;
+      background: var(--surface2); color: var(--muted);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .card-name { font-weight: 700; font-size: 15px; line-height: 1.3; }
+    .card-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+    .effects {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .effect {
+      font-size: 11px; padding: 2px 8px; border-radius: 999px;
+      background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+    }
+
+    .components {
+      font-size: 11px; color: var(--muted);
+    }
+    .components span { color: var(--accent); }
+
+    .prompt-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 10px 12px;
+      position: relative;
+    }
+    .prompt-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin-bottom: 5px;
+    }
+    .prompt-text { font-size: 12px; line-height: 1.5; color: var(--text); }
+    .copy-btn {
+      position: absolute; top: 8px; right: 8px;
+      background: var(--border); border: none; border-radius: 5px;
+      color: var(--muted); cursor: pointer; font-size: 11px;
+      padding: 3px 8px; transition: background 0.15s;
+    }
+    .copy-btn:hover { background: var(--accent); color: white; }
+
+    .enemy-card { border-left: 3px solid var(--enemy); }
+    .enemy-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+    .stat-pill {
+      font-size: 11px; padding: 2px 8px; border-radius: 5px;
+      background: var(--surface2); border: 1px solid var(--border);
+    }
+    .stat-pill strong { color: var(--enemy); }
+
+    @media (max-width: 700px) {
+      main, .stats, header { padding: 16px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+    }
+    .filter-btn {
+      padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface2); color: var(--muted); cursor: pointer; font-size: 12px;
+      transition: all 0.15s;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+    .search-bar {
+      width: 100%; max-width: 400px;
+      padding: 8px 14px; border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); font-size: 13px; margin-bottom: 24px;
+    }
+    .search-bar:focus { outline: none; border-color: var(--accent); }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Assets a Criar — Autoscroller</h1>
+  <p>Lista de todas as artes pendentes: cartas (novo sistema), relíquias e inimigos/chefes.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><span>21</span><label>Componentes Base</label></div>
+  <div class="stat"><span>71</span><label>Cartas Médias</label></div>
+  <div class="stat"><span>20</span><label>Cartas Avançadas</label></div>
+  <div class="stat"><span>30</span><label>Cartas Épicas</label></div>
+  <div class="stat"><span>5</span><label>Chefes (Sprites)</label></div>
+  <div class="stat"><span style="color:#e05555">147</span><label>Total de Assets</label></div>
+</div>
+
+<main>
+
+  <input class="search-bar" type="text" id="searchInput" placeholder="Buscar por nome, id ou efeito..." oninput="filterCards()" />
+
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Todos</button>
+    <button class="filter-btn" data-filter="common" onclick="setFilter('common',this)">Componentes (C)</button>
+    <button class="filter-btn" data-filter="medium" onclick="setFilter('medium',this)">Médias (M)</button>
+    <button class="filter-btn" data-filter="advanced" onclick="setFilter('advanced',this)">Avançadas (A)</button>
+    <button class="filter-btn" data-filter="epic" onclick="setFilter('epic',this)">Épicas (E)</button>
+    <button class="filter-btn" data-filter="enemy" onclick="setFilter('enemy',this)">Inimigos</button>
+  </div>
+
+  <!-- COMPONENTES BASE -->
+  <div class="section" id="section-common">
+    <div class="section-header">
+      <h2>Cartas Componentes Base</h2>
+      <span class="badge badge-common">Common</span>
+      <span class="count">21 cartas</span>
+    </div>
+    <div class="grid" id="grid-common"></div>
+  </div>
+
+  <!-- MÉDIAS -->
+  <div class="section" id="section-medium">
+    <div class="section-header">
+      <h2>Cartas Médias (Combinações 2 componentes)</h2>
+      <span class="badge badge-medium">Medium</span>
+      <span class="count">71 cartas</span>
+    </div>
+    <div class="grid" id="grid-medium"></div>
+  </div>
+
+  <!-- AVANÇADAS -->
+  <div class="section" id="section-advanced">
+    <div class="section-header">
+      <h2>Cartas Avançadas (Combinações 2 médias)</h2>
+      <span class="badge badge-advanced">Advanced</span>
+      <span class="count">20 cartas</span>
+    </div>
+    <div class="grid" id="grid-advanced"></div>
+  </div>
+
+  <!-- ÉPICAS -->
+  <div class="section" id="section-epic">
+    <div class="section-header">
+      <h2>Cartas Épicas (Combinações avançadas)</h2>
+      <span class="badge badge-epic">Epic</span>
+      <span class="count">30 cartas</span>
+    </div>
+    <div class="grid" id="grid-epic"></div>
+  </div>
+
+  <!-- INIMIGOS -->
+  <div class="section" id="section-enemy">
+    <div class="section-header">
+      <h2>Chefes — Spritesheets Faltando</h2>
+      <span class="badge badge-enemy">Enemy</span>
+      <span class="count">5 chefes</span>
+    </div>
+    <div class="grid" id="grid-enemy"></div>
+  </div>
+
+</main>
+
+<script>
+const STYLE_SUFFIX = "fantasy card art, digital painting, vibrant colors, dark fantasy RPG aesthetic, square format 512x512, no text, no UI elements";
+
+const COMMON_CARDS = [
+  { id:"C01", name:"Cortante", desc:"Ataque físico cortante básico.", effects:["dano cortante"],
+    prompt:`A sharp slashing sword attack, glowing metallic blade mid-swing, motion blur, sparks flying, dark fantasy style. ${STYLE_SUFFIX}` },
+  { id:"C02", name:"Contundente", desc:"Ataque físico pesado, chance de atordoar.", effects:["dano contundente","chance de stun"],
+    prompt:`A massive hammer or mace slamming down, shockwave ripple on ground, dust and debris, heavy impact, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C03", name:"Defensivo", desc:"Postura defensiva que reduz dano recebido.", effects:["+defesa temporária"],
+    prompt:`A glowing golden shield raised in defensive stance, protective magical aura radiating outward, blue-gold light, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C04", name:"Perfurante", desc:"Golpe focalizado que ignora parte da armadura.", effects:["dano perfurante","ignora armadura parcial"],
+    prompt:`A narrow pointed blade or spear piercing through steel armor, glowing tip, focused energy, precision strike, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C05", name:"Evasivo", desc:"Movimento ágil para evitar ataques.", effects:["aumento de esquiva"],
+    prompt:`A silhouette leaping gracefully with afterimage trails, speed lines, dark background, ninja-like agility, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C06", name:"Mágico", desc:"Canaliza energia mágica genérica.", effects:["dano mágico genérico"],
+    prompt:`Swirling generic arcane energy, purple and blue magical orb in open palm, mystical runes orbiting, generic magic spell, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C07", name:"Terra", desc:"Poder do solo e da pedra.", effects:["dano terra","stagger"],
+    prompt:`Rock and earth erupting from the ground, stone fists rising, brown and amber energy, earthen power, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C08", name:"Água", desc:"Fluxo e cura suave; controle.", effects:["dano água","cura leve"],
+    prompt:`Water flowing in graceful waves forming a powerful wave attack, blue-teal colors, soft healing light, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C09", name:"Fogo", desc:"Chama agressiva que queima.", effects:["dano fogo","burn"],
+    prompt:`Roaring fire spell, orange-red flames spiraling upward, heat distortion, aggressive burning energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C10", name:"Ar", desc:"Vento e velocidade, ataques rápidos.", effects:["dano ar","aumento de velocidade"],
+    prompt:`Swirling wind cyclone attack, white-cyan air currents, speed lines, feathers and leaves caught in vortex, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C11", name:"Elétrico", desc:"Descargas que paralisam.", effects:["dano elétrico","chance de paralisar"],
+    prompt:`Electric lightning bolt crackling, yellow-white electricity arcing, paralysis sparks around target, storm energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C12", name:"Luz", desc:"Energia purificadora e curativa.", effects:["cura","remoção de debuffs"],
+    prompt:`Holy light beam radiating from above, golden divine energy, healing aura, angelic white-gold glow purifying darkness, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C13", name:"Trevas", desc:"Forças sombrias, drenagem e maldição.", effects:["dano trevas","roubo de vida"],
+    prompt:`Dark shadowy tendrils draining life force, black-purple corruption energy, sinister skull-like wisps, life steal, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C14", name:"Poison", desc:"Veneno que causa dano ao longo do tempo.", effects:["dot poison"],
+    prompt:`Toxic green venom dripping and spreading, poison cloud, serpentine smoke, acidic green-yellow corrosive energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C15", name:"Slow", desc:"Reduz velocidade e reação.", effects:["redução de velocidade"],
+    prompt:`Thick purple-blue crystallizing energy freezing movement, time distortion effect, slow molasses-like magical substance, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C16", name:"Death", desc:"Energia letal: marca de dano final.", effects:["marca de morte","explosão em morte"],
+    prompt:`A glowing death mark skull rune, crimson-black explosive energy, ominous death seal floating, grim reaper energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C17", name:"Stun", desc:"Atordoamento curto e potente.", effects:["atordoamento"],
+    prompt:`Lightning shock ring expanding from impact point, yellow stun stars circling, recoil energy burst, concussive blast, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C18", name:"Místico", desc:"Variante de mágico com foco em truques.", effects:["efeitos mágicos imprevisíveis"],
+    prompt:`Chaotic multicolored prismatic magic swirl, unpredictable energy patterns, question marks dissolved in arcane light, whimsical dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C19", name:"Couraça", desc:"Versão defensiva física robusta.", effects:["alta resistência física"],
+    prompt:`Thick heavy armor plating forming around a figure, iron-clad shell, metal layering with faint glow, impenetrable fortress, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C20", name:"Assalto", desc:"Ataque agressivo focado em dano bruto.", effects:["alto dano corpo a corpo"],
+    prompt:`Berserker charge attack leaving a trail of destruction, red rage aura, brutal melee strike, explosive impact, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"C21", name:"Suporte", desc:"Habilidades utilitárias de auxílio.", effects:["buffs leves","remoção de status menor"],
+    prompt:`Supportive magical aura with gentle green-gold particles, small buff symbols floating upward, helpful energy field, dark fantasy. ${STYLE_SUFFIX}` },
+];
+
+const MEDIUM_CARDS = [
+  { id:"M01", name:"Rend Strike", desc:"Golpe cortante com impacto que causa sangramento.", effects:["dano cortante","sangramento DOT"], comps:["C01","C02"],
+    prompt:`Brutal slashing strike leaving deep bleeding wounds, red blood effects combined with heavy impact, sword and mace hybrid energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M02", name:"Slicing Thrust", desc:"Estocada que perfura armaduras.", effects:["dano cortante","ignora defesa parcial"], comps:["C01","C04"],
+    prompt:`A razor blade thrusting through cracked armor, slicing energy combined with piercing force, broken metal fragments, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M03", name:"Parry Slash", desc:"Ataque que pode gerar contra-ataque se falhado.", effects:["dano cortante","chance de contra"], comps:["C01","C03"],
+    prompt:`A deflecting blade parrying and counterslashing, shield and sword combined in one fluid motion, golden-silver flash, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M04", name:"Swift Slash", desc:"Golpe rápido com alta prioridade e crítico.", effects:["dano cortante","aumento crítico"], comps:["C01","C05"],
+    prompt:`Ultra-fast blade slash with multiple afterimages, blue-white speed streaks and critical energy spark, extreme velocity, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M05", name:"Crushing Spike", desc:"Ataque pesado que quebra postura inimiga.", effects:["dano contundente","stagger"], comps:["C02","C04"],
+    prompt:`A massive spike hammered into ground breaking rock and posture, earth-shattering impact, metal spike and hammer fusion, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M06", name:"Shield Bash", desc:"Investida que atordoa e reduz defesa adversária.", effects:["dano contundente","stun curto","reduz defesa"], comps:["C02","C03"],
+    prompt:`A heavy shield bashing forward with concussive force, stun stars and cracked enemy armor, golden shield with brutal impact, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M07", name:"Feint Smash", desc:"Finta seguida de golpe para quebrar guarda.", effects:["dano contundente","quebra de guarda"], comps:["C02","C05"],
+    prompt:`A deceptive feint dodge followed by a massive overhead smash, agile shadow fake and heavy impact, guard-breaking energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M08", name:"Piercing Guard", desc:"Golpe que perfura defesas criando vulnerabilidade.", effects:["dano perfurante","aplica vulnerabilidade"], comps:["C04","C03"],
+    prompt:`A lance piercing through a shield creating cracks and vulnerability marks, orange vulnerability glow on target, shield pierce, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M09", name:"Agile Pierce", desc:"Investida ágil que ignora parte da esquiva.", effects:["dano perfurante","ignora esquiva parcial"], comps:["C04","C05"],
+    prompt:`A rapid acrobatic leap into a precise pierce attack, needle-like speed combined with agile flip, trajectory tracking, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M10", name:"Evasive Guard", desc:"Postura que melhora esquiva e permite contra.", effects:["aumento esquiva","contra leve"], comps:["C03","C05"],
+    prompt:`A nimble defensive stance with ghostly afterimage evasion, shield shimmer and ready counterattack pose, agile defense, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M11", name:"Steam Burst", desc:"Explosão de vapor que causa dano térmico e reduz precisão.", effects:["dano fogo/água","reduz precisão inimiga"], comps:["C09","C08"],
+    prompt:`Superheated steam explosion erupting, white clouds of scalding vapor, fire and water clash creating fog, thermal burst, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M12", name:"Flame Gust", desc:"Rajada ígnea rápida que empurra inimigos.", effects:["dano fogo","empurra alvo"], comps:["C09","C10"],
+    prompt:`A horizontal fire tornado gust blasting forward, fire and wind spiral, burning cyclone that pushes everything away, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M13", name:"Magma Strike", desc:"Impacto de magma que cria área de dano contínuo.", effects:["dano fogo/terra","zona de dano persistente"], comps:["C09","C07"],
+    prompt:`Molten lava fist smashing ground creating a pool of magma, volcanic rock eruption, fire and earth fused, glowing lava zone, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M14", name:"Voltaic Flame", desc:"Chama eletrificada que pode atordoar.", effects:["dano fogo/elétrico","chance de stun"], comps:["C09","C11"],
+    prompt:`Electric fire plasma ball crackling with lightning and flames, yellow-orange electric fire fusion, plasma explosion, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M15", name:"Radiant Flame", desc:"Fogo luminescente que revela e queima.", effects:["dano fogo","revela furtivos"], comps:["C09","C12"],
+    prompt:`Holy fire with divine light, golden flames revealing hidden shadows, sacred fire burning away darkness, luminous fire spell, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M16", name:"Umbral Blaze", desc:"Chama sombria que drena vida aos poucos.", effects:["dano fogo/trevas","roubo de vida pequeno"], comps:["C09","C13"],
+    prompt:`Dark cursed flame in black and deep red, shadow fire that absorbs life essence, necrotic burning energy, dark consuming fire, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M17", name:"Mud Quake", desc:"Abalo de lama que causa lentidão e dano.", effects:["dano terra/água","aplica slow"], comps:["C08","C07"],
+    prompt:`Brown muddy earth quake eruption, thick mud splashing with slowdown aura, earth and water merge into toxic sludge, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M18", name:"Frost Gale", desc:"Gélido vendaval com chance de congelar.", effects:["dano água/ar","chance de freeze"], comps:["C08","C10"],
+    prompt:`Icy blizzard wind blast, blue-white frost crystals in swirling wind, freezing gale with ice shards, blizzard storm energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M19", name:"Electrocurrent", desc:"Corrente que salta entre inimigos.", effects:["dano água/elétrico","atinge múltiplos alvos"], comps:["C08","C11"],
+    prompt:`Electric current leaping through water, blue water conducts yellow lightning between targets, chain lightning in liquid medium, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M20", name:"Heal", desc:"Cura moderada que purifica debuffs leves.", effects:["cura média","remove 1 debuff menor"], comps:["C08","C12"],
+    prompt:`Gentle blue-green healing water washing over wounds, golden healing light in flowing water, purifying liquid restoring health, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M21", name:"Drown Shadow", desc:"Sufocamento sombrio que gera vulnerabilidade.", effects:["dano água/trevas","aplica vulnerabilidade"], comps:["C08","C13"],
+    prompt:`Dark water tendrils wrapping around and suffocating, black tainted water absorbing life, shadowy drowning force, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M22", name:"Stonestorm", desc:"Chuva de pedras que fere área ampla.", effects:["dano terra/ar","AoE"], comps:["C07","C10"],
+    prompt:`A storm of rocks and boulders raining down, earth and wind combined into stone tornado, debris flying in wide area, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M23", name:"Magnet Surge", desc:"Surto magnético que desarma inimigos.", effects:["dano terra/elétrico","chance de desarme"], comps:["C07","C11"],
+    prompt:`Magnetic field pulling metal weapons away, earth magnetism combined with electrical surge, weapons flying off disarmed, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M24", name:"Sanctuary", desc:"Proteção do solo que regenera aliados na área.", effects:["regen em área","aumento defesa aliados"], comps:["C07","C12"],
+    prompt:`A sacred stone circle glowing with golden healing energy on the ground, earth formation creating a protective sanctuary dome, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M25", name:"Gravebind", desc:"Correntes de terra que prendem os inimigos.", effects:["root","dano trevas/terra lento"], comps:["C07","C13"],
+    prompt:`Dark earth roots and shadow chains bursting from the ground to bind, black rocky tendrils ensnaring, grave energy earth, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M26", name:"Tempest Spark", desc:"Tempestade elétrica rápida com múltiplos golpes.", effects:["dano ar/elétrico","multihit"], comps:["C10","C11"],
+    prompt:`Rapid electric wind storm with multiple lightning strikes in sequence, high-speed wind channels electricity, storm multihit, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M27", name:"Luminous Wind", desc:"Vento de luz que aumenta velocidade e visão.", effects:["buff velocidade aliados","revela área"], comps:["C10","C12"],
+    prompt:`Radiant holy wind with golden-white light particles boosting speed, illuminating breeze, divine wind revealing all, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M28", name:"Shadow Gale", desc:"Vendaval sombrio que obscurece e empurra.", effects:["empurra","reduce accuracy enemies"], comps:["C10","C13"],
+    prompt:`Dark shadowy wind storm obscuring vision, black wind pushing enemies, shadow cyclone reducing accuracy, dark blinding gale, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M29", name:"Radiant Charge", desc:"Carga elétrica-luminosa que cura o usuário por acertos.", effects:["dano elétrico+luz","cura por hit"], comps:["C11","C12"],
+    prompt:`Holy electric charge attack with life-steal glow, white-yellow healing lightning, divine electricity restoring health on strike, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M30", name:"Dark Current", desc:"Corrente elétrica corrompida que reduz resistências.", effects:["dano elétrico/trevas","reduz resistência inimiga"], comps:["C11","C13"],
+    prompt:`Corrupted black-purple lightning current crackling with dark energy, necrotic electricity weakening defenses, evil storm energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M31", name:"Umbral Balance", desc:"Equilíbrio de luz e trevas: cura fraca e maldição fraca.", effects:["cura pequena","aplica curse leve"], comps:["C12","C13"],
+    prompt:`Half golden light half dark shadow energy in yin-yang balance, dual nature spell, light and darkness in equilibrium, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M32", name:"Venom Cut", desc:"Corte envenenado que sangra com veneno.", effects:["bleed DOT","poison DOT"], comps:["C14","C01"],
+    prompt:`A poisoned blade leaving toxic green bleeding wounds, venom dripping from slash, green-red combined DOT energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M33", name:"Toxic Pierce", desc:"Perfurante que inocula veneno profundo.", effects:["dano perfurante","poison DOT penetrante"], comps:["C14","C04"],
+    prompt:`A venomous needle or fang piercing deep, injecting green poison deep into target, toxic syringe energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M34", name:"Corrosive Flame", desc:"Chama que corrói armaduras e causa DOT.", effects:["dano fogo","reduce armor over time","poison DOT"], comps:["C14","C09"],
+    prompt:`Acidic green-orange fire melting and corroding armor plates, corrosive burning that dissolves metal, toxic inferno, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M35", name:"Sapping Ground", desc:"Solo esgotante que reduz velocidade e stamina.", effects:["area slow","reduce stamina regen"], comps:["C15","C07"],
+    prompt:`Exhausting quicksand-like ground that drains energy, brown-grey energy sapping from the earth, stamina-draining field, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M36", name:"Icy Mire", desc:"Charco congelante que prende e lenta fortemente.", effects:["heavy slow","chance freeze"], comps:["C15","C08"],
+    prompt:`A freezing ice bog trapping feet in crystallized ice, heavy blue-white freeze zone, immobilizing icy swamp, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M37", name:"Death Mark", desc:"Marca mortal que explode se alvo morrer por outro causador.", effects:["marca","explosão se morte por terceiro"], comps:["C16","C13"],
+    prompt:`A glowing death rune branded on a surface, dark crimson death mark seal, explosion trigger energy, ominous skull sigil, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M38", name:"Concussive Blow", desc:"Impacto com alta chance de atordoamento.", effects:["alto dano contundente","alta chance stun"], comps:["C17","C02"],
+    prompt:`A massive concussive fist impact with shockwave, yellow stun ring and heavy impact crater, skull-rattling blow, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M39", name:"Shocking Stun", desc:"Atordoamento elétrico curto com dano.", effects:["stun curto","dano elétrico"], comps:["C17","C11"],
+    prompt:`Electric stun pulse with short-circuit sparks, target frozen in yellow electric shock, taser-like energy burst, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M40", name:"Hallowed Slowness", desc:"Devassa sagrada que reduz inimigos e fortalece aliados.", effects:["slow inimigos","aumento resistência aliados"], comps:["C15","C12"],
+    prompt:`Sacred golden light field that slows enemies and empowers allies, divine slowdown aura, holy temporal distortion, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M41", name:"Purged Venom", desc:"Veneno paradoxal que fere inimigo e beneficia aliado.", effects:["poison DOT inimigo","cura leve aliados"], comps:["C14","C12"],
+    prompt:`Paradoxical venom that heals the bearer and harms enemies, green-gold split energy, toxin with purifying duality, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M42", name:"Bleed Poison", desc:"Combinação de sangramento e veneno potente.", effects:["bleed DOT forte","poison DOT"], comps:["C01","C14"],
+    prompt:`Deep bleeding wound with poison seeping in, red blood and green venom mixing in wounds, dual DOT energy pattern, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M43", name:"Swift Guard", desc:"Esquiva que gera escudo temporário se bem-sucedida.", effects:["aumento esquiva","escudo temporário"], comps:["C05","C03"],
+    prompt:`Agile dodge that leaves a temporary energy shield in its wake, speed-formed defensive barrier, quick shield formation, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M44", name:"Counter Thrust", desc:"Ataque veloz em resposta que ignora parte da defesa.", effects:["dano perfurante","ignora defesa ao contra-atacar"], comps:["C05","C04"],
+    prompt:`Lightning-fast counter thrust stabbing through guard, reactive pierce attack, blue speed energy combined with piercing spear, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M45", name:"Boulder Crash", desc:"Queda de rocha esmagadora, grande stagger.", effects:["alto dano terra","stagger em área"], comps:["C07","C02"],
+    prompt:`A massive boulder crashing down from above, earth-shattering impact with huge debris cloud, ground-cracking stagger, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M46", name:"Aerial Slash", desc:"Investida aérea cortante com alcance aumentado.", effects:["dano cortante","aumento alcance"], comps:["C10","C01"],
+    prompt:`A soaring aerial sword slash from great height, wind-enhanced blade reach, sky-borne cutting strike with extended blade trail, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M47", name:"Lightning Spike", desc:"Estocada elétrica que paralisa alvos perfurados.", effects:["dano perfurante","paralisa alvo"], comps:["C11","C04"],
+    prompt:`An electric lance penetrating and paralyzing, yellow lightning channeled through sharp spike, paralysis on impact, thunderbolt spear, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M48", name:"Solar Burst", desc:"Explosão de luz ígnea que cega e queima.", effects:["dano fogo/luz","cegueira curta"], comps:["C12","C09"],
+    prompt:`Solar explosion of blinding holy fire, white-gold supernova burst, blinding divine fire, eyes-shut reaction, solar flare spell, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M49", name:"Nether Grasp", desc:"Prende e drena energia vital com terra negra.", effects:["root","roubo de vida ao longo do tempo"], comps:["C13","C07"],
+    prompt:`Black earth tendrils grabbing and life-draining victim, dark roots sucking life essence, necrotic earth binding, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M50", name:"Venom Spray", desc:"Jato venenoso ao vento que atinge múltiplos.", effects:["poison AoE","afeta vários alvos"], comps:["C14","C10"],
+    prompt:`Wind-carried poison spray cloud dispersing in wide area, green mist scattered by wind, toxic AoE cloud, venom carried on breeze, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M51", name:"Tectonic Shield", desc:"Escudo de pedra que reduz dano e reflete habilmente.", effects:["grande escudo","pequena reflexão dano"], comps:["C07","C03"],
+    prompt:`A massive stone shield wall rising from the earth, rock fortress barrier with reflected damage glow, tectonic defense formation, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M52", name:"Gale Step", desc:"Movimento rápido por vento que reposiciona e ataca.", effects:["movement teleport curto","ataque leve"], comps:["C10","C05"],
+    prompt:`Wind-dash teleport strike, figure blurring through air with wind trail, repositioning with light hit, wind step movement, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M53", name:"Spark Trap", desc:"Armadilha elétrica que retarda e causa dano contínuo.", effects:["trap AoE","electric DOT","aplica slow"], comps:["C11","C15"],
+    prompt:`Electric trap laid on ground with lightning circles, charged land mine trap, slow-causing electric field, zap trap zone, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M54", name:"Holy Ward", desc:"Proteção sagrada que reduz debuffs por X turns.", effects:["reduz debuffs","escudo leve"], comps:["C12","C03"],
+    prompt:`Golden holy ward barrier, divine protection seal radiating, sacred cleansing light shield, protective divine circle, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M55", name:"Shadow Step", desc:"Passo sombrio que aumenta evasão e permite ataque surpresa.", effects:["aumento esquiva","first strike bônus"], comps:["C13","C05"],
+    prompt:`Dark shadow teleport step with afterimage of darkness, assassin stepping through shadows, stealth movement with ambush energy, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M56", name:"Toxic Storm", desc:"Tempestade corrosiva que causa DOT e reduz armadura.", effects:["AoE poison DOT","reduce armor"], comps:["C14","C09"],
+    prompt:`A toxic corrosive storm raining acid-green fire from above, corrosive cloud with armor-melting rain, toxic inferno storm, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M57", name:"Frozen Lash", desc:"Corte gelado que aplica lentidão e bleed frio.", effects:["dano cortante/gelo","slow leve","bleed frio"], comps:["C08","C01"],
+    prompt:`An ice blade slashing with frost trails, cold blue blade leaving frozen bleeding wounds, cryo-cut, icy slash with cold bleed, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M58", name:"Seismic Rip", desc:"Rasgamento de pedra e lâmina que causa fragmentos AoE.", effects:["dano físico/terra","estilhaços AoE"], comps:["C07","C01"],
+    prompt:`A blade tearing through rock sending stone fragments flying, ground ripping open with sharp debris, seismic slash, rock shatter AoE, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M59", name:"Arc Light", desc:"Magia luminosa que cura e causa dano sagrado.", effects:["cura leve","dano sagrado"], comps:["C06","C12"],
+    prompt:`An arc of holy light with dual purpose healing and harm, white-gold curved beam, divine arc magic, healing arc of light, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M60", name:"Void Spike", desc:"Mágica sombria perfurante que suga resistência.", effects:["dano mágico/trevas","reduz resistência alvo"], comps:["C06","C13"],
+    prompt:`A void-black spike of dark magic piercing and draining, purple-black penetrating arcane lance, resistance-sapping void spike, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M61", name:"Poisoned Guard", desc:"Defesa envenenada que aplica DOT ao bloqueador.", effects:["escudo","aplica poison ao atacante"], comps:["C14","C03"],
+    prompt:`A spiked toxic shield with venom coating, poison-tipped defensive wall that infects attackers, venomous barrier, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M62", name:"Quickened Strike", desc:"Ataque mágico rápido que ignora recuo.", effects:["dano mágico rápido","ignora stagger"], comps:["C05","C06"],
+    prompt:`Ultra-fast magic strike with no recovery time, speed-lined magical hit, instant arcane attack with no windup, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M63", name:"Earthen Roots", desc:"Raízes lentificantes que também curtam energia inimiga.", effects:["root","reduce mana/stamina regen"], comps:["C07","C15"],
+    prompt:`Thick brown tree roots bursting from ground ensnaring targets, draining energy as they bind, resource-stealing roots, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M64", name:"Blinding Ash", desc:"Cinzas que queimam e cegam temporariamente.", effects:["dano fogo","blind curto"], comps:["C09","C12"],
+    prompt:`Blinding ash cloud from burning sacred fire, white-grey ash mixed with ember sparks, eyes-shut blindness from holy fire, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M65", name:"Storm Cage", desc:"Gaiola elétrica-terra que prende e causa dano.", effects:["root","dano elétrico ao longo do tempo"], comps:["C11","C07"],
+    prompt:`A cage made of earth and electric bars trapping target, stone pillars connected by lightning bars, electro-earth prison, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M66", name:"Grasping Chill", desc:"Frio sombrio que drena velocidade e vigor.", effects:["slow","rouba velocidade/actions"], comps:["C08","C13"],
+    prompt:`Dark icy tendrils grasping and slowing victim, shadow cold energy stealing speed and vitality, dark freeze claw, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M67", name:"Radiant Purge", desc:"Purificação luminosa que danifica venenosos e cura aliados.", effects:["remove poison inimigo","cura aliados"], comps:["C12","C14"],
+    prompt:`Holy light purging toxins and curing allies, golden beam dissolving green poison, divine purification that heals, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M68", name:"Nightfall Slash", desc:"Corte noturno que causa dano adicional à saúde máxima.", effects:["dano cortante","dano percentual saúde"], comps:["C01","C13"],
+    prompt:`A night-time slashing attack powered by darkness, black blade in moonless night, shadow-empowered cut scaling with target health, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M69", name:"Tempest Guard", desc:"Escudo ventilado que reduz dano de projéteis.", effects:["reduz dano projetil","pequeno contra-empurrão"], comps:["C10","C03"],
+    prompt:`A wind wall defensive barrier deflecting arrows and projectiles, air shield barrier, projectile-deflecting wind guard, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M70", name:"Lava Coil", desc:"Enrolamento ígneo perfurante que aplica queimadura interna.", effects:["dano perfurante/fogo","burn DOT interno"], comps:["C09","C04"],
+    prompt:`Molten lava coiling around and piercing inside target, fire spike penetrating with internal burn, lava lance with burn within, dark fantasy. ${STYLE_SUFFIX}` },
+  { id:"M71", name:"Echoing Blow", desc:"Impacto mágico-contundente que reverbera.", effects:["dano contundente+mágico","reverberação em alvo secundário"], comps:["C02","C06"],
+    prompt:`A magical fist strike that reverberates to a second target, arcane echo wave after impact, dual-hit magical resonance, dark fantasy. ${STYLE_SUFFIX}` },
+];
+
+const ADVANCED_CARDS = [
+  { id:"A01", name:"Divine Restoration", desc:"Cura massiva em área e concede escudo protetor aos aliados.", effects:["cura grande em área","escudo por X turns"], comps:["M20","M54"],
+    prompt:`Massive divine healing light explosion in wide area, golden shockwave of restoration, protective aegis shields forming around allies, epic holy magic. ${STYLE_SUFFIX}` },
+  { id:"A02", name:"Cataclysmic Lance", desc:"Lança ígnea que explode em magma e traça arcos elétricos entre inimigos.", effects:["AoE dano fogo/terra","cadeia elétrica entre alvos"], comps:["M13","M47"],
+    prompt:`A fire-and-earth lance exploding into magma then arcing electricity between enemies, lava explosion with electric chain, cataclysmic dual-element spear. ${STYLE_SUFFIX}` },
+  { id:"A03", name:"Virulent Maul", desc:"Golpe pesado que aplica bleed+poison e tem chance alta de atordoar.", effects:["aplica bleed forte","aplica poison","chance de stun alto"], comps:["M42","M38"],
+    prompt:`Grotesque toxic mace covered in venom and blood, shattering impact leaving bleed-poison combo, virulent heavy weapon, dark brutal fantasy. ${STYLE_SUFFIX}` },
+  { id:"A04", name:"Glacial Domain", desc:"Cria um domínio gelado que congela periodicamente e reduz drasticamente velocidade.", effects:["campo persistente","freeze periódico","muito slow"], comps:["M18","M36"],
+    prompt:`An entire frozen domain landscape, glacial blue tundra forming under feet, periodic ice crystal explosions, time-frozen glacier domain. ${STYLE_SUFFIX}` },
+  { id:"A05", name:"Necrotic Cage", desc:"Gaiola sombria que prende inimigos e drena vida continuamente.", effects:["root em área","roubo de vida contínuo"], comps:["M25","M30"],
+    prompt:`A necrotic bone-and-shadow cage imprisoning enemies while draining their life, dark life-steal cage, corrupted prison draining souls. ${STYLE_SUFFIX}` },
+  { id:"A06", name:"Tempest of Light", desc:"Tornado luminoso que cura aliados por acerto e aumenta mobilidade geral.", effects:["cura por hit aliados","aumento grande velocidade aliados"], comps:["M29","M27"],
+    prompt:`A radiant light tornado that heals on touch and boosts movement, golden healing cyclone, divine speed tempest, luminous whirlwind. ${STYLE_SUFFIX}` },
+  { id:"A07", name:"Doomflame", desc:"Chama amaldiçoada que marca alvos e causa explosão letal com dano percentual.", effects:["marca alvo","explosão com dano % de vida"], comps:["M16","M37"],
+    prompt:`A cursed black-red doom flame marking targets with death runes, burning skull mark with percentage-based explosive potential. ${STYLE_SUFFIX}` },
+  { id:"A08", name:"Toxic Inferno", desc:"Inferno corrosivo que aplica poison e reduz armadura rapidamente.", effects:["AoE poison DOT","reduz armadura em área"], comps:["M34","M56"],
+    prompt:`A massive toxic inferno combining acid rain and fire, armor-dissolving corrosive flames, green-orange AoE destruction field. ${STYLE_SUFFIX}` },
+  { id:"A09", name:"Aegis of Stone", desc:"Barreira pétrea que converte dano recebido em vigor aliado.", effects:["escudo forte","converte parte dano em regen aliado"], comps:["M51","M24"],
+    prompt:`A colossal stone aegis fortress wall, converting attacks into healing energy for allies, indestructible rock sanctuary, divine stone barrier. ${STYLE_SUFFIX}` },
+  { id:"A10", name:"Phantom Volley", desc:"Tiros etéreos elétricos que ignoram parcialmente defesas.", effects:["dano mágico/eléctrico","ignora % de defesa"], comps:["M60","M26"],
+    prompt:`Ethereal electric ghost projectiles phasing through armor, void-purple lightning bolts partially ignoring defense, phantom storm volley. ${STYLE_SUFFIX}` },
+  { id:"A11", name:"Ebon Tempest", desc:"Tempestade sombria que reduz resistências e empurra inimigos.", effects:["AoE dano trevas/elétrico","reduz resistências","empurra"], comps:["M28","M30"],
+    prompt:`A massive dark storm pushing and weakening all in its path, black lightning and shadow gale, ebon hurricane with debilitating winds. ${STYLE_SUFFIX}` },
+  { id:"A12", name:"Sanctified Bastion", desc:"Fortificação sagrada que regenera e imuniza contra um debuff por período.", effects:["regen em área","imunidade a 1 debuff por X segundos"], comps:["M24","M54"],
+    prompt:`A glowing sanctified fortress bastion, holy regenerating field with divine immunity dome, golden stone temple fortification. ${STYLE_SUFFIX}` },
+  { id:"A13", name:"Maelstrom Piercer", desc:"Projéteis de pedra e relâmpagos que perfuram linhas inimigas.", effects:["multihit perfurante","dano terra+eléctrico em linha"], comps:["M19","M26"],
+    prompt:`A maelstrom of rock and lightning projectiles piercing through a line of enemies, earth-electric drill vortex boring through defenses. ${STYLE_SUFFIX}` },
+  { id:"A14", name:"Soulrender", desc:"Ataque que drena resistência, reduz cura recebida e suga vida.", effects:["rouba vida","reduz cura recebida pelo alvo","diminui resistência"], comps:["M49","M60"],
+    prompt:`A soul-rending void attack tearing at spirit and resistances, life-drain combined with healing suppression, soul extraction dark magic. ${STYLE_SUFFIX}` },
+  { id:"A15", name:"Celestial Ember", desc:"Fogo sagrado que queima por fora e purifica por dentro.", effects:["burn DOT","remove debuffs positivos inimigos","cura aliados próximos"], comps:["M15","M48"],
+    prompt:`Celestial holy ember burning enemies while purifying allies nearby, angelic fire with dual nature, divine ember that cleanses and scorches. ${STYLE_SUFFIX}` },
+  { id:"A16", name:"Gravity Well", desc:"Fenda no solo que atrai inimigos, aplica slow e causa dano por esmagamento.", effects:["pull para centro","AoE slow","dano progressivo"], comps:["M22","M63"],
+    prompt:`A gravity well singularity pulling enemies inward and crushing them, black hole-like earth fissure, gravitational collapse field. ${STYLE_SUFFIX}` },
+  { id:"A17", name:"Thunderbind", desc:"Red de tormenta que prende e amplifica dano elétrico recebido.", effects:["root","alvos recebem mais dano elétrico"], comps:["M65","M19"],
+    prompt:`Electric storm net wrapping around target amplifying all lightning damage received, thunder web binding spell, electric resonance trap. ${STYLE_SUFFIX}` },
+  { id:"A18", name:"Mirage Shroud", desc:"Ilusão que aumenta evasão de aliados e cria clones temporários.", effects:["muito aumento esquiva aliados","cria clones que distraem inimigos"], comps:["M43","M52"],
+    prompt:`Shimmering mirage clones forming around allies, illusory decoys distracting enemies, prismatic evasion shroud with phantom copies. ${STYLE_SUFFIX}` },
+  { id:"A19", name:"Rupturing Quake", desc:"Abalo massivo que estilhaça armaduras, aplica stagger e fragments AoE.", effects:["alto dano terra","quebra armadura","estilhaços AoE"], comps:["M45","M22"],
+    prompt:`A rupturing earthquake shattering armor and sending massive rock fragments flying in all directions, armor-breaking quake, catastrophic earth rupture. ${STYLE_SUFFIX}` },
+  { id:"A20", name:"Noxious Vortex", desc:"Vórtice venenoso que suga e espalha poison entre inimigos.", effects:["AoE poison DOT","contágio de poison entre alvos"], comps:["M50","M56"],
+    prompt:`A toxic green vortex spreading poison between all nearby enemies, contagious venom whirlpool, noxious spreading corruption vortex. ${STYLE_SUFFIX}` },
+];
+
+const EPIC_CARDS = [
+  { id:"E01", name:"Apex Restoration", desc:"Cura massiva instantânea, revives fainted allies parcial e cria aegis duradouro.", effects:["cura massiva","revive parcial 1 aliado","aegis longo"], comps:["A01","M59"],
+    prompt:`Apex divine restoration explosion, reviving fallen allies in radiant white-gold light, massive healing supernova, angelic aegis formation, ultimate healing spell. ${STYLE_SUFFIX}` },
+  { id:"E02", name:"Worldbreaker Lance", desc:"Lança cataclísmica que perfura o terreno e causa erupções contínuas e tempestade elétrica.", effects:["colossal AoE dano fogo/terra","tempestade elétrica persistente"], comps:["A02","M13"],
+    prompt:`A world-breaking divine lance shattering the ground into lava eruptions with persistent electric storms above, cataclysmic elemental devastation. ${STYLE_SUFFIX}` },
+  { id:"E03", name:"Plague Sovereign", desc:"Rei da praga: aplica bleed/poison de alto dano, chance de converter inimigos em minions venenosos.", effects:["bleed+poison extremos","chance de transformar inimigo em minion poison"], comps:["A03","M56"],
+    prompt:`A plague sovereign corona, grotesque crown of disease converting enemies into toxic minions, plague king aura of ultimate poison and corruption. ${STYLE_SUFFIX}` },
+  { id:"E04", name:"Absolute Glacier", desc:"Congela vastas áreas, reduz mobilidade a zero e aplica congelamento terminal.", effects:["congela área por vários turnos","impossibilita movimentação","freeze terminal"], comps:["A04","M66"],
+    prompt:`An absolute glacier encasing vast area in terminal ice, all movement frozen for eternity, crystalline blue-white total freeze, omega ice age. ${STYLE_SUFFIX}` },
+  { id:"E05", name:"Eternal Cage", desc:"Gaiola da morte eterna: prende múltiplos alvos e converte vida drenada em escudo aliado.", effects:["prende múltiplos","rouba vida em massa","converte em escudo aliado"], comps:["A05","M37"],
+    prompt:`An eternal death cage imprisoning multiple souls simultaneously, life drain powering a protective shield for allies, eternal soul prison. ${STYLE_SUFFIX}` },
+  { id:"E06", name:"Solar Tempest", desc:"Tempestade de luz que cura massivamente, purga e causa dano sagrado brutal.", effects:["cura massiva por segundo","purga todos debuffs aliados","alto dano sagrado"], comps:["A06","M48"],
+    prompt:`Solar storm of divine light, healing allies massively while obliterating enemies with sacred fury, solar deity's wrath and mercy combined. ${STYLE_SUFFIX}` },
+  { id:"E07", name:"Apocalypse Ember", desc:"Chama apocalíptica que marca e causa explosões sequenciais percentuais sobre o tempo.", effects:["marca com explosões percentuais repetidas","alto dano contínuo"], comps:["A07","M16"],
+    prompt:`Apocalyptic ember rune marking targets with sequential explosions, each detonation feeding the next, cascading apocalypse fire chain. ${STYLE_SUFFIX}` },
+  { id:"E08", name:"Corrosive Cataclysm", desc:"Inferno corrosivo de larga escala que desmantela defesas e causa dano irreversível.", effects:["AoE corroção massiva","redução permanente temporária de armadura"], comps:["A08","M34"],
+    prompt:`Corrosive acid cataclysm melting all armor in wide area, irreversible dissolving inferno, large-scale corrosion apocalypse. ${STYLE_SUFFIX}` },
+  { id:"E09", name:"Earthwarden Aegis", desc:"Barreira impenetrável que redireciona parte do dano recebido de aliados ao conjurador.", effects:["escudo gigante","redireciona parte do dano para conjurador"], comps:["A09","M51"],
+    prompt:`An earthwarden's colossal aegis barrier redirecting damage to the caster, self-sacrificing stone wall, ultimate earth guardian shield spell. ${STYLE_SUFFIX}` },
+  { id:"E10", name:"Phantom Stormfall", desc:"Tempestade espectral elétrica que atravessa terrenos e persegue inimigos debilitados.", effects:["tempestade movente que persegue alvos","dano elétrico persistente"], comps:["A10","M26"],
+    prompt:`A phantom electric storm that hunts weakened enemies across terrain, ghostly electric cloud pursuing targets, spectral stormfront pursuing. ${STYLE_SUFFIX}` },
+  { id:"E11", name:"Abyssal Maelstrom", desc:"Maelstrom das trevas: reduz permanentemente resistências e consome buffs aliados inimigos.", effects:["redução massiva de resistência","consome buffs inimigos gerando heal parcial ao usuário"], comps:["A11","M21"],
+    prompt:`An abyssal dark maelstrom consuming enemy buffs and resistances, void whirlpool devouring magical energy, abyss swallowing enchantments. ${STYLE_SUFFIX}` },
+  { id:"E12", name:"Bastion of Sanctity", desc:"Fortaleza sagrada que garante imunidade temporária a debuffs e regen potente.", effects:["imunidade total a debuffs por curto tempo","regen muito alto"], comps:["A12","M54"],
+    prompt:`A sacred bastion fortress of holy light granting complete immunity and rapid regeneration, invincible divine fortress, ultimate holy sanctuary. ${STYLE_SUFFIX}` },
+  { id:"E13", name:"Lance of the Cataclysm", desc:"Lança tectônica que rasga fileiras e causa efeitos persistentes de queimadura e perfuração.", effects:["dano massivo em linha","burn persistente","perfura defesas"], comps:["A13","M70"],
+    prompt:`Cataclysmic tectonic lance ripping through enemy lines leaving lasting fire and piercing wounds, earth-splitting burning spear of destruction. ${STYLE_SUFFIX}` },
+  { id:"E14", name:"Siphon Overlord", desc:"Senhor sugador: drena vida/recursos de todos em área e redistribui entre aliados.", effects:["roubo de vida em área","redistribuição de recursos aliados"], comps:["A14","M49"],
+    prompt:`An overlord life siphon draining all enemies in area and redistributing stolen vitality to allies, mass resource theft energy redistribution. ${STYLE_SUFFIX}` },
+  { id:"E15", name:"Phoenix Sacrament", desc:"Ritual de renascimento que queima inimigos e ressuscita aliados com parte da vida.", effects:["alto dano de fogo","revive aliados com % vida","remove debuffs ao reviver"], comps:["A15","M48"],
+    prompt:`Phoenix resurrection sacrament burning enemies while reviving fallen allies in rebirth flame, cyclical death-and-life fire ritual, phoenix rebirth. ${STYLE_SUFFIX}` },
+  { id:"E16", name:"Core Collapse", desc:"Fenda gravitacional que causa esmagamento, nega mobilidade e converte terreno em armadilha.", effects:["pull massivo","dano esmagador","zona de armadilha por longo tempo"], comps:["A16","M22"],
+    prompt:`Planetary core collapse singularity crushing all, terrain transforming into dangerous trap zone, gravitational core implosion. ${STYLE_SUFFIX}` },
+  { id:"E17", name:"Chainstorm Dominion", desc:"Rede eléctrica que prende, amplifica e explode causando dano em cadeia massiva.", effects:["cadeia elétrica massiva","explosões em cadeia","prende e amplifica dano recebido"], comps:["A17","M65"],
+    prompt:`Chain storm dominion of lightning exploding between bound targets, cascading electric explosions in chain reaction, ultimate chain lightning dominion. ${STYLE_SUFFIX}` },
+  { id:"E18", name:"Mirage Legion", desc:"Cria exércitos ilusórios que confundem e amplificam ataques aliados.", effects:["multiplica clones aliados","clones causam dano real reduzido","confusão em inimigos"], comps:["A18","M52"],
+    prompt:`A mirage legion of dozens of illusory warriors swarming and confusing enemies, phantom army of clones amplifying real allies, illusion battle legion. ${STYLE_SUFFIX}` },
+  { id:"E19", name:"Worldshatter", desc:"Quebra-mundos: tremor final que desmonta resistências, aplica debuffs e causa dano percentual da vida máxima.", effects:["alto dano percentual","remove buffs defensivos inimigos","stagger em massa"], comps:["A19","M45"],
+    prompt:`World-shattering ultimate quake stripping defensive buffs and dealing percentage-based damage, omega earthquake, world-ending ground rupture. ${STYLE_SUFFIX}` },
+  { id:"E20", name:"Plague Conflux", desc:"Convergência tóxica que envenena, contamina e transforma terreno em fonte de dano permanente.", effects:["AoE poison persistente","contaminações que se propagam","redução de cura em área"], comps:["A20","M50"],
+    prompt:`Plague conflux transforming terrain into permanent toxic wasteland, spreading contagion that inhibits healing, plague zone of permanent poison. ${STYLE_SUFFIX}` },
+  { id:"E21", name:"Judgment of the Sun", desc:"Julgamento solar supremo: limpa campo, cura e inflige dano sagrado proibitivo.", effects:["remoção completa de debuffs aliados","cura extremamente alta","alto dano sagrado em inimigos"], comps:["E12","A06"],
+    prompt:`The sun's divine judgment beam, total field cleanse, massive ally healing, and devastating sacred damage, solar deity's final verdict. ${STYLE_SUFFIX}` },
+  { id:"E22", name:"Oblivion Gate", desc:"Portal abissal que consome e teleporta inimigos para um vórtice de dano contínuo.", effects:["teleporta inimigos para vórtice","dano contínuo e consumo de buffs"], comps:["E11","A05"],
+    prompt:`An oblivion gate portal consuming and teleporting enemies into an endless void vortex, abyss doorway swallowing enemies whole. ${STYLE_SUFFIX}` },
+  { id:"E23", name:"Infernal Sovereignty", desc:"Soberania infernal: domínio de fogo corrosivo que converte defesas em dano adicional.", effects:["domínio de fogo corrosivo persistente","converte armadura inimiga em dano extra"], comps:["E02","A08"],
+    prompt:`Infernal sovereignty domain of corrosive fire converting enemy defenses into extra damage, hellfire dominion that feeds on armor. ${STYLE_SUFFIX}` },
+  { id:"E24", name:"Aegis Requiem", desc:"Requiem protetor que sacrifica parte do poder para proteger aliados indefinidamente por curta janela.", effects:["escudo massivo","transfere parte do dano recebido para conjurador","prolonga duração de buffs defensivos"], comps:["E09","A01"],
+    prompt:`A sacrificial aegis requiem transferring incoming damage to the caster to protect allies, selfless divine shield requiem, martyrdom protection. ${STYLE_SUFFIX}` },
+  { id:"E25", name:"Void Requital", desc:"Vingança do vazio: converte buffs inimigos em explosões sombrias que curam o usuário.", effects:["consome buffs inimigos","explode causando dano sombro","cura o usuário"], comps:["E10","A11"],
+    prompt:`Void requital stealing enemy buffs and exploding them as shadow bombs that heal the caster, dark retribution magic converting power. ${STYLE_SUFFIX}` },
+  { id:"E26", name:"Cathedral of Storms", desc:"Catedral tempestiva: invoca uma fúria de luz e relâmpagos que guia aliados e destrói formações inimigas.", effects:["guiamento aliado (boost de dano/velocidade)","relâmpagos catastróficos"], comps:["E06","A06"],
+    prompt:`Cathedral of storms summoning divine lightning bolts guiding and empowering allies while destroying enemy formations, divine storm cathedral. ${STYLE_SUFFIX}` },
+  { id:"E27", name:"Prismatic Annihilation", desc:"Aniquilação prismática que combina cura e destruição em pulso final incomparável.", effects:["pulso massivo cura/ataque","anel de destruição sequencial"], comps:["E01","E21"],
+    prompt:`Prismatic annihilation pulse combining all elements in one supreme burst, rainbow-colored destruction ring with healing core, ultimate final spell. ${STYLE_SUFFIX}` },
+  { id:"E28", name:"Thorn of the First Earth", desc:"Espinho primordial que atravessa o mundo, criando fissuras que persistem na batalha.", effects:["lançamento de fissuras lineares persistentes","dano contínuo em terreno afetado"], comps:["A13","A09"],
+    prompt:`Primordial earth thorn piercing through the world creating permanent fissures, ancient first earth spike leaving lingering battlefield damage. ${STYLE_SUFFIX}` },
+  { id:"E29", name:"Ascendant Eclipse", desc:"Eclipse ascendente que combina trevas e caos para suprimir curas e amplificar dano corrupto.", effects:["negação de cura em área","aumento massivo de dano trevas"], comps:["E03","A11"],
+    prompt:`Ascendant eclipse of darkness blocking all healing and amplifying shadow damage, corruption eclipse devouring light and life. ${STYLE_SUFFIX}` },
+  { id:"E30", name:"Genesis Collapse", desc:"Colapso de gênese: remodela parte do mapa, aplica debuffs sujos e altera temporariamente mecânicas de combate.", effects:["alteração de terreno permanente temporária","aplica debuffs globais","modifica regras de combate locais"], comps:["E16","E19"],
+    prompt:`Genesis collapse reshaping battlefield reality, terrain reformation with global debuffs, omega event altering combat mechanics themselves. ${STYLE_SUFFIX}` },
+];
+
+const ENEMIES = [
+  { id:"boss_tank", name:"Iron Golem", hp:700, def:8, ability:"Shield +15 armor / 8s",
+    desc:"Golém colossal de ferro forjado em trevas. Lento mas praticamente indestrutível.",
+    prompt:`A colossal iron golem boss enemy, massive metallic humanoid made of dark forged steel and rivets, glowing orange lava veins in chest, imposing and slow, video game boss side-view sprite style, 64x64 pixel scale reference, against transparent background, idle pose.` },
+  { id:"boss_berserker", name:"Blood Reaver", hp:850, def:3, ability:"Enrage 1.5× speed at 40% HP",
+    desc:"Guerreiro corrompido pelo ódio eterno. Quanto mais ferido, mais perigoso.",
+    prompt:`A blood reaver berserker boss enemy, massive battle-scarred warrior with blood-soaked twin axes, glowing red eyes, horned helmet, raging veins, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, against transparent background, menacing idle pose.` },
+  { id:"boss_mage", name:"Lich King", hp:960, def:4, ability:"Debuff/Necromancy spells",
+    desc:"Feiticeiro antigo de poder inimagináve. Comanda as forças da morte e corrupção.",
+    prompt:`A lich king mage boss enemy, ancient undead sorcerer in dark robes with spectral crown, skeletal hands channeling dark necrotic energy, glowing purple-cyan eyes, staff with skull, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, casting pose.` },
+  { id:"boss_dragon", name:"Ancient Dragon", hp:1200, def:6, ability:"Enrage at 30% + Double attack",
+    desc:"O dragão mais antigo. Cada asa bate extingue civilizações. Enraivece no limite da morte.",
+    prompt:`An ancient dragon boss enemy, enormous fearsome dragon with battle-scarred scales, glowing amber eyes, massive wings spread, wisps of ancient fire, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, imposing perched idle pose.` },
+  { id:"boss_hydra", name:"Swamp Hydra", hp:1000, def:3, ability:"Triple hit 0.4× + Drain 15% heal",
+    desc:"Criatura ancestral dos pântanos. Três cabeças que drenam e atacam ao mesmo tempo.",
+    prompt:`A swamp hydra boss enemy, three-headed serpentine creature rising from dark marsh water, venomous dripping fangs on each head, murky green-brown scales, life-draining aura, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, multi-head ready pose.` },
+];
+
+// ─── Render ────────────────────────────────────────────────────────────────
+
+function rarityBadge(r) {
+  return `<span class="badge badge-${r}">${r}</span>`;
+}
+
+function copyPrompt(btn) {
+  const txt = btn.nextElementSibling.textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 1500);
+  });
+}
+
+function renderCard(c, rarity) {
+  const compsHtml = c.comps ? `<div class="components">Componentes: <span>${c.comps.join(' + ')}</span></div>` : '';
+  const effectsHtml = c.effects.map(e => `<span class="effect">${e}</span>`).join('');
+  return `
+  <div class="card" data-rarity="${rarity}" data-search="${(c.id+' '+c.name+' '+(c.effects||[]).join(' ')).toLowerCase()}">
+    <div class="card-top">
+      <span class="card-id">${c.id}</span>
+      <span class="card-name">${c.name}</span>
+    </div>
+    <div class="card-desc">${c.desc}</div>
+    ${compsHtml}
+    <div class="effects">${effectsHtml}</div>
+    <div class="prompt-block">
+      <div class="prompt-label">Prompt para Geração</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar</button>
+      <div class="prompt-text">${c.prompt}</div>
+    </div>
+  </div>`;
+}
+
+function renderEnemy(e) {
+  return `
+  <div class="card enemy-card" data-rarity="enemy" data-search="${(e.id+' '+e.name).toLowerCase()}">
+    <div class="card-top">
+      <span class="card-id">${e.id}</span>
+      <span class="card-name">${e.name}</span>
+      <span class="badge badge-enemy">Boss</span>
+    </div>
+    <div class="card-desc">${e.desc}</div>
+    <div class="enemy-stats">
+      <span class="stat-pill">HP <strong>${e.hp}</strong></span>
+      <span class="stat-pill">DEF <strong>${e.def}</strong></span>
+      <span class="stat-pill">Habilidade: ${e.ability}</span>
+    </div>
+    <div class="effects"><span class="effect">idle spritesheet</span><span class="effect">attack spritesheet</span><span class="effect">death spritesheet</span></div>
+    <div class="prompt-block">
+      <div class="prompt-label">Prompt Base (adaptar para idle/attack/death)</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar</button>
+      <div class="prompt-text">${e.prompt}</div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('grid-common').innerHTML   = COMMON_CARDS.map(c => renderCard(c, 'common')).join('');
+document.getElementById('grid-medium').innerHTML   = MEDIUM_CARDS.map(c => renderCard(c, 'medium')).join('');
+document.getElementById('grid-advanced').innerHTML = ADVANCED_CARDS.map(c => renderCard(c, 'advanced')).join('');
+document.getElementById('grid-epic').innerHTML     = EPIC_CARDS.map(c => renderCard(c, 'epic')).join('');
+document.getElementById('grid-enemy').innerHTML    = ENEMIES.map(e => renderEnemy(e)).join('');
+
+// ─── Filter ─────────────────────────────────────────────────────────────────
+
+let activeFilter = 'all';
+let searchTerm   = '';
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function filterCards() {
+  searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  applyFilter();
+}
+
+function applyFilter() {
+  const sections = { common:'section-common', medium:'section-medium', advanced:'section-advanced', epic:'section-epic', enemy:'section-enemy' };
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    const rarity = card.dataset.rarity;
+    const search = card.dataset.search || '';
+    const filterOk = activeFilter === 'all' || activeFilter === rarity;
+    const searchOk = !searchTerm || search.includes(searchTerm);
+    card.classList.toggle('hidden', !(filterOk && searchOk));
+  });
+  // Show/hide sections based on visible cards
+  Object.entries(sections).forEach(([r, sid]) => {
+    const sec = document.getElementById(sid);
+    const visible = sec.querySelectorAll('.card:not(.hidden)').length;
+    sec.style.display = visible > 0 ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
