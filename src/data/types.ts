@@ -9,7 +9,7 @@
 
 export type StatId = "str" | "vit" | "dex" | "int" | "spi";
 
-export type StackId = "poison" | "bleed" | "burn" | "freeze" | "shock" | "arcane" | "rage";
+export type StackId = "poison" | "bleed" | "burn" | "stun" | "slow" | "arcane" | "rage";
 
 // -- Card Types --
 
@@ -198,7 +198,7 @@ export interface SynergyDefinition {
 
 // -- Tile Types --
 
-export type TileType = "basic" | "combat" | "elite" | "boss" | "shop" | "rest" | "event" | "treasure";
+export type TileType = "basic" | "combat" | "elite" | "boss" | "rest" | "event" | "treasure";
 
 export interface TileTypeConfig {
   type: TileType;

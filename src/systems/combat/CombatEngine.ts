@@ -12,7 +12,6 @@ import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
 import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { tickAuras, getCdReductionFactor } from './StatusEffects';
-import { rand } from '../SharedRNG';
 import { getRun } from '../../state/RunState';
 
 /** Passive regen interval in milliseconds */
@@ -301,79 +300,89 @@ export class CombatEngine {
   }
 
   /**
-   * Phase 9: Resolve active DoT stacks once per card play (DoT cadence per
-   * INDEX §7 #2 + RESEARCH A2). Per-tick damage = stacks * (1 + floor(DEX/4))
-   * for poison. Bleed / burn / freeze / shock follow the same shape per
-   * design/00 §3 with class-internal formulas. After the tick, each stack
-   * decays by 1.
+   * Resolve active DoT stacks once per card play (DoT cadence per INDEX §7 #2
+   * + RESEARCH A2). Per-stack damage formulas differ by stack type:
+   *   - Poison: stacks damage, decays every 2nd tick (slow burn).
+   *   - Bleed: stacks * (enemyAttackedSinceLastBleedTick ? 2 : 1) damage,
+   *            -1 stack/tick (swing-amplified).
+   *   - Burn: flat 2 damage while burnStacks > 0; stacks do NOT decay
+   *           (only consumed by Pyre cards via CardResolver).
+   *   - Slow (renamed from Shock): stacks damage + cooldown slow in EnemyAI;
+   *           -1 stack/tick.
+   *   - Stun (renamed from Freeze): no damage; freezes enemy cooldown timer
+   *           in EnemyAI; -1 stack/tick.
    */
   private tickActiveDoTs(triggeringCardId: string): void {
     const state = this.state;
-    const dexBonus = 1 + Math.floor(state.heroDexterity / 4);
 
-    // Phase 9 (WR-01 fix): track whether ANY DoT type ticked this cycle so
-    // the `dot_tick` relic dispatch can fire once after the pass, instead of
-    // only inside the poison branch (which silently excluded bleed/burn/shock
-    // tick triggers — Warrior bleed + Mage burn relics had no `dot_tick`
-    // coverage). Fires once per card-play cycle if any DoT actually ticked.
+    // Track whether ANY DoT type ticked this cycle so the `dot_tick` relic
+    // dispatch fires once after the pass (WR-01 fix preserved).
     let anyDotTicked = false;
 
-    // Poison: stacks * (1 + floor(DEX/4)) damage; -1 stack/tick unless disabled.
+    // Poison: stacks damage every tick; stacks decay every 2nd tick (parity).
+    // Apply damage first, then advance parity. On the cycle where parity wraps
+    // back to 0, decrement stacks by 1. The first tick after apply does damage
+    // but no decay (parity goes 0→1); the second tick does damage and decays
+    // (parity goes 1→0).
     if (state.poisonStacks > 0) {
-      const dmg = state.poisonStacks * dexBonus;
+      const dmg = state.poisonStacks;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', {
         stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
       });
-      state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      state.poisonTickParity = (state.poisonTickParity + 1) % 2;
+      if (state.poisonTickParity === 0) {
+        state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      }
       anyDotTicked = true;
     }
 
-    // Bleed: per design/00 §3, similar shape — class-internal (warrior-leaning).
-    // Use stack * 1 baseline; class-specific formulas land in their per-class plans.
+    // Bleed: swing-amplified. If the enemy attacked since the last bleed tick,
+    // each stack deals 2 damage; otherwise 1. Reset the flag AFTER applying
+    // damage. Stacks decay -1 per tick regardless.
     if (state.bleedStacks > 0) {
-      const dmg = state.bleedStacks;
+      const perStack = state.enemyAttackedSinceLastBleedTick ? 2 : 1;
+      const dmg = state.bleedStacks * perStack;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'bleed', damage: dmg, sourceCard: triggeringCardId });
       state.bleedStacks = Math.max(0, state.bleedStacks - 1);
+      state.enemyAttackedSinceLastBleedTick = false;
       anyDotTicked = true;
     }
 
-    // Burn: mage-leaning DoT. INT-scaling per design/00 §3.
-    // Phase 9 (WR-04 fix): mirror poison's per-stack DEX multiplier shape so
-    // INT scales burn ON EACH STACK rather than as a flat add. Previous
-    // formula `stacks + floor(INT/2)` made high-INT/high-stack burn flatten
-    // out (1 stack @ INT 8 = 5 dmg, 5 stacks @ INT 8 = 9 dmg). New formula
-    // `stacks * (1 + floor(INT/2))` matches poison's `stacks * (1+floor(DEX/4))`
-    // so DoT classes scale symmetrically with their primary stat.
+    // Burn: non-decaying, fixed DoT. While burnStacks > 0, deal a flat 2
+    // damage per tick regardless of stack count. Stacks are only consumed by
+    // Pyre cards (handled in CardResolver post-damage).
     if (state.burnStacks > 0) {
-      const intMult = 1 + Math.floor(state.heroIntellect / 2);
-      const dmg = state.burnStacks * intMult;
+      const dmg = 2;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'burn', damage: dmg, sourceCard: triggeringCardId });
-      state.burnStacks = Math.max(0, state.burnStacks - 1);
+      // No decay — Pyre cards consume burnStacks on resolve.
       anyDotTicked = true;
     }
 
-    // Freeze: not pure DoT — slows enemy cooldown. Stack still decays per tick.
-    if (state.freezeStacks > 0) {
-      state.freezeStacks = Math.max(0, state.freezeStacks - 1);
+    // Stun (renamed from Freeze): no damage. While stunStacks > 0, EnemyAI
+    // halts the cooldown timer. Stacks decay -1 per tick here.
+    if (state.stunStacks > 0) {
+      state.stunStacks = Math.max(0, state.stunStacks - 1);
     }
 
-    // Shock: small DoT + stamina drain placeholder (design/02 mage burn line).
-    if (state.shockStacks > 0) {
-      const dmg = state.shockStacks;
+    // Slow (renamed from Shock): small DoT + per-stack enemy attack-cooldown
+    // slow (applied in EnemyAI.tick — 8% per stack, capped at 50%). Stack
+    // decays each tick.
+    if (state.slowStacks > 0) {
+      const dmg = state.slowStacks;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
-      eventBus.emit('combat:dot-tick', { stack: 'shock', damage: dmg, sourceCard: triggeringCardId });
-      state.shockStacks = Math.max(0, state.shockStacks - 1);
+      eventBus.emit('combat:dot-tick', { stack: 'slow', damage: dmg, sourceCard: triggeringCardId });
+      state.slowStacks = Math.max(0, state.slowStacks - 1);
       anyDotTicked = true;
     }
 
@@ -416,23 +425,16 @@ export class CombatEngine {
     // checkEndConditions immediately after executeCard returns, so the
     // win/loss event still fires on the correct tick.
     const combatStillLive = this.state.enemyHP > 0 && this.state.heroHP > 0;
-    const nextCardId = this.state.deckOrder[this.deckPointer >= this.state.deckOrder.length ? 0 : this.deckPointer];
-    if (nextCardId && combatStillLive) {
-      dispatchTriggerRelics('card_drawn', this.state.activeRelicIds ?? [], this.state);
-      eventBus.emit('combat:card-drawn', { cardId: nextCardId });
-    }
 
     if (this.deckPointer >= this.state.deckOrder.length) {
       this.deckPointer = 0;
       this.stats.reshuffles++;
-      this.consecutiveAttacks = 0; // reset on reshuffle
+      this.consecutiveAttacks = 0; // reset on deck cycle
 
-      // Actually re-randomize order — emitting the event without shuffling
-      // gave the player the same card sequence forever. Shuffle deckOrder
-      // and the parallel `upgraded` flags in lockstep so per-position
-      // upgrade tracking survives the reshuffle.
-      this.fisherYatesPair(this.state.deckOrder, this.state.upgraded);
-
+      // Deck preserves its order across cycles — the player faces the same
+      // sequence each loop. The reshuffle event/counter is retained because
+      // downstream systems (second_wind, SPI/INT regen) trigger on a deck
+      // wrap, regardless of whether order changes.
       eventBus.emit('combat:deck-reshuffled', { reshuffleCount: this.stats.reshuffles });
 
       // second_wind passive: recover 5 stamina on reshuffle
@@ -453,16 +455,11 @@ export class CombatEngine {
         this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + intMana);
       }
     }
-  }
 
-  /** Shuffle two parallel arrays in lockstep (same swaps). */
-  private fisherYatesPair<A, B>(a: A[], b: B[]): void {
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(rand() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-      if (j < b.length && i < b.length) {
-        [b[i], b[j]] = [b[j], b[i]];
-      }
+    const nextCardId = this.state.deckOrder[this.deckPointer];
+    if (nextCardId && combatStillLive) {
+      dispatchTriggerRelics('card_drawn', this.state.activeRelicIds ?? [], this.state);
+      eventBus.emit('combat:card-drawn', { cardId: nextCardId });
     }
   }
 

@@ -23,9 +23,6 @@ export function emptyShardInventory(): ShardInventory {
   for (const id of ALL_ELEMENT_IDS) inv[id] = 0;
   return inv;
 }
-export function emptyElementInventory(): ElementInventory {
-  return emptyShardInventory(); // same shape
-}
 
 /** Reads a counter, defaulting to 0 for absent keys. */
 export function readShards(inv: ShardInventory | undefined, id: ElementId): number {
@@ -61,8 +58,9 @@ export function addShardsAndConvert(
 
 /**
  * Roll shard drops for an enemy kill.
- * - Count is determined by enemy type (normal/elite/boss)
- * - Each shard rolls category by class bias, then uniform among 4 subtypes
+ * - Drops come in packs: each pack is one element with K shards of that type.
+ * - Pack count and per-pack size are defined per enemy type in DROP_RATES.
+ * - Each pack rolls category by class bias, then uniform among 4 subtypes.
  * - Uses SharedRNG by default (deterministic when a run RNG is active).
  */
 export function rollShardDrops(
@@ -70,15 +68,16 @@ export function rollShardDrops(
   className: string,
   rng: RandFn = sharedRand,
 ): ShardInventory {
-  const { min, max } = DROP_RATES[enemyType];
-  const totalShards = min + Math.floor(rng() * (max - min + 1));
+  const { packs, perPack } = DROP_RATES[enemyType];
+  const packCount = packs.min + Math.floor(rng() * (packs.max - packs.min + 1));
   const bias = CLASS_BIAS[className] ?? CLASS_BIAS.warrior;
   const result: ShardInventory = emptyShardInventory();
-  for (let i = 0; i < totalShards; i++) {
+  for (let i = 0; i < packCount; i++) {
     const isPhysical = rng() < bias.physical;
     const pool = isPhysical ? PHYSICAL_ELEMENTS : ELEMENTAL_ELEMENTS;
     const pick = pool[Math.floor(rng() * pool.length)];
-    result[pick] = (result[pick] ?? 0) + 1;
+    const size = perPack.min + Math.floor(rng() * (perPack.max - perPack.min + 1));
+    result[pick] = (result[pick] ?? 0) + size;
   }
   return result;
 }

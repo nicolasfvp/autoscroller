@@ -21,24 +21,36 @@ import {
 import { saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import type { CardDefinition } from '../data/types';
+import { formatCardDescription } from '../systems/cards/CardText';
+import { CardFilterBar } from '../ui/CardFilterBar';
+import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
+import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { countElementCategories } from '../systems/ElementSystem';
 
 const FF = FONTS.family;
 const WHITE = '#ffffff';
 const GOLD = COLORS.accent;
 const DIM = COLORS.textSecondary;
 
-// Grid geometry
-const CARD_W = 140;
-const CARD_H = 90;
+// Grid geometry — switched from a custom horizontal card cell to the shared
+// CardVisual at scale 0.55 (82.5×132 footprint). Same 3-column layout fits
+// comfortably in the left half of the screen alongside the deck-slot panel.
+const CARD_SCALE = 0.55;
+const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 82.5
+const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 132
 const GRID_COLS = 3;
 const GRID_X = 30;
-const GRID_Y = 150;
+const GRID_Y = 205;
 const GRID_GAP = 8;
 const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP;
-const GRID_VIEWPORT_H = 380;
+const GRID_VIEWPORT_H = 325;
 
-// Filter chip row geometry
-const FILTER_Y = 115;
+// CardFilterBar row (top) — element/tier/search. Sits above the existing
+// element-only chip row (which keeps its multi-select AND intersection).
+const CARD_FILTER_BAR_Y = 108;
+
+// Filter chip row geometry — shifted down to clear the CardFilterBar above.
+const FILTER_Y = 175;
 const FILTER_CHIP_W = 50;
 const FILTER_CHIP_H = 20;
 const FILTER_GAP = 4;
@@ -74,6 +86,16 @@ export class DeckBuilderScene extends Scene {
   private gridScrollHint?: Phaser.GameObjects.Text;
   private filterContainer!: Phaser.GameObjects.Container;
   private activeFilters: Set<ElementId> = new Set();
+  // Top-level reusable filter bar (element dropdown + tier checkboxes + search).
+  // Layered on top of the existing element-chip row — chip row stays for
+  // multi-element AND-intersection, this bar adds single-element + tier + name
+  // search and is the primary filter UI going forward.
+  private cardFilterBar: CardFilterBar | null = null;
+  private cardFilters: CardFilters = {
+    element: 'All',
+    tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+    search: '',
+  };
 
   private deckSlotContainers: Phaser.GameObjects.Container[] = [];
   private presetButtons: Phaser.GameObjects.Container[] = [];
@@ -106,6 +128,23 @@ export class DeckBuilderScene extends Scene {
     this.onCancel = data.onCancel ?? null;
     this.metaState = data.metaState ?? null;
     this.gridScrollY = 0;
+
+    // Phaser reuses the scene instance across remounts. Class-field arrays
+    // keep references to game objects destroyed at shutdown, so reset them
+    // before re-rendering or `updatePresetTab` will crash on a stale container.
+    this.presetButtons = [];
+    this.deckSlotContainers = [];
+    this.cardCells = [];
+    this.activeFilters = new Set();
+    this.cardFilters = {
+      element: 'All',
+      tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+      search: '',
+    };
+    // Old bar reference from a previous mount must be cleared — the actual
+    // GameObject was destroyed by Phaser when the scene shut down, but we
+    // recreate it below and don't want a stale handle.
+    this.cardFilterBar = null;
 
     const presets = this.getPresets();
     this.selectedPresetIndex = 0;
@@ -142,6 +181,7 @@ export class DeckBuilderScene extends Scene {
     }).setOrigin(0.5);
 
     this.renderPresetTabs();
+    this.renderCardFilterBar();
     this.renderFilterChips();
     this.renderCardGrid();
     this.renderDeckPanel();
@@ -149,6 +189,33 @@ export class DeckBuilderScene extends Scene {
     this.renderTooltip();
     this.bindScroll();
     this.refresh();
+
+    // CardFilterBar appends a native <input> to document.body. Destroy it
+    // when the scene shuts down so a relaunch doesn't stack ghost inputs
+    // across the page. The bar already wires its own shutdown listener,
+    // but we own the field reference, so clear it here too.
+    this.events.once('shutdown', () => {
+      if (this.cardFilterBar) {
+        this.cardFilterBar.destroy();
+        this.cardFilterBar = null;
+      }
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // Reusable CardFilterBar (element + tier + search)
+  // ────────────────────────────────────────────────
+
+  private renderCardFilterBar(): void {
+    // Width is constrained to the left half so the bar doesn't overlap the
+    // deck-slot panel at x=510. Bar spans the same horizontal extent as the
+    // card grid + element chips below it.
+    const barX = GRID_X;
+    const barW = 470;
+    this.cardFilterBar = new CardFilterBar(this, barX, CARD_FILTER_BAR_Y, barW, (filters) => {
+      this.cardFilters = filters;
+      this.rebuildGrid();
+    });
   }
 
   // ────────────────────────────────────────────────
@@ -310,10 +377,16 @@ export class DeckBuilderScene extends Scene {
   }
 
   private getFilteredCards(): CardDefinition[] {
+    // Starter deck is Tier-1 only by rule. We still hand the CardFilterBar
+    // its full filter set, but pre-restrict the pool to Tier 1 so the bar's
+    // tier checkboxes only meaningfully gate within {1}. Search + element
+    // gates are both useful here.
     const tier1 = getAllCards().filter((c) => c.tier === 1);
-    if (this.activeFilters.size === 0) return tier1;
-    // Intersection: card must contain ALL selected elements at least once.
-    return tier1.filter((c) => {
+    const cardBarFiltered = applyFilters(tier1, this.cardFilters);
+    if (this.activeFilters.size === 0) return cardBarFiltered;
+    // Intersection with the existing chip-row filter: card must contain ALL
+    // selected elements at least once (this preserves prior chip semantics).
+    return cardBarFiltered.filter((c) => {
       const elems = (c.elements ?? []) as ElementId[];
       for (const f of this.activeFilters) {
         if (!elems.includes(f)) return false;
@@ -378,44 +451,28 @@ export class DeckBuilderScene extends Scene {
   }
 
   private createCardCell(card: CardDefinition, x: number, y: number): CardCell {
+    // Container parent so grid math (positions, scrolling) stays unchanged.
+    // The CardVisual is anchored at the cell center; an invisible hit-box
+    // rectangle (`bg`) holds the cell's interactivity so the existing
+    // updateCellInteractivity() viewport-toggle logic still works.
     const container = this.add.container(x, y);
 
-    const dominantColor = this.dominantElementColor(card);
-    const bg = this.add.rectangle(CARD_W / 2, CARD_H / 2, CARD_W, CARD_H, dominantColor, 0.18)
-      .setStrokeStyle(1.5, dominantColor, 0.85);
+    // Centered CardVisual — fills the cell. We strip its built-in pointer
+    // handlers so the deck-builder's own click-to-pick behavior runs instead
+    // of opening the card detail popup.
+    const visual = createCardVisual(this, CARD_W / 2, CARD_H / 2, card.id, { scale: CARD_SCALE });
+    visual.removeAllListeners('pointerdown');
+    visual.removeAllListeners('pointerover');
+    visual.removeAllListeners('pointerout');
+    visual.disableInteractive();
+    container.add(visual);
 
-    const name = this.add.text(CARD_W / 2, 12, card.name, {
-      fontSize: '11px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-      align: 'center', wordWrap: { width: CARD_W - 8 },
-    }).setOrigin(0.5, 0);
-
-    // Element icons (small colored dots in a row)
-    const elems = (card.elements ?? []) as ElementId[];
-    const dotR = 6;
-    const dotGap = 4;
-    const dotsTotalW = elems.length * dotR * 2 + (elems.length - 1) * dotGap;
-    const startDotX = CARD_W / 2 - dotsTotalW / 2 + dotR;
-    elems.forEach((e, idx) => {
-      const dx = startDotX + idx * (dotR * 2 + dotGap);
-      const color = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-      const dot = this.add.circle(dx, 38, dotR, color).setStrokeStyle(1, 0xffffff, 0.6);
-      container.add(dot);
-    });
-
-    // Brief effect summary
-    const effectsLine = this.summarizeEffects(card);
-    const summary = this.add.text(CARD_W / 2, 56, effectsLine, {
-      fontSize: '9px', color: WHITE, fontFamily: FF,
-      align: 'center', wordWrap: { width: CARD_W - 8 },
-    }).setOrigin(0.5, 0);
-
-    // Cost / cooldown
-    const costLine = this.formatCostLine(card);
-    this.add.text(CARD_W / 2, CARD_H - 12, costLine, {
-      fontSize: '9px', color: GOLD, fontFamily: FF,
-    }).setOrigin(0.5).setData('_inCell', true);
-
-    container.add([bg, name, summary]);
+    // Invisible hit-box on top — drives cell-level pointer events. Kept as a
+    // Rectangle (not the visual) so updateCellInteractivity()'s disable/enable
+    // toggling stays simple.
+    const bg = this.add.rectangle(CARD_W / 2, CARD_H / 2, CARD_W, CARD_H, 0x000000, 0)
+      .setStrokeStyle(1.5, 0xffffff, 0);
+    container.add(bg);
 
     bg.setInteractive({ useHandCursor: true });
     bg.on('pointerover', () => {
@@ -423,10 +480,15 @@ export class DeckBuilderScene extends Scene {
       this.showTooltip(card, x, y);
     });
     bg.on('pointerout', () => {
-      bg.setStrokeStyle(1.5, dominantColor, 0.85);
+      bg.setStrokeStyle(1.5, 0xffffff, 0);
       this.hideTooltip();
     });
     bg.on('pointerdown', () => {
+      // Element-budget validation: don't allow picking a card that overflows
+      // the 10-element starter budget. Dim/disable behavior is applied via
+      // alpha in refreshCellAffordability() — the click guard here is a
+      // belt-and-braces backstop so a stale alpha can't sneak a pick through.
+      if (!this.canPickCard(card)) return;
       if (this.currentDeck.length < STARTER_DECK_SIZE) {
         this.currentDeck.push(card.id);
         this.refresh();
@@ -434,6 +496,36 @@ export class DeckBuilderScene extends Scene {
     });
 
     return { card, container, bg };
+  }
+
+  /**
+   * Affordability check used by createCardCell click-guard and the per-cell
+   * alpha dimming pass. A card is pickable if (a) the deck has room and
+   * (b) adding its elements wouldn't exceed the 10-element starter budget.
+   */
+  private canPickCard(card: CardDefinition): boolean {
+    if (this.currentDeck.length >= STARTER_DECK_SIZE) return false;
+    const cardElems = (card.elements ?? []) as ElementId[];
+    const cardCount = countElementCategories(cardElems).total;
+    let currentTotal = 0;
+    for (const id of this.currentDeck) {
+      const c = getAllCards().find((cc) => cc.id === id);
+      if (!c) continue;
+      currentTotal += countElementCategories((c.elements ?? []) as ElementId[]).total;
+    }
+    return currentTotal + cardCount <= 10;
+  }
+
+  /**
+   * Dim cards the player can't currently pick (deck full OR would overflow
+   * the element budget). Re-run on every refresh so dims stay in sync with
+   * the in-flight deck.
+   */
+  private refreshCellAffordability(): void {
+    for (const cell of this.cardCells) {
+      const ok = this.canPickCard(cell.card);
+      cell.container.setAlpha(ok ? 1.0 : 0.4);
+    }
   }
 
   private bindScroll(): void {
@@ -651,6 +743,9 @@ export class DeckBuilderScene extends Scene {
   private refresh(): void {
     for (let i = 0; i < PRESETS_PER_CLASS; i++) this.updatePresetTab(i);
     this.updateDeckSlots();
+    // Repaint cell alpha against the current in-flight deck so cards that
+    // would push the element budget over 10 dim out and become un-clickable.
+    this.refreshCellAffordability();
     const v = validateStarterDeck(this.currentDeck, this.className);
     this.elementBudgetText.setText(`Cards: ${v.size}/${STARTER_DECK_SIZE}  |  Elements: ${v.totalElements}/10  |  Physical: ${v.physical}  |  Elemental: ${v.elemental}`);
     if (v.valid) {
@@ -673,43 +768,11 @@ export class DeckBuilderScene extends Scene {
     return parseInt(ELEMENTS[elems[0]].color.replace('#', ''), 16);
   }
 
-  private summarizeEffects(card: CardDefinition): string {
-    if (!card.effects?.length) return '—';
-    const fx = card.effects[0];
-    switch (fx.type) {
-      case 'damage':   return `Deal ${fx.value} dmg`;
-      case 'heal':     return `Heal ${fx.value}`;
-      case 'armor':    return `+${fx.value} armor`;
-      case 'stamina':  return `+${fx.value} stam`;
-      case 'mana':     return `+${fx.value} mana`;
-      case 'dot':      return `${fx.stack || 'DoT'} ${fx.value}`;
-      case 'buff':     return `+${fx.value} ${fx.scale?.stat ?? 'stat'}`;
-      case 'debuff':   return `Enemy -${fx.value} def`;
-      case 'stack':    return `+${fx.value} ${fx.stack ?? 'stack'}`;
-      default:         return fx.type;
-    }
-  }
-
   private describeEffects(card: CardDefinition): string {
-    if (!card.effects?.length) return '—';
-    return card.effects.map((fx) => {
-      const tgt = fx.target === 'enemy' ? '→ enemy' : '→ self';
-      let line = '';
-      switch (fx.type) {
-        case 'damage':  line = `Deal ${fx.value} damage ${tgt}`; break;
-        case 'heal':    line = `Heal ${fx.value} HP`; break;
-        case 'armor':   line = `Gain ${fx.value} armor`; break;
-        case 'stamina': line = `+${fx.value} stamina`; break;
-        case 'mana':    line = `+${fx.value} mana`; break;
-        case 'dot':     line = `Apply ${fx.value} ${fx.stack || 'DoT'} stacks ${tgt}`; break;
-        case 'buff':    line = `+${fx.value} ${fx.scale?.stat ?? 'stat'} buff`; break;
-        case 'debuff':  line = `Enemy -${fx.value} def`; break;
-        case 'stack':   line = `+${fx.value} ${fx.stack ?? 'stack'}`; break;
-        default:        line = `${fx.type} ${fx.value}`;
-      }
-      if (fx.scale) line += ` (+${fx.scale.value} per ${fx.scale.stat})`;
-      return line;
-    }).join('\n');
+    const text = formatCardDescription(card);
+    if (!text) return '—';
+    // The shared formatter joins fragments with ". " — tooltip wants one per line.
+    return text.replace(/\. /g, '\n').replace(/\.$/, '');
   }
 
   private formatCostLine(card: CardDefinition): string {

@@ -19,7 +19,22 @@ export class EnemyAI {
   }
 
   tick(deltaMs: number, state: CombatState, stats: CombatStats): void {
-    this.cooldownTimer -= deltaMs;
+    // Stun (renamed from freeze): while stunStacks >= 1, the enemy's attack
+    // cooldown timer must not advance at all. We override the effectiveDelta
+    // BEFORE applying the Slow scaling — stun outranks slow.
+    let effectiveDelta = deltaMs;
+    if (state.stunStacks > 0) {
+      effectiveDelta = 0;
+    } else {
+      // Slow (renamed from shock) slows the enemy attack timer: 8% per stack,
+      // capped at 50%. The stack count decays in CombatEngine.tickActiveDoTs
+      // (~1/sec), so the slow naturally fades. Cooldown-shave recovery below
+      // still uses real deltaMs so the agility affinity speedup decays at a
+      // constant real-time rate.
+      const slowFactor = Math.min(0.5, state.slowStacks * 0.08);
+      effectiveDelta = deltaMs * (1 - slowFactor);
+    }
+    this.cooldownTimer -= effectiveDelta;
 
     // Agility affinity gives a temporary cooldown shave; decay it back toward
     // the enemy's base cooldown so the speedup fades instead of ratcheting
@@ -76,6 +91,9 @@ export class EnemyAI {
   }
 
   private attack(state: CombatState, stats: CombatStats): void {
+    // Bleed swing-amplification: flag is consumed by CombatEngine.tickActiveDoTs
+    // on the next bleed tick to deal 2-per-stack instead of 1.
+    state.enemyAttackedSinceLastBleedTick = true;
     let damage = this.calculateDamage(state, stats);
     let specialEffect: string | null = null;
 

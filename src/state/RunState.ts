@@ -143,12 +143,18 @@ export interface RunState {
   isInCombat: boolean;
   /** Current scene key (for restoring position on load) */
   currentScene: string;
-  /** Whether to stop at shop tiles (toggle in HUD) */
+  /** Whether to stop at shop tiles (toggle in HUD) -- legacy; shop tile was removed. */
   stopAtShop: boolean;
   /** Combat speed multiplier (0.5x - 3x, default 1x) */
   combatSpeed: number;
   /** Map traversal speed multiplier (0.5x - 3x, default 1x) */
   mapSpeed: number;
+  /**
+   * Auto-skip the next N planning phases without showing PlanningOverlay.
+   * Set from the "Don't stop here for: 1/5/10/25" control. Boss-loop planning
+   * (loop.count % bossEveryNLoops === 0) always stops regardless of this value.
+   */
+  skipLoopsRemaining?: number;
 
   /** Unlocked items valid for this run (populated from MetaState at run start) */
   pool: {

@@ -6,6 +6,8 @@ import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
 import { COLORS, FONTS } from './StyleConstants';
 import { createDelayedBackdrop } from './Backdrop';
+import { attachKeywordTooltip } from './KeywordTooltip';
+import { hideFilterBarInputs, showFilterBarInputs } from './FilterBarVisibility';
 import type { CardCategory } from '../data/types';
 
 const RARITY_COLORS: Record<string, number> = {
@@ -85,10 +87,21 @@ export function showCardDetail(
 
   // Full-screen dimmed backdrop -- 100ms delay before interactive prevents
   // the same pointerdown that opened the popup from closing it.
+  // The keyword tooltip handle is assigned below; the backdrop closes
+  // the popup AND cancels the pending tooltip timer so it doesn't fire
+  // (or fire and immediately get torn down with the popup).
   const backdrop = createDelayedBackdrop(scene, 100, 0.7);
+  let tip: { cancel: () => void } | null = null;
+  // Hide any floating HTML <input>s (search bars) while the popup is open,
+  // since DOM elements outside the canvas always render above canvas content
+  // regardless of Phaser depth.
+  hideFilterBarInputs();
   backdrop.on('pointerdown', () => {
+    if (tip) tip.cancel();
+    showFilterBarInputs();
     popup.destroy(true);
   });
+  popup.once('destroy', () => showFilterBarInputs());
   popup.add(backdrop);
 
   // Card panel
@@ -207,26 +220,12 @@ export function showCardDetail(
     yPos += 22;
   }
 
-  // Effects breakdown
-  if (effectiveEffects && effectiveEffects.length > 0) {
-    yPos += 4;
-    const effectsLabel = scene.add.text(px, yPos, 'Effects', {
-      fontSize: '13px', color: COLORS.textSecondary, fontFamily, fontStyle: 'bold',
-    }).setOrigin(0.5, 0);
-    popup.add(effectsLabel);
-    yPos += 18;
-
-    for (const eff of effectiveEffects) {
-      const effTypeLabel = eff.type.charAt(0).toUpperCase() + eff.type.slice(1);
-      const targetLabel = eff.target === 'self' ? '(Self)' : '(Enemy)';
-      const effStr = `${effTypeLabel}: ${eff.value} ${targetLabel}`;
-      const effText = scene.add.text(px, yPos, effStr, {
-        fontSize: '13px', color: catHex, fontFamily,
-      }).setOrigin(0.5, 0);
-      popup.add(effText);
-      yPos += 17;
-    }
-  }
+  // Effects breakdown removed: the card's `description` already reads as a
+  // curated player-facing summary (e.g. "Deal 4. Pyre 3. Burn 3.") so a
+  // raw type/value dump below it is redundant AND was rendering DoT cards
+  // as "Dot: 3 (Enemy)" which the player has no way to decode.
+  void effectiveEffects;
+  void catHex;
 
   // Upgraded indicator
   if (isUpgraded) {
@@ -241,6 +240,12 @@ export function showCardDetail(
     fontSize: '12px', color: COLORS.textSecondary, fontFamily, fontStyle: 'italic',
   }).setOrigin(0.5);
   popup.add(hint);
+
+  // Schedule keyword glossary tooltip (2s delay; cancelled if popup
+  // closes early via backdrop click).
+  tip = attachKeywordTooltip(scene, popup, effectiveDesc, {
+    x: px, y: py, w: panelW, h: panelH,
+  });
 
   // Entrance animation
   popup.setAlpha(0);

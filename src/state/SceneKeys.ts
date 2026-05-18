@@ -17,9 +17,9 @@ export const SCENE_KEYS = {
   PLANNING_OVERLAY: 'PlanningOverlay',
   BOSS_EXIT: 'BossExitScene',
   DEATH: 'DeathScene',
-  GAME_OVER: 'GameOverScene',
   CITY_HUB: 'CityHub',
   SHOP: 'ShopScene',
+  FORGE: 'ForgeScene',
   PAUSE: 'PauseScene',
   SETTINGS: 'SettingsScene',
   CHARACTER_SELECT: 'CharacterSelectScene',
@@ -31,8 +31,9 @@ export const SCENE_KEYS = {
   TAVERN_PANEL: 'TavernPanelScene',
   RUN_TRANSITION: 'RunTransitionScene',
   GLOBAL_SOUND: 'GlobalSound',
-  FORGE: 'ForgeScene',
+  SPEED_PANEL: 'SpeedPanelScene',
   DECK_BUILDER: 'DeckBuilderScene',
+  LIBRARY: 'CardLibraryScene',
 } as const;
 
 export type SceneKey = typeof SCENE_KEYS[keyof typeof SCENE_KEYS];
@@ -56,7 +57,6 @@ export function stopAllRunScenes(scene: Phaser.Scene, exclude?: string): void {
     SCENE_KEYS.RELIC_VIEWER,
     SCENE_KEYS.PAUSE,
     SCENE_KEYS.SETTINGS,
-    SCENE_KEYS.GAME_OVER,
     SCENE_KEYS.DEATH
   ];
   runScenes.forEach(key => {

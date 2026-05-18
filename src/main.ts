@@ -6,9 +6,9 @@ import { MainMenu } from './scenes/MainMenu'
 import { TutorialScene } from './scenes/TutorialScene'
 import { CombatScene } from './scenes/CombatScene'
 import { ShopScene } from './scenes/ShopScene'
+import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
 import { SettingsScene } from './scenes/SettingsScene'
-import { GameOverScene } from './scenes/GameOverScene'
 import { DeckCustomizationScene } from './scenes/DeckCustomizationScene'
 import { RelicViewerScene } from './scenes/RelicViewerScene'
 import { CharacterSelectScene } from './scenes/CharacterSelectScene'
@@ -22,8 +22,9 @@ import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
 import { GlobalSound } from './scenes/GlobalSound'
 import { RunTransitionScene } from './scenes/RunTransitionScene'
-import { ForgeScene } from './scenes/ForgeScene'
 import { DeckBuilderScene } from './scenes/DeckBuilderScene'
+import { CardLibraryScene } from './scenes/CardLibraryScene'
+import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -40,6 +41,13 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: false
         }
     },
+    // Keep the loop alive when the tab is backgrounded. Browsers still throttle
+    // setTimeout to ~1Hz, but the game's delta-based ticking advances wall-clock
+    // state correctly; CombatScene/GameScene force 1x speed while hidden.
+    fps: {
+        forceSetTimeOut: true,
+        target: 60
+    },
     scene: [
         Boot,
         Preloader,
@@ -48,9 +56,9 @@ const config: Phaser.Types.Core.GameConfig = {
         GameScene,
         CombatScene,
         ShopScene,
+        ForgeScene,
         PauseScene,
         SettingsScene,
-        GameOverScene,
         DeckCustomizationScene,
         RelicViewerScene,
         CharacterSelectScene,
@@ -63,8 +71,9 @@ const config: Phaser.Types.Core.GameConfig = {
         CollectionScene,
         GlobalSound,
         RunTransitionScene,
-        ForgeScene,
-        DeckBuilderScene
+        DeckBuilderScene,
+        CardLibraryScene,
+        SpeedPanelScene
     ]
 }
 

@@ -36,13 +36,13 @@ describe('BossSystem', () => {
     expect(encounter.scaledStats.damage).toBeGreaterThan(0);
   });
 
-  it('triggerBossCombat scales stats with loop count', () => {
+  it('triggerBossCombat scales stats with difficultyMultiplier (boss kills)', () => {
     const run1 = makeRunState();
-    run1.loop.count = 1;
+    run1.loop.difficultyMultiplier = 1.0; // 0 boss kills
     const enc1 = triggerBossCombat(run1);
 
     const run5 = makeRunState();
-    run5.loop.count = 5;
+    run5.loop.difficultyMultiplier = 1.4; // 4 boss kills (1 + 4*0.10)
     const enc5 = triggerBossCombat(run5);
 
     expect(enc5.scaledStats.hp).toBeGreaterThan(enc1.scaledStats.hp);

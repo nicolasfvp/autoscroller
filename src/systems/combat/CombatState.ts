@@ -74,11 +74,26 @@ export interface CombatState {
   poisonStacks: number;
   bleedStacks: number;
   burnStacks: number;
-  freezeStacks: number;
-  shockStacks: number;
+  stunStacks: number;
+  slowStacks: number;
   arcaneStacks: number;         // cap = arcaneStacksCap (Pitfall 8: cap-and-drop)
   arcaneStacksCap: number;      // default 10
   rageStacks: number;
+
+  /**
+   * Bleed swing-amplification flag. Set to true by EnemyAI whenever the enemy
+   * lands an attack; consumed (reset to false) by tickActiveDoTs after the
+   * bleed damage for the cycle is applied. When true, each bleed stack
+   * deals 2 damage instead of 1.
+   */
+  enemyAttackedSinceLastBleedTick: boolean;
+
+  /**
+   * Poison slow-decay counter. Poison damage applies every tick but stacks
+   * only decay every 2nd tick. Increments on each poison tick and modulo-2;
+   * when the resulting value is 0, decrement poisonStacks by 1.
+   */
+  poisonTickParity: number;
 
   /**
    * Phase 9: one-shot cooldown shave consumed by the NEXT card's cooldown.
@@ -168,11 +183,13 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     poisonStacks: 0,
     bleedStacks: 0,
     burnStacks: 0,
-    freezeStacks: 0,
-    shockStacks: 0,
+    stunStacks: 0,
+    slowStacks: 0,
     arcaneStacks: 0,
     arcaneStacksCap: 10,
     rageStacks: 0,
+    enemyAttackedSinceLastBleedTick: false,
+    poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     buffMagnitudePerCard: {},
     heroAuras: [],

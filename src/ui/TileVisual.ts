@@ -9,7 +9,6 @@ const TILE_SPRITE_MAP: Record<string, string> = {
   forest: 'tile_forest',
   graveyard: 'tile_graveyard',
   swamp: 'tile_swamp',
-  shop: 'tile_shop',
   rest: 'tile_rest',
   event: 'tile_event',
   treasure: 'tile_treasure',
@@ -21,7 +20,6 @@ const BG_SPRITE_MAP: Record<string, string> = {
   forest: 'bg_forest',
   graveyard: 'bg_graveyard',
   swamp: 'bg_swamp',
-  shop: 'bg_shop',
   rest: 'bg_rest',
   event: 'bg_event',
   treasure: 'bg_treasure',
@@ -137,17 +135,24 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
   }
 
-  private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number): void {
+  private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number, fadeIn: boolean = false): void {
     // Phase 9 (CR-01 fix): monster texture keys are namespaced `monster_*`
     // to avoid colliding with hero spritesheets (e.g. enemy 'mage' vs hero
     // Mage class). See Preloader.ts monsterIds loop.
     const textureKey = `monster_${enemyId}`;
     if (scene.textures.exists(textureKey)) {
-      this.enemySprite = scene.add.sprite(0, -tileSize * 0.15, textureKey);
+      this.enemySprite = scene.add.sprite(0, 0, textureKey);
       this.enemySprite.setOrigin(0.5, 1.0);
       this.enemySprite.y = tileSize * 0.2; // Sobe os monstros novamente para parear com a nova altura dos itens
-      this.enemySprite.setScale(tileSize / 32); // reducing scale assuming 64x64 images
+      // Bound enemy sprite to tile size regardless of source dimensions.
+      // Previous setScale(tileSize / 32) assumed 32px source but the PNGs
+      // are 64x64, causing a 2x "pop" (128px) on first appearance.
+      this.enemySprite.setDisplaySize(tileSize, tileSize);
       this.add(this.enemySprite);
+      if (fadeIn) {
+        this.enemySprite.setAlpha(0);
+        scene.tweens.add({ targets: this.enemySprite, alpha: 1, duration: 150 });
+      }
     } else {
       // Fallback: small colored circle
       const dot = scene.add.circle(0, -tileSize * 0.1, tileSize * 0.15, 0xff0000, 0.8);
@@ -226,6 +231,26 @@ export class TileVisual extends Phaser.GameObjects.Container {
     const updateConfig = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
     this.iconText.setText(updateConfig?.icon ?? '');
     this.setSynergyEdge('none');
+
+    // Enemy sprite reconcile: pool tiles change enemyId between basic and
+    // boss/combat tiles as the loop advances. Without this, the only path
+    // that adds an enemy sprite was the full destroy-and-reconstruct on
+    // loop completion, which caused a "pop" the first time a boss tile
+    // came into view via a pool reuse.
+    const size = TILE_SIZE * this.tileScale;
+    const shouldHaveEnemy = !!(tileSlot.enemyId && !tileSlot.defeatedThisLoop);
+    if (shouldHaveEnemy) {
+      const textureKey = `monster_${tileSlot.enemyId}`;
+      if (!this.enemySprite) {
+        this.addEnemySprite(this.scene, tileSlot.enemyId!, size, true);
+      } else if (this.enemySprite.texture.key !== textureKey && this.scene.textures.exists(textureKey)) {
+        this.enemySprite.setTexture(textureKey);
+        this.enemySprite.setDisplaySize(size, size);
+      }
+    } else if (this.enemySprite) {
+      this.enemySprite.destroy();
+      this.enemySprite = null;
+    }
   }
 
   hideFloor(): void {

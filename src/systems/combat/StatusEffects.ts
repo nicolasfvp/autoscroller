@@ -84,6 +84,12 @@ export function sumModifier(auras: ActiveAura[] | undefined | null, kind: AuraMo
  *     base cooldown).
  *
  * Returns a multiplier in [0.4, 1.0] to apply to a card's base cooldown.
+ *
+ * UNITS CONTRACT: cd_reduction modifier values are stored as FRACTIONS in
+ * cards.json (e.g. 0.25 = 25%), not as percents. sumModifier returns the
+ * raw sum of those fractions, so 0.30 / 0.60 here are fractional thresholds.
+ * If you change JSON to store percents, divide by 100 at the sumModifier
+ * boundary — do not touch these thresholds.
  */
 export function getCdReductionFactor(auras: ActiveAura[] | undefined | null): number {
   const raw = sumModifier(auras, "cd_reduction");
@@ -158,8 +164,8 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect): {
         case 'poison': state.poisonStacks += value; break;
         case 'bleed': state.bleedStacks += value; break;
         case 'burn': state.burnStacks += value; break;
-        case 'freeze': state.freezeStacks += value; break;
-        case 'shock': state.shockStacks += value; break;
+        case 'stun': state.stunStacks += value; break;
+        case 'slow': state.slowStacks += value; break;
         case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + value); break;
         case 'rage': state.rageStacks += value; break;
       }

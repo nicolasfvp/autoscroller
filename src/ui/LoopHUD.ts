@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { getRun, type RunState } from '../state/RunState';
+import { type RunState } from '../state/RunState';
 import { FONTS } from './StyleConstants';
 import { ALL_ELEMENT_IDS, ELEMENTS, type ElementId } from '../systems/ElementSystem';
 // Re-export Phase 9 helpers from a Phaser-free module so tests can import
@@ -53,15 +53,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private static readonly PROG_W  = 200;
   private static readonly PROG_H  = 104;
 
-  // Tweened display values
-  private displayedGold = 0;
-  private displayedHP    = 0;
-  private displayedMaxHP = 0;
-  private displayedTP    = 0;
-
-  private goldTween?: Phaser.Tweens.Tween;
-  private hpTween?:   Phaser.Tweens.Tween;
-  private tpTween?:   Phaser.Tweens.Tween;
+  // Active tweens spawned by applyStatTween — tracked so we can stop them on
+  // shutdown/destroy. Each entry is removed automatically in its onComplete.
+  private pendingTweens: Set<Phaser.Tweens.Tween> = new Set();
 
   // Panel constants
   private static readonly LP_X  = 10;
@@ -169,13 +163,17 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
     const shopX = LP.RP_X + LP.RP_W - 14;
     const shopY = LP.RP_Y + 26;
-    this.shopToggleBg = scene.add.graphics();
+    // Shop tile was removed: shop is now only reachable from the PlanningOverlay,
+    // so the legacy "Shop ✔ / Shop ✘" auto-stop toggle no longer has anything to
+    // gate. Keep the offscreen text/graphics so updateShopToggle() still has a
+    // target and the rest of the HUD layout is undisturbed.
+    this.shopToggleBg = scene.add.graphics().setVisible(false);
     this.rightPanelContainer.add(this.shopToggleBg);
 
-    this.shopToggleText = scene.add.text(shopX, shopY, 'Shop ✔', {
+    this.shopToggleText = scene.add.text(shopX, shopY, '', {
       fontFamily: FF, fontSize: '12px', fontStyle: 'bold', color: '#00ff88',
       stroke: '#000', strokeThickness: 2,
-    }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true });
+    }).setOrigin(1, 0.5).setVisible(false);
     this.rightPanelContainer.add(this.shopToggleText);
 
     const btnSize = 24;
@@ -194,17 +192,31 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     });
     this.rightPanelContainer.add([deckBtn, relicBtn]);
 
-    this.shopToggleText.on('pointerdown', () => {
-      const run = getRun();
-      run.stopAtShop = !run.stopAtShop;
-      this.updateShopToggle(run.stopAtShop);
-    });
-    this.drawShopToggle(true);
+    // Shop toggle is hidden — see note above on the offscreen Text/Graphics.
 
     this.buildLoopProgressBar(scene);
     this.buildStatusStatsRow(scene);
     this.buildElementsRow(scene);
     scene.add.existing(this);
+
+    // Stop tracked tweens when the host scene shuts down, so mid-tween scene
+    // teardown doesn't leave onUpdate callbacks running against destroyed Text
+    // objects.
+    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, this.stopAllTweens, this);
+    scene.events.once(Phaser.Scenes.Events.DESTROY, this.stopAllTweens, this);
+  }
+
+  private stopAllTweens(): void {
+    for (const tw of this.pendingTweens) {
+      tw.stop();
+    }
+    this.pendingTweens.clear();
+  }
+
+  /** Override Container.destroy to also stop in-flight stat tweens. */
+  destroy(fromScene?: boolean): void {
+    this.stopAllTweens();
+    super.destroy(fromScene);
   }
 
   /**
@@ -326,15 +338,26 @@ export class LoopHUD extends Phaser.GameObjects.Container {
       return;
     }
     if (currentValue === newValue) return;
-    this.scene.tweens.addCounter({
+    const counter = this.scene.tweens.addCounter({
       from: currentValue, to: newValue, duration: 280,
       onUpdate: (tw) => {
         const v = tw.getValue();
         txt.setText(String(Math.round(v ?? newValue)));
       },
-      onComplete: () => { txt.setText(String(newValue)); },
+      onComplete: () => {
+        txt.setText(String(newValue));
+        this.pendingTweens.delete(counter);
+      },
+      onStop: () => { this.pendingTweens.delete(counter); },
     });
-    this.scene.tweens.add({ targets: txt, scale: 1.1, duration: 140, yoyo: true });
+    this.pendingTweens.add(counter);
+
+    const pulse = this.scene.tweens.add({
+      targets: txt, scale: 1.1, duration: 140, yoyo: true,
+      onComplete: () => { this.pendingTweens.delete(pulse); },
+      onStop: () => { this.pendingTweens.delete(pulse); },
+    });
+    this.pendingTweens.add(pulse);
   }
 
   private buildLoopProgressBar(scene: Phaser.Scene): void {

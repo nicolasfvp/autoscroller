@@ -57,8 +57,8 @@ describe('DataLoader', () => {
     expect(enemy!.name).toBe('Forge Slime');
   });
 
-  it('getAllTiles() returns at least 8 tile configs', () => {
-    expect(getAllTiles().length).toBeGreaterThanOrEqual(8);
+  it('getAllTiles() returns at least 7 tile configs (shop tile removed)', () => {
+    expect(getAllTiles().length).toBeGreaterThanOrEqual(7);
   });
 
   it('getAllRelics() returns at least 8 relics', () => {

@@ -66,12 +66,20 @@ export function applyRestChoice(
       return { choice, description: `Trained ${cardId} (upgraded).` };
     }
     case 'meditate': {
+      // When raising a max pool, also bump the current value by the same
+      // delta so the gained capacity is immediately usable — matches the
+      // convention in PassiveSkillSystem.applyPassiveModifiersToCombatState,
+      // which bumps heroStamina/heroMana in lockstep with heroMaxStamina/
+      // heroMaxMana. Without this, the new pool was invisible until natural
+      // regen slowly filled it.
       const roll = rng();
       if (roll < 0.5) {
         runState.hero.maxStamina += restConfig.meditateBonusAmount;
+        runState.hero.currentStamina += restConfig.meditateBonusAmount;
         return { choice, description: `Increased max stamina by +${restConfig.meditateBonusAmount}.` };
       } else {
         runState.hero.maxMana += restConfig.meditateBonusAmount;
+        runState.hero.currentMana += restConfig.meditateBonusAmount;
         return { choice, description: `Increased max mana by +${restConfig.meditateBonusAmount}.` };
       }
     }

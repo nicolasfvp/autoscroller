@@ -172,20 +172,20 @@ describe('Combat Balance Validation', () => {
     });
   });
 
-  describe('fight duration scales with loop count', () => {
-    it('loop 3 Slime takes at least as long as loop 1 Slime', () => {
+  describe('fight duration scales with difficulty multiplier (boss kills)', () => {
+    it('post-boss Slime (mult 1.4) takes at least as long as base Slime', () => {
       const slimeBase = makeSlimeEnemy();
 
-      // Loop 1
+      // Base difficulty (no boss kills yet)
       const run1 = makeStarterRun(ATTACK_LIGHT_DECK);
       setRun(run1);
       const state1 = createCombatState(run1, slimeBase);
       const engine1 = new CombatEngine(state1);
       const result1 = simulateCombat(engine1);
 
-      // Loop 3: scale enemy stats
-      const scaled = scaleEnemyForLoop(slimeBase, 3);
-      const slimeLoop3: EnemyDefinition = {
+      // After 4 boss kills: difficultyMultiplier = 1 + 4*0.10 = 1.4
+      const scaled = scaleEnemyForLoop(slimeBase, 1, false, 1.4);
+      const slimeScaled: EnemyDefinition = {
         ...slimeBase,
         baseHP: scaled.hp,
         baseDefense: scaled.defense,
@@ -193,7 +193,7 @@ describe('Combat Balance Validation', () => {
       };
       const run3 = makeStarterRun(ATTACK_LIGHT_DECK);
       setRun(run3);
-      const state3 = createCombatState(run3, slimeLoop3);
+      const state3 = createCombatState(run3, slimeScaled);
       const engine3 = new CombatEngine(state3);
       const result3 = simulateCombat(engine3);
 

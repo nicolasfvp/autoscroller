@@ -20,7 +20,7 @@ export function getAvailableRelics(metaUnlockedRelics: string[]): RelicDef[] {
 }
 
 export function getAvailableTiles(metaUnlockedTiles: string[]): TileDef[] {
-  const baseTileIds = ['basic', 'forest', 'shop', 'rest', 'event', 'treasure', 'boss'];
+  const baseTileIds = ['basic', 'forest', 'rest', 'event', 'treasure', 'boss'];
   const allTileIds = [...baseTileIds, ...metaUnlockedTiles.filter(id => !baseTileIds.includes(id))];
   return allTileIds.map(id => ({ id })) as TileDef[];
 }

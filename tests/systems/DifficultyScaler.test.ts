@@ -9,32 +9,38 @@ const baseEnemy = {
 };
 
 describe('DifficultyScaler', () => {
-  it('loop 1: multiplier is 1.0 (no scaling)', () => {
+  it('no precomputed multiplier: stats unscaled (per-loop scaling removed)', () => {
+    // Loop count is now ignored without a precomputed multiplier — bossKill
+    // scaling lives in LoopRunner.difficultyMultiplier.
     const stats = scaleEnemyForLoop(baseEnemy, 1);
     expect(stats.hp).toBe(100);
     expect(stats.damage).toBe(10);
     expect(stats.defense).toBe(5);
     expect(stats.goldReward).toBe(15);
+
+    const stats5 = scaleEnemyForLoop(baseEnemy, 5);
+    expect(stats5.hp).toBe(100);
+    expect(stats5.damage).toBe(10);
+    expect(stats5.defense).toBe(5);
   });
 
-  it('loop 5: multiplier is 1.48', () => {
-    const stats = scaleEnemyForLoop(baseEnemy, 5);
-    // 1 + 4*0.12 = 1.48
-    expect(stats.hp).toBe(148);
-    expect(stats.damage).toBe(14); // floor(10 * 1.48) = 14
-    expect(stats.defense).toBe(7); // floor(5 * 1.48) = 7
-    // goldReward = floor(15 * log2(1.48 + 1)) = floor(15 * 1.31034) = 19
-    expect(stats.goldReward).toBe(19);
+  it('precomputed multiplier scales stats directly', () => {
+    // 4 boss kills → 1 + 4*0.10 = 1.4
+    const stats = scaleEnemyForLoop(baseEnemy, 1, false, 1.4);
+    expect(stats.hp).toBe(140);
+    expect(stats.damage).toBe(14);
+    expect(stats.defense).toBe(7);
+    // goldReward = floor(15 * log2(1.4 + 1)) = floor(15 * 1.26303) = 18
+    expect(stats.goldReward).toBe(18);
   });
 
-  it('bosses use half the per-loop growth rate and the boss multiplier', () => {
-    const stats = scaleEnemyForLoop(baseEnemy, 5, true);
-    // normal loopMult = 1.48; boss halves the growth: 1 + 0.48*0.5 = 1.24
-    // then * bossMultiplier (1.0) = 1.24
-    expect(stats.hp).toBe(124);
-    expect(stats.damage).toBe(12); // floor(10 * 1.24)
-    expect(stats.defense).toBe(6); // floor(5 * 1.24)
-    // goldReward = floor(15 * log2(1.24 + 1)) = floor(15 * 1.16282) = 17
+  it('bosses use half the post-kill growth rate and the boss multiplier', () => {
+    // precomputed 1.4 → boss halves growth: 1 + 0.4*0.5 = 1.2, then * 1.0
+    const stats = scaleEnemyForLoop(baseEnemy, 1, true, 1.4);
+    expect(stats.hp).toBe(120);
+    expect(stats.damage).toBe(12);
+    expect(stats.defense).toBe(6);
+    // goldReward = floor(15 * log2(1.2 + 1)) = floor(15 * 1.13750) = 17
     expect(stats.goldReward).toBe(17);
   });
 
@@ -52,9 +58,10 @@ describe('DifficultyScaler', () => {
 
   it('getDifficultyConfig returns full config', () => {
     const cfg = getDifficultyConfig();
-    expect(cfg.percentPerLoop).toBe(0.12);
+    expect(cfg.percentPerLoop).toBe(0);
+    expect(cfg.percentPerBossKill).toBe(0.10);
     expect(cfg.bossMultiplier).toBe(1.0);
-    expect(cfg.bossEveryNLoops).toBe(5);
+    expect(cfg.bossEveryNLoops).toBe(25);
     expect(cfg.baseLoopLength).toBe(15);
   });
 

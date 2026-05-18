@@ -18,7 +18,12 @@ const BOSS_BASE_STATS = {
 };
 
 export function triggerBossCombat(runState: RunState): BossEncounterData {
-  const scaledStats = scaleEnemyForLoop(BOSS_BASE_STATS, runState.loop.count, true);
+  const scaledStats = scaleEnemyForLoop(
+    BOSS_BASE_STATS,
+    runState.loop.count,
+    true,
+    runState.loop.difficultyMultiplier,
+  );
   return {
     enemyId: 'doom_knight',
     scaledStats,

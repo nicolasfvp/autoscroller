@@ -31,7 +31,8 @@ function makeMinimalState(overrides: Partial<CombatState> = {}): CombatState {
     phoenixUsed: false,
     heroVitality: 0, heroDexterity: 0, heroIntellect: 0, heroSpirit: 0,
     poisonStacks: 0, bleedStacks: 0, burnStacks: 0,
-    freezeStacks: 0, shockStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    stunStacks: 0, slowStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
   };

@@ -9,6 +9,7 @@ export interface ScaledEnemyStats {
 
 interface DifficultyConfig {
   percentPerLoop: number;
+  percentPerBossKill: number;
   bossMultiplier: number;
   basicTileCombatChance: number;
   baseSpeed: number;
@@ -49,19 +50,19 @@ export function scaleEnemyForLoop(
     baseDefense: number;
     goldReward: { min: number; max: number };
   },
-  loopCount: number,
+  _loopCount: number,
   isBoss?: boolean,
   /**
-   * E.8.g: Optional override that lets LoopRunner pass its persisted
-   * `loop.difficultyMultiplier` (set in onLoopCompleted) directly. Falls
-   * back to recomputing from `loopCount` when omitted, so existing callers
-   * keep working. Boss multiplier is layered on top either way.
+   * Source of truth: LoopRunner persists `loop.difficultyMultiplier` and
+   * advances it by `percentPerBossKill` each time a boss is defeated. Per-loop
+   * scaling was removed — passing this is now effectively required for
+   * post-boss content. Falls back to 1.0 (no scaling) when omitted.
    */
   precomputedMultiplier?: number,
 ): ScaledEnemyStats {
-  let loopMult = precomputedMultiplier ?? (1 + (loopCount - 1) * config.percentPerLoop);
+  let loopMult = precomputedMultiplier ?? 1.0;
   if (isBoss) {
-    // Bosses scale at half the per-loop growth rate of normal enemies.
+    // Bosses scale at half the post-boss growth rate of normal enemies.
     loopMult = 1 + (loopMult - 1) * 0.5;
     loopMult *= config.bossMultiplier;
   }

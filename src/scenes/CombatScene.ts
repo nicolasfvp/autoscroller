@@ -17,7 +17,6 @@ import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { AudioManager } from '../systems/AudioManager';
-import { MapSpeedSlider } from '../ui/MapSpeedSlider';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
 export class CombatScene extends Scene {
@@ -25,7 +24,6 @@ export class CombatScene extends Scene {
   private hud!: CombatHUD;
   private cardQueue!: CardQueueDisplay;
   private combatEffects!: CombatEffects;
-  private speedSlider!: MapSpeedSlider;
 
   // Visual representations
   private heroSprite!: Phaser.GameObjects.Sprite;
@@ -115,7 +113,12 @@ export class CombatScene extends Scene {
       if (!enemyDef) return;
 
       if (eventData.result === 'victory') {
-        const scaled = scaleEnemyForLoop(enemyDef, currentRun.loop.count, enemyDef.type === 'boss');
+        const scaled = scaleEnemyForLoop(
+          enemyDef,
+          currentRun.loop.count,
+          enemyDef.type === 'boss',
+          currentRun.loop.difficultyMultiplier,
+        );
         const xpEarned = getXPForEnemy(enemyDef.type);
         earnXP(currentRun, xpEarned);
         if (enemyDef.type === 'boss') {
@@ -129,7 +132,7 @@ export class CombatScene extends Scene {
         loseAllRunXP(currentRun);
         this.transitioning = true;
         this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
-        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(SCENE_KEYS.GAME_OVER, { defeatedBy: enemyDef.name, enemyName: enemyDef.name, stats: this.engine.getStats() }));
+        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(SCENE_KEYS.DEATH, { enemyName: enemyDef.name, stats: this.engine.getStats() }));
       }
     });
   };
@@ -139,7 +142,6 @@ export class CombatScene extends Scene {
   }
  
   init(data: { enemyId: string; isBoss?: boolean; terrain?: string }): void {
-    console.log('[CombatScene] init() called with data:', data);
     this.initData = data;
   }
 
@@ -154,7 +156,6 @@ export class CombatScene extends Scene {
     this.scene.bringToTop();
     this.transitioning = false;
     this.cameras.main.setBackgroundColor(0x000000);
-    console.log('[CombatScene] Creating combat scene...');
 
     try {
       const run = getRun();
@@ -182,7 +183,12 @@ export class CombatScene extends Scene {
         return;
       }
 
-      const scaled = scaleEnemyForLoop(enemyDef, run.loop.count, enemyDef.type === 'boss');
+      const scaled = scaleEnemyForLoop(
+        enemyDef,
+        run.loop.count,
+        enemyDef.type === 'boss',
+        run.loop.difficultyMultiplier,
+      );
       const scaledEnemy = {
         ...enemyDef,
         baseHP: scaled.hp,
@@ -222,7 +228,9 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this);
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
-      this.speedSlider = new MapSpeedSlider(this, 400, 580, this.gameSpeed, (speed) => { this.gameSpeed = speed; run.combatSpeed = speed; }, 'Combat Speed');
+      // Speed slider lives in the persistent SpeedPanelScene; it writes to
+      // run.combatSpeed directly so this scene's `gameSpeed` is re-read each
+      // tick (see update()) rather than wired through a per-scene slider.
 
       eventBus.on('combat:card-played', this.onCardPlayed);
       eventBus.on('combat:synergy-triggered', this.onSynergyTriggered);
@@ -232,7 +240,6 @@ export class CombatScene extends Scene {
       eventBus.on('combat:end', this.onCombatEnd);
 
       this.events.on('shutdown', this.cleanup, this);
-      console.log('[CombatScene] Combat scene created successfully.');
     } catch (err) {
       console.error('[CombatScene] Critical error in create():', err);
       const run = getRun(); run.isInCombat = false;
@@ -242,7 +249,14 @@ export class CombatScene extends Scene {
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
-      this.engine.tick(delta * this.gameSpeed);
+      // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
+      // to run.combatSpeed without notifying us, so polling is the contract.
+      try { this.gameSpeed = getRun().combatSpeed ?? this.gameSpeed; } catch { /* run cleared */ }
+      // Background tabs force 1x: avoids time-warping when player returns after
+      // long absence (browser-throttled ticks accumulate large deltas).
+      const inBackground = typeof document !== 'undefined' && document.hidden;
+      const speed = inBackground ? 1 : this.gameSpeed;
+      this.engine.tick(delta * speed);
       if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
     }
   }

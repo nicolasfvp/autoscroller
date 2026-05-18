@@ -133,10 +133,10 @@ describe('LoopRunner', () => {
     expect(runState.loop.tiles.filter(t => t.type === 'buffer').every(t => t.defeatedThisLoop === true)).toBe(true);
   });
 
-  it('boss tile injected at last position on loop 5', () => {
+  it('boss tile injected at last position on loop 25', () => {
     runner.startRun(runState);
-    // Simulate completing loops 1-4 to reach loop 5
-    for (let loop = 0; loop < 4; loop++) {
+    // Simulate completing loops 1-24 to reach loop 25 (bossEveryNLoops=25).
+    for (let loop = 0; loop < 24; loop++) {
       for (const t of runState.loop.tiles) {
         t.defeatedThisLoop = true;
       }
@@ -144,14 +144,11 @@ describe('LoopRunner', () => {
         if (runner.getState() !== 'traversing') break;
         runner.tick(1000);
       }
-      // After loop completion, state is 'planning'
       if (runner.getState() === 'planning') {
         runner.confirmPlanning();
       }
     }
-    // After 4 loops complete, count is 5. Boss tile should be injected.
-    // We need to check when count%5===0 which is loop 5
-    expect(runState.loop.count).toBe(5);
+    expect(runState.loop.count).toBe(25);
     expect(runState.loop.tiles[runState.loop.length - 1].type).toBe('boss');
   });
 
@@ -214,7 +211,7 @@ describe('LoopRunner', () => {
     // Place a forest tile first
     runner.placeTile(0, 'forest');
     // Try to place again on the same slot (now terrain, not basic)
-    const result = runner.placeTile(0, 'shop');
+    const result = runner.placeTile(0, 'rest');
     expect(result).toBe(false);
   });
 
@@ -268,9 +265,9 @@ describe('LoopRunner', () => {
     expect(combatEvent!.data.enemyId).toBe('slime'); // first in forest pool
   });
 
-  it('shop tile entry emits open-scene with ShopScene', () => {
+  it('rest tile entry emits open-scene with RestSiteScene', () => {
     runner.startRun(runState);
-    runState.loop.tiles[1] = { type: 'shop', defeatedThisLoop: false };
+    runState.loop.tiles[1] = { type: 'rest', defeatedThisLoop: false };
     runState.loop.tiles[0].defeatedThisLoop = true;
     for (let i = 0; i < 5; i++) {
       if (runner.getState() !== 'traversing') break;
@@ -278,7 +275,7 @@ describe('LoopRunner', () => {
     }
     const sceneEvent = events.find(e => e.event === 'open-scene');
     expect(sceneEvent).toBeDefined();
-    expect(sceneEvent!.data.scene).toBe('ShopScene');
+    expect(sceneEvent!.data.scene).toBe('RestSiteScene');
   });
 
   it('resumeTraversal transitions back to traversing', () => {

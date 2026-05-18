@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
+import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 /**
@@ -16,8 +17,13 @@ export class PauseScene extends Scene {
     // Read run to verify active state exists
     getRun();
 
-    // Fullscreen semi-transparent backdrop
-    this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75).setInteractive();
+    // Fullscreen semi-transparent backdrop — delay interactivity so the ESC
+    // press that *opened* the pause doesn't immediately dismiss it on the same
+    // frame. Same pattern as BuildingPanelScene.
+    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75);
+    this.time.delayedCall(100, () => {
+      backdrop.setInteractive();
+    });
 
     // Overlay panel (wood texture with rounded corners)
     const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(360, 460);
@@ -35,7 +41,7 @@ export class PauseScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 8,
-      fontFamily: '"Impact", "Arial Black", sans-serif',
+      fontFamily: FONTS.family,
       shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
     }).setOrigin(0.5);
 
@@ -63,8 +69,11 @@ export class PauseScene extends Scene {
       this.scene.start(SCENE_KEYS.MAIN_MENU);
     });
 
-    // ESC to resume
-    this.input.keyboard?.on('keydown-ESC', () => this.resume());
+    // ESC to resume — same delay gate as the backdrop so the ESC that opened
+    // this scene doesn't immediately dismiss it on the same frame.
+    this.time.delayedCall(100, () => {
+      this.input.keyboard?.on('keydown-ESC', () => this.resume());
+    });
 
     this.events.on('shutdown', this.cleanup, this);
   }
@@ -87,7 +96,7 @@ export class PauseScene extends Scene {
       color: textColor,
       stroke: textColor === '#ffffff' ? '#000000' : undefined,
       strokeThickness: textColor === '#ffffff' ? 4 : 0,
-      fontFamily: '"Impact", "Arial Black", sans-serif',
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
     container.add([bg, txt]);

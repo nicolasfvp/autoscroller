@@ -3,7 +3,6 @@
   { "type": "combat", "name": "Combat", "color": 8912896, "canPlaceManually": true },
   { "type": "elite", "name": "Elite Combat", "color": 11141120, "canPlaceManually": true },
   { "type": "boss", "name": "Boss", "color": 16711680, "canPlaceManually": false },
-  { "type": "shop", "name": "Shop", "color": 16766720, "canPlaceManually": true },
   { "type": "rest", "name": "Rest Site", "color": 4286945, "canPlaceManually": true },
   { "type": "event", "name": "Event", "color": 9662683, "canPlaceManually": true },
   { "type": "treasure", "name": "Treasure", "color": 16748800, "canPlaceManually": true }

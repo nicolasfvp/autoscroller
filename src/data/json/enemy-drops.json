@@ -81,12 +81,6 @@
         "dropChance": 0.5,
         "minQuantity": 1,
         "maxQuantity": 2
-      },
-      {
-        "tileType": "shop",
-        "dropChance": 0.3,
-        "minQuantity": 1,
-        "maxQuantity": 1
       }
     ]
   },
@@ -123,12 +117,6 @@
       {
         "tileType": "elite",
         "dropChance": 0.4,
-        "minQuantity": 1,
-        "maxQuantity": 1
-      },
-      {
-        "tileType": "shop",
-        "dropChance": 0.5,
         "minQuantity": 1,
         "maxQuantity": 1
       }
@@ -175,12 +163,6 @@
         "dropChance": 0.7,
         "minQuantity": 1,
         "maxQuantity": 2
-      },
-      {
-        "tileType": "shop",
-        "dropChance": 0.6,
-        "minQuantity": 1,
-        "maxQuantity": 1
       }
     ]
   },
@@ -223,12 +205,6 @@
       {
         "tileType": "treasure",
         "dropChance": 0.8,
-        "minQuantity": 1,
-        "maxQuantity": 2
-      },
-      {
-        "tileType": "shop",
-        "dropChance": 0.7,
         "minQuantity": 1,
         "maxQuantity": 2
       },

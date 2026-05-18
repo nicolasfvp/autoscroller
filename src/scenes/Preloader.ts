@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
 import { eventBus } from '../core/EventBus';
 import { LAYOUT } from '../ui/StyleConstants';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
 export class Preloader extends Scene {
   constructor() {
@@ -238,6 +239,7 @@ export class Preloader extends Scene {
     });
 
     this.scene.launch('GlobalSound');
+    this.scene.launch(SCENE_KEYS.SPEED_PANEL);
     this.scene.start('MainMenu');
   }
 }

@@ -153,6 +153,20 @@ export class CardResolver {
       damageMultiplier, effect.scale, effect.stack, card,
       effect.pierce_armor, effect,
     );
+
+    // Pyre consume semantic: a damage effect gated by `enemy_has_stack: 'burn'`
+    // AND `per_stack: true` is the Pyre keyword — after the damage applies,
+    // consume the entire burn pool. Plain `Empowered (if Burn)` (no per_stack)
+    // is NOT consumed; it remains a passive scaler. This MUST run only when
+    // the effect actually fired (we early-returned above if the condition
+    // gated the effect out, so by here, the burn stack count was > 0).
+    if (
+      effect.type === 'damage' &&
+      cond?.enemy_has_stack === 'burn' &&
+      cond?.per_stack === true
+    ) {
+      state.burnStacks = 0;
+    }
   }
 
   /**
@@ -266,8 +280,8 @@ export class CardResolver {
           case 'poison': state.poisonStacks += resolvedValue; break;
           case 'bleed': state.bleedStacks += resolvedValue; break;
           case 'burn': state.burnStacks += resolvedValue; break;
-          case 'freeze': state.freezeStacks += resolvedValue; break;
-          case 'shock': state.shockStacks += resolvedValue; break;
+          case 'stun': state.stunStacks += resolvedValue; break;
+          case 'slow': state.slowStacks += resolvedValue; break;
           case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + resolvedValue); break;
           case 'rage': state.rageStacks += resolvedValue; break;
         }
@@ -288,8 +302,8 @@ export class CardResolver {
               case 'poison': state.poisonStacks = consumeFrom(state.poisonStacks); break;
               case 'bleed': state.bleedStacks = consumeFrom(state.bleedStacks); break;
               case 'burn': state.burnStacks = consumeFrom(state.burnStacks); break;
-              case 'freeze': state.freezeStacks = consumeFrom(state.freezeStacks); break;
-              case 'shock': state.shockStacks = consumeFrom(state.shockStacks); break;
+              case 'stun': state.stunStacks = consumeFrom(state.stunStacks); break;
+              case 'slow': state.slowStacks = consumeFrom(state.slowStacks); break;
               case 'arcane': state.arcaneStacks = consumeFrom(state.arcaneStacks); break;
               case 'rage': state.rageStacks = consumeFrom(state.rageStacks); break;
             }
@@ -311,8 +325,8 @@ export class CardResolver {
           case 'poison': state.poisonStacks += resolvedValue; break;
           case 'bleed': state.bleedStacks += resolvedValue; break;
           case 'burn': state.burnStacks += resolvedValue; break;
-          case 'freeze': state.freezeStacks += resolvedValue; break;
-          case 'shock': state.shockStacks += resolvedValue; break;
+          case 'stun': state.stunStacks += resolvedValue; break;
+          case 'slow': state.slowStacks += resolvedValue; break;
         }
         break;
       }
@@ -349,19 +363,6 @@ export class CardResolver {
         break;
       }
 
-      case 'debuff_stat': {
-        // Enemies have no stat axes in v2 -- forward-compatible stub.
-        // (If a future enemy gains stat axes, this is the seam to extend.)
-        break;
-      }
-
-      case 'taunt': {
-        // No engine behavior specified for v2 -- stub. Future: state.taunted
-        // or turn-skip flag. Leaving as no-op so JSON content authored with
-        // `taunt` effects compiles and runs without throwing.
-        break;
-      }
-
       case 'aura': {
         // Time-decaying status effect. Modifier auras add a value to a stat
         // axis or `cd_reduction` while alive; triggered auras (e.g.
@@ -391,8 +392,8 @@ function readStackCount(state: CombatState, which: StackId, side: 'self' | 'enem
     case 'poison': return state.poisonStacks;
     case 'bleed': return state.bleedStacks;
     case 'burn': return state.burnStacks;
-    case 'freeze': return state.freezeStacks;
-    case 'shock': return state.shockStacks;
+    case 'stun': return state.stunStacks;
+    case 'slow': return state.slowStacks;
     case 'arcane': return state.arcaneStacks;
     case 'rage': return state.rageStacks;
   }

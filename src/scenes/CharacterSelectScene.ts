@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
-import { LAYOUT } from '../ui/StyleConstants';
+import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import {
   CLASS_CARDS as CLASSES,
@@ -44,7 +44,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 6,
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0.5);
 
@@ -80,6 +80,10 @@ export class CharacterSelectScene extends Scene {
     this.input.keyboard?.on('keydown-SPACE', () => {
       this.confirmSelection();
     });
+    this.input.keyboard?.on('keydown-ESC', () => {
+      if (this.deckBuilderOpen) return;
+      this.fadeToScene(SCENE_KEYS.MAIN_MENU);
+    });
 
     // Reset to mouse mode when the pointer actually moves — this prevents
     // a stale pointerover event from overriding keyboard navigation when
@@ -90,7 +94,7 @@ export class CharacterSelectScene extends Scene {
     this.add.text(LAYOUT.centerX, 570, 'Arrow keys to browse, Enter to select', {
       fontSize: '16px',
       color: '#ffffff',
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0.5);
   }
@@ -156,7 +160,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       align: 'center',
       resolution: 3,
     }).setOrigin(0.5);
@@ -174,7 +178,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       align: 'center',
       wordWrap: { width: w - 30 },
       resolution: 3,
@@ -199,7 +203,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(txt);
@@ -226,7 +230,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: '"Impact", sans-serif',
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(valTxt);
