@@ -59,11 +59,7 @@ function makeStarterRun(deck: string[] = ATTACK_LIGHT_DECK): RunState {
     deck: {
       active: [...deck],
       inventory: {},
-<<<<<<< HEAD
       upgraded: new Array(deck.length).fill(false),
-=======
-      upgraded: STARTER_DECK.map(() => false),
->>>>>>> 95f3b823dc42d10a5a6930a94e0da84301c55944
       droppedCards: [],
     },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
