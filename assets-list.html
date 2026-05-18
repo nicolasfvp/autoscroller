@@ -166,8 +166,9 @@
   <div class="stat"><span>71</span><label>Cartas Médias</label></div>
   <div class="stat"><span>20</span><label>Cartas Avançadas</label></div>
   <div class="stat"><span>30</span><label>Cartas Épicas</label></div>
-  <div class="stat"><span>5</span><label>Chefes (Sprites)</label></div>
-  <div class="stat"><span style="color:#e05555">147</span><label>Total de Assets</label></div>
+  <div class="stat"><span>17</span><label>Inimigos Normais</label></div>
+  <div class="stat"><span>6</span><label>Chefes (Sprites)</label></div>
+  <div class="stat"><span style="color:#e05555">165</span><label>Total de Assets</label></div>
 </div>
 
 <main>
@@ -180,7 +181,8 @@
     <button class="filter-btn" data-filter="medium" onclick="setFilter('medium',this)">Médias (M)</button>
     <button class="filter-btn" data-filter="advanced" onclick="setFilter('advanced',this)">Avançadas (A)</button>
     <button class="filter-btn" data-filter="epic" onclick="setFilter('epic',this)">Épicas (E)</button>
-    <button class="filter-btn" data-filter="enemy" onclick="setFilter('enemy',this)">Inimigos</button>
+    <button class="filter-btn" data-filter="normal-enemy" onclick="setFilter('normal-enemy',this)">Normais</button>
+    <button class="filter-btn" data-filter="boss-enemy" onclick="setFilter('boss-enemy',this)">Chefes</button>
   </div>
 
   <!-- COMPONENTES BASE -->
@@ -223,14 +225,24 @@
     <div class="grid" id="grid-epic"></div>
   </div>
 
-  <!-- INIMIGOS -->
-  <div class="section" id="section-enemy">
+  <!-- INIMIGOS NORMAIS -->
+  <div class="section" id="section-normal-enemy">
+    <div class="section-header">
+      <h2>Inimigos Normais — Spritesheets</h2>
+      <span class="badge badge-enemy">Normal</span>
+      <span class="count">17 inimigos · nenhum tem sprite ainda</span>
+    </div>
+    <div class="grid" id="grid-normal-enemy"></div>
+  </div>
+
+  <!-- BOSSES -->
+  <div class="section" id="section-boss-enemy">
     <div class="section-header">
       <h2>Chefes — Spritesheets Faltando</h2>
-      <span class="badge badge-enemy">Enemy</span>
-      <span class="count">5 chefes</span>
+      <span class="badge badge-enemy">Boss</span>
+      <span class="count">6 chefes · boss_demon já tem sprite ✓</span>
     </div>
-    <div class="grid" id="grid-enemy"></div>
+    <div class="grid" id="grid-boss-enemy"></div>
   </div>
 
 </main>
@@ -534,22 +546,79 @@ const EPIC_CARDS = [
     prompt:`Genesis collapse reshaping battlefield reality, terrain reformation with global debuffs, omega event altering combat mechanics themselves. ${STYLE_SUFFIX}` },
 ];
 
-const ENEMIES = [
-  { id:"boss_tank", name:"Iron Golem", hp:700, def:8, ability:"Shield +15 armor / 8s",
-    desc:"Golém colossal de ferro forjado em trevas. Lento mas praticamente indestrutível.",
-    prompt:`A colossal iron golem boss enemy, massive metallic humanoid made of dark forged steel and rivets, glowing orange lava veins in chest, imposing and slow, video game boss side-view sprite style, 64x64 pixel scale reference, against transparent background, idle pose.` },
+const NORMAL_ENEMIES = [
+  { id:"lost_lizard", name:"Lost Lizard", hp:68, def:0, cd:3500, affinity:"attack",
+    desc:"Lagarto pequeno e ágil, o inimigo mais fraco. Bom para início de jogo.",
+    prompt:`A small lost lizard enemy, cute but menacing green lizard creature, sharp claws, beady eyes, RPG side-view sprite style, pixel art aesthetic, transparent background, idle standing pose.` },
+  { id:"corpse_eater", name:"Corpse Eater", hp:167, def:2, cd:2032, affinity:"counter",
+    desc:"Criatura necrótica que se alimenta de cadáveres. Forte e resistente.",
+    prompt:`A corpse eater monster enemy, grotesque undead scavenger creature with rotting flesh and bone protrusions, pale eyes, hunched posture, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"headless_fire_horse", name:"Headless Fire Horse", hp:162, def:2, cd:2827, affinity:"fire",
+    desc:"Cavalo sem cabeça envolto em chamas. Avança sem parar.",
+    prompt:`A headless fire horse enemy, spectral horse with no head, blazing fire mane and tail, galloping stance, ghostly flames, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"pocket_cat", name:"Pocket Cat", hp:245, def:1, cd:2215, affinity:"agility",
+    desc:"Gato mágico pequeno mas surpreendentemente resistente.",
+    prompt:`A pocket cat enemy, small magical cat with glowing eyes and arcane markings on fur, playful but dangerous expression, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"baby_dragon", name:"Baby Dragon", hp:209, def:1, cd:2255, affinity:"fire",
+    desc:"Dragão jovem e impulsivo. Ainda não aprendeu a controlar suas chamas.",
+    prompt:`A baby dragon enemy, young small dragon with oversized wings, round body, fiery breath wisps, curious aggressive stance, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"giant_beetle", name:"Giant Beetle", hp:233, def:1, cd:2813, affinity:"defense",
+    desc:"Besouro gigante com carapaça praticamente impenetrável.",
+    prompt:`A giant beetle enemy, oversized armored beetle with thick carapace shell, massive mandibles, glowing pattern on back, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"mutated_salamander", name:"Mutated Salamander", hp:266, def:0, cd:2194, affinity:"water",
+    desc:"Salamandra mutada por magia corrompida. Veloz e ácida.",
+    prompt:`A mutated salamander enemy, large toxic salamander with warped limbs and acid dripping from skin, unnatural colors, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"ancient_tree", name:"Ancient Tree", hp:168, def:1, cd:2530, affinity:"earth",
+    desc:"Árvore milenar animada por espíritos da floresta.",
+    prompt:`An ancient tree enemy, living tree creature with face formed in bark, gnarled branch arms, glowing eyes, mossy body, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"giant_spider_2", name:"Giant Spider II", hp:180, def:2, cd:2945, affinity:"water",
+    desc:"Aranha gigante com veneno evoluído. Versão maior e mais letal.",
+    prompt:`A giant spider 2 enemy, large venomous spider with striped pattern, multiple glowing eyes, dripping venom fangs, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"giant_spider", name:"Giant Spider", hp:240, def:0, cd:2071, affinity:"water",
+    desc:"Aranha gigante ágil. Rápida e perigosa.",
+    prompt:`A giant spider enemy, large fast spider with dark coloring, glowing red eyes, menacing mandibles, attack-ready stance, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"mush", name:"Mush", hp:204, def:0, cd:2052, affinity:"earth",
+    desc:"Fungo ambulante que espalha esporos tóxicos.",
+    prompt:`A mush enemy, ambulatory mushroom creature with cap hat and stubby legs, releasing toxic spores, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"forge_slime", name:"Forge Slime", hp:218, def:2, cd:2786, affinity:"fire",
+    desc:"Slime de forja nascido em metal fundido. Incandescente.",
+    prompt:`A forge slime enemy, metallic glowing slime creature born from molten metal, orange-red incandescent body with floating metal shards, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"lava_golen", name:"Lava Golem", hp:248, def:2, cd:2097, affinity:"fire",
+    desc:"Golém de lava de tamanho médio. Cada passo deixa rastro de fogo.",
+    prompt:`A lava golem normal enemy, medium sized rock-and-lava creature, cracked stone exterior with glowing magma flowing through cracks, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"mecha_warrior", name:"Mecha Warrior", hp:179, def:2, cd:2979, affinity:"defense",
+    desc:"Guerreiro mecânico de metal enferrujado. Lento mas blindado.",
+    prompt:`A mecha warrior enemy, rusted mechanical humanoid robot soldier, visible gears and circuits, damaged plating, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"depths_horror", name:"Depths Horror", hp:158, def:0, cd:2332, affinity:"air",
+    desc:"Horror das profundezas do abismo. Levemente translúcido.",
+    prompt:`A depths horror enemy, spectral creature from the abyss, semi-transparent eldritch form with tentacles and void eyes, eerie glow, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"toxic_gooze", name:"Toxic Gooze", hp:167, def:1, cd:2578, affinity:"water",
+    desc:"Gosma tóxica de pântano. Cada toque aplica veneno.",
+    prompt:`A toxic gooze enemy, oozing toxic slime creature, bright green-yellow poison dripping, bubbling surface, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+  { id:"venomous_kobra", name:"Venomous Kobra", hp:233, def:1, cd:2355, affinity:"air",
+    desc:"Cobra venenosa gigante que encanta antes de atacar.",
+    prompt:`A venomous kobra enemy, large hooded cobra snake enemy with glowing venom sacs, hypnotic eye markings, raised hood, RPG side-view sprite style, dark fantasy, transparent background, idle pose.` },
+];
+
+const BOSS_ENEMIES = [
+  { id:"doom_knight", name:"Doom Knight", hp:550, def:5, cd:2500, ability:"Rotação de bosses",
+    desc:"Cavaleiro da condenação. Primeiro chefe do jogo, equilibrado entre ofensiva e defensiva.",
+    prompt:`A doom knight boss enemy, imposing dark armored knight with glowing skull visor, tattered cape, massive sword, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, menacing idle pose.` },
+  { id:"iron_golem", name:"Iron Golem", hp:700, def:5, ability:"Shield +15 armor / 8s",
+    desc:"Golém colossal de ferro. Lento mas praticamente indestrutível.",
+    prompt:`A colossal iron golem boss enemy, massive metallic humanoid made of dark forged steel and rivets, glowing orange lava veins in chest, imposing and slow, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, idle pose.` },
   { id:"boss_berserker", name:"Blood Reaver", hp:850, def:3, ability:"Enrage 1.5× speed at 40% HP",
     desc:"Guerreiro corrompido pelo ódio eterno. Quanto mais ferido, mais perigoso.",
-    prompt:`A blood reaver berserker boss enemy, massive battle-scarred warrior with blood-soaked twin axes, glowing red eyes, horned helmet, raging veins, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, against transparent background, menacing idle pose.` },
-  { id:"boss_mage", name:"Lich King", hp:960, def:4, ability:"Debuff/Necromancy spells",
-    desc:"Feiticeiro antigo de poder inimagináve. Comanda as forças da morte e corrupção.",
-    prompt:`A lich king mage boss enemy, ancient undead sorcerer in dark robes with spectral crown, skeletal hands channeling dark necrotic energy, glowing purple-cyan eyes, staff with skull, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, casting pose.` },
-  { id:"boss_dragon", name:"Ancient Dragon", hp:1200, def:6, ability:"Enrage at 30% + Double attack",
-    desc:"O dragão mais antigo. Cada asa bate extingue civilizações. Enraivece no limite da morte.",
-    prompt:`An ancient dragon boss enemy, enormous fearsome dragon with battle-scarred scales, glowing amber eyes, massive wings spread, wisps of ancient fire, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, imposing perched idle pose.` },
-  { id:"boss_hydra", name:"Swamp Hydra", hp:1000, def:3, ability:"Triple hit 0.4× + Drain 15% heal",
+    prompt:`A blood reaver berserker boss enemy, massive battle-scarred warrior with blood-soaked twin axes, glowing red eyes, horned helmet, raging veins, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, menacing idle pose.` },
+  { id:"boss_mage", name:"Lich King", hp:960, def:4, ability:"Magia necrótica",
+    desc:"Feiticeiro antigo de poder inimaginável. Comanda as forças da morte e corrupção.",
+    prompt:`A lich king mage boss enemy, ancient undead sorcerer in dark robes with spectral crown, skeletal hands channeling dark necrotic energy, glowing purple-cyan eyes, staff with skull, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, casting pose.` },
+  { id:"lizard_king", name:"Lizard King", hp:450, def:5, ability:"Enrage at 30% + Multi-hit ×2",
+    desc:"Rei dos lagartos. Veloz e feroz, enraivece perto da morte.",
+    prompt:`A lizard king boss enemy, regal giant lizard with crown-like crest, imposing bipedal stance, sharp claws, battle scars, fire breath hints, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, imposing idle pose.` },
+  { id:"boss_hydra", name:"Swamp Hydra", hp:1000, def:3, ability:"Triple hit 0.4× + Drain 15% HP",
     desc:"Criatura ancestral dos pântanos. Três cabeças que drenam e atacam ao mesmo tempo.",
-    prompt:`A swamp hydra boss enemy, three-headed serpentine creature rising from dark marsh water, venomous dripping fangs on each head, murky green-brown scales, life-draining aura, dark fantasy RPG side-view sprite style, 64x64 pixel scale reference, transparent background, multi-head ready pose.` },
+    prompt:`A swamp hydra boss enemy, three-headed serpentine creature rising from dark marsh water, venomous dripping fangs on each head, murky green-brown scales, life-draining aura, RPG side-view boss sprite style, 64x64 pixel scale, transparent background, multi-head ready pose.` },
 ];
 
 // ─── Render ────────────────────────────────────────────────────────────────
@@ -586,9 +655,33 @@ function renderCard(c, rarity) {
   </div>`;
 }
 
-function renderEnemy(e) {
+function renderNormalEnemy(e) {
+  const affinityColor = {fire:'#e05555',water:'#6aa8d4',earth:'#8aad6a',air:'#c07bdb',attack:'#e89940',defense:'#6aa8d4',counter:'#c07bdb',agility:'#6ad4c0'}[e.affinity] || '#7070a0';
   return `
-  <div class="card enemy-card" data-rarity="enemy" data-search="${(e.id+' '+e.name).toLowerCase()}">
+  <div class="card enemy-card" data-rarity="normal-enemy" data-search="${(e.id+' '+e.name+' '+(e.affinity||'')).toLowerCase()}">
+    <div class="card-top">
+      <span class="card-id">${e.id}</span>
+      <span class="card-name">${e.name}</span>
+      <span class="badge badge-enemy" style="color:${affinityColor};border-color:${affinityColor}">${e.affinity||'?'}</span>
+    </div>
+    <div class="card-desc">${e.desc}</div>
+    <div class="enemy-stats">
+      <span class="stat-pill">HP <strong>${e.hp}</strong></span>
+      <span class="stat-pill">DEF <strong>${e.def}</strong></span>
+      <span class="stat-pill">CD ${(e.cd/1000).toFixed(1)}s</span>
+    </div>
+    <div class="effects"><span class="effect">idle spritesheet</span><span class="effect">attack spritesheet</span><span class="effect">death spritesheet</span></div>
+    <div class="prompt-block">
+      <div class="prompt-label">Prompt para Geração de Sprite</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">Copiar</button>
+      <div class="prompt-text">${e.prompt}</div>
+    </div>
+  </div>`;
+}
+
+function renderBossEnemy(e) {
+  return `
+  <div class="card enemy-card" data-rarity="boss-enemy" data-search="${(e.id+' '+e.name).toLowerCase()}">
     <div class="card-top">
       <span class="card-id">${e.id}</span>
       <span class="card-name">${e.name}</span>
@@ -598,7 +691,7 @@ function renderEnemy(e) {
     <div class="enemy-stats">
       <span class="stat-pill">HP <strong>${e.hp}</strong></span>
       <span class="stat-pill">DEF <strong>${e.def}</strong></span>
-      <span class="stat-pill">Habilidade: ${e.ability}</span>
+      <span class="stat-pill">${e.ability}</span>
     </div>
     <div class="effects"><span class="effect">idle spritesheet</span><span class="effect">attack spritesheet</span><span class="effect">death spritesheet</span></div>
     <div class="prompt-block">
@@ -609,11 +702,12 @@ function renderEnemy(e) {
   </div>`;
 }
 
-document.getElementById('grid-common').innerHTML   = COMMON_CARDS.map(c => renderCard(c, 'common')).join('');
-document.getElementById('grid-medium').innerHTML   = MEDIUM_CARDS.map(c => renderCard(c, 'medium')).join('');
-document.getElementById('grid-advanced').innerHTML = ADVANCED_CARDS.map(c => renderCard(c, 'advanced')).join('');
-document.getElementById('grid-epic').innerHTML     = EPIC_CARDS.map(c => renderCard(c, 'epic')).join('');
-document.getElementById('grid-enemy').innerHTML    = ENEMIES.map(e => renderEnemy(e)).join('');
+document.getElementById('grid-common').innerHTML      = COMMON_CARDS.map(c => renderCard(c, 'common')).join('');
+document.getElementById('grid-medium').innerHTML      = MEDIUM_CARDS.map(c => renderCard(c, 'medium')).join('');
+document.getElementById('grid-advanced').innerHTML    = ADVANCED_CARDS.map(c => renderCard(c, 'advanced')).join('');
+document.getElementById('grid-epic').innerHTML        = EPIC_CARDS.map(c => renderCard(c, 'epic')).join('');
+document.getElementById('grid-normal-enemy').innerHTML = NORMAL_ENEMIES.map(e => renderNormalEnemy(e)).join('');
+document.getElementById('grid-boss-enemy').innerHTML  = BOSS_ENEMIES.map(e => renderBossEnemy(e)).join('');
 
 // ─── Filter ─────────────────────────────────────────────────────────────────
 
@@ -633,7 +727,11 @@ function filterCards() {
 }
 
 function applyFilter() {
-  const sections = { common:'section-common', medium:'section-medium', advanced:'section-advanced', epic:'section-epic', enemy:'section-enemy' };
+  const sections = {
+    common:'section-common', medium:'section-medium',
+    advanced:'section-advanced', epic:'section-epic',
+    'normal-enemy':'section-normal-enemy', 'boss-enemy':'section-boss-enemy'
+  };
   const cards = document.querySelectorAll('.card');
   cards.forEach(card => {
     const rarity = card.dataset.rarity;
@@ -642,9 +740,9 @@ function applyFilter() {
     const searchOk = !searchTerm || search.includes(searchTerm);
     card.classList.toggle('hidden', !(filterOk && searchOk));
   });
-  // Show/hide sections based on visible cards
   Object.entries(sections).forEach(([r, sid]) => {
     const sec = document.getElementById(sid);
+    if (!sec) return;
     const visible = sec.querySelectorAll('.card:not(.hidden)').length;
     sec.style.display = visible > 0 ? '' : 'none';
   });
