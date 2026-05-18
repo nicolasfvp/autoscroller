@@ -5,28 +5,26 @@
 
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { getCardById } from '../data/DataLoader';
-import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
-import type { CardCategory } from '../data/types';
+import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
+import { getCardById } from '../data/DataLoader';
 
 const COLS = 6;
-const CARD_W = 80;
-const CARD_H = 106;
+// Active-deck grid uses CardVisual at scale 0.5 → 75×120. Cell footprint
+// reserves the same dimensions so grid math stays simple.
+const CARD_SCALE = 0.5;
+const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 75
+const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 120
 const GAP = 10;
-
-const RARITY_COLORS: Record<string, number> = {
-  common: 0xcccccc, uncommon: 0x33cc33, rare: 0xff6600, epic: 0xaa00ff,
-};
-
-const CATEGORY_COLORS: Record<CardCategory, number> = {
-  attack: 0xcc3333, defense: 0x3366cc, magic: 0x9933cc,
-};
 
 // ── Dropped cards strip constants ──
 const STRIP_TOP = 160;
-const STRIP_CARD_W = 64;
-const STRIP_CARD_H = 86;
+// Dropped strip uses a smaller scale so 6+ cards fit horizontally.
+const STRIP_SCALE = 0.4;
+const STRIP_CARD_W = STANDARD_CARD_WIDTH * STRIP_SCALE;   // 60
+const STRIP_CARD_H = STANDARD_CARD_HEIGHT * STRIP_SCALE;  // 96
 const STRIP_GAP = 8;
 const STRIP_HEIGHT = STRIP_CARD_H + 20;
 
@@ -49,10 +47,17 @@ export class DeckCustomizationScene extends Scene {
   private dragDeckIndex = -1;
   private dragCardId = '';
   private hoverIndex = -1;
+  /** Pending keyword tooltip for the active drag (fires after 2s). */
+  private dragTooltip: KeywordTooltipHandle | null = null;
 
   private scrollY = 0;
   private maxScroll = 0;
   private parentScene: string = SCENE_KEYS.GAME;
+
+  // Off-display-list Graphics backing the scroll mask. Phaser does not auto-
+  // destroy `this.make.graphics()` objects because they are not in the
+  // display list; store a ref so cleanup() can destroy it.
+  private scrollMaskGfx: Phaser.GameObjects.Graphics | null = null;
 
   constructor() {
     super(SCENE_KEYS.DECK_CUSTOMIZATION);
@@ -64,6 +69,10 @@ export class DeckCustomizationScene extends Scene {
     this.deckOrder = [...run.deck.active];
     this.upgradedOrder = [...run.deck.upgraded];
     this.scrollY = 0;
+    // Scene instances are reused on re-entry; clear any stale drag flags
+    // before binding handlers so the first click doesn't trip a leftover
+    // bag-drop branch in dropCard().
+    this.resetDragState();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
     this.cameras.main.setBackgroundColor(0x1a1a2e);
@@ -133,6 +142,7 @@ export class DeckCustomizationScene extends Scene {
     maskGfx.fillStyle(0xffffff);
     maskGfx.fillRect(0, gridTop - 10, LAYOUT.canvasWidth, visibleH + 10);
     this.gridContainer.setMask(maskGfx.createGeometryMask());
+    this.scrollMaskGfx = maskGfx;
 
     // ── Pointer handlers ──
     this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
@@ -210,8 +220,7 @@ export class DeckCustomizationScene extends Scene {
     for (let i = 0; i < droppedIds.length; i++) {
       const x = startX + i * (STRIP_CARD_W + STRIP_GAP);
       const y = STRIP_TOP + STRIP_CARD_H / 2;
-      const slot = this.createMiniCard(droppedIds[i], x, y, -1, true);
-      slot.setScale(STRIP_CARD_W / CARD_W);
+      const slot = this.createMiniCard(droppedIds[i], x, y, -1, true, STRIP_SCALE);
       slot.setData('droppedIndex', i);
       this.droppedStrip.add(slot);
     }
@@ -234,85 +243,50 @@ export class DeckCustomizationScene extends Scene {
   private createMiniCard(
     cardId: string, x: number, y: number,
     deckIndex: number, isDraggable: boolean,
+    scale: number = CARD_SCALE,
   ): Phaser.GameObjects.Container {
-    const card = getCardById(cardId);
-    const container = this.add.container(x, y);
+    // Unified card visual — replaces the custom deck_frame + bespoke text
+    // layout. CardVisual already shows category strip, rarity outline, name,
+    // cost, cooldown, and either the pixel-art image (when loaded) or the
+    // procedural look (when missing).
+    const visual = createCardVisual(this, x, y, cardId, { scale });
+    // Override CardVisual's built-in pointerdown (which opens the card detail
+    // popup). The Customization scene uses pointerdown to start a drag, not to
+    // open a popup. We strip prior listeners and rebind our drag handlers.
+    visual.removeAllListeners('pointerdown');
+    visual.removeAllListeners('pointerover');
+    visual.removeAllListeners('pointerout');
 
-    // BG - using new deck-frame asset
-    const bg = this.add.image(0, 0, 'deck_frame');
-    bg.setDisplaySize(CARD_W, CARD_H);
-    const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-    // We can use a tint or an invisible rectangle with stroke to keep the rarity/selection feedback
-    const stroke = this.add.rectangle(0, 0, CARD_W, CARD_H).setStrokeStyle(2, isDraggable ? 0xffd700 : rarityColor);
-    container.add(bg);
-    container.add(stroke);
-
-    // Category strip
-    const catColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
-    container.add(this.add.rectangle(0, -CARD_H / 2 + 3, CARD_W - 4, 6, catColor));
-
-    // Illustration
-    const imgKey = `card_${cardId}`;
-    if (this.textures.exists(imgKey)) {
-      const img = this.add.image(0, 10, imgKey); 
-      const scaleX = (CARD_W - 12) / img.width;
-      const scaleY = (CARD_H - 45) / img.height;
-      img.setScale(Math.min(scaleX, scaleY));
-      img.setAlpha(0.7);
-      container.add(img);
-    }
-
-    // Order number (top-left)
+    // Order number badge (top-left) for active-deck cards — kept because the
+    // numbered position is meaningful to the player.
     if (deckIndex >= 0) {
-      container.add(this.add.text(-CARD_W / 2 + 4, -CARD_H / 2 + 6, `${deckIndex + 1}`, {
-        fontSize: '12px', color: '#888888', fontFamily: FONTS.family,
-      }));
+      const halfW = (STANDARD_CARD_WIDTH * scale) / 2;
+      const halfH = (STANDARD_CARD_HEIGHT * scale) / 2;
+      const badge = this.add.text(x - halfW + 4, y - halfH + 2, `${deckIndex + 1}`, {
+        fontSize: '11px', fontStyle: 'bold', color: '#ffffff',
+        fontFamily: FONTS.family, stroke: '#000000', strokeThickness: 3,
+      }).setOrigin(0, 0).setDepth(1);
+      // Attach the badge as a sibling that follows the container — we add
+      // it to the same parent (the caller's container) but here we approximate
+      // by storing it on the visual's data so callers can manage lifecycle.
+      visual.setData('_orderBadge', badge);
+      // The badge isn't a child of the container, so make sure it's destroyed
+      // alongside it.
+      visual.once('destroy', () => badge.destroy());
     }
-
-    // Name - moved to top area below category strip
-    const isUpgraded = deckIndex >= 0
-      ? (this.upgradedOrder[deckIndex] ?? false)
-      : false; // dropped-strip cards are never upgraded yet (loot drops are unupgraded)
-    const displayName = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
-    const nameColor = isUpgraded ? COLORS.accent : '#ffffff';
-    container.add(this.add.text(0, -32, displayName, {
-      fontSize: '11px', color: nameColor, fontFamily: FONTS.family,
-      stroke: '#000000', strokeThickness: 3,
-      wordWrap: { width: CARD_W - 10 }, align: 'center',
-    }).setOrigin(0.5));
-
-    // Cost
-    if (card?.cost) {
-      const costVal = card.cost.mana ?? card.cost.stamina ?? card.cost.defense ?? 0;
-      const costColor = card.cost.mana ? '#6a5acd' : card.cost.defense ? '#3366cc' : '#ff8c00';
-      container.add(this.add.text(-CARD_W / 2 + 4, CARD_H / 2 - 4, `${costVal}`, {
-        fontSize: '11px', color: costColor, fontFamily: FONTS.family,
-      }).setOrigin(0, 1));
-    }
-
-    // Cooldown
-    if (card) {
-      container.add(this.add.text(CARD_W / 2 - 4, CARD_H / 2 - 4, `${card.cooldown}s`, {
-        fontSize: '11px', color: '#aaaaaa', fontFamily: FONTS.family,
-      }).setOrigin(1, 1));
-    }
-
-    // Interactive
-    container.setSize(CARD_W, CARD_H);
-    container.setInteractive({ useHandCursor: true });
 
     if (isDraggable) {
-      container.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-        const droppedIdx = container.getData('droppedIndex') as number;
+      visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+        const droppedIdx = visual.getData('droppedIndex') as number;
         this.startDragFromDropped(droppedIdx, cardId, pointer);
       });
     } else {
-      container.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
         this.startDragFromDeck(deckIndex, cardId, pointer);
       });
     }
 
-    return container;
+    return visual;
   }
 
   // ── Drag from dropped strip ──
@@ -325,6 +299,7 @@ export class DeckCustomizationScene extends Scene {
 
     // Create enlarged drag visual
     this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
+    this.scheduleDragTooltip(cardId);
   }
 
   private startDragFromDeck(deckIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
@@ -336,87 +311,51 @@ export class DeckCustomizationScene extends Scene {
     // Hide the original slot while dragging
     if (this.cardSlots[deckIndex]) this.cardSlots[deckIndex].setVisible(false);
     this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
+    this.scheduleDragTooltip(cardId);
+  }
+
+  /**
+   * Schedule the keyword glossary panel to appear after the standard 2-second
+   * hold while a card is being dragged. The anchor is read lazily at fire
+   * time so the panel mounts next to wherever the drag visual currently is.
+   * Auto-cancelled in cancelDragTooltip() when the drag ends or the scene
+   * shuts down.
+   */
+  private scheduleDragTooltip(cardId: string): void {
+    this.cancelDragTooltip();
+    const card = getCardById(cardId);
+    if (!card) return;
+    // The drag visual renders CardVisual at scale 0.9; mirror that here so
+    // the anchor box matches the on-screen drag preview.
+    const DRAG_SCALE = 0.9;
+    const w = STANDARD_CARD_WIDTH * DRAG_SCALE;
+    const h = STANDARD_CARD_HEIGHT * DRAG_SCALE;
+    this.dragTooltip = scheduleKeywordPanel(this, card.description, () => ({
+      x: this.dragCard?.x ?? 0,
+      y: this.dragCard?.y ?? 0,
+      w, h,
+    }));
+  }
+
+  private cancelDragTooltip(): void {
+    if (this.dragTooltip) {
+      this.dragTooltip.cancel();
+      this.dragTooltip = null;
+    }
   }
 
   private createDragVisual(cardId: string, x: number, y: number): Phaser.GameObjects.Container {
-    const card = getCardById(cardId);
-    const w = 180;
-    const h = 240;
-    const container = this.add.container(x, y);
-    container.setDepth(1000);
-
-    const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-    const catColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
-    const fontFamily = FONTS.family;
-
-    // Main Frame
-    const bg = this.add.image(0, 0, 'deck_frame').setDisplaySize(w, h);
-    // Darker inner background for text legibility
-    const innerBg = this.add.rectangle(0, 0, w - 12, h - 12, 0x050505, 0.4);
-    const stroke = this.add.rectangle(0, 0, w, h).setStrokeStyle(3, rarityColor);
-    container.add([bg, innerBg, stroke]);
-
-    // Top Category Strip
-    const topStrip = this.add.rectangle(0, -h / 2 + 6, w - 8, 10, catColor);
-    container.add(topStrip);
-
-    let currentY = -h / 2 + 25;
-
-    // Name
-    const isUpgraded = this.dragFromDeck && this.dragDeckIndex >= 0
-      ? (this.upgradedOrder[this.dragDeckIndex] ?? false)
-      : false;
-    const displayName = isUpgraded ? `${card?.name ?? cardId}+` : (card?.name ?? cardId);
-    const nameText = this.add.text(0, currentY, displayName, {
-      fontSize: '18px', fontStyle: 'bold', color: isUpgraded ? COLORS.accent : '#ffffff',
-      fontFamily, stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(0.5, 0);
-    container.add(nameText);
-    currentY += 28;
-
-    // Illustration Area
-    if (this.textures.exists(`card_${cardId}`)) {
-      const img = this.add.image(0, currentY + 40, `card_${cardId}`);
-      const imgSize = 80;
-      const scale = Math.min(imgSize / img.width, imgSize / img.height);
-      img.setScale(scale);
-      
-      // Subtle frame for the image
-      const imgFrame = this.add.rectangle(0, currentY + 40, imgSize + 4, imgSize + 4, 0x000000, 0.3)
-        .setStrokeStyle(1, 0x444444);
-      container.add([imgFrame, img]);
-      currentY += imgSize + 12;
-    }
-
-    // Description
-    if (card) {
-      const desc = (isUpgraded && card.upgraded?.description) ? card.upgraded.description : card.description;
-      const descText = this.add.text(0, currentY, desc, {
-        fontSize: '12px', color: '#dddddd', fontFamily,
-        wordWrap: { width: w - 24 }, align: 'center', lineSpacing: 2,
-      }).setOrigin(0.5, 0);
-      container.add(descText);
-    }
-
-    // Stats Bar at the bottom
-    const statsY = h / 2 - 18;
-    if (card) {
-      const stats: string[] = [];
-      stats.push(`${card.cooldown}s`);
-      if (card.cost?.stamina) stats.push(`${card.cost.stamina} St`);
-      if (card.cost?.mana) stats.push(`${card.cost.mana} Mp`);
-      if (card.cost?.defense) stats.push(`${card.cost.defense} Df`);
-      
-      const statsText = this.add.text(0, statsY, stats.join(' · '), {
-        fontSize: '11px', color: '#aaaaaa', fontStyle: 'bold', fontFamily,
-      }).setOrigin(0.5);
-      container.add(statsText);
-    }
-
-    container.setAlpha(1);
-    this.tweens.add({ targets: container, scaleX: 1.05, scaleY: 1.05, duration: 80 });
-
-    return container;
+    // Enlarged CardVisual for the floating drag preview — uses the same
+    // procedural / png-backed look as the rest of the deck UI, just larger.
+    const visual = createCardVisual(this, x, y, cardId, { scale: 0.9 });
+    visual.removeAllListeners('pointerdown');
+    visual.removeAllListeners('pointerover');
+    visual.removeAllListeners('pointerout');
+    visual.disableInteractive();
+    visual.setDepth(1000);
+    // Tiny scale-up confirmation tween — matches the prior pickup feel.
+    this.tweens.add({ targets: visual, scaleX: 1.0, scaleY: 1.0, duration: 80 });
+    return visual;
   }
 
   // ── Animate deck slots to open gap at hoverIndex ──
@@ -453,10 +392,27 @@ export class DeckCustomizationScene extends Scene {
   private dropCard(): void {
     if (!this.dragCard) return;
 
+    // Tear down any keyword tooltip that was scheduled or already mounted
+    // for the drag — must run regardless of which drop branch we hit below.
+    this.cancelDragTooltip();
+
+    // Capture release position before destroying the drag visual — used to
+    // gate bag→deck inserts so releasing outside the deck grid cancels.
+    const releaseY = this.dragCard.y;
     this.dragCard.destroy(true);
     this.dragCard = null;
 
     if (this.dragFromDropped && this.dragDroppedIndex >= 0) {
+      // Bag drag released above the deck grid (over the strip / header) —
+      // treat as cancel: the card stays in the bag.
+      if (releaseY < this.getGridTop()) {
+        // animateSlots() had opened a gap at hoverIndex; reset and re-run so
+        // the slots smoothly slide back to their natural positions before
+        // we clear drag state.
+        this.resetDragState();
+        this.animateSlots();
+        return;
+      }
       const run = getRun();
 
       // Remove from droppedCards
@@ -472,11 +428,7 @@ export class DeckCustomizationScene extends Scene {
       run.deck.active = [...this.deckOrder];
       run.deck.upgraded = [...this.upgradedOrder];
 
-      // Reset drag state
-      this.dragFromDropped = false;
-      this.dragDroppedIndex = -1;
-      this.dragCardId = '';
-      this.hoverIndex = -1;
+      this.resetDragState();
 
       // Full scene restart so layout recalculates (strip may disappear).
       // Pass parentScene via data so the restarted scene preserves the
@@ -500,24 +452,12 @@ export class DeckCustomizationScene extends Scene {
       run.deck.active = [...this.deckOrder];
       run.deck.upgraded = [...this.upgradedOrder];
 
-      // Reset drag state
-      this.dragFromDeck = false;
-      this.dragDeckIndex = -1;
-      this.dragCardId = '';
-      this.hoverIndex = -1;
-
+      this.resetDragState();
       this.rebuildGrid();
       return;
     }
 
-    // Reset drag state
-    this.dragFromDropped = false;
-    this.dragFromDeck = false;
-    this.dragDroppedIndex = -1;
-    this.dragDeckIndex = -1;
-    this.dragCardId = '';
-    this.hoverIndex = -1;
-
+    this.resetDragState();
     this.rebuildGrid();
   }
 
@@ -535,11 +475,34 @@ export class DeckCustomizationScene extends Scene {
     this.scene.stop();
   }
 
+  private resetDragState(): void {
+    this.dragFromDropped = false;
+    this.dragFromDeck = false;
+    this.dragDroppedIndex = -1;
+    this.dragDeckIndex = -1;
+    this.dragCardId = '';
+    this.hoverIndex = -1;
+  }
+
   private cleanup(): void {
     if (this.dragCard) {
       this.dragCard.destroy(true);
       this.dragCard = null;
     }
+    // Cancel any pending/mounted drag tooltip so its timer doesn't fire on
+    // a destroyed scene (and so a mounted panel doesn't leak across exits).
+    this.cancelDragTooltip();
+    // Phaser reuses scene instances on stop/launch, so stale drag flags from
+    // an interrupted drag (ESC/D mid-drag) would otherwise leak into the next
+    // entry and corrupt the next dropCard() call.
+    this.resetDragState();
     this.cardSlots = [];
+
+    // Destroy the off-display-list mask Graphics so re-entering the scene
+    // doesn't leak a Graphics + its underlying mask render texture.
+    if (this.scrollMaskGfx) {
+      this.scrollMaskGfx.destroy();
+      this.scrollMaskGfx = null;
+    }
   }
 }

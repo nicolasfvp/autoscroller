@@ -1,18 +1,17 @@
-// Forge overlay scene -- in-run card crafting from element units + gold.
-// Slot-based: pick 2-4 element-unit tokens, see preview, click Forge.
-// See docs/CARDS_SYSTEM.md §5.
+// ForgeScene -- standalone recipe-crafting overlay, launched from PlanningOverlay.
+// UI is adapted from the legacy ShopScene.modalForge; forge is no longer part
+// of the shop categories (per design: direct access from the planning phase).
 
 import { Scene } from 'phaser';
-import { SCENE_KEYS } from '../state/SceneKeys';
 import { getRun } from '../state/RunState';
-import { saveMetaState } from '../systems/MetaPersistence';
-import type { MetaState } from '../state/MetaState';
-import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
+import { FONTS } from '../ui/StyleConstants';
+import { AudioManager } from '../systems/AudioManager';
+import { SCENE_KEYS } from '../state/SceneKeys';
 import {
   ELEMENTS,
-  ALL_ELEMENT_IDS,
+  PHYSICAL_ELEMENTS,
+  ELEMENTAL_ELEMENTS,
   type ElementId,
-  canonicalCardId,
 } from '../systems/ElementSystem';
 import {
   findCardForElements,
@@ -21,268 +20,324 @@ import {
   validateForge,
   executeForge,
   discoverRecipe,
-  type ForgeRecipe,
 } from '../systems/ForgeSystem';
 import type { ElementInventory } from '../systems/ShardSystem';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import type { MetaState } from '../state/MetaState';
+import { createCardVisual } from '../ui/CardVisual';
+
+const FF    = FONTS.family;
+const GOLD  = '#ffd700';
+const WHITE = '#ffffff';
+const DIM   = '#998877';
+const RED   = '#ff6655';
+
+const PANEL_W     = 470;
+const PANEL_CX    = 400;
+const PANEL_LEFT  = PANEL_CX - PANEL_W / 2;
+const PANEL_RIGHT = PANEL_CX + PANEL_W / 2;
+
+function colX(col: number, cols: number, itemW: number, gapW: number): number {
+  const total = cols * itemW + (cols - 1) * gapW;
+  const left  = PANEL_LEFT + (PANEL_W - total) / 2;
+  return left + col * (itemW + gapW) + itemW / 2;
+}
 
 export class ForgeScene extends Scene {
-  private slots: ElementId[] = [];
-  private slotTexts: Phaser.GameObjects.Text[] = [];
-  private elementButtons: Map<ElementId, Phaser.GameObjects.Container> = new Map();
-  private previewText!: Phaser.GameObjects.Text;
-  private previewName!: Phaser.GameObjects.Text;
-  private previewCost!: Phaser.GameObjects.Text;
-  private statusText!: Phaser.GameObjects.Text;
-  private forgeBtn!: Phaser.GameObjects.Text;
-  private goldLabel!: Phaser.GameObjects.Text;
-  private forgeLevel: number = 0;
+  private goldText!: Phaser.GameObjects.Text;
+  private container!: Phaser.GameObjects.Container;
   private metaState: MetaState | null = null;
+  private forgeSlots: ElementId[] = [];
+  /** Scene to wake/resume on close. Defaults to PlanningOverlay. */
+  private parentSceneKey: string = SCENE_KEYS.PLANNING;
 
-  constructor() {
-    super(SCENE_KEYS.FORGE);
+  constructor() { super(SCENE_KEYS.FORGE); }
+
+  init(data?: { parentScene?: string }): void {
+    this.parentSceneKey = data?.parentScene ?? SCENE_KEYS.PLANNING;
+    this.forgeSlots = [];
   }
 
-  create(data?: { metaState?: MetaState }): void {
-    this.metaState = data?.metaState ?? null;
-    this.forgeLevel = this.metaState?.buildings?.forge?.level ?? 0;
+  create(): void {
+    try {
+      this.scene.bringToTop();
 
-    // Backdrop
-    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.85);
-    this.time.delayedCall(100, () => {
-      backdrop.setInteractive();
-      backdrop.on('pointerdown', () => this.closeScene());
+      // Dim backdrop + side rails (matches ShopScene's panel chrome).
+      this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+      this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x130800, 0.92);
+      this.add.rectangle(PANEL_LEFT, 300, 3, 600, 0x9a6030, 0.5);
+      this.add.rectangle(PANEL_RIGHT, 300, 3, 600, 0x9a6030, 0.5);
+
+      // Header
+      this.add.rectangle(PANEL_CX, 24, PANEL_W, 48, 0x0a0400, 0.95);
+      this.add.rectangle(PANEL_CX, 47, PANEL_W, 2, 0x9a6030, 0.7);
+      this.add.text(PANEL_CX, 24, 'FORGE', {
+        fontSize: '23px', fontStyle: 'bold', color: GOLD,
+        fontFamily: FF, stroke: '#000', strokeThickness: 4,
+      }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+
+      // Gold readout
+      this.add.rectangle(PANEL_RIGHT - 4, 8, 130, 18, 0x3a2008, 0.92).setOrigin(1, 0).setStrokeStyle(1, 0x9a6030);
+      this.goldText = this.add.text(PANEL_RIGHT - 8, 9, `♦ ${getRun().economy.gold} Gold`, {
+        fontSize: '12px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 2,
+      }).setOrigin(1, 0);
+
+      // Fire-and-forget meta load — recipe discovery uses it; rendering doesn't
+      // depend on it being ready.
+      loadMetaState().then((m) => { this.metaState = m; }).catch(() => { /* ignore */ });
+
+      this.renderForge();
+
+      // Close button (parallels ShopScene's "Leave Shop")
+      const leave = this.add.text(PANEL_CX, 592, 'Leave Forge', {
+        fontSize: '21px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 4,
+      }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000', 2, true, true);
+      leave.on('pointerover', () => leave.setColor(WHITE));
+      leave.on('pointerout',  () => leave.setColor(GOLD));
+      leave.on('pointerdown', () => this.close());
+
+      this.events.on('shutdown', this.cleanup, this);
+    } catch (err) {
+      console.error('[ForgeScene] Critical error in create():', err);
+      this.close();
+    }
+  }
+
+  /** Rebuild the slot/inventory/preview UI from scratch (cheap; called on every change). */
+  private renderForge(): void {
+    if (this.container) this.container.destroy(true);
+    this.container = this.add.container(0, 0);
+
+    // TEMPORARY: forge restrictions disabled — see ForgeSystem.FORGE_OVERRIDE_LEVEL.
+    const forgeLevel = 0;
+
+    const run = getRun();
+    this.goldText.setText(`♦ ${run.economy.gold} Gold`);
+
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const shardInv = (run.economy.shards ?? {}) as Record<string, number>;
+    const slotUsage: Record<string, number> = {};
+    for (const slotId of this.forgeSlots) {
+      slotUsage[slotId] = (slotUsage[slotId] ?? 0) + 1;
+    }
+
+    // Inventory grid (8 elements, 2×4)
+    const invStartY = 100;
+    const cellW = 100;
+    const cellH = 46;
+    const rowGap = 4;
+    const colGap = 6;
+    [PHYSICAL_ELEMENTS, ELEMENTAL_ELEMENTS].forEach((row, rowIdx) => {
+      row.forEach((id, colIdx) => {
+        const x = colX(colIdx, 4, cellW, colGap);
+        const y = invStartY + rowIdx * (cellH + rowGap) + cellH / 2;
+        const elem = ELEMENTS[id];
+        const elemColor = parseInt(elem.color.replace('#', ''), 16);
+        const available = (elementInv[id] ?? 0) - (slotUsage[id] ?? 0);
+        const shards = shardInv[id] ?? 0;
+        const usable = available > 0 && this.forgeSlots.length < 4;
+
+        const bg = this.add.rectangle(x, y, cellW, cellH, elemColor, usable ? 0.4 : 0.18)
+          .setStrokeStyle(1.5, elemColor, usable ? 0.95 : 0.4);
+        if (usable) {
+          bg.setInteractive({ useHandCursor: true });
+          bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
+          bg.on('pointerout',  () => bg.setStrokeStyle(1.5, elemColor, 0.95));
+          bg.on('pointerdown', () => { this.forgeSlots.push(id); this.renderForge(); });
+        }
+        const name = this.add.text(x - cellW / 2 + 6, y - cellH / 2 + 4, elem.name, {
+          fontSize: '11px', fontStyle: 'bold', color: usable ? WHITE : DIM, fontFamily: FF,
+        });
+        const cnt = this.add.text(x + cellW / 2 - 6, y - cellH / 2 + 4, `${available}`, {
+          fontSize: '16px', fontStyle: 'bold', color: usable ? GOLD : DIM, fontFamily: FF,
+        }).setOrigin(1, 0);
+        const shardLine = this.add.text(x + cellW / 2 - 6, y + cellH / 2 - 4, `+${shards}/10 shards`, {
+          fontSize: '9px', color: shards > 0 ? '#c0c0c0' : DIM, fontFamily: FF,
+        }).setOrigin(1, 1);
+        this.container.add([bg, name, cnt, shardLine]);
+      });
     });
 
-    // Title
-    this.add.text(400, 30, 'Forge', {
-      ...FONTS.title,
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-
-    this.add.text(400, 60, `Forge Lv ${this.forgeLevel} — discount ${Math.round(getDiscountForLevel(this.forgeLevel) * 100)}%`, {
-      ...FONTS.small,
-      color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-
-    // Element inventory panel (left)
-    this.renderElementInventory(this.metaState);
-
-    // Slot panel (center)
-    this.renderSlots();
-
-    // Preview & action (right)
-    this.renderPreview();
-
-    // Close button
-    createButton(this, 750, 30, 'X', () => this.closeScene(), 'secondary');
-
-    this.refreshPreview();
-  }
-
-  private renderElementInventory(_meta: any): void {
-    void _meta;
-    this.add.text(120, 100, 'Elements', { ...FONTS.heading, color: COLORS.textPrimary, fontFamily: FONTS.family }).setOrigin(0.5);
-    const run = safeGetRun();
-    const elements: ElementInventory = (run?.economy.elements ?? {}) as ElementInventory;
-    const startY = 140;
-    ALL_ELEMENT_IDS.forEach((id, i) => {
-      const y = startY + i * 50;
-      const elem = ELEMENTS[id];
-      const color = parseInt(elem.color.replace('#', ''), 16);
-      const card = this.add.rectangle(120, y, 200, 40, color, 0.4).setStrokeStyle(2, 0xffffff, 0.5);
-      const name = this.add.text(40, y - 8, elem.name, { fontSize: '14px', color: '#ffffff', fontFamily: FONTS.family });
-      const count = this.add.text(195, y - 8, `${elements[id] ?? 0}`, { fontSize: '16px', color: COLORS.accent, fontFamily: FONTS.family, fontStyle: 'bold' }).setOrigin(1, 0);
-      const container = this.add.container(0, 0, [card, name, count]);
-      card.setInteractive({ useHandCursor: true });
-      card.on('pointerover', () => card.setStrokeStyle(2, 0xffffff, 1.0));
-      card.on('pointerout', () => card.setStrokeStyle(2, 0xffffff, 0.5));
-      card.on('pointerdown', () => this.addToSlot(id));
-      this.elementButtons.set(id, container);
-    });
-  }
-
-  private renderSlots(): void {
-    this.add.text(400, 100, 'Recipe Slots', { ...FONTS.heading, color: COLORS.textPrimary, fontFamily: FONTS.family }).setOrigin(0.5);
-    const startY = 160;
+    // Recipe slots
+    const slotsY = invStartY + 2 * (cellH + rowGap) + 14;
+    const slotW = 100;
+    const slotH = 36;
+    const slotGap = 6;
+    this.container.add(this.add.text(PANEL_CX, slotsY - 14, 'Recipe', {
+      fontSize: '12px', fontStyle: 'bold', color: DIM, fontFamily: FF,
+    }).setOrigin(0.5));
     for (let i = 0; i < 4; i++) {
-      const y = startY + i * 60;
-      const rect = this.add.rectangle(400, y, 240, 50, 0x2a2a40, 0.7).setStrokeStyle(1, 0x4a4a60);
-      void rect;
-      const txt = this.add.text(400, y, '(empty)', {
-        ...FONTS.body,
-        color: COLORS.textSecondary,
-        fontFamily: FONTS.family,
+      const x = colX(i, 4, slotW, slotGap);
+      const y = slotsY + slotH / 2;
+      const id = this.forgeSlots[i];
+      const fill = id ? parseInt(ELEMENTS[id].color.replace('#', ''), 16) : 0x1e1008;
+      const slot = this.add.rectangle(x, y, slotW, slotH, fill, id ? 0.55 : 0.6)
+        .setStrokeStyle(1.5, id ? 0xffffff : 0x4a3020, id ? 0.7 : 0.5);
+      const label = this.add.text(x, y, id ? ELEMENTS[id].name : 'empty', {
+        fontSize: '12px', fontStyle: 'bold', color: id ? WHITE : DIM, fontFamily: FF,
       }).setOrigin(0.5);
-      this.slotTexts.push(txt);
-    }
-    createButton(this, 400, 430, 'Clear Slots', () => this.clearSlots(), 'secondary');
-    this.goldLabel = this.add.text(400, 460, '', {
-      ...FONTS.body,
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-  }
-
-  private renderPreview(): void {
-    this.add.text(680, 100, 'Preview', { ...FONTS.heading, color: COLORS.textPrimary, fontFamily: FONTS.family }).setOrigin(0.5);
-    this.previewName = this.add.text(680, 150, '???', {
-      ...FONTS.heading,
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-      align: 'center',
-      wordWrap: { width: 220 },
-    }).setOrigin(0.5);
-    this.previewText = this.add.text(680, 230, 'Select 2-4 elements.', {
-      ...FONTS.body,
-      color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
-      align: 'center',
-      wordWrap: { width: 220 },
-    }).setOrigin(0.5);
-    this.previewCost = this.add.text(680, 360, '', {
-      ...FONTS.body,
-      color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-    this.statusText = this.add.text(680, 420, '', {
-      ...FONTS.small,
-      color: '#ff9999',
-      fontFamily: FONTS.family,
-      align: 'center',
-      wordWrap: { width: 220 },
-    }).setOrigin(0.5);
-    this.forgeBtn = createButton(this, 680, 480, '⚒ Forge', () => this.tryForge(), 'primary');
-  }
-
-  private addToSlot(id: ElementId): void {
-    if (this.slots.length >= 4) return;
-    this.slots.push(id);
-    this.updateSlotTexts();
-    this.refreshPreview();
-  }
-
-  private clearSlots(): void {
-    this.slots = [];
-    this.updateSlotTexts();
-    this.refreshPreview();
-  }
-
-  private updateSlotTexts(): void {
-    for (let i = 0; i < 4; i++) {
-      const id = this.slots[i];
-      this.slotTexts[i].setText(id ? ELEMENTS[id].name : '(empty)');
-      this.slotTexts[i].setColor(id ? COLORS.textPrimary : COLORS.textSecondary);
-    }
-  }
-
-  private refreshPreview(): void {
-    const run = safeGetRun();
-    const gold = run?.economy.gold ?? 0;
-    this.goldLabel.setText(`Gold: ${gold}`);
-
-    if (this.slots.length < 2) {
-      this.previewName.setText('???');
-      this.previewText.setText('Select 2-4 elements.');
-      this.previewCost.setText('');
-      this.statusText.setText('');
-      return;
+      if (id) {
+        slot.setInteractive({ useHandCursor: true });
+        slot.on('pointerdown', () => { this.forgeSlots.splice(i, 1); this.renderForge(); });
+      }
+      this.container.add([slot, label]);
     }
 
-    const card = findCardForElements(this.slots);
-    if (!card) {
-      this.previewName.setText('???');
-      this.previewText.setText('No matching card.');
-      this.previewCost.setText('');
-      this.statusText.setText(`id would be ${canonicalCardId(this.slots)}`);
-      return;
-    }
+    // Preview area
+    const previewY = slotsY + slotH + 18;
+    const CARD_AREA_H = 130;
+    const PREVIEW_RECT_H = CARD_AREA_H + 44;
+    const cardAreaCenterY = previewY + CARD_AREA_H / 2;
 
-    this.previewName.setText(card.name);
-    this.previewText.setText(card.description ?? '');
-    const tier = (this.slots.length - 1) as 1 | 2 | 3;
-    const cost = getForgeGoldCost(tier, this.forgeLevel);
-    this.previewCost.setText(`Cost: ${cost} gold + elements`);
-
-    if (!run) {
-      this.statusText.setText('No active run.');
-      return;
-    }
-
-    const deckSize = run.deck.active.length + run.deck.droppedCards.length;
-    const validation = validateForge(
-      this.slots,
-      (run.economy.elements ?? {}) as ElementInventory,
-      run.economy.gold,
-      this.forgeLevel,
-      deckSize,
-      15,
+    this.container.add(
+      this.add.rectangle(PANEL_CX, previewY + PREVIEW_RECT_H / 2, PANEL_W - 30, PREVIEW_RECT_H, 0x130800, 0.6)
+        .setStrokeStyle(1.5, 0x7a4820),
     );
-    if (!validation.ok) {
-      const reason = validation.reason ?? 'invalid';
-      this.statusText.setText(reasonText(reason, tier));
-    } else if (!isTierUnlocked(tier, this.forgeLevel)) {
-      this.statusText.setText(`Tier ${tier} locked. Need Forge Lv ${this.forgeLevel + 1}.`);
+
+    const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
+    const tier = (this.forgeSlots.length - 1) as 1 | 2 | 3;
+    const cost = this.forgeSlots.length >= 2 ? getForgeGoldCost(tier, forgeLevel) : 0;
+    const deckSize = run.deck.active.length;
+    const validation = this.forgeSlots.length >= 2
+      ? validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15)
+      : null;
+
+    let costText = '';
+    let statusText = '';
+    let statusColor = GOLD;
+
+    if (card) {
+      costText = `Cost: ${cost} gold + ${this.forgeSlots.length} elements`;
+      if (validation && !validation.ok) {
+        statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
+        statusColor = RED;
+      } else if (!isTierUnlocked(tier, forgeLevel)) {
+        statusText = `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4}`;
+        statusColor = RED;
+      } else {
+        statusText = 'Ready to forge';
+        statusColor = '#88ff88';
+      }
+    } else if (this.forgeSlots.length >= 2) {
+      statusText = 'No card matches that combination.';
+      statusColor = RED;
+    }
+
+    if (card) {
+      const visual = createCardVisual(this, PANEL_CX, cardAreaCenterY, card.id, { scale: 0.5 });
+      this.container.add(visual);
     } else {
-      this.statusText.setText('Ready to forge.');
+      const headline = this.forgeSlots.length >= 2 ? '???' : 'Pick 2-4 elements';
+      const subline = this.forgeSlots.length >= 2
+        ? 'Tap an element above to swap, or Clear to reset.'
+        : 'Tap an element above to add to the recipe.';
+      this.container.add([
+        this.add.text(PANEL_CX, cardAreaCenterY - 14, headline, {
+          fontSize: '22px', fontStyle: 'bold', color: DIM, fontFamily: FF,
+        }).setOrigin(0.5),
+        this.add.text(PANEL_CX, cardAreaCenterY + 18, subline, {
+          fontSize: '11px', color: WHITE, fontFamily: FF, align: 'center',
+          wordWrap: { width: PANEL_W - 60 },
+        }).setOrigin(0.5),
+      ]);
     }
+
+    const costY = previewY + CARD_AREA_H + 8;
+    const statusY = costY + 18;
+    this.container.add([
+      this.add.text(PANEL_CX, costY, costText, {
+        fontSize: '12px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+      }).setOrigin(0.5),
+      this.add.text(PANEL_CX, statusY, statusText, {
+        fontSize: '11px', fontStyle: 'bold', color: statusColor, fontFamily: FF,
+      }).setOrigin(0.5),
+    ]);
+
+    // Action buttons (Clear / Library / Forge)
+    const actionsY = previewY + PREVIEW_RECT_H + 22;
+    const clearBtn = this.add.text(PANEL_CX - 80, actionsY, '↺ Clear', {
+      fontSize: '14px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF,
+      stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    clearBtn.on('pointerover', () => clearBtn.setColor(WHITE));
+    clearBtn.on('pointerout',  () => clearBtn.setColor('#aaddff'));
+    clearBtn.on('pointerdown', () => { this.forgeSlots = []; this.renderForge(); });
+
+    const libBtn = this.add.text(PANEL_CX, actionsY, '📖 Library', {
+      fontSize: '14px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF,
+      stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    libBtn.on('pointerover', () => libBtn.setColor(WHITE));
+    libBtn.on('pointerout',  () => libBtn.setColor('#aaddff'));
+    libBtn.on('pointerdown', () => {
+      this.scene.launch(SCENE_KEYS.LIBRARY, { parentKey: SCENE_KEYS.FORGE });
+      this.scene.pause();
+    });
+
+    const forgeable = !!(card && validation && validation.ok);
+    const forgeBtn = this.add.text(PANEL_CX + 80, actionsY, '⚒ Forge', {
+      fontSize: '16px', fontStyle: 'bold', color: forgeable ? GOLD : DIM, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5);
+    if (forgeable) {
+      forgeBtn.setInteractive({ useHandCursor: true });
+      forgeBtn.on('pointerover', () => forgeBtn.setColor(WHITE));
+      forgeBtn.on('pointerout',  () => forgeBtn.setColor(GOLD));
+      forgeBtn.on('pointerdown', () => this.executeForgeAction());
+    }
+    this.container.add([clearBtn, libBtn, forgeBtn]);
   }
 
-  private tryForge(): void {
-    const run = safeGetRun();
-    if (!run) return;
-    const deckSize = run.deck.active.length + run.deck.droppedCards.length;
-    const validation = validateForge(
-      this.slots,
-      (run.economy.elements ?? {}) as ElementInventory,
-      run.economy.gold,
-      this.forgeLevel,
-      deckSize,
-      15,
-    );
+  private executeForgeAction(): void {
+    const run = getRun();
+    const forgeLevel = 6; // TEMPORARY: forge restrictions disabled
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const deckSize = run.deck.active.length;
+    const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);
     if (!validation.ok) return;
-
-    const meta = this.metaState;
-    const knownRecipes: ForgeRecipe[] = (meta as any)?.forgeRecipes ?? [];
+    const knownRecipes = this.metaState?.forgeRecipes ?? [];
     const result = executeForge(
-      this.slots,
-      (run.economy.elements ?? {}) as ElementInventory,
+      this.forgeSlots,
+      elementInv,
       (amt) => { run.economy.gold -= amt; },
-      this.forgeLevel,
-      knownRecipes,
+      forgeLevel,
+      knownRecipes as any,
     );
     run.deck.droppedCards.push(result.cardId);
 
-    if (result.isNewRecipe && meta) {
-      (meta as any).forgeRecipes = discoverRecipe(knownRecipes, this.slots, result.cardId);
-      saveMetaState(meta).catch(() => { /* ignore */ });
+    if (result.isNewRecipe && this.metaState) {
+      this.metaState.forgeRecipes = discoverRecipe(knownRecipes as any, this.forgeSlots, result.cardId) as any;
+      saveMetaState(this.metaState).catch(() => { /* ignore */ });
     }
 
-    this.clearSlots();
+    AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+    this.forgeSlots = [];
+    this.renderForge();
   }
 
-  private closeScene(): void {
+  private close(): void {
+    const parent = this.parentSceneKey;
+    const isSleeping = this.scene.isSleeping(parent);
     this.scene.stop();
+    if (isSleeping) this.scene.wake(parent); else this.scene.resume(parent);
+  }
+
+  private cleanup(): void {
+    if (this.container) {
+      this.container.destroy(true);
+      this.container = null as any;
+    }
   }
 }
 
-function reasonText(reason: string, tier: number): string {
+function forgeReason(reason: string, tier: number, forgeLevel: number): string {
   switch (reason) {
-    case 'tier_locked': return `Tier ${tier} locked.`;
-    case 'no_card':     return 'No matching card.';
-    case 'insufficient_elements': return 'Not enough element units.';
-    case 'insufficient_gold': return 'Not enough gold.';
-    case 'deck_full':   return 'Deck full (15 cards).';
-    default: return '';
+    case 'tier_locked':
+      return `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4} (currently ${forgeLevel}).`;
+    case 'no_card':                return 'No card matches that combination.';
+    case 'insufficient_elements':  return 'Not enough element units.';
+    case 'insufficient_gold':      return 'Not enough gold.';
+    case 'deck_full':              return 'Deck full (max 15 cards).';
+    default:                       return '';
   }
-}
-
-function getDiscountForLevel(level: number): number {
-  const table: Record<number, number> = { 0: 0, 1: 0, 2: 0.10, 3: 0.15, 4: 0.20, 5: 0.25, 6: 0.30 };
-  return table[Math.max(0, Math.min(6, level))] ?? 0;
-}
-
-function safeGetRun(): ReturnType<typeof getRun> | null {
-  try { return getRun(); } catch { return null; }
 }

@@ -4,6 +4,9 @@
 import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
 import { showCardDetail } from './CardDetailPopup';
+import { attachKeywordHover } from './KeywordTooltip';
+import { SCENE_KEYS } from '../state/SceneKeys';
+import { ELEMENTS, type ElementId } from '../systems/ElementSystem';
 import type { CardCategory, CardDefinition } from '../data/types';
 
 // ── Constants ─────────────────────────────────────────
@@ -80,6 +83,25 @@ export function createCardVisual(
     fontStyle: 'bold',
   }).setOrigin(1, 0);
   container.add(rarityLabel);
+
+  // Element identity dots — centered in the header band between the
+  // category emoji (top-left) and the rarity label (top-right). Each
+  // dot uses the canonical ELEMENTS color so a glance reads the card's
+  // element identity (1–4 dots depending on tier).
+  const elems = ((card.elements ?? []) as ElementId[]).filter((e) => !!ELEMENTS[e]);
+  if (elems.length > 0) {
+    const dotR = 4;
+    const dotGap = 3;
+    const dotsTotalW = elems.length * (dotR * 2) + (elems.length - 1) * dotGap;
+    const startX = -dotsTotalW / 2 + dotR;
+    const dotY = -h / 2 + 15;
+    elems.forEach((e, idx) => {
+      const dx = startX + idx * (dotR * 2 + dotGap);
+      const elemColor = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
+      const dot = scene.add.circle(dx, dotY, dotR, elemColor).setStrokeStyle(1, 0xffffff, 0.6);
+      container.add(dot);
+    });
+  }
 
   // Image Area Gradient
   const imgAreaTop = -h / 2 + 28;
@@ -251,6 +273,17 @@ export function createCardVisual(
     showCardDetail(scene, cardId);
   });
 
+  // Keyword glossary tooltip on 2-second hover. Skipped in CombatScene —
+  // cards play automatically there and a wide hover panel would clutter the
+  // battle view. Tooltip self-destroys on pointerout and on container
+  // destroy, so no lifecycle hook is needed at the call site.
+  if (scene.scene.key !== SCENE_KEYS.COMBAT && card) {
+    const effectiveDesc = getEffectiveDesc(card, false);
+    attachKeywordHover(scene, container, effectiveDesc, {
+      x, y, w: w * scale, h: h * scale,
+    });
+  }
+
   container.setData('cardId', cardId);
   container.setData('card', card);
 
@@ -269,6 +302,17 @@ function getEffectiveCooldown(card: CardDefinition): number | undefined {
   return card.cooldown;
 }
 
+// Per-stack display palette so the main label matches the keyword color
+// used elsewhere in the UI (status DoTs and keyword tooltip).
+const STACK_DISPLAY: Record<string, { label: string; color: string }> = {
+  burn:   { label: 'BURN',   color: '#ff8c00' },
+  bleed:  { label: 'BLEED',  color: '#ff5555' },
+  poison: { label: 'POISON', color: '#88dd55' },
+  slow:   { label: 'SLOW',   color: '#66ccff' },
+  stun:   { label: 'STUN',   color: '#cccccc' },
+  rage:   { label: 'RAGE',   color: '#ff7733' },
+};
+
 function getMainEffect(card: CardDefinition, isUpgraded: boolean) {
   const effects = isUpgraded && card.upgraded?.effects ? card.upgraded.effects : card.effects;
   if (!effects || effects.length === 0) return null;
@@ -276,10 +320,21 @@ function getMainEffect(card: CardDefinition, isUpgraded: boolean) {
 
   switch (primary.type) {
     case 'damage': return { val: primary.value, label: 'DMG', color: '#ff6666' };
-    case 'armor': return { val: primary.value, label: 'ARM', color: '#66bbff' };
-    case 'heal': return { val: primary.value, label: 'HP', color: '#66ff66' };
-    case 'mana': return { val: primary.value, label: 'MP', color: '#cc66ff' };
-    case 'stamina': return { val: primary.value, label: 'STA', color: '#ffcc66' };
+    case 'armor':  return { val: primary.value, label: 'ARM', color: '#66bbff' };
+    case 'heal':   return { val: primary.value, label: 'HP',  color: '#66ff66' };
+    case 'mana':   return { val: primary.value, label: 'MP',  color: '#cc66ff' };
+    case 'stamina':return { val: primary.value, label: 'STA', color: '#ffcc66' };
+    case 'dot':
+    case 'stack': {
+      // Use the named stack (Burn/Bleed/Poison/Slow/Stun/Rage) as the label
+      // rather than the raw effect type. "DOT" by itself is meaningless to the
+      // player; the stack name reads as the card's intent.
+      const stack = (primary as { stack?: string }).stack;
+      if (stack && STACK_DISPLAY[stack]) return { val: primary.value, ...STACK_DISPLAY[stack] };
+      return { val: primary.value, label: 'STACK', color: '#ffffff' };
+    }
+    case 'cleanse': return { val: primary.value, label: 'CLEAR', color: '#ffffff' };
+    case 'aura':    return { val: primary.value, label: 'AURA',  color: '#bb99ff' };
   }
   return { val: primary.value, label: primary.type.toUpperCase(), color: '#ffffff' };
 }
