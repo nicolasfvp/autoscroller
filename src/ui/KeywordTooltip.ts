@@ -59,6 +59,10 @@ interface AnchorBounds {
  * would clip past the canvas edge). On pointerout / destroy: cancels the
  * pending timer AND destroys any mounted panel.
  *
+ * `anchorBounds` may be a static rectangle or a getter resolved at panel-
+ * mount time — the deck editor uses the getter form so the panel tracks
+ * the card across scroll / parent-container translation.
+ *
  * Returns a handle whose cancel() unwires the listeners and tears down any
  * mounted panel — call this if the consumer wants to detach early.
  */
@@ -66,7 +70,7 @@ export function attachKeywordHover(
   scene: Phaser.Scene,
   cardContainer: Phaser.GameObjects.Container,
   cardDescription: string,
-  anchorBounds: AnchorBounds,
+  anchorBounds: AnchorBounds | (() => AnchorBounds),
 ): KeywordTooltipHandle {
   const keywords = detectKeywords(cardDescription);
   if (keywords.length === 0) {
@@ -98,7 +102,8 @@ export function attachKeywordHover(
     timer = scene.time.delayedCall(HOVER_DELAY_MS, () => {
       if (detached) return;
       if (!cardContainer.active) return;
-      panel = mountStandalonePanel(scene, keywords, anchorBounds);
+      const anchor = typeof anchorBounds === 'function' ? anchorBounds() : anchorBounds;
+      panel = mountStandalonePanel(scene, keywords, anchor);
       hideFilterBarInputs();
       hidingInputs = true;
     });

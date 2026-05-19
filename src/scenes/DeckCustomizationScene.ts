@@ -8,7 +8,7 @@ import { getRun } from '../state/RunState';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
-import { scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
+import { attachKeywordHover, scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { getCardById } from '../data/DataLoader';
 
 const COLS = 6;
@@ -256,6 +256,23 @@ export class DeckCustomizationScene extends Scene {
     visual.removeAllListeners('pointerdown');
     visual.removeAllListeners('pointerover');
     visual.removeAllListeners('pointerout');
+
+    // Re-wire the 2-second keyword tooltip — CardVisual attaches it on creation
+    // but the removeAllListeners() calls above also strip its pointerover/out
+    // bindings. Anchor is resolved lazily so the panel tracks scroll: deck
+    // slots live inside gridContainer (which translates on scroll) and strip
+    // slots live inside droppedStrip; both parents may offset the visual.
+    const card = getCardById(cardId);
+    if (card) {
+      const w = STANDARD_CARD_WIDTH * scale;
+      const h = STANDARD_CARD_HEIGHT * scale;
+      attachKeywordHover(this, visual, card.description, () => ({
+        x: visual.x + (visual.parentContainer?.x ?? 0),
+        y: visual.y + (visual.parentContainer?.y ?? 0),
+        w,
+        h,
+      }));
+    }
 
     // Order number badge (top-left) for active-deck cards — kept because the
     // numbered position is meaningful to the player.
