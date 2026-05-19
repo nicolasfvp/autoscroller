@@ -127,6 +127,32 @@ export interface CombatState {
    */
   heroBurnStacks: number;
   heroBleedStacks: number;
+
+  /**
+   * v3: Exhaust tracking. Card IDs that have already fired their once-per-combat
+   * payload — CardResolver gates a re-resolve when present. Reset every combat.
+   */
+  spentThisCombat: Set<string>;
+
+  /**
+   * v3: Overload cooldown debt — per-deck-position extra ms added to the next
+   * cooldown after the slot resolves (Cleaver's Tax pattern). Keyed by deck
+   * position, since CombatState doesn't track card-id slot mapping directly.
+   */
+  cdDebtBySlot: Record<number, number>;
+
+  /**
+   * v3: Echo charges — number of upcoming card resolutions that re-trigger
+   * twice. Decremented on resolve. TTL is checked against echoExpiresAt.
+   */
+  echoCharges: number;
+  echoExpiresAt: number;
+
+  /**
+   * v3: Devour markers — deck slots disabled permanently for this combat.
+   * Consulted by CombatEngine when advancing the deck pointer.
+   */
+  devouredSlots: Set<number>;
 }
 
 /**
@@ -196,6 +222,13 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     enemyAuras: [],
     heroBurnStacks: 0,
     heroBleedStacks: 0,
+
+    // -- v3 archetype redesigns --
+    spentThisCombat: new Set<string>(),
+    cdDebtBySlot: {},
+    echoCharges: 0,
+    echoExpiresAt: 0,
+    devouredSlots: new Set<number>(),
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --

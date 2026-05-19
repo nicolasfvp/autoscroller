@@ -8,7 +8,7 @@ import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
-import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers } from './StatusEffects';
+import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers, fireRecurringTrigger, sumModifier } from './StatusEffects';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -239,7 +239,16 @@ export class EnemyAI {
  * code path — armor must always be considered.
  */
 export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-  const damage = Math.max(0, Math.floor(rawDamage));
+  // v3: damage_taken_pct — flat fractional mitigation summed across hero auras
+  // (Crimson Regen Mantle: -0.20). Applied BEFORE armor so armor still
+  // absorbs the post-mitigation amount.
+  let damage = Math.max(0, Math.floor(rawDamage));
+  if (state.heroAuras && state.heroAuras.length > 0) {
+    const dtp = sumModifier(state.heroAuras, 'damage_taken_pct');
+    if (dtp !== 0) {
+      damage = Math.max(0, Math.floor(damage * (1 + dtp)));
+    }
+  }
   if (damage === 0) return 0;
   const multiplier = state.heroDefenseMultiplier ?? 1;
   const effectiveDefense = state.heroDefense * multiplier;
@@ -279,6 +288,21 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
         applyTriggeredPayload(state, p);
       }
     }
+  }
+
+  // v3: recurring on_hit_taken triggers fire on every applied hit (regardless
+  // of armor absorption). Persistent — aura stays alive for its full ttl.
+  // Used by Forge Spike Ward, Wrathshell Vow, Last Stand reflexes.
+  if (state.heroAuras && state.heroAuras.length > 0) {
+    const hitTakenPayloads = fireRecurringTrigger(state.heroAuras, 'on_hit_taken', damage);
+    for (const p of hitTakenPayloads) applyTriggeredPayload(state, p);
+  }
+
+  // v3: on_self_damage fires when the hit came from a card effect (skipRelics
+  // is the proxy — card self-damage routes through here with skipRelics=true).
+  if (skipRelics && state.heroAuras && state.heroAuras.length > 0) {
+    const selfDmgPayloads = fireRecurringTrigger(state.heroAuras, 'on_self_damage', damage);
+    for (const p of selfDmgPayloads) applyTriggeredPayload(state, p);
   }
 
   return remaining;

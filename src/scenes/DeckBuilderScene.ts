@@ -1,7 +1,7 @@
 // Deck builder overlay -- pre-run starter deck selection with element ratio + presets.
-// 3xN scrollable grid of available cards, hover tooltip with effects/elements,
-// click-to-add (from grid) / click-to-remove (from deck slots), preset save/load.
-// See docs/CARDS_SYSTEM.md §6.
+// 4xN scrollable grid of available cards centered in the left zone, hover tooltip
+// with effects/elements, click-to-add (from grid) / click-to-remove (from deck slots),
+// preset save/load. See docs/CARDS_SYSTEM.md §6.
 
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -32,30 +32,23 @@ const WHITE = '#ffffff';
 const GOLD = COLORS.accent;
 const DIM = COLORS.textSecondary;
 
-// Grid geometry — switched from a custom horizontal card cell to the shared
-// CardVisual at scale 0.55 (82.5×132 footprint). Same 3-column layout fits
-// comfortably in the left half of the screen alongside the deck-slot panel.
+// Grid geometry — CardVisual at scale 0.55 (82.5×132 footprint), 4 columns
+// centered in the left zone (slot panel sits at x=510-770).
 const CARD_SCALE = 0.55;
 const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 82.5
 const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 132
-const GRID_COLS = 3;
-const GRID_X = 30;
-const GRID_Y = 205;
+const GRID_COLS = 4;
 const GRID_GAP = 8;
-const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP;
-const GRID_VIEWPORT_H = 325;
+const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 354
+const LEFT_ZONE_W = 500;                                                 // ends just before slot panel @ 510
+const GRID_X = Math.round((LEFT_ZONE_W - GRID_VIEWPORT_W) / 2);          // 73
+const GRID_Y = 175;
+const GRID_VIEWPORT_H = 355;
 
-// CardFilterBar row (top) — element/tier/search. Sits above the existing
-// element-only chip row (which keeps its multi-select AND intersection).
+// CardFilterBar row — element dropdown / tier checkboxes / search.
 const CARD_FILTER_BAR_Y = 108;
-
-// Filter chip row geometry — shifted down to clear the CardFilterBar above.
-const FILTER_Y = 175;
-const FILTER_CHIP_W = 50;
-const FILTER_CHIP_H = 20;
-const FILTER_GAP = 4;
-
-const ALL_ELEMENTS: ElementId[] = ['attack', 'defense', 'agility', 'counter', 'fire', 'water', 'air', 'earth'];
+const FILTER_BAR_W = 470;
+const FILTER_BAR_X = Math.round((LEFT_ZONE_W - FILTER_BAR_W) / 2);       // 15
 
 // Deck slot geometry
 const SLOT_X = 510;
@@ -84,12 +77,6 @@ export class DeckBuilderScene extends Scene {
   private gridMaxScroll: number = 0;
   private gridHeaderText!: Phaser.GameObjects.Text;
   private gridScrollHint?: Phaser.GameObjects.Text;
-  private filterContainer!: Phaser.GameObjects.Container;
-  private activeFilters: Set<ElementId> = new Set();
-  // Top-level reusable filter bar (element dropdown + tier checkboxes + search).
-  // Layered on top of the existing element-chip row — chip row stays for
-  // multi-element AND-intersection, this bar adds single-element + tier + name
-  // search and is the primary filter UI going forward.
   private cardFilterBar: CardFilterBar | null = null;
   private cardFilters: CardFilters = {
     element: 'All',
@@ -135,7 +122,6 @@ export class DeckBuilderScene extends Scene {
     this.presetButtons = [];
     this.deckSlotContainers = [];
     this.cardCells = [];
-    this.activeFilters = new Set();
     this.cardFilters = {
       element: 'All',
       tiers: new Set<1 | 2 | 3>([1, 2, 3]),
@@ -182,7 +168,6 @@ export class DeckBuilderScene extends Scene {
 
     this.renderPresetTabs();
     this.renderCardFilterBar();
-    this.renderFilterChips();
     this.renderCardGrid();
     this.renderDeckPanel();
     this.renderValidationAndActions();
@@ -207,86 +192,9 @@ export class DeckBuilderScene extends Scene {
   // ────────────────────────────────────────────────
 
   private renderCardFilterBar(): void {
-    // Width is constrained to the left half so the bar doesn't overlap the
-    // deck-slot panel at x=510. Bar spans the same horizontal extent as the
-    // card grid + element chips below it.
-    const barX = GRID_X;
-    const barW = 470;
-    this.cardFilterBar = new CardFilterBar(this, barX, CARD_FILTER_BAR_Y, barW, (filters) => {
+    this.cardFilterBar = new CardFilterBar(this, FILTER_BAR_X, CARD_FILTER_BAR_Y, FILTER_BAR_W, (filters) => {
       this.cardFilters = filters;
       this.rebuildGrid();
-    });
-  }
-
-  // ────────────────────────────────────────────────
-  // Element filter chips
-  // ────────────────────────────────────────────────
-
-  private renderFilterChips(): void {
-    this.add.text(GRID_X, FILTER_Y - 16, 'Filter by element:', {
-      fontSize: '11px', fontStyle: 'bold', color: DIM, fontFamily: FF,
-    });
-
-    this.filterContainer = this.add.container(0, 0);
-
-    // 8 element chips
-    ALL_ELEMENTS.forEach((id, idx) => {
-      const x = GRID_X + idx * (FILTER_CHIP_W + FILTER_GAP);
-      const chipContainer = this.add.container(x + FILTER_CHIP_W / 2, FILTER_Y);
-      const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
-      const bg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, color, 0.2)
-        .setStrokeStyle(1, color, 0.6);
-      const label = this.add.text(0, 0, ELEMENTS[id].name.slice(0, 5), {
-        fontSize: '10px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-      }).setOrigin(0.5);
-      chipContainer.add([bg, label]);
-      chipContainer.setData('elementId', id);
-      bg.setInteractive({ useHandCursor: true });
-      bg.on('pointerdown', () => this.toggleFilter(id));
-      bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
-      bg.on('pointerout',  () => this.refreshChip(chipContainer));
-      this.filterContainer.add(chipContainer);
-    });
-
-    // "All" reset button
-    const allX = GRID_X + 8 * (FILTER_CHIP_W + FILTER_GAP);
-    const allContainer = this.add.container(allX + FILTER_CHIP_W / 2, FILTER_Y);
-    const allBg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, 0x4a4a60, 0.85)
-      .setStrokeStyle(1, 0xffd700, 0.6);
-    const allLabel = this.add.text(0, 0, 'All', {
-      fontSize: '10px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-    }).setOrigin(0.5);
-    allContainer.add([allBg, allLabel]);
-    allBg.setInteractive({ useHandCursor: true });
-    allBg.on('pointerdown', () => { this.activeFilters.clear(); this.rebuildGrid(); this.refreshAllChips(); });
-    allBg.on('pointerover', () => allBg.setStrokeStyle(2, 0xffffff, 1));
-    allBg.on('pointerout',  () => allBg.setStrokeStyle(1, 0xffd700, 0.6));
-  }
-
-  private toggleFilter(id: ElementId): void {
-    if (this.activeFilters.has(id)) this.activeFilters.delete(id);
-    else this.activeFilters.add(id);
-    this.rebuildGrid();
-    this.refreshAllChips();
-  }
-
-  private refreshChip(container: Phaser.GameObjects.Container): void {
-    const id = container.getData('elementId') as ElementId;
-    const bg = container.list[0] as Phaser.GameObjects.Rectangle;
-    const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
-    if (this.activeFilters.has(id)) {
-      bg.setFillStyle(color, 0.85);
-      bg.setStrokeStyle(2, 0xffffff, 1);
-    } else {
-      bg.setFillStyle(color, 0.2);
-      bg.setStrokeStyle(1, color, 0.6);
-    }
-  }
-
-  private refreshAllChips(): void {
-    if (!this.filterContainer) return;
-    this.filterContainer.list.forEach((obj) => {
-      if (obj instanceof Phaser.GameObjects.Container) this.refreshChip(obj);
     });
   }
 
@@ -377,22 +285,11 @@ export class DeckBuilderScene extends Scene {
   }
 
   private getFilteredCards(): CardDefinition[] {
-    // Starter deck is Tier-1 only by rule. We still hand the CardFilterBar
-    // its full filter set, but pre-restrict the pool to Tier 1 so the bar's
-    // tier checkboxes only meaningfully gate within {1}. Search + element
-    // gates are both useful here.
+    // Starter deck is Tier-1 only by rule. Pre-restrict the pool to Tier 1 so
+    // the bar's tier checkboxes only meaningfully gate within {1}; element
+    // dropdown + name search still apply.
     const tier1 = getAllCards().filter((c) => c.tier === 1);
-    const cardBarFiltered = applyFilters(tier1, this.cardFilters);
-    if (this.activeFilters.size === 0) return cardBarFiltered;
-    // Intersection with the existing chip-row filter: card must contain ALL
-    // selected elements at least once (this preserves prior chip semantics).
-    return cardBarFiltered.filter((c) => {
-      const elems = (c.elements ?? []) as ElementId[];
-      for (const f of this.activeFilters) {
-        if (!elems.includes(f)) return false;
-      }
-      return true;
-    });
+    return applyFilters(tier1, this.cardFilters);
   }
 
   private rebuildGrid(): void {

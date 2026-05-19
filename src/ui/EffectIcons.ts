@@ -38,6 +38,14 @@ const MOD_META: Record<AuraModifierKind, { icon: string; color: string; name: st
   spi: { icon: '✨', color: '#22cc44', name: 'SPI' },
   def: { icon: '🛡', color: '#9fd6ff', name: 'DEF' },
   cd_reduction: { icon: '⏱', color: '#ffd700', name: 'Haste' },
+  // v3 archetype redesigns:
+  burn_taken: { icon: '🔥', color: '#ff8a3d', name: 'Vuln Fire' },
+  armor_bonus_pct: { icon: '🛡', color: '#9fd6ff', name: 'Reforce' },
+  armor_bonus_flat: { icon: '🛡', color: '#9fd6ff', name: 'Reforce' },
+  damage_taken_pct: { icon: '🛡', color: '#88e0ff', name: 'Mitigate' },
+  damage_dealt_pct: { icon: '⚔', color: '#ffaa44', name: 'Empower' },
+  hero_hit_bonus: { icon: '⚔', color: '#ffaa44', name: 'Stance' },
+  ignore_immunity: { icon: '☠', color: '#c490ff', name: 'Pierce Imm.' },
 };
 
 interface AggregatedMod {

@@ -21,7 +21,32 @@ export interface CardCost {
   defense?: number;
 }
 
-export type AuraModifierKind = "str" | "vit" | "dex" | "int" | "spi" | "def" | "cd_reduction";
+export type AuraModifierKind =
+  | "str" | "vit" | "dex" | "int" | "spi" | "def" | "cd_reduction"
+  // v3 extensions for archetype redesigns (Wave 1-3):
+  | "burn_taken"          // adds +N to every burn application landed on bearer
+  | "armor_bonus_pct"     // % multiplier on every armor effect resolved by bearer
+  | "armor_bonus_flat"    // flat addend on every armor effect resolved by bearer
+  | "damage_taken_pct"    // negative fraction reduces incoming damage to bearer
+  | "damage_dealt_pct"    // positive fraction boosts outgoing damage by bearer
+  | "hero_hit_bonus"      // flat add to every damage hit by bearer (Iron Reckoning)
+  | "ignore_immunity";    // bearer ignores stack immunity of named stack
+
+export type AuraTriggerKind =
+  // v1 (already runtime-supported)
+  | "on_armor_break" | "on_hp_pct_below"
+  // v3 extensions (Wave 2/3 runtime):
+  | "on_hit_dealt"            // hero lands a damaging hit
+  | "on_hit_taken"            // hero takes a hit (regardless of armor)
+  | "on_armor_gained"         // hero gains armor (optional min_amount)
+  | "on_self_dot_tick"        // a DoT tick resolves on hero
+  | "on_self_damage"          // hero takes any HP loss (incl. self-damage from cards)
+  | "on_stack_threshold"      // bearer stack of a given type crosses threshold
+  | "on_enemy_stack_threshold"// enemy stack of given type crosses threshold
+  | "on_kill_with_stack"      // enemy killed while carrying named stack
+  | "on_slow_applied"         // bearer applied a slow stack to an enemy
+  | "on_cooldown_resolve"     // any card slot resolves cooldown (Frenzy hook)
+  | "passive_armor_scaler";   // declarative: present-armor multiplier aura
 
 export interface CardEffectCondition {
   /** Effect only fires (or value multiplied) when enemy has the given stack. */
@@ -36,7 +61,34 @@ export interface CardEffectCondition {
   self_armor_atleast?: number;
   /** Multiplies the effect value by the number of stacks named in enemy_has_stack. */
   per_stack?: boolean;
+  /** v3: effect only fires if enemy stun stack > 0. */
+  enemy_stunned?: boolean;
+  /** v3: effect only fires if enemy has at least N of the named stack. */
+  enemy_stack_atleast?: { stack: StackId; value: number };
+  /** v3: effect only fires if hero has at least N of the named stack. */
+  self_stack_atleast?: { stack: StackId; value: number };
+  /** v3: effect only fires if a same-cast `devour` resolved successfully. */
+  devour_succeeded?: boolean;
 }
+
+/** Source key extended by v3 redesigns. Runtime parses these to read live
+ *  values from CombatState rather than scaling off a stat axis. */
+export type ScaleSourceKind =
+  | "stat"
+  | "armor"
+  | "consumed_stack"          // value of stacks consumed by an in-this-cast `consume_stack` step
+  | "enemy_pre_consume_stack" // snapshot of enemy stack count before this cast began
+  | "self_stack"              // current hero pool of a named stack (consume_stack_value)
+  | "missing_hp_pct"          // 0..100, used by Frenzy / scaling auras
+  | "rage";                   // hero rageStacks (legacy alias)
+
+export type StackScaleSource = {
+  source: "stack";
+  stack: StackId;
+  side: "enemy" | "self";
+  /** When set, reads pre-consume snapshot in this effect chain. */
+  pre_consume?: boolean;
+};
 
 export interface CardEffect {
   type:
@@ -45,15 +97,34 @@ export interface CardEffect {
     // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
     | "buff" | "debuff_stat" | "dot" | "stack" | "taunt"
     // NEW (Tier-1 redesign): time-decaying status effect on hero or enemy.
-    | "aura";
+    | "aura"
+    // v3 archetype redesigns:
+    | "echo"                  // queue N re-triggers of next cards
+    | "cd_debt"               // add N seconds to this card's next cooldown (Overload)
+    | "convert_stack"         // gasta from-stacks, gera to-stacks (cross-stack converter)
+    | "multiply_stack"        // multiplica stacks atuais do alvo (Catalyst)
+    | "stack_boost"           // soma valor a cada stack já presente (Pyre Surge)
+    | "devour"                // consome uma carta do deck pra ganhar buff
+    | "force_trigger_all_cards"; // dispara todas as cartas do herói imediatamente
   value: number;
-  target: "enemy" | "self" | "self_dot";
+  target: "enemy" | "self" | "self_dot" | "aoe" | "enemy_nearest" | "self_deck";
   /**
    * Optional stat scaling: adds floor(stat / per) * value to the resolved value.
-   * Tier-2: `source: "armor"` reads target's current armor instead of a stat axis
-   * (enables Body Slam — damage equal to current armor).
+   * v1: `source: "armor"` reads target's current armor (enables Body Slam).
+   * v3: extended source kinds — see ScaleSourceKind.
    */
-  scale?: { stat: StatId; per: number; value: number; source?: "stat" | "armor" };
+  scale?: {
+    stat: StatId;
+    per: number;
+    value: number;
+    source?: ScaleSourceKind;
+    /** When source="stack" via the special-cased path, names which stack to read. */
+    stack?: StackId;
+    /** When source reads stacks, which side carries them. */
+    side?: "enemy" | "self";
+    /** When source="enemy_pre_consume_stack", read snapshot taken before consume_stack fires. */
+    pre_consume?: boolean;
+  };
   /** Disambiguates which stack to apply for type="dot" or type="stack". */
   stack?: StackId;
   /** Damage variant: skip enemy defense subtraction. */
@@ -64,24 +135,59 @@ export interface CardEffect {
    * STR scaling, condition gates, and pierce_armor.
    */
   multi_hit?: number;
+  /** v3: when this non-damage effect follows a multi_hit damage, replay it N+1 times. */
+  per_hit?: boolean;
   /**
    * Tier-2: on a stack effect with negative value, consume up to |value| stacks
    * from the target. The pre-consume stack count is what subsequent `per_stack`
    * reads use, so an effects[] array can read-then-consume atomically.
    */
   consume_stack?: boolean;
+  /** v3: name a stack whose pre-consume count this effect's `value` should be
+   *  scaled by (multiplicative detonator like Hemotoxin Burst, Crimson Spiral). */
+  consume_stack_value?: StackId;
+  /** v3: lifesteal — heal % of damage dealt by this damage effect. */
+  siphon?: number;
+  /** v3: Channel — payload scales with seconds the slot waited past readiness. */
+  channel?: { max_bonus: number; ramp_per_sec: number };
+  /** v3: Overload — after this effect resolves, the card slot adds N ms to its
+   *  next cooldown (independent of normal cooldown). */
+  overload_lockout_ms?: number;
+  /** v3: convert_stack source/target/cap. */
+  from?: StackId;
+  to?: StackId;
+  cap?: number;
+  /** v3: multiply_stack factor (×N current stacks). */
+  factor?: number;
+  /** v3: spread an applied stack to AoE / nearest targets. */
+  spread?: { ratio: number; target: "aoe" | "enemy_nearest"; max_targets?: number };
+  /** v3: devour params (consume one deck card permanently for combat). */
+  devour?: { from_deck?: boolean; rarity?: "common" | "uncommon" | "rare" | "epic"; count?: number };
   /** Gate / multiplier: see CardEffectCondition. */
   condition?: CardEffectCondition;
-  /** Aura: lifetime in ms before this effect decays off the target. */
-  ttl_ms?: number;
+  /** Aura: lifetime in ms before this effect decays off the target. null = no decay (manual). */
+  ttl_ms?: number | null;
+  /** v3 aura: periodic tick interval — fires `then` every N ms while alive. */
+  tick_ms?: number;
+  /** v3 aura: internal cooldown between trigger fires (anti-farm in multi-hit). */
+  cooldown_ms?: number;
+  /** v3 aura: minimum amount required for trigger (e.g. on_armor_gained ≥ 4). */
+  min_amount?: number;
+  /** v3 aura: channel-delay before aura becomes active (Demon Form 4s warm-up). */
+  channel_ms?: number;
   /** Aura modifier (stat or cd_reduction) carried while the aura is alive. */
-  modifier?: { kind: AuraModifierKind; value: number };
-  /** Aura: trigger name that fires the `then` effect once, then removes the aura. */
-  trigger?: "on_armor_break" | "on_hp_pct_below";
-  /** Aura: threshold for on_hp_pct_below trigger (0-100, hero HP %). */
+  modifier?: { kind: AuraModifierKind; value: number; stack?: StackId };
+  /** v3 aura trigger threshold + stack (on_stack_threshold). */
+  threshold_stack?: StackId;
+  /** v3: stack name carried by the aura (used by on_kill_with_stack to gate). */
+  payload_stack?: StackId;
+  /** Aura: trigger name that fires the `then` effect once, then removes the aura.
+   *  v3: many new trigger kinds — see AuraTriggerKind. */
+  trigger?: AuraTriggerKind;
+  /** Aura: threshold for on_hp_pct_below / on_stack_threshold triggers. */
   threshold?: number;
-  /** Aura: effect to apply once when `trigger` fires. */
-  then?: CardEffect;
+  /** Aura: effect to apply once when `trigger` fires. v3: may be array. */
+  then?: CardEffect | CardEffect[];
 }
 
 export interface CardUpgrade {
@@ -124,6 +230,20 @@ export interface CardDefinition {
   tier?: CardTier;
   /** True for Tier-3 mock placeholders not yet implemented. */
   locked?: boolean;
+  /** v3: Exhaust — card fires once per combat and is then disabled until next combat. */
+  exhaust?: boolean;
+  /** v3: Frenzy — cooldown multiplier applied while hero HP fraction is below threshold. */
+  frenzy?: { hero_hp_pct_below: number; cd_mult: number };
+  /** v3: cooldown scaled by a runtime variable (e.g. hero rage stacks). */
+  cooldown_scale?: {
+    stat: "rage" | "missing_hp_pct";
+    per: number;
+    reduce_pct: number;   // 0.10 = 10% per `per` units
+    min_pct: number;      // 0.40 = cap floor at 40% of base
+  };
+  /** v3: when set true, this card consumes all hero armor as part of resolution
+   *  (used by Citadel Inferno detonator). The armor read happens before reset. */
+  spend_armor?: "all" | number;
 }
 
 // -- Enemy Types --

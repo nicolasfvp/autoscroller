@@ -11,7 +11,7 @@ import { EnemyAI, applyHeroDamage } from './EnemyAI';
 import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
 import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
-import { tickAuras, getCdReductionFactor } from './StatusEffects';
+import { tickAuras, getCdReductionFactor, collectAuraTicks, applyTriggeredPayload } from './StatusEffects';
 import { getRun } from '../../state/RunState';
 
 /** Passive regen interval in milliseconds */
@@ -96,6 +96,21 @@ export class CombatEngine {
     // themselves; cd_reduction recalculation happens lazily on next card play.
     tickAuras(this.state.heroAuras, deltaMs);
     tickAuras(this.state.enemyAuras, deltaMs);
+
+    // v3: periodic tick_ms auras fire their `then` payload on every interval.
+    // Used by Stagnant Bulwark, Dust Plague, Twinflame Flicker, Wrathshell Vow,
+    // Crimson Regen Mantle, etc.
+    const heroTickEffects = collectAuraTicks(this.state.heroAuras);
+    for (const e of heroTickEffects) applyTriggeredPayload(this.state, e);
+    const enemyTickEffects = collectAuraTicks(this.state.enemyAuras);
+    for (const e of enemyTickEffects) applyTriggeredPayload(this.state, e);
+
+    // v3: Echo TTL countdown. When the window expires, any leftover charges
+    // evaporate so the player can't bank Echos forever between casts.
+    if (this.state.echoCharges > 0 || this.state.echoExpiresAt > 0) {
+      this.state.echoExpiresAt = Math.max(0, this.state.echoExpiresAt - deltaMs);
+      if (this.state.echoExpiresAt === 0) this.state.echoCharges = 0;
+    }
   }
 
   private playNextCard(): void {
@@ -266,9 +281,25 @@ export class CombatEngine {
 
     // Set cooldown for next card. Upgraded variants override base cooldown.
     // `isUpgraded` is already resolved above for this deck position.
-    const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
+    let effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;
+    // v3: Frenzy — card-level multiplier when hero HP is below threshold.
+    if (card.frenzy) {
+      const pct = (this.state.heroHP / Math.max(1, this.state.heroMaxHP)) * 100;
+      if (pct < card.frenzy.hero_hp_pct_below) {
+        effectiveCooldown = effectiveCooldown * card.frenzy.cd_mult;
+      }
+    }
+    // v3: Overload — slot's previously-issued cd_debt is added to this CD.
+    const slot = this.deckPointer;
+    const debtMs = this.state.cdDebtBySlot[slot] ?? 0;
+    if (debtMs > 0) this.state.cdDebtBySlot[slot] = 0;
+    // v3: cd_debt produced by THIS cast gets stored on the slot for next time.
+    if (result.cooldownDebtSec && result.cooldownDebtSec > 0) {
+      this.state.cdDebtBySlot[slot] =
+        (this.state.cdDebtBySlot[slot] ?? 0) + result.cooldownDebtSec * 1000;
+    }
     // Phase 9: DEX scales card cooldown by -2% per point, capped at -60%
     // (design/00 §3). cardCooldown * (1 - dexReduction) * cooldownMultiplier.
     const dexReduction = Math.min(0.60, this.state.heroDexterity * 0.02);
@@ -283,8 +314,25 @@ export class CombatEngine {
     const auraCdFactor = getCdReductionFactor(this.state.heroAuras);
     this.heroCooldownTimer = Math.max(
       0,
-      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor,
+      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor
+        + debtMs,
     );
+
+    // v3: Echo — consume one charge by repeating the same resolution. The
+    // `echoExpiresAt` field is treated as a countdown that decays in tick();
+    // a positive remaining window means at least one charge is still live.
+    if (this.state.echoCharges > 0 && this.state.echoExpiresAt > 0) {
+      this.state.echoCharges = Math.max(0, this.state.echoCharges - 1);
+      const isUpgradedEcho = this.state.upgraded[slot] ?? false;
+      if (this.cardResolver.canAfford(card, this.state, isUpgradedEcho)) {
+        this.cardResolver.resolve(card, this.state, null, relicBonus.damageMultiplier, isUpgradedEcho);
+      }
+    }
+
+    // v3: force_trigger_all_cards — Tectonic Reckoning blasts the deck.
+    if (result.forceTriggerAll) {
+      this.forceTriggerAllDeck(card.id);
+    }
 
     // Emit event
     eventBus.emit('combat:card-played', {
@@ -412,6 +460,15 @@ export class CombatEngine {
 
   private advanceDeckPointer(): void {
     this.deckPointer++;
+    // v3: skip slots that were Devoured during this combat (Vengeful Pyre).
+    // Bounded loop — at most one full deck rotation before giving up.
+    if (this.state.devouredSlots && this.state.devouredSlots.size > 0) {
+      let guard = this.state.deckOrder.length;
+      while (guard-- > 0 && this.state.devouredSlots.has(this.deckPointer)) {
+        this.deckPointer++;
+        if (this.deckPointer >= this.state.deckOrder.length) this.deckPointer = 0;
+      }
+    }
     // Phase 9 Task 5: card_drawn trigger fires once per advance (the "next"
     // card is now the active card). Dispatched here so it stays in lockstep
     // with whatever the next pointer points at — including post-reshuffle.
@@ -483,6 +540,12 @@ export class CombatEngine {
     if (this.isFinished) return true;
 
     if (this.state.enemyHP <= 0) {
+      // v3: on_kill_with_stack — fire any aura whose threshold_stack the
+      // dying enemy was still carrying. Cascade triggers must run BEFORE the
+      // victory event so spread/copy effects can populate any adjacent
+      // target structure (current build only has one enemy slot, so this is
+      // mostly a no-op until multi-enemy arrives — but the hook is in place).
+      this.fireOnKillWithStack();
       this.stats.result = 'victory';
       this.isFinished = true;
       // Phase 9 Task 5: enemy_killed relic trigger fires once on victory.
@@ -500,6 +563,53 @@ export class CombatEngine {
     }
 
     return false;
+  }
+
+  /** v3: walk the hero's auras and fire on_kill_with_stack payloads when the
+   *  enemy is being killed AND it still carries the named stack at >0. */
+  private fireOnKillWithStack(): void {
+    const auras = this.state.heroAuras;
+    if (!auras || auras.length === 0) return;
+    const stackCount = (which: string): number => {
+      switch (which) {
+        case 'poison': return this.state.poisonStacks;
+        case 'bleed': return this.state.bleedStacks;
+        case 'burn': return this.state.burnStacks;
+        case 'stun': return this.state.stunStacks;
+        case 'slow': return this.state.slowStacks;
+        default: return 0;
+      }
+    };
+    const fired: import('../../data/types').CardEffect[] = [];
+    for (const a of auras) {
+      if (a.trigger !== 'on_kill_with_stack') continue;
+      if (!a.threshold_stack) continue;
+      if (stackCount(a.threshold_stack) <= 0) continue;
+      if (!a.then) continue;
+      const arr = Array.isArray(a.then) ? a.then : [a.then];
+      for (const e of arr) fired.push(e);
+    }
+    for (const e of fired) applyTriggeredPayload(this.state, e);
+  }
+
+  /** v3: Tectonic Reckoning — force-resolve every non-self, non-devoured,
+   *  non-Exhausted deck slot once. Cooldowns are reset to 0 to give the next
+   *  card slot a fresh tick. Costs are bypassed (the closer pays for the
+   *  combo). Hard guard: only fires once per call to avoid loop recursion. */
+  private forceTriggerAllDeck(originatingCardId: string): void {
+    const seen = new Set<string>();
+    for (let i = 0; i < this.state.deckOrder.length; i++) {
+      if (this.state.devouredSlots.has(i)) continue;
+      const cid = this.state.deckOrder[i];
+      if (!cid || cid === originatingCardId || seen.has(cid)) continue;
+      seen.add(cid);
+      const c = getCardById(cid);
+      if (!c) continue;
+      if (c.exhaust && this.state.spentThisCombat.has(cid)) continue;
+      const isUp = this.state.upgraded[i] ?? false;
+      this.cardResolver.resolve(c, this.state, null, 1.0, isUp);
+    }
+    this.heroCooldownTimer = 0;
   }
 
   getStats(): CombatStats {
