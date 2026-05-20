@@ -4,6 +4,10 @@ import { getCollectionStatus, getCompletionPercent, getItemDetails, type Collect
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { CardFilterBar } from '../ui/CardFilterBar';
+import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
+import { getAllCards } from '../data/DataLoader';
+import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 
 const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Bosses'] as const;
 type TabName = typeof TAB_NAMES[number];
@@ -26,6 +30,21 @@ export class CollectionScene extends Scene {
   private detailPopup: Phaser.GameObjects.Container | null = null;
   private scrollY = 0;
   private wheelHandler: ((p: unknown, go: unknown, dx: number, dy: number) => void) | null = null;
+  // Graphics objects used to back GeometryMasks. `this.make.graphics` creates
+  // GameObjects that are NOT added to the display list and therefore NOT
+  // auto-destroyed when the scene shuts down — we have to destroy them
+  // ourselves to avoid leaking textures/buffers on re-entry.
+  private panelMaskGfx: Phaser.GameObjects.Graphics | null = null;
+  private scrollMaskGfx: Phaser.GameObjects.Graphics | null = null;
+  // Card filter bar (only active on the Cards tab). Re-rendering the grid
+  // filters items by the current CardFilters; locked cards still render
+  // locked but are subject to the same element/tier/search gates.
+  private cardFilterBar: CardFilterBar | null = null;
+  private cardFilters: CardFilters = {
+    element: 'All',
+    tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+    search: '',
+  };
 
   constructor() {
     super(SCENE_KEYS.COLLECTION);
@@ -60,6 +79,7 @@ export class CollectionScene extends Scene {
     shape.fillStyle(0xffffff);
     shape.fillRoundedRect(20, 20, 760, 560, 16);
     panel.setMask(shape.createGeometryMask());
+    this.panelMaskGfx = shape;
 
     // Title (Top Center Headline Image)
     this.add.image(400, 55, 'collection_headline').setOrigin(0.5);
@@ -128,21 +148,39 @@ export class CollectionScene extends Scene {
         this.scrollY = 0;
         this.gridContainer.y = 0;
         this.updateTabs();
+        // The filter bar is built for the Cards tab; it remains mounted on
+        // all tabs (destroying/recreating would leak DOM listeners) but only
+        // re-renders the grid when Cards is active. Filters are ignored for
+        // Relics/Tiles/Bosses items.
         this.renderGrid();
       });
     }
 
-    // Inner dark background for the grid area (simulating the indented board)
-    this.add.rectangle(400, 355, 720, 430, 0x1a0f0a, 0.8).setStrokeStyle(2, 0x3e2723);
+    // Card filter bar — only meaningful on the Cards tab. Hidden when other
+    // tabs are active. Sits between the tab row (y=110) and the grid panel.
+    this.cardFilterBar = new CardFilterBar(this, 40, 138, 720, (filters) => {
+      this.cardFilters = filters;
+      if (this.activeTab === 'Cards') {
+        // Reset scroll so the user lands at the top of the filtered set.
+        this.scrollY = 0;
+        this.gridContainer.y = 0;
+        this.renderGrid();
+      }
+    });
+
+    // Inner dark background for the grid area (simulating the indented board).
+    // Shifted down ~20px to make room for the filter bar above.
+    this.add.rectangle(400, 380, 720, 400, 0x1a0f0a, 0.8).setStrokeStyle(2, 0x3e2723);
 
     // Grid container with scroll support
     this.gridContainer = this.add.container(0, 0);
 
-    // Scroll mask
+    // Scroll mask — top edge shifted to clear the filter bar.
     const maskGfx = this.make.graphics({ x: 0, y: 0 });
     maskGfx.fillStyle(0xffffff);
-    maskGfx.fillRect(40, 140, 720, 430);
+    maskGfx.fillRect(40, 185, 720, 395);
     this.gridContainer.setMask(maskGfx.createGeometryMask());
+    this.scrollMaskGfx = maskGfx;
 
     // Mouse wheel scroll for grid — track scrollY on the scene so the
     // grid offset persists across tab switches; remove the old handler
@@ -161,6 +199,24 @@ export class CollectionScene extends Scene {
         this.input.off('wheel', this.wheelHandler);
         this.wheelHandler = null;
       }
+      // Off-display-list Graphics created via this.make.graphics() must be
+      // destroyed manually — Phaser only auto-destroys GameObjects that are
+      // in the scene's display list.
+      if (this.panelMaskGfx) {
+        this.panelMaskGfx.destroy();
+        this.panelMaskGfx = null;
+      }
+      if (this.scrollMaskGfx) {
+        this.scrollMaskGfx.destroy();
+        this.scrollMaskGfx = null;
+      }
+      // CardFilterBar appends a native <input> to document.body and binds
+      // window listeners — its destroy() unwinds both. Skipping this leaks
+      // an orphaned input each time the scene relaunches.
+      if (this.cardFilterBar) {
+        this.cardFilterBar.destroy();
+        this.cardFilterBar = null;
+      }
     });
 
     this.renderGrid();
@@ -170,9 +226,13 @@ export class CollectionScene extends Scene {
   private getGridHeight(): number {
     const tabKey = TAB_KEYS[this.activeTab];
     const status = this.collectionStatus[tabKey];
-    const itemCount = status.items.length;
+    // On the Cards tab the visible row count depends on the current filter,
+    // so use the filtered length to compute scroll extents.
+    const itemCount = this.activeTab === 'Cards'
+      ? this.filterCardItems(status.items).length
+      : status.items.length;
     switch (this.activeTab) {
-      case 'Cards': return Math.ceil(itemCount / 6) * 160 + 80;
+      case 'Cards': return Math.ceil(itemCount / 5) * 200 + 80;
       case 'Relics': return Math.ceil(itemCount / 6) * 160 + 80;
       case 'Tiles': return Math.ceil(itemCount / 6) * 160 + 80;
       case 'Bosses': return 350;
@@ -219,50 +279,48 @@ export class CollectionScene extends Scene {
 
   private renderCardsGrid(status: CategoryStatus): void {
     const fontFamily = FONTS.family;
-    const cols = 6;
-    const itemW = 90;
-    const itemH = 100;
-    const gapX = 12;
-    const gapY = 60; // Slightly decreased from 70
-    
+    const isCardsTab = this.activeTab === 'Cards';
+    // Cards tab uses the shared CardVisual at scale 0.55 → 83×132 footprint;
+    // 5 columns fit the 720-wide panel comfortably with breathing room.
+    const cardScale = 0.55;
+    const cardW = STANDARD_CARD_WIDTH * cardScale;   // 82.5
+    const cardH = STANDARD_CARD_HEIGHT * cardScale;  // 132
+    const cols = isCardsTab ? 5 : 6;
+    const itemW = isCardsTab ? cardW : 90;
+    const itemH = isCardsTab ? cardH : 100;
+    const gapX = isCardsTab ? 24 : 12;
+    const gapY = isCardsTab ? 40 : 60;
+
     const totalWidth = cols * itemW + (cols - 1) * gapX;
     const startX = 400 - (totalWidth / 2) + (itemW / 2);
-    const startY = 220; // Increased padding at the top from 200
-    status.items.forEach((item, index) => {
+    // Shifted down 40px from 220 to clear the inline CardFilterBar above.
+    // For the cards grid the taller vertical card needs ~half the card height
+    // of headroom below the filter bar (centered y); start a bit higher.
+    const startY = isCardsTab ? 250 : 260;
+    // Apply card filters on the Cards tab. We map status items → CardDefinition
+    // by id, then run them through `applyFilters`, and finally keep only the
+    // status items whose ids survived the filter. Items whose ids don't appear
+    // in `getAllCards()` (legacy / placeholder rows) are kept under "All".
+    const items = isCardsTab
+      ? this.filterCardItems(status.items)
+      : status.items;
+    items.forEach((item, index) => {
       const col = index % cols;
       const row = Math.floor(index / cols);
       const x = startX + col * (itemW + gapX);
       const y = startY + row * (itemH + gapY);
 
       if (item.isUnlocked) {
-        const isCard = this.activeTab === 'Cards';
+        const isCard = isCardsTab;
         let interactableObj;
 
         if (isCard) {
-          // Render Card Illustration
-          const img = this.add.image(x, y, `card_${item.id}`).setDisplaySize(itemW, itemH);
-          img.setInteractive({ useHandCursor: true });
-          this.gridContainer.add(img);
-          interactableObj = img;
-
-          // Red Frame
-          const frame = this.add.rectangle(x, y, itemW, itemH).setStrokeStyle(3, 0xcc0000);
-          this.gridContainer.add(frame);
-
-          // Name at the bottom OUTSIDE the card
-          const textY = y + (itemH / 2) + 6;
-          const name = this.add.text(x, textY, item.name, {
-            fontSize: '16px',
-            fontStyle: 'bold',
-            color: '#e6c88a',
-            stroke: '#2e1b0f',
-            strokeThickness: 2,
-            shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true },
-            fontFamily,
-            align: 'center',
-            wordWrap: { width: itemW + gapX }
-          }).setOrigin(0.5, 0); // Top-center alignment
-          this.gridContainer.add(name);
+          // Unified card visual — CardVisual already binds pointerdown to
+          // showCardDetail, but the Collection wants its own popup, so we
+          // attach an override handler with priority over its built-in one.
+          const visual = createCardVisual(this, x, y, item.id, { scale: cardScale });
+          this.gridContainer.add(visual);
+          interactableObj = visual;
         } else if (this.activeTab === 'Relics' || this.activeTab === 'Tiles') {
           // Render Relic or Tile Asset
           const assetPrefix = this.activeTab === 'Relics' ? 'relic_' : 'tile_';
@@ -322,30 +380,84 @@ export class CollectionScene extends Scene {
           this.gridContainer.add(name);
         }
 
-        interactableObj.on('pointerdown', () => this.showDetailPopup(item.id));
+        // Cards: CardVisual self-binds to showCardDetail (the shared popup);
+        // we keep that as the click handler so card detail is uniform across
+        // the app. Relics / Tiles / Bosses still use the Collection's custom
+        // detail popup since CardVisual doesn't apply to them.
+        if (!isCard) {
+          interactableObj.on('pointerdown', () => this.showDetailPopup(item.id));
+        }
       } else {
-        const card = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(2, 0x111111);
-        this.gridContainer.add(card);
-
-        const locked = this.add.text(x, y - 15, '???', {
-          fontSize: '20px',
-          fontStyle: 'bold',
-          color: '#aaaaaa',
-          fontFamily,
-        }).setOrigin(0.5);
-        this.gridContainer.add(locked);
-
-        if (item.unlockHint) {
-          const hint = this.add.text(x, y + 20, item.unlockHint, {
-            fontSize: '10px',
-            color: '#888888',
-            fontFamily: 'Arial, sans-serif',
-            wordWrap: { width: itemW - 4 },
-            align: 'center',
+        // Locked rendering — for the Cards tab show a dimmed CardVisual + lock
+        // icon (same pattern as CardLibraryScene). Other tabs keep the prior
+        // "???" placeholder since there's no full-card visual for them.
+        if (isCardsTab) {
+          const visual = createCardVisual(this, x, y, item.id, { scale: cardScale });
+          visual.setAlpha(0.4);
+          visual.disableInteractive();
+          this.gridContainer.add(visual);
+          const lock = this.add.text(x, y, '🔒', {
+            fontSize: '24px', fontFamily, color: '#ffffff',
           }).setOrigin(0.5);
-          this.gridContainer.add(hint);
+          this.gridContainer.add(lock);
+          if (item.unlockHint) {
+            const hint = this.add.text(x, y + itemH / 2 + 4, item.unlockHint, {
+              fontSize: '10px', color: '#888888',
+              fontFamily: 'Arial, sans-serif',
+              wordWrap: { width: itemW + gapX }, align: 'center',
+            }).setOrigin(0.5, 0);
+            this.gridContainer.add(hint);
+          }
+        } else {
+          const card = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(2, 0x111111);
+          this.gridContainer.add(card);
+
+          const locked = this.add.text(x, y - 15, '???', {
+            fontSize: '20px',
+            fontStyle: 'bold',
+            color: '#aaaaaa',
+            fontFamily,
+          }).setOrigin(0.5);
+          this.gridContainer.add(locked);
+
+          if (item.unlockHint) {
+            const hint = this.add.text(x, y + 20, item.unlockHint, {
+              fontSize: '10px',
+              color: '#888888',
+              fontFamily: 'Arial, sans-serif',
+              wordWrap: { width: itemW - 4 },
+              align: 'center',
+            }).setOrigin(0.5);
+            this.gridContainer.add(hint);
+          }
         }
       }
+    });
+  }
+
+  /**
+   * Intersect collection items with cards passing the current CardFilters.
+   * The collection lists every card (locked and unlocked); filtering applies
+   * uniformly so locked cards still render in their locked style — but only
+   * the locked cards matching the filter survive. Items whose ids do not
+   * resolve to a known card are kept under the default "All" / all-tiers /
+   * empty-search filter so the collection remains accurate for content that
+   * isn't covered by the cards database.
+   */
+  private filterCardItems<T extends { id: string }>(items: T[]): T[] {
+    const f = this.cardFilters;
+    const isDefault =
+      f.element === 'All' && f.tiers.size === 3 && (!f.search || !f.search.trim());
+    if (isDefault) return items;
+    const allCards = getAllCards();
+    const byId = new Map(allCards.map((c) => [c.id, c]));
+    const allowedIds = new Set(applyFilters(allCards, f).map((c) => c.id));
+    return items.filter((item) => {
+      const card = byId.get(item.id);
+      // Unknown ids (legacy / non-card entries) fall through filtering rather
+      // than disappearing entirely.
+      if (!card) return true;
+      return allowedIds.has(item.id);
     });
   }
 

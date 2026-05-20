@@ -19,6 +19,10 @@ export class CardQueueDisplay {
   private currentPointer = 0;
   private animatingPlay = false;
   private pendingState: { deck: string[]; pointer: number } | null = null;
+  // Tweens spawned by onCardPlayed — tracked so destroy() can stop them.
+  // Without this, mid-animation shutdown leaves onUpdate/onComplete tweens
+  // running against destroyed containers.
+  private playTweens: Set<Phaser.Tweens.Tween> = new Set();
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -133,7 +137,7 @@ export class CardQueueDisplay {
     const topCard = this.cardContainers[0];
 
     // "Explodes" in place and fade out effect - more dramatic
-    this.scene.tweens.add({
+    const burst = this.scene.tweens.add({
       targets: topCard,
       scaleX: 1.4, // Huge scale burst
       scaleY: 1.4,
@@ -142,8 +146,11 @@ export class CardQueueDisplay {
       ease: 'Quad.easeOut', // Fast start, slowing down as it fades
       onComplete: () => {
         topCard.destroy();
+        this.playTweens.delete(burst);
       },
+      onStop: () => { this.playTweens.delete(burst); },
     });
+    this.playTweens.add(burst);
 
     // Smooth incoming ghost card fading in from below the visible slots
     const incomingIdx = (this.currentPointer + VISIBLE_COUNT) % this.currentDeckOrder.length;
@@ -167,7 +174,7 @@ export class CardQueueDisplay {
       const targetAlpha = isBecomingTop ? 1 : 0.8;
 
       const isLast = (newIdx === slideTargets.length - 1);
-      this.scene.tweens.add({
+      const slide = this.scene.tweens.add({
         targets: card,
         y: targetY,
         scaleX: targetScale,
@@ -177,6 +184,7 @@ export class CardQueueDisplay {
         ease: 'Cubic.easeOut',
         onComplete: () => {
           if (card === incomingCard) incomingCard.destroy();
+          this.playTweens.delete(slide);
           if (isLast) {
             this.animatingPlay = false;
             if (this.pendingState) {
@@ -187,8 +195,10 @@ export class CardQueueDisplay {
               this.rebuild();
             }
           }
-        }
+        },
+        onStop: () => { this.playTweens.delete(slide); },
       });
+      this.playTweens.add(slide);
     }
   }
 
@@ -235,6 +245,12 @@ export class CardQueueDisplay {
       this.pulseTween.destroy();
       this.pulseTween = null;
     }
+    // Stop any in-flight play-animation tweens before destroying the cards
+    // they reference. Otherwise onUpdate fires against destroyed containers.
+    for (const tw of this.playTweens) {
+      tw.stop();
+    }
+    this.playTweens.clear();
     for (const c of this.cardContainers) {
       c.destroy();
     }

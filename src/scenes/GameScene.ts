@@ -6,7 +6,6 @@ import { getDifficultyConfig } from '../systems/DifficultyScaler';
 import { LoopHUD } from '../ui/LoopHUD';
 import { LoopCelebration } from '../ui/LoopCelebration';
 import { TileVisual } from '../ui/TileVisual';
-import { MapSpeedSlider } from '../ui/MapSpeedSlider';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
@@ -35,7 +34,6 @@ export class GameScene extends Scene {
   private loopRunState!: LoopRunState;
   private heroSprite!: Phaser.GameObjects.Sprite;
   private hud!: LoopHUD;
-  private speedSlider!: MapSpeedSlider;
   private celebration = new LoopCelebration();
 
   // Tile pool: globalIndex -> TileVisual
@@ -61,15 +59,6 @@ export class GameScene extends Scene {
 
   constructor() {
     super(SCENE_KEYS.GAME);
-  }
-
-  private fadeToScene(sceneKey: string, data?: any): void {
-    if (this.transitioning) return;
-    this.transitioning = true;
-    this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start(sceneKey, data);
-    });
   }
 
   private introPlaying = false;
@@ -217,12 +206,9 @@ export class GameScene extends Scene {
       console.error("Loop HUD initialization failed:", err);
     }
 
-    // Map speed slider (independent of combatSpeed)
-    this.speedSlider = new MapSpeedSlider(this, 400, 580, run.mapSpeed ?? 1, (speed) => {
-      const r = getRun();
-      r.mapSpeed = speed;
-      this.gameSpeed = speed;
-    });
+    // Map speed slider lives in SpeedPanelScene (persistent bottom-left
+    // panel). It writes run.mapSpeed directly; this scene re-reads that on
+    // every update() so changes apply immediately.
 
     // Keyboard shortcuts
     this.input.keyboard?.on('keydown-D', () => {
@@ -292,10 +278,7 @@ export class GameScene extends Scene {
     this.tilePool.clear();
 
     if (this.hud) this.hud.update(run);
-    if (this.speedSlider) {
-      this.speedSlider.setSpeed(run.mapSpeed ?? 1);
-      this.gameSpeed = run.mapSpeed ?? 1;
-    }
+    this.gameSpeed = run.mapSpeed ?? 1;
 
     const state = this.loopRunner.getState();
     if (state === 'tile-interaction') {
@@ -319,8 +302,11 @@ export class GameScene extends Scene {
       return; // Run was cleared, stop updating
     }
 
-    // Apply slow debuff — use map speed from RunState (feedback #10, #28)
-    let speedMult = run.mapSpeed ?? this.gameSpeed;
+    // Apply slow debuff — use map speed from RunState (feedback #10, #28).
+    // Background tabs force 1x: avoids time-warping when player returns after
+    // long absence (browser-throttled ticks accumulate large deltas).
+    const inBackground = typeof document !== 'undefined' && document.hidden;
+    let speedMult = inBackground ? 1 : (run.mapSpeed ?? this.gameSpeed);
     if (this.slowTimer > 0) {
       this.slowTimer -= delta;
       speedMult *= 0.4;
@@ -397,7 +383,6 @@ export class GameScene extends Scene {
   private handleLoopEvent(event: string, data: any): void {
     switch (event) {
       case 'combat-start': {
-        console.log('[GameScene] Launching combat for enemy:', data.enemyId);
         this.scene.pause(SCENE_KEYS.GAME);
         this.scene.launch(SCENE_KEYS.COMBAT, { 
           enemyId: data.enemyId, 
@@ -452,20 +437,20 @@ export class GameScene extends Scene {
           break;
         }
 
-        // ── Shop: check toggle ──
-        if (data.scene === 'ShopScene' && !run.stopAtShop) {
-          this.loopRunner.resumeTraversal();
-          break;
-        }
-
-        // Default: open scene (shop when enabled, or any future scenes)
-        console.log('[GameScene] Launching scene:', data.scene);
+        // Default: open scene (any future scenes)
         this.scene.launch(data.scene);
         this.scene.pause();
         break;
       }
       case 'loop-completed': {
         this.celebrationPlaying = true;
+
+        // Snapshot the pre-mutation loop length the hero actually traversed.
+        // LoopRunner has already mutated loop.length by the time this event
+        // fires (boss push/splice in onLoopCompleted), so using the live
+        // value would advance worldOffset by the wrong amount and desync the
+        // tile pool. Fall back to current length for legacy emitters.
+        const traversedLength: number = data?.traversedLength ?? this.loopRunState.loop.length;
 
         for (const [gi, tv] of this.tilePool) {
           const len = this.loopRunState.loop.length;
@@ -479,21 +464,46 @@ export class GameScene extends Scene {
 
         this.celebration.play(this, data.loopCount, tpEarned, () => {
           this.celebrationPlaying = false;
-          // Accumulate world offset for seamless wrap ONLY after celebration is done
-          this.worldOffset += this.loopRunState.loop.length * TILE_SIZE;
-          
-          // Planning phase: launch overlay then sleep
-          this.scene.launch(SCENE_KEYS.PLANNING, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
-          this.scene.sleep();
-          
-          // Clear pool to force fresh render after sleep/wake cycle
+          // Accumulate world offset for seamless wrap ONLY after celebration is done.
+          // Use the pre-mutation length captured above so a boss-loop transition
+          // (N → N+1 tiles) advances by N, not N+1.
+          this.worldOffset += traversedLength * TILE_SIZE;
+
+          // "Don't stop here for N" auto-skip: PlanningOverlay sets
+          // run.skipLoopsRemaining; we consume one each loop, but the planning
+          // phase that puts the player into a boss loop always stops.
+          const run = getRun();
+          const isBossLoopNext = this.loopRunState.loop.count % diffConfig.bossEveryNLoops === 0;
+          const skipRemaining = run.skipLoopsRemaining ?? 0;
+          if (skipRemaining > 0 && !isBossLoopNext) {
+            run.skipLoopsRemaining = skipRemaining - 1;
+            this.loopRunner.confirmPlanning();
+          } else {
+            run.skipLoopsRemaining = 0;
+            this.scene.launch(SCENE_KEYS.PLANNING, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+            this.scene.sleep();
+          }
+
+          // Clear pool AFTER worldOffset advance so the re-render aligns with
+          // the new hero position when GameScene wakes back up.
           for (const [, tv] of this.tilePool) tv.destroy();
           this.tilePool.clear();
         });
         break;
       }
       case 'planning-phase-started': {
-        // Handled by loop-completed celebration callback
+        // Two emitters:
+        //  - onLoopCompleted: no traversedLength payload; worldOffset is
+        //    advanced by the paired 'loop-completed' callback above.
+        //  - onBossChoice('continue'): includes traversedLength because no
+        //    'loop-completed' fired (boss was defeated mid-loop and tiles
+        //    were grown/spliced before positionInLoop reset to 0). Advance
+        //    worldOffset here so the hero doesn't visually snap backward.
+        if (typeof data?.traversedLength === 'number') {
+          this.worldOffset += data.traversedLength * TILE_SIZE;
+          for (const [, tv] of this.tilePool) tv.destroy();
+          this.tilePool.clear();
+        }
         break;
       }
       case 'boss-defeated': {
@@ -510,8 +520,9 @@ export class GameScene extends Scene {
         break;
       }
       case 'run-exited': {
-        // Transition to GameOverScene with safe exit data
-        this.fadeToScene(SCENE_KEYS.GAME_OVER, data);
+        // Safe exit flow is owned by BossExitScene: it banks rewards, clears
+        // the run, and fades to CityHub directly. GameScene was paused when
+        // BossExit launched, so no transition is needed here.
         break;
       }
     }

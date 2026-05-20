@@ -1,6 +1,6 @@
 import tilesData from '../data/tiles.json';
 
-export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'shop' | 'rest' | 'event' | 'treasure' | 'boss';
+export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'rest' | 'event' | 'treasure' | 'boss';
 export type TerrainType = 'forest' | 'graveyard' | 'swamp';
 
 export interface TileConfig {

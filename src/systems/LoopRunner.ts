@@ -150,14 +150,12 @@ export class LoopRunner {
         this.emit('combat-start', { enemyId: tile.enemyId ?? 'doom_knight', isBoss: true, tileIndex });
         break;
       }
-      case 'shop':
       case 'rest':
       case 'event':
       case 'treasure': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const sceneMap: Record<string, string> = {
-          shop: 'ShopScene',
           rest: 'RestSiteScene',
           event: 'EventScene',
           treasure: 'TreasureScene',
@@ -170,6 +168,12 @@ export class LoopRunner {
 
   private onLoopCompleted(): void {
     const loop = this.runState.loop;
+    // Snapshot the length the hero just traversed BEFORE any tile mutations
+    // below (boss push/splice, buffer renorm). GameScene uses this to advance
+    // worldOffset by the exact distance covered so the tile pool stays aligned
+    // when a boss tile is added (loop length grows mid-callback) or when a
+    // leftover boss is dropped (loop length shrinks).
+    const traversedLength = loop.length;
     loop.count++;
 
     // Award tile points
@@ -181,8 +185,8 @@ export class LoopRunner {
       if (tile.type !== 'buffer') tile.defeatedThisLoop = false;
     }
 
-    // Update difficulty multiplier
-    loop.difficultyMultiplier = 1 + (loop.count - 1) * diffConfig.percentPerLoop;
+    // Difficulty multiplier scales with boss kills, not loops.
+    loop.difficultyMultiplier = 1 + this.bossKillCount * diffConfig.percentPerBossKill;
 
     // Boss tile management:
     //  - On a boss loop, ensure exactly ONE boss tile exists (don't append a
@@ -225,7 +229,7 @@ export class LoopRunner {
     // F.5.l: defer enemy assignment to confirmPlanning() — running here AND
     // in confirmPlanning rerolled enemies twice and burned RNG state for
     // tiles the player would never see (planning could swap them out).
-    this.emit('loop-completed', { loopCount: loop.count });
+    this.emit('loop-completed', { loopCount: loop.count, traversedLength });
     this.state = 'planning';
     this.assignEnemies(); // Pre-assign enemies for the next loop layout
     this.emit('planning-phase-started', { loopCount: loop.count });
@@ -248,6 +252,9 @@ export class LoopRunner {
     const loop = this.runState.loop;
     const diffConfig = getDifficultyConfig();
     for (const tile of loop.tiles) {
+      // Non-combat tiles never need enemy assignment — skip them up front
+      // so we don't burn rng() calls (would also drift the seeded RNG state
+      // once B.7/B.8 lands).
       if (tile.type === 'buffer' || tile.type === 'shop' ||
           tile.type === 'rest' || tile.type === 'event' ||
           tile.type === 'treasure') {
@@ -321,10 +328,20 @@ export class LoopRunner {
       return result;
     }
 
+    // Snapshot the length BEFORE the splice/grow so GameScene can advance
+    // worldOffset by the distance the hero actually traversed up to the boss
+    // tile. Once we mutate loop.length below, that information is lost.
+    const traversedLength = this.runState.loop.length;
+
     // Continue: grow loop by diminishing amount based on boss kills
     const growth = getLoopGrowth(this.bossKillCount);
     this.bossKillCount++;
+    // Bump difficulty for the remainder of the current loop immediately —
+    // onLoopCompleted only fires once the next loop wraps, so without this
+    // any encounter between boss defeat and next wrap would still scale
+    // off the pre-kill multiplier.
     const diffConfig = getDifficultyConfig();
+    this.runState.loop.difficultyMultiplier = 1 + this.bossKillCount * diffConfig.percentPerBossKill;
     const maxLen = (diffConfig as any).loopGrowth?.maxTileLength ?? 40;
     const actualGrowth = Math.min(growth, maxLen - this.runState.loop.length);
     const newTiles: TileSlot[] = Array.from(
@@ -352,7 +369,7 @@ export class LoopRunner {
     this.lastTileIndex = -1;
 
     this.state = 'planning';
-    this.emit('planning-phase-started', { loopCount: this.runState.loop.count });
+    this.emit('planning-phase-started', { loopCount: this.runState.loop.count, traversedLength });
   }
 
   placeTile(slotIndex: number, tileKey: string): boolean {

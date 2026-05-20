@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { getTileConfig, getAllPlaceableTiles, createTileSlot, createBasicLoop } from '../../src/systems/TileRegistry';
 
 describe('TileRegistry', () => {
-  it('has exactly 9 tile types', () => {
-    const allKeys = ['basic', 'forest', 'graveyard', 'swamp', 'shop', 'rest', 'event', 'treasure', 'boss'];
+  it('has exactly 8 tile types (shop removed)', () => {
+    const allKeys = ['basic', 'forest', 'graveyard', 'swamp', 'rest', 'event', 'treasure', 'boss'];
     for (const key of allKeys) {
       expect(() => getTileConfig(key)).not.toThrow();
     }
@@ -30,9 +30,9 @@ describe('TileRegistry', () => {
     expect(config.tilePointCost).toBe(0);
   });
 
-  it('getAllPlaceableTiles returns 10 tile types (Phase 9: +library/arena/shrine_of_pact)', () => {
+  it('getAllPlaceableTiles returns 9 tile types (shop removed)', () => {
     const placeable = getAllPlaceableTiles();
-    expect(placeable).toHaveLength(10);
+    expect(placeable).toHaveLength(9);
     // Should not include basic or boss
     expect(placeable.every(t => t.canPlaceManually)).toBe(true);
   });

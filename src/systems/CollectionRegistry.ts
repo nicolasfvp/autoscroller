@@ -57,7 +57,7 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
       isUnlocked: true,
     }));
 
-  const baseTiles = ['basic', 'forest', 'shop', 'rest', 'event', 'treasure', 'boss'];
+  const baseTiles = ['basic', 'forest', 'rest', 'event', 'treasure', 'boss'];
   const unlockableTiles = ['graveyard', 'swamp', 'volcano'];
   const allTiles = [...baseTiles, ...unlockableTiles];
   const tiles = allTiles.map(id => ({

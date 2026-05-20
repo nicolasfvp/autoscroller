@@ -107,6 +107,4 @@ export function applyEnemyAffinityEffect(
       return { type: 'hero_slow', value: stam };
     }
   }
-
-  return null;
 }

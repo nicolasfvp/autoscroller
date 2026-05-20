@@ -255,6 +255,9 @@ describe('Phase 10 (element system) content totals + coverage', () => {
       'consume_combo', 'gain_combo', 'stealth', 'taunt',
       // Tier-1 redesign: time-decaying status effect on hero/enemy.
       'aura',
+      // v3 archetype redesigns:
+      'echo', 'cd_debt', 'convert_stack', 'multiply_stack', 'stack_boost',
+      'devour', 'force_trigger_all_cards',
     ]);
     for (const card of cards as any[]) {
       for (const eff of card.effects) {

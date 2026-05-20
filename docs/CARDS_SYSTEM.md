@@ -18,7 +18,7 @@ This rewrite landed in 5 atomic commits on branch `design/cards-relics-tiles`:
 
 **What works:**
 - All 156 implemented cards load cleanly into `cards.json`; IDs are alphabetically canonical (`t1-attack-fire`, `t2-fire-fire-water`, etc.).
-- ShardSystem rolls drops per kill (1-3 / 6-13 / 20-30 by enemy type), auto-converts at 10 shards per element. Class bias (75/25 split) applied.
+- ShardSystem rolls drops per kill in **packs** (normal/elite: 1–3 packs; boss: 3 packs). Pack size 1–4 / 3–9 / 5–9 by enemy type. Auto-converts at 10 shards per element. Class bias (75/25 split) applied per pack.
 - ForgeSystem looks up cards by element multiset, computes gold cost with discount tier, validates inventory + tier-unlock + deck capacity, executes crafting, persists recipes to MetaState.
 - DeckBuilder validates the 5-card / 10-element / class-ratio starter rule.
 - ForgeScene + DeckBuilderScene compile and are registered in `SCENE_KEYS` (`Forge`, `DeckBuilder`).
@@ -190,16 +190,20 @@ original value) and prefers small CD/cost tweaks over deleting effects.
 ### Shards (8 typed counters)
 Each enemy kill rolls shards. Each shard is one of 8 types (matching the 8 elements).
 
-**Roll formula per kill:**
-1. Determine total shard count for this enemy:
-   - `normal` enemies: random integer in [1, 3]
-   - `elite` enemies: random integer in [6, 13]
-   - `boss` enemies: random integer in [20, 30]
-2. For each shard, roll independently:
+**Roll formula per kill:** drops come in **packs** — each pack is one element with K shards of that element.
+1. Determine pack count for this enemy:
+   - `normal` enemies: 1–3 packs
+   - `elite` enemies: 1–3 packs
+   - `boss` enemies: always 3 packs
+2. For each pack, roll independently:
    - **Category bias by player class:**
      - Warrior: 75% physical / 25% elemental
      - Mage: 25% physical / 75% elemental
    - **Subtype within category:** uniform among the 4 elements in that category
+   - **Pack size (shards in that pack):**
+     - `normal`: 1–4 shards
+     - `elite`: 3–9 shards
+     - `boss`: 5–9 shards
 
 ### Element units (auto-conversion)
 When any shard counter reaches **10**, the system automatically:

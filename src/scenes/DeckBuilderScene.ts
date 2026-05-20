@@ -1,7 +1,7 @@
 // Deck builder overlay -- pre-run starter deck selection with element ratio + presets.
-// 3xN scrollable grid of available cards, hover tooltip with effects/elements,
-// click-to-add (from grid) / click-to-remove (from deck slots), preset save/load.
-// See docs/CARDS_SYSTEM.md §6.
+// 4xN scrollable grid of available cards centered in the left zone, hover tooltip
+// with effects/elements, click-to-add (from grid) / click-to-remove (from deck slots),
+// preset save/load. See docs/CARDS_SYSTEM.md §6.
 
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -21,29 +21,35 @@ import {
 import { saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import type { CardDefinition } from '../data/types';
+import { formatCardDescription } from '../systems/cards/CardText';
+import { CardFilterBar } from '../ui/CardFilterBar';
+import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
+import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { attachKeywordHover } from '../ui/KeywordTooltip';
+import { countElementCategories } from '../systems/ElementSystem';
 
 const FF = FONTS.family;
 const WHITE = '#ffffff';
 const GOLD = COLORS.accent;
 const DIM = COLORS.textSecondary;
 
-// Grid geometry
-const CARD_W = 140;
-const CARD_H = 90;
-const GRID_COLS = 3;
-const GRID_X = 30;
-const GRID_Y = 150;
+// Grid geometry — CardVisual at scale 0.55 (82.5×132 footprint), 4 columns
+// centered in the left zone (slot panel sits at x=510-770).
+const CARD_SCALE = 0.55;
+const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 82.5
+const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 132
+const GRID_COLS = 4;
 const GRID_GAP = 8;
-const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP;
-const GRID_VIEWPORT_H = 380;
+const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 354
+const LEFT_ZONE_W = 500;                                                 // ends just before slot panel @ 510
+const GRID_X = Math.round((LEFT_ZONE_W - GRID_VIEWPORT_W) / 2);          // 73
+const GRID_Y = 175;
+const GRID_VIEWPORT_H = 355;
 
-// Filter chip row geometry
-const FILTER_Y = 115;
-const FILTER_CHIP_W = 50;
-const FILTER_CHIP_H = 20;
-const FILTER_GAP = 4;
-
-const ALL_ELEMENTS: ElementId[] = ['attack', 'defense', 'agility', 'counter', 'fire', 'water', 'air', 'earth'];
+// CardFilterBar row — element dropdown / tier checkboxes / search.
+const CARD_FILTER_BAR_Y = 108;
+const FILTER_BAR_W = 470;
+const FILTER_BAR_X = Math.round((LEFT_ZONE_W - FILTER_BAR_W) / 2);       // 15
 
 // Deck slot geometry
 const SLOT_X = 510;
@@ -72,8 +78,12 @@ export class DeckBuilderScene extends Scene {
   private gridMaxScroll: number = 0;
   private gridHeaderText!: Phaser.GameObjects.Text;
   private gridScrollHint?: Phaser.GameObjects.Text;
-  private filterContainer!: Phaser.GameObjects.Container;
-  private activeFilters: Set<ElementId> = new Set();
+  private cardFilterBar: CardFilterBar | null = null;
+  private cardFilters: CardFilters = {
+    element: 'All',
+    tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+    search: '',
+  };
 
   private deckSlotContainers: Phaser.GameObjects.Container[] = [];
   private presetButtons: Phaser.GameObjects.Container[] = [];
@@ -106,6 +116,22 @@ export class DeckBuilderScene extends Scene {
     this.onCancel = data.onCancel ?? null;
     this.metaState = data.metaState ?? null;
     this.gridScrollY = 0;
+
+    // Phaser reuses the scene instance across remounts. Class-field arrays
+    // keep references to game objects destroyed at shutdown, so reset them
+    // before re-rendering or `updatePresetTab` will crash on a stale container.
+    this.presetButtons = [];
+    this.deckSlotContainers = [];
+    this.cardCells = [];
+    this.cardFilters = {
+      element: 'All',
+      tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+      search: '',
+    };
+    // Old bar reference from a previous mount must be cleared — the actual
+    // GameObject was destroyed by Phaser when the scene shut down, but we
+    // recreate it below and don't want a stale handle.
+    this.cardFilterBar = null;
 
     const presets = this.getPresets();
     this.selectedPresetIndex = 0;
@@ -142,84 +168,34 @@ export class DeckBuilderScene extends Scene {
     }).setOrigin(0.5);
 
     this.renderPresetTabs();
-    this.renderFilterChips();
+    this.renderCardFilterBar();
     this.renderCardGrid();
     this.renderDeckPanel();
     this.renderValidationAndActions();
     this.renderTooltip();
     this.bindScroll();
     this.refresh();
+
+    // CardFilterBar appends a native <input> to document.body. Destroy it
+    // when the scene shuts down so a relaunch doesn't stack ghost inputs
+    // across the page. The bar already wires its own shutdown listener,
+    // but we own the field reference, so clear it here too.
+    this.events.once('shutdown', () => {
+      if (this.cardFilterBar) {
+        this.cardFilterBar.destroy();
+        this.cardFilterBar = null;
+      }
+    });
   }
 
   // ────────────────────────────────────────────────
-  // Element filter chips
+  // Reusable CardFilterBar (element + tier + search)
   // ────────────────────────────────────────────────
 
-  private renderFilterChips(): void {
-    this.add.text(GRID_X, FILTER_Y - 16, 'Filter by element:', {
-      fontSize: '11px', fontStyle: 'bold', color: DIM, fontFamily: FF,
-    });
-
-    this.filterContainer = this.add.container(0, 0);
-
-    // 8 element chips
-    ALL_ELEMENTS.forEach((id, idx) => {
-      const x = GRID_X + idx * (FILTER_CHIP_W + FILTER_GAP);
-      const chipContainer = this.add.container(x + FILTER_CHIP_W / 2, FILTER_Y);
-      const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
-      const bg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, color, 0.2)
-        .setStrokeStyle(1, color, 0.6);
-      const label = this.add.text(0, 0, ELEMENTS[id].name.slice(0, 5), {
-        fontSize: '10px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-      }).setOrigin(0.5);
-      chipContainer.add([bg, label]);
-      chipContainer.setData('elementId', id);
-      bg.setInteractive({ useHandCursor: true });
-      bg.on('pointerdown', () => this.toggleFilter(id));
-      bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
-      bg.on('pointerout',  () => this.refreshChip(chipContainer));
-      this.filterContainer.add(chipContainer);
-    });
-
-    // "All" reset button
-    const allX = GRID_X + 8 * (FILTER_CHIP_W + FILTER_GAP);
-    const allContainer = this.add.container(allX + FILTER_CHIP_W / 2, FILTER_Y);
-    const allBg = this.add.rectangle(0, 0, FILTER_CHIP_W, FILTER_CHIP_H, 0x4a4a60, 0.85)
-      .setStrokeStyle(1, 0xffd700, 0.6);
-    const allLabel = this.add.text(0, 0, 'All', {
-      fontSize: '10px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-    }).setOrigin(0.5);
-    allContainer.add([allBg, allLabel]);
-    allBg.setInteractive({ useHandCursor: true });
-    allBg.on('pointerdown', () => { this.activeFilters.clear(); this.rebuildGrid(); this.refreshAllChips(); });
-    allBg.on('pointerover', () => allBg.setStrokeStyle(2, 0xffffff, 1));
-    allBg.on('pointerout',  () => allBg.setStrokeStyle(1, 0xffd700, 0.6));
-  }
-
-  private toggleFilter(id: ElementId): void {
-    if (this.activeFilters.has(id)) this.activeFilters.delete(id);
-    else this.activeFilters.add(id);
-    this.rebuildGrid();
-    this.refreshAllChips();
-  }
-
-  private refreshChip(container: Phaser.GameObjects.Container): void {
-    const id = container.getData('elementId') as ElementId;
-    const bg = container.list[0] as Phaser.GameObjects.Rectangle;
-    const color = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
-    if (this.activeFilters.has(id)) {
-      bg.setFillStyle(color, 0.85);
-      bg.setStrokeStyle(2, 0xffffff, 1);
-    } else {
-      bg.setFillStyle(color, 0.2);
-      bg.setStrokeStyle(1, color, 0.6);
-    }
-  }
-
-  private refreshAllChips(): void {
-    if (!this.filterContainer) return;
-    this.filterContainer.list.forEach((obj) => {
-      if (obj instanceof Phaser.GameObjects.Container) this.refreshChip(obj);
+  private renderCardFilterBar(): void {
+    this.cardFilterBar = new CardFilterBar(this, FILTER_BAR_X, CARD_FILTER_BAR_Y, FILTER_BAR_W, (filters) => {
+      this.cardFilters = filters;
+      this.rebuildGrid();
     });
   }
 
@@ -310,16 +286,11 @@ export class DeckBuilderScene extends Scene {
   }
 
   private getFilteredCards(): CardDefinition[] {
+    // Starter deck is Tier-1 only by rule. Pre-restrict the pool to Tier 1 so
+    // the bar's tier checkboxes only meaningfully gate within {1}; element
+    // dropdown + name search still apply.
     const tier1 = getAllCards().filter((c) => c.tier === 1);
-    if (this.activeFilters.size === 0) return tier1;
-    // Intersection: card must contain ALL selected elements at least once.
-    return tier1.filter((c) => {
-      const elems = (c.elements ?? []) as ElementId[];
-      for (const f of this.activeFilters) {
-        if (!elems.includes(f)) return false;
-      }
-      return true;
-    });
+    return applyFilters(tier1, this.cardFilters);
   }
 
   private rebuildGrid(): void {
@@ -378,44 +349,28 @@ export class DeckBuilderScene extends Scene {
   }
 
   private createCardCell(card: CardDefinition, x: number, y: number): CardCell {
+    // Container parent so grid math (positions, scrolling) stays unchanged.
+    // The CardVisual is anchored at the cell center; an invisible hit-box
+    // rectangle (`bg`) holds the cell's interactivity so the existing
+    // updateCellInteractivity() viewport-toggle logic still works.
     const container = this.add.container(x, y);
 
-    const dominantColor = this.dominantElementColor(card);
-    const bg = this.add.rectangle(CARD_W / 2, CARD_H / 2, CARD_W, CARD_H, dominantColor, 0.18)
-      .setStrokeStyle(1.5, dominantColor, 0.85);
+    // Centered CardVisual — fills the cell. We strip its built-in pointer
+    // handlers so the deck-builder's own click-to-pick behavior runs instead
+    // of opening the card detail popup.
+    const visual = createCardVisual(this, CARD_W / 2, CARD_H / 2, card.id, { scale: CARD_SCALE });
+    visual.removeAllListeners('pointerdown');
+    visual.removeAllListeners('pointerover');
+    visual.removeAllListeners('pointerout');
+    visual.disableInteractive();
+    container.add(visual);
 
-    const name = this.add.text(CARD_W / 2, 12, card.name, {
-      fontSize: '11px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-      align: 'center', wordWrap: { width: CARD_W - 8 },
-    }).setOrigin(0.5, 0);
-
-    // Element icons (small colored dots in a row)
-    const elems = (card.elements ?? []) as ElementId[];
-    const dotR = 6;
-    const dotGap = 4;
-    const dotsTotalW = elems.length * dotR * 2 + (elems.length - 1) * dotGap;
-    const startDotX = CARD_W / 2 - dotsTotalW / 2 + dotR;
-    elems.forEach((e, idx) => {
-      const dx = startDotX + idx * (dotR * 2 + dotGap);
-      const color = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-      const dot = this.add.circle(dx, 38, dotR, color).setStrokeStyle(1, 0xffffff, 0.6);
-      container.add(dot);
-    });
-
-    // Brief effect summary
-    const effectsLine = this.summarizeEffects(card);
-    const summary = this.add.text(CARD_W / 2, 56, effectsLine, {
-      fontSize: '9px', color: WHITE, fontFamily: FF,
-      align: 'center', wordWrap: { width: CARD_W - 8 },
-    }).setOrigin(0.5, 0);
-
-    // Cost / cooldown
-    const costLine = this.formatCostLine(card);
-    this.add.text(CARD_W / 2, CARD_H - 12, costLine, {
-      fontSize: '9px', color: GOLD, fontFamily: FF,
-    }).setOrigin(0.5).setData('_inCell', true);
-
-    container.add([bg, name, summary]);
+    // Invisible hit-box on top — drives cell-level pointer events. Kept as a
+    // Rectangle (not the visual) so updateCellInteractivity()'s disable/enable
+    // toggling stays simple.
+    const bg = this.add.rectangle(CARD_W / 2, CARD_H / 2, CARD_W, CARD_H, 0x000000, 0)
+      .setStrokeStyle(1.5, 0xffffff, 0);
+    container.add(bg);
 
     bg.setInteractive({ useHandCursor: true });
     bg.on('pointerover', () => {
@@ -423,10 +378,25 @@ export class DeckBuilderScene extends Scene {
       this.showTooltip(card, x, y);
     });
     bg.on('pointerout', () => {
-      bg.setStrokeStyle(1.5, dominantColor, 0.85);
+      bg.setStrokeStyle(1.5, 0xffffff, 0);
       this.hideTooltip();
     });
+
+    // 2-second keyword glossary panel — attaches to the hit-box bg because
+    // the underlying CardVisual is disableInteractive()'d in this scene.
+    // Anchor is resolved lazily so the panel follows the cell as the grid
+    // scrolls (gridContainer.y shifts with the wheel).
+    attachKeywordHover(this, bg, card.description, () => {
+      const m = bg.getWorldTransformMatrix();
+      return { x: m.tx, y: m.ty, w: CARD_W, h: CARD_H };
+    });
+
     bg.on('pointerdown', () => {
+      // Element-budget validation: don't allow picking a card that overflows
+      // the 10-element starter budget. Dim/disable behavior is applied via
+      // alpha in refreshCellAffordability() — the click guard here is a
+      // belt-and-braces backstop so a stale alpha can't sneak a pick through.
+      if (!this.canPickCard(card)) return;
       if (this.currentDeck.length < STARTER_DECK_SIZE) {
         this.currentDeck.push(card.id);
         this.refresh();
@@ -434,6 +404,36 @@ export class DeckBuilderScene extends Scene {
     });
 
     return { card, container, bg };
+  }
+
+  /**
+   * Affordability check used by createCardCell click-guard and the per-cell
+   * alpha dimming pass. A card is pickable if (a) the deck has room and
+   * (b) adding its elements wouldn't exceed the 10-element starter budget.
+   */
+  private canPickCard(card: CardDefinition): boolean {
+    if (this.currentDeck.length >= STARTER_DECK_SIZE) return false;
+    const cardElems = (card.elements ?? []) as ElementId[];
+    const cardCount = countElementCategories(cardElems).total;
+    let currentTotal = 0;
+    for (const id of this.currentDeck) {
+      const c = getAllCards().find((cc) => cc.id === id);
+      if (!c) continue;
+      currentTotal += countElementCategories((c.elements ?? []) as ElementId[]).total;
+    }
+    return currentTotal + cardCount <= 10;
+  }
+
+  /**
+   * Dim cards the player can't currently pick (deck full OR would overflow
+   * the element budget). Re-run on every refresh so dims stay in sync with
+   * the in-flight deck.
+   */
+  private refreshCellAffordability(): void {
+    for (const cell of this.cardCells) {
+      const ok = this.canPickCard(cell.card);
+      cell.container.setAlpha(ok ? 1.0 : 0.4);
+    }
   }
 
   private bindScroll(): void {
@@ -651,6 +651,9 @@ export class DeckBuilderScene extends Scene {
   private refresh(): void {
     for (let i = 0; i < PRESETS_PER_CLASS; i++) this.updatePresetTab(i);
     this.updateDeckSlots();
+    // Repaint cell alpha against the current in-flight deck so cards that
+    // would push the element budget over 10 dim out and become un-clickable.
+    this.refreshCellAffordability();
     const v = validateStarterDeck(this.currentDeck, this.className);
     this.elementBudgetText.setText(`Cards: ${v.size}/${STARTER_DECK_SIZE}  |  Elements: ${v.totalElements}/10  |  Physical: ${v.physical}  |  Elemental: ${v.elemental}`);
     if (v.valid) {
@@ -673,43 +676,11 @@ export class DeckBuilderScene extends Scene {
     return parseInt(ELEMENTS[elems[0]].color.replace('#', ''), 16);
   }
 
-  private summarizeEffects(card: CardDefinition): string {
-    if (!card.effects?.length) return '—';
-    const fx = card.effects[0];
-    switch (fx.type) {
-      case 'damage':   return `Deal ${fx.value} dmg`;
-      case 'heal':     return `Heal ${fx.value}`;
-      case 'armor':    return `+${fx.value} armor`;
-      case 'stamina':  return `+${fx.value} stam`;
-      case 'mana':     return `+${fx.value} mana`;
-      case 'dot':      return `${fx.stack || 'DoT'} ${fx.value}`;
-      case 'buff':     return `+${fx.value} ${fx.scale?.stat ?? 'stat'}`;
-      case 'debuff':   return `Enemy -${fx.value} def`;
-      case 'stack':    return `+${fx.value} ${fx.stack ?? 'stack'}`;
-      default:         return fx.type;
-    }
-  }
-
   private describeEffects(card: CardDefinition): string {
-    if (!card.effects?.length) return '—';
-    return card.effects.map((fx) => {
-      const tgt = fx.target === 'enemy' ? '→ enemy' : '→ self';
-      let line = '';
-      switch (fx.type) {
-        case 'damage':  line = `Deal ${fx.value} damage ${tgt}`; break;
-        case 'heal':    line = `Heal ${fx.value} HP`; break;
-        case 'armor':   line = `Gain ${fx.value} armor`; break;
-        case 'stamina': line = `+${fx.value} stamina`; break;
-        case 'mana':    line = `+${fx.value} mana`; break;
-        case 'dot':     line = `Apply ${fx.value} ${fx.stack || 'DoT'} stacks ${tgt}`; break;
-        case 'buff':    line = `+${fx.value} ${fx.scale?.stat ?? 'stat'} buff`; break;
-        case 'debuff':  line = `Enemy -${fx.value} def`; break;
-        case 'stack':   line = `+${fx.value} ${fx.stack ?? 'stack'}`; break;
-        default:        line = `${fx.type} ${fx.value}`;
-      }
-      if (fx.scale) line += ` (+${fx.scale.value} per ${fx.scale.stat})`;
-      return line;
-    }).join('\n');
+    const text = formatCardDescription(card);
+    if (!text) return '—';
+    // The shared formatter joins fragments with ". " — tooltip wants one per line.
+    return text.replace(/\. /g, '\n').replace(/\.$/, '');
   }
 
   private formatCostLine(card: CardDefinition): string {

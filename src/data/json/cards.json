@@ -18,8 +18,8 @@
   "cards": [
     {
       "id": "t1-attack-attack",
-      "name": "Strike",
-      "description": "Deal 7. Restore 1 stamina.",
+      "name": "Reckless Strike",
+      "description": "Deal 7 (scales STR). +1 Rage. Self Bleed 1.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -38,9 +38,16 @@
           }
         },
         {
-          "type": "stamina",
+          "type": "stack",
           "value": 1,
-          "target": "self"
+          "target": "self",
+          "stack": "rage"
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "self_dot",
+          "stack": "bleed"
         }
       ],
       "cooldown": 1,
@@ -53,7 +60,7 @@
     {
       "id": "t1-defense-defense",
       "name": "Bulwark Vow",
-      "description": "Gain 6 armor (scales VIT). On break: +2 rage.",
+      "description": "Armor 6 (scales VIT). Brace: +2 Rage.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -95,7 +102,7 @@
     {
       "id": "t1-agility-agility",
       "name": "Flurry Step",
-      "description": "Hit twice; second swing scales DEX.",
+      "description": "Deal 4. Deal 4 (scales DEX).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -128,8 +135,8 @@
     },
     {
       "id": "t1-counter-counter",
-      "name": "Vengeful Riposte",
-      "description": "Deal 6 (pierces armor below 50% HP). Bleed 4.",
+      "name": "Razor Stance",
+      "description": "Aura 10s: your hits apply Bleed 1 (scales DEX). Vengeance: +4s.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -138,37 +145,56 @@
       ],
       "effects": [
         {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "pierce_armor": true,
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 10000,
+          "trigger": "on_hit_dealt",
+          "then": {
+            "type": "dot",
+            "value": 1,
+            "target": "enemy",
+            "stack": "bleed",
+            "scale": {
+              "stat": "dex",
+              "per": 3,
+              "value": 1
+            }
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 4000,
+          "trigger": "on_hit_dealt",
+          "then": {
+            "type": "dot",
+            "value": 1,
+            "target": "enemy",
+            "stack": "bleed",
+            "scale": {
+              "stat": "dex",
+              "per": 3,
+              "value": 1
+            }
+          },
           "condition": {
             "hero_hp_pct_below": 50
           }
-        },
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "condition": {
-            "hero_hp_pct_atleast": 50
-          }
-        },
-        {
-          "type": "dot",
-          "value": 4,
-          "target": "enemy",
-          "stack": "bleed"
         }
       ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common"
+      "cooldown": 2,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-fire-fire",
       "name": "Pyre",
-      "description": "Deal 4 + 2 per burn stack. Burn 5.",
+      "description": "Deal 4. Pyre: 3. Burn 3.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -179,11 +205,16 @@
         {
           "type": "damage",
           "value": 4,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "damage",
-          "value": 2,
+          "value": 3,
           "target": "enemy",
           "condition": {
             "enemy_has_stack": "burn",
@@ -192,7 +223,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         }
@@ -203,8 +234,8 @@
     },
     {
       "id": "t1-water-water",
-      "name": "Wellspring",
-      "description": "Heal 4 (scales SPI). Restore 2 mana. +2 SPI aura.",
+      "name": "Frostbind",
+      "description": "Stun 1 (scales INT). Armor 4 (scales VIT).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -213,39 +244,42 @@
       ],
       "effects": [
         {
-          "type": "heal",
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 4,
+            "value": 1
+          }
+        },
+        {
+          "type": "armor",
           "value": 4,
           "target": "self",
           "scale": {
-            "stat": "spi",
+            "stat": "vit",
             "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "mana",
-          "value": 2,
-          "target": "self"
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 6000,
-          "modifier": {
-            "kind": "spi",
-            "value": 2
+            "value": 1
           }
         }
       ],
-      "cooldown": 1.5,
-      "targeting": "self",
-      "rarity": "common"
+      "cooldown": 2,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      },
+      "frenzy": {
+        "hero_hp_pct_below": 50,
+        "cd_mult": 0.7
+      }
     },
     {
       "id": "t1-air-air",
       "name": "Tailwind",
-      "description": "Deal 4. Next cards cooldown -25% (5s).",
+      "description": "Deal 4. Haste 25% (5s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -256,7 +290,12 @@
         {
           "type": "damage",
           "value": 4,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -278,9 +317,9 @@
     },
     {
       "id": "t1-earth-earth",
-      "name": "Avalanche",
-      "description": "Gain 14 armor (scales VIT). Deal 12 (scales VIT).",
-      "category": "defense",
+      "name": "Tremor Lock",
+      "description": "Stun 2 (scales INT).",
+      "category": "magic",
       "tier": 1,
       "elements": [
         "earth",
@@ -288,31 +327,22 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 14,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "damage",
-          "value": 12,
+          "type": "dot",
+          "value": 2,
           "target": "enemy",
+          "stack": "stun",
           "scale": {
-            "stat": "vit",
-            "per": 2,
+            "stat": "int",
+            "per": 4,
             "value": 1
           }
         }
       ],
-      "cooldown": 2.8,
-      "targeting": "self",
+      "cooldown": 2.5,
+      "targeting": "single",
       "rarity": "common",
       "cost": {
-        "stamina": 2
+        "mana": 1
       }
     },
     {
@@ -347,7 +377,7 @@
     {
       "id": "t1-agility-counter",
       "name": "Sidestep & Slash",
-      "description": "Deal 5; +5 below 60% HP. Bleed 2. Restore 1 stamina.",
+      "description": "Deal 5. Vengeance: Deal 5. Bleed 2. +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -358,7 +388,12 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "damage",
@@ -387,7 +422,7 @@
     {
       "id": "t1-agility-defense",
       "name": "Parrying Stance",
-      "description": "Gain 5 armor (scales DEX). Restore 1 stamina. On break: deal 4.",
+      "description": "Armor 5 (scales DEX). +1 Stamina. Brace: Deal 4.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -430,7 +465,7 @@
     {
       "id": "t1-agility-fire",
       "name": "Flame Dart",
-      "description": "Deal 5 to random foe (scales DEX). Burn 3.",
+      "description": "Deal 5 (scales DEX). Burn 2.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -450,7 +485,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -462,7 +497,7 @@
     {
       "id": "t1-agility-water",
       "name": "Mist Step",
-      "description": "Heal 3. Restore 1 stamina. +1 DEX aura. Drain 1 enemy mana.",
+      "description": "Heal 3. +1 Stamina. +1 DEX (6s). Drain 1 Mana.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -473,7 +508,12 @@
         {
           "type": "heal",
           "value": 3,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "stamina",
@@ -503,7 +543,7 @@
     {
       "id": "t1-agility-air",
       "name": "Gale Cut",
-      "description": "Deal 5. Next cards cooldown -15% (4s).",
+      "description": "Deal 5. Haste 15% (4s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -514,7 +554,12 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -534,7 +579,7 @@
     {
       "id": "t1-agility-earth",
       "name": "Tremor Dash",
-      "description": "Deal 5. Gain 4 armor. Restore 1 stamina.",
+      "description": "Deal 5 (scales DEX). Armor 4 (scales VIT). +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -545,12 +590,74 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "armor",
           "value": 4,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
+        },
+        {
+          "type": "stamina",
+          "value": 1,
           "target": "self"
+        }
+      ],
+      "cooldown": 1.6,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {}
+    },
+    {
+      "id": "t1-attack-counter",
+      "name": "Bloodprice Strike",
+      "description": "Lose 4 HP (Pierce). Deal 12 (scales STR). +2 Rage. +1 Stamina.",
+      "category": "attack",
+      "tier": 1,
+      "elements": [
+        "attack",
+        "counter"
+      ],
+      "cost": {
+        "stamina": 1
+      },
+      "effects": [
+        {
+          "type": "damage",
+          "value": 4,
+          "target": "self",
+          "pierce_armor": true
+        },
+        {
+          "type": "damage",
+          "value": 12,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "stack",
+          "value": 2,
+          "target": "self",
+          "stack": "rage",
+          "scale": {
+            "stat": "str",
+            "per": 4,
+            "value": 1
+          }
         },
         {
           "type": "stamina",
@@ -563,55 +670,9 @@
       "rarity": "common"
     },
     {
-      "id": "t1-attack-counter",
-      "name": "Brutal Reprisal",
-      "description": "Deal 7 (pierces armor below 40% HP). Scales STR.",
-      "category": "attack",
-      "tier": 1,
-      "elements": [
-        "attack",
-        "counter"
-      ],
-      "cost": {
-        "stamina": 2
-      },
-      "effects": [
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 3,
-            "value": 2
-          },
-          "pierce_armor": true,
-          "condition": {
-            "hero_hp_pct_below": 40
-          }
-        },
-        {
-          "type": "damage",
-          "value": 7,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 3,
-            "value": 2
-          },
-          "condition": {
-            "hero_hp_pct_atleast": 40
-          }
-        }
-      ],
-      "cooldown": 1.5,
-      "targeting": "single",
-      "rarity": "common"
-    },
-    {
       "id": "t1-attack-defense",
       "name": "Shield Bash",
-      "description": "Spend 4 armor: deal 8 (scales STR). Taunt.",
+      "description": "Deal 8 (scales STR). Taunt.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -644,8 +705,8 @@
     },
     {
       "id": "t1-attack-fire",
-      "name": "Searing Cleave",
-      "description": "Deal 6 (+4 if burning). Burn 4.",
+      "name": "Kindle Strike",
+      "description": "Deal 5 (scales STR). Burn 2 (scales INT). Vulnerable Fire 1 (5s).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -658,32 +719,44 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
-          "target": "enemy"
-        },
-        {
-          "type": "damage",
-          "value": 4,
+          "value": 5,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "burn"
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
-          "stack": "burn"
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "enemy",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "burn_taken",
+            "value": 1
+          }
         }
       ],
-      "cooldown": 1.3,
+      "cooldown": 1.5,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-attack-water",
-      "name": "Tide-Tempered Blade",
-      "description": "Deal 6 (scales STR). Heal 2. Self-burn 1.",
+      "name": "Crimson Tithe",
+      "description": "Lose 5 HP. +1 Stamina, +1 Mana (scales SPI). Aura 6s: HP loss → +1 Rage.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -693,34 +766,52 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 2,
-            "value": 1
-          }
-        },
-        {
-          "type": "heal",
-          "value": 2,
+          "value": 5,
           "target": "self"
         },
         {
-          "type": "dot",
+          "type": "stamina",
           "value": 1,
-          "target": "self_dot",
-          "stack": "burn"
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 4,
+            "value": 0
+          }
+        },
+        {
+          "type": "mana",
+          "value": 1,
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 4,
+            "value": 0
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "trigger": "on_self_damage",
+          "then": {
+            "type": "stack",
+            "value": 1,
+            "target": "self",
+            "stack": "rage"
+          }
         }
       ],
-      "cooldown": 1.4,
-      "targeting": "single",
-      "rarity": "common"
+      "cooldown": 1.6,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {}
     },
     {
       "id": "t1-air-attack",
       "name": "Stormstrike",
-      "description": "Deal 6 (scales STR). Next cards cooldown -20% (5s).",
+      "description": "Deal 6 (scales STR). Haste 20% (5s).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -755,8 +846,8 @@
     },
     {
       "id": "t1-attack-earth",
-      "name": "Crushing Blow",
-      "description": "Deal 10 (scales STR). Gain 5 armor. -2 enemy defense (8s).",
+      "name": "Granite Lunge",
+      "description": "Armor 4 (scales VIT). Deal 3 + 1 per 4 Armor (scales STR). +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -764,43 +855,44 @@
         "earth"
       ],
       "cost": {
-        "stamina": 2
+        "stamina": 1
       },
       "effects": [
         {
+          "type": "armor",
+          "value": 4,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
+        },
+        {
           "type": "damage",
-          "value": 10,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "str",
-            "per": 2,
-            "value": 2
+            "per": 4,
+            "value": 1,
+            "source": "armor"
           }
         },
         {
-          "type": "armor",
-          "value": 5,
+          "type": "stamina",
+          "value": 1,
           "target": "self"
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "enemy",
-          "ttl_ms": 8000,
-          "modifier": {
-            "kind": "def",
-            "value": -2
-          }
         }
       ],
-      "cooldown": 2.2,
+      "cooldown": 1.4,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-counter-defense",
       "name": "Iron Reckoning",
-      "description": "Gain 5 armor (scales VIT). +2 rage. On break: deal 6 (scales rage).",
+      "description": "Armor 4 (scales VIT). Stance 8s: hits +1 per Rage (scales STR).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -813,7 +905,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 5,
+          "value": 4,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -822,37 +914,25 @@
           }
         },
         {
-          "type": "stack",
-          "value": 2,
-          "target": "self",
-          "stack": "rage"
-        },
-        {
           "type": "aura",
           "value": 0,
           "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "damage",
-            "value": 6,
-            "target": "enemy",
-            "scale": {
-              "stat": "rage",
-              "per": 1,
-              "value": 1
-            }
+          "ttl_ms": 8000,
+          "modifier": {
+            "kind": "hero_hit_bonus",
+            "value": 1,
+            "stack": "rage"
           }
         }
       ],
-      "cooldown": 1.7,
+      "cooldown": 1.6,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-counter-fire",
-      "name": "Flickering Vengeance",
-      "description": "Burn 5; +3 burn below 60% HP. Bleed 2.",
+      "name": "Cinderscar",
+      "description": "Burn 2 (scales INT). Vengeance (<60% HP): convert 2 Burn into Bleed.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -862,34 +942,37 @@
       "effects": [
         {
           "type": "dot",
-          "value": 5,
-          "target": "enemy",
-          "stack": "burn"
-        },
-        {
-          "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
-          "condition": {
-            "hero_hp_pct_below": 60
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
         },
         {
-          "type": "dot",
+          "type": "convert_stack",
           "value": 2,
           "target": "enemy",
-          "stack": "bleed"
+          "from": "burn",
+          "to": "bleed",
+          "condition": {
+            "hero_hp_pct_below": 60
+          }
         }
       ],
       "cooldown": 1.4,
       "targeting": "single",
-      "rarity": "common"
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-counter-water",
       "name": "Bloodtide Mend",
-      "description": "Heal 5 (scales SPI); +4 below 50% HP. Self-bleed 2.",
+      "description": "Heal 5 (scales SPI). Vengeance: Heal 4. Self Bleed 2.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -929,7 +1012,7 @@
     {
       "id": "t1-air-counter",
       "name": "Hollow Echo",
-      "description": "Deal 5; +3 below 50% HP. Next cards cooldown -15% (4s).",
+      "description": "Deal 5. Vengeance: Deal 3. Haste 15% (4s).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -940,7 +1023,12 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "damage",
@@ -968,7 +1056,7 @@
     {
       "id": "t1-counter-earth",
       "name": "Thornwall",
-      "description": "Gain 8 armor (scales VIT). Deal 5. On break: deal 6.",
+      "description": "Armor 8 (scales VIT). Deal 5. Brace: Deal 6.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1013,8 +1101,8 @@
     },
     {
       "id": "t1-defense-fire",
-      "name": "Forge Aegis",
-      "description": "Gain 6 armor (scales VIT). Burn 3.",
+      "name": "Forge Spike Ward",
+      "description": "Armor 5 (scales VIT). Aura 8s: on hit taken, deal 2 + 1 per 6 Armor (scales STR).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1027,7 +1115,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 6,
+          "value": 5,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -1036,20 +1124,33 @@
           }
         },
         {
-          "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "burn"
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 8000,
+          "trigger": "on_hit_taken",
+          "cooldown_ms": 1000,
+          "then": {
+            "type": "damage",
+            "value": 2,
+            "target": "enemy",
+            "scale": {
+              "stat": "str",
+              "per": 6,
+              "value": 1,
+              "source": "armor"
+            }
+          }
         }
       ],
-      "cooldown": 1.6,
+      "cooldown": 1.8,
       "targeting": "self",
       "rarity": "common"
     },
     {
       "id": "t1-defense-water",
       "name": "Vow of the Tide",
-      "description": "Gain 5 armor (scales VIT). Heal 3. Restore 1 stamina. +1 SPI aura.",
+      "description": "Armor 5 (scales VIT). Heal 3. +1 Stamina. +1 SPI (6s).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1098,7 +1199,7 @@
     {
       "id": "t1-air-defense",
       "name": "Cyclone Ward",
-      "description": "Gain 5 armor (scales VIT). Next cards cooldown -15% (4s).",
+      "description": "Armor 5 (scales VIT). Haste 15% (4s).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1134,7 +1235,7 @@
     {
       "id": "t1-defense-earth",
       "name": "Bramble Bulwark",
-      "description": "Gain 8 armor (scales VIT). Deal 6 piercing if armored ≥10.",
+      "description": "Armor 8 (scales VIT). Fortified 10: 6 Pierce.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1172,7 +1273,7 @@
     {
       "id": "t1-fire-water",
       "name": "Steam Surge",
-      "description": "Deal 4 (+4 if burning). Heal 4. Restore 1 stamina.",
+      "description": "Deal 4. Empowered (if Burn): +4. Heal 4. +1 Stamina.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1186,7 +1287,12 @@
         {
           "type": "damage",
           "value": 4,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "damage",
@@ -1214,7 +1320,7 @@
     {
       "id": "t1-air-fire",
       "name": "Firestorm",
-      "description": "AoE deal 4. Burn 3 AoE. Drain 1 enemy stamina.",
+      "description": "Deal 4. Burn 2. Drain 1 Stamina.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1228,11 +1334,16 @@
         {
           "type": "damage",
           "value": 4,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         },
@@ -1249,7 +1360,7 @@
     {
       "id": "t1-earth-fire",
       "name": "Magma Vein",
-      "description": "Gain 7 armor. Deal 8. Burn 4.",
+      "description": "Armor 7. Deal 8. Burn 2.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1268,11 +1379,16 @@
         {
           "type": "damage",
           "value": 8,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -1284,7 +1400,7 @@
     {
       "id": "t1-air-water",
       "name": "Misting Veil",
-      "description": "Heal 3. Next cards cooldown -20% (5s). +1 INT aura.",
+      "description": "Heal 3. Haste 20% (5s). +1 INT (6s).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1295,7 +1411,12 @@
         {
           "type": "heal",
           "value": 3,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -1328,7 +1449,7 @@
     {
       "id": "t1-earth-water",
       "name": "Mire Bloom",
-      "description": "Gain 6 armor. Heal 4. Deal 5.",
+      "description": "Armor 6. Heal 4. Deal 5.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1349,7 +1470,12 @@
         {
           "type": "damage",
           "value": 5,
-          "target": "enemy"
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         }
       ],
       "cooldown": 1.8,
@@ -1358,8 +1484,8 @@
     },
     {
       "id": "t1-air-earth",
-      "name": "Sandstorm Wall",
-      "description": "Gain 5 armor. Deal 4. Next cards cooldown -15% (4s).",
+      "name": "Bedrock Snare",
+      "description": "Slow 2 (scales INT). If enemy has Slow ≥ 4: Stun 1.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1367,38 +1493,46 @@
         "earth"
       ],
       "cost": {
-        "mana": 1
+        "stamina": 1
       },
       "effects": [
         {
-          "type": "armor",
-          "value": 5,
-          "target": "self"
+          "type": "dot",
+          "value": 2,
+          "target": "enemy",
+          "stack": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
-          "value": 4,
-          "target": "enemy"
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 4000,
-          "modifier": {
-            "kind": "cd_reduction",
-            "value": 0.15
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 5,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stack_atleast": {
+              "stack": "slow",
+              "value": 4
+            }
           }
         }
       ],
-      "cooldown": 1.8,
-      "targeting": "aoe",
+      "cooldown": 1.6,
+      "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t2-attack-attack-attack",
       "name": "Berserker's Ledger",
-      "description": "Triple strike; STR scales each hit.",
+      "description": "Deal 8 ×3 (scales STR). Self Bleed 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1435,7 +1569,7 @@
     {
       "id": "t2-defense-defense-defense",
       "name": "Aegis of Returning Wrath",
-      "description": "Gain 22 armor; on break: deal 18 pierce.",
+      "description": "Armor 22 (scales VIT). Brace: 18 Pierce.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1478,7 +1612,7 @@
     {
       "id": "t2-agility-agility-agility",
       "name": "Quickstep Sigil",
-      "description": "−25% cd for 8s; deal 6.",
+      "description": "Haste 25% (8s). Deal 6 (scales DEX).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1517,8 +1651,8 @@
     },
     {
       "id": "t2-counter-counter-counter",
-      "name": "Open Vein",
-      "description": "Per rage stack: deal 5 pierce + 1 bleed. Consume all rage.",
+      "name": "Crimson Spiral",
+      "description": "Damage = Rage × 2 (Pierce, scales STR). +1 Bleed per Rage. Consume all Rage.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1529,12 +1663,14 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 0,
           "target": "enemy",
           "pierce_armor": true,
-          "condition": {
-            "self_has_stack": "rage",
-            "per_stack": true
+          "consume_stack_value": "rage",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
           }
         },
         {
@@ -1545,6 +1681,11 @@
           "condition": {
             "self_has_stack": "rage",
             "per_stack": true
+          },
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
           }
         },
         {
@@ -1558,14 +1699,14 @@
       "cost": {
         "stamina": 2
       },
-      "cooldown": 3.5,
-      "targeting": "self",
+      "cooldown": 4.5,
+      "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-attack-attack-defense",
-      "name": "Iron Volley",
-      "description": "Hit twice for 9 STR; gain 8 armor.",
+      "name": "Bulwark Salvo",
+      "description": "Deal 6 + 1 per 2 Armor ×2 (scales STR, no consume).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1576,32 +1717,28 @@
       "effects": [
         {
           "type": "damage",
-          "value": 9,
+          "value": 6,
           "target": "enemy",
           "scale": {
             "stat": "str",
             "per": 2,
-            "value": 1
+            "value": 1,
+            "source": "armor"
           },
           "multi_hit": 1
-        },
-        {
-          "type": "armor",
-          "value": 8,
-          "target": "self"
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2,
+      "cooldown": 2.5,
       "targeting": "single",
       "rarity": "uncommon"
     },
     {
       "id": "t2-agility-attack-attack",
       "name": "Triple Slash",
-      "description": "Hit thrice for 6 (scales DEX).",
+      "description": "Deal 6 ×3 (scales DEX).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1631,8 +1768,8 @@
     },
     {
       "id": "t2-attack-attack-counter",
-      "name": "Wounded Beast",
-      "description": "Deal 12 STR; below 40% HP, hit again with bleed 3.",
+      "name": "Bloodlash Salvo",
+      "description": "Per Bleed: 3 Pierce (scales STR). Vengeance: +2 Pierce per Bleed. No consume.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1643,48 +1780,47 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 3,
           "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "damage",
-          "value": 10,
-          "target": "enemy",
-          "condition": {
-            "hero_hp_pct_below": 40
-          },
+          "pierce_armor": true,
           "scale": {
             "stat": "str",
             "per": 2,
             "value": 1
+          },
+          "condition": {
+            "enemy_has_stack": "bleed",
+            "per_stack": true
           }
         },
         {
-          "type": "dot",
-          "value": 3,
+          "type": "damage",
+          "value": 2,
           "target": "enemy",
-          "stack": "bleed",
+          "pierce_armor": true,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          },
           "condition": {
-            "hero_hp_pct_below": 40
+            "enemy_has_stack": "bleed",
+            "per_stack": true,
+            "hero_hp_pct_below": 50
           }
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2.4,
+      "cooldown": 2.6,
       "targeting": "single",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     {
       "id": "t2-attack-defense-defense",
       "name": "Body Slam Vow",
-      "description": "Pierce damage equal to current armor.",
+      "description": "2 Pierce (scales Armor). Armor 6.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1721,7 +1857,7 @@
     {
       "id": "t2-agility-defense-defense",
       "name": "Phalanx Drift",
-      "description": "Gain 18 armor; −15% cd aura 6s.",
+      "description": "Armor 18 (scales VIT). Haste 15% (6s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1760,8 +1896,8 @@
     },
     {
       "id": "t2-counter-defense-defense",
-      "name": "Crimson Mantle",
-      "description": "Gain 16 armor; on break, +3 rage.",
+      "name": "Reforge Vow",
+      "description": "Aura 12s: Armor gained +50%. Armor 8 (scales VIT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1771,40 +1907,39 @@
       ],
       "effects": [
         {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "passive_armor_scaler",
+          "modifier": {
+            "kind": "armor_bonus_pct",
+            "value": 0.5
+          }
+        },
+        {
           "type": "armor",
-          "value": 16,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
             "value": 2
           }
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 15000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "stack",
-            "value": 3,
-            "target": "self",
-            "stack": "rage"
-          }
         }
       ],
       "cost": {
-        "stamina": 2
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 2.6,
+      "cooldown": 3,
       "targeting": "self",
       "rarity": "rare"
     },
     {
       "id": "t2-agility-agility-attack",
       "name": "Pinprick Volley",
-      "description": "Pierce 5 × 3 hits (scales DEX).",
+      "description": "5 Pierce ×3 (scales DEX).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1836,7 +1971,7 @@
     {
       "id": "t2-agility-agility-defense",
       "name": "Veil of Steps",
-      "description": "Gain 14 armor (DEX); −20% cd aura 6s.",
+      "description": "Armor 14 (scales DEX). Haste 20% (6s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1876,7 +2011,7 @@
     {
       "id": "t2-agility-agility-counter",
       "name": "Quicksilver Bleed",
-      "description": "Bleed 5; +2 dmg per bleed stack.",
+      "description": "Bleed 3. Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1887,18 +2022,20 @@
       "effects": [
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
-          "stack": "bleed"
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
+          "type": "dot",
           "value": 2,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "bleed",
-            "per_stack": true
-          }
+          "stack": "burn"
         }
       ],
       "cost": {
@@ -1910,8 +2047,8 @@
     },
     {
       "id": "t2-attack-counter-counter",
-      "name": "Vein Splitter",
-      "description": "Hit twice for 9; if rage ≥3, +4 pierce hit and consume 3 rage.",
+      "name": "Cleaver's Tax",
+      "description": "Deal 12 Pierce (scales STR). Overload: -5 Rage, +20 dmg, lockout 4s.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1922,32 +2059,164 @@
       "effects": [
         {
           "type": "damage",
-          "value": 9,
+          "value": 12,
           "target": "enemy",
+          "pierce_armor": true,
           "scale": {
             "stat": "str",
             "per": 2,
             "value": 1
-          },
-          "multi_hit": 1
-        },
-        {
-          "type": "damage",
-          "value": 4,
-          "target": "enemy",
-          "pierce_armor": true,
-          "condition": {
-            "self_has_stack": "rage"
           }
         },
         {
+          "type": "damage",
+          "value": 20,
+          "target": "enemy",
+          "pierce_armor": true,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
+          },
+          "condition": {
+            "self_stack_atleast": {
+              "stack": "rage",
+              "value": 5
+            }
+          },
+          "overload_lockout_ms": 4000
+        },
+        {
           "type": "stack",
-          "value": -3,
+          "value": -5,
           "target": "self",
           "stack": "rage",
           "consume_stack": true,
           "condition": {
-            "self_has_stack": "rage"
+            "self_stack_atleast": {
+              "stack": "rage",
+              "value": 5
+            }
+          }
+        }
+      ],
+      "cost": {
+        "stamina": 2
+      },
+      "cooldown": 2,
+      "targeting": "single",
+      "rarity": "rare"
+    },
+    {
+      "id": "t2-counter-counter-defense",
+      "name": "Wrathshell Vow",
+      "description": "Exhaust. Channel 4s, then aura: +1 Rage every 3s (scales STR). On hit taken: +1 Rage.",
+      "category": "defense",
+      "tier": 2,
+      "elements": [
+        "counter",
+        "counter",
+        "defense"
+      ],
+      "effects": [
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": null,
+          "channel_ms": 4000,
+          "tick_ms": 3000,
+          "then": {
+            "type": "stack",
+            "value": 1,
+            "target": "self",
+            "stack": "rage"
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": null,
+          "channel_ms": 4000,
+          "trigger": "on_hit_taken",
+          "cooldown_ms": 800,
+          "then": {
+            "type": "stack",
+            "value": 1,
+            "target": "self",
+            "stack": "rage"
+          }
+        }
+      ],
+      "cost": {
+        "stamina": 2
+      },
+      "cooldown": 6,
+      "targeting": "self",
+      "rarity": "epic",
+      "exhaust": true
+    },
+    {
+      "id": "t2-agility-counter-counter",
+      "name": "Razor Cadence",
+      "description": "Deal 5 ×3 (scales DEX). Each hit: Bleed 1. Vengeance: ×4 hits.",
+      "category": "attack",
+      "tier": 2,
+      "elements": [
+        "agility",
+        "counter",
+        "counter"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          },
+          "multi_hit": 2
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "bleed",
+          "per_hit": true,
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
+          }
+        },
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          },
+          "condition": {
+            "hero_hp_pct_below": 50
+          }
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
+          },
+          "condition": {
+            "hero_hp_pct_below": 50
           }
         }
       ],
@@ -1959,96 +2228,9 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-counter-defense",
-      "name": "Wrathwall",
-      "description": "Gain 14 armor; on break, +5 rage.",
-      "category": "defense",
-      "tier": 2,
-      "elements": [
-        "counter",
-        "counter",
-        "defense"
-      ],
-      "effects": [
-        {
-          "type": "armor",
-          "value": 14,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 15000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "stack",
-            "value": 5,
-            "target": "self",
-            "stack": "rage"
-          }
-        }
-      ],
-      "cost": {
-        "stamina": 2
-      },
-      "cooldown": 2.8,
-      "targeting": "self",
-      "rarity": "rare"
-    },
-    {
-      "id": "t2-agility-counter-counter",
-      "name": "Whirlwind of Spite",
-      "description": "Hit twice; if rage ≥3, +12 dmg and consume 3 rage.",
-      "category": "attack",
-      "tier": 2,
-      "elements": [
-        "agility",
-        "counter",
-        "counter"
-      ],
-      "effects": [
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
-          "multi_hit": 1
-        },
-        {
-          "type": "damage",
-          "value": 12,
-          "target": "enemy",
-          "condition": {
-            "self_has_stack": "rage"
-          }
-        },
-        {
-          "type": "stack",
-          "value": -3,
-          "target": "self",
-          "stack": "rage",
-          "consume_stack": true,
-          "condition": {
-            "self_has_stack": "rage"
-          }
-        }
-      ],
-      "cost": {
-        "stamina": 2
-      },
-      "cooldown": 2.2,
-      "targeting": "single",
-      "rarity": "uncommon"
-    },
-    {
       "id": "t2-agility-attack-defense",
       "name": "Flowstrike",
-      "description": "Deal 10; gain 10 armor; −15% cd aura 6s.",
+      "description": "Deal 10 (scales STR). Armor 10. Haste 15% (6s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2092,8 +2274,8 @@
     },
     {
       "id": "t2-attack-counter-defense",
-      "name": "Vengeful Bulwark",
-      "description": "Gain 12 armor; if armor ≥20, deal 18 pierce.",
+      "name": "Last Stand Bulwark",
+      "description": "Armor 10 (scales VIT). Berserk (<50% HP): +10 Armor and 12 Pierce (scales STR).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2104,7 +2286,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 12,
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -2113,12 +2295,30 @@
           }
         },
         {
+          "type": "armor",
+          "value": 10,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 2
+          },
+          "condition": {
+            "hero_hp_pct_below": 50
+          }
+        },
+        {
           "type": "damage",
-          "value": 18,
+          "value": 12,
           "target": "enemy",
           "pierce_armor": true,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 2
+          },
           "condition": {
-            "self_armor_atleast": 20
+            "hero_hp_pct_below": 50
           }
         }
       ],
@@ -2126,13 +2326,13 @@
         "stamina": 2
       },
       "cooldown": 2.6,
-      "targeting": "single",
+      "targeting": "self",
       "rarity": "uncommon"
     },
     {
       "id": "t2-agility-attack-counter",
-      "name": "Cutpurse",
-      "description": "Deal 8; bleed 3; +2 dmg per bleed.",
+      "name": "Vein Splitter",
+      "description": "Deal 4 ×3 (scales DEX). Each hit: Bleed +1 per existing Bleed.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2143,41 +2343,54 @@
       "effects": [
         {
           "type": "damage",
-          "value": 8,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "dex",
             "per": 3,
             "value": 1
+          },
+          "multi_hit": 2
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "bleed",
+          "per_hit": true,
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 1,
           "target": "enemy",
-          "stack": "bleed"
-        },
-        {
-          "type": "damage",
-          "value": 2,
-          "target": "enemy",
+          "stack": "bleed",
+          "per_hit": true,
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
+          },
           "condition": {
-            "enemy_has_stack": "bleed",
-            "per_stack": true
+            "enemy_has_stack": "bleed"
           }
         }
       ],
       "cost": {
-        "stamina": 1
+        "stamina": 2
       },
-      "cooldown": 1.8,
+      "cooldown": 2.4,
       "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-agility-counter-defense",
       "name": "Bramble Step",
-      "description": "Gain 10 armor; on break, bleed 4.",
+      "description": "Armor 10 (scales DEX). Brace: Bleed 3.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -2204,7 +2417,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 3,
             "target": "enemy",
             "stack": "bleed"
           }
@@ -2219,8 +2432,8 @@
     },
     {
       "id": "t2-fire-fire-fire",
-      "name": "Inferno Detonator",
-      "description": "Damage 4 per burn stack (pierces); consume all burn. Reseed 2 burn.",
+      "name": "Supernova",
+      "description": "Exhaust. Consume all Burn: 5 Pierce per stack consumed (AoE, scales INT).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2231,39 +2444,37 @@
       "effects": [
         {
           "type": "damage",
-          "value": 4,
-          "target": "enemy",
+          "value": 5,
+          "target": "aoe",
           "pierce_armor": true,
-          "condition": {
-            "enemy_has_stack": "burn",
-            "per_stack": true
+          "consume_stack_value": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
         },
         {
           "type": "stack",
-          "value": -99,
+          "value": -999,
           "target": "enemy",
           "stack": "burn",
           "consume_stack": true
-        },
-        {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "burn"
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 2,
+        "mana": 1
       },
-      "cooldown": 3.2,
+      "cooldown": 4,
       "targeting": "aoe",
-      "rarity": "rare"
+      "rarity": "rare",
+      "exhaust": true
     },
     {
       "id": "t2-water-water-water",
       "name": "Tidesong Aura",
-      "description": "Heal 12; +3 SPI aura 10s; restore 3 mana.",
+      "description": "Heal 12 (scales SPI). +3 SPI (10s). +3 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2308,7 +2519,7 @@
     {
       "id": "t2-air-air-air",
       "name": "Tempest Cadence",
-      "description": "AoE 8 dmg; −30% cd aura 10s.",
+      "description": "Deal 8 (scales DEX). Haste 30% (10s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2348,7 +2559,7 @@
     {
       "id": "t2-earth-earth-earth",
       "name": "Mountain's Answer",
-      "description": "Gain 26 armor; if armor ≥20, deal 22 pierce.",
+      "description": "Armor 26 (scales VIT). Fortified 20: 22 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2386,8 +2597,8 @@
     },
     {
       "id": "t2-fire-fire-water",
-      "name": "Steam Lash",
-      "description": "Deal 12 + 3 burn; consume 3 burn → +10 dmg.",
+      "name": "Quench Lance",
+      "description": "Convert 3 Burn into Bleed. Deal 4 per Bleed (scales STR). Burn 2 (scales INT).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2397,43 +2608,50 @@
       ],
       "effects": [
         {
-          "type": "damage",
-          "value": 12,
-          "target": "enemy"
-        },
-        {
-          "type": "dot",
+          "type": "convert_stack",
           "value": 3,
           "target": "enemy",
-          "stack": "burn"
+          "from": "burn",
+          "to": "bleed"
         },
         {
           "type": "damage",
-          "value": 10,
+          "value": 4,
           "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          },
           "condition": {
-            "enemy_has_stack": "burn"
+            "enemy_has_stack": "bleed",
+            "per_stack": true
           }
         },
         {
-          "type": "stack",
-          "value": -3,
+          "type": "dot",
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
-          "consume_stack": true
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 2.6,
-      "targeting": "aoe",
-      "rarity": "rare"
+      "cooldown": 2.4,
+      "targeting": "single",
+      "rarity": "uncommon"
     },
     {
       "id": "t2-air-fire-fire",
-      "name": "Updraft Ember",
-      "description": "Hit twice for 7; +per burn pierce 3.",
+      "name": "Pyre Surge",
+      "description": "+2 to every Burn on enemy (scales INT). Vulnerable Fire 3 (8s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2443,33 +2661,39 @@
       ],
       "effects": [
         {
-          "type": "damage",
-          "value": 7,
+          "type": "stack_boost",
+          "value": 2,
           "target": "enemy",
-          "multi_hit": 1
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 4,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
-          "value": 3,
+          "type": "aura",
+          "value": 0,
           "target": "enemy",
-          "pierce_armor": true,
-          "condition": {
-            "enemy_has_stack": "burn",
-            "per_stack": true
+          "ttl_ms": 8000,
+          "modifier": {
+            "kind": "burn_taken",
+            "value": 3
           }
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 2.4,
-      "targeting": "aoe",
-      "rarity": "rare"
+      "cooldown": 2.8,
+      "targeting": "single",
+      "rarity": "uncommon"
     },
     {
       "id": "t2-earth-fire-fire",
-      "name": "Coalwall",
-      "description": "Gain 14 armor; on break, dot 5 burn.",
+      "name": "Magma Welling",
+      "description": "Armor 14 (scales VIT). Burn 8 (scales INT). Slow cooldown.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2489,30 +2713,28 @@
           }
         },
         {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "dot",
-            "value": 5,
-            "target": "enemy",
-            "stack": "burn"
+          "type": "dot",
+          "value": 8,
+          "target": "enemy",
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 2
       },
-      "cooldown": 3,
+      "cooldown": 4.5,
       "targeting": "single",
-      "rarity": "rare"
+      "rarity": "uncommon"
     },
     {
       "id": "t2-fire-water-water",
       "name": "Phoenix Aura",
-      "description": "Heal 10; below 50% HP, gain 18 armor.",
+      "description": "Heal 10 (scales SPI). Guard 50%: Armor 18 (12s).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2555,7 +2777,7 @@
     {
       "id": "t2-air-water-water",
       "name": "Misted Cadence",
-      "description": "Heal 9; −25% cd aura 8s; +3 mana.",
+      "description": "Heal 9 (scales SPI). Haste 25% (8s). +3 Mana.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -2600,7 +2822,7 @@
     {
       "id": "t2-earth-water-water",
       "name": "Brine Bedrock",
-      "description": "Heal 10; below 50% HP, poison 6.",
+      "description": "Heal 10 (scales SPI). Vengeance: Poison 4.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2621,7 +2843,7 @@
         },
         {
           "type": "dot",
-          "value": 6,
+          "value": 4,
           "target": "enemy",
           "stack": "poison",
           "condition": {
@@ -2638,8 +2860,8 @@
     },
     {
       "id": "t2-air-air-fire",
-      "name": "Cinder Gale",
-      "description": "Shock 3 + burn 3; +2 dmg per shock.",
+      "name": "Cinder Squall",
+      "description": "Slow 3 AoE (scales INT). If Slow ≥ 5: Stun 1. 2 damage per Slow stack.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2651,36 +2873,58 @@
         {
           "type": "dot",
           "value": 3,
-          "target": "enemy",
-          "stack": "shock"
+          "target": "aoe",
+          "stack": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "burn"
+          "value": 1,
+          "target": "aoe",
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 5,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stack_atleast": {
+              "stack": "slow",
+              "value": 5
+            }
+          }
         },
         {
           "type": "damage",
           "value": 2,
-          "target": "enemy",
+          "target": "aoe",
+          "scale": {
+            "stat": "int",
+            "per": 2,
+            "value": 1
+          },
           "condition": {
-            "enemy_has_stack": "shock",
+            "enemy_has_stack": "slow",
             "per_stack": true
           }
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 2.2,
+      "cooldown": 2.6,
       "targeting": "aoe",
       "rarity": "uncommon"
     },
     {
       "id": "t2-air-air-water",
       "name": "Squall Aura",
-      "description": "Heal 6; −25% cd aura 8s; +4 mana.",
+      "description": "Heal 6. Haste 25% (8s). +4 Mana.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2692,7 +2936,12 @@
         {
           "type": "heal",
           "value": 6,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -2719,8 +2968,8 @@
     },
     {
       "id": "t2-air-air-earth",
-      "name": "Dust Cyclone",
-      "description": "Gain 10 armor; on break, shock 4.",
+      "name": "Dust Plague",
+      "description": "Armor 8 (scales VIT). Aura 12s: every 2.5s apply Slow 1 AoE (scales INT). ≥5 Slow → Stun.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2731,34 +2980,65 @@
       "effects": [
         {
           "type": "armor",
-          "value": 10,
-          "target": "self"
+          "value": 8,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
           "value": 0,
           "target": "self",
           "ttl_ms": 12000,
-          "trigger": "on_armor_break",
+          "tick_ms": 2500,
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 1,
+            "target": "aoe",
+            "stack": "slow",
+            "scale": {
+              "stat": "int",
+              "per": 4,
+              "value": 1
+            }
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_enemy_stack_threshold",
+          "threshold_stack": "slow",
+          "threshold": 5,
+          "then": {
+            "type": "dot",
+            "value": 1,
             "target": "enemy",
-            "stack": "shock"
+            "stack": "stun",
+            "scale": {
+              "stat": "int",
+              "per": 5,
+              "value": 1
+            }
           }
         }
       ],
       "cost": {
+        "stamina": 1,
         "mana": 2
       },
       "cooldown": 2.8,
-      "targeting": "aoe",
+      "targeting": "self",
       "rarity": "rare"
     },
     {
       "id": "t2-earth-earth-fire",
       "name": "Magma Vow",
-      "description": "Gain 14 armor; below 40% HP, 20 pierce.",
+      "description": "Armor 14 (scales VIT). Vengeance: 20 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2796,8 +3076,8 @@
     },
     {
       "id": "t2-earth-earth-water",
-      "name": "Mudbind",
-      "description": "Gain 12 armor; poison 3; if armor ≥15, +3 poison.",
+      "name": "Bog Catalyst",
+      "description": "Poison 2 (scales INT). Catalyze x2: doubles Poison on enemy.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2807,42 +3087,36 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 12,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
           "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "poison",
-          "condition": {
-            "self_armor_atleast": 15
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
+        },
+        {
+          "type": "multiply_stack",
+          "value": 0,
+          "target": "enemy",
+          "stack": "poison",
+          "factor": 2
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 2.8,
+      "cooldown": 4,
       "targeting": "single",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     {
       "id": "t2-air-earth-earth",
       "name": "Standing Stone",
-      "description": "Gain 16 armor; on break, heal 8.",
+      "description": "Armor 16 (scales VIT). Brace: Heal 8. Haste 10% (8s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2893,8 +3167,8 @@
     },
     {
       "id": "t2-air-fire-water",
-      "name": "Triadic Hex",
-      "description": "Burn 3 + poison 3 + shock 3.",
+      "name": "Steaming Plague",
+      "description": "Poison 3 AoE (scales INT). +2 extra Poison on already-poisoned enemies.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2906,33 +3180,41 @@
         {
           "type": "dot",
           "value": 3,
-          "target": "enemy",
-          "stack": "burn"
+          "target": "aoe",
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "shock"
+          "value": 2,
+          "target": "aoe",
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 4,
+            "value": 1
+          },
+          "condition": {
+            "enemy_has_stack": "poison"
+          }
         }
       ],
       "cost": {
-        "mana": 3
+        "stamina": 1,
+        "mana": 1
       },
-      "cooldown": 3,
+      "cooldown": 2.4,
       "targeting": "aoe",
-      "rarity": "rare"
+      "rarity": "uncommon"
     },
     {
       "id": "t2-earth-fire-water",
-      "name": "Alchemist's Cauldron",
-      "description": "Consume 3 burn → heal 10 + poison 3.",
+      "name": "Alchemic Drain",
+      "description": "Consume up to 4 Poison: Heal 4 per stack consumed (scales SPI).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2943,40 +3225,35 @@
       "effects": [
         {
           "type": "heal",
-          "value": 10,
+          "value": 4,
           "target": "self",
-          "condition": {
-            "enemy_has_stack": "burn"
-          }
-        },
-        {
-          "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "poison",
-          "condition": {
-            "enemy_has_stack": "burn"
+          "consume_stack_value": "poison",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
           }
         },
         {
           "type": "stack",
-          "value": -3,
+          "value": -4,
           "target": "enemy",
-          "stack": "burn",
+          "stack": "poison",
           "consume_stack": true
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
       "cooldown": 3,
       "targeting": "single",
-      "rarity": "rare"
+      "rarity": "uncommon"
     },
     {
       "id": "t2-air-earth-fire",
-      "name": "Sandstorm Pyre",
-      "description": "Hit twice for 8; per shock stack pierce 2.",
+      "name": "Sandfury",
+      "description": "Deal 8 ×2. Per Slow: 2 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -2989,7 +3266,12 @@
           "type": "damage",
           "value": 8,
           "target": "enemy",
-          "multi_hit": 1
+          "multi_hit": 1,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "damage",
@@ -2997,7 +3279,7 @@
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
-            "enemy_has_stack": "shock",
+            "enemy_has_stack": "slow",
             "per_stack": true
           }
         }
@@ -3011,8 +3293,8 @@
     },
     {
       "id": "t2-air-earth-water",
-      "name": "Stormbog",
-      "description": "Poison 3 + shock 3; if enemy poisoned, +14 dmg.",
+      "name": "Marsh Squall",
+      "description": "Exhaust. Spread 50% Poison AoE. 4 Pierce per Poison consumed (scales INT).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -3022,37 +3304,49 @@
       ],
       "effects": [
         {
-          "type": "dot",
-          "value": 3,
+          "type": "stack",
+          "value": 0,
           "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "shock"
+          "stack": "poison",
+          "spread": {
+            "ratio": 0.5,
+            "target": "aoe",
+            "max_targets": 4
+          }
         },
         {
           "type": "damage",
-          "value": 14,
-          "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "poison"
+          "value": 0,
+          "target": "aoe",
+          "pierce_armor": true,
+          "consume_stack_value": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 2,
+            "value": 4
           }
+        },
+        {
+          "type": "stack",
+          "value": -999,
+          "target": "enemy",
+          "stack": "poison",
+          "consume_stack": true
         }
       ],
       "cost": {
+        "stamina": 2,
         "mana": 2
       },
-      "cooldown": 3,
+      "cooldown": 5,
       "targeting": "aoe",
-      "rarity": "rare"
+      "rarity": "rare",
+      "exhaust": true
     },
     {
       "id": "t2-attack-attack-fire",
       "name": "Cinder Thrust",
-      "description": "Hit twice for 10; burn 2.",
+      "description": "Deal 10 ×2 (scales STR). Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3089,7 +3383,7 @@
     {
       "id": "t2-attack-attack-water",
       "name": "Soaking Blade",
-      "description": "Deal 12; poison 2; if enemy poisoned, +8 dmg.",
+      "description": "Deal 12 (scales STR). Poison 2. Empowered (if Poison): +7.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3116,7 +3410,7 @@
         },
         {
           "type": "damage",
-          "value": 8,
+          "value": 7,
           "target": "enemy",
           "condition": {
             "enemy_has_stack": "poison"
@@ -3133,7 +3427,7 @@
     {
       "id": "t2-air-attack-attack",
       "name": "Galekick",
-      "description": "Hit twice for 7; shock 2.",
+      "description": "Deal 7 ×2 (scales STR). Slow 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3157,7 +3451,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -3169,8 +3463,8 @@
     },
     {
       "id": "t2-attack-attack-earth",
-      "name": "Boulder Toss",
-      "description": "Deal 18 STR; if armor ≥10, pierce.",
+      "name": "Concussive Smash",
+      "description": "Deal 12 (scales STR). Stun 2 (scales INT).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3181,7 +3475,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 18,
+          "value": 12,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3190,26 +3484,29 @@
           }
         },
         {
-          "type": "damage",
-          "value": 6,
+          "type": "dot",
+          "value": 2,
           "target": "enemy",
-          "pierce_armor": true,
-          "condition": {
-            "self_armor_atleast": 10
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 4,
+            "value": 1
           }
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2.4,
+      "cooldown": 3,
       "targeting": "single",
-      "rarity": "rare"
+      "rarity": "rare",
+      "exhaust": true
     },
     {
       "id": "t2-defense-defense-fire",
-      "name": "Heated Plate",
-      "description": "Gain 16 armor; on break, burn 4.",
+      "name": "Pyric Bulwark",
+      "description": "Armor 12 (scales VIT). Aura 14s: on Armor gained ≥ 4 → Burn 1 (scales INT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3220,7 +3517,57 @@
       "effects": [
         {
           "type": "armor",
-          "value": 16,
+          "value": 12,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 2
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 14000,
+          "trigger": "on_armor_gained",
+          "min_amount": 4,
+          "then": {
+            "type": "dot",
+            "value": 1,
+            "target": "enemy",
+            "stack": "burn",
+            "scale": {
+              "stat": "int",
+              "per": 4,
+              "value": 1
+            }
+          }
+        }
+      ],
+      "cost": {
+        "stamina": 1,
+        "mana": 1
+      },
+      "cooldown": 2.6,
+      "targeting": "self",
+      "rarity": "uncommon"
+    },
+    {
+      "id": "t2-defense-defense-water",
+      "name": "Stagnant Bulwark",
+      "description": "Armor 10 (scales VIT). Aura 12s: every 2s apply Poison 1 (scales INT).",
+      "category": "defense",
+      "tier": 2,
+      "elements": [
+        "defense",
+        "defense",
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 10,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -3233,57 +3580,22 @@
           "value": 0,
           "target": "self",
           "ttl_ms": 12000,
-          "trigger": "on_armor_break",
+          "tick_ms": 2000,
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 1,
             "target": "enemy",
-            "stack": "burn"
+            "stack": "poison",
+            "scale": {
+              "stat": "int",
+              "per": 3,
+              "value": 1
+            }
           }
         }
       ],
       "cost": {
-        "stamina": 2
-      },
-      "cooldown": 2.8,
-      "targeting": "self",
-      "rarity": "rare"
-    },
-    {
-      "id": "t2-defense-defense-water",
-      "name": "Tidewall",
-      "description": "Gain 14 armor; heal 8; poison 2.",
-      "category": "defense",
-      "tier": 2,
-      "elements": [
-        "defense",
-        "defense",
-        "water"
-      ],
-      "effects": [
-        {
-          "type": "armor",
-          "value": 14,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "heal",
-          "value": 8,
-          "target": "self"
-        },
-        {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "poison"
-        }
-      ],
-      "cost": {
+        "stamina": 1,
         "mana": 1
       },
       "cooldown": 2.6,
@@ -3293,7 +3605,7 @@
     {
       "id": "t2-air-defense-defense",
       "name": "Stormgate",
-      "description": "Gain 14 armor; −15% cd aura 10s.",
+      "description": "Armor 14 (scales VIT). Haste 15% (10s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3332,8 +3644,8 @@
     },
     {
       "id": "t2-defense-defense-earth",
-      "name": "Tectonic Vow",
-      "description": "Gain 20 armor; below 50% HP, +12 armor.",
+      "name": "Stoneward Reprisal",
+      "description": "Armor 8 (scales VIT). Brace: Stun 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3344,39 +3656,39 @@
       "effects": [
         {
           "type": "armor",
-          "value": 20,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
-            "value": 4
+            "value": 2
           }
         },
         {
           "type": "aura",
           "value": 0,
           "target": "self",
-          "ttl_ms": 15000,
-          "trigger": "on_hp_pct_below",
-          "threshold": 50,
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
           "then": {
-            "type": "armor",
-            "value": 12,
-            "target": "self"
+            "type": "dot",
+            "value": 2,
+            "target": "enemy",
+            "stack": "stun"
           }
         }
       ],
       "cost": {
-        "stamina": 2
+        "stamina": 1
       },
-      "cooldown": 3.5,
+      "cooldown": 3,
       "targeting": "self",
       "rarity": "rare"
     },
     {
       "id": "t2-agility-agility-fire",
-      "name": "Embertrick",
-      "description": "Burn 4; +2 dmg per burn.",
+      "name": "Twinflame Flicker",
+      "description": "Burn 3 (scales INT). Echo: re-apply Burn 2 after 1.5s.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3387,31 +3699,45 @@
       "effects": [
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
-          "stack": "burn"
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
-          "value": 2,
-          "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "burn",
-            "per_stack": true
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 1600,
+          "tick_ms": 1500,
+          "then": {
+            "type": "dot",
+            "value": 2,
+            "target": "enemy",
+            "stack": "burn",
+            "scale": {
+              "stat": "int",
+              "per": 3,
+              "value": 1
+            }
           }
         }
       ],
       "cost": {
-        "mana": 1
+        "stamina": 1
       },
-      "cooldown": 1.4,
+      "cooldown": 1.6,
       "targeting": "single",
       "rarity": "uncommon"
     },
     {
       "id": "t2-agility-agility-water",
       "name": "Slipstream",
-      "description": "Pierce 6 + poison 2; −15% cd aura 6s.",
+      "description": "6 Pierce (scales DEX). Poison 2. Haste 15% (6s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3458,7 +3784,7 @@
     {
       "id": "t2-agility-agility-air",
       "name": "Zephyr Cascade",
-      "description": "Shock 3; +2 dmg per shock.",
+      "description": "Slow 3. Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3471,16 +3797,18 @@
           "type": "dot",
           "value": 3,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
+          "type": "dot",
           "value": 2,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "shock",
-            "per_stack": true
-          }
+          "stack": "burn"
         }
       ],
       "cost": {
@@ -3493,7 +3821,7 @@
     {
       "id": "t2-agility-agility-earth",
       "name": "Footwork Stone",
-      "description": "Gain 10 armor; −20% cd aura 6s.",
+      "description": "Armor 10 (scales VIT). Haste 20% (6s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3532,8 +3860,8 @@
     },
     {
       "id": "t2-counter-counter-fire",
-      "name": "Ragefire",
-      "description": "Consume 3 rage → 16 dmg + 3 burn.",
+      "name": "Vengeful Pyre",
+      "description": "Exhaust. Devour 1 common: +12 Rage (scales STR). Burn 6 (scales INT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3543,41 +3871,56 @@
       ],
       "effects": [
         {
-          "type": "damage",
-          "value": 16,
-          "target": "enemy",
-          "condition": {
-            "self_has_stack": "rage"
-          }
-        },
-        {
-          "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "burn",
-          "condition": {
-            "self_has_stack": "rage"
+          "type": "devour",
+          "value": 0,
+          "target": "self_deck",
+          "devour": {
+            "from_deck": true,
+            "rarity": "common",
+            "count": 1
           }
         },
         {
           "type": "stack",
-          "value": -3,
+          "value": 12,
           "target": "self",
           "stack": "rage",
-          "consume_stack": true
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 1
+          },
+          "condition": {
+            "devour_succeeded": true
+          }
+        },
+        {
+          "type": "dot",
+          "value": 6,
+          "target": "enemy",
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          },
+          "condition": {
+            "devour_succeeded": true
+          }
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2.4,
-      "targeting": "single",
-      "rarity": "rare"
+      "cooldown": 3,
+      "targeting": "self",
+      "rarity": "rare",
+      "exhaust": true
     },
     {
       "id": "t2-counter-counter-water",
-      "name": "Bitter Tide",
-      "description": "Self-bleed 4; on break, heal 8.",
+      "name": "Crimson Cascade",
+      "description": "Self Bleed 1. Aura 15s: on enemy kill with Bleed, spread 50% Bleed to nearest.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3588,7 +3931,7 @@
       "effects": [
         {
           "type": "dot",
-          "value": 4,
+          "value": 1,
           "target": "self_dot",
           "stack": "bleed"
         },
@@ -3596,26 +3939,34 @@
           "type": "aura",
           "value": 0,
           "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
+          "ttl_ms": 15000,
+          "trigger": "on_kill_with_stack",
+          "threshold_stack": "bleed",
           "then": {
-            "type": "heal",
-            "value": 8,
-            "target": "self"
+            "type": "dot",
+            "value": 4,
+            "target": "enemy_nearest",
+            "stack": "bleed",
+            "scale": {
+              "stat": "spi",
+              "per": 3,
+              "value": 2
+            }
           }
         }
       ],
       "cost": {
+        "stamina": 1,
         "mana": 1
       },
-      "cooldown": 2.6,
-      "targeting": "single",
-      "rarity": "uncommon"
+      "cooldown": 3.5,
+      "targeting": "self",
+      "rarity": "rare"
     },
     {
       "id": "t2-air-counter-counter",
-      "name": "Thunderhowl",
-      "description": "Consume 4 rage → shock 6.",
+      "name": "Wrath Squall",
+      "description": "On 30 Rage: deal 40 (scales STR) + Slow 8 (scales INT). Reset Rage.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3625,33 +3976,57 @@
       ],
       "effects": [
         {
-          "type": "dot",
-          "value": 6,
-          "target": "enemy",
-          "stack": "shock",
-          "condition": {
-            "self_has_stack": "rage"
-          }
-        },
-        {
-          "type": "stack",
-          "value": -4,
+          "type": "aura",
+          "value": 0,
           "target": "self",
-          "stack": "rage",
-          "consume_stack": true
+          "ttl_ms": null,
+          "trigger": "on_stack_threshold",
+          "threshold_stack": "rage",
+          "threshold": 30,
+          "cooldown_ms": 8000,
+          "then": [
+            {
+              "type": "damage",
+              "value": 40,
+              "target": "enemy",
+              "scale": {
+                "stat": "str",
+                "per": 2,
+                "value": 2
+              }
+            },
+            {
+              "type": "dot",
+              "value": 8,
+              "target": "enemy",
+              "stack": "slow",
+              "scale": {
+                "stat": "int",
+                "per": 3,
+                "value": 1
+              }
+            },
+            {
+              "type": "stack",
+              "value": -99,
+              "target": "self",
+              "stack": "rage",
+              "consume_stack": true
+            }
+          ]
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2.4,
-      "targeting": "single",
-      "rarity": "uncommon"
+      "cooldown": 6,
+      "targeting": "self",
+      "rarity": "rare"
     },
     {
       "id": "t2-counter-counter-earth",
       "name": "Stonewrath",
-      "description": "Gain 12 armor; below 50% HP, +6 rage.",
+      "description": "Armor 12 (scales VIT). Guard 50%: +6 Rage (15s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3695,7 +4070,7 @@
     {
       "id": "t2-attack-defense-fire",
       "name": "Forge Strike",
-      "description": "Deal 12; gain 8 armor; burn 3.",
+      "description": "Deal 12 (scales STR). Armor 8. Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3721,7 +4096,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -3736,7 +4111,7 @@
     {
       "id": "t2-attack-defense-water",
       "name": "Mire Cleave",
-      "description": "Deal 10; gain 8 armor; poison 3.",
+      "description": "Deal 10 (scales STR). Armor 8. Poison 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3762,7 +4137,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "poison"
         }
@@ -3778,7 +4153,7 @@
     {
       "id": "t2-air-attack-defense",
       "name": "Stormhilt",
-      "description": "Hit twice for 8; armor 6; shock 2.",
+      "description": "Deal 8 ×2. Armor 6. Slow 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3791,7 +4166,12 @@
           "type": "damage",
           "value": 8,
           "target": "enemy",
-          "multi_hit": 1
+          "multi_hit": 1,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "armor",
@@ -3802,7 +4182,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -3815,7 +4195,7 @@
     {
       "id": "t2-attack-defense-earth",
       "name": "Earthcleaver",
-      "description": "Deal 14; if armor ≥15, +8 pierce.",
+      "description": "Deal 14 (scales STR). Fortified 15: 8 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3854,7 +4234,7 @@
     {
       "id": "t2-agility-attack-fire",
       "name": "Wickfencer",
-      "description": "Hit twice for 6; +2 dmg per burn.",
+      "description": "Deal 6 ×2. Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3867,16 +4247,18 @@
           "type": "damage",
           "value": 6,
           "target": "enemy",
-          "multi_hit": 1
+          "multi_hit": 1,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
-          "type": "damage",
+          "type": "dot",
           "value": 2,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "burn",
-            "per_stack": true
-          }
+          "stack": "burn"
         }
       ],
       "cost": {
@@ -3889,7 +4271,7 @@
     {
       "id": "t2-agility-attack-water",
       "name": "Drowner's Dart",
-      "description": "Pierce 8; poison 2.",
+      "description": "8 Pierce (scales DEX). Poison 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3927,7 +4309,7 @@
     {
       "id": "t2-agility-air-attack",
       "name": "Skywire",
-      "description": "Hit thrice for 5; shock 2.",
+      "description": "Deal 5 ×3 (scales DEX). Slow 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3951,7 +4333,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -3964,7 +4346,7 @@
     {
       "id": "t2-agility-attack-earth",
       "name": "Quarry Dance",
-      "description": "Deal 10; if armor ≥10, +8 dmg.",
+      "description": "Deal 10 (scales DEX). Fortified 10: Deal 8.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4001,8 +4383,8 @@
     },
     {
       "id": "t2-attack-counter-fire",
-      "name": "Pyre Vengeance",
-      "description": "Consume 3 rage → 12 dmg ×2; burn 3.",
+      "name": "Wrath Brand",
+      "description": "Empowered (if Rage): +12 + 2 Burn. Consume(3) Rage.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4018,11 +4400,16 @@
           "multi_hit": 1,
           "condition": {
             "self_has_stack": "rage"
+          },
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "condition": {
@@ -4046,8 +4433,8 @@
     },
     {
       "id": "t2-attack-counter-water",
-      "name": "Blood Brine",
-      "description": "Self-bleed 3; poison enemy 4.",
+      "name": "Necrotic Festering",
+      "description": "Self Bleed 3 (scales DEX). Apply Poison = Self Bleed (scales INT). Pierce per stack pair.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4060,36 +4447,57 @@
           "type": "dot",
           "value": 3,
           "target": "self_dot",
-          "stack": "bleed"
-        },
-        {
-          "type": "dot",
-          "value": 4,
-          "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy",
+          "stack": "bleed",
           "scale": {
-            "stat": "str",
+            "stat": "dex",
             "per": 3,
             "value": 1
           }
+        },
+        {
+          "type": "stack",
+          "value": 0,
+          "target": "enemy",
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 4,
+            "value": 1,
+            "source": "self_stack",
+            "stack": "bleed"
+          }
+        },
+        {
+          "type": "damage",
+          "value": 0,
+          "target": "enemy",
+          "pierce_armor": true,
+          "consume_stack_value": "bleed",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 4
+          }
+        },
+        {
+          "type": "stack",
+          "value": -99,
+          "target": "self",
+          "stack": "bleed",
+          "consume_stack": true
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2.4,
+      "cooldown": 2.2,
       "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-air-attack-counter",
-      "name": "Thunderclap",
-      "description": "Deal 10; consume 3 shock → +12 pierce.",
+      "name": "Thunderstrike Catalyst",
+      "description": "Deal 6 (scales STR). Consume 4 Slow: +6 Pierce per stack consumed (scales INT).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4100,37 +4508,48 @@
       "effects": [
         {
           "type": "damage",
-          "value": 10,
-          "target": "enemy"
+          "value": 6,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "damage",
-          "value": 12,
+          "value": 6,
           "target": "enemy",
           "pierce_armor": true,
+          "consume_stack_value": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 2,
+            "value": 1
+          },
           "condition": {
-            "enemy_has_stack": "shock"
+            "enemy_has_stack": "slow"
           }
         },
         {
           "type": "stack",
-          "value": -3,
+          "value": -4,
           "target": "enemy",
-          "stack": "shock",
+          "stack": "slow",
           "consume_stack": true
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 2,
+      "cooldown": 2.4,
       "targeting": "single",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     {
       "id": "t2-attack-counter-earth",
       "name": "Granitewrath",
-      "description": "Deal 14; below 50% HP, +12 pierce.",
+      "description": "Deal 14 (scales STR). Vengeance: 12 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4169,7 +4588,7 @@
     {
       "id": "t2-agility-defense-fire",
       "name": "Ember Vault",
-      "description": "Gain 10 armor; on break, burn 4.",
+      "description": "Armor 10. Brace: Burn 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4181,7 +4600,12 @@
         {
           "type": "armor",
           "value": 10,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -4191,7 +4615,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -4208,7 +4632,7 @@
     {
       "id": "t2-agility-defense-water",
       "name": "Tidefoot Guard",
-      "description": "Gain 12 armor; poison 2; −15% cd aura 6s.",
+      "description": "Armor 12 (scales VIT). Poison 2 (scales INT). Haste 15% (6s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4220,13 +4644,23 @@
         {
           "type": "armor",
           "value": 12,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 2
+          }
         },
         {
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "poison"
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -4249,7 +4683,7 @@
     {
       "id": "t2-agility-air-defense",
       "name": "Galeguard",
-      "description": "Gain 10 armor; −25% cd aura 8s.",
+      "description": "Armor 10. Haste 25% (8s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4261,7 +4695,12 @@
         {
           "type": "armor",
           "value": 10,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -4284,7 +4723,7 @@
     {
       "id": "t2-agility-defense-earth",
       "name": "Quickstone",
-      "description": "Gain 14 armor; below 60% HP, −30% cd aura 6s.",
+      "description": "Armor 14. Guard 60%: Haste 30% (6s) (15s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4296,7 +4735,12 @@
         {
           "type": "armor",
           "value": 14,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -4328,7 +4772,7 @@
     {
       "id": "t2-counter-defense-fire",
       "name": "Ashen Bulwark",
-      "description": "Gain 12 armor; on break, 12 dmg + burn 3.",
+      "description": "Armor 12 (scales VIT). Brace: Deal 12. Brace: Burn 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4367,7 +4811,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 3,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -4382,8 +4826,8 @@
     },
     {
       "id": "t2-counter-defense-water",
-      "name": "Vengeful Brine",
-      "description": "Gain 10 armor; on break, poison 5.",
+      "name": "Crimson Regen Mantle",
+      "description": "Armor 8 (scales VIT). Aura 12s: while HP<50%, heal 3/s (scales SPI). DR 20%.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4394,7 +4838,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 10,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -4407,12 +4851,29 @@
           "value": 0,
           "target": "self",
           "ttl_ms": 12000,
-          "trigger": "on_armor_break",
+          "tick_ms": 1000,
           "then": {
-            "type": "dot",
-            "value": 5,
-            "target": "enemy",
-            "stack": "poison"
+            "type": "heal",
+            "value": 3,
+            "target": "self",
+            "scale": {
+              "stat": "spi",
+              "per": 3,
+              "value": 1
+            },
+            "condition": {
+              "hero_hp_pct_below": 50
+            }
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "modifier": {
+            "kind": "damage_taken_pct",
+            "value": -0.2
           }
         }
       ],
@@ -4426,8 +4887,8 @@
     },
     {
       "id": "t2-air-counter-defense",
-      "name": "Stormwarden",
-      "description": "Gain 10 armor; on break, shock 6.",
+      "name": "Glacial Pact",
+      "description": "Slow 4 (scales INT). Armor 8 (scales VIT). Frenzy: CD -30% below 50% HP.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4437,26 +4898,24 @@
       ],
       "effects": [
         {
+          "type": "dot",
+          "value": 4,
+          "target": "enemy",
+          "stack": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
           "type": "armor",
-          "value": 10,
+          "value": 8,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
             "value": 2
-          }
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "dot",
-            "value": 6,
-            "target": "enemy",
-            "stack": "shock"
           }
         }
       ],
@@ -4464,14 +4923,18 @@
         "stamina": 1,
         "mana": 1
       },
-      "cooldown": 2.8,
+      "cooldown": 2.4,
       "targeting": "self",
-      "rarity": "uncommon"
+      "rarity": "uncommon",
+      "frenzy": {
+        "hero_hp_pct_below": 50,
+        "cd_mult": 0.7
+      }
     },
     {
       "id": "t2-counter-defense-earth",
       "name": "Tombplate",
-      "description": "Gain 18 armor; below 40% HP, +10 armor + 4 rage.",
+      "description": "Armor 18 (scales VIT). Guard 40%: Armor 10 (15s). Guard 40%: +4 Rage (15s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4527,8 +4990,8 @@
     },
     {
       "id": "t2-agility-counter-fire",
-      "name": "Sparkbleed",
-      "description": "Burn 3 + bleed 3; +2 dmg per bleed.",
+      "name": "Searing Razor",
+      "description": "Bleed 2 (scales DEX). Burn 2 (scales INT). Aura 10s: CD -10% per 25% missing HP.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4539,23 +5002,34 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
-          "stack": "burn"
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
-          "target": "enemy",
-          "stack": "bleed"
-        },
-        {
-          "type": "damage",
           "value": 2,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "bleed",
-            "per_stack": true
+          "stack": "burn",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 10000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.1
           }
         }
       ],
@@ -4563,14 +5037,14 @@
         "stamina": 1,
         "mana": 1
       },
-      "cooldown": 1.8,
+      "cooldown": 2.2,
       "targeting": "single",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     {
       "id": "t2-agility-counter-water",
       "name": "Venom Dance",
-      "description": "Poison 4; consume 3 poison → 14 dmg.",
+      "description": "Poison 3 (scales INT). Spread to 2 targets (50%). Vengeance: convert 5 Bleed→Poison.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4581,37 +5055,48 @@
       "effects": [
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "damage",
-          "value": 14,
-          "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "poison"
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
         },
         {
           "type": "stack",
-          "value": -3,
+          "value": 0,
           "target": "enemy",
           "stack": "poison",
-          "consume_stack": true
+          "spread": {
+            "ratio": 0.5,
+            "target": "aoe",
+            "max_targets": 2
+          }
+        },
+        {
+          "type": "convert_stack",
+          "value": 5,
+          "target": "self",
+          "from": "bleed",
+          "to": "poison",
+          "condition": {
+            "hero_hp_pct_below": 60
+          }
         }
       ],
       "cost": {
-        "mana": 1
+        "stamina": 1
       },
-      "cooldown": 2,
+      "cooldown": 1.8,
       "targeting": "single",
       "rarity": "uncommon"
     },
     {
       "id": "t2-agility-air-counter",
       "name": "Static Skirmish",
-      "description": "Shock 3; +3 pierce per shock.",
+      "description": "Slow 3. Per Slow: 3 Pierce.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4624,7 +5109,7 @@
           "type": "dot",
           "value": 3,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         },
         {
           "type": "damage",
@@ -4632,8 +5117,13 @@
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
-            "enemy_has_stack": "shock",
+            "enemy_has_stack": "slow",
             "per_stack": true
+          },
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
           }
         }
       ],
@@ -4648,7 +5138,7 @@
     {
       "id": "t2-agility-counter-earth",
       "name": "Quickearth Rite",
-      "description": "Gain 8 armor; below 60% HP, 14 pierce.",
+      "description": "Armor 8. Vengeance: 14 Pierce.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4669,6 +5159,11 @@
           "pierce_armor": true,
           "condition": {
             "hero_hp_pct_below": 60
+          },
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
           }
         }
       ],
@@ -4683,7 +5178,7 @@
     {
       "id": "t2-attack-fire-fire",
       "name": "Cinderlance",
-      "description": "Hit twice for 8; +2 pierce per burn.",
+      "description": "Deal 8 ×2 (scales STR). Pyre: 3 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4705,7 +5200,7 @@
         },
         {
           "type": "damage",
-          "value": 2,
+          "value": 3,
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
@@ -4724,8 +5219,8 @@
     },
     {
       "id": "t2-attack-water-water",
-      "name": "Drown Lance",
-      "description": "Deal 10 + poison 4; if poisoned, pierce.",
+      "name": "Drowning Lance",
+      "description": "Consume all Poison: 3 Pierce per stack consumed (scales INT).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -4736,42 +5231,36 @@
       "effects": [
         {
           "type": "damage",
-          "value": 10,
-          "target": "enemy",
-          "scale": {
-            "stat": "str",
-            "per": 2,
-            "value": 1
-          }
-        },
-        {
-          "type": "dot",
-          "value": 4,
-          "target": "enemy",
-          "stack": "poison"
-        },
-        {
-          "type": "damage",
-          "value": 6,
+          "value": 0,
           "target": "enemy",
           "pierce_armor": true,
-          "condition": {
-            "enemy_has_stack": "poison"
+          "consume_stack_value": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 2,
+            "value": 3
           }
+        },
+        {
+          "type": "stack",
+          "value": -999,
+          "target": "enemy",
+          "stack": "poison",
+          "consume_stack": true
         }
       ],
       "cost": {
-        "stamina": 1,
+        "stamina": 2,
         "mana": 1
       },
-      "cooldown": 2.4,
+      "cooldown": 3.2,
       "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-air-air-attack",
       "name": "Tempest Pike",
-      "description": "Hit thrice for 6; shock 2.",
+      "description": "Deal 6 ×3. Slow 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4784,13 +5273,18 @@
           "type": "damage",
           "value": 6,
           "target": "enemy",
-          "multi_hit": 2
+          "multi_hit": 2,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -4803,7 +5297,7 @@
     {
       "id": "t2-attack-earth-earth",
       "name": "Mountain's Will",
-      "description": "Deal 20; if armor ≥20, pierce.",
+      "description": "Deal 20 (scales STR). Fortified 20: 8 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4841,8 +5335,8 @@
     },
     {
       "id": "t2-attack-fire-water",
-      "name": "Boiling Edge",
-      "description": "Deal 12; consume 3 burn → poison 4.",
+      "name": "Tremor Detonate",
+      "description": "Exhaust. Deal 6 + 3× (Poison + Bleed + Burn) (scales STR). Consume all.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -4853,8 +5347,9 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 6,
           "target": "enemy",
+          "pierce_armor": true,
           "scale": {
             "stat": "str",
             "per": 2,
@@ -4862,34 +5357,75 @@
           }
         },
         {
-          "type": "dot",
-          "value": 4,
+          "type": "damage",
+          "value": 3,
           "target": "enemy",
-          "stack": "poison",
-          "condition": {
-            "enemy_has_stack": "burn"
+          "pierce_armor": true,
+          "consume_stack_value": "poison",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "enemy",
+          "pierce_armor": true,
+          "consume_stack_value": "bleed",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "damage",
+          "value": 3,
+          "target": "enemy",
+          "pierce_armor": true,
+          "consume_stack_value": "burn",
+          "scale": {
+            "stat": "str",
+            "per": 3,
+            "value": 1
           }
         },
         {
           "type": "stack",
-          "value": -3,
+          "value": -99,
+          "target": "enemy",
+          "stack": "poison",
+          "consume_stack": true
+        },
+        {
+          "type": "stack",
+          "value": -99,
+          "target": "enemy",
+          "stack": "bleed",
+          "consume_stack": true
+        },
+        {
+          "type": "stack",
+          "value": -99,
           "target": "enemy",
           "stack": "burn",
           "consume_stack": true
         }
       ],
       "cost": {
-        "stamina": 1,
-        "mana": 1
+        "stamina": 3
       },
-      "cooldown": 2.4,
+      "cooldown": 5.5,
       "targeting": "single",
-      "rarity": "uncommon"
+      "rarity": "epic",
+      "exhaust": true
     },
     {
       "id": "t2-air-attack-fire",
-      "name": "Galepyre",
-      "description": "Deal 8; shock 3 + burn 3.",
+      "name": "Galebrand",
+      "description": "Deal 8 (scales STR). Slow 3. Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4912,11 +5448,11 @@
           "type": "dot",
           "value": 3,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "burn"
         }
@@ -4932,7 +5468,7 @@
     {
       "id": "t2-attack-earth-fire",
       "name": "Slag Maul",
-      "description": "Deal 14; on break, 12 dmg + burn 3.",
+      "description": "Deal 14 (scales STR). Brace: Deal 12. Brace: Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4971,7 +5507,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 3,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -4987,7 +5523,7 @@
     {
       "id": "t2-air-attack-water",
       "name": "Galetide",
-      "description": "Pierce 10; poison 3 + shock 2.",
+      "description": "10 Pierce (scales STR). Poison 2. Slow 2.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5009,7 +5545,7 @@
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "poison"
         },
@@ -5017,7 +5553,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -5031,7 +5567,7 @@
     {
       "id": "t2-attack-earth-water",
       "name": "Mirebreaker",
-      "description": "Deal 14; if poisoned, pierce +6.",
+      "description": "Deal 14 (scales STR). Empowered (if Poison): +6 Pierce.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5071,7 +5607,7 @@
     {
       "id": "t2-air-attack-earth",
       "name": "Cliffwind Maul",
-      "description": "Deal 12; if armor ≥12, +10 pierce.",
+      "description": "Deal 12 (scales STR). Fortified 12: 10 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5109,8 +5645,8 @@
     },
     {
       "id": "t2-defense-fire-fire",
-      "name": "Forgeward",
-      "description": "Gain 16 armor; on break, burn 6.",
+      "name": "Citadel Inferno",
+      "description": "Exhaust. Spend ALL Armor: AoE Pierce = Armor × 2 (scales STR). Requires Armor ≥ 10.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5120,41 +5656,35 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 16,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
-          }
-        },
-        {
-          "type": "aura",
+          "type": "damage",
           "value": 0,
-          "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "dot",
-            "value": 6,
-            "target": "enemy",
-            "stack": "burn"
+          "target": "aoe",
+          "pierce_armor": true,
+          "scale": {
+            "stat": "str",
+            "per": 1,
+            "value": 2,
+            "source": "armor"
+          },
+          "condition": {
+            "self_armor_atleast": 10
           }
         }
       ],
       "cost": {
-        "stamina": 1,
+        "stamina": 2,
         "mana": 1
       },
-      "cooldown": 2.8,
-      "targeting": "self",
-      "rarity": "rare"
+      "cooldown": 4,
+      "targeting": "aoe",
+      "rarity": "epic",
+      "exhaust": true,
+      "spend_armor": "all"
     },
     {
       "id": "t2-defense-water-water",
       "name": "Brineward",
-      "description": "Gain 14 armor; heal 8; poison 3.",
+      "description": "Armor 14 (scales VIT). Heal 8 (scales SPI). Poison 2 (scales INT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5176,13 +5706,23 @@
         {
           "type": "heal",
           "value": 8,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
-          "stack": "poison"
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         }
       ],
       "cost": {
@@ -5195,7 +5735,7 @@
     {
       "id": "t2-air-air-defense",
       "name": "Galeward",
-      "description": "Gain 12 armor; −20% cd aura 10s.",
+      "description": "Armor 12 (scales VIT). Haste 20% (10s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5235,8 +5775,8 @@
     },
     {
       "id": "t2-defense-earth-earth",
-      "name": "Granite Aegis",
-      "description": "Gain 22 armor; below 50% HP, +10 armor.",
+      "name": "Bedrock Bulwark",
+      "description": "Armor 16 (scales VIT). Aura 15s: on Armor break → re-arm Armor 6 (scales VIT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5247,12 +5787,12 @@
       "effects": [
         {
           "type": "armor",
-          "value": 22,
+          "value": 16,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
-            "value": 4
+            "value": 3
           }
         },
         {
@@ -5260,27 +5800,30 @@
           "value": 0,
           "target": "self",
           "ttl_ms": 15000,
-          "trigger": "on_hp_pct_below",
-          "threshold": 50,
+          "trigger": "on_armor_break",
           "then": {
             "type": "armor",
-            "value": 10,
-            "target": "self"
+            "value": 6,
+            "target": "self",
+            "scale": {
+              "stat": "vit",
+              "per": 3,
+              "value": 1
+            }
           }
         }
       ],
       "cost": {
-        "stamina": 1,
-        "mana": 1
+        "stamina": 2
       },
-      "cooldown": 3.5,
+      "cooldown": 3,
       "targeting": "self",
       "rarity": "rare"
     },
     {
       "id": "t2-defense-fire-water",
       "name": "Steam Bulwark",
-      "description": "Gain 14 armor; on break, poison 4 + burn 4.",
+      "description": "Armor 14 (scales VIT). Brace: Poison 3. Brace: Burn 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5307,7 +5850,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 3,
             "target": "enemy",
             "stack": "poison"
           }
@@ -5320,7 +5863,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -5335,8 +5878,8 @@
     },
     {
       "id": "t2-air-defense-fire",
-      "name": "Ember Sailwall",
-      "description": "Gain 12 armor; burn 3; −15% cd aura 6s.",
+      "name": "Ember Aegis Gust",
+      "description": "Convert all Burn → Armor (cap 20, scales VIT). Haste 15% (6s, scales INT).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5346,15 +5889,17 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 12,
-          "target": "self"
-        },
-        {
-          "type": "dot",
-          "value": 3,
+          "type": "convert_stack",
+          "value": 99,
           "target": "enemy",
-          "stack": "burn"
+          "from": "burn",
+          "to": "armor",
+          "cap": 20,
+          "scale": {
+            "stat": "vit",
+            "per": 4,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -5368,16 +5913,17 @@
         }
       ],
       "cost": {
-        "mana": 2
+        "stamina": 1,
+        "mana": 1
       },
       "cooldown": 2.6,
       "targeting": "self",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     {
       "id": "t2-defense-earth-fire",
       "name": "Magmaplate",
-      "description": "Gain 16 armor; on break, 14 dmg + burn 4.",
+      "description": "Armor 16 (scales VIT). Brace: Deal 14. Brace: Burn 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5416,7 +5962,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 4,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -5432,7 +5978,7 @@
     {
       "id": "t2-air-defense-water",
       "name": "Mistplate",
-      "description": "Gain 12 armor; poison 3 + shock 2.",
+      "description": "Armor 12. Poison 2. Slow 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5444,11 +5990,16 @@
         {
           "type": "armor",
           "value": 12,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
           "stack": "poison"
         },
@@ -5456,7 +6007,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -5469,7 +6020,7 @@
     {
       "id": "t2-defense-earth-water",
       "name": "Bogplate",
-      "description": "Gain 14 armor; below 60% HP, poison 5.",
+      "description": "Armor 14 (scales VIT). Vengeance: Poison 4.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5490,7 +6041,7 @@
         },
         {
           "type": "dot",
-          "value": 5,
+          "value": 4,
           "target": "enemy",
           "stack": "poison",
           "condition": {
@@ -5509,7 +6060,7 @@
     {
       "id": "t2-air-defense-earth",
       "name": "Dustward",
-      "description": "Gain 16 armor; −10% cd aura 12s; on break, shock 4.",
+      "description": "Armor 16 (scales VIT). Haste 10% (12s). Brace: Slow 4.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5548,7 +6099,7 @@
             "type": "dot",
             "value": 4,
             "target": "enemy",
-            "stack": "shock"
+            "stack": "slow"
           }
         }
       ],
@@ -5563,7 +6114,7 @@
     {
       "id": "t2-agility-fire-fire",
       "name": "Cinder Sprint",
-      "description": "Burn 4; consume 3 burn → 12 dmg.",
+      "description": "Burn 3. Pyre: 4.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5574,24 +6125,23 @@
       "effects": [
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
           "stack": "burn"
         },
         {
           "type": "damage",
-          "value": 12,
+          "value": 4,
           "target": "enemy",
           "condition": {
-            "enemy_has_stack": "burn"
+            "enemy_has_stack": "burn",
+            "per_stack": true
+          },
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
           }
-        },
-        {
-          "type": "stack",
-          "value": -3,
-          "target": "enemy",
-          "stack": "burn",
-          "consume_stack": true
         }
       ],
       "cost": {
@@ -5603,8 +6153,8 @@
     },
     {
       "id": "t2-agility-water-water",
-      "name": "Venom Slip",
-      "description": "Poison 5; −15% cd aura 6s.",
+      "name": "Slipvenom Tempo",
+      "description": "Poison 3 (scales INT). Haste 15% (6s). Echo if Poison ≥ 10.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5615,9 +6165,80 @@
       "effects": [
         {
           "type": "dot",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
-          "stack": "poison"
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.15
+          }
+        },
+        {
+          "type": "dot",
+          "value": 3,
+          "target": "enemy",
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stack_atleast": {
+              "stack": "poison",
+              "value": 10
+            }
+          }
+        }
+      ],
+      "cost": {
+        "stamina": 1,
+        "mana": 1
+      },
+      "cooldown": 1.6,
+      "targeting": "single",
+      "rarity": "uncommon"
+    },
+    {
+      "id": "t2-agility-air-air",
+      "name": "Gale Echo",
+      "description": "Aura 12s: Slow effects apply +1 extra (scales INT). Haste 15% (6s).",
+      "category": "magic",
+      "tier": 2,
+      "elements": [
+        "agility",
+        "air",
+        "air"
+      ],
+      "effects": [
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_slow_applied",
+          "then": {
+            "type": "dot",
+            "value": 1,
+            "target": "enemy",
+            "stack": "slow",
+            "scale": {
+              "stat": "int",
+              "per": 4,
+              "value": 1
+            }
+          }
         },
         {
           "type": "aura",
@@ -5631,52 +6252,17 @@
         }
       ],
       "cost": {
+        "stamina": 1,
         "mana": 1
       },
-      "cooldown": 1.6,
+      "cooldown": 2.4,
       "targeting": "self",
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-air",
-      "name": "Stormstep",
-      "description": "Shock 4; −20% cd aura 6s.",
-      "category": "magic",
-      "tier": 2,
-      "elements": [
-        "agility",
-        "air",
-        "air"
-      ],
-      "effects": [
-        {
-          "type": "dot",
-          "value": 4,
-          "target": "enemy",
-          "stack": "shock"
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 6000,
-          "modifier": {
-            "kind": "cd_reduction",
-            "value": 0.2
-          }
-        }
-      ],
-      "cost": {
-        "mana": 1
-      },
-      "cooldown": 1.4,
-      "targeting": "aoe",
-      "rarity": "rare"
-    },
-    {
       "id": "t2-agility-earth-earth",
       "name": "Stonepacer",
-      "description": "Gain 10 armor; −20% cd aura 8s.",
+      "description": "Armor 10. Haste 20% (8s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5688,7 +6274,12 @@
         {
           "type": "armor",
           "value": 10,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -5711,7 +6302,7 @@
     {
       "id": "t2-agility-fire-water",
       "name": "Boilstep",
-      "description": "Pierce 6; burn 2 + poison 2.",
+      "description": "6 Pierce (scales DEX). Burn 2. Poison 2.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5754,7 +6345,7 @@
     {
       "id": "t2-agility-air-fire",
       "name": "Galecinder",
-      "description": "Hit twice for 5; burn 2 + shock 2.",
+      "description": "Deal 5 ×2. Burn 2. Slow 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5767,7 +6358,12 @@
           "type": "damage",
           "value": 5,
           "target": "enemy",
-          "multi_hit": 1
+          "multi_hit": 1,
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
@@ -5779,7 +6375,7 @@
           "type": "dot",
           "value": 2,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         }
       ],
       "cost": {
@@ -5793,7 +6389,7 @@
     {
       "id": "t2-agility-earth-fire",
       "name": "Cinderquake",
-      "description": "Deal 10; if armor ≥10, burn 4 pierce.",
+      "description": "Deal 10 (scales DEX). Fortified 10: 4 Pierce + Burn 2.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5823,7 +6419,7 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
           "stack": "burn",
           "condition": {
@@ -5841,7 +6437,7 @@
     {
       "id": "t2-agility-air-water",
       "name": "Stormsplash",
-      "description": "Poison 3 + shock 3; +2 dmg per shock.",
+      "description": "Poison 2. Slow 3. Burn 2.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5852,24 +6448,26 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "enemy",
-          "stack": "poison"
+          "stack": "poison",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "dot",
           "value": 3,
           "target": "enemy",
-          "stack": "shock"
+          "stack": "slow"
         },
         {
-          "type": "damage",
+          "type": "dot",
           "value": 2,
           "target": "enemy",
-          "condition": {
-            "enemy_has_stack": "shock",
-            "per_stack": true
-          }
+          "stack": "burn"
         }
       ],
       "cost": {
@@ -5882,7 +6480,7 @@
     {
       "id": "t2-agility-earth-water",
       "name": "Mireglide",
-      "description": "Gain 8 armor; poison 4; −15% cd aura 6s.",
+      "description": "Armor 8. Poison 3. Haste 15% (6s).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -5894,11 +6492,16 @@
         {
           "type": "armor",
           "value": 8,
-          "target": "self"
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 1
+          }
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
           "stack": "poison"
         },
@@ -5922,8 +6525,8 @@
     },
     {
       "id": "t2-agility-air-earth",
-      "name": "Quarrygale",
-      "description": "Gain 8 armor; shock 3; −20% cd aura 6s.",
+      "name": "Stormstone Tempo",
+      "description": "Channel: Deal 6 (scales DEX, +25%/s held, max +100%). Shatter: 6 Pierce (scales STR).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -5933,38 +6536,45 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 8,
-          "target": "self"
-        },
-        {
-          "type": "dot",
-          "value": 3,
+          "type": "damage",
+          "value": 6,
           "target": "enemy",
-          "stack": "shock"
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          },
+          "channel": {
+            "max_bonus": 1,
+            "ramp_per_sec": 0.25
+          }
         },
         {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 6000,
-          "modifier": {
-            "kind": "cd_reduction",
-            "value": 0.2
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "pierce_armor": true,
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stunned": true
           }
         }
       ],
       "cost": {
-        "mana": 1
+        "stamina": 2
       },
-      "cooldown": 2,
-      "targeting": "aoe",
+      "cooldown": 3,
+      "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-counter-fire-fire",
-      "name": "Rage Pyre",
-      "description": "Consume 4 rage → 14 dmg + burn 4.",
+      "name": "Brine Crucible",
+      "description": "Overload (+3s next CD): convert all Burn → Bleed (1:2, scales DEX).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5974,42 +6584,47 @@
       ],
       "effects": [
         {
-          "type": "damage",
-          "value": 14,
+          "type": "convert_stack",
+          "value": 99,
           "target": "enemy",
-          "condition": {
-            "self_has_stack": "rage"
+          "from": "burn",
+          "to": "bleed",
+          "factor": 2,
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
           }
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 2,
           "target": "enemy",
-          "stack": "burn",
-          "condition": {
-            "self_has_stack": "rage"
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
           }
         },
         {
-          "type": "stack",
-          "value": -4,
-          "target": "self",
-          "stack": "rage",
-          "consume_stack": true
+          "type": "cd_debt",
+          "value": 3,
+          "target": "self"
         }
       ],
       "cost": {
         "stamina": 1,
         "mana": 1
       },
-      "cooldown": 2.6,
-      "targeting": "self",
+      "cooldown": 2.4,
+      "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-counter-water-water",
-      "name": "Bleedbrine",
-      "description": "Self-bleed 4; on break, poison 6.",
+      "name": "Tidefoot Bloom",
+      "description": "Convert all Poison → Bleed 1:1 (scales DEX). Echo 1 (6s, scales INT).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6019,22 +6634,26 @@
       ],
       "effects": [
         {
-          "type": "dot",
-          "value": 4,
-          "target": "self_dot",
-          "stack": "bleed"
+          "type": "convert_stack",
+          "value": 99,
+          "target": "enemy",
+          "from": "poison",
+          "to": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 4,
+            "value": 1
+          }
         },
         {
-          "type": "aura",
-          "value": 0,
+          "type": "echo",
+          "value": 1,
           "target": "self",
-          "ttl_ms": 12000,
-          "trigger": "on_armor_break",
-          "then": {
-            "type": "dot",
-            "value": 6,
-            "target": "enemy",
-            "stack": "poison"
+          "ttl_ms": 6000,
+          "scale": {
+            "stat": "int",
+            "per": 8,
+            "value": 1
           }
         }
       ],
@@ -6042,14 +6661,14 @@
         "stamina": 1,
         "mana": 1
       },
-      "cooldown": 2.6,
-      "targeting": "self",
+      "cooldown": 2.2,
+      "targeting": "single",
       "rarity": "rare"
     },
     {
       "id": "t2-air-air-counter",
       "name": "Stormrage",
-      "description": "Consume 4 rage → shock 8.",
+      "description": "Empowered (if Rage): +8 Slow. Consume(4) Rage.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6062,9 +6681,14 @@
           "type": "dot",
           "value": 8,
           "target": "enemy",
-          "stack": "shock",
+          "stack": "slow",
           "condition": {
             "self_has_stack": "rage"
+          },
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
           }
         },
         {
@@ -6086,7 +6710,7 @@
     {
       "id": "t2-counter-earth-earth",
       "name": "Tombrage",
-      "description": "Gain 12 armor; below 40% HP, +8 rage.",
+      "description": "Armor 12 (scales VIT). Guard 40%: +8 Rage (15s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6129,8 +6753,8 @@
     },
     {
       "id": "t2-counter-fire-water",
-      "name": "Venompyre",
-      "description": "Consume 3 burn → poison 5; +2 dmg per poison.",
+      "name": "Venom Detonation",
+      "description": "Burn 2. Poison 3. Pyre: 2.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6141,27 +6765,28 @@
       "effects": [
         {
           "type": "dot",
-          "value": 5,
+          "value": 2,
           "target": "enemy",
-          "stack": "poison",
-          "condition": {
-            "enemy_has_stack": "burn"
-          }
+          "stack": "burn"
         },
         {
-          "type": "stack",
-          "value": -3,
+          "type": "dot",
+          "value": 3,
           "target": "enemy",
-          "stack": "burn",
-          "consume_stack": true
+          "stack": "poison"
         },
         {
           "type": "damage",
           "value": 2,
           "target": "enemy",
           "condition": {
-            "enemy_has_stack": "poison",
+            "enemy_has_stack": "burn",
             "per_stack": true
+          },
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
           }
         }
       ],
@@ -6176,7 +6801,7 @@
     {
       "id": "t2-air-counter-fire",
       "name": "Static Bleed",
-      "description": "Self-bleed 3; on break, shock 4.",
+      "description": "Self Bleed 2. Brace: Slow 4.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6187,9 +6812,14 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "self_dot",
-          "stack": "bleed"
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -6201,7 +6831,7 @@
             "type": "dot",
             "value": 4,
             "target": "enemy",
-            "stack": "shock"
+            "stack": "slow"
           }
         }
       ],
@@ -6216,7 +6846,7 @@
     {
       "id": "t2-counter-earth-fire",
       "name": "Magmavow",
-      "description": "Gain 10 armor; on break, 16 pierce + burn 3.",
+      "description": "Armor 10 (scales VIT). Brace: 16 Pierce. Brace: Burn 2.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6256,7 +6886,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 3,
+            "value": 2,
             "target": "enemy",
             "stack": "burn"
           }
@@ -6272,7 +6902,7 @@
     {
       "id": "t2-air-counter-water",
       "name": "Tempestbleed",
-      "description": "Self-bleed 3; on break, deal 6 + shock 2.",
+      "description": "Self Bleed 2. Brace: Deal 6. Brace: Slow 2.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6283,9 +6913,14 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 2,
           "target": "self_dot",
-          "stack": "bleed"
+          "stack": "bleed",
+          "scale": {
+            "stat": "dex",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "aura",
@@ -6309,7 +6944,7 @@
             "type": "dot",
             "value": 2,
             "target": "enemy",
-            "stack": "shock"
+            "stack": "slow"
           }
         }
       ],
@@ -6324,7 +6959,7 @@
     {
       "id": "t2-counter-earth-water",
       "name": "Bogwrath",
-      "description": "Gain 10 armor; on break, poison 6 + rage 3.",
+      "description": "Armor 10 (scales VIT). Brace: Poison 4. Brace: +3 Rage.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -6351,7 +6986,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "dot",
-            "value": 6,
+            "value": 4,
             "target": "enemy",
             "stack": "poison"
           }
@@ -6380,8 +7015,8 @@
     },
     {
       "id": "t2-air-counter-earth",
-      "name": "Stormvow",
-      "description": "Gain 10 armor; below 50% HP, shock 6 + −25% cd aura 8s.",
+      "name": "Tectonic Reckoning",
+      "description": "Exhaust. Stun 3 AoE (scales INT). Force-trigger every card you own once.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6391,55 +7026,30 @@
       ],
       "effects": [
         {
-          "type": "armor",
-          "value": 10,
-          "target": "self",
+          "type": "dot",
+          "value": 3,
+          "target": "aoe",
+          "stack": "stun",
           "scale": {
-            "stat": "vit",
-            "per": 2,
-            "value": 2
+            "stat": "int",
+            "per": 4,
+            "value": 1
           }
         },
         {
-          "type": "aura",
+          "type": "force_trigger_all_cards",
           "value": 0,
-          "target": "self",
-          "ttl_ms": 15000,
-          "trigger": "on_hp_pct_below",
-          "threshold": 50,
-          "then": {
-            "type": "dot",
-            "value": 6,
-            "target": "enemy",
-            "stack": "shock"
-          }
-        },
-        {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 15000,
-          "trigger": "on_hp_pct_below",
-          "threshold": 50,
-          "then": {
-            "type": "aura",
-            "value": 0,
-            "target": "self",
-            "ttl_ms": 8000,
-            "modifier": {
-              "kind": "cd_reduction",
-              "value": 0.25
-            }
-          }
+          "target": "self_deck"
         }
       ],
       "cost": {
-        "stamina": 1,
-        "mana": 1
+        "stamina": 3,
+        "mana": 2
       },
-      "cooldown": 3,
-      "targeting": "self",
-      "rarity": "rare"
+      "cooldown": 5,
+      "targeting": "aoe",
+      "rarity": "epic",
+      "exhaust": true
     }
   ]
 }

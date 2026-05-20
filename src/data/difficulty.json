@@ -1,10 +1,11 @@
 {
-  "percentPerLoop": 0.12,
+  "percentPerLoop": 0,
+  "percentPerBossKill": 0.10,
   "bossMultiplier": 1.0,
   "basicTileCombatChance": 0.18,
   "baseSpeed": 240,
   "speedScalePerLoop": 1.02,
-  "bossEveryNLoops": 5,
+  "bossEveryNLoops": 25,
   "baseLoopLength": 15,
   "loopGrowth": {
     "schedule": [3, 2, 2, 1, 1],

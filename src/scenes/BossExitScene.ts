@@ -128,12 +128,17 @@ export class BossExitScene extends Scene {
     });
     continueBg.on('pointerdown', () => this.selectChoice('continue'));
 
-    // Confirm button (hidden until selection)
+    // Confirm button — visible but dimmed until a selection is made so the
+    // player can see the affordance up-front (UX: no "where do I confirm?").
     this.confirmBtn = this.add.text(400, 430, 'Confirm', {
       fontSize: '24px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setVisible(false);
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setAlpha(0.4);
 
     this.confirmBtn.on('pointerdown', () => this.confirmSelection());
+
+    // Keyboard path: Enter/Space confirms the current selection (no-op if none).
+    this.input.keyboard?.on('keydown-ENTER', () => this.confirmSelection());
+    this.input.keyboard?.on('keydown-SPACE', () => this.confirmSelection());
 
     this.events.on('shutdown', this.cleanup, this);
   }
@@ -155,7 +160,7 @@ export class BossExitScene extends Scene {
       this.confirmBtn!.setColor('#ff6600');
     }
 
-    this.confirmBtn!.setVisible(true);
+    this.confirmBtn!.setAlpha(1);
   }
 
   private async confirmSelection(): Promise<void> {

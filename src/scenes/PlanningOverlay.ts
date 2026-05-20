@@ -22,6 +22,19 @@ export class PlanningOverlay extends Scene {
   private gridContainer!: Phaser.GameObjects.Container;
   private gridGeometry!: { cellW: number; period: number; centerX: number };
 
+  // Drag-scroll input handlers — stored so cleanup() can remove them. The
+  // overlay's `scene.events` listeners use `this` as the context, but the
+  // global input listeners need the original references to off() correctly.
+  private onPointerDown?: (pointer: Phaser.Input.Pointer) => void;
+  private onPointerMove?: (pointer: Phaser.Input.Pointer) => void;
+  private onPointerUp?: () => void;
+  private onWheel?: (
+    pointer: Phaser.Input.Pointer,
+    objects: Phaser.GameObjects.GameObject[],
+    dx: number,
+    dy: number,
+  ) => void;
+
   constructor() {
     super(SCENE_KEYS.PLANNING);
   }
@@ -101,18 +114,23 @@ export class PlanningOverlay extends Scene {
       this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
     });
 
-    // "Start Loop" text button at y=540 (styled like Tile Inventory)
-    const startBtn = this.add.text(400, 540, 'Start Loop', {
-      fontSize: '32px', 
-      fontStyle: 'bold', 
-      color: '#ffd700', 
+    // "Don't stop here for: 1 / 5 / 10 / 25" — auto-skips the next N planning
+    // phases. Boss-loop planning (1 loop before the boss tile spawns) always
+    // stops regardless of the chosen value; the skip counter is consumed by
+    // GameScene's loop-completed handler.
+    this.buildSkipLoopsRow(fontFamily);
+
+    // Bottom row: Shop | Start Loop | Forge
+    const startBtn = this.add.text(400, 545, 'Start Loop', {
+      fontSize: '32px',
+      fontStyle: 'bold',
+      color: '#ffd700',
       fontFamily,
       stroke: '#000000',
       strokeThickness: 4,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
 
-    startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button !== 0) return; // Left click only
+    const startLoop = () => {
       // Sync spent TP/gold back to RunState before resuming GameScene, so
       // the resume handler doesn't refund the just-spent points by copying
       // a stale RunState.economy back into loopRunState.
@@ -129,12 +147,37 @@ export class PlanningOverlay extends Scene {
           this.scene.wake(SCENE_KEYS.GAME);
         },
       });
+    };
+
+    startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      if (pointer.button !== 0) return; // Left click only
+      startLoop();
     });
+
+    this.buildShopForgeButtons(fontFamily);
 
     // Enable drag scroll for long loops
     this.setupDragScroll();
 
     this.events.on('shutdown', this.cleanup, this);
+
+    // Re-sync economy + inventory from RunState when we wake (e.g. after the
+    // Shop/Forge sub-scene closes). Without this, gold spent in the shop is
+    // refunded next time Start Loop syncs LoopRunState → RunState.
+    this.events.on('wake', () => this.syncFromRunStateOnWake());
+  }
+
+  private syncFromRunStateOnWake(): void {
+    const run = getRun();
+    this.loopRunState.economy.gold = run.economy.gold;
+    this.loopRunState.economy.tilePoints = run.economy.tilePoints;
+    // tileInventory shape: RunState stores Record<string,count>; LoopRunState
+    // stores Array<{tileType,count}>. Re-derive the array view so the
+    // inventory panel reflects anything purchased in the shop.
+    this.loopRunState.tileInventory = Object.entries(run.economy.tileInventory ?? {})
+      .filter(([, count]) => count > 0)
+      .map(([tileType, count]) => ({ tileType, count }));
+    this.refreshInventory();
   }
 
   private buildLoopGrid(): void {
@@ -383,7 +426,7 @@ export class PlanningOverlay extends Scene {
       const scale = previewSize / TILE_SIZE;
       const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
       
-      if (['shop', 'rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
+      if (['rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
         preview.hideFloor();
       }
       container.add(preview);
@@ -468,25 +511,27 @@ export class PlanningOverlay extends Scene {
     let startOffset = 0;
     const DRAG_THRESHOLD = 4; // pixels — below this, treat as a click
 
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+    this.onPointerDown = (pointer: Phaser.Input.Pointer) => {
       if (pointer.y > 200 && pointer.y < 300) {
         dragging = true;
         dragMoved = false;
         startPointerX = pointer.x;
         startOffset = this.scrollOffset;
       }
-    });
+    };
+    this.input.on('pointerdown', this.onPointerDown);
 
-    this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+    this.onPointerMove = (pointer: Phaser.Input.Pointer) => {
       if (!dragging) return;
       const dx = pointer.x - startPointerX;
       if (Math.abs(dx) > DRAG_THRESHOLD) dragMoved = true;
       // No clamp — the belt wraps via updateTilePositions().
       this.scrollOffset = startOffset + dx;
       this.updateTilePositions();
-    });
+    };
+    this.input.on('pointermove', this.onPointerMove);
 
-    this.input.on('pointerup', () => {
+    this.onPointerUp = () => {
       dragging = false;
       // Fold scrollOffset back into [0, period) so future drags don't grow
       // unbounded and lose precision over many loops.
@@ -494,10 +539,11 @@ export class PlanningOverlay extends Scene {
         const p = this.gridGeometry.period;
         this.scrollOffset = ((this.scrollOffset % p) + p) % p;
       }
-    });
+    };
+    this.input.on('pointerup', this.onPointerUp);
 
     // Mouse wheel scrolls horizontally too — handy for trackpads.
-    this.input.on('wheel', (
+    this.onWheel = (
       pointer: Phaser.Input.Pointer,
       _objects: Phaser.GameObjects.GameObject[],
       _dx: number,
@@ -506,7 +552,84 @@ export class PlanningOverlay extends Scene {
       if (pointer.y < 200 || pointer.y > 300) return;
       this.scrollOffset -= dy;
       this.updateTilePositions();
+    };
+    this.input.on('wheel', this.onWheel);
+  }
+
+  /**
+   * "Don't stop here for: 1 / 5 / 10 / 25" toggle row.
+   * Sets `run.skipLoopsRemaining = N`, which GameScene consumes in its
+   * loop-completed handler. Boss-loop planning ignores the counter.
+   */
+  private buildSkipLoopsRow(fontFamily: string): void {
+    const run = getRun();
+    const labelText = this.add.text(280, 505, "Don't stop here for:", {
+      fontSize: '13px', color: '#ffdca0', fontFamily,
+      stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(1, 0.5);
+
+    const optionValues = [1, 5, 10, 25];
+    const optionTexts: Phaser.GameObjects.Text[] = [];
+
+    const refresh = () => {
+      const current = run.skipLoopsRemaining ?? 0;
+      optionTexts.forEach((t, i) => {
+        const isActive = optionValues[i] === current;
+        t.setColor(isActive ? '#ffd700' : '#aaddff');
+        t.setStyle({ fontStyle: isActive ? 'bold' : 'normal' });
+      });
+    };
+
+    optionValues.forEach((value, idx) => {
+      const x = 295 + idx * 50;
+      const btn = this.add.text(x, 505, `${value}`, {
+        fontSize: '16px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+        stroke: '#000000', strokeThickness: 3,
+      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      btn.on('pointerover', () => btn.setScale(1.15));
+      btn.on('pointerout', () => btn.setScale(1));
+      btn.on('pointerdown', () => {
+        const current = run.skipLoopsRemaining ?? 0;
+        // Click the active option to clear it (toggle off).
+        run.skipLoopsRemaining = current === value ? 0 : value;
+        refresh();
+      });
+      optionTexts.push(btn);
     });
+
+    // Discard parameter — text only exists to be visible.
+    void labelText;
+    refresh();
+  }
+
+  /** "Shop" and "Forge" buttons on the planning overlay. Forge is its own scene now. */
+  private buildShopForgeButtons(fontFamily: string): void {
+    const shopBtn = this.add.text(150, 545, '🛒 Shop', {
+      fontSize: '22px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+      stroke: '#000000', strokeThickness: 4,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
+    shopBtn.on('pointerover', () => shopBtn.setColor('#ffffff'));
+    shopBtn.on('pointerout',  () => shopBtn.setColor('#aaddff'));
+    shopBtn.on('pointerdown', () => this.openSubScene(SCENE_KEYS.SHOP));
+
+    const forgeBtn = this.add.text(650, 545, '⚒ Forge', {
+      fontSize: '22px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+      stroke: '#000000', strokeThickness: 4,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
+    forgeBtn.on('pointerover', () => forgeBtn.setColor('#ffffff'));
+    forgeBtn.on('pointerout',  () => forgeBtn.setColor('#aaddff'));
+    forgeBtn.on('pointerdown', () => this.openSubScene(SCENE_KEYS.FORGE));
+  }
+
+  private openSubScene(sceneKey: string): void {
+    // Sync TP/gold back to RunState so the sub-scene sees the up-to-date
+    // economy (planning may have spent TP placing tiles).
+    const run = getRun();
+    run.economy.gold = this.loopRunState.economy.gold;
+    run.economy.tilePoints = this.loopRunState.economy.tilePoints;
+
+    this.scene.sleep();
+    this.scene.launch(sceneKey, { parentScene: SCENE_KEYS.PLANNING });
   }
 
   private showToast(message: string): void {
@@ -523,7 +646,39 @@ export class PlanningOverlay extends Scene {
   }
 
   private cleanup(): void {
+    // Destroy belt tile visuals; the container is destroyed below.
+    for (const tv of this.tileVisuals) {
+      tv.destroy();
+    }
     this.tileVisuals = [];
+
+    for (const card of this.inventoryCards) {
+      card.destroy();
+    }
     this.inventoryCards = [];
+
+    if (this.gridContainer) {
+      this.gridContainer.destroy(true);
+      this.gridContainer = undefined as unknown as Phaser.GameObjects.Container;
+    }
+
+    // Remove the global pointer/wheel handlers attached in setupDragScroll —
+    // otherwise they re-stack each time the overlay is re-entered.
+    if (this.onPointerDown) {
+      this.input.off('pointerdown', this.onPointerDown);
+      this.onPointerDown = undefined;
+    }
+    if (this.onPointerMove) {
+      this.input.off('pointermove', this.onPointerMove);
+      this.onPointerMove = undefined;
+    }
+    if (this.onPointerUp) {
+      this.input.off('pointerup', this.onPointerUp);
+      this.onPointerUp = undefined;
+    }
+    if (this.onWheel) {
+      this.input.off('wheel', this.onWheel);
+      this.onWheel = undefined;
+    }
   }
 }

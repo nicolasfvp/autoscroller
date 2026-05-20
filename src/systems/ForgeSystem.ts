@@ -22,9 +22,14 @@ export interface ForgeRecipe {
   firstForgedAt: number;
 }
 
+// TEMPORARY: forge restrictions disabled — all tiers always unlocked, and the
+// per-level discount is bypassed so FORGE_BASE_COST values are charged exactly.
+// To re-enable progression, revert getForgeDiscount and isTierUnlocked to use
+// FORGE_DISCOUNT_BY_LEVEL / FORGE_TIER_UNLOCK.
+
 /** Discount multiplier (0 - 1) given forge meta-building level. */
-export function getForgeDiscount(forgeLevel: number): number {
-  return FORGE_DISCOUNT_BY_LEVEL[Math.max(0, Math.min(6, forgeLevel))] ?? 0;
+export function getForgeDiscount(_forgeLevel: number): number {
+  return 0;
 }
 
 /** Final gold cost after discount, rounded down. */
@@ -35,8 +40,8 @@ export function getForgeGoldCost(tier: CardTier, forgeLevel: number): number {
 }
 
 /** Is this tier unlocked at this forge level? */
-export function isTierUnlocked(tier: CardTier, forgeLevel: number): boolean {
-  return forgeLevel >= FORGE_TIER_UNLOCK[tier];
+export function isTierUnlocked(_tier: CardTier, _forgeLevel: number): boolean {
+  return true;
 }
 
 /** Look up a card definition by its element multiset. Returns null if no card matches. */
@@ -73,7 +78,8 @@ export function validateForge(
   deckMax: number,
 ): ForgeValidation {
   if (elements.length < 2 || elements.length > 4) return { ok: false, reason: 'no_card' };
-  const tier = elements.length as CardTier;
+  // Tier mapping: 2 elements → tier 1, 3 → tier 2, 4 → tier 3. See ElementSystem.canonicalCardId.
+  const tier = (elements.length - 1) as CardTier;
   if (!isTierUnlocked(tier, forgeLevel)) return { ok: false, reason: 'tier_locked' };
   const card = findCardForElements(elements);
   if (!card || card.locked) return { ok: false, reason: 'no_card' };
@@ -103,7 +109,11 @@ export function executeForge(
   forgeLevel: number,
   knownRecipes: ForgeRecipe[],
 ): ForgeResult {
-  const tier = elements.length as CardTier;
+  if (elements.length < 2 || elements.length > 4) {
+    throw new Error(`executeForge: invalid element count ${elements.length} (must be 2-4)`);
+  }
+  // Tier mapping: 2 elements → tier 1, 3 → tier 2, 4 → tier 3. See ElementSystem.canonicalCardId.
+  const tier = (elements.length - 1) as CardTier;
   const card = findCardForElements(elements)!;
   const cost = getForgeGoldCost(tier, forgeLevel);
   spendElements(elementInv, elements);

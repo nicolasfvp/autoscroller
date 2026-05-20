@@ -18,12 +18,6 @@ describe('SynergyResolver', () => {
     expect(buffs).toContainEqual(expect.objectContaining({ type: 'goldDropBonus', value: 0.15 }));
   });
 
-  it('rest adjacent to shop produces hpRecoveryBonus', () => {
-    const tiles = [slot('rest'), slot('shop'), slot('basic')];
-    const buffs = resolveAdjacencySynergies(tiles);
-    expect(buffs).toContainEqual(expect.objectContaining({ type: 'hpRecoveryBonus', value: 0.10 }));
-  });
-
   it('graveyard adjacent to swamp produces damageBonus', () => {
     const tiles = [slot('terrain', 'graveyard'), slot('terrain', 'swamp'), slot('basic')];
     const buffs = resolveAdjacencySynergies(tiles);
@@ -49,7 +43,7 @@ describe('SynergyResolver', () => {
   });
 
   it('non-synergy pairs produce no buffs', () => {
-    const tiles = [slot('basic'), slot('shop'), slot('basic')];
+    const tiles = [slot('basic'), slot('rest'), slot('basic')];
     const buffs = resolveAdjacencySynergies(tiles);
     expect(buffs).toHaveLength(0);
   });
@@ -75,14 +69,6 @@ describe('SynergyResolver', () => {
 });
 
 describe('Phase 9 — v2 tile adjacency (design/04 §7)', () => {
-  it('library + shop yields cardUpgradeDiscount 0.20 (Scholarly Bargain)', () => {
-    const tiles = [kindSlot('library'), slot('shop'), slot('basic')];
-    const buffs = resolveAdjacencySynergies(tiles);
-    expect(buffs).toContainEqual(
-      expect.objectContaining({ type: 'cardUpgradeDiscount', value: 0.20 }),
-    );
-  });
-
   it('library + graveyard yields xpBonus 0.25 (Cursed Knowledge)', () => {
     const tiles = [kindSlot('library'), slot('terrain', 'graveyard'), slot('basic')];
     const buffs = resolveAdjacencySynergies(tiles);

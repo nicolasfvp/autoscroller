@@ -8,7 +8,7 @@ import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
-import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers } from './StatusEffects';
+import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers, fireRecurringTrigger, sumModifier } from './StatusEffects';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -19,7 +19,22 @@ export class EnemyAI {
   }
 
   tick(deltaMs: number, state: CombatState, stats: CombatStats): void {
-    this.cooldownTimer -= deltaMs;
+    // Stun (renamed from freeze): while stunStacks >= 1, the enemy's attack
+    // cooldown timer must not advance at all. We override the effectiveDelta
+    // BEFORE applying the Slow scaling — stun outranks slow.
+    let effectiveDelta = deltaMs;
+    if (state.stunStacks > 0) {
+      effectiveDelta = 0;
+    } else {
+      // Slow (renamed from shock) slows the enemy attack timer: 8% per stack,
+      // capped at 50%. The stack count decays in CombatEngine.tickActiveDoTs
+      // (~1/sec), so the slow naturally fades. Cooldown-shave recovery below
+      // still uses real deltaMs so the agility affinity speedup decays at a
+      // constant real-time rate.
+      const slowFactor = Math.min(0.5, state.slowStacks * 0.08);
+      effectiveDelta = deltaMs * (1 - slowFactor);
+    }
+    this.cooldownTimer -= effectiveDelta;
 
     // Agility affinity gives a temporary cooldown shave; decay it back toward
     // the enemy's base cooldown so the speedup fades instead of ratcheting
@@ -76,6 +91,9 @@ export class EnemyAI {
   }
 
   private attack(state: CombatState, stats: CombatStats): void {
+    // Bleed swing-amplification: flag is consumed by CombatEngine.tickActiveDoTs
+    // on the next bleed tick to deal 2-per-stack instead of 1.
+    state.enemyAttackedSinceLastBleedTick = true;
     let damage = this.calculateDamage(state, stats);
     let specialEffect: string | null = null;
 
@@ -221,7 +239,16 @@ export class EnemyAI {
  * code path — armor must always be considered.
  */
 export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-  const damage = Math.max(0, Math.floor(rawDamage));
+  // v3: damage_taken_pct — flat fractional mitigation summed across hero auras
+  // (Crimson Regen Mantle: -0.20). Applied BEFORE armor so armor still
+  // absorbs the post-mitigation amount.
+  let damage = Math.max(0, Math.floor(rawDamage));
+  if (state.heroAuras && state.heroAuras.length > 0) {
+    const dtp = sumModifier(state.heroAuras, 'damage_taken_pct');
+    if (dtp !== 0) {
+      damage = Math.max(0, Math.floor(damage * (1 + dtp)));
+    }
+  }
   if (damage === 0) return 0;
   const multiplier = state.heroDefenseMultiplier ?? 1;
   const effectiveDefense = state.heroDefense * multiplier;
@@ -261,6 +288,21 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
         applyTriggeredPayload(state, p);
       }
     }
+  }
+
+  // v3: recurring on_hit_taken triggers fire on every applied hit (regardless
+  // of armor absorption). Persistent — aura stays alive for its full ttl.
+  // Used by Forge Spike Ward, Wrathshell Vow, Last Stand reflexes.
+  if (state.heroAuras && state.heroAuras.length > 0) {
+    const hitTakenPayloads = fireRecurringTrigger(state.heroAuras, 'on_hit_taken', damage);
+    for (const p of hitTakenPayloads) applyTriggeredPayload(state, p);
+  }
+
+  // v3: on_self_damage fires when the hit came from a card effect (skipRelics
+  // is the proxy — card self-damage routes through here with skipRelics=true).
+  if (skipRelics && state.heroAuras && state.heroAuras.length > 0) {
+    const selfDmgPayloads = fireRecurringTrigger(state.heroAuras, 'on_self_damage', damage);
+    for (const p of selfDmgPayloads) applyTriggeredPayload(state, p);
   }
 
   return remaining;

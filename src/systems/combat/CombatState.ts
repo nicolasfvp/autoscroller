@@ -74,11 +74,26 @@ export interface CombatState {
   poisonStacks: number;
   bleedStacks: number;
   burnStacks: number;
-  freezeStacks: number;
-  shockStacks: number;
+  stunStacks: number;
+  slowStacks: number;
   arcaneStacks: number;         // cap = arcaneStacksCap (Pitfall 8: cap-and-drop)
   arcaneStacksCap: number;      // default 10
   rageStacks: number;
+
+  /**
+   * Bleed swing-amplification flag. Set to true by EnemyAI whenever the enemy
+   * lands an attack; consumed (reset to false) by tickActiveDoTs after the
+   * bleed damage for the cycle is applied. When true, each bleed stack
+   * deals 2 damage instead of 1.
+   */
+  enemyAttackedSinceLastBleedTick: boolean;
+
+  /**
+   * Poison slow-decay counter. Poison damage applies every tick but stacks
+   * only decay every 2nd tick. Increments on each poison tick and modulo-2;
+   * when the resulting value is 0, decrement poisonStacks by 1.
+   */
+  poisonTickParity: number;
 
   /**
    * Phase 9: one-shot cooldown shave consumed by the NEXT card's cooldown.
@@ -112,6 +127,32 @@ export interface CombatState {
    */
   heroBurnStacks: number;
   heroBleedStacks: number;
+
+  /**
+   * v3: Exhaust tracking. Card IDs that have already fired their once-per-combat
+   * payload — CardResolver gates a re-resolve when present. Reset every combat.
+   */
+  spentThisCombat: Set<string>;
+
+  /**
+   * v3: Overload cooldown debt — per-deck-position extra ms added to the next
+   * cooldown after the slot resolves (Cleaver's Tax pattern). Keyed by deck
+   * position, since CombatState doesn't track card-id slot mapping directly.
+   */
+  cdDebtBySlot: Record<number, number>;
+
+  /**
+   * v3: Echo charges — number of upcoming card resolutions that re-trigger
+   * twice. Decremented on resolve. TTL is checked against echoExpiresAt.
+   */
+  echoCharges: number;
+  echoExpiresAt: number;
+
+  /**
+   * v3: Devour markers — deck slots disabled permanently for this combat.
+   * Consulted by CombatEngine when advancing the deck pointer.
+   */
+  devouredSlots: Set<number>;
 }
 
 /**
@@ -168,17 +209,26 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     poisonStacks: 0,
     bleedStacks: 0,
     burnStacks: 0,
-    freezeStacks: 0,
-    shockStacks: 0,
+    stunStacks: 0,
+    slowStacks: 0,
     arcaneStacks: 0,
     arcaneStacksCap: 10,
     rageStacks: 0,
+    enemyAttackedSinceLastBleedTick: false,
+    poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     buffMagnitudePerCard: {},
     heroAuras: [],
     enemyAuras: [],
     heroBurnStacks: 0,
     heroBleedStacks: 0,
+
+    // -- v3 archetype redesigns --
+    spentThisCombat: new Set<string>(),
+    cdDebtBySlot: {},
+    echoCharges: 0,
+    echoExpiresAt: 0,
+    devouredSlots: new Set<number>(),
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --

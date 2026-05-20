@@ -68,10 +68,25 @@ describe('RestSiteSystem', () => {
     expect(staminaIncreased || manaIncreased).toBe(true);
   });
 
+  it('meditate (stamina branch) bumps both max AND current stamina by the same delta', () => {
+    // Regression: previously only max was bumped, leaving the gained pool
+    // invisible until natural regen filled it. Convention matches
+    // PassiveSkillSystem.applyPassiveModifiersToCombatState.
+    const run = makeRunState();
+    const origMaxStamina = run.hero.maxStamina;
+    const origCurrentStamina = run.hero.currentStamina;
+    applyRestChoice('meditate', run, () => 0); // rng < 0.5 => stamina branch
+    expect(run.hero.maxStamina).toBe(origMaxStamina + 5);
+    expect(run.hero.currentStamina).toBe(origCurrentStamina + 5);
+  });
+
   it('meditate choice picks mana when rng >= 0.5', () => {
     const run = makeRunState();
+    const origCurrentMana = run.hero.currentMana;
     applyRestChoice('meditate', run, () => 0.5);
     expect(run.hero.maxMana).toBe(35);
+    // Bug fix: current mana must also bump in lockstep.
+    expect(run.hero.currentMana).toBe(origCurrentMana + 5);
   });
 
   it('getRestChoices returns 3 choices', () => {

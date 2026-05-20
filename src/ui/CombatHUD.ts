@@ -3,6 +3,7 @@
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { FONTS, SHADOWBLADE_PALETTE } from './StyleConstants';
+import { computeHeroChips, computeEnemyChips, type EffectChip } from './EffectIcons';
 
 /**
  * Pure visibility logic for HUD widgets. Extracted so the toggle logic is
@@ -28,6 +29,21 @@ const STROKE = { stroke: '#000000', strokeThickness: 3 };
 const LP = { x: 8,   y: 8,  w: 238, h: 188 };   // Hero (left) — armor row + STR/VIT/DEX/INT/SPI row
 const RP = { x: 554, y: 8,  w: 238, h: 70 };    // Enemy (right, tightly packed)
 const BAR_W = LP.w - 28;                         // 210px bar width
+
+// Status-chip row geometry (effect icons row under each panel)
+const CHIP_POOL_SIZE = 10;
+const CHIP_HEIGHT = 20;
+const CHIP_GAP = 4;
+const CHIP_ROW_GAP = 22;
+const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 6, maxWidth: LP.w - 8 };
+const ENEMY_CHIPS = { x: RP.x + 4, y: RP.y + RP.h + 6, maxWidth: RP.w - 8 };
+
+interface ChipDisplay {
+  container: Phaser.GameObjects.Container;
+  bg: Phaser.GameObjects.Rectangle;
+  icon: Phaser.GameObjects.Text;
+  label: Phaser.GameObjects.Text;
+}
 
 export class CombatHUD {
   private scene: Phaser.Scene;
@@ -58,6 +74,10 @@ export class CombatHUD {
   private cooldownGraphics!: Phaser.GameObjects.Graphics;
   private cooldownText!:     Phaser.GameObjects.Text;
 
+  // Status effect chip pools (one row per side, pre-allocated)
+  private heroChipPool: ChipDisplay[] = [];
+  private enemyChipPool: ChipDisplay[] = [];
+
   // Display values (for tween delta checks)
   private displayedHeroHp  = 0;
   private targetHeroHp     = 0;
@@ -82,6 +102,7 @@ export class CombatHUD {
     this.buildHeroPanel();
     this.buildEnemyPanel();
     this.buildCooldownArc();
+    this.buildChipPools();
   }
 
   // ── Hero panel ─────────────────────────────────────────────────
@@ -244,6 +265,65 @@ export class CombatHUD {
     this.container.add(this.cooldownText);
   }
 
+  // ── Status-effect chips ────────────────────────────────────────
+
+  private buildChipPools(): void {
+    for (let i = 0; i < CHIP_POOL_SIZE; i++) {
+      this.heroChipPool.push(this.buildChip());
+      this.enemyChipPool.push(this.buildChip());
+    }
+  }
+
+  private buildChip(): ChipDisplay {
+    const s = this.scene;
+    const c = s.add.container(0, 0).setVisible(false);
+    const bg = s.add.rectangle(0, 0, 50, CHIP_HEIGHT, 0x0a0a1a, 0.78)
+      .setOrigin(0, 0.5)
+      .setStrokeStyle(1, 0x4a9eff, 0.5);
+    const icon = s.add.text(4, 0, '', {
+      fontFamily: FF, fontSize: '13px',
+      color: '#ffffff',
+    }).setOrigin(0, 0.5);
+    const label = s.add.text(22, 0, '', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0, 0.5);
+    c.add([bg, icon, label]);
+    this.container.add(c);
+    return { container: c, bg, icon, label };
+  }
+
+  private layoutChips(
+    chips: EffectChip[],
+    pool: ChipDisplay[],
+    baseX: number,
+    baseY: number,
+    maxWidth: number,
+  ): void {
+    let x = 0;
+    let row = 0;
+    for (let i = 0; i < pool.length; i++) {
+      const slot = pool[i];
+      const chip = chips[i];
+      if (!chip) {
+        slot.container.setVisible(false);
+        continue;
+      }
+      slot.icon.setText(chip.icon);
+      slot.label.setText(chip.label);
+      slot.label.setColor(chip.color);
+      const w = Math.max(36, 22 + slot.label.width + 6);
+      slot.bg.width = w;
+      if (x > 0 && x + w > maxWidth) {
+        x = 0;
+        row += 1;
+      }
+      slot.container.setPosition(baseX + x, baseY + row * CHIP_ROW_GAP);
+      slot.container.setVisible(true);
+      x += w + CHIP_GAP;
+    }
+  }
+
   // ── Public update ──────────────────────────────────────────────
 
   update(state: CombatState, heroCooldown: number, heroMaxCooldown: number): void {
@@ -307,6 +387,10 @@ export class CombatHUD {
       this.tweenBar('enemyHp', from, newEHP, state.enemyMaxHP,
         this.enemyHpBar, this.enemyHpText, () => 0xdd2222);
     }
+
+    // Status effect chips (auras, stacks, triggered effects)
+    this.layoutChips(computeHeroChips(state), this.heroChipPool, HERO_CHIPS.x, HERO_CHIPS.y, HERO_CHIPS.maxWidth);
+    this.layoutChips(computeEnemyChips(state), this.enemyChipPool, ENEMY_CHIPS.x, ENEMY_CHIPS.y, ENEMY_CHIPS.maxWidth);
 
     // Cooldown arc
     this.cooldownGraphics.clear();
@@ -389,6 +473,18 @@ export class CombatHUD {
   }
 
   destroy(): void {
+    // Stop in-flight stat tweens before tearing down the container. Without
+    // this, a mid-tween shutdown calls onUpdate after the Rectangle has been
+    // destroyed and throws "cannot read property of undefined".
+    this.hpTween?.stop();
+    this.staminaTween?.stop();
+    this.manaTween?.stop();
+    this.enemyHpTween?.stop();
+    this.hpTween = undefined;
+    this.staminaTween = undefined;
+    this.manaTween = undefined;
+    this.enemyHpTween = undefined;
+
     this.container.destroy(true);
   }
 }

@@ -38,10 +38,12 @@ export const ELEMENTAL_ELEMENTS: ElementId[] = ['fire', 'water', 'air', 'earth']
 
 export const SHARDS_PER_ELEMENT = 10;
 
+// Pack-based shard drops. Each kill rolls N packs; each pack rolls one element
+// (via class bias) and assigns K shards of that element. Boss pack count is fixed.
 export const DROP_RATES = {
-  normal: { min: 1, max: 3 },
-  elite:  { min: 6, max: 13 },
-  boss:   { min: 20, max: 30 },
+  normal: { packs: { min: 1, max: 3 }, perPack: { min: 1, max: 4 } },
+  elite:  { packs: { min: 1, max: 3 }, perPack: { min: 3, max: 9 } },
+  boss:   { packs: { min: 3, max: 3 }, perPack: { min: 5, max: 9 } },
 } as const;
 
 export const CLASS_BIAS: Record<string, { physical: number; elemental: number }> = {
@@ -50,9 +52,9 @@ export const CLASS_BIAS: Record<string, { physical: number; elemental: number }>
 };
 
 export const FORGE_BASE_COST: Record<CardTier, number> = {
-  1: 75,
-  2: 200,
-  3: 500,
+  1: 0,
+  2: 100,
+  3: 350,
 };
 
 export const FORGE_DISCOUNT_BY_LEVEL: Record<number, number> = {

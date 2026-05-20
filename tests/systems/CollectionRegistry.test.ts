@@ -58,8 +58,8 @@ describe('CollectionRegistry', () => {
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.tiles.total).toBe(10); // 7 base + 3 unlockable
-      expect(status.tiles.unlocked).toBe(7); // only base tiles
+      expect(status.tiles.total).toBe(9); // 6 base + 3 unlockable (shop tile removed)
+      expect(status.tiles.unlocked).toBe(6); // only base tiles
     });
   });
 

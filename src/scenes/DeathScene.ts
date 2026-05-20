@@ -88,7 +88,7 @@ export class DeathScene extends Scene {
     const gap = 36;
 
     const createStatRow = (icon: string, label: string, value: string | number) => {
-      this.add.text(startX, currentY, icon, { fontSize: '24px' }).setOrigin(0, 0.5);
+      this.add.text(startX, currentY, icon, { fontFamily: FONTS.family, fontSize: '24px' }).setOrigin(0, 0.5);
       this.add.text(startX + 40, currentY, label, {
         fontFamily: FONTS.family, fontSize: '20px', fontStyle: 'bold', color: '#ffffff'
       }).setOrigin(0, 0.5);
