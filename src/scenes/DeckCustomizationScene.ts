@@ -252,26 +252,25 @@ export class DeckCustomizationScene extends Scene {
     const visual = createCardVisual(this, x, y, cardId, { scale });
     // Override CardVisual's built-in pointerdown (which opens the card detail
     // popup). The Customization scene uses pointerdown to start a drag, not to
-    // open a popup. We strip prior listeners and rebind our drag handlers.
+    // open a popup. We also strip pointerover/pointerout so the CardVisual
+    // hover-scale tween + its (now-stale-anchor) keyword tooltip don't
+    // double-fire alongside our re-attached, scroll-aware tooltip below.
     visual.removeAllListeners('pointerdown');
     visual.removeAllListeners('pointerover');
     visual.removeAllListeners('pointerout');
 
-    // Re-wire the 2-second keyword tooltip — CardVisual attaches it on creation
-    // but the removeAllListeners() calls above also strip its pointerover/out
-    // bindings. Anchor is resolved lazily so the panel tracks scroll: deck
-    // slots live inside gridContainer (which translates on scroll) and strip
-    // slots live inside droppedStrip; both parents may offset the visual.
+    // Re-attach the 2-second keyword tooltip with a lazy anchor that
+    // resolves to scene-space via getWorldTransformMatrix(), so the panel
+    // mounts beside the card regardless of parent-container translation
+    // (gridContainer scroll, droppedStrip offset, etc.).
     const card = getCardById(cardId);
     if (card) {
       const w = STANDARD_CARD_WIDTH * scale;
       const h = STANDARD_CARD_HEIGHT * scale;
-      attachKeywordHover(this, visual, card.description, () => ({
-        x: visual.x + (visual.parentContainer?.x ?? 0),
-        y: visual.y + (visual.parentContainer?.y ?? 0),
-        w,
-        h,
-      }));
+      attachKeywordHover(this, visual, card.description, () => {
+        const m = visual.getWorldTransformMatrix();
+        return { x: m.tx, y: m.ty, w, h };
+      });
     }
 
     // Order number badge (top-left) for active-deck cards — kept because the
