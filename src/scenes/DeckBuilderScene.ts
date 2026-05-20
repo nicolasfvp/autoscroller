@@ -25,6 +25,7 @@ import { formatCardDescription } from '../systems/cards/CardText';
 import { CardFilterBar } from '../ui/CardFilterBar';
 import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { attachKeywordHover } from '../ui/KeywordTooltip';
 import { countElementCategories } from '../systems/ElementSystem';
 
 const FF = FONTS.family;
@@ -380,6 +381,16 @@ export class DeckBuilderScene extends Scene {
       bg.setStrokeStyle(1.5, 0xffffff, 0);
       this.hideTooltip();
     });
+
+    // 2-second keyword glossary panel — attaches to the hit-box bg because
+    // the underlying CardVisual is disableInteractive()'d in this scene.
+    // Anchor is resolved lazily so the panel follows the cell as the grid
+    // scrolls (gridContainer.y shifts with the wheel).
+    attachKeywordHover(this, bg, card.description, () => {
+      const m = bg.getWorldTransformMatrix();
+      return { x: m.tx, y: m.ty, w: CARD_W, h: CARD_H };
+    });
+
     bg.on('pointerdown', () => {
       // Element-budget validation: don't allow picking a card that overflows
       // the 10-element starter budget. Dim/disable behavior is applied via

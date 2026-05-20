@@ -4,7 +4,7 @@
 // scene shuts down.
 //
 // Two entry points:
-//   - attachKeywordHover(scene, cardContainer, description, anchorBounds):
+//   - attachKeywordHover(scene, target, description, anchorBounds):
 //     wires up pointerover/pointerout/destroy on the card so the tooltip
 //     appears after 2s of hovering and disappears on hover-out. The caller
 //     supplies the card's bounding box in scene-space so the panel can be
@@ -52,12 +52,17 @@ interface AnchorBounds {
 }
 
 /**
- * Wire keyword-tooltip-on-hover behavior to a card visual container.
+ * Wire keyword-tooltip-on-hover behavior to a card visual target.
  *
  * On pointerover: starts a 2-second timer. After 2s, mounts the glossary
  * panel beside the card (right side preferred, mirrored to left if it
  * would clip past the canvas edge). On pointerout / destroy: cancels the
  * pending timer AND destroys any mounted panel.
+ *
+ * `target` is any interactive GameObject — typically a Container holding
+ * the card, but DeckBuilderScene attaches to its overlay hit-box Rectangle
+ * because the underlying CardVisual is `disableInteractive()`-d in that
+ * scene.
  *
  * `anchorBounds` may be a static rectangle or a getter resolved at panel-
  * mount time — the deck editor uses the getter form so the panel tracks
@@ -68,7 +73,7 @@ interface AnchorBounds {
  */
 export function attachKeywordHover(
   scene: Phaser.Scene,
-  cardContainer: Phaser.GameObjects.Container,
+  target: Phaser.GameObjects.GameObject,
   cardDescription: string,
   anchorBounds: AnchorBounds | (() => AnchorBounds),
 ): KeywordTooltipHandle {
@@ -101,7 +106,7 @@ export function attachKeywordHover(
     tearDownPanel();
     timer = scene.time.delayedCall(HOVER_DELAY_MS, () => {
       if (detached) return;
-      if (!cardContainer.active) return;
+      if (!target.active) return;
       const anchor = typeof anchorBounds === 'function' ? anchorBounds() : anchorBounds;
       panel = mountStandalonePanel(scene, keywords, anchor);
       hideFilterBarInputs();
@@ -114,9 +119,9 @@ export function attachKeywordHover(
     tearDownPanel();
   };
 
-  cardContainer.on('pointerover', onOver);
-  cardContainer.on('pointerout', onOut);
-  cardContainer.once('destroy', () => {
+  target.on('pointerover', onOver);
+  target.on('pointerout', onOut);
+  target.once('destroy', () => {
     detached = true;
     cancelTimer();
     tearDownPanel();
@@ -127,8 +132,8 @@ export function attachKeywordHover(
       detached = true;
       cancelTimer();
       tearDownPanel();
-      cardContainer.off('pointerover', onOver);
-      cardContainer.off('pointerout', onOut);
+      target.off('pointerover', onOver);
+      target.off('pointerout', onOut);
     },
   };
 }
