@@ -70,15 +70,15 @@ describe('ShopSystem', () => {
   // ── Scaling relic prices ─────────────────────────────────
   describe('getRelicPrice', () => {
     it('common relic at loop 1', () => {
-      expect(ShopSystem.getRelicPrice('common', 1)).toBe(90); // 80 + 1*10
+      expect(ShopSystem.getRelicPrice('common', 1)).toBe(98); // 90 + 1*8
     });
 
-    it('legendary relic at loop 5 below cap', () => {
-      expect(ShopSystem.getRelicPrice('legendary', 5)).toBe(450); // 400 + 5*10 = 450 < 600
+    it('rare relic at loop 5 below cap', () => {
+      expect(ShopSystem.getRelicPrice('rare', 5)).toBe(450); // 360 + 5*18 = 450 < 600
     });
 
     it('common relic caps at high loop', () => {
-      expect(ShopSystem.getRelicPrice('common', 100)).toBe(150); // capped
+      expect(ShopSystem.getRelicPrice('common', 100)).toBe(160); // capped
     });
   });
 

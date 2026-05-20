@@ -1,8 +1,9 @@
 // Keyword-driven card description formatter.
 // Single source of truth for the human-readable text on every card view.
-// Keywords (Pyre, Berserk, Empowered, Vengeance, Steady, Fortified, Brace,
-// Guard, Haste, Expose, Pierce, Burn, Bleed, Poison, Slow, Stun, Rage,
-// Consume, Drain, Taunt, Heal, Armor, Scales) are tooltip-linkable.
+// Keywords (Pyre, Empowered, Vengeance, Fortified, Brace, Guard, Haste,
+// Pierce, Burn, Bleed, Poison, Slow, Stun, Rage, Consume, Drain, Heal,
+// Armor, Scales, Aura, Echo, Overload, Channel, Devour, Stance, Catalyze,
+// Convert, Spread, Exhaust, DR) are tooltip-linkable.
 //
 // Pipeline: each effect → { prefix, body }. Consecutive effects with the same
 // prefix are merged with " + " so "Berserk: 5 Pierce + 1 Bleed" comes out of
@@ -42,7 +43,7 @@ function scaleSuffix(fx: CardEffect): string {
   if (fx.scale.source === 'self_stack' || fx.scale.source === 'consumed_stack') {
     return '';
   }
-  return ` (scales ${statName(fx.scale.stat)})`;
+  return ` (Scales ${statName(fx.scale.stat)})`;
 }
 function multiHitSuffix(fx: CardEffect): string {
   const extra = fx.multi_hit ?? 0;
@@ -58,14 +59,19 @@ interface Fragment {
 
 function prefixFromCondition(cond: CardEffectCondition | undefined, fx: CardEffect): string | null {
   if (!cond) return null;
+  // v4 Vengeance: took HP damage in the last N ms. Render with the canonical
+  // "Vengeance" keyword (matches glossary).
+  if (cond.took_damage_within_ms !== undefined) return 'Vengeance';
   if (cond.enemy_has_stack === 'burn' && cond.per_stack) return 'Pyre';
   if (cond.enemy_has_stack && cond.per_stack) return `Per ${stackName(cond.enemy_has_stack)}`;
   if (cond.self_has_stack === 'rage' && cond.per_stack) return 'Berserk';
   if (cond.self_has_stack && cond.per_stack) return `Per ${stackName(cond.self_has_stack)}`;
   if (cond.enemy_has_stack) return `Empowered (if ${stackName(cond.enemy_has_stack)})`;
   if (cond.self_has_stack) return `Empowered (if ${stackName(cond.self_has_stack)})`;
-  if (cond.hero_hp_pct_below !== undefined) return `Vengeance (<${cond.hero_hp_pct_below}% HP)`;
-  if (cond.hero_hp_pct_atleast !== undefined) return 'Steady';
+  // hero_hp_pct_below is now Berserk (low-HP threshold, used by Last Stand
+  // Bulwark and similar). Vengeance was migrated to took_damage_within_ms above.
+  if (cond.hero_hp_pct_below !== undefined) return `Berserk (<${cond.hero_hp_pct_below}% HP)`;
+  if (cond.hero_hp_pct_atleast !== undefined) return `Steady (>${cond.hero_hp_pct_atleast}% HP)`;
   if (cond.self_armor_atleast !== undefined) return `Fortified ${cond.self_armor_atleast}`;
   // v3 conditions
   if (cond.enemy_stunned === true) return 'Shatter';
@@ -191,7 +197,6 @@ function fragmentForEffect(fx: CardEffect): Fragment {
     const sign = fx.value >= 0 ? '+' : '';
     return { prefix: null, body: `${sign}${fx.value} ${name}` };
   }
-  if (fx.type === 'taunt') return { prefix: null, body: 'Taunt' };
   if (fx.type === 'aura') return { prefix: null, body: formatAura(fx) };
   if (fx.type === 'debuff') return { prefix: null, body: `Enemy −${fx.value} Defense` };
   if (fx.type === 'buff') return {
@@ -368,7 +373,7 @@ function isRageConsumeAll(fx: CardEffect): boolean {
     && Math.abs(fx.value) >= 99;
 }
 
-type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'frenzy' | 'spend_armor' | 'cooldown_scale'>;
+type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'spend_armor' | 'cooldown_scale'>;
 
 /** v3: collect the amount each stack is being consumed by within this card.
  *  Reads any `stack` effect with `consume_stack: true` and a negative value.
@@ -430,14 +435,10 @@ export function formatCardDescription(card: CardDescPick): string {
     frags.push(frag);
   }
 
-  // v3: prepend card-level keyword markers so Exhaust/Frenzy are visible even
-  // when the effect dispatcher doesn't surface them.
+  // v3: prepend card-level keyword markers so Exhaust is visible even
+  // when the effect dispatcher doesn't surface it.
   const leading: string[] = [];
   if (card.exhaust) leading.push('Exhaust');
-  if (card.frenzy) {
-    const cdPct = Math.round((1 - card.frenzy.cd_mult) * 100);
-    leading.push(`Frenzy: CD −${cdPct}% below ${card.frenzy.hero_hp_pct_below}% HP`);
-  }
   // spend_armor: if the card has an armor-sourced damage effect, the damage
   // line is already prefixed via the special-case handling below; otherwise
   // we add a top-level note so the card still reads coherently.

@@ -5,6 +5,7 @@ import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
 import type { SynergyBuff } from './SynergyResolver';
 import { eventBus } from '../core/EventBus';
+import { getRelicData } from './combat/RelicSystem';
 
 const pricing = (difficultyConfig as any).pricing;
 
@@ -65,10 +66,16 @@ export class ShopSystem {
     );
   }
 
-  static getRelicPrice(rarity: string, loopCount: number): number {
-    const base = pricing.relicPriceByRarity[rarity] ?? 150;
-    const cap = pricing.relicPriceCap[rarity] ?? 300;
-    return Math.min(base + loopCount * pricing.relicPricePerLoop, cap);
+  static getRelicPrice(rarity: string, loopCount: number, runState?: RunState): number {
+    const base = pricing.relicPriceByRarity[rarity] ?? 180;
+    const cap = pricing.relicPriceCap[rarity] ?? 320;
+    const perLoop = pricing.relicPricePerLoop[rarity] ?? 12;
+    let price = Math.min(base + loopCount * perLoop, cap);
+    // C7 — Beacon Lantern: -10% relic prices while held.
+    if (runState && (runState.relics ?? []).includes('beacon_lantern')) {
+      price = Math.floor(price * 0.9);
+    }
+    return price;
   }
 
   // ── Shop operations ────────────────────────────────────────
@@ -119,12 +126,20 @@ export class ShopSystem {
   static getShopRelics(runState: RunState, availableRelicIds: string[], loopCount: number = 0): ShopRelic[] {
     const unowned = availableRelicIds.filter(id => !runState.relics.includes(id));
     const shuffled = fisherYates([...unowned]);
-    const count = Math.min(1 + Math.floor(rand() * 2), shuffled.length);
-    return shuffled.slice(0, count).map(id => ({
-      relicId: id,
-      name: id,
-      price: ShopSystem.getRelicPrice('common', loopCount), // default to common; callers can override
-    }));
+    // C7 — Beacon Lantern: +2 relics per shop. Base shop size is 5.
+    const baseCount = 5;
+    const lanternBonus = (runState.relics ?? []).includes('beacon_lantern') ? 2 : 0;
+    const count = Math.min(baseCount + lanternBonus, shuffled.length);
+    return shuffled.slice(0, count).map(id => {
+      // Read the relic's actual rarity so pricing is correct per tier.
+      const relic = getRelicData(id);
+      const rarity = relic?.rarity ?? 'common';
+      return {
+        relicId: id,
+        name: relic?.name ?? id,
+        price: ShopSystem.getRelicPrice(rarity, loopCount, runState),
+      };
+    });
   }
 
   static buyRelic(runState: RunState, relicId: string, price: number): boolean {

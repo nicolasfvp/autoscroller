@@ -4,9 +4,7 @@ import relicsData from '../data/json/relics.json';
 const RARITY_COLORS: Record<string, number> = {
   common: 0xcccccc,
   uncommon: 0x33cc33,
-  rare: 0xff6600,
-  epic: 0xff6600,
-  legendary: 0xffd700,
+  rare: 0xffd700,
 };
 
 /**

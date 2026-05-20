@@ -31,7 +31,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     phoenixUsed: false,
     heroVitality: 0, heroDexterity: 0, heroIntellect: 0, heroSpirit: 0,
     poisonStacks: 0, bleedStacks: 0, burnStacks: 0,
-    stunStacks: 0, slowStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    stunStacks: 0, slowStacks: 0, rageStacks: 0,
     enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
@@ -129,12 +129,14 @@ describe('CardResolver', () => {
     });
 
     it('damage accounts for hero strength', () => {
+      // v4: STR is a soft multiplier — strMult = 1 + (STR-1) × 0.25.
+      // STR=2 → 1.25× → 10 base × 1.25 = 12 (floor).
       const state = makeState({ heroStrength: 2 });
-      const card = makeCard(); // 10 damage * 2 strength = 20
+      const card = makeCard();
       const result = resolver.resolve(card, state, null);
 
-      expect(result.totalDamage).toBe(20);
-      expect(state.enemyHP).toBe(80);
+      expect(result.totalDamage).toBe(12);
+      expect(state.enemyHP).toBe(88);
     });
 
     it('damage reduced by enemy defense (minimum 1 for damage cards)', () => {

@@ -31,7 +31,9 @@ export class EnemyAI {
       // (~1/sec), so the slow naturally fades. Cooldown-shave recovery below
       // still uses real deltaMs so the agility affinity speedup decays at a
       // constant real-time rate.
-      const slowFactor = Math.min(0.5, state.slowStacks * 0.08);
+      // C4 — Stormcaller's Rod: slow cap raised from 50% to 80%.
+      const slowCap = state.activeRelicIds.includes('stormcallers_rod') ? 0.8 : 0.5;
+      const slowFactor = Math.min(slowCap, state.slowStacks * 0.08);
       effectiveDelta = deltaMs * (1 - slowFactor);
     }
     this.cooldownTimer -= effectiveDelta;
@@ -239,29 +241,45 @@ export class EnemyAI {
  * code path — armor must always be considered.
  */
 export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
+  // C1 — Apothecary's Vial: a one-time Barrier absorbs the next hit fully.
+  // Triggered on any non-zero incoming hit before mitigation / armor.
+  let damage = Math.max(0, Math.floor(rawDamage));
+  if (damage > 0 && state.barrierActive) {
+    state.barrierActive = false;
+    return 0;
+  }
   // v3: damage_taken_pct — flat fractional mitigation summed across hero auras
   // (Crimson Regen Mantle: -0.20). Applied BEFORE armor so armor still
   // absorbs the post-mitigation amount.
-  let damage = Math.max(0, Math.floor(rawDamage));
   if (state.heroAuras && state.heroAuras.length > 0) {
     const dtp = sumModifier(state.heroAuras, 'damage_taken_pct');
     if (dtp !== 0) {
       damage = Math.max(0, Math.floor(damage * (1 + dtp)));
     }
   }
+  // C5 — Glass Cannon: +50% damage taken from all sources.
+  if (state.activeRelicIds.includes('glass_cannon')) {
+    damage = Math.floor(damage * 1.5);
+  }
   if (damage === 0) return 0;
   const multiplier = state.heroDefenseMultiplier ?? 1;
   const effectiveDefense = state.heroDefense * multiplier;
 
-  const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
+  let remaining = Math.max(0, Math.floor(damage - effectiveDefense));
+  // C4 — Stoneheart Sigil: 5 flat damage-reduction floor (always blocks at least 5).
+  if (state.activeRelicIds.includes('stoneheart_sigil')) {
+    remaining = Math.max(0, remaining - 5);
+  }
   // Armor consumed at face value — multiplier only shifts how much damage
   // each point of armor blocks, not how fast armor itself depletes.
   const armorBefore = state.heroDefense;
   state.heroDefense = Math.max(0, state.heroDefense - damage);
+  const armorPrevented = armorBefore - state.heroDefense;
+  const armorJustBroke = armorBefore > 0 && state.heroDefense === 0;
 
   // on_armor_break: triggered auras armed on the hero fire their `then`
   // payload when armor transitions from >0 to 0.
-  if (armorBefore > 0 && state.heroDefense === 0 && state.heroAuras && state.heroAuras.length > 0) {
+  if (armorJustBroke && state.heroAuras && state.heroAuras.length > 0) {
     const payloads = fireTrigger(state.heroAuras, 'on_armor_break');
     for (const p of payloads) {
       const r = applyTriggeredPayload(state, p);
@@ -275,9 +293,25 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
   if (remaining > 0) {
     state.heroHP = Math.max(0, state.heroHP - remaining);
 
-    if (!skipRelics) {
-      applyDamageTakenRelics(state.activeRelicIds ?? [], remaining, state);
-    }
+    // v4 Vengeance: mark the moment HP loss happened so cards with
+    // `took_damage_within_ms` can detect a recent hit. Stored against the
+    // synced combatElapsedMs from CombatEngine.tick. Self-DoT ticks and card
+    // self-damage also route through here, so all real HP loss is captured.
+    state.lastHeroDamageMs = state.combatElapsedMs;
+  }
+
+  // C3: dispatch damage_taken relics on every non-zero hit (even armor-only),
+  // so brace, banded greaves, and iron will fire regardless of HP loss.
+  if (!skipRelics && damage > 0) {
+    applyDamageTakenRelics(state.activeRelicIds ?? [], {
+      actualDamage: remaining,
+      armorPrevented,
+      armorJustBroke,
+      rawDamage: damage,
+    }, state);
+  }
+
+  if (remaining > 0) {
 
     // Tier-2 on_hp_pct_below trigger: any aura whose threshold the hero just
     // crossed downward fires its payload once.

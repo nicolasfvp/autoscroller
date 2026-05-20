@@ -141,7 +141,6 @@ export function sumModifierStackScaled(
         case 'burn': cur = state.heroBurnStacks; break;
         case 'bleed': cur = state.heroBleedStacks; break;
         case 'rage': cur = state.rageStacks; break;
-        case 'arcane': cur = state.arcaneStacks; break;
         default: cur = 0;
       }
     } else {
@@ -151,7 +150,6 @@ export function sumModifierStackScaled(
         case 'burn': cur = state.burnStacks; break;
         case 'stun': cur = state.stunStacks; break;
         case 'slow': cur = state.slowStacks; break;
-        case 'arcane': cur = state.arcaneStacks; break;
         case 'rage': cur = state.rageStacks; break;
       }
     }
@@ -293,7 +291,9 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect): {
 
   switch (effect.type) {
     case 'damage': {
-      const baseDmg = value * state.heroStrength;
+      // v4: align STR with CardResolver — soft multiplier instead of flat ×STR.
+      const strMult = 1 + Math.max(0, state.heroStrength - 1) * 0.25;
+      const baseDmg = value * strMult;
       const raw = baseDmg > 0
         ? (effect.pierce_armor
             ? Math.max(1, Math.floor(baseDmg))
@@ -312,7 +312,6 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect): {
         case 'burn': state.burnStacks += value; break;
         case 'stun': state.stunStacks += value; break;
         case 'slow': state.slowStacks += value; break;
-        case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + value); break;
         case 'rage': state.rageStacks += value; break;
       }
       break;

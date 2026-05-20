@@ -3,6 +3,7 @@
 // (which throws on import in a non-DOM context).
 
 import type { CardDefinition, ElementId } from '../data/types';
+import { formatCardDescription } from '../systems/cards/CardText';
 
 export interface CardFilters {
   element: string;         // "All" | "Fire" | "Attack" | ...
@@ -44,9 +45,18 @@ export function applyFilters(allCards: CardDefinition[], filters: CardFilters): 
     if (elemId) {
       if (!card.elements || !card.elements.includes(elemId)) return false;
     }
-    // Search gate (name OR description, case-insensitive substring).
+    // Search gate (name OR description, case-insensitive substring). v4: hay
+    // includes BOTH the static description AND the dynamic formatter output —
+    // the static text holds flavor/legacy terms, the dynamic text holds the
+    // canonical rendered keywords ("Vengeance", "Shatter", "Scales STR", …).
     if (q.length > 0) {
-      const hay = `${card.name} ${card.description}`.toLowerCase();
+      const rendered = formatCardDescription({
+        effects: card.effects,
+        exhaust: card.exhaust,
+        spend_armor: card.spend_armor,
+        cooldown_scale: card.cooldown_scale,
+      });
+      const hay = `${card.name} ${card.description ?? ''} ${rendered}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;

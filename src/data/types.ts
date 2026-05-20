@@ -9,7 +9,7 @@
 
 export type StatId = "str" | "vit" | "dex" | "int" | "spi";
 
-export type StackId = "poison" | "bleed" | "burn" | "stun" | "slow" | "arcane" | "rage";
+export type StackId = "poison" | "bleed" | "burn" | "stun" | "slow" | "rage";
 
 // -- Card Types --
 
@@ -45,7 +45,7 @@ export type AuraTriggerKind =
   | "on_enemy_stack_threshold"// enemy stack of given type crosses threshold
   | "on_kill_with_stack"      // enemy killed while carrying named stack
   | "on_slow_applied"         // bearer applied a slow stack to an enemy
-  | "on_cooldown_resolve"     // any card slot resolves cooldown (Frenzy hook)
+  | "on_cooldown_resolve"     // any card slot resolves cooldown
   | "passive_armor_scaler";   // declarative: present-armor multiplier aura
 
 export interface CardEffectCondition {
@@ -69,6 +69,8 @@ export interface CardEffectCondition {
   self_stack_atleast?: { stack: StackId; value: number };
   /** v3: effect only fires if a same-cast `devour` resolved successfully. */
   devour_succeeded?: boolean;
+  /** v4 Vengeance: fires when hero took HP damage within the last N ms. */
+  took_damage_within_ms?: number;
 }
 
 /** Source key extended by v3 redesigns. Runtime parses these to read live
@@ -79,7 +81,7 @@ export type ScaleSourceKind =
   | "consumed_stack"          // value of stacks consumed by an in-this-cast `consume_stack` step
   | "enemy_pre_consume_stack" // snapshot of enemy stack count before this cast began
   | "self_stack"              // current hero pool of a named stack (consume_stack_value)
-  | "missing_hp_pct"          // 0..100, used by Frenzy / scaling auras
+  | "missing_hp_pct"          // 0..100, used by scaling auras
   | "rage";                   // hero rageStacks (legacy alias)
 
 export type StackScaleSource = {
@@ -95,7 +97,7 @@ export interface CardEffect {
     // Existing (v1)
     | "damage" | "heal" | "armor" | "stamina" | "mana" | "debuff"
     // NEW (v2 / Phase 9) -- Plan 3 implements runtime resolution
-    | "buff" | "debuff_stat" | "dot" | "stack" | "taunt"
+    | "buff" | "debuff_stat" | "dot" | "stack"
     // NEW (Tier-1 redesign): time-decaying status effect on hero or enemy.
     | "aura"
     // v3 archetype redesigns:
@@ -232,8 +234,6 @@ export interface CardDefinition {
   locked?: boolean;
   /** v3: Exhaust — card fires once per combat and is then disabled until next combat. */
   exhaust?: boolean;
-  /** v3: Frenzy — cooldown multiplier applied while hero HP fraction is below threshold. */
-  frenzy?: { hero_hp_pct_below: number; cd_mult: number };
   /** v3: cooldown scaled by a runtime variable (e.g. hero rage stacks). */
   cooldown_scale?: {
     stat: "rage" | "missing_hp_pct";
@@ -329,7 +329,7 @@ export interface TileTypeConfig {
 
 // -- Relic Types --
 
-export type RelicRarity = "common" | "rare" | "epic" | "legendary";
+export type RelicRarity = "common" | "uncommon" | "rare";
 export type RelicTrigger =
   // Existing (v1)
   | "combat_start" | "turn_start" | "card_played" | "damage_taken" | "heal" | "passive"
@@ -371,7 +371,7 @@ export interface PricingConfig {
   reorderEscalation: number;
   reorderCap: number;
   relicPriceByRarity: Record<string, number>;
-  relicPricePerLoop: number;
+  relicPricePerLoop: Record<string, number>;
   relicPriceCap: Record<string, number>;
 }
 

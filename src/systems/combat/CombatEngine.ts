@@ -8,7 +8,8 @@ import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
 import { CardResolver } from './CardResolver';
 import { EnemyAI, applyHeroDamage } from './EnemyAI';
-import { SynergySystem, applyDirectSynergyBonus } from './SynergySystem';
+// v4: SynergySystem removed — card-pair synergies were never populated.
+// Card-played relics and class passives still cover combo-style effects.
 import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { tickAuras, getCdReductionFactor, collectAuraTicks, applyTriggeredPayload } from './StatusEffects';
@@ -30,12 +31,10 @@ export class CombatEngine {
   private stats: CombatStats;
   private cardResolver: CardResolver;
   private enemyAI: EnemyAI;
-  private synergies: SynergySystem;
 
   private consecutiveAttacks = 0;
   private heroCooldownTimer = 0; // starts at 0 so first card plays immediately
   private deckPointer = 0;
-  private lastPlayedCardId: string | null = null;
   private isFinished = false;
 
   private regenAccumulator = 0;
@@ -47,7 +46,6 @@ export class CombatEngine {
     this.stats = createEmptyCombatStats(state.enemyId, state.enemyName);
     this.cardResolver = new CardResolver();
     this.enemyAI = new EnemyAI(state);
-    this.synergies = new SynergySystem();
   }
 
   tick(deltaMs: number): void {
@@ -57,6 +55,9 @@ export class CombatEngine {
     // after DEADLOCK_TIMEOUT_MS (e.g. empty deck + immortal enemy, or a
     // bug producing 0-damage attacks), force a defeat.
     this.totalElapsedMs += deltaMs;
+    // v4 Vengeance: mirror elapsed time on CombatState so condition checks
+    // (took_damage_within_ms) and applyHeroDamage timestamps stay in sync.
+    this.state.combatElapsedMs = this.totalElapsedMs;
     if (this.totalElapsedMs >= DEADLOCK_TIMEOUT_MS) {
       this.state.heroHP = 0;
       this.checkEndConditions();
@@ -144,19 +145,9 @@ export class CombatEngine {
         continue;
       }
 
-      // Check cost-waiver synergy BEFORE the affordability gate so cards
-      // like Fortified Fury can fire even when the hero can't afford the
-      // base cost. (Without this, the card is skipped before synergy is
-      // even checked.)
-      const synergyForAffordability = this.synergies.check(
-        this.lastPlayedCardId,
-        card.id,
-        this.state.heroClass,
-      );
-      const waivedByCost = synergyForAffordability?.bonus.type === 'cost_waive';
-
+      // v4: card-pair synergies removed; cost-waive used to come from them.
       const isUpgraded = this.state.upgraded[this.deckPointer] ?? false;
-      if (waivedByCost || this.cardResolver.canAfford(card, this.state, isUpgraded)) {
+      if (this.cardResolver.canAfford(card, this.state, isUpgraded)) {
         this.executeCard(card);
         return;
       }
@@ -172,17 +163,8 @@ export class CombatEngine {
   }
 
   private executeCard(card: CardDefinition): void {
-    // Check synergy
-    const synergy = this.synergies.check(
-      this.lastPlayedCardId,
-      card.id,
-      this.state.heroClass,
-    );
-
-    if (synergy) {
-      this.stats.synergiesTriggered++;
-      getRun().stats.combosTriggered++;
-    }
+    // v4: card-pair synergies removed (data file was empty). Relic + passive
+    // bonuses below still cover combo-style payoffs.
 
     // Relic bonuses for this card
     const relicBonus = resolveCardPlayedRelicBonus(
@@ -194,6 +176,13 @@ export class CombatEngine {
     // Apply blood_pact temp strength bonus
     if (this.state._bloodPactBonus > 0) {
       this.state.heroStrength += this.state._bloodPactBonus;
+    }
+    // C5 — Sanguine Pact temp STR/INT bonus.
+    if (this.state._sanguinePactStrBonus > 0) {
+      this.state.heroStrength += this.state._sanguinePactStrBonus;
+    }
+    if (this.state._sanguinePactIntBonus > 0) {
+      this.state.heroIntellect += this.state._sanguinePactIntBonus;
     }
 
     // Per-position upgrade flag for the card we're about to resolve.
@@ -210,16 +199,7 @@ export class CombatEngine {
     }
 
     // Resolve card (with damage multiplier from relics)
-    const result = this.cardResolver.resolve(card, this.state, synergy, relicBonus.damageMultiplier, isUpgraded);
-
-    // Phase 9 Task 5: cooldown_reduction synergy bonus mutates CombatState
-    // directly (CardResolver.applyEffect is a no-op for that bonus type).
-    if (synergy) {
-      applyDirectSynergyBonus(synergy, this.state);
-      eventBus.emit('combat:combo-played', {
-        displayName: synergy.displayName,
-      });
-    }
+    const result = this.cardResolver.resolve(card, this.state, null, relicBonus.damageMultiplier, isUpgraded);
 
     if (manaRefund > 0) {
       this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
@@ -229,6 +209,19 @@ export class CombatEngine {
     if (this.state._bloodPactBonus > 0) {
       this.state.heroStrength -= this.state._bloodPactBonus;
       this.state._bloodPactBonus = 0;
+    }
+    // C5 — Restore Sanguine Pact temp STR/INT.
+    if (this.state._sanguinePactStrBonus > 0) {
+      this.state.heroStrength -= this.state._sanguinePactStrBonus;
+      this.state._sanguinePactStrBonus = 0;
+    }
+    if (this.state._sanguinePactIntBonus > 0) {
+      this.state.heroIntellect -= this.state._sanguinePactIntBonus;
+      this.state._sanguinePactIntBonus = 0;
+    }
+    // C5 — Demon Heart: 1 self-damage per card during the first 6s window.
+    if (this.state.activeRelicIds.includes('demon_heart') && this.state.combatElapsedMs < 6000) {
+      this.state.heroHP = Math.max(1, this.state.heroHP - 1);
     }
 
     // Apply relic resource refunds post-resolve
@@ -274,6 +267,24 @@ export class CombatEngine {
       getRun().stats.damageDealt += intBonus;
     }
 
+    // C1 relics — first-attack flat damage bonus (Whetstone Shard, Iron Tooth).
+    // Fires only when the card actually dealt damage; consumed once per combat.
+    if (this.state.firstAttackDamageBonus > 0 && result.totalDamage > 0) {
+      const bonus = this.state.firstAttackDamageBonus;
+      this.state.enemyHP -= bonus;
+      this.stats.damageDealt += bonus;
+      result.totalDamage += bonus;
+      getRun().stats.damageDealt += bonus;
+      this.state.firstAttackDamageBonus = 0;
+    }
+
+    // C1 — Ember Wick: first Fire-element card applies +N Burn to enemy.
+    // Consumed once when a card carrying the fire element resolves.
+    if (this.state.firstFireCardBurnBonus > 0 && card.elements && card.elements.includes('fire' as any)) {
+      this.state.burnStacks += this.state.firstFireCardBurnBonus;
+      this.state.firstFireCardBurnBonus = 0;
+    }
+
     // Phase 9: DoT tick cadence is "every card play" (INDEX §7 #2, RESEARCH
     // A2). Tick BEFORE deck-pointer advance so attribution to the triggering
     // card is preserved (Pitfall 4).
@@ -281,16 +292,10 @@ export class CombatEngine {
 
     // Set cooldown for next card. Upgraded variants override base cooldown.
     // `isUpgraded` is already resolved above for this deck position.
-    let effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
+    const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown !== undefined)
       ? card.upgraded.cooldown
       : card.cooldown;
-    // v3: Frenzy — card-level multiplier when hero HP is below threshold.
-    if (card.frenzy) {
-      const pct = (this.state.heroHP / Math.max(1, this.state.heroMaxHP)) * 100;
-      if (pct < card.frenzy.hero_hp_pct_below) {
-        effectiveCooldown = effectiveCooldown * card.frenzy.cd_mult;
-      }
-    }
+    // v4: Frenzy removed — folded into Vengeance effects on the affected cards.
     // v3: Overload — slot's previously-issued cd_debt is added to this CD.
     const slot = this.deckPointer;
     const debtMs = this.state.cdDebtBySlot[slot] ?? 0;
@@ -312,9 +317,11 @@ export class CombatEngine {
     // Air-element cd_reduction auras apply on top of DEX scaling; capped to a
     // floor of 40% of the base cooldown (60% max reduction, soft cap above 30%).
     const auraCdFactor = getCdReductionFactor(this.state.heroAuras);
+    // C6 — Roaring Hourglass: first 4s of combat, cooldowns -50%.
+    const roaringHourglassFactor = (this.state.activeRelicIds.includes('roaring_hourglass') && this.state.combatElapsedMs < 4000) ? 0.5 : 1.0;
     this.heroCooldownTimer = Math.max(
       0,
-      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor
+      (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor * roaringHourglassFactor
         + debtMs,
     );
 
@@ -324,7 +331,14 @@ export class CombatEngine {
     if (this.state.echoCharges > 0 && this.state.echoExpiresAt > 0) {
       this.state.echoCharges = Math.max(0, this.state.echoCharges - 1);
       const isUpgradedEcho = this.state.upgraded[slot] ?? false;
-      if (this.cardResolver.canAfford(card, this.state, isUpgradedEcho)) {
+      // C7 — Echo Chamber / Tempest Resonator: if this echo was relic-granted,
+      // waive cost by setting firstCardCostsZero (consumed during resolve).
+      const isFreeEcho = this.state.freeEchoCharges > 0;
+      if (isFreeEcho) {
+        this.state.freeEchoCharges -= 1;
+        this.state.firstCardCostsZero = true;
+      }
+      if (isFreeEcho || this.cardResolver.canAfford(card, this.state, isUpgradedEcho)) {
         this.cardResolver.resolve(card, this.state, null, relicBonus.damageMultiplier, isUpgradedEcho);
       }
     }
@@ -343,7 +357,6 @@ export class CombatEngine {
     });
 
     // Update tracking
-    this.lastPlayedCardId = card.id;
     this.advanceDeckPointer();
   }
 
@@ -372,6 +385,11 @@ export class CombatEngine {
     // back to 0, decrement stacks by 1. The first tick after apply does damage
     // but no decay (parity goes 0→1); the second tick does damage and decays
     // (parity goes 1→0).
+    // C4 relic flags (read once per tick).
+    const hemlockVial = state.activeRelicIds.includes('hemlock_vial');
+    const cinderkeep = state.activeRelicIds.includes('cinderkeep');
+    const crimsonStiletto = state.activeRelicIds.includes('crimson_stiletto');
+
     if (state.poisonStacks > 0) {
       const dmg = state.poisonStacks;
       state.enemyHP -= dmg;
@@ -381,8 +399,12 @@ export class CombatEngine {
         stack: 'poison', damage: dmg, sourceCard: triggeringCardId,
       });
       state.poisonTickParity = (state.poisonTickParity + 1) % 2;
-      if (state.poisonTickParity === 0) {
+      // C4 — Hemlock Vial: skip decay entirely; 25% chance to gain +1 Poison per tick.
+      if (!hemlockVial && state.poisonTickParity === 0) {
         state.poisonStacks = Math.max(0, state.poisonStacks - 1);
+      }
+      if (hemlockVial && Math.random() < 0.25) {
+        state.poisonStacks += 1;
       }
       anyDotTicked = true;
     }
@@ -392,7 +414,9 @@ export class CombatEngine {
     // damage. Stacks decay -1 per tick regardless.
     if (state.bleedStacks > 0) {
       const perStack = state.enemyAttackedSinceLastBleedTick ? 2 : 1;
-      const dmg = state.bleedStacks * perStack;
+      // C4 — Crimson Stiletto: bleed ticks fire 2× faster (= deal double per tick).
+      const speedMult = crimsonStiletto ? 2 : 1;
+      const dmg = state.bleedStacks * perStack * speedMult;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
@@ -406,7 +430,8 @@ export class CombatEngine {
     // damage per tick regardless of stack count. Stacks are only consumed by
     // Pyre cards (handled in CardResolver post-damage).
     if (state.burnStacks > 0) {
-      const dmg = 2;
+      // C4 — Cinderkeep: tick damage = ceil(burnStacks / 4), min 2.
+      const dmg = cinderkeep ? Math.max(2, Math.ceil(state.burnStacks / 4)) : 2;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;

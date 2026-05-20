@@ -10,16 +10,10 @@ import {
 //   - 156 implemented cards (36 Tier 1 + 120 Tier 2)
 //   - 0 cards with unlockSource (all cards are universally available; the Forge
 //     gate is enforced via tier unlock at the Forge, not unlockSource)
-// And the relic pool is 39 relics, 28 always-available and 11 gated (forge unlocks).
+// Relics v2: 80 relics, none gated — every relic is always-available.
 const TOTAL_CARDS = 156;
-const TOTAL_RELICS = 39;
-const ALWAYS_AVAILABLE_RELICS = 28;
-const GATED_RELIC_IDS = [
-  'wargods_mantle', 'bloodgorged_heart', 'the_last_banner',
-  'tempest_resonator', 'tideheart_amulet', 'archon_codex',
-  'blood_pact', 'berserker_ring', 'crown_of_pact',
-  'phoenix_feather', 'demon_heart',
-];
+const TOTAL_RELICS = 80;
+const ALWAYS_AVAILABLE_RELICS = 80;
 
 describe('CollectionRegistry', () => {
   describe('getCollectionStatus', () => {
@@ -41,7 +35,7 @@ describe('CollectionRegistry', () => {
       expect(status.cards.unlocked).toBe(TOTAL_CARDS);
     });
 
-    it('returns relics total=39 and unlocked=28 for default state (28 always available)', () => {
+    it('returns relics total=80 and all unlocked for default state (v2: no gating)', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
       expect(status.relics.total).toBe(TOTAL_RELICS);
@@ -75,27 +69,18 @@ describe('CollectionRegistry', () => {
     it('returns higher percent when more items are unlocked', () => {
       const defaultState = createDefaultMetaState();
       const unlockedState = createDefaultMetaState();
-      // Cards have no gates, so unlocking a card has no effect. Unlock a gated
-      // relic instead to drive the completion percent up.
-      unlockedState.unlockedRelics = ['phoenix_feather', 'demon_heart', 'berserker_ring'];
+      // v2 relics have no gating, so move a tile to drive the percent up.
+      unlockedState.unlockedTiles = ['graveyard'];
       expect(getCompletionPercent(unlockedState)).toBeGreaterThan(getCompletionPercent(defaultState));
     });
   });
 
   describe('getItemDetails', () => {
-    it('returns relic data with isUnlocked=false and unlockHint for gated relic', () => {
+    it('returns relic data with isUnlocked=true for any relic (v2: no gating)', () => {
       const state = createDefaultMetaState();
       const details = getItemDetails('phoenix_feather', state);
       expect(details).toBeDefined();
       expect(details!.id).toBe('phoenix_feather');
-      expect(details!.isUnlocked).toBe(false);
-      expect(details!.unlockHint).toContain('Forge');
-    });
-
-    it('returns relic data with isUnlocked=true for unlocked relic', () => {
-      const state = createDefaultMetaState();
-      state.unlockedRelics = ['phoenix_feather'];
-      const details = getItemDetails('phoenix_feather', state);
       expect(details!.isUnlocked).toBe(true);
     });
 
@@ -113,14 +98,11 @@ describe('CollectionRegistry', () => {
     });
   });
 
-  // Reference: confirm the GATED_RELIC_IDS list stays in sync with the data
-  // (this is a sanity guard against silent fixture drift).
-  it('GATED_RELIC_IDS sanity: every id is a real gated relic in relics.json', async () => {
+  // v2 invariant: no relic carries unlockSource.
+  it('no relic in v2 carries unlockSource', async () => {
     const relicsData = (await import('../../src/data/json/relics.json')).default as any[];
-    for (const id of GATED_RELIC_IDS) {
-      const relic = relicsData.find((r) => r.id === id);
-      expect(relic, `relic ${id} should exist in relics.json`).toBeDefined();
-      expect(relic.unlockSource, `relic ${id} should have unlockSource`).toBeDefined();
+    for (const relic of relicsData) {
+      expect(relic.unlockSource, `relic ${relic.id} should not be gated in v2`).toBeUndefined();
     }
   });
 });
