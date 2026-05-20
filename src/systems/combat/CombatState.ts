@@ -59,8 +59,27 @@ export interface CombatState {
   cooldownMultiplier: number;
   /** Multiplier for the next card only (first_strike_amulet) */
   firstCardDamageMultiplier: number;
+  /** First card each combat is free (Smoldering Torch). Consumed on first played card. */
+  firstCardCostsZero: boolean;
+  /** Remaining count of cards that get -1 Stamina cost (Vanguard Cuffs). Decremented per card. */
+  firstNCardsStaminaDiscount: number;
+  /** Flat damage bonus on the first damage card (Whetstone Shard, Iron Tooth). Consumed on first damage card. */
+  firstAttackDamageBonus: number;
+  /** Extra Burn applied by the first Fire-element card (Ember Wick). Consumed once. */
+  firstFireCardBurnBonus: number;
+  /** One-shot Barrier (Apothecary's Vial) — absorbs the next hit fully, then resets. */
+  barrierActive: boolean;
+  /** C2: pending gold credited to RunState.economy.gold after combat ends (kill-bonus relics). */
+  pendingGoldBonus: number;
+  /** C2: generic per-relic numeric counters (card-played counts, cap trackers, time windows). */
+  relicCounters: Record<string, number>;
+  /** C2: next armor effect resolved by hero is multiplied by this (Burnished Sigil). 1.0 = no effect. Consumed once. */
+  nextArmorMultiplier: number;
   /** Temp strength bonus from blood_pact (applied per card) */
   _bloodPactBonus: number;
+  /** C5 — Sanguine Pact temp STR/INT bonuses applied around resolve. */
+  _sanguinePactStrBonus: number;
+  _sanguinePactIntBonus: number;
   /** Whether phoenix_feather has already been used this combat */
   phoenixUsed: boolean;
 
@@ -76,9 +95,13 @@ export interface CombatState {
   burnStacks: number;
   stunStacks: number;
   slowStacks: number;
-  arcaneStacks: number;         // cap = arcaneStacksCap (Pitfall 8: cap-and-drop)
-  arcaneStacksCap: number;      // default 10
   rageStacks: number;
+
+  // ── v4 Vengeance: hero damage timing ─────────────────────────────────
+  /** Total elapsed combat time in ms — synced from CombatEngine each tick. */
+  combatElapsedMs: number;
+  /** Timestamp (in combatElapsedMs) of the last HP loss the hero suffered. */
+  lastHeroDamageMs: number | null;
 
   /**
    * Bleed swing-amplification flag. Set to true by EnemyAI whenever the enemy
@@ -147,6 +170,10 @@ export interface CombatState {
    */
   echoCharges: number;
   echoExpiresAt: number;
+  /** C7 — Echoes that consume zero cost (granted by Echo Chamber / Tempest
+   *  Resonator relics). When the engine consumes an echo, if this is > 0 it
+   *  decrements and the replay's cost is waived. */
+  freeEchoCharges: number;
 
   /**
    * v3: Devour markers — deck slots disabled permanently for this combat.
@@ -196,7 +223,17 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
 
     cooldownMultiplier: 1.0,
     firstCardDamageMultiplier: 1.0,
+    firstCardCostsZero: false,
+    firstNCardsStaminaDiscount: 0,
+    firstAttackDamageBonus: 0,
+    firstFireCardBurnBonus: 0,
+    barrierActive: false,
+    pendingGoldBonus: 0,
+    relicCounters: {},
+    nextArmorMultiplier: 1.0,
     _bloodPactBonus: 0,
+    _sanguinePactStrBonus: 0,
+    _sanguinePactIntBonus: 0,
     phoenixUsed: false,
 
     // -- Phase 9: per-combat stat axes seeded from resolveHeroStats(run) --
@@ -211,9 +248,9 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     burnStacks: 0,
     stunStacks: 0,
     slowStacks: 0,
-    arcaneStacks: 0,
-    arcaneStacksCap: 10,
     rageStacks: 0,
+    combatElapsedMs: 0,
+    lastHeroDamageMs: null,
     enemyAttackedSinceLastBleedTick: false,
     poisonTickParity: 0,
     nextCardCooldownReduction: 0,
@@ -228,6 +265,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     cdDebtBySlot: {},
     echoCharges: 0,
     echoExpiresAt: 0,
+    freeEchoCharges: 0,
     devouredSlots: new Set<number>(),
   };
 
@@ -254,6 +292,14 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
 
   // Apply passive (stat) relics immediately
   applyPassiveRelics(run.relics ?? [], state);
+
+  // C6 — Stamina Reservoir: at combat start, every 3 Stamina the hero ended
+  // the previous combat with (read from run.hero.currentStamina, which is what
+  // CombatScene wrote on combat:end) converts to +1 STR for this combat, cap +5.
+  if ((run.relics ?? []).includes('stamina_reservoir')) {
+    const carry = Math.min(5, Math.floor((run.hero.currentStamina ?? 0) / 3));
+    state.heroStrength += carry;
+  }
 
   // Apply combat_start relics (first_strike_amulet, etc.)
   applyOnCombatStartRelics(run.relics ?? [], state);

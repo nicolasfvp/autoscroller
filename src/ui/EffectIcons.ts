@@ -26,7 +26,6 @@ const STACK_META: Record<string, { icon: string; color: string; name: string }> 
   burn:   { icon: '🔥', color: '#ff8a3d', name: 'Burn' },
   stun:   { icon: '💫', color: '#ffe066', name: 'Stun' },
   slow:   { icon: '🐌', color: '#6ec5ff', name: 'Slow' },
-  arcane: { icon: '🔮', color: '#c490ff', name: 'Arcane' },
   rage:   { icon: '😡', color: '#ff6b6b', name: 'Rage' },
 };
 
@@ -153,7 +152,6 @@ export function computeEnemyChips(state: CombatState): EffectChip[] {
     ['burn', state.burnStacks],
     ['stun', state.stunStacks],
     ['slow', state.slowStacks],
-    ['arcane', state.arcaneStacks],
   ];
   for (const [k, v] of stackPairs) {
     if (v > 0) {

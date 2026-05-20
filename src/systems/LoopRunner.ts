@@ -127,6 +127,24 @@ export class LoopRunner {
     const tile = this.runState.loop.tiles[tileIndex];
     if (!tile || tile.defeatedThisLoop) return;
 
+    // C6 — Travel Boots: heal +1 HP on entering each tile.
+    if ((this.runState.relics ?? []).includes('travel_boots')) {
+      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 1);
+    }
+
+    // C7 — Trailblazer's Brand: first time entering a combat tile each loop,
+    // heal 5 HP and gain +1 Stamina / +1 Mana. Combat tiles: basic (with
+    // enemy), terrain (with combat), boss.
+    const isCombatTile = (tile.type === 'basic' && !!tile.enemyId) || tile.type === 'terrain' || tile.type === 'boss';
+    if (isCombatTile
+        && !this.runState.loop.trailblazerFiredThisLoop
+        && (this.runState.relics ?? []).includes('trailblazers_brand')) {
+      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 5);
+      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
+      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
+      this.runState.loop.trailblazerFiredThisLoop = true;
+    }
+
     switch (tile.type) {
       case 'basic': {
         // Combat only if enemy was pre-assigned
@@ -175,6 +193,16 @@ export class LoopRunner {
     // leftover boss is dropped (loop length shrinks).
     const traversedLength = loop.length;
     loop.count++;
+
+    // C6 — Lodestone Pendant: on loop completion, heal 8 HP and +1 Stamina / +1 Mana.
+    if ((this.runState.relics ?? []).includes('lodestone_pendant')) {
+      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 8);
+      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
+      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
+    }
+
+    // C7 — Trailblazer's Brand: reset the per-loop fired flag on new loop.
+    this.runState.loop.trailblazerFiredThisLoop = false;
 
     // Award tile points
     const diffConfig = getDifficultyConfig();

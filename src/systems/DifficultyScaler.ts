@@ -36,7 +36,7 @@ interface DifficultyConfig {
     reorderEscalation: number;
     reorderCap: number;
     relicPriceByRarity: Record<string, number>;
-    relicPricePerLoop: number;
+    relicPricePerLoop: Record<string, number>;
     relicPriceCap: Record<string, number>;
   };
 }

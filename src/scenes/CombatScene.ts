@@ -125,7 +125,11 @@ export class CombatScene extends Scene {
           currentRun.loop.lastBossDefeated = true;
           currentRun.loop.bossesDefeated = (currentRun.loop.bossesDefeated ?? 0) + 1;
         }
-        generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward, xpEarned);
+        // C2 relics: kill-bonus relics queued gold onto CombatState; add it to
+        // the base reward so it flows through normal loot processing (which
+        // also pipes the right notification).
+        const goldBonus = finalState.pendingGoldBonus ?? 0;
+        generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward + goldBonus, xpEarned);
         this.scene.stop();
         this.scene.resume(SCENE_KEYS.GAME);
       } else {

@@ -26,8 +26,8 @@
     "reorderBasePrice": 15,
     "reorderEscalation": 20,
     "reorderCap": 150,
-    "relicPriceByRarity": { "common": 80, "rare": 150, "epic": 250, "legendary": 400 },
-    "relicPricePerLoop": 10,
-    "relicPriceCap": { "common": 150, "rare": 280, "epic": 450, "legendary": 600 }
+    "relicPriceByRarity": { "common": 90, "uncommon": 180, "rare": 360 },
+    "relicPricePerLoop": { "common": 8, "uncommon": 12, "rare": 18 },
+    "relicPriceCap": { "common": 160, "uncommon": 320, "rare": 600 }
   }
 }

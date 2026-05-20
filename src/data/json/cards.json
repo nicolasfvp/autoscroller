@@ -19,7 +19,7 @@
     {
       "id": "t1-attack-attack",
       "name": "Reckless Strike",
-      "description": "Deal 7 (scales STR). +1 Rage. Self Bleed 1.",
+      "description": "Deal 9 (scales STR). +2 Rage. Self Bleed 1.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -29,17 +29,17 @@
       "effects": [
         {
           "type": "damage",
-          "value": 7,
+          "value": 9,
           "target": "enemy",
           "scale": {
             "stat": "str",
             "per": 2,
-            "value": 1
+            "value": 2
           }
         },
         {
           "type": "stack",
-          "value": 1,
+          "value": 2,
           "target": "self",
           "stack": "rage"
         },
@@ -50,7 +50,7 @@
           "stack": "bleed"
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.2,
       "targeting": "single",
       "rarity": "common",
       "cost": {
@@ -60,7 +60,7 @@
     {
       "id": "t1-defense-defense",
       "name": "Bulwark Vow",
-      "description": "Armor 6 (scales VIT). Brace: +2 Rage.",
+      "description": "Armor 7 (Scales VIT). Brace: +3 Rage.",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -70,7 +70,7 @@
       "effects": [
         {
           "type": "armor",
-          "value": 6,
+          "value": 7,
           "target": "self",
           "scale": {
             "stat": "vit",
@@ -86,7 +86,7 @@
           "trigger": "on_armor_break",
           "then": {
             "type": "stack",
-            "value": 2,
+            "value": 3,
             "target": "self",
             "stack": "rage"
           }
@@ -136,7 +136,7 @@
     {
       "id": "t1-counter-counter",
       "name": "Razor Stance",
-      "description": "Aura 10s: your hits apply Bleed 1 (scales DEX). Vengeance: +4s.",
+      "description": "On Hit 10s: apply Bleed 1 (Scales DEX). Vengeance — On Hit 4s: apply +1 Bleed.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -180,7 +180,7 @@
             }
           },
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -235,7 +235,7 @@
     {
       "id": "t1-water-water",
       "name": "Frostbind",
-      "description": "Stun 1 (scales INT). Armor 4 (scales VIT).",
+      "description": "Stun 1 (scales INT). Armor 4 (scales VIT). Vengeance: Stun 1.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -263,6 +263,20 @@
             "per": 2,
             "value": 1
           }
+        },
+        {
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 5,
+            "value": 1
+          },
+          "condition": {
+            "took_damage_within_ms": 2000
+          }
         }
       ],
       "cooldown": 2,
@@ -270,16 +284,12 @@
       "rarity": "common",
       "cost": {
         "mana": 1
-      },
-      "frenzy": {
-        "hero_hp_pct_below": 50,
-        "cd_mult": 0.7
       }
     },
     {
       "id": "t1-air-air",
       "name": "Tailwind",
-      "description": "Deal 4. Haste 25% (5s).",
+      "description": "Deal 4 (Scales STR). Haste 20% (5s). +1 Mana.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -304,21 +314,23 @@
           "ttl_ms": 5000,
           "modifier": {
             "kind": "cd_reduction",
-            "value": 0.25
+            "value": 0.20
           }
+        },
+        {
+          "type": "mana",
+          "value": 1,
+          "target": "self"
         }
       ],
       "cooldown": 1.2,
       "targeting": "single",
-      "rarity": "common",
-      "cost": {
-        "mana": 1
-      }
+      "rarity": "common"
     },
     {
       "id": "t1-earth-earth",
       "name": "Tremor Lock",
-      "description": "Stun 2 (scales INT).",
+      "description": "Stun 1 (Scales INT). Slow 4 (Scales INT). Shatter: Deal 5.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -328,7 +340,7 @@
       "effects": [
         {
           "type": "dot",
-          "value": 2,
+          "value": 1,
           "target": "enemy",
           "stack": "stun",
           "scale": {
@@ -336,9 +348,33 @@
             "per": 4,
             "value": 1
           }
+        },
+        {
+          "type": "dot",
+          "value": 4,
+          "target": "enemy",
+          "stack": "slow",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          }
+        },
+        {
+          "type": "damage",
+          "value": 5,
+          "target": "enemy",
+          "scale": {
+            "stat": "int",
+            "per": 3,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stunned": true
+          }
         }
       ],
-      "cooldown": 2.5,
+      "cooldown": 2,
       "targeting": "single",
       "rarity": "common",
       "cost": {
@@ -348,7 +384,7 @@
     {
       "id": "t1-agility-attack",
       "name": "Quickstrike",
-      "description": "Deal 6 (scales DEX).",
+      "description": "Deal 8 (Scales DEX).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -358,7 +394,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 6,
+          "value": 8,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -377,7 +413,7 @@
     {
       "id": "t1-agility-counter",
       "name": "Sidestep & Slash",
-      "description": "Deal 5. Vengeance: Deal 5. Bleed 2. +1 Stamina.",
+      "description": "Deal 5. Vengeance: Deal 3. Bleed 2. +1 Stamina.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -397,10 +433,10 @@
         },
         {
           "type": "damage",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "condition": {
-            "hero_hp_pct_below": 60
+            "took_damage_within_ms": 2000
           }
         },
         {
@@ -497,7 +533,7 @@
     {
       "id": "t1-agility-water",
       "name": "Mist Step",
-      "description": "Heal 3. +1 Stamina. +1 DEX (6s). Drain 1 Mana.",
+      "description": "Heal 3 (scales SPI). +1 Stamina. +1 DEX (6s). Slow 1.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -531,9 +567,10 @@
           }
         },
         {
-          "type": "mana",
-          "value": -1,
-          "target": "enemy"
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "slow"
         }
       ],
       "cooldown": 1.3,
@@ -543,7 +580,7 @@
     {
       "id": "t1-agility-air",
       "name": "Gale Cut",
-      "description": "Deal 5. Haste 15% (4s).",
+      "description": "Deal 3 (Scales DEX). Haste 15% (4s). +1 Stamina.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -553,7 +590,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "dex",
@@ -570,16 +607,21 @@
             "kind": "cd_reduction",
             "value": 0.15
           }
+        },
+        {
+          "type": "stamina",
+          "value": 1,
+          "target": "self"
         }
       ],
-      "cooldown": 1,
+      "cooldown": 1.1,
       "targeting": "single",
       "rarity": "common"
     },
     {
       "id": "t1-agility-earth",
       "name": "Tremor Dash",
-      "description": "Deal 5 (scales DEX). Armor 4 (scales VIT). +1 Stamina.",
+      "description": "Deal 7 (Scales DEX). Armor 6 (Scales VIT).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -589,34 +631,31 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "dex",
-            "per": 3,
-            "value": 1
-          }
-        },
-        {
-          "type": "armor",
-          "value": 4,
-          "target": "self",
-          "scale": {
-            "stat": "vit",
             "per": 2,
             "value": 1
           }
         },
         {
-          "type": "stamina",
-          "value": 1,
-          "target": "self"
+          "type": "armor",
+          "value": 6,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 2,
+            "value": 2
+          }
         }
       ],
       "cooldown": 1.6,
       "targeting": "single",
       "rarity": "common",
-      "cost": {}
+      "cost": {
+        "stamina": 1
+      }
     },
     {
       "id": "t1-attack-counter",
@@ -672,7 +711,7 @@
     {
       "id": "t1-attack-defense",
       "name": "Shield Bash",
-      "description": "Deal 8 (scales STR). Taunt.",
+      "description": "Deal 10 (scales STR). Aura 6s: enemy Defense −3.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -685,7 +724,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 8,
+          "value": 10,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -694,9 +733,14 @@
           }
         },
         {
-          "type": "taunt",
-          "value": 1,
-          "target": "enemy"
+          "type": "aura",
+          "value": 0,
+          "target": "enemy",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "def",
+            "value": -3
+          }
         }
       ],
       "cooldown": 1.5,
@@ -706,7 +750,7 @@
     {
       "id": "t1-attack-fire",
       "name": "Kindle Strike",
-      "description": "Deal 5 (scales STR). Burn 2 (scales INT). Vulnerable Fire 1 (5s).",
+      "description": "Deal 7 (Scales STR). Burn 3 (Scales INT). Vulnerable Fire 1 (5s).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -719,7 +763,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 5,
+          "value": 7,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -729,7 +773,7 @@
         },
         {
           "type": "dot",
-          "value": 2,
+          "value": 3,
           "target": "enemy",
           "stack": "burn",
           "scale": {
@@ -847,7 +891,7 @@
     {
       "id": "t1-attack-earth",
       "name": "Granite Lunge",
-      "description": "Armor 4 (scales VIT). Deal 3 + 1 per 4 Armor (scales STR). +1 Stamina.",
+      "description": "Armor 6 (Scales VIT). Deal 4 + 1 per 4 Armor (Scales STR).",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -860,17 +904,17 @@
       "effects": [
         {
           "type": "armor",
-          "value": 4,
+          "value": 6,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
-            "value": 1
+            "value": 2
           }
         },
         {
           "type": "damage",
-          "value": 3,
+          "value": 4,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -878,11 +922,6 @@
             "value": 1,
             "source": "armor"
           }
-        },
-        {
-          "type": "stamina",
-          "value": 1,
-          "target": "self"
         }
       ],
       "cooldown": 1.4,
@@ -932,7 +971,7 @@
     {
       "id": "t1-counter-fire",
       "name": "Cinderscar",
-      "description": "Burn 2 (scales INT). Vengeance (<60% HP): convert 2 Burn into Bleed.",
+      "description": "Burn 2 (scales INT). Vengeance: convert 2 Burn into Bleed.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -958,7 +997,7 @@
           "from": "burn",
           "to": "bleed",
           "condition": {
-            "hero_hp_pct_below": 60
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -972,7 +1011,7 @@
     {
       "id": "t1-counter-water",
       "name": "Bloodtide Mend",
-      "description": "Heal 5 (scales SPI). Vengeance: Heal 4. Self Bleed 2.",
+      "description": "Heal 5 (scales SPI). Vengeance: Heal 3. Self Bleed 2.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -992,10 +1031,10 @@
         },
         {
           "type": "heal",
-          "value": 4,
+          "value": 3,
           "target": "self",
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         },
         {
@@ -1012,7 +1051,7 @@
     {
       "id": "t1-air-counter",
       "name": "Hollow Echo",
-      "description": "Deal 5. Vengeance: Deal 3. Haste 15% (4s).",
+      "description": "Deal 5 (scales STR). Vengeance: Deal 3. Haste 15% (4s).",
       "category": "defense",
       "tier": 1,
       "elements": [
@@ -1035,7 +1074,7 @@
           "value": 3,
           "target": "enemy",
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         },
         {
@@ -1320,7 +1359,7 @@
     {
       "id": "t1-air-fire",
       "name": "Firestorm",
-      "description": "Deal 4. Burn 2. Drain 1 Stamina.",
+      "description": "Deal 4 AoE (scales STR). Burn 2. Stun 1.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1348,9 +1387,15 @@
           "stack": "burn"
         },
         {
-          "type": "stamina",
-          "value": -1,
-          "target": "enemy"
+          "type": "dot",
+          "value": 1,
+          "target": "enemy",
+          "stack": "stun",
+          "scale": {
+            "stat": "int",
+            "per": 5,
+            "value": 1
+          }
         }
       ],
       "cooldown": 1.8,
@@ -1400,7 +1445,7 @@
     {
       "id": "t1-air-water",
       "name": "Misting Veil",
-      "description": "Heal 3. Haste 20% (5s). +1 INT (6s).",
+      "description": "Heal 3 (Scales SPI). Haste 15% (5s). +1 INT (6s). +1 Mana.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1425,7 +1470,7 @@
           "ttl_ms": 5000,
           "modifier": {
             "kind": "cd_reduction",
-            "value": 0.2
+            "value": 0.15
           }
         },
         {
@@ -1437,19 +1482,21 @@
             "kind": "int",
             "value": 1
           }
+        },
+        {
+          "type": "mana",
+          "value": 1,
+          "target": "self"
         }
       ],
       "cooldown": 1.4,
       "targeting": "self",
-      "rarity": "common",
-      "cost": {
-        "mana": 1
-      }
+      "rarity": "common"
     },
     {
       "id": "t1-earth-water",
       "name": "Mire Bloom",
-      "description": "Armor 6. Heal 4. Deal 5.",
+      "description": "Armor 4 (Scales VIT). Heal 3 (Scales SPI). Deal 3 (Scales STR). +1 Mana.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1459,23 +1506,38 @@
       "effects": [
         {
           "type": "armor",
-          "value": 6,
-          "target": "self"
+          "value": 4,
+          "target": "self",
+          "scale": {
+            "stat": "vit",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "heal",
-          "value": 4,
-          "target": "self"
+          "value": 3,
+          "target": "self",
+          "scale": {
+            "stat": "spi",
+            "per": 3,
+            "value": 1
+          }
         },
         {
           "type": "damage",
-          "value": 5,
+          "value": 3,
           "target": "enemy",
           "scale": {
             "stat": "str",
             "per": 2,
             "value": 1
           }
+        },
+        {
+          "type": "mana",
+          "value": 1,
+          "target": "self"
         }
       ],
       "cooldown": 1.8,
@@ -1485,7 +1547,7 @@
     {
       "id": "t1-air-earth",
       "name": "Bedrock Snare",
-      "description": "Slow 2 (scales INT). If enemy has Slow ≥ 4: Stun 1.",
+      "description": "Slow 2 (Scales INT). If enemy Slow ≥ 4: Stun 1. Shatter: Deal 4 (Scales STR).",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -1493,7 +1555,7 @@
         "earth"
       ],
       "cost": {
-        "stamina": 1
+        "mana": 1
       },
       "effects": [
         {
@@ -1522,6 +1584,19 @@
               "stack": "slow",
               "value": 4
             }
+          }
+        },
+        {
+          "type": "damage",
+          "value": 4,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stunned": true
           }
         }
       ],
@@ -1612,7 +1687,7 @@
     {
       "id": "t2-agility-agility-agility",
       "name": "Quickstep Sigil",
-      "description": "Haste 25% (8s). Deal 6 (scales DEX).",
+      "description": "Deal 5 ×3 (Scales DEX). Haste 30% (6s).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1622,30 +1697,31 @@
       ],
       "effects": [
         {
-          "type": "aura",
-          "value": 0,
-          "target": "self",
-          "ttl_ms": 8000,
-          "modifier": {
-            "kind": "cd_reduction",
-            "value": 0.25
-          }
-        },
-        {
           "type": "damage",
-          "value": 6,
+          "value": 5,
           "target": "enemy",
           "scale": {
             "stat": "dex",
             "per": 2,
-            "value": 2
+            "value": 1
+          },
+          "multi_hit": 2
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.30
           }
         }
       ],
       "cost": {
-        "stamina": 2
+        "stamina": 1
       },
-      "cooldown": 3,
+      "cooldown": 1.8,
       "targeting": "single",
       "rarity": "rare"
     },
@@ -1806,7 +1882,7 @@
           "condition": {
             "enemy_has_stack": "bleed",
             "per_stack": true,
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -1857,7 +1933,7 @@
     {
       "id": "t2-agility-defense-defense",
       "name": "Phalanx Drift",
-      "description": "Armor 18 (scales VIT). Haste 15% (6s).",
+      "description": "Armor 22 (scales VIT). Haste 10% (8s). Brace: Deal 10.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1868,22 +1944,34 @@
       "effects": [
         {
           "type": "armor",
-          "value": 18,
+          "value": 22,
           "target": "self",
           "scale": {
             "stat": "vit",
             "per": 2,
-            "value": 2
+            "value": 3
           }
         },
         {
           "type": "aura",
           "value": 0,
           "target": "self",
-          "ttl_ms": 6000,
+          "ttl_ms": 8000,
           "modifier": {
             "kind": "cd_reduction",
-            "value": 0.15
+            "value": 0.10
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 12000,
+          "trigger": "on_armor_break",
+          "then": {
+            "type": "damage",
+            "value": 10,
+            "target": "enemy"
           }
         }
       ],
@@ -2110,7 +2198,7 @@
     {
       "id": "t2-counter-counter-defense",
       "name": "Wrathshell Vow",
-      "description": "Exhaust. Channel 4s, then aura: +1 Rage every 3s (scales STR). On hit taken: +1 Rage.",
+      "description": "Exhaust. Channel 4s, then aura: +1 Rage every 3s. On hit taken: +1 Rage.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -2202,7 +2290,7 @@
             "value": 1
           },
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         },
         {
@@ -2216,7 +2304,7 @@
             "value": 1
           },
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -2822,7 +2910,7 @@
     {
       "id": "t2-earth-water-water",
       "name": "Brine Bedrock",
-      "description": "Heal 10 (scales SPI). Vengeance: Poison 4.",
+      "description": "Heal 10 (scales SPI). Vengeance: Poison 3.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -2843,11 +2931,11 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
           "stack": "poison",
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -3038,7 +3126,7 @@
     {
       "id": "t2-earth-earth-fire",
       "name": "Magma Vow",
-      "description": "Armor 14 (scales VIT). Vengeance: 20 Pierce.",
+      "description": "Armor 14 (scales VIT). Vengeance: 14 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3059,11 +3147,11 @@
         },
         {
           "type": "damage",
-          "value": 20,
+          "value": 14,
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
-            "hero_hp_pct_below": 40
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -3464,7 +3552,7 @@
     {
       "id": "t2-attack-attack-earth",
       "name": "Concussive Smash",
-      "description": "Deal 12 (scales STR). Stun 2 (scales INT).",
+      "description": "Deal 14 (Scales STR). Stun 2 (Scales INT). Slow 3. Shatter: Deal 6.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -3475,7 +3563,7 @@
       "effects": [
         {
           "type": "damage",
-          "value": 12,
+          "value": 14,
           "target": "enemy",
           "scale": {
             "stat": "str",
@@ -3493,15 +3581,33 @@
             "per": 4,
             "value": 1
           }
+        },
+        {
+          "type": "dot",
+          "value": 3,
+          "target": "enemy",
+          "stack": "slow"
+        },
+        {
+          "type": "damage",
+          "value": 6,
+          "target": "enemy",
+          "scale": {
+            "stat": "str",
+            "per": 2,
+            "value": 1
+          },
+          "condition": {
+            "enemy_stunned": true
+          }
         }
       ],
       "cost": {
         "stamina": 2
       },
-      "cooldown": 3,
+      "cooldown": 2.4,
       "targeting": "single",
-      "rarity": "rare",
-      "exhaust": true
+      "rarity": "rare"
     },
     {
       "id": "t2-defense-defense-fire",
@@ -3821,7 +3927,7 @@
     {
       "id": "t2-agility-agility-earth",
       "name": "Footwork Stone",
-      "description": "Armor 10 (scales VIT). Haste 20% (6s).",
+      "description": "Armor 12 (Scales DEX). Haste 25% (6s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -3832,12 +3938,12 @@
       "effects": [
         {
           "type": "armor",
-          "value": 10,
+          "value": 12,
           "target": "self",
           "scale": {
-            "stat": "vit",
+            "stat": "dex",
             "per": 2,
-            "value": 1
+            "value": 2
           }
         },
         {
@@ -3847,7 +3953,7 @@
           "ttl_ms": 6000,
           "modifier": {
             "kind": "cd_reduction",
-            "value": 0.2
+            "value": 0.25
           }
         }
       ],
@@ -3920,7 +4026,7 @@
     {
       "id": "t2-counter-counter-water",
       "name": "Crimson Cascade",
-      "description": "Self Bleed 1. Aura 15s: on enemy kill with Bleed, spread 50% Bleed to nearest.",
+      "description": "Self Bleed 1. Cascade (Bleed) 15s: on Bleed-kill, apply Bleed 4 to nearest (Scales SPI).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4434,7 +4540,7 @@
     {
       "id": "t2-attack-counter-water",
       "name": "Necrotic Festering",
-      "description": "Self Bleed 3 (scales DEX). Apply Poison = Self Bleed (scales INT). Pierce per stack pair.",
+      "description": "Self Bleed 3 (Scales DEX). Apply Poison equal to your Bleed (Scales INT). Consume all Bleed: 4 Pierce per stack (Scales STR).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4549,7 +4655,7 @@
     {
       "id": "t2-attack-counter-earth",
       "name": "Granitewrath",
-      "description": "Deal 14 (scales STR). Vengeance: 12 Pierce.",
+      "description": "Deal 14 (scales STR). Vengeance: 10 Pierce.",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -4570,11 +4676,11 @@
         },
         {
           "type": "damage",
-          "value": 12,
+          "value": 10,
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
-            "hero_hp_pct_below": 50
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -4888,7 +4994,7 @@
     {
       "id": "t2-air-counter-defense",
       "name": "Glacial Pact",
-      "description": "Slow 4 (scales INT). Armor 8 (scales VIT). Frenzy: CD -30% below 50% HP.",
+      "description": "Slow 4 (scales INT). Armor 8 (scales VIT). Vengeance: Slow 3 + Haste 20% (5s).",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -4917,6 +5023,28 @@
             "per": 2,
             "value": 2
           }
+        },
+        {
+          "type": "dot",
+          "value": 3,
+          "target": "enemy",
+          "stack": "slow",
+          "condition": {
+            "took_damage_within_ms": 2000
+          }
+        },
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.2
+          },
+          "condition": {
+            "took_damage_within_ms": 2000
+          }
         }
       ],
       "cost": {
@@ -4925,11 +5053,7 @@
       },
       "cooldown": 2.4,
       "targeting": "self",
-      "rarity": "uncommon",
-      "frenzy": {
-        "hero_hp_pct_below": 50,
-        "cd_mult": 0.7
-      }
+      "rarity": "uncommon"
     },
     {
       "id": "t2-counter-defense-earth",
@@ -5082,7 +5206,7 @@
           "from": "bleed",
           "to": "poison",
           "condition": {
-            "hero_hp_pct_below": 60
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -5138,7 +5262,7 @@
     {
       "id": "t2-agility-counter-earth",
       "name": "Quickearth Rite",
-      "description": "Armor 8. Vengeance: 14 Pierce.",
+      "description": "Armor 8. Vengeance: 10 Pierce.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -5154,11 +5278,11 @@
         },
         {
           "type": "damage",
-          "value": 14,
+          "value": 10,
           "target": "enemy",
           "pierce_armor": true,
           "condition": {
-            "hero_hp_pct_below": 60
+            "took_damage_within_ms": 2000
           },
           "scale": {
             "stat": "dex",
@@ -6020,7 +6144,7 @@
     {
       "id": "t2-defense-earth-water",
       "name": "Bogplate",
-      "description": "Armor 14 (scales VIT). Vengeance: Poison 4.",
+      "description": "Armor 14 (scales VIT). Vengeance: Poison 3.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -6041,11 +6165,11 @@
         },
         {
           "type": "dot",
-          "value": 4,
+          "value": 3,
           "target": "enemy",
           "stack": "poison",
           "condition": {
-            "hero_hp_pct_below": 60
+            "took_damage_within_ms": 2000
           }
         }
       ],
@@ -6574,7 +6698,7 @@
     {
       "id": "t2-counter-fire-fire",
       "name": "Brine Crucible",
-      "description": "Overload (+3s next CD): convert all Burn → Bleed (1:2, scales DEX).",
+      "description": "Bleed 2 (Scales DEX). Convert all Burn → Bleed (1:2, Scales DEX). Overload: +3s next CD.",
       "category": "defense",
       "tier": 2,
       "elements": [

@@ -39,9 +39,15 @@ export function applyRestChoice(
   eventBus.emit('combat:rest-used', { choice });
   switch (choice) {
     case 'rest': {
-      const recoveryPct = restConfig.hpRecoveryPercent * (1 + getHpRecoveryBonus());
+      // C6 — Hearty Meal: rest sites heal +50% and grant +2 Stamina.
+      const heartyMeal = (runState.relics ?? []).includes('hearty_meal');
+      const heartyMult = heartyMeal ? 1.5 : 1.0;
+      const recoveryPct = restConfig.hpRecoveryPercent * (1 + getHpRecoveryBonus()) * heartyMult;
       const heal = Math.floor(runState.hero.maxHP * recoveryPct);
       runState.hero.currentHP = Math.min(runState.hero.currentHP + heal, runState.hero.maxHP);
+      if (heartyMeal) {
+        runState.hero.currentStamina = Math.min(runState.hero.maxStamina, runState.hero.currentStamina + 2);
+      }
       return { choice, description: `Recovered ${heal} HP.` };
     }
     case 'train': {

@@ -7,6 +7,7 @@ import { showCardDetail } from './CardDetailPopup';
 import { attachKeywordHover } from './KeywordTooltip';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { ELEMENTS, type ElementId } from '../systems/ElementSystem';
+import { formatCardDescription } from '../systems/cards/CardText';
 import type { CardCategory, CardDefinition } from '../data/types';
 
 // ── Constants ─────────────────────────────────────────
@@ -293,8 +294,16 @@ export function createCardVisual(
 // ── Helpers ─────────────────────────────────────────
 
 function getEffectiveDesc(card: CardDefinition, isUpgraded: boolean): string {
-  if (isUpgraded && card.upgraded?.description) return card.upgraded.description;
-  return card.description;
+  // v4: render through the dynamic formatter so static cards.json descriptions
+  // and the live UI can never diverge. Honors per-position upgrade by swapping
+  // in card.upgraded.effects when the upgrade flag is set.
+  const effects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
+  return formatCardDescription({
+    effects,
+    exhaust: card.exhaust,
+    spend_armor: card.spend_armor,
+    cooldown_scale: card.cooldown_scale,
+  });
 }
 
 function getEffectiveCooldown(card: CardDefinition): number | undefined {

@@ -89,6 +89,9 @@ export interface LoopState {
   positionInLoop?: number;
   /** Difficulty multiplier for the current loop. Persisted on save. */
   difficultyMultiplier?: number;
+  /** C7 — Trailblazer's Brand: set true after the relic fires on the first
+   *  combat tile in the current loop. Reset to false on loop completion. */
+  trailblazerFiredThisLoop?: boolean;
 }
 
 export interface EconomyState {

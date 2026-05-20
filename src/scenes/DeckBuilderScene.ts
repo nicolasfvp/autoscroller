@@ -21,42 +21,56 @@ import {
 import { saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import type { CardDefinition } from '../data/types';
-import { formatCardDescription } from '../systems/cards/CardText';
 import { CardFilterBar } from '../ui/CardFilterBar';
 import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
-import { attachKeywordHover } from '../ui/KeywordTooltip';
+import { scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { countElementCategories } from '../systems/ElementSystem';
+import { LAYOUT } from '../ui/StyleConstants';
 
 const FF = FONTS.family;
 const WHITE = '#ffffff';
 const GOLD = COLORS.accent;
 const DIM = COLORS.textSecondary;
 
-// Grid geometry — CardVisual at scale 0.55 (82.5×132 footprint), 4 columns
-// centered in the left zone (slot panel sits at x=510-770).
+// Grid geometry — 6×N scrollable grid of CardVisuals at scale 0.55. The slot
+// panel is a narrow column at the right edge (~80 px), so the grid claims the
+// rest of the canvas width.
 const CARD_SCALE = 0.55;
 const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 82.5
 const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 132
-const GRID_COLS = 4;
+const GRID_COLS = 6;
 const GRID_GAP = 8;
-const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 354
-const LEFT_ZONE_W = 500;                                                 // ends just before slot panel @ 510
-const GRID_X = Math.round((LEFT_ZONE_W - GRID_VIEWPORT_W) / 2);          // 73
-const GRID_Y = 175;
-const GRID_VIEWPORT_H = 355;
+const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 535
+const GRID_X = 20;
+const GRID_Y = 145;
+const GRID_VIEWPORT_H = 380;
 
-// CardFilterBar row — element dropdown / tier checkboxes / search.
+// CardFilterBar row — element dropdown / tier checkboxes / search. Spans the
+// same width as the grid so it reads as one column of controls.
 const CARD_FILTER_BAR_Y = 108;
-const FILTER_BAR_W = 470;
-const FILTER_BAR_X = Math.round((LEFT_ZONE_W - FILTER_BAR_W) / 2);       // 15
+const FILTER_BAR_W = GRID_VIEWPORT_W;
+const FILTER_BAR_X = GRID_X;
 
-// Deck slot geometry
-const SLOT_X = 510;
-const SLOT_Y = 120;
-const SLOT_W = 260;
-const SLOT_H = 60;
-const SLOT_GAP = 6;
+// Deck slot column — narrow strip of full CardVisuals on the right edge. The
+// slot footprint matches the rendered card; no extra horizontal padding.
+const SLOT_CARD_SCALE = 0.4;
+const SLOT_CARD_W = STANDARD_CARD_WIDTH * SLOT_CARD_SCALE;   // 60
+const SLOT_CARD_H = STANDARD_CARD_HEIGHT * SLOT_CARD_SCALE;  // 96
+const SLOT_PANEL_W = SLOT_CARD_W + 12;                       // 72
+const SLOT_PANEL_X = 743;                                    // panel center x
+const SLOT_Y = 80;                                           // top of first slot
+const SLOT_GAP = 4;
+
+// Hover preview — pops up next to the small grid card on hover. Position is
+// computed dynamically per-hover so the preview sits beside the actual source
+// card rather than at a fixed scene location.
+const PREVIEW_SCALE = 0.9;
+const PREVIEW_DEPTH = 200;
+const PREVIEW_GAP = 14;
+// Reserve width for the keyword glossary panel (~220 px + 12 gap) so the
+// dynamic right/left decision keeps the keyword tooltip on-canvas too.
+const PREVIEW_TOOLTIP_BUDGET = 240;
 
 interface CardCell {
   card: CardDefinition;
@@ -91,12 +105,13 @@ export class DeckBuilderScene extends Scene {
   private elementBudgetText!: Phaser.GameObjects.Text;
   private startBtn!: Phaser.GameObjects.Text;
 
-  private tooltipContainer!: Phaser.GameObjects.Container;
-  private tooltipBg!: Phaser.GameObjects.Rectangle;
-  private tooltipName!: Phaser.GameObjects.Text;
-  private tooltipElements!: Phaser.GameObjects.Text;
-  private tooltipEffects!: Phaser.GameObjects.Text;
-  private tooltipCost!: Phaser.GameObjects.Text;
+  // Hover preview — a full-scale CardVisual that pops in when the player hovers
+  // a card cell in the grid. Replaces the old text-based info tooltip; the
+  // keyword glossary panel anchors against this preview so it always reads to
+  // the side of the actual card rather than overlapping the grid cell.
+  private hoverPreview: Phaser.GameObjects.Container | null = null;
+  private hoverPreviewTooltip: KeywordTooltipHandle | null = null;
+  private hoverPreviewCardId: string | null = null;
 
   private cardCells: CardCell[] = [];
 
@@ -172,7 +187,6 @@ export class DeckBuilderScene extends Scene {
     this.renderCardGrid();
     this.renderDeckPanel();
     this.renderValidationAndActions();
-    this.renderTooltip();
     this.bindScroll();
     this.refresh();
 
@@ -185,6 +199,9 @@ export class DeckBuilderScene extends Scene {
         this.cardFilterBar.destroy();
         this.cardFilterBar = null;
       }
+      // Tear down any in-flight hover preview so a re-entry doesn't leak the
+      // overlay or its pending keyword-tooltip timer onto a destroyed scene.
+      this.hideHoverPreview();
     });
   }
 
@@ -375,21 +392,20 @@ export class DeckBuilderScene extends Scene {
     bg.setInteractive({ useHandCursor: true });
     bg.on('pointerover', () => {
       bg.setStrokeStyle(2, 0xffffff, 1);
-      this.showTooltip(card, x, y);
+      // Resolve the bg's actual scene-space center (accounts for the
+      // gridContainer's scroll offset) so the preview pops up next to the
+      // physically-rendered grid card, not its untranslated cell coordinate.
+      const m = bg.getWorldTransformMatrix();
+      this.showHoverPreview(card, m.tx, m.ty);
     });
     bg.on('pointerout', () => {
       bg.setStrokeStyle(1.5, 0xffffff, 0);
-      this.hideTooltip();
+      this.hideHoverPreview();
     });
 
-    // 2-second keyword glossary panel — attaches to the hit-box bg because
-    // the underlying CardVisual is disableInteractive()'d in this scene.
-    // Anchor is resolved lazily so the panel follows the cell as the grid
-    // scrolls (gridContainer.y shifts with the wheel).
-    attachKeywordHover(this, bg, card.description, () => {
-      const m = bg.getWorldTransformMatrix();
-      return { x: m.tx, y: m.ty, w: CARD_W, h: CARD_H };
-    });
+    // Keyword glossary tooltip is owned by the hover preview overlay instead
+    // of the small grid cell — keeps the panel anchored to the enlarged card
+    // and prevents it from clipping past the tiny grid footprint.
 
     bg.on('pointerdown', () => {
       // Element-budget validation: don't allow picking a card that overflows
@@ -448,7 +464,7 @@ export class DeckBuilderScene extends Scene {
 
       this.gridScrollY = Math.max(0, Math.min(this.gridMaxScroll, this.gridScrollY + dy));
       this.gridContainer.setY(-this.gridScrollY);
-      this.hideTooltip();
+      this.hideHoverPreview();
       this.updateCellInteractivity();
     });
   }
@@ -458,27 +474,36 @@ export class DeckBuilderScene extends Scene {
   // ────────────────────────────────────────────────
 
   private renderDeckPanel(): void {
+    const totalH = SLOT_CARD_H * STARTER_DECK_SIZE + SLOT_GAP * (STARTER_DECK_SIZE - 1);
     this.add.rectangle(
-      SLOT_X + SLOT_W / 2,
-      SLOT_Y + (SLOT_H * STARTER_DECK_SIZE + SLOT_GAP * (STARTER_DECK_SIZE - 1)) / 2,
-      SLOT_W + 16,
-      SLOT_H * STARTER_DECK_SIZE + SLOT_GAP * (STARTER_DECK_SIZE - 1) + 16,
+      SLOT_PANEL_X,
+      SLOT_Y + totalH / 2,
+      SLOT_PANEL_W + 16,
+      totalH + 16,
       0x141420, 0.85,
     ).setStrokeStyle(1, 0x4a4a60);
 
-    this.add.text(SLOT_X, SLOT_Y - 18, 'Your Deck (click to remove)', {
+    this.add.text(SLOT_PANEL_X, SLOT_Y - 24, 'Deck', {
       fontSize: '13px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-    });
+    }).setOrigin(0.5, 1);
+    this.add.text(SLOT_PANEL_X, SLOT_Y - 10, 'click to remove', {
+      fontSize: '9px', color: DIM, fontFamily: FF,
+    }).setOrigin(0.5, 1);
 
     for (let i = 0; i < STARTER_DECK_SIZE; i++) {
-      const y = SLOT_Y + i * (SLOT_H + SLOT_GAP);
-      const container = this.add.container(SLOT_X, y);
-      const bg = this.add.rectangle(SLOT_W / 2, SLOT_H / 2, SLOT_W, SLOT_H, 0x1a1a30, 0.7)
+      // Slot container centered on (SLOT_PANEL_X, slotY). Each slot owns its
+      // empty-state background rectangle as the first child; updateDeckSlots
+      // adds/removes a CardVisual child on top depending on whether the slot
+      // is filled.
+      const slotY = SLOT_Y + i * (SLOT_CARD_H + SLOT_GAP) + SLOT_CARD_H / 2;
+      const container = this.add.container(SLOT_PANEL_X, slotY);
+      const bg = this.add.rectangle(0, 0, SLOT_CARD_W + 8, SLOT_CARD_H + 4, 0x1a1a30, 0.7)
         .setStrokeStyle(1, 0x3a3a55);
-      const label = this.add.text(SLOT_W / 2, SLOT_H / 2, `Slot ${i + 1}`, {
-        fontSize: '13px', color: DIM, fontFamily: FF,
+      const label = this.add.text(0, 0, `Slot ${i + 1}`, {
+        fontSize: '12px', color: DIM, fontFamily: FF,
       }).setOrigin(0.5);
       container.add([bg, label]);
+
       bg.setInteractive({ useHandCursor: true });
       bg.on('pointerdown', () => {
         if (this.currentDeck[i]) {
@@ -496,98 +521,106 @@ export class DeckBuilderScene extends Scene {
       if (!container) continue;
       const bg = container.list[0] as Phaser.GameObjects.Rectangle;
       const label = container.list[1] as Phaser.GameObjects.Text;
-      // remove any extra children (dots) from previous render
-      while (container.list.length > 2) container.remove(container.list[2], true);
+      // Remove any previously-mounted CardVisual or extra child from a prior
+      // render. The bg + label live at indices 0/1; everything past that is a
+      // CardVisual we created last refresh and need to tear down.
+      while (container.list.length > 2) {
+        const extra = container.list[container.list.length - 1];
+        container.remove(extra, true);
+      }
 
       const cardId = this.currentDeck[i];
       if (cardId) {
+        // Filled slot: hide the placeholder label/bg styling and mount a full
+        // CardVisual (all features — image, name, cost, description, dots).
+        bg.setFillStyle(0x000000, 0).setStrokeStyle(0);
+        label.setVisible(false);
+
         const card = getAllCards().find((c) => c.id === cardId);
         const color = card ? this.dominantElementColor(card) : 0x3a3a55;
-        bg.setFillStyle(color, 0.3).setStrokeStyle(1.5, color, 0.85);
-        label.setText(card?.name ?? cardId);
-        label.setColor(WHITE);
-        label.setX(20);
-        label.setOrigin(0, 0.5);
-        // element dots on the right
-        const elems = (card?.elements ?? []) as ElementId[];
-        const dotR = 5;
-        const dotGap = 4;
-        const dotsTotalW = elems.length * dotR * 2 + (elems.length - 1) * dotGap;
-        const startDotX = SLOT_W - 14 - dotsTotalW + dotR;
-        elems.forEach((e, idx) => {
-          const dx = startDotX + idx * (dotR * 2 + dotGap);
-          const elemColor = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-          const dot = this.add.circle(dx, SLOT_H / 2, dotR, elemColor).setStrokeStyle(1, 0xffffff, 0.6);
-          container.add(dot);
-        });
+        bg.setStrokeStyle(1.5, color, 0.85);
+
+        // Create the full card visual at slot scale. The CardVisual factory
+        // attaches its own pointerdown (opens detail popup) and pointerover/out
+        // (scale tween + 2s keyword tooltip). Strip those — the deck slot's
+        // click semantics are "remove from deck" and it must not pop a card
+        // detail / hover panel that fights with the click target.
+        const visual = createCardVisual(this, 0, 0, cardId, { scale: SLOT_CARD_SCALE });
+        visual.removeAllListeners('pointerdown');
+        visual.removeAllListeners('pointerover');
+        visual.removeAllListeners('pointerout');
+        visual.disableInteractive();
+        container.add(visual);
       } else {
         bg.setFillStyle(0x1a1a30, 0.7).setStrokeStyle(1, 0x3a3a55);
         label.setText(`Slot ${i + 1}`);
         label.setColor(DIM);
-        label.setX(SLOT_W / 2);
-        label.setOrigin(0.5);
+        label.setVisible(true);
       }
     }
   }
 
   // ────────────────────────────────────────────────
-  // Tooltip (floating)
+  // Hover preview — full-size CardVisual that pops up beside the grid card.
+  // The keyword tooltip mounts off the preview's bounds, so the panel always
+  // appears to the side of an "actual card" instead of clipping the tiny
+  // grid cell footprint.
   // ────────────────────────────────────────────────
 
-  private renderTooltip(): void {
-    this.tooltipContainer = this.add.container(0, 0);
-    this.tooltipContainer.setDepth(100);
-    this.tooltipBg = this.add.rectangle(0, 0, 250, 140, 0x0a0a18, 0.97).setStrokeStyle(2, 0xffd700);
-    this.tooltipName = this.add.text(0, 0, '', {
-      fontSize: '14px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-    }).setOrigin(0.5, 0);
-    this.tooltipElements = this.add.text(0, 0, '', {
-      fontSize: '11px', color: WHITE, fontFamily: FF,
-    }).setOrigin(0.5, 0);
-    this.tooltipEffects = this.add.text(0, 0, '', {
-      fontSize: '11px', color: WHITE, fontFamily: FF,
-      align: 'center', wordWrap: { width: 230 },
-    }).setOrigin(0.5, 0);
-    this.tooltipCost = this.add.text(0, 0, '', {
-      fontSize: '11px', color: '#aaccff', fontFamily: FF,
-    }).setOrigin(0.5, 0);
-    this.tooltipContainer.add([this.tooltipBg, this.tooltipName, this.tooltipElements, this.tooltipEffects, this.tooltipCost]);
-    this.tooltipContainer.setVisible(false);
+  private showHoverPreview(card: CardDefinition, sourceCenterX: number, sourceCenterY: number): void {
+    if (this.hoverPreviewCardId === card.id && this.hoverPreview) return;
+    this.hideHoverPreview();
+    this.hoverPreviewCardId = card.id;
+
+    // Place the preview beside the actual hovered grid card. Try the right
+    // side first; mirror to the left if the preview + its keyword tooltip
+    // would clip past the canvas edge. The keyword panel mirrors itself
+    // independently, but we still keep a tooltip budget here so the preview
+    // doesn't push the panel off-canvas when it would have otherwise fit.
+    const w = STANDARD_CARD_WIDTH * PREVIEW_SCALE;
+    const h = STANDARD_CARD_HEIGHT * PREVIEW_SCALE;
+
+    let previewX = sourceCenterX + CARD_W / 2 + PREVIEW_GAP + w / 2;
+    const rightEdgeWithTooltip = previewX + w / 2 + PREVIEW_TOOLTIP_BUDGET;
+    if (rightEdgeWithTooltip > LAYOUT.canvasWidth - 4) {
+      previewX = sourceCenterX - CARD_W / 2 - PREVIEW_GAP - w / 2;
+    }
+    previewX = Math.max(w / 2 + 4, Math.min(LAYOUT.canvasWidth - w / 2 - 4, previewX));
+
+    const previewY = Math.max(
+      h / 2 + 4,
+      Math.min(LAYOUT.canvasHeight - h / 2 - 4, sourceCenterY),
+    );
+
+    const visual = createCardVisual(this, previewX, previewY, card.id, { scale: PREVIEW_SCALE });
+    // The preview is a passive overlay: it must not absorb pointer events
+    // (would block the grid cell's pointerout), open the detail popup, or
+    // schedule its own competing keyword tooltip.
+    visual.removeAllListeners('pointerdown');
+    visual.removeAllListeners('pointerover');
+    visual.removeAllListeners('pointerout');
+    visual.disableInteractive();
+    visual.setDepth(PREVIEW_DEPTH);
+    this.hoverPreview = visual;
+
+    // Schedule the keyword glossary panel against the preview's bounds so it
+    // mounts to the side of the full card. The scheduler's standard 2s delay
+    // applies here exactly as elsewhere in the UI.
+    this.hoverPreviewTooltip = scheduleKeywordPanel(this, card.description, () => ({
+      x: previewX, y: previewY, w, h,
+    }));
   }
 
-  private showTooltip(card: CardDefinition, cardX: number, cardY: number): void {
-    const elems = ((card.elements ?? []) as ElementId[]).map((e) => ELEMENTS[e].name).join(' + ');
-    const effects = this.describeEffects(card);
-    const cost = this.formatCostLine(card);
-
-    this.tooltipName.setText(card.name);
-    this.tooltipElements.setText(`Elements: ${elems || '—'}`);
-    this.tooltipEffects.setText(effects);
-    this.tooltipCost.setText(cost);
-
-    // Resize bg to fit
-    const w = 260;
-    const lines = effects.split('\n').length;
-    const h = 100 + lines * 14;
-    this.tooltipBg.setSize(w, h);
-
-    // Position to the right of the card (or left if near edge)
-    let tx = cardX + CARD_W + 12;
-    if (tx + w / 2 > 790) tx = cardX - 12 - w / 2;
-    else tx += w / 2;
-    const ty = Math.max(60, Math.min(540 - h, cardY - this.gridScrollY + CARD_H / 2));
-
-    this.tooltipContainer.setPosition(tx, ty - h / 2);
-    this.tooltipBg.setPosition(0, h / 2);
-    this.tooltipName.setPosition(0, 10);
-    this.tooltipElements.setPosition(0, 32);
-    this.tooltipEffects.setPosition(0, 52);
-    this.tooltipCost.setPosition(0, 52 + lines * 14 + 6);
-    this.tooltipContainer.setVisible(true);
-  }
-
-  private hideTooltip(): void {
-    this.tooltipContainer.setVisible(false);
+  private hideHoverPreview(): void {
+    if (this.hoverPreviewTooltip) {
+      this.hoverPreviewTooltip.cancel();
+      this.hoverPreviewTooltip = null;
+    }
+    if (this.hoverPreview) {
+      this.hoverPreview.destroy(true);
+      this.hoverPreview = null;
+    }
+    this.hoverPreviewCardId = null;
   }
 
   // ────────────────────────────────────────────────
@@ -674,21 +707,5 @@ export class DeckBuilderScene extends Scene {
     if (!elems.length) return 0x4a4a60;
     // Pick the first element's color as dominant for simplicity.
     return parseInt(ELEMENTS[elems[0]].color.replace('#', ''), 16);
-  }
-
-  private describeEffects(card: CardDefinition): string {
-    const text = formatCardDescription(card);
-    if (!text) return '—';
-    // The shared formatter joins fragments with ". " — tooltip wants one per line.
-    return text.replace(/\. /g, '\n').replace(/\.$/, '');
-  }
-
-  private formatCostLine(card: CardDefinition): string {
-    const parts: string[] = [];
-    if (card.cost?.stamina) parts.push(`${card.cost.stamina} stam`);
-    if (card.cost?.mana)    parts.push(`${card.cost.mana} mana`);
-    if (card.cost?.defense) parts.push(`${card.cost.defense} def`);
-    const cost = parts.length ? parts.join(' / ') : 'Free';
-    return `${cost}  ·  ${card.cooldown.toFixed(1)}s CD`;
   }
 }

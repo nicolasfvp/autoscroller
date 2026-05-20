@@ -14,7 +14,7 @@
       "name": "Defense",
       "category": "physical",
       "primaryStat": "vit",
-      "identity": "Armor, mitigation, taunt",
+      "identity": "Armor, mitigation, retaliation",
       "color": "#6B7280",
       "icon": "shield"
     },

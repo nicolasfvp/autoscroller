@@ -8,6 +8,7 @@ import { COLORS, FONTS } from './StyleConstants';
 import { createDelayedBackdrop } from './Backdrop';
 import { attachKeywordTooltip } from './KeywordTooltip';
 import { hideFilterBarInputs, showFilterBarInputs } from './FilterBarVisibility';
+import { formatCardDescription } from '../systems/cards/CardText';
 import type { CardCategory } from '../data/types';
 
 const RARITY_COLORS: Record<string, number> = {
@@ -77,10 +78,17 @@ export function showCardDetail(
   }
 
   // Resolve effective card values (apply upgrade overlay)
-  const effectiveDesc = (isUpgraded && card.upgraded?.description) ? card.upgraded.description : card.description;
   const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown != null) ? card.upgraded.cooldown : card.cooldown;
   const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
   const effectiveEffects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
+  // v4: render description through dynamic formatter so the popup matches the
+  // card visual exactly (no chance of static text drifting from real effects).
+  const effectiveDesc = formatCardDescription({
+    effects: effectiveEffects,
+    exhaust: card.exhaust,
+    spend_armor: card.spend_armor,
+    cooldown_scale: card.cooldown_scale,
+  });
 
   const popup = scene.add.container(0, 0);
   popup.setDepth(500);

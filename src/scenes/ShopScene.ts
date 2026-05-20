@@ -68,6 +68,10 @@ export class ShopScene extends Scene {
   private modalContainer!: Phaser.GameObjects.Container;
   /** Scene to wake/resume when the shop closes. Defaults to GameScene. */
   private parentSceneKey: string = SCENE_KEYS.GAME;
+  /** C7 — Relics roll cached for the duration of this shop visit, so opening
+   *  the relic modal multiple times shows the same picks until the player
+   *  leaves and re-enters the shop. */
+  private cachedRelicRoll?: import('../systems/ShopSystem').ShopRelic[];
 
   constructor() { super(SCENE_KEYS.SHOP); }
 
@@ -319,7 +323,11 @@ export class ShopScene extends Scene {
   }
 
   private modalRelics(): void {
-    const run = getRun(); const relics = ShopSystem.getShopRelics(run, run.pool.relics);
+    const run = getRun();
+    if (!this.cachedRelicRoll) {
+      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
+    }
+    const relics = this.cachedRelicRoll;
     this.createShopModal({
       title: '💎 Buy Relics', emptyMessage: 'Out of stock.', items: relics, cols: 2, cellW: 202, cellH: 76, reopenKey: 'relics',
       canAfford: (r) => run.economy.gold >= r.price, onSelect: (r) => ShopSystem.buyRelic(run, r.relicId, r.price),
