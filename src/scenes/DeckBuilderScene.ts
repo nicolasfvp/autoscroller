@@ -52,11 +52,11 @@ const FILTER_BAR_W = 470;
 const FILTER_BAR_X = Math.round((LEFT_ZONE_W - FILTER_BAR_W) / 2);       // 15
 
 // Deck slot geometry
-const SLOT_X = 510;
-const SLOT_Y = 120;
-const SLOT_W = 260;
-const SLOT_H = 60;
-const SLOT_GAP = 6;
+const SLOT_X = 512;
+const SLOT_Y = 118;
+const SLOT_W = 262;
+const SLOT_H = 66;
+const SLOT_GAP = 7;
 
 interface CardCell {
   card: CardDefinition;
