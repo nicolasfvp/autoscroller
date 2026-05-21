@@ -200,7 +200,7 @@ export class PlanningOverlay extends Scene {
     // non-clickable; they're just no longer invisible.
     const period = tiles.length * cellW;
     const centerX = 400;
-    const y = 240;
+    const y = 170;
 
     this.gridGeometry = { cellW, period, centerX };
 
@@ -369,14 +369,15 @@ export class PlanningOverlay extends Scene {
   }
 
   private buildInventoryPanel(fontFamily: string): void {
-    // Panel background
-    const board = this.add.image(400, 420, 'tile_selection_board');
-    // Reducing size as requested
+    // Panel background — shifted up to make room for the subtile row beneath
+    // the main tile row while keeping the "don't stop here for" + Remove Mode
+    // toolbar at y=505 untouched.
+    const board = this.add.image(400, 350, 'tile_selection_board');
     board.setDisplaySize(720, 190);
 
 
     // Tile point balance - repositioned and styled
-    this.tpBalanceText = this.add.text(720, 360, `${this.loopRunState.economy.tilePoints} TP`, {
+    this.tpBalanceText = this.add.text(720, 290, `${this.loopRunState.economy.tilePoints} TP`, {
       fontSize: '22px', color: '#00e5ff', fontFamily,
       fontStyle: 'bold',
       stroke: '#000000',
@@ -456,7 +457,7 @@ export class PlanningOverlay extends Scene {
     const totalRowW = cols * frameWidth + (cols - 1) * gap;
     const startX    = 400 - totalRowW / 2 + frameWidth / 2;
     // Centre vertically in the board area
-    const rowStartY = rows === 2 ? 400 : 420;
+    const rowStartY = rows === 2 ? 330 : 350;
 
     placeableTiles.forEach((tileConfig, idx) => {
       const col = idx % cols;
@@ -555,11 +556,11 @@ export class PlanningOverlay extends Scene {
   ): void {
     if (subtileTiles.length === 0) return;
 
-    const FRAME = 48;
+    const FRAME = 44;
     const GAP = 6;
     const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
     const startX = 400 - total / 2 + FRAME / 2;
-    const rowY = 490;
+    const rowY = 445;
 
     const subtileSlotsExist = this.hasOpenReservedSlot();
 
@@ -582,7 +583,13 @@ export class PlanningOverlay extends Scene {
       const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
       container.add(preview);
 
-      const costText = this.add.text(0, FRAME / 2 + 8, `${tileConfig.tilePointCost} TP`, {
+      // Name label below the frame, cost label below the name.
+      const nameText = this.add.text(0, FRAME / 2 + 6, tileConfig.name, {
+        fontSize: '9px', color: '#ffdca0', fontFamily,
+      }).setOrigin(0.5);
+      container.add(nameText);
+
+      const costText = this.add.text(0, FRAME / 2 + 18, `${tileConfig.tilePointCost} TP`, {
         fontSize: '10px', color: '#ff4444', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
@@ -673,7 +680,7 @@ export class PlanningOverlay extends Scene {
     const DRAG_THRESHOLD = 4; // pixels — below this, treat as a click
 
     this.onPointerDown = (pointer: Phaser.Input.Pointer) => {
-      if (pointer.y > 200 && pointer.y < 300) {
+      if (pointer.y > 130 && pointer.y < 230) {
         dragging = true;
         dragMoved = false;
         startPointerX = pointer.x;
@@ -710,7 +717,7 @@ export class PlanningOverlay extends Scene {
       _dx: number,
       dy: number,
     ) => {
-      if (pointer.y < 200 || pointer.y > 300) return;
+      if (pointer.y < 130 || pointer.y > 230) return;
       this.scrollOffset -= dy;
       this.updateTilePositions();
     };
