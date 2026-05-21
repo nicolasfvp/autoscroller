@@ -557,7 +557,7 @@ export class PlanningOverlay extends Scene {
     if (subtileTiles.length === 0) return;
 
     const FRAME = 44;
-    const GAP = 6;
+    const GAP = 22;
     const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
     const startX = 400 - total / 2 + FRAME / 2;
     const rowY = 445;
