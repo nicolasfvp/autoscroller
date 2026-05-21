@@ -573,6 +573,7 @@ export class PlanningOverlay extends Scene {
       const pseudoSlot: TileSlot = {
         type: tileConfig.type,
         terrain: tileConfig.terrain,
+        kind: tileConfig.key,           // needed so TileVisual resolves to the specific subtile_* config
         subtileEffect: tileConfig.effect,
         defeatedThisLoop: false,
       };
