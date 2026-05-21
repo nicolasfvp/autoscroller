@@ -1,4 +1,5 @@
 import { createBasicLoop, createBufferTiles, createTileSlot, type TileSlot, type TileInventoryEntry } from './TileRegistry';
+import { resolveSubtileEffects, effectsForTile, type SubtileEffect } from './SubtileResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
@@ -40,6 +41,19 @@ export class LoopRunner {
   private runState!: LoopRunState;
   private emit: LoopEventCallback;
   private rng: () => number;
+  /**
+   * Cached subtile effect bag for the current loop layout. Refreshed in
+   * confirmPlanning / resumeRun / startRun whenever the tile array can
+   * change. Drives:
+   *   - War Horn spawn boost in assignEnemies
+   *   - per-combat subtileEffects payload on combat-start emits
+   */
+  private subtileEffectBag: SubtileEffect[] = [];
+
+  /** Base 50% combat-spawn chance for terrain / subtile tiles. */
+  private static readonly COMBAT_TILE_SPAWN_CHANCE = 0.5;
+  /** Additive spawn-chance boost per War Horn stack within ±2 AOE. */
+  private static readonly WAR_HORN_BOOST_PER_STACK = 0.5;
 
   constructor(emit: LoopEventCallback, rng?: () => number) {
     this.emit = emit;
@@ -125,9 +139,14 @@ export class LoopRunner {
     }
 
     // C7 — Trailblazer's Brand: first time entering a combat tile each loop,
-    // heal 5 HP and gain +1 Stamina / +1 Mana. Combat tiles: basic (with
-    // enemy), terrain (with combat), boss.
-    const isCombatTile = (tile.type === 'basic' && !!tile.enemyId) || tile.type === 'terrain' || tile.type === 'boss';
+    // heal 5 HP and gain +1 Stamina / +1 Mana. Combat tiles: any tile that
+    // actually resolves a fight on entry (basic with enemy, terrain with
+    // spawn roll succeeded, subtile with spawn roll succeeded, boss).
+    const isCombatTile =
+      (tile.type === 'basic' && !!tile.enemyId) ||
+      (tile.type === 'terrain' && !!tile.enemyId) ||
+      (tile.type === 'subtile' && !!tile.enemyId) ||
+      tile.type === 'boss';
     if (isCombatTile
         && !this.runState.loop.trailblazerFiredThisLoop
         && (this.runState.relics ?? []).includes('trailblazers_brand')) {
@@ -137,27 +156,50 @@ export class LoopRunner {
       this.runState.loop.trailblazerFiredThisLoop = true;
     }
 
+    // Subtile effects targeting this tile (Wave 6 consumers use this bag).
+    const subtileEffects = effectsForTile(this.subtileEffectBag, tileIndex);
+
     switch (tile.type) {
       case 'basic': {
         // Combat only if enemy was pre-assigned
         if (tile.enemyId) {
           tile.defeatedThisLoop = true;
           this.state = 'tile-interaction';
-          this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex });
+          this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, subtileEffects });
         }
         break;
       }
       case 'terrain': {
+        if (!tile.enemyId) {
+          // Spawn roll lost (chance-based since Wave 4). Mark traversed and
+          // walk on without emitting combat-start.
+          tile.defeatedThisLoop = true;
+          break;
+        }
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const terrainKey = tile.terrain!;
-        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain: terrainKey });
+        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain: terrainKey, subtileEffects });
+        break;
+      }
+      case 'subtile': {
+        // Subtiles can also produce an extra combat encounter when the spawn
+        // roll succeeded in assignEnemies. Effect itself is consumed by the
+        // host combat (or boss) in AOE — not by the subtile's own fight.
+        if (!tile.enemyId) {
+          tile.defeatedThisLoop = true;
+          break;
+        }
+        tile.defeatedThisLoop = true;
+        this.state = 'tile-interaction';
+        const terrain = this.getAdjacentTerrain(tileIndex);
+        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain, subtileEffects });
         break;
       }
       case 'boss': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
-        this.emit('combat-start', { enemyId: tile.enemyId ?? 'doom_knight', isBoss: true, tileIndex });
+        this.emit('combat-start', { enemyId: tile.enemyId ?? 'doom_knight', isBoss: true, tileIndex, subtileEffects });
         break;
       }
       case 'event':
@@ -264,11 +306,25 @@ export class LoopRunner {
     this.emit('loop-started', { loopCount: this.runState.loop.count });
   }
 
-  /** Pre-assign enemies to combat/terrain/boss/basic tiles for world-map display */
+  /**
+   * Pre-assign enemies to combat/terrain/subtile/boss tiles for world-map display.
+   *
+   * Spawn rules (Wave 4):
+   *   - basic: uses diffConfig.basicTileCombatChance (unchanged)
+   *   - terrain (combat): base 50%, +0.5 per War Horn stack in ±2 AOE, clamped to 1.0
+   *   - subtile: flat 50% from the adjacent host's terrain pool (no War Horn boost on subtiles themselves)
+   *   - boss: 100% (always spawns); receives subtile AOE via effect bag, not via spawn roll
+   *
+   * The cached subtile effect bag is refreshed before rolling so War Horn /
+   * other effects reflect the current layout.
+   */
   private assignEnemies(): void {
     const loop = this.runState.loop;
     const diffConfig = getDifficultyConfig();
-    for (const tile of loop.tiles) {
+    this.subtileEffectBag = resolveSubtileEffects(loop.tiles);
+
+    for (let i = 0; i < loop.tiles.length; i++) {
+      const tile = loop.tiles[i];
       // Non-combat tiles never need enemy assignment — skip them up front
       // so we don't burn rng() calls (would also drift the seeded RNG state
       // once B.7/B.8 lands).
@@ -287,8 +343,22 @@ export class LoopRunner {
           break;
         }
         case 'terrain': {
-          const pool = getEnemyPoolForTerrain(tile.terrain!, loop.count);
-          tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+          const spawnChance = this.getCombatSpawnChance(i);
+          if (this.rng() < spawnChance) {
+            const pool = getEnemyPoolForTerrain(tile.terrain!, loop.count);
+            tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+          }
+          break;
+        }
+        case 'subtile': {
+          // Subtiles are 50% to spawn one extra enemy drawn from the adjacent
+          // host combat's terrain pool. War Horn does NOT boost subtiles
+          // themselves — only the combat tiles in its AOE.
+          if (this.rng() < LoopRunner.COMBAT_TILE_SPAWN_CHANCE) {
+            const terrain = this.getAdjacentTerrain(i);
+            const pool = getEnemyPoolForTerrain(terrain, loop.count);
+            tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+          }
           break;
         }
         case 'boss': {
@@ -299,6 +369,37 @@ export class LoopRunner {
         }
       }
     }
+  }
+
+  /**
+   * Final spawn chance for a combat tile at index i: 0.5 base, +0.5 per
+   * War Horn stack in its AOE, clamped to [0, 1].
+   */
+  private getCombatSpawnChance(tileIndex: number): number {
+    let chance = LoopRunner.COMBAT_TILE_SPAWN_CHANCE;
+    const here = effectsForTile(this.subtileEffectBag, tileIndex);
+    for (const e of here) {
+      if (e.effect === 'war_horn') {
+        chance += LoopRunner.WAR_HORN_BOOST_PER_STACK * e.stacks;
+      }
+    }
+    return Math.min(1, Math.max(0, chance));
+  }
+
+  /**
+   * Look at S±1 for a terrain tile (subtile's host) and return its terrain.
+   * If no adjacent terrain tile exists (orphaned subtile awaiting Wave-5
+   * auto-removal, or boss adjacency), fall back to 'basic'.
+   */
+  private getAdjacentTerrain(subtileIndex: number): string {
+    const tiles = this.runState.loop.tiles;
+    for (const offset of [-1, 1]) {
+      const j = subtileIndex + offset;
+      if (j < 0 || j >= tiles.length) continue;
+      const neighbor = tiles[j];
+      if (neighbor.type === 'terrain' && neighbor.terrain) return neighbor.terrain;
+    }
+    return 'basic';
   }
 
   onBossDefeated(): void {
