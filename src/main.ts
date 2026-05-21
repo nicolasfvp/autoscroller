@@ -41,11 +41,13 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: false
         }
     },
-    // Keep the loop alive when the tab is backgrounded. Browsers still throttle
-    // setTimeout to ~1Hz, but the game's delta-based ticking advances wall-clock
-    // state correctly; CombatScene/GameScene force 1x speed while hidden.
+    // Use requestAnimationFrame (the Phaser default). The previous
+    // forceSetTimeOut:true setting hurt frame pacing on every platform and
+    // starved weak Intel iGPUs; modern browsers also throttle setTimeout
+    // aggressively when backgrounded, so it didn't even achieve its stated
+    // goal of "keep ticking when hidden". CombatScene/GameScene already
+    // force 1x speed under document.hidden, so rAF throttling is harmless.
     fps: {
-        forceSetTimeOut: true,
         target: 60
     },
     scene: [
