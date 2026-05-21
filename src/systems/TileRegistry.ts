@@ -15,6 +15,8 @@ export interface TileConfig {
   /** Subtile effect identifier. Only set on `type === 'subtile'` entries. */
   effect?: SubtileEffectKey;
   name: string;
+  /** Short hover-tooltip blurb shown in the planning picker. */
+  description?: string;
   color: number;
   /** Optional hex string equivalent of color (Phase 9 design v2 LOCKED palette). */
   hexColor?: string;
