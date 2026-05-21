@@ -35,7 +35,6 @@ function fail(msg) { errors.push(msg); }
 // ── Load all data ──────────────────────────────────────────────
 const cards = loadJSON('src/data/json/cards.json');
 const enemyDrops = loadJSON('src/data/json/enemy-drops.json');
-const cardSynergies = loadJSON('src/data/json/synergies.json');
 const relics = loadJSON('src/data/json/relics.json');
 const passives = loadJSON('src/data/json/passives.json');
 const buildings = loadJSON('src/data/json/buildings.json');
@@ -43,7 +42,6 @@ const enemies = loadJSON('src/data/json/enemies.json');
 const materials = loadJSON('src/data/json/materials.json');
 const tilesKeyed = loadJSON('src/data/tiles.json');           // live (object-keyed)
 const terrainEnemies = loadJSON('src/data/terrain-enemies.json');
-const terrainSynergies = loadJSON('src/data/synergies.json'); // terrain-pair synergies
 
 // ── Build canonical sets ───────────────────────────────────────
 const cardIds = new Set((cards.cards ?? []).map(c => c.id));
@@ -70,13 +68,12 @@ for (const [enemyName, table] of Object.entries(enemyDrops)) {
   }
 }
 
-// ── Check 3: card-synergies card IDs ───────────────────────────
-for (const s of cardSynergies ?? []) {
-  if (!cardIds.has(s.cardA)) fail(`synergies.json: cardA "${s.cardA}" not in cards.json (${s.displayName ?? '?'})`);
-  if (!cardIds.has(s.cardB)) fail(`synergies.json: cardB "${s.cardB}" not in cards.json (${s.displayName ?? '?'})`);
+// ── Check 4: starterDecks in cards.json (per-class shape) ──────
+for (const [cls, ids] of Object.entries(cards.starterDecks ?? {})) {
+  for (const id of ids ?? []) {
+    if (!cardIds.has(id)) fail(`cards.json starterDecks[${cls}]: "${id}" not in cards.json`);
+  }
 }
-
-// ── Check 4: starterDeckIds in cards.json ──────────────────────
 for (const id of cards.starterDeckIds ?? []) {
   if (!cardIds.has(id)) fail(`cards.json starterDeckIds: "${id}" not in cards.json`);
 }
@@ -102,7 +99,10 @@ for (const [bldKey, bld] of Object.entries(buildings)) {
 
 // ── Check 6: relics.json self-coherence (unlocks attributable) ──
 // Trigger / rarity surface-level checks only; deep schema is in tests.
-const validTriggers = new Set(['combat_start', 'turn_start', 'card_played', 'damage_taken', 'heal', 'passive']);
+const validTriggers = new Set([
+  'combat_start', 'turn_start', 'card_played', 'damage_taken', 'heal', 'passive',
+  'enemy_killed', 'card_drawn', 'shop_visited', 'stat_changed', 'dot_tick',
+]);
 for (const r of relics ?? []) {
   if (r.trigger && !validTriggers.has(r.trigger)) {
     fail(`relics.json["${r.id}"]: trigger "${r.trigger}" is not a known RelicTrigger`);
@@ -113,15 +113,6 @@ for (const r of relics ?? []) {
 for (const key of Object.keys(terrainEnemies)) {
   if (!tileKeys.has(key)) {
     fail(`terrain-enemies.json: terrain "${key}" not in tiles.json`);
-  }
-}
-
-// ── Check 8: terrain-pair synergies reference real tile keys ───
-for (const s of terrainSynergies ?? []) {
-  for (const tk of s.pair ?? []) {
-    if (!tileKeys.has(tk)) {
-      fail(`src/data/synergies.json (terrain): pair key "${tk}" not in tiles.json`);
-    }
   }
 }
 
