@@ -394,10 +394,14 @@ export class GameScene extends Scene {
     switch (event) {
       case 'combat-start': {
         this.scene.pause(SCENE_KEYS.GAME);
-        this.scene.launch(SCENE_KEYS.COMBAT, { 
-          enemyId: data.enemyId, 
-          isBoss: data.isBoss, 
-          terrain: data.terrain ?? 'basic' 
+        this.scene.launch(SCENE_KEYS.COMBAT, {
+          enemyId: data.enemyId,
+          isBoss: data.isBoss,
+          terrain: data.terrain ?? 'basic',
+          // Wave 4 wiring: forward the resolved subtile effect list for this
+          // combat target. Wave 6 consumes the bag in CombatScene.init to
+          // pre-apply enemy/hero stacks and arm build amplifiers.
+          subtileEffects: data.subtileEffects ?? [],
         });
         break;
       }
