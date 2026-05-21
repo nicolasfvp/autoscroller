@@ -329,12 +329,17 @@ export class GameScene extends Scene {
     const heroWorldX = this.worldOffset + this.loopRunState.loop.positionInLoop;
     this.heroSprite.x = heroWorldX + 100; // +100 offset so hero starts visible
 
-    // Parallax update
+    // Parallax update. Modulo against texture width so tilePositionX
+    // stays bounded across long runs; otherwise worldOffset accumulates
+    // unboundedly and Phaser's internal Math.fract / fract-paths lose
+    // precision (visible texture wobble after dozens of loops).
     if (this.bgSky) {
-      this.bgSky.tilePositionX = heroWorldX * 0.1; // Slower sky
+      const w = this.bgSky.width || 1;
+      this.bgSky.tilePositionX = (heroWorldX * 0.1) % w;
     }
     if (this.bgDesert) {
-      this.bgDesert.tilePositionX = heroWorldX * 0.5; // Faster foreground
+      const w = this.bgDesert.width || 1;
+      this.bgDesert.tilePositionX = (heroWorldX * 0.5) % w;
     }
 
     // Update tile visuals
