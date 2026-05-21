@@ -97,6 +97,13 @@ export interface CombatState {
   slowStacks: number;
   rageStacks: number;
 
+  // ── Wave 8: subtile build-amplifier bonuses (set by CombatScene from the
+  //    resolved subtile effect bag, consumed by burn application / bleed
+  //    tick / magic-card damage paths). Defaults: 0 / 0 / 1.
+  subtileBurnApplyBonus: number;
+  subtileBleedTickBonus: number;
+  subtileSpellDamageMult: number;
+
   // ── v4 Vengeance: hero damage timing ─────────────────────────────────
   /** Total elapsed combat time in ms — synced from CombatEngine each tick. */
   combatElapsedMs: number;
@@ -249,6 +256,11 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     stunStacks: 0,
     slowStacks: 0,
     rageStacks: 0,
+
+    // -- Wave 8: subtile build-amplifier defaults --
+    subtileBurnApplyBonus: 0,
+    subtileBleedTickBonus: 0,
+    subtileSpellDamageMult: 1,
     combatElapsedMs: 0,
     lastHeroDamageMs: null,
     enemyAttackedSinceLastBleedTick: false,

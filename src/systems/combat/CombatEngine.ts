@@ -413,7 +413,10 @@ export class CombatEngine {
     // each stack deals 2 damage; otherwise 1. Reset the flag AFTER applying
     // damage. Stacks decay -1 per tick regardless.
     if (state.bleedStacks > 0) {
-      const perStack = state.enemyAttackedSinceLastBleedTick ? 2 : 1;
+      // Wave 8: Bleed Totem subtile boosts perStack additively. Stacks of
+      // totem in the AOE accumulate via state.subtileBleedTickBonus.
+      const basePerStack = state.enemyAttackedSinceLastBleedTick ? 2 : 1;
+      const perStack = basePerStack + state.subtileBleedTickBonus;
       // C4 — Crimson Stiletto: bleed ticks fire 2× faster (= deal double per tick).
       const speedMult = crimsonStiletto ? 2 : 1;
       const dmg = state.bleedStacks * perStack * speedMult;

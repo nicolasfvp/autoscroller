@@ -392,7 +392,10 @@ export class CardResolver {
         // a flat ×STR. Keeps STR=1 (baseline) at 1.0×, but lets DEX/INT-scaled
         // cards remain competitive. Curve: STR 1→1.0, 4→1.75, 10→3.25.
         const strMult = 1 + Math.max(0, state.heroStrength - 1) * 0.25;
-        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * channelMult * dealtMult * cinderkeepMult * glassCannonMult;
+        // Wave 8: Resonance Crystal multiplies magic-category damage. Falls
+        // back to 1× for non-magic cards so other categories are unaffected.
+        const resonanceMult = (card?.category === 'magic') ? state.subtileSpellDamageMult : 1;
+        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * channelMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult;
         // Enemy defense is the base value plus any timed 'def' aura modifiers
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
@@ -481,9 +484,15 @@ export class CardResolver {
         // v3: burn_taken — adds N to every burn application landed on the
         // bearer (enemy auras carry the vulnerability). Kindle Strike,
         // Pyre Surge apply this aura on the enemy.
+        // Wave 8: subtile Burn Altar bonus is added on top, only when the
+        // base application is non-zero (so a no-op card doesn't suddenly
+        // start applying burn just because an altar is in range).
         let appliedValue = resolvedValue;
-        if (which === 'burn' && target === 'enemy' && state.enemyAuras && state.enemyAuras.length > 0) {
-          appliedValue += sumModifier(state.enemyAuras, 'burn_taken');
+        if (which === 'burn' && target === 'enemy' && resolvedValue > 0) {
+          if (state.enemyAuras && state.enemyAuras.length > 0) {
+            appliedValue += sumModifier(state.enemyAuras, 'burn_taken');
+          }
+          appliedValue += state.subtileBurnApplyBonus;
         }
         switch (which) {
           case 'poison': state.poisonStacks += appliedValue; break;
