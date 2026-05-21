@@ -14,6 +14,7 @@ import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSyste
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
 import { tickAuras, getCdReductionFactor, collectAuraTicks, applyTriggeredPayload } from './StatusEffects';
 import { getRun } from '../../state/RunState';
+import { rand } from '../SharedRNG';
 
 /** Passive regen interval in milliseconds */
 const REGEN_INTERVAL = 4500;
@@ -403,7 +404,7 @@ export class CombatEngine {
       if (!hemlockVial && state.poisonTickParity === 0) {
         state.poisonStacks = Math.max(0, state.poisonStacks - 1);
       }
-      if (hemlockVial && Math.random() < 0.25) {
+      if (hemlockVial && rand() < 0.25) {
         state.poisonStacks += 1;
       }
       anyDotTicked = true;

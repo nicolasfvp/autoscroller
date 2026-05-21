@@ -4,6 +4,7 @@
 import relicsData from '../../data/json/relics.json';
 import type { CombatState } from './CombatState';
 import type { CardDefinition } from '../../data/types';
+import { rand } from '../SharedRNG';
 
 export interface RelicData {
   id: string;
@@ -211,7 +212,7 @@ export function applyOnCombatStartRelics(relicIds: string[], state: CombatState)
       const stacks: Array<keyof CombatState> = [
         'burnStacks', 'bleedStacks', 'poisonStacks', 'slowStacks', 'stunStacks',
       ];
-      const pick = stacks[Math.floor(Math.random() * stacks.length)];
+      const pick = stacks[Math.floor(rand() * stacks.length)];
       (state as any)[pick] = ((state as any)[pick] ?? 0) + (relic.value ?? 3);
     }
   }
@@ -528,8 +529,8 @@ export function applyDamageTakenRelics(
       case 'rng_resource_refund': {
         if (ctx.rawDamage <= 0) break;
         const pct = relic.value ?? 25;
-        if (Math.random() * 100 < pct) {
-          if (Math.random() < 0.5) {
+        if (rand() * 100 < pct) {
+          if (rand() < 0.5) {
             state.heroStamina = Math.min(state.heroMaxStamina, state.heroStamina + 1);
           } else {
             state.heroMana = Math.min(state.heroMaxMana, state.heroMana + 1);
