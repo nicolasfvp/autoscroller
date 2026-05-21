@@ -27,9 +27,13 @@ const BG_SPRITE_MAP: Record<string, string> = {
   treasure: 'bg_treasure',
 };
 
-/** Get the terrain key for a tile slot */
+/** Get the terrain key for a tile slot.
+ * Wave 5+: also fall back to `kind` (the registry key) so subtile slots —
+ * which have type='subtile' and no terrain — resolve to their specific
+ * entry (subtile_ambush, subtile_warhorn, ...) instead of throwing on a
+ * missing 'subtile' config lookup. */
 function getTileTerrainKey(slot: TileSlot): string {
-  return slot.terrain ?? slot.type;
+  return slot.terrain ?? slot.kind ?? slot.type;
 }
 
 /**

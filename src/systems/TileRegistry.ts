@@ -4,8 +4,8 @@ export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'subtile' | 'event' 
 export type TerrainType = 'forest' | 'graveyard' | 'swamp' | 'desert' | 'lava';
 
 export type SubtileEffectKey =
-  | 'ambush' | 'magma_burst' | 'brittle'
-  | 'war_drum' | 'mana_well' | 'tactical'
+  | 'ambush' | 'magma_burst'
+  | 'mana_well' | 'tactical'
   | 'burn_altar' | 'bleed_totem' | 'resonance'
   | 'war_horn';
 
@@ -28,11 +28,10 @@ export interface TileSlot {
   type: TileSlotType;
   terrain?: TerrainType;
   /**
-   * Phase 9: tile registry key (e.g. 'library', 'arena', 'shrine_of_pact').
-   * Carried separately from `type` so adjacency resolution can match the
-   * specific registry key for tiles that share an existing `type` umbrella
-   * (e.g. library/arena/shrine_of_pact all use type='event' but need
-   * distinct adjacency keys per design/04 §7).
+   * Registry key for the specific tile entry. Carried separately from
+   * `type` so subtile slots (which all share type='subtile') resolve
+   * back to their distinct entries (subtile_ambush, subtile_warhorn, ...)
+   * for sprite lookup and effect resolution.
    */
   kind?: string;
   /** Subtile effect ID. Only populated when `type === 'subtile'`. */
