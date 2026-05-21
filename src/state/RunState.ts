@@ -174,7 +174,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 5;
+export const RUN_STATE_VERSION = 6;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.

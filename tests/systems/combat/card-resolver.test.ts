@@ -17,7 +17,9 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     enemyHP: 100, enemyMaxHP: 100,
     enemyDefense: 0, enemyDamage: 8,
     enemyAttackCooldown: 2500,
+    enemyBaseAttackCooldown: 2500,
     enemyPattern: 'fixed',
+    firstCardCostsZero: false,
     enemySpecialEffect: null,
     enemyAffinity: null,
     activePassives: [],
@@ -35,7 +37,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
-  };
+  } as CombatState;
 }
 
 function makeCard(overrides: Partial<CardDefinition> = {}): CardDefinition {
