@@ -190,12 +190,12 @@ export class BossExitScene extends Scene {
       await saveMetaState(updatedState);
 
       // Wipe the persisted run save — the run is resolved, MainMenu shouldn't
-      // offer "Continue" pointing at it.
-      // offer "Continue" pointing at it.
-      await saveManager.clear();
+      // offer "Continue" pointing at it. clearByMode targets the daily slot
+      // when the run is a daily, leaving any separate normal save intact.
+      await saveManager.clearByMode(run.mode);
       clearRun();
       stopAllRunScenes(this, SCENE_KEYS.BOSS_EXIT);
-      this.fadeToScene('CityHub');
+      this.fadeToScene(run.mode === 'daily' ? SCENE_KEYS.MAIN_MENU : 'CityHub');
     } else {
       this.loopRunner.onBossChoice('continue');
       // Resume GameScene -- LoopRunner is now in 'planning' state

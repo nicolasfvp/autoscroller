@@ -7,7 +7,7 @@ import { formatCardDescription } from '../systems/cards/CardText';
 
 export interface CardFilters {
   element: string;         // "All" | "Fire" | "Attack" | ...
-  tiers: Set<1 | 2 | 3>;
+  tiers: Set<0 | 1 | 2 | 3>;
   search: string;          // lowercased
 }
 
@@ -39,7 +39,7 @@ export function applyFilters(allCards: CardDefinition[], filters: CardFilters): 
   const q = (filters.search ?? '').trim().toLowerCase();
   return allCards.filter((card) => {
     // Tier gate. Cards with no tier field are treated as Tier 1 (legacy).
-    const tier = (card.tier ?? 1) as 1 | 2 | 3;
+    const tier = (card.tier ?? 1) as 0 | 1 | 2 | 3;
     if (!filters.tiers.has(tier)) return false;
     // Element gate.
     if (elemId) {

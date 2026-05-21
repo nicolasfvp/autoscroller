@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
-import { setRun } from '../state/RunState';
+import { setRun, createNewDailyRun, getRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
@@ -11,11 +11,43 @@ import {
   formatWelcomeNotice,
   SAVE_INCOMPATIBLE_COPY,
 } from './MainMenu.helpers';
+import {
+  ensureNickname,
+  setStoredNickname,
+  utcDateString,
+} from '../systems/DailySeed';
+import { NicknameModal } from '../ui/NicknameModal';
+
+// Rotating tips surfaced on the menu — one is picked at random on every
+// MainMenu mount. Phrased as short hints so a returning player learns
+// passively between runs without a dedicated tutorial pass. Lean toward
+// non-obvious mechanics (Slow ticks for damage, Burn doesn't decay) over
+// generic "play the game" advice.
+const TIPS: string[] = [
+  'Cards in the deck builder glow gold when they share a keyword with ≥2 cards already in your deck.',
+  'Tier 0 cards each teach one element. Pick them early to learn what each element does.',
+  'Tap the "?" button in any scene to revisit keywords you have already encountered.',
+  'Slow does not just slow — it also deals damage every tick. Cheap pressure on bosses.',
+  'Burn stacks do NOT decay. They stack up until a Pyre card detonates them for big damage.',
+  'Bleed doubles its tick damage if the enemy has attacked since the last tick.',
+  'Relics in the shop glow gold when they combo with your current deck.',
+  'Vengeance triggers when you have taken HP damage in the last 2 seconds — keep risky cards near it.',
+  'Armor depletes before HP and absorbs damage flatly. Stack it early before bosses.',
+  'Stun freezes enemy attacks while at least 1 stack is up. Earth and Water both apply it.',
+  'Mage cards spend mana, Warrior cards spend stamina. Mind your pool when ordering the deck.',
+  'Heavy cards hit harder but cycle slower. Front-load fast cards to keep pressure flowing.',
+];
+
+function pickRandomTip(): string {
+  return TIPS[Math.floor(Math.random() * TIPS.length)];
+}
 
 export class MainMenu extends Scene {
   private savedRun: RunState | null = null;
+  private savedDailyRun: RunState | null = null;
   private confirmOverlay: Phaser.GameObjects.Container | null = null;
   private transitioning = false;
+  private nicknameModal: NicknameModal | null = null;
 
   constructor() {
     super(SCENE_KEYS.MAIN_MENU);
@@ -35,8 +67,10 @@ export class MainMenu extends Scene {
     // would re-surface an abandoned run.
     this.registry.get(REGISTRY_KEYS.SAVED_RUN);
     this.savedRun = await saveManager.load();
+    this.savedDailyRun = await saveManager.loadDaily();
     this.registry.remove(REGISTRY_KEYS.SAVED_RUN);
     this.confirmOverlay = null;
+    this.nicknameModal = null;
 
     // Phase 9 (Design v2) Pitfall 5: consume the one-shot _wipedFromVersion
     // flag from MetaState, then persist the stripped state so it never
@@ -124,7 +158,45 @@ export class MainMenu extends Scene {
       this.createImgBtn(LAYOUT.centerX, 330, 'btn_new_game', () => this.startNewRun(), 1.1);
     }
 
+    // Daily Run entry — sits below the normal-mode buttons so it never
+    // overlaps Continue / New layouts. Label adapts based on whether
+    // there's an in-progress daily save for today.
+    this.createDailyRunButton(LAYOUT.centerX, 530);
+
+    // Rotating beginner tip — one randomly-picked hint per mount. Bottom of
+    // the menu, small italic so it reads as flavor text rather than a
+    // CTA. The player picks up mechanics passively across runs.
+    this.add.text(LAYOUT.centerX, 582, `💡  ${pickRandomTip()}`, {
+      fontSize: '11px',
+      fontStyle: 'italic',
+      color: '#cccccc',
+      stroke: '#000000',
+      strokeThickness: 2,
+      fontFamily: FONTS.family,
+      wordWrap: { width: 720 },
+      align: 'center',
+    }).setOrigin(0.5).setDepth(20);
+
     this.events.on('shutdown', this.cleanup, this);
+  }
+
+  private createDailyRunButton(x: number, y: number): void {
+    const hasDaily = !!this.savedDailyRun;
+    const label = hasDaily ? `CONTINUE DAILY (${utcDateString()})` : `DAILY RUN (${utcDateString()})`;
+
+    const bg = this.add.rectangle(x, y, 320, 38, 0x000000, 0.55)
+      .setStrokeStyle(2, 0xffd700, 0.9)
+      .setInteractive({ useHandCursor: true });
+    const txt = this.add.text(x, y, label, {
+      fontFamily: FONTS.family,
+      fontSize: '15px',
+      fontStyle: 'bold',
+      color: COLORS.accent,
+    }).setOrigin(0.5);
+
+    bg.on('pointerover', () => { bg.setFillStyle(0x000000, 0.75); txt.setColor(COLORS.accentHover); });
+    bg.on('pointerout', () => { bg.setFillStyle(0x000000, 0.55); txt.setColor(COLORS.accent); });
+    bg.on('pointerdown', () => this.onDailyButtonClicked());
   }
 
   private createImgBtn(x: number, y: number, key: string, callback: () => void, scale: number = 0.5) {
@@ -215,6 +287,45 @@ export class MainMenu extends Scene {
     this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT);
   }
 
+  private onDailyButtonClicked(): void {
+    if (this.transitioning || this.nicknameModal) return;
+    const initial = ensureNickname();
+    this.nicknameModal = new NicknameModal(this, {
+      initialValue: initial,
+      title: this.savedDailyRun ? 'Continue today\'s daily run' : 'Enter your daily nickname',
+      onConfirm: (name) => {
+        setStoredNickname(name);
+        this.nicknameModal = null;
+        void this.startDailyRun();
+      },
+      onCancel: () => { this.nicknameModal = null; },
+    });
+  }
+
+  private async startDailyRun(): Promise<void> {
+    if (this.transitioning) return;
+    try {
+      let meta;
+      try {
+        meta = await loadMetaState();
+      } catch (err) {
+        console.error('[MainMenu] daily run loadMetaState failed:', err);
+        return;
+      }
+      // Resume the saved daily run if it's still for today; otherwise build
+      // a fresh one. createNewDailyRun derives class+deck from today's UTC seed
+      // so every player worldwide gets the same starting setup.
+      const run = this.savedDailyRun ?? createNewDailyRun(meta);
+      setRun(run);
+      await saveManager.save(getRun());
+    } catch (err) {
+      console.error('[MainMenu] startDailyRun failed:', err);
+      return;
+    }
+    // Skip CharacterSelect — daily mode is deterministic, no class pick.
+    this.fadeToScene(SCENE_KEYS.GAME);
+  }
+
   /**
    * Phase 9 (Design v2): inline welcome notice after a v3/v4/v5 -> v6
    * MetaState wipe migration. NOT a modal -- per UI-SPEC §Copywriting the
@@ -281,5 +392,7 @@ export class MainMenu extends Scene {
   private cleanup(): void {
     this.confirmOverlay = null;
     this.savedRun = null;
+    this.savedDailyRun = null;
+    if (this.nicknameModal) { this.nicknameModal.destroy(); this.nicknameModal = null; }
   }
 }

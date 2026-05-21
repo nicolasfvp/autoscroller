@@ -9,6 +9,8 @@ const TILE_SPRITE_MAP: Record<string, string> = {
   forest: 'tile_forest',
   graveyard: 'tile_graveyard',
   swamp: 'tile_swamp',
+  desert: 'tile_desert',
+  lava: 'tile_lava',
   rest: 'tile_rest',
   event: 'tile_event',
   treasure: 'tile_treasure',

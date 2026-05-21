@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../../src/systems/UnlockManager';
 
-// In the element-based card system there are 156 implemented cards, none of
-// which carry an unlockSource — so every card is universally available
-// regardless of metaUnlockedCards.
+// In the element-based card system there are 164 implemented cards (8 Tier 0
+// teaching cards + 36 Tier 1 + 120 Tier 2), none of which carry an
+// unlockSource — so every card is universally available regardless of
+// metaUnlockedCards.
 // Relics v2: 80 total, none gated — every relic is always-available.
-const TOTAL_CARDS = 156;
+const TOTAL_CARDS = 164;
 const TOTAL_RELICS = 80;
 const ALWAYS_AVAILABLE_RELICS = 80;
 
@@ -13,7 +14,7 @@ describe('UnlockManager', () => {
   describe('getAvailableCards', () => {
     it('returns all cards when unlockedCards is empty (no unlockSource gates)', () => {
       const cards = getAvailableCards([]);
-      // All 156 cards have no unlockSource → always available.
+      // All 164 cards have no unlockSource → always available.
       expect(cards.length).toBe(TOTAL_CARDS);
       const ids = cards.map(c => c.id);
       // Spot-check a representative Tier 1 spread (pure-element + mixed).
@@ -30,11 +31,11 @@ describe('UnlockManager', () => {
       const ids = cards.map(c => c.id);
       expect(ids).toContain('t1-attack-attack');
       expect(ids).toContain('t1-fire-fire');
-      // Listing an id is a no-op when no card is gated — pool is still 156.
+      // Listing an id is a no-op when no card is gated — pool is still 164.
       expect(cards.length).toBe(TOTAL_CARDS);
     });
 
-    it('returns all 156 cards regardless of the gated list contents', () => {
+    it('returns all 164 cards regardless of the gated list contents', () => {
       const someIds = [
         't1-attack-attack', 't1-defense-defense', 't1-fire-fire',
         't2-attack-attack-attack', 't2-fire-fire-fire',

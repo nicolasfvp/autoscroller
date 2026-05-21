@@ -149,7 +149,12 @@ export class CombatHUD {
     this.manaBar  = this.getLastFill();
     this.manaText = this.buildBarLabel(bx + BAR_W / 2, mpY);
 
-    // Attribute row: STR / VIT / DEX / INT / SPI
+    // Attribute row: STR / VIT / DEX / INT / SPI — collapsed by default
+    // behind a single "📊 Stats" button to reduce HUD density for beginners.
+    // The values row sits inline to the right of the button and toggles on
+    // pointerover/out. The CombatState attribute readings still write to
+    // statTexts every tick so the popup shows up-to-date numbers the moment
+    // it appears.
     const statRowY = LP.y + 164;
     const stats: Array<{ key: 'str' | 'vit' | 'dex' | 'int' | 'spi'; code: string; color: number }> = [
       { key: 'str', code: 'STR', color: 0xff8844 },
@@ -158,10 +163,20 @@ export class CombatHUD {
       { key: 'int', code: 'INT', color: SHADOWBLADE_PALETTE.int },
       { key: 'spi', code: 'SPI', color: SHADOWBLADE_PALETTE.spi },
     ];
-    const cellW = BAR_W / stats.length;
+
+    const statsBtn = s.add.text(bx, statRowY, '📊 Stats', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#ccccff', ...STROKE, strokeThickness: 2,
+    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true });
+    this.container.add(statsBtn);
+
+    const statsRowContainer = s.add.container(0, 0).setVisible(false);
+    const rowStartX = bx + 64;
+    const rowWidth = BAR_W - 64;
+    const cellW = rowWidth / stats.length;
     stats.forEach((stat, i) => {
-      const cellX = bx + cellW * i;
-      const codeText = s.add.text(cellX + 4, statRowY, stat.code, {
+      const cellX = rowStartX + cellW * i;
+      const codeText = s.add.text(cellX, statRowY, stat.code, {
         fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
         color: '#' + stat.color.toString(16).padStart(6, '0'),
         ...STROKE, strokeThickness: 2,
@@ -170,9 +185,30 @@ export class CombatHUD {
         fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
         color: '#ffffff', ...STROKE, strokeThickness: 2,
       }).setOrigin(1, 0.5);
-      this.container.add([codeText, valText]);
+      statsRowContainer.add([codeText, valText]);
       this.statTexts[stat.key] = valText;
     });
+    this.container.add(statsRowContainer);
+
+    // Small hide-grace so a quick mouse drift between button text glyphs
+    // doesn't flicker the row off-on. 250 ms is below the perceived
+    // "instant" threshold for hover-out, while keeping the row up long
+    // enough to glance the values.
+    let hideTimer: Phaser.Time.TimerEvent | null = null;
+    const showRow = () => {
+      if (hideTimer) { hideTimer.remove(false); hideTimer = null; }
+      statsRowContainer.setVisible(true);
+      statsBtn.setColor('#ffffff');
+    };
+    const hideRow = () => {
+      if (hideTimer) hideTimer.remove(false);
+      hideTimer = s.time.delayedCall(250, () => {
+        statsRowContainer.setVisible(false);
+        statsBtn.setColor('#ccccff');
+      });
+    };
+    statsBtn.on('pointerover', showRow);
+    statsBtn.on('pointerout', hideRow);
   }
 
   private buildBar(

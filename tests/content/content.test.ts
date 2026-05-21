@@ -193,8 +193,9 @@ describe('MetaState', () => {
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    // Phase 10 / Design v3: bumped to v8 with forgeRecipes + deckPresets.
-    expect(state.version).toBe(8);
+    // Beginner-mode redesign: bumped to v9 with seenKeywords for contextual
+    // keyword teaching.
+    expect(state.version).toBe(9);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);
@@ -212,8 +213,13 @@ describe('Phase 10 (element system) content totals + coverage', () => {
   const cards = cardsData.cards;
   const relics = relicsData as any[];
 
-  it('cards.json has exactly 156 entries (36 Tier 1 + 120 Tier 2)', () => {
-    expect(cards.length).toBe(156);
+  it('cards.json has exactly 164 entries (8 Tier 0 + 36 Tier 1 + 120 Tier 2)', () => {
+    expect(cards.length).toBe(164);
+  });
+
+  it('cards.json contains exactly 8 Tier 0 cards (one per element)', () => {
+    const t0 = (cards as any[]).filter((c) => c.tier === 0);
+    expect(t0.length).toBe(8);
   });
 
   it('cards.json contains exactly 36 Tier 1 cards', () => {

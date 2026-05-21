@@ -2,9 +2,11 @@ import { get, set, del, createStore } from 'idb-keyval';
 import { migrateRunState, RUN_STATE_VERSION, type RunState } from '../state/RunState';
 import { eventBus } from './EventBus';
 import { loadMetaState } from '../systems/MetaPersistence';
+import { dailySeedString } from '../systems/DailySeed';
 
 const gameStore = createStore('rogue-scroll-db', 'save-store');
 const SAVE_KEY = 'active-run';
+const DAILY_SAVE_KEY = 'active-daily-run';
 
 // Cache the MetaState autoSave preference briefly so doSave doesn't hit
 // IndexedDB on every combat:end / loop:completed event. SettingsScene
@@ -32,13 +34,15 @@ async function isAutoSaveAllowedByMeta(): Promise<boolean> {
 
 export class SaveManager {
   async save(state: RunState): Promise<void> {
+    // Route daily runs to their own slot so they never clobber a normal save.
+    const key = state.mode === 'daily' ? DAILY_SAVE_KEY : SAVE_KEY;
     try {
       const toSave = { ...state };
       if (toSave.isInCombat) {
         toSave.isInCombat = false;
         toSave.currentScene = 'GameScene';
       }
-      await set(SAVE_KEY, toSave, gameStore);
+      await set(key, toSave, gameStore);
       eventBus.emit('save:completed', { timestamp: Date.now() });
     } catch (err) {
       console.error('Save failed:', err);
@@ -73,6 +77,33 @@ export class SaveManager {
     }
   }
 
+  /**
+   * Load the daily save, but only if its seed matches today's daily seed.
+   * Yesterday's save (still sitting in IDB from a previous session) is
+   * silently cleared rather than returned — the broker topic and ticker key
+   * off today's date and there's no value in resuming a stale run.
+   */
+  async loadDaily(): Promise<RunState | null> {
+    try {
+      const saved = await get<unknown>(DAILY_SAVE_KEY, gameStore);
+      if (!saved) return null;
+      const migrated = migrateRunState(saved);
+      if (!migrated) return null;
+      if (!migrated.version || migrated.version < RUN_STATE_VERSION) {
+        await this.clearDaily();
+        return null;
+      }
+      if (migrated.mode !== 'daily' || migrated.seed !== dailySeedString()) {
+        await this.clearDaily();
+        return null;
+      }
+      return migrated;
+    } catch (err) {
+      console.error('Daily load failed:', err);
+      return null;
+    }
+  }
+
   async clear(): Promise<void> {
     try {
       await del(SAVE_KEY, gameStore);
@@ -80,6 +111,28 @@ export class SaveManager {
     } catch (err) {
       console.error('Clear failed:', err);
     }
+  }
+
+  async clearDaily(): Promise<void> {
+    try {
+      await del(DAILY_SAVE_KEY, gameStore);
+    } catch (err) {
+      console.error('Daily clear failed:', err);
+    }
+  }
+
+  /**
+   * Clear the slot that matches the supplied mode. Used by death / abandon
+   * paths so a daily-run death never wipes a normal-run save and vice versa.
+   * Emits run:cleared regardless of mode so downstream singletons drain.
+   */
+  async clearByMode(mode: 'normal' | 'daily' | undefined): Promise<void> {
+    if (mode === 'daily') {
+      await this.clearDaily();
+      eventBus.emit('run:cleared', {});
+      return;
+    }
+    await this.clear();
   }
 
   /**

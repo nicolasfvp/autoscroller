@@ -25,6 +25,9 @@ import { CardFilterBar } from '../ui/CardFilterBar';
 import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
+import { addGlossaryButton } from '../ui/GlossaryButton';
+import { cardSynergizesWithDeck } from '../systems/cards/SynergyDetection';
+import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 import { countElementCategories } from '../systems/ElementSystem';
 import { LAYOUT } from '../ui/StyleConstants';
 
@@ -76,6 +79,8 @@ interface CardCell {
   card: CardDefinition;
   container: Phaser.GameObjects.Container;
   bg: Phaser.GameObjects.Rectangle;
+  /** True when this card shares ≥1 keyword with ≥2 cards in currentDeck. */
+  synergy: boolean;
 }
 
 export class DeckBuilderScene extends Scene {
@@ -95,7 +100,7 @@ export class DeckBuilderScene extends Scene {
   private cardFilterBar: CardFilterBar | null = null;
   private cardFilters: CardFilters = {
     element: 'All',
-    tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+    tiers: new Set<0 | 1 | 2 | 3>([0, 1, 2, 3]),
     search: '',
   };
 
@@ -140,7 +145,7 @@ export class DeckBuilderScene extends Scene {
     this.cardCells = [];
     this.cardFilters = {
       element: 'All',
-      tiers: new Set<1 | 2 | 3>([1, 2, 3]),
+      tiers: new Set<0 | 1 | 2 | 3>([0, 1, 2, 3]),
       search: '',
     };
     // Old bar reference from a previous mount must be cleared — the actual
@@ -176,9 +181,15 @@ export class DeckBuilderScene extends Scene {
     cancelBtn.on('pointerout', () => cancelBtn.setColor('#ff9999'));
     cancelBtn.on('pointerdown', () => this.cancel());
 
+    // Keyword glossary "?" button — left of Cancel so it stays accessible
+    // while the deck builder is open. Hydrate the seen-keyword cache so the
+    // panel filters correctly the first time the player opens it from here.
+    void keywordIntro.init();
+    addGlossaryButton(this, 665, 22);
+
     // Hint
     const ratio = CLASS_DECK_RATIO[this.className];
-    this.add.text(400, 50, `Pick ${STARTER_DECK_SIZE} Tier-1 cards · 10 elements total · ${this.className} ratio P[${ratio.physicalMin}-${ratio.physicalMax}] / E[${ratio.elementalMin}-${ratio.elementalMax}]`, {
+    this.add.text(400, 50, `Pick ${STARTER_DECK_SIZE} starter cards (Tier 0-1) · 10 elements total · ${this.className} ratio P[${ratio.physicalMin}-${ratio.physicalMax}] / E[${ratio.elementalMin}-${ratio.elementalMax}]`, {
       fontSize: '11px', color: DIM, fontFamily: FF,
     }).setOrigin(0.5);
 
@@ -287,7 +298,7 @@ export class DeckBuilderScene extends Scene {
       0x141420, 0.85,
     ).setStrokeStyle(1, 0x4a4a60);
 
-    this.gridHeaderText = this.add.text(GRID_X, GRID_Y - 18, 'Available Tier 1 Cards', {
+    this.gridHeaderText = this.add.text(GRID_X, GRID_Y - 18, 'Available Starter Cards', {
       fontSize: '13px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
     });
 
@@ -303,11 +314,10 @@ export class DeckBuilderScene extends Scene {
   }
 
   private getFilteredCards(): CardDefinition[] {
-    // Starter deck is Tier-1 only by rule. Pre-restrict the pool to Tier 1 so
-    // the bar's tier checkboxes only meaningfully gate within {1}; element
-    // dropdown + name search still apply.
-    const tier1 = getAllCards().filter((c) => c.tier === 1);
-    return applyFilters(tier1, this.cardFilters);
+    // Starter pool is Tier 0 (single-element teaching cards) + Tier 1. Element
+    // dropdown + name search still apply via the filter bar.
+    const starterPool = getAllCards().filter((c) => c.tier === 0 || c.tier === 1);
+    return applyFilters(starterPool, this.cardFilters);
   }
 
   private rebuildGrid(): void {
@@ -318,7 +328,7 @@ export class DeckBuilderScene extends Scene {
     this.gridContainer.setY(0);
 
     const filtered = this.getFilteredCards();
-    this.gridHeaderText.setText(`Available Tier 1 Cards (${filtered.length})`);
+    this.gridHeaderText.setText(`Available Starter Cards (${filtered.length})`);
 
     filtered.forEach((card, idx) => {
       const col = idx % GRID_COLS;
@@ -389,9 +399,14 @@ export class DeckBuilderScene extends Scene {
       .setStrokeStyle(1.5, 0xffffff, 0);
     container.add(bg);
 
+    // Build the CardCell record up-front so hover handlers can read its
+    // `synergy` flag (mutated later by refreshCellSynergy) without rewiring.
+    const cell: CardCell = { card, container, bg, synergy: false };
+
     bg.setInteractive({ useHandCursor: true });
     bg.on('pointerover', () => {
-      bg.setStrokeStyle(2, 0xffffff, 1);
+      if (cell.synergy) bg.setStrokeStyle(3, 0xffd700, 1);
+      else bg.setStrokeStyle(2, 0xffffff, 1);
       // Resolve the bg's actual scene-space center (accounts for the
       // gridContainer's scroll offset) so the preview pops up next to the
       // physically-rendered grid card, not its untranslated cell coordinate.
@@ -399,7 +414,8 @@ export class DeckBuilderScene extends Scene {
       this.showHoverPreview(card, m.tx, m.ty);
     });
     bg.on('pointerout', () => {
-      bg.setStrokeStyle(1.5, 0xffffff, 0);
+      if (cell.synergy) bg.setStrokeStyle(2, 0xffd700, 0.85);
+      else bg.setStrokeStyle(1.5, 0xffffff, 0);
       this.hideHoverPreview();
     });
 
@@ -419,7 +435,26 @@ export class DeckBuilderScene extends Scene {
       }
     });
 
-    return { card, container, bg };
+    return cell;
+  }
+
+  /**
+   * Tag each grid cell with a synergy flag (≥1 shared keyword with ≥2 deck
+   * cards). Repaint the bg stroke to a soft gold glow on matches; clear it
+   * back to invisible otherwise. Hover handlers consult cell.synergy to keep
+   * the gold tint over the standard white-highlight on pointerover.
+   */
+  private refreshCellSynergy(): void {
+    const deckCards: CardDefinition[] = [];
+    for (const id of this.currentDeck) {
+      const c = getAllCards().find((cc) => cc.id === id);
+      if (c) deckCards.push(c);
+    }
+    for (const cell of this.cardCells) {
+      cell.synergy = cardSynergizesWithDeck(cell.card, deckCards);
+      if (cell.synergy) cell.bg.setStrokeStyle(2, 0xffd700, 0.85);
+      else cell.bg.setStrokeStyle(1.5, 0xffffff, 0);
+    }
   }
 
   /**
@@ -687,6 +722,8 @@ export class DeckBuilderScene extends Scene {
     // Repaint cell alpha against the current in-flight deck so cards that
     // would push the element budget over 10 dim out and become un-clickable.
     this.refreshCellAffordability();
+    // Repaint synergy glow against the current in-flight deck.
+    this.refreshCellSynergy();
     const v = validateStarterDeck(this.currentDeck, this.className);
     this.elementBudgetText.setText(`Cards: ${v.size}/${STARTER_DECK_SIZE}  |  Elements: ${v.totalElements}/10  |  Physical: ${v.physical}  |  Elemental: ${v.elemental}`);
     if (v.valid) {
