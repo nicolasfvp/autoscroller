@@ -14,7 +14,6 @@ export const SCENE_KEYS = {
   GAME: 'GameScene',
   COMBAT: 'CombatScene',
   PLANNING: 'PlanningOverlay',
-  PLANNING_OVERLAY: 'PlanningOverlay',
   BOSS_EXIT: 'BossExitScene',
   DEATH: 'DeathScene',
   CITY_HUB: 'CityHub',
