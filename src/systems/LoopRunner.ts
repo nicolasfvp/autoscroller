@@ -1,5 +1,4 @@
 import { createBasicLoop, createBufferTiles, createTileSlot, type TileSlot, type TileInventoryEntry } from './TileRegistry';
-import { resolveAdjacencySynergies, type SynergyBuff } from './SynergyResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
@@ -39,7 +38,6 @@ export class LoopRunner {
   private state: LoopState = 'idle';
   private lastTileIndex: number = -1;
   private runState!: LoopRunState;
-  private activeBuffs: SynergyBuff[] = [];
   private emit: LoopEventCallback;
   private rng: () => number;
 
@@ -52,10 +50,6 @@ export class LoopRunner {
 
   getState(): LoopState {
     return this.state;
-  }
-
-  getActiveBuffs(): SynergyBuff[] {
-    return this.activeBuffs;
   }
 
   startRun(runState: LoopRunState): void {
@@ -71,7 +65,6 @@ export class LoopRunner {
     this.runState.loop.positionInLoop = 0;
     this.runState.loop.difficultyMultiplier = 1.0;
     this.lastTileIndex = -1;
-    this.activeBuffs = [];
     this.bossKillCount = 0;
     this.assignEnemies();
     this.state = 'traversing';
@@ -92,7 +85,6 @@ export class LoopRunner {
     }
     runState.loop.length = runState.loop.tiles.length;
     this.lastTileIndex = -1;
-    this.activeBuffs = resolveAdjacencySynergies(runState.loop.tiles);
     this.bossKillCount = bossKillCount;
     // Re-roll enemy assignments for any tile that hasn't been pre-assigned
     // (saves don't necessarily round-trip enemyId in older data).
@@ -269,10 +261,9 @@ export class LoopRunner {
 
   confirmPlanning(): void {
     if (this.state !== 'planning') return;
-    this.activeBuffs = resolveAdjacencySynergies(this.runState.loop.tiles);
     this.assignEnemies();
     this.state = 'traversing';
-    this.emit('loop-started', { loopCount: this.runState.loop.count, buffs: this.activeBuffs });
+    this.emit('loop-started', { loopCount: this.runState.loop.count });
   }
 
   /** Pre-assign enemies to combat/terrain/boss/basic tiles for world-map display */

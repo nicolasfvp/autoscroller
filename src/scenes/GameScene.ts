@@ -12,14 +12,9 @@ import { AudioManager } from '../systems/AudioManager';
 import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
-import { resolveInlineEvent, setActiveBuffs as setEventBuffs } from '../systems/InlineEvents';
+import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
 import { setActiveRNG, rand } from '../systems/SharedRNG';
-import { setActiveBuffs as setCardBuffs, clearActiveBuffs as clearCardBuffs } from '../systems/combat/CardResolver';
-import { setActiveBuffs as setLootBuffs } from '../systems/CombatLoot';
-import { setActiveBuffs as setRestBuffs } from '../systems/RestSiteSystem';
-import { setActiveBuffs as setMetaBuffs } from '../systems/MetaProgressionSystem';
-import type { SynergyBuff } from '../systems/SynergyResolver';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 import { dailyRunBroadcaster } from '../systems/DailyRunBroadcaster';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
@@ -527,11 +522,8 @@ export class GameScene extends Scene {
         break;
       }
       case 'loop-started': {
-        // Loop resumed after planning -- broadcast adjacency buffs to the
-        // systems that consume them (combat damage, loot rolls, events,
-        // rest healing, run-end XP banking). Cleared again on shutdown.
-        const buffs: SynergyBuff[] = data?.buffs ?? this.loopRunner.getActiveBuffs();
-        this.applyBuffsToSystems(buffs);
+        // Synergy buff distribution removed in Wave 2. Subtile effects are
+        // computed and dispatched per-combat in Wave 4+ via a different path.
         break;
       }
       case 'run-exited': {
@@ -581,14 +573,6 @@ export class GameScene extends Scene {
   }
 
 
-  private applyBuffsToSystems(buffs: SynergyBuff[]): void {
-    setCardBuffs(buffs);
-    setLootBuffs(buffs);
-    setEventBuffs(buffs);
-    setRestBuffs(buffs);
-    setMetaBuffs(buffs);
-  }
-
   private cleanup(): void {
     if (this.autoSaveUnsubscribe) {
       this.autoSaveUnsubscribe();
@@ -601,11 +585,5 @@ export class GameScene extends Scene {
     // Drop the module-level RNG so it can't bleed into the next run / a
     // standalone scene that opens after game shutdown.
     setActiveRNG(null);
-    // Clear adjacency buffs so they don't survive into a next run/scene.
-    clearCardBuffs();
-    setLootBuffs([]);
-    setEventBuffs([]);
-    setRestBuffs([]);
-    setMetaBuffs([]);
   }
 }

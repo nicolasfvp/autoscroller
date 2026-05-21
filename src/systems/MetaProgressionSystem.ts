@@ -1,22 +1,6 @@
 import { MetaState } from '../state/MetaState';
 import buildingsData from '../data/json/buildings.json';
 import passivesData from '../data/json/passives.json';
-import type { SynergyBuff } from './SynergyResolver';
-
-// B.1: tile-adjacency xpBonus uplifts XP banked at run end.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-function getXpBonus(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'xpBonus') bonus += buff.value;
-  }
-  return bonus;
-}
 
 export interface UpgradeResult {
   success: boolean;
@@ -132,9 +116,9 @@ export function bankRunRewards(
     bankedMaterials[mat] = banked;
   }
 
-  // B.1: xpBonus from tile adjacency uplifts banked XP on safe exits.
-  const xpBuffMultiplier = 1 + getXpBonus();
-  const xpGained = Math.floor(xpEarned * xpMultiplier * xpBuffMultiplier);
+  // Tile-adjacency xpBonus uplift removed in Wave 2; banking now applies
+  // only the safe/death exit multiplier.
+  const xpGained = Math.floor(xpEarned * xpMultiplier);
   // B.3: route XP to the correct class bucket. Guard against unknown classes
   // — fall back to warrior with a warning rather than silently dropping XP.
   let resolvedClass = className;

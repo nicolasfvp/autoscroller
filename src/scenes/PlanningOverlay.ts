@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
 import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
-import { resolveAdjacencySynergies } from '../systems/SynergyResolver';
 import { TileVisual } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -202,19 +201,8 @@ export class PlanningOverlay extends Scene {
     this.tileVisuals = [];
     this.gridContainer.removeAll(true);
 
-    // Build synergy data
-    const synergies = resolveAdjacencySynergies(tiles);
-    const synergyByTile = new Map<number, { left: boolean; right: boolean }>();
-    for (const buff of synergies) {
-      const existing = synergyByTile.get(buff.tileIndex) ?? { left: false, right: false };
-      existing.right = true;
-      synergyByTile.set(buff.tileIndex, existing);
-      // Next tile gets left synergy
-      const nextIdx = (buff.tileIndex + 1) % tiles.length;
-      const nextExisting = synergyByTile.get(nextIdx) ?? { left: false, right: false };
-      nextExisting.left = true;
-      synergyByTile.set(nextIdx, nextExisting);
-    }
+    // Adjacency-synergy preview removed in Wave 2 (synergies abolished).
+    // Wave 5 introduces a subtile reservation indicator in this same pass.
 
     for (let i = 0; i < tiles.length; i++) {
       // Initial position; updateTilePositions() handles the wrap math.
@@ -222,14 +210,6 @@ export class PlanningOverlay extends Scene {
       tv.setData('beltSlot', i);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
-
-      // Set synergy edges
-      const syn = synergyByTile.get(i);
-      if (syn) {
-        if (syn.left && syn.right) tv.setSynergyEdge('both');
-        else if (syn.left) tv.setSynergyEdge('left');
-        else if (syn.right) tv.setSynergyEdge('right');
-      }
 
       // Buffer tiles are part of the path but not editable — dim them so
       // players can see they exist without thinking they can be replaced.
