@@ -1,23 +1,7 @@
 import restConfig from '../data/rest-config.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
-import type { SynergyBuff } from './SynergyResolver';
 import { eventBus } from '../core/EventBus';
-
-// B.1: tile-adjacency hpRecoveryBonus uplifts the rest tile heal amount.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-export function getHpRecoveryBonus(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'hpRecoveryBonus') bonus += buff.value;
-  }
-  return bonus;
-}
 
 export type RestChoice = 'rest' | 'train' | 'meditate';
 
@@ -42,7 +26,7 @@ export function applyRestChoice(
       // C6 — Hearty Meal: rest sites heal +50% and grant +2 Stamina.
       const heartyMeal = (runState.relics ?? []).includes('hearty_meal');
       const heartyMult = heartyMeal ? 1.5 : 1.0;
-      const recoveryPct = restConfig.hpRecoveryPercent * (1 + getHpRecoveryBonus()) * heartyMult;
+      const recoveryPct = restConfig.hpRecoveryPercent * heartyMult;
       const heal = Math.floor(runState.hero.maxHP * recoveryPct);
       runState.hero.currentHP = Math.min(runState.hero.currentHP + heal, runState.hero.maxHP);
       if (heartyMeal) {

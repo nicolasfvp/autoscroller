@@ -3,7 +3,6 @@
 
 import type { CardDefinition, CardEffect, SynergyDefinition, StatId, StackId, ScaleSourceKind } from '../../data/types';
 import type { CombatState } from './CombatState';
-import type { SynergyBuff } from '../SynergyResolver';
 import { readStat } from '../hero/HeroStatsResolver';
 import { applyHeroDamage } from './EnemyAI';
 import { createAura, sumModifier, sumModifierStackScaled, fireRecurringTrigger, applyTriggeredPayload } from './StatusEffects';
@@ -16,26 +15,6 @@ export interface ResolveResult {
   cooldownDebtSec?: number;
   /** v3: Tectonic Reckoning — request the engine to force-trigger all cards. */
   forceTriggerAll?: boolean;
-}
-
-// Module-level active adjacency buffs from LoopRunner.
-// `damageBonus` is summed and added as a flat damage multiplier (e.g. 0.20 → +20%).
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-export function clearActiveBuffs(): void {
-  activeBuffs = [];
-}
-
-function getDamageBuffMultiplier(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'damageBonus') bonus += buff.value;
-  }
-  return 1 + bonus;
 }
 
 /** v3: stack pool snapshot taken at the start of every card resolution. Used
@@ -384,7 +363,10 @@ export class CardResolver {
         // (design/00 §3). We don't know the card category at this layer, so
         // INT scaling is applied via the explicit `scale: { stat: 'int' }`
         // metadata on magic cards — keeps the resolver category-agnostic.
-        const buffMult = getDamageBuffMultiplier();
+        // Tile-adjacency damage buff removed in Wave 2; subtile build
+        // amplifiers (burn_altar / bleed_totem / resonance) land in Wave 6
+        // via a different per-fight consumption pathway.
+        const buffMult = 1;
         // v3: hero_hit_bonus — flat-per-hit addend, optionally scaled per
         // stack named in the aura's modifier.stack field (Iron Reckoning =
         // +value × Rage). Applied to the pre-multiplier value so STR scales it.

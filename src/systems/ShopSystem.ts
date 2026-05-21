@@ -3,32 +3,10 @@ import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import difficultyConfig from '../data/difficulty.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
-import type { SynergyBuff } from './SynergyResolver';
 import { eventBus } from '../core/EventBus';
 import { getRelicData } from './combat/RelicSystem';
 
 const pricing = (difficultyConfig as any).pricing;
-
-// Phase 9: tile-adjacency cardUpgradeDiscount (Library+Shop) is sourced from
-// SynergyResolver via the same setActiveBuffs() module pattern CardResolver
-// and RestSiteSystem use. The LoopRunner pushes the current buff set here
-// when it pushes to the other consumers, so ShopSystem.upgradeCard can shave
-// the upgrade price without a synergy-resolver dependency injection rewrite.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-export function getCardUpgradeDiscount(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'cardUpgradeDiscount') bonus += buff.value;
-  }
-  // Clamp to [0, 1) — the math below survives 1.0 but a 100%+ discount would
-  // negate the gold sink the relic was tuned around.
-  return Math.min(0.95, Math.max(0, bonus));
-}
 
 export interface ShopCard {
   cardId: string;
@@ -169,13 +147,9 @@ export class ShopSystem {
   ): boolean {
     if (deckIndex < 0 || deckIndex >= runState.deck.active.length) return false;
     if (runState.deck.upgraded[deckIndex]) return false;
-    // Phase 9: shave the upgrade price by the active cardUpgradeDiscount buff
-    // (Library + Shop adjacency = 0.20 per design/04 §7). The discount is
-    // floored after the multiplier so a 20% discount on a 50g common upgrade
-    // costs 40g, not 39.99g.
-    const basePrice = ShopSystem.getUpgradePrice(rarity);
-    const discount = getCardUpgradeDiscount();
-    const price = Math.max(0, Math.floor(basePrice * (1 - discount)));
+    // Tile-adjacency Library+Shop discount removed in Wave 2; upgrade
+    // pricing is now the base price by rarity.
+    const price = ShopSystem.getUpgradePrice(rarity);
     if (runState.economy.gold < price) return false;
     runState.economy.gold -= price;
     runState.deck.upgraded[deckIndex] = true;

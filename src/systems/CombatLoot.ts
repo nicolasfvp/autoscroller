@@ -5,25 +5,8 @@
 import type { RunState } from '../state/RunState';
 import { addPendingLoot } from './PendingLoot';
 import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
-import type { SynergyBuff } from './SynergyResolver';
 import { rollShardDrops, addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
 import { ELEMENTS, type ElementId } from './ElementSystem';
-
-// B.1: tile-adjacency loot buffs. goldDropBonus / tileDropBonus uplift the
-// rolled gold and tile drop counts at combat resolution time.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-function sumBuff(type: string): number {
-  let total = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === type) total += buff.value;
-  }
-  return total;
-}
 
 // Card drops removed in Phase 10 — enemies award shards only.
 
@@ -45,9 +28,9 @@ export function generateAndApplyCombatLoot(
 ): void {
   const entries: Array<{ label: string; color: string }> = [];
 
-  // Gold (apply tile-adjacency goldDropBonus on top of base reward)
-  const goldMult = 1 + sumBuff('goldDropBonus');
-  const finalGold = Math.floor(goldAmount * goldMult);
+  // Gold (raw — synergy-buff uplift removed in Wave 2; subtile loot-shaper
+  // category was cut from the new design).
+  const finalGold = goldAmount;
   if (finalGold > 0) {
     run.economy.gold += finalGold;
     run.stats.goldEarned += finalGold;
@@ -116,12 +99,10 @@ export function generateAndApplyCombatLoot(
   // canonical RunState tile inventory; LoopRunState rehydrates from there
   // on next GameScene.create / planning entry. tileDropBonus uplifts count.
   const tileDrops = rollTileDrops(terrain, run.loop.count);
-  const tileMult = 1 + sumBuff('tileDropBonus');
   for (const drop of tileDrops) {
-    const finalCount = Math.max(drop.count, Math.floor(drop.count * tileMult));
     const current = run.economy.tileInventory[drop.tileType] ?? 0;
-    run.economy.tileInventory[drop.tileType] = current + finalCount;
-    entries.push({ label: `+${finalCount} ${drop.tileType} tile`, color: '#80ffd0' });
+    run.economy.tileInventory[drop.tileType] = current + drop.count;
+    entries.push({ label: `+${drop.count} ${drop.tileType} tile`, color: '#80ffd0' });
   }
 
   // Card drops removed in Phase 10 — enemies award gold + materials + shards only.

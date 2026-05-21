@@ -5,24 +5,6 @@
 import type { RunState } from '../state/RunState';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
-import type { SynergyBuff } from './SynergyResolver';
-
-// Tile-adjacency event buffs (B.1). `eventBonus` multiplies the weight of
-// "positive" outcomes (heal/gold/restore) so adjacent rest+event tiles tilt
-// the table toward beneficial rolls.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-function getEventBonus(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'eventBonus') bonus += buff.value;
-  }
-  return bonus;
-}
 
 interface EventResult {
   notifications: LootEntry[];
@@ -137,16 +119,13 @@ const EVENT_TABLE: EventOption[] = [
  * Returns combat enemy ID if the event triggers a fight.
  */
 export function resolveInlineEvent(run: RunState): EventResult {
-  const eventBonus = getEventBonus();
-  // Apply tile-adjacency eventBonus by uplifting positive-outcome weights.
-  // A `0.15` bonus multiplies positive weights by 1.15.
-  const weightOf = (e: EventOption): number =>
-    e.positive ? e.weight * (1 + eventBonus) : e.weight;
-  const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + weightOf(e), 0);
+  // Tile-adjacency eventBonus weight uplift removed in Wave 2; events now
+  // use their declared weights directly.
+  const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + e.weight, 0);
   let roll = rand() * totalWeight;
 
   for (const option of EVENT_TABLE) {
-    roll -= weightOf(option);
+    roll -= option.weight;
     if (roll <= 0) {
       const result = option.apply(run);
       addPendingLoot(result.notifications);
