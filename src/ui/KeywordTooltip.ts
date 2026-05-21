@@ -1,5 +1,5 @@
 // KeywordTooltip -- lateral glossary panel that mounts beside a card after
-// 2 seconds of continuous hover. Informational only: the panel has no
+// 800ms of continuous hover. Informational only: the panel has no
 // interactive elements and self-destroys when hover ends or the parent
 // scene shuts down.
 //
@@ -31,7 +31,7 @@ const DEFINITION_FONT_SIZE = 12;
 const ENTRY_SPACING = 8;
 const KEYWORD_TO_DEF_GAP = 2;
 const TITLE_TO_BODY_GAP = 10;
-const HOVER_DELAY_MS = 2000;
+const HOVER_DELAY_MS = 800;
 const TOOLTIP_DEPTH = 9000;
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
@@ -54,10 +54,10 @@ interface AnchorBounds {
 /**
  * Wire keyword-tooltip-on-hover behavior to a card visual target.
  *
- * On pointerover: starts a 2-second timer. After 2s, mounts the glossary
- * panel beside the card (right side preferred, mirrored to left if it
- * would clip past the canvas edge). On pointerout / destroy: cancels the
- * pending timer AND destroys any mounted panel.
+ * On pointerover: starts an 800ms timer. After it fires, mounts the
+ * glossary panel beside the card (right side preferred, mirrored to left
+ * if it would clip past the canvas edge). On pointerout / destroy: cancels
+ * the pending timer AND destroys any mounted panel.
  *
  * `target` is any interactive GameObject — typically a Container holding
  * the card, but DeckBuilderScene attaches to its overlay hit-box Rectangle
@@ -139,8 +139,8 @@ export function attachKeywordHover(
 }
 
 /**
- * Schedule a keyword tooltip to appear after the standard 2s delay, with the
- * anchor resolved lazily at fire time. Used by the deck editor's drag flow:
+ * Schedule a keyword tooltip to appear after the standard hover delay, with
+ * the anchor resolved lazily at fire time. Used by the deck editor's drag flow:
  * the drag visual is non-interactive (no pointerover/out), so the standard
  * hover-attached form doesn't apply — the caller starts the timer at drag
  * begin and cancels via the returned handle at drag end.
@@ -171,9 +171,9 @@ export function scheduleKeywordPanel(
 }
 
 /**
- * Schedule a keyword tooltip to appear next to a card detail popup after a
- * 2-second delay. Mounted as a child of the popup container so it tears
- * down with it. Kept for parity with the CardDetailPopup integration.
+ * Schedule a keyword tooltip to appear next to a card detail popup after
+ * the standard hover delay. Mounted as a child of the popup container so
+ * it tears down with it. Kept for parity with the CardDetailPopup integration.
  */
 export function attachKeywordTooltip(
   scene: Phaser.Scene,

@@ -165,11 +165,14 @@ export class DeathScene extends Scene {
     this.tweens.add({ targets: unlockNotice, alpha: 0.5, duration: 800, yoyo: true, repeat: -1 });
 
     // ── Return Button ───────────────────────────────────────────
-    createButton(this, 400, 540, 'Return to City', async () => {
+    const isDaily = run.mode === 'daily';
+    const buttonLabel = isDaily ? 'Return to Menu' : 'Return to City';
+    const nextScene = isDaily ? SCENE_KEYS.MAIN_MENU : SCENE_KEYS.CITY_HUB;
+    createButton(this, 400, 540, buttonLabel, async () => {
       stopAllRunScenes(this, SCENE_KEYS.DEATH);
-      await saveManager.clear();
+      await saveManager.clearByMode(run.mode);
       clearRun();
-      this.fadeToScene(SCENE_KEYS.CITY_HUB);
+      this.fadeToScene(nextScene);
     }, 'primary');
 
     // ── Bank Rewards ────────────────────────────────────────────

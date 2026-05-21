@@ -37,7 +37,7 @@ describe('MetaPersistence', () => {
     expect(loaded.buildings.forge.level).toBe(2);
     expect(loaded.unlockedCards).toEqual(['fury', 'iron-skin']);
     expect(loaded.totalRuns).toBe(5);
-    expect(loaded.version).toBe(8);
+    expect(loaded.version).toBe(9);
   });
 
   it('uses a separate store name from run state (autoscroller-meta)', async () => {

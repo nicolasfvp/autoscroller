@@ -28,16 +28,26 @@
   },
   "swamp": {
     "base": [
-      "toxic_gooze",
+      "toxic_gooze"
+    ],
+    "addAtLoop": {
+      "5": [
+        "venomous_kobra"
+      ],
+      "10": [
+        "depths_horror"
+      ]
+    }
+  },
+  "lava": {
+    "base": [
       "forge_slime"
     ],
     "addAtLoop": {
       "5": [
-        "venomous_kobra",
         "lava_golen"
       ],
       "10": [
-        "depths_horror",
         "mecha_warrior"
       ]
     }

@@ -7,17 +7,17 @@ import {
 } from '../../src/systems/CollectionRegistry';
 
 // In the element-based card system (see docs/CARDS_SYSTEM.md), the card pool is:
-//   - 156 implemented cards (36 Tier 1 + 120 Tier 2)
+//   - 164 implemented cards (8 Tier 0 + 36 Tier 1 + 120 Tier 2)
 //   - 0 cards with unlockSource (all cards are universally available; the Forge
 //     gate is enforced via tier unlock at the Forge, not unlockSource)
 // Relics v2: 80 relics, none gated — every relic is always-available.
-const TOTAL_CARDS = 156;
+const TOTAL_CARDS = 164;
 const TOTAL_RELICS = 80;
 const ALWAYS_AVAILABLE_RELICS = 80;
 
 describe('CollectionRegistry', () => {
   describe('getCollectionStatus', () => {
-    it('returns cards total=156 and all cards unlocked (no unlockSource gates in element system)', () => {
+    it('returns cards total=164 and all cards unlocked (no unlockSource gates in element system)', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
       expect(status.cards.total).toBe(TOTAL_CARDS);
@@ -26,7 +26,7 @@ describe('CollectionRegistry', () => {
       expect(status.cards.unlocked).toBe(TOTAL_CARDS);
     });
 
-    it('returns cards total=156 and unlocked=156 when unlockedCards is populated', () => {
+    it('returns cards total=164 and unlocked=164 when unlockedCards is populated', () => {
       const state = createDefaultMetaState();
       state.unlockedCards = ['t1-attack-attack', 't1-fire-fire', 't1-defense-defense'];
       const status = getCollectionStatus(state);

@@ -204,7 +204,7 @@ export type ElementId =
   | "attack" | "defense" | "agility" | "counter"
   | "fire" | "water" | "air" | "earth";
 
-export type CardTier = 1 | 2 | 3;
+export type CardTier = 0 | 1 | 2 | 3;
 
 export interface CardDefinition {
   id: string;
@@ -226,9 +226,9 @@ export interface CardDefinition {
   rarity: "common" | "uncommon" | "rare" | "epic";
   /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
   classRestriction?: "warrior" | "mage" | "neutral";
-  /** Element multiset that crafted this card (2-4 elements). Optional for legacy cards. */
+  /** Element multiset that crafted this card (1-4 elements). Optional for legacy cards. */
   elements?: ElementId[];
-  /** Tier 1 (2 elements), 2 (3 elements), or 3 (4 elements). Optional for legacy cards. */
+  /** Tier 0 (1-element starter), 1 (2 elements), 2 (3 elements), or 3 (4 elements). Optional for legacy cards. */
   tier?: CardTier;
   /** True for Tier-3 mock placeholders not yet implemented. */
   locked?: boolean;

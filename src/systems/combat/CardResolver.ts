@@ -604,7 +604,7 @@ export class CardResolver {
         // a +1 VIT card many times still snowballs across long boss fights.
         let magnitude = value;
         if (card?.id) {
-          const tierCap = card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
+          const tierCap = card.tier === 0 ? 5 : card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
           const already = state.buffMagnitudePerCard[card.id] ?? 0;
           const remaining = Math.max(0, tierCap - already);
           magnitude = Math.min(magnitude, remaining);

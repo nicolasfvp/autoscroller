@@ -16,6 +16,8 @@ export class Preloader extends Scene {
     this.load.image('tile_forest', 'assets/map/tiles/tile_meadow.png');
     this.load.image('tile_graveyard', 'assets/map/tiles/tile_graveyard.png');
     this.load.image('tile_swamp', 'assets/map/tiles/tile_swamp.png');
+    this.load.image('tile_desert', 'assets/map/tiles/tile_desert.png');
+    // tile_lava.png not yet authored — TileVisual falls back to color fill.
 
     // Background objects (64x64, transparent)
     this.load.image('bg_basic', 'assets/map/tiles/bg_path.png');

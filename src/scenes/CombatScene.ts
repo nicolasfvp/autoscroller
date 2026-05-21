@@ -4,7 +4,9 @@
 import { Scene } from 'phaser';
 import { eventBus, type GameEvents } from '../core/EventBus';
 import { getRun } from '../state/RunState';
-import { getEnemyById } from '../data/DataLoader';
+import { getEnemyById, getCardById } from '../data/DataLoader';
+import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
+import { formatCardDescription } from '../systems/cards/CardText';
 import { createCombatState } from '../systems/combat/CombatState';
 import { CombatEngine } from '../systems/combat/CombatEngine';
 import { CombatHUD } from '../ui/CombatHUD';
@@ -18,6 +20,9 @@ import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { dailyRunTicker } from '../systems/DailyRunTicker';
+import { DailyTickerPanel } from '../ui/DailyTickerPanel';
+import { addGlossaryButton } from '../ui/GlossaryButton';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -36,6 +41,23 @@ export class CombatScene extends Scene {
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+    // Contextual keyword teaching: if this card introduces a keyword the
+    // player hasn't learned, the intro service queues an overlay that
+    // pauses combat until dismissed. Combine the static description with
+    // the dynamic CardText render so engine-generated keyword tokens
+    // (Burn N, Scales STR, Vengeance) trigger the same first-encounter
+    // pause as author-written ones.
+    const cardDef = getCardById(data.cardId);
+    if (cardDef) {
+      const rendered = formatCardDescription({
+        effects: cardDef.effects,
+        exhaust: cardDef.exhaust,
+        spend_armor: cardDef.spend_armor,
+        cooldown_scale: cardDef.cooldown_scale,
+      });
+      const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
+      keywordIntro.handleCardPlayed(this, fullText);
+    }
     if (data.damage > 0) {
       AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
@@ -160,6 +182,12 @@ export class CombatScene extends Scene {
     this.scene.bringToTop();
     this.transitioning = false;
     this.cameras.main.setBackgroundColor(0x000000);
+    // Hydrate the seen-keywords set from MetaState. Fire-and-forget — by the
+    // time the first card resolves (≥ first card cooldown), IDB will have
+    // returned and the intro service can gate appropriately. If the player
+    // somehow plays a card before init finishes, the service silently skips
+    // (returns no-op) and the keyword stays unseen for next time.
+    void keywordIntro.init();
 
     try {
       const run = getRun();
@@ -232,6 +260,10 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this);
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
+
+      // Keyword glossary "?" — top-right corner. Depth above HUD so it stays
+      // tappable when the HUD overlays the upper-right area.
+      addGlossaryButton(this, 775, 20, 600);
       // Speed slider lives in the persistent SpeedPanelScene; it writes to
       // run.combatSpeed directly so this scene's `gameSpeed` is re-read each
       // tick (see update()) rather than wired through a per-scene slider.
@@ -243,6 +275,14 @@ export class CombatScene extends Scene {
       eventBus.on('combat:enemy-attack', this.onEnemyAttack);
       eventBus.on('combat:end', this.onCombatEnd);
 
+      // Daily Run ticker overlay — visible during combat too so the player
+      // can see other racers tick up while they're fighting. Panel
+      // self-destructs on scene shutdown via Phaser events.
+      if (run.mode === 'daily') {
+        dailyRunTicker.start();
+        new DailyTickerPanel(this, { selfRunId: run.runId });
+      }
+
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
       console.error('[CombatScene] Critical error in create():', err);
@@ -253,6 +293,13 @@ export class CombatScene extends Scene {
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
+      // Pause the simulation while a contextual keyword-intro overlay is
+      // up so the player can read the explanation without enemies still
+      // ticking down in the background.
+      if (keywordIntro.isPaused()) {
+        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+        return;
+      }
       // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
       // to run.combatSpeed without notifying us, so polling is the contract.
       try { this.gameSpeed = getRun().combatSpeed ?? this.gameSpeed; } catch { /* run cleared */ }

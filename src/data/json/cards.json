@@ -1,21 +1,221 @@
 {
   "starterDecks": {
     "warrior": [
-      "t1-attack-attack",
-      "t1-defense-defense",
+      "t0-attack",
+      "t0-defense",
       "t1-attack-defense",
       "t1-agility-agility",
       "t1-attack-fire"
     ],
     "mage": [
-      "t1-fire-fire",
-      "t1-water-water",
+      "t0-fire",
+      "t0-water",
       "t1-fire-water",
       "t1-air-earth",
       "t1-attack-fire"
     ]
   },
   "cards": [
+    {
+      "id": "t0-attack",
+      "name": "Jab",
+      "description": "Deal 9.",
+      "category": "attack",
+      "tier": 0,
+      "elements": [
+        "attack"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 9,
+          "target": "enemy"
+        }
+      ],
+      "cooldown": 1.2,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
+    },
+    {
+      "id": "t0-defense",
+      "name": "Guard",
+      "description": "Armor 12.",
+      "category": "defense",
+      "tier": 0,
+      "elements": [
+        "defense"
+      ],
+      "effects": [
+        {
+          "type": "armor",
+          "value": 12,
+          "target": "self"
+        }
+      ],
+      "cooldown": 1.6,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
+    },
+    {
+      "id": "t0-agility",
+      "name": "Quickstep",
+      "description": "Deal 4. Deal 4.",
+      "category": "attack",
+      "tier": 0,
+      "elements": [
+        "agility"
+      ],
+      "effects": [
+        {
+          "type": "damage",
+          "value": 4,
+          "target": "enemy"
+        },
+        {
+          "type": "damage",
+          "value": 4,
+          "target": "enemy"
+        }
+      ],
+      "cooldown": 0.9,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
+    },
+    {
+      "id": "t0-counter",
+      "name": "Riposte",
+      "description": "On Hit 6s: Deal 3.",
+      "category": "attack",
+      "tier": 0,
+      "elements": [
+        "counter"
+      ],
+      "effects": [
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 6000,
+          "trigger": "on_hit_dealt",
+          "then": {
+            "type": "damage",
+            "value": 3,
+            "target": "enemy"
+          }
+        }
+      ],
+      "cooldown": 2,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {
+        "stamina": 1
+      }
+    },
+    {
+      "id": "t0-fire",
+      "name": "Spark",
+      "description": "Burn 3.",
+      "category": "magic",
+      "tier": 0,
+      "elements": [
+        "fire"
+      ],
+      "effects": [
+        {
+          "type": "dot",
+          "value": 3,
+          "target": "enemy",
+          "stack": "burn"
+        }
+      ],
+      "cooldown": 1.4,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      }
+    },
+    {
+      "id": "t0-water",
+      "name": "Mend",
+      "description": "Heal 6.",
+      "category": "magic",
+      "tier": 0,
+      "elements": [
+        "water"
+      ],
+      "effects": [
+        {
+          "type": "heal",
+          "value": 6,
+          "target": "self"
+        }
+      ],
+      "cooldown": 2,
+      "targeting": "self",
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      }
+    },
+    {
+      "id": "t0-air",
+      "name": "Gust",
+      "description": "Haste 20% (5s).",
+      "category": "magic",
+      "tier": 0,
+      "elements": [
+        "air"
+      ],
+      "effects": [
+        {
+          "type": "aura",
+          "value": 0,
+          "target": "self",
+          "ttl_ms": 5000,
+          "modifier": {
+            "kind": "cd_reduction",
+            "value": 0.20
+          }
+        }
+      ],
+      "cooldown": 1.2,
+      "targeting": "self",
+      "rarity": "common"
+    },
+    {
+      "id": "t0-earth",
+      "name": "Quake",
+      "description": "Slow 4.",
+      "category": "magic",
+      "tier": 0,
+      "elements": [
+        "earth"
+      ],
+      "effects": [
+        {
+          "type": "dot",
+          "value": 4,
+          "target": "enemy",
+          "stack": "slow"
+        }
+      ],
+      "cooldown": 2,
+      "targeting": "single",
+      "rarity": "common",
+      "cost": {
+        "mana": 1
+      }
+    },
     {
       "id": "t1-attack-attack",
       "name": "Reckless Strike",

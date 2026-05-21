@@ -43,7 +43,7 @@ describe('DataLoader', () => {
     const ids = getStarterDeckIds('warrior');
     expect(ids.length).toBe(5);
     for (const id of ids) {
-      expect(id).toMatch(/^t1-/);
+      expect(id).toMatch(/^t[01]-/);
     }
   });
 

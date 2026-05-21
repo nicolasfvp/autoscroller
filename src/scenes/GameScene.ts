@@ -21,6 +21,10 @@ import { setActiveBuffs as setRestBuffs } from '../systems/RestSiteSystem';
 import { setActiveBuffs as setMetaBuffs } from '../systems/MetaProgressionSystem';
 import type { SynergyBuff } from '../systems/SynergyResolver';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { dailyRunBroadcaster } from '../systems/DailyRunBroadcaster';
+import { dailyRunTicker } from '../systems/DailyRunTicker';
+import { DailyTickerPanel } from '../ui/DailyTickerPanel';
+import { ensureNickname } from '../systems/DailySeed';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -52,7 +56,7 @@ export class GameScene extends Scene {
 
   // Auto-save subscription (cleared on shutdown to avoid stacked listeners)
   private autoSaveUnsubscribe?: () => void;
-  
+
   // Parallax Backgrounds
   private bgSky?: Phaser.GameObjects.TileSprite;
   private bgDesert?: Phaser.GameObjects.TileSprite;
@@ -241,6 +245,17 @@ export class GameScene extends Scene {
     // short cache), so SettingsScene toggles take effect without a scene
     // reload and without us caching the value here.
     this.autoSaveUnsubscribe = saveManager.setupAutoSave(() => getRun());
+
+    // Daily Run wiring — only when this run was started in daily mode.
+    // Ticker + broadcaster live at module level so they survive the
+    // GameScene <-> CombatScene swap; the panel UI self-destructs on
+    // scene shutdown so we don't need to hold the reference.
+    if (run.mode === 'daily') {
+      const nickname = ensureNickname();
+      dailyRunBroadcaster.start(run.runId, nickname);
+      dailyRunTicker.start();
+      new DailyTickerPanel(this, { selfRunId: run.runId });
+    }
 
     // Initial visual setup: ensure tiles and HUD are populated immediately
     this.updateTilePool();
