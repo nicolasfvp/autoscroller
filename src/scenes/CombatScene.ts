@@ -7,8 +7,9 @@ import { getRun } from '../state/RunState';
 import { getEnemyById, getCardById } from '../data/DataLoader';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 import { formatCardDescription } from '../systems/cards/CardText';
-import { createCombatState } from '../systems/combat/CombatState';
+import { createCombatState, type CombatState } from '../systems/combat/CombatState';
 import { CombatEngine } from '../systems/combat/CombatEngine';
+import type { SubtileEffect } from '../systems/SubtileResolver';
 import { CombatHUD } from '../ui/CombatHUD';
 import { CardQueueDisplay } from '../ui/CardQueueDisplay';
 import { showSynergyFlash } from '../ui/SynergyFlash';
@@ -37,7 +38,7 @@ export class CombatScene extends Scene {
 
   private gameSpeed: number = 1;
   private transitioning = false;
-  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string };
+  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -167,8 +168,50 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
  
-  init(data: { enemyId: string; isBoss?: boolean; terrain?: string }): void {
+  init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
+  }
+
+  /**
+   * Wave 6: apply pre-fight subtile effects to the freshly-built CombatState.
+   * Runs once before the engine starts, mutating the state in place.
+   *
+   * Implemented:
+   *   - ambush        — enemy starts with slow(2) + bleed(3) per stack
+   *   - magma_burst   — enemy starts with burn(5) per stack
+   *   - mana_well     — hero starts with +2 mana per stack (uncapped; first turn)
+   *
+   * Not yet wired (require engine-level hooks beyond this scene):
+   *   - war_drum, tactical, brittle, burn_altar, bleed_totem, resonance.
+   *     Each needs either a new state flag the engine respects (e.g.
+   *     firstCardDamageMult, burnApplyBonus, bleedTickMultiplier,
+   *     spellDamageMult) or a triggered effect (free defense card, hero
+   *     rage stack equivalent). Documented as TODOs against the relevant
+   *     subtile entries in tiles.json; tracking continues in a follow-up.
+   *
+   * War Horn is consumed in LoopRunner.getCombatSpawnChance, not here.
+   */
+  private applySubtileEffects(state: CombatState, effects: SubtileEffect[]): void {
+    for (const e of effects) {
+      const n = e.stacks;
+      switch (e.effect) {
+        case 'ambush':
+          state.slowStacks += 2 * n;
+          state.bleedStacks += 3 * n;
+          break;
+        case 'magma_burst':
+          state.burnStacks += 5 * n;
+          break;
+        case 'mana_well':
+          state.heroMana += 2 * n;
+          break;
+        // war_drum, tactical, brittle, burn_altar, bleed_totem, resonance,
+        // war_horn: see method docstring. War Horn is handled upstream
+        // in LoopRunner; the others need engine work.
+        default:
+          break;
+      }
+    }
   }
 
   create(): void {
@@ -229,6 +272,8 @@ export class CombatScene extends Scene {
       };
 
       const combatState = createCombatState(run, scaledEnemy);
+      // Wave 6: apply pre-fight subtile effects before the engine takes over.
+      this.applySubtileEffects(combatState, data.subtileEffects ?? []);
       this.engine = new CombatEngine(combatState);
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
