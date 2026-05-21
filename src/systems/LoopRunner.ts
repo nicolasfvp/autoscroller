@@ -1,4 +1,4 @@
-import { createBasicLoop, createBufferTiles, createTileSlot, type TileSlot, type TileInventoryEntry } from './TileRegistry';
+import { createBasicLoop, createBufferTiles, createTileSlot, getTileConfig, type TileSlot, type TileInventoryEntry } from './TileRegistry';
 import { resolveSubtileEffects, effectsForTile, type SubtileEffect } from './SubtileResolver';
 import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultyScaler';
 import { getEnemyPoolForTerrain } from './LootGenerator';
@@ -483,22 +483,115 @@ export class LoopRunner {
     // Prevent placing on boss or buffer tiles
     if (tile.type === 'boss' || tile.type === 'buffer') return false;
 
-    // If slot is occupied by a non-basic tile, return it to inventory (feedback #24).
-    // Inventory is keyed on the *specific* tile kind (forest, swamp, shop, …),
-    // not on tile.type — terrain tiles all have type === 'terrain' so using
-    // that as the key collapses every terrain into a single 'terrain' entry.
-    if (tile.type !== 'basic') {
-      const inventoryKey = tile.terrain ?? tile.type;
-      const existing = this.runState.tileInventory.find(t => t.tileType === inventoryKey);
-      if (existing) {
-        existing.count++;
-      } else {
-        this.runState.tileInventory.push({ tileType: inventoryKey, count: 1 });
-      }
+    // Wave 5: slot must be empty to accept a new tile. Use removeTile first.
+    // Empty here means a basic slot — reserved slots are basic with reserved:true.
+    if (tile.type !== 'basic') return false;
+
+    // Wave 5: enforce reservation rules. The picker is supposed to gate this
+    // visually too, but the engine also rejects mismatches as a safety net.
+    const newConfig = getTileConfig(tileKey);
+    const isSubtile = newConfig.type === 'subtile';
+    if (isSubtile) {
+      // Subtiles only into reserved slots, AND need at least one adjacent
+      // combat or boss tile (the AOE anchor).
+      if (!tile.reserved) return false;
+      if (!this.hasAdjacentCombatOrBoss(slotIndex)) return false;
+    } else {
+      // Non-subtiles can't land on a reserved slot.
+      if (tile.reserved) return false;
     }
 
     const newTile = createTileSlot(tileKey);
     this.runState.loop.tiles[slotIndex] = newTile;
+
+    // A new combat (terrain) tile reserves its empty neighbors. Subtile and
+    // event/treasure placements don't project reservations.
+    this.recomputeReservations();
     return true;
+  }
+
+  /**
+   * Wave 5: explicit tile removal. Returns the slot to basic + refunds
+   * floor(cost * 0.5) tile points. Recomputes reservations and cascades
+   * orphan-subtile cleanup (any subtile that loses its last adjacent
+   * combat/boss is also auto-removed with the same 50% refund).
+   *
+   * Refuses to remove buffer / boss / basic tiles. Returns true if a
+   * tile was actually removed.
+   */
+  removeTile(slotIndex: number): boolean {
+    if (this.state !== 'planning') return false;
+    const tile = this.runState.loop.tiles[slotIndex];
+    if (!tile) return false;
+    if (tile.type === 'basic' || tile.type === 'buffer' || tile.type === 'boss') return false;
+
+    this.refundTileAndClear(slotIndex);
+    this.recomputeReservations();
+    this.cascadeOrphanSubtiles();
+    return true;
+  }
+
+  private refundTileAndClear(slotIndex: number): void {
+    const tile = this.runState.loop.tiles[slotIndex];
+    if (!tile || tile.type === 'basic' || tile.type === 'buffer' || tile.type === 'boss') return;
+    const kindKey = tile.kind ?? tile.terrain ?? tile.type;
+    try {
+      const config = getTileConfig(kindKey);
+      const refund = Math.floor(config.tilePointCost * 0.5);
+      this.runState.economy.tilePoints += refund;
+    } catch {
+      // Unknown tile kind shouldn't happen, but never block removal on it.
+    }
+    this.runState.loop.tiles[slotIndex] = {
+      type: 'basic',
+      defeatedThisLoop: false,
+    };
+  }
+
+  /**
+   * Recompute the `reserved` flag on every empty (basic, non-buffer) slot.
+   * A slot is reserved iff it is empty AND at least one immediate neighbor
+   * is a combat (terrain) tile. Boss tiles do NOT project reservations
+   * outward per design (Wave 5).
+   */
+  private recomputeReservations(): void {
+    const tiles = this.runState.loop.tiles;
+    for (let i = 0; i < tiles.length; i++) {
+      const slot = tiles[i];
+      if (slot.type !== 'basic' || slot.enemyId) continue;
+      const leftIsCombat = i > 0 && tiles[i - 1].type === 'terrain';
+      const rightIsCombat = i + 1 < tiles.length && tiles[i + 1].type === 'terrain';
+      slot.reserved = leftIsCombat || rightIsCombat;
+    }
+  }
+
+  /**
+   * After a removal, any subtile that no longer has an adjacent combat or
+   * boss tile is "orphaned" and self-removes with the same 50% TP refund.
+   * Reservations are recomputed once more after the cascade in case the
+   * cascade unblocks further reservations.
+   */
+  private cascadeOrphanSubtiles(): void {
+    const tiles = this.runState.loop.tiles;
+    let removed = false;
+    for (let i = 0; i < tiles.length; i++) {
+      if (tiles[i].type !== 'subtile') continue;
+      if (!this.hasAdjacentCombatOrBoss(i)) {
+        this.refundTileAndClear(i);
+        removed = true;
+      }
+    }
+    if (removed) this.recomputeReservations();
+  }
+
+  private hasAdjacentCombatOrBoss(slotIndex: number): boolean {
+    const tiles = this.runState.loop.tiles;
+    for (const offset of [-1, 1]) {
+      const j = slotIndex + offset;
+      if (j < 0 || j >= tiles.length) continue;
+      const t = tiles[j].type;
+      if (t === 'terrain' || t === 'boss') return true;
+    }
+    return false;
   }
 }
