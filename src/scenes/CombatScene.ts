@@ -176,14 +176,8 @@ export class CombatScene extends Scene {
    * Apply pre-fight subtile effects to the freshly-built CombatState.
    * Runs once before the engine starts, mutating the state in place.
    *
-   * Wave 6: ambush / magma_burst / mana_well (direct stack init).
-   * Wave 8: tactical (heroDefense), burn_altar, bleed_totem, resonance
-   *         (new CombatState bonus fields consumed by the engine).
-   *
-   * Still deferred — these need new engine surface that doesn't exist yet:
-   *   - war_drum  : hero rage stacks (no hero-side rage system today)
-   *   - brittle   : first-card-taken +50% damage multiplier
-   *
+   * Pre-fight stack init  : ambush / magma_burst / mana_well / tactical
+   * Build amplifiers (Wave 8 fields): burn_altar / bleed_totem / resonance
    * War Horn is consumed upstream in LoopRunner.getCombatSpawnChance.
    */
   private applySubtileEffects(state: CombatState, effects: SubtileEffect[]): void {
@@ -206,19 +200,15 @@ export class CombatScene extends Scene {
           state.heroDefense += 5 * n;
           break;
         case 'burn_altar':
-          // Every burn application this fight gets +1 per stack.
           state.subtileBurnApplyBonus += n;
           break;
         case 'bleed_totem':
-          // Bleed tick damage gets +1 per stack added to perStack.
           state.subtileBleedTickBonus += n;
           break;
         case 'resonance':
-          // Magic-category cards deal +15% damage per stack (additive bonus
-          // folded into the existing damage multiplier chain).
           state.subtileSpellDamageMult += 0.15 * n;
           break;
-        // war_drum / brittle: see method docstring. war_horn upstream.
+        // war_horn handled upstream in LoopRunner.
         default:
           break;
       }
