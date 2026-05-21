@@ -318,7 +318,7 @@ export interface SynergyDefinition {
 
 // -- Tile Types --
 
-export type TileType = "basic" | "combat" | "elite" | "boss" | "rest" | "event" | "treasure";
+export type TileType = "basic" | "combat" | "elite" | "boss" | "event" | "treasure";
 
 export interface TileTypeConfig {
   type: TileType;
@@ -334,7 +334,7 @@ export type RelicTrigger =
   // Existing (v1)
   | "combat_start" | "turn_start" | "card_played" | "damage_taken" | "heal" | "passive"
   // NEW (v2 / Phase 9) -- Plan 3 implements dispatch
-  | "enemy_killed" | "card_drawn" | "rest_used" | "shop_visited" | "stat_changed"
+  | "enemy_killed" | "card_drawn" | "shop_visited" | "stat_changed"
   | "dot_tick";
 
 export interface RelicDefinition {

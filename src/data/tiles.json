@@ -5,7 +5,6 @@
   "swamp": { "type": "terrain", "terrain": "swamp", "name": "Swamp", "color": 5597999, "canPlaceManually": true, "tilePointCost": 3, "icon": "~", "combatChance": 1.0 },
   "desert": { "type": "terrain", "terrain": "desert", "name": "Desert", "color": 12759168, "canPlaceManually": true, "tilePointCost": 3, "icon": "D", "combatChance": 1.0 },
   "lava": { "type": "terrain", "terrain": "lava", "name": "Lava Fields", "color": 13386786, "canPlaceManually": true, "tilePointCost": 4, "icon": "V", "combatChance": 1.0 },
-  "rest": { "type": "rest", "name": "Rest Site", "color": 4286945, "canPlaceManually": true, "tilePointCost": 4, "icon": "R" },
   "event": { "type": "event", "name": "Event", "color": 9662683, "canPlaceManually": true, "tilePointCost": 2, "icon": "?" },
   "treasure": { "type": "treasure", "name": "Treasure", "color": 16748800, "canPlaceManually": true, "tilePointCost": 6, "icon": "!" },
   "boss": { "type": "boss", "name": "Boss", "color": 16711680, "canPlaceManually": false, "tilePointCost": 0, "icon": "B" },

@@ -160,13 +160,11 @@ export class LoopRunner {
         this.emit('combat-start', { enemyId: tile.enemyId ?? 'doom_knight', isBoss: true, tileIndex });
         break;
       }
-      case 'rest':
       case 'event':
       case 'treasure': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const sceneMap: Record<string, string> = {
-          rest: 'RestSiteScene',
           event: 'EventScene',
           treasure: 'TreasureScene',
         };
@@ -274,9 +272,7 @@ export class LoopRunner {
       // Non-combat tiles never need enemy assignment — skip them up front
       // so we don't burn rng() calls (would also drift the seeded RNG state
       // once B.7/B.8 lands).
-      if (tile.type === 'buffer' ||
-          tile.type === 'rest' || tile.type === 'event' ||
-          tile.type === 'treasure') {
+      if (tile.type === 'buffer' || tile.type === 'event' || tile.type === 'treasure') {
         continue;
       }
       tile.enemyId = undefined;

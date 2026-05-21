@@ -87,6 +87,12 @@ export class ShopScene extends Scene {
       run.economy.removalsThisShop = 0;
       run.economy.reordersThisShop = 0;
 
+      // Wave 3: rest tiles removed. The auto-heal that used to live on the
+      // rest tile now fires on shop entry (one shop visit per loop). Hearty
+      // Meal multiplies the heal and tops up stamina; Lodestone Pendant
+      // already fires in LoopRunner.onLoopCompleted independently.
+      this.applyLoopEndAutoHeal(run);
+
       this.scene.bringToTop();
 
       // Background fallback dimming
@@ -129,6 +135,24 @@ export class ShopScene extends Scene {
     } catch (err) {
       console.error('[ShopScene] Critical error in create():', err);
       this.close();
+    }
+  }
+
+  /**
+   * Wave 3: loop-end auto-heal that replaces the deleted rest tile.
+   * Base 30% HP recovery (matches the old rest_choice 'rest' value).
+   * Hearty Meal relic adds +50% heal and +2 stamina, mirroring its prior
+   * behavior on rest tiles. Lodestone Pendant still fires independently
+   * in LoopRunner.onLoopCompleted, so it is not re-applied here.
+   */
+  private applyLoopEndAutoHeal(run: ReturnType<typeof getRun>): void {
+    const baseRecoveryPct = 0.3;
+    const heartyMeal = (run.relics ?? []).includes('hearty_meal');
+    const recoveryPct = baseRecoveryPct * (heartyMeal ? 1.5 : 1.0);
+    const heal = Math.floor(run.hero.maxHP * recoveryPct);
+    run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
+    if (heartyMeal) {
+      run.hero.currentStamina = Math.min(run.hero.maxStamina, run.hero.currentStamina + 2);
     }
   }
 

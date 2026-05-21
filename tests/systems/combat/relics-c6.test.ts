@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
 import { resolveCardPlayedRelicBonus } from '../../../src/systems/combat/RelicSystem';
 import { CardResolver } from '../../../src/systems/combat/CardResolver';
-import { applyRestChoice } from '../../../src/systems/RestSiteSystem';
 import type { RunState } from '../../../src/state/RunState';
 import type { CardDefinition, EnemyDefinition } from '../../../src/data/types';
 
@@ -144,19 +143,6 @@ describe('Relics C6 — Ash Eater', () => {
   });
 });
 
-describe('Relics C6 — Hearty Meal', () => {
-  it('rest heals 50% more and grants +2 Stamina', () => {
-    const baseline = makeRun([]);
-    baseline.hero.currentStamina = 0;
-    applyRestChoice('rest', baseline);
-    const baselineHpHealed = baseline.hero.currentHP - 50;
-    const baselineStamina = baseline.hero.currentStamina;
-
-    const withRelic = makeRun(['hearty_meal']);
-    withRelic.hero.currentStamina = 0;
-    applyRestChoice('rest', withRelic);
-    const withHealed = withRelic.hero.currentHP - 50;
-    expect(withHealed).toBeGreaterThan(baselineHpHealed); // +50% heal
-    expect(withRelic.hero.currentStamina).toBe(baselineStamina + 2);
-  });
-});
+// Wave 3: rest tile + RestSiteSystem removed. hearty_meal now applies on
+// the loop-end auto-heal inside ShopScene.applyLoopEndAutoHeal — covered
+// implicitly when running the live shop flow rather than via unit test.
