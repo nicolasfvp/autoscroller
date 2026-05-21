@@ -173,23 +173,18 @@ export class CombatScene extends Scene {
   }
 
   /**
-   * Wave 6: apply pre-fight subtile effects to the freshly-built CombatState.
+   * Apply pre-fight subtile effects to the freshly-built CombatState.
    * Runs once before the engine starts, mutating the state in place.
    *
-   * Implemented:
-   *   - ambush        — enemy starts with slow(2) + bleed(3) per stack
-   *   - magma_burst   — enemy starts with burn(5) per stack
-   *   - mana_well     — hero starts with +2 mana per stack (uncapped; first turn)
+   * Wave 6: ambush / magma_burst / mana_well (direct stack init).
+   * Wave 8: tactical (heroDefense), burn_altar, bleed_totem, resonance
+   *         (new CombatState bonus fields consumed by the engine).
    *
-   * Not yet wired (require engine-level hooks beyond this scene):
-   *   - war_drum, tactical, brittle, burn_altar, bleed_totem, resonance.
-   *     Each needs either a new state flag the engine respects (e.g.
-   *     firstCardDamageMult, burnApplyBonus, bleedTickMultiplier,
-   *     spellDamageMult) or a triggered effect (free defense card, hero
-   *     rage stack equivalent). Documented as TODOs against the relevant
-   *     subtile entries in tiles.json; tracking continues in a follow-up.
+   * Still deferred — these need new engine surface that doesn't exist yet:
+   *   - war_drum  : hero rage stacks (no hero-side rage system today)
+   *   - brittle   : first-card-taken +50% damage multiplier
    *
-   * War Horn is consumed in LoopRunner.getCombatSpawnChance, not here.
+   * War Horn is consumed upstream in LoopRunner.getCombatSpawnChance.
    */
   private applySubtileEffects(state: CombatState, effects: SubtileEffect[]): void {
     for (const e of effects) {
@@ -205,9 +200,25 @@ export class CombatScene extends Scene {
         case 'mana_well':
           state.heroMana += 2 * n;
           break;
-        // war_drum, tactical, brittle, burn_altar, bleed_totem, resonance,
-        // war_horn: see method docstring. War Horn is handled upstream
-        // in LoopRunner; the others need engine work.
+        case 'tactical':
+          // "Free defense card pre-played" — model as +5 armor per stack
+          // at fight start, mirroring a basic defense card's payout.
+          state.heroDefense += 5 * n;
+          break;
+        case 'burn_altar':
+          // Every burn application this fight gets +1 per stack.
+          state.subtileBurnApplyBonus += n;
+          break;
+        case 'bleed_totem':
+          // Bleed tick damage gets +1 per stack added to perStack.
+          state.subtileBleedTickBonus += n;
+          break;
+        case 'resonance':
+          // Magic-category cards deal +15% damage per stack (additive bonus
+          // folded into the existing damage multiplier chain).
+          state.subtileSpellDamageMult += 0.15 * n;
+          break;
+        // war_drum / brittle: see method docstring. war_horn upstream.
         default:
           break;
       }
