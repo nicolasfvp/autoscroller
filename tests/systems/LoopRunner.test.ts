@@ -265,18 +265,7 @@ describe('LoopRunner', () => {
     expect(combatEvent!.data.enemyId).toBe('slime'); // first in forest pool
   });
 
-  it('rest tile entry emits open-scene with RestSiteScene', () => {
-    runner.startRun(runState);
-    runState.loop.tiles[1] = { type: 'rest', defeatedThisLoop: false };
-    runState.loop.tiles[0].defeatedThisLoop = true;
-    for (let i = 0; i < 5; i++) {
-      if (runner.getState() !== 'traversing') break;
-      runner.tick(500);
-    }
-    const sceneEvent = events.find(e => e.event === 'open-scene');
-    expect(sceneEvent).toBeDefined();
-    expect(sceneEvent!.data.scene).toBe('RestSiteScene');
-  });
+  // Wave 3: rest tile removed; auto-heal moved to ShopScene.applyLoopEndAutoHeal.
 
   it('resumeTraversal transitions back to traversing', () => {
     runner.startRun(runState);

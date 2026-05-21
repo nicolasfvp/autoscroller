@@ -1,6 +1,6 @@
 import tilesData from '../data/tiles.json';
 
-export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'subtile' | 'rest' | 'event' | 'treasure' | 'boss';
+export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'subtile' | 'event' | 'treasure' | 'boss';
 export type TerrainType = 'forest' | 'graveyard' | 'swamp' | 'desert' | 'lava';
 
 export type SubtileEffectKey =

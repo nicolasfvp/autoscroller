@@ -9,7 +9,7 @@ import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
-import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
+import { drainPendingLoot, hasPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
 import { resolveInlineEvent } from '../systems/InlineEvents';
@@ -404,20 +404,8 @@ export class GameScene extends Scene {
       case 'open-scene': {
         const run = getRun();
 
-        // ── Rest: heal 30% inline ──
-        if (data.scene === 'RestSiteScene') {
-          const heal = Math.floor(run.hero.maxHP * 0.3);
-          run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
-          run.hero.currentStamina = run.hero.maxStamina;
-          run.hero.currentMana = run.hero.maxMana;
-          addPendingLoot([{ label: `+${heal} HP, full STA/MP (rest)`, color: '#00ff00' }]);
-          this.showPendingNotifications();
-          // Force immediate HUD update so HP bar reflects heal (feedback #31)
-          this.syncRunState();
-          if (this.hud) this.hud.update(run);
-          this.loopRunner.resumeTraversal();
-          break;
-        }
+        // Wave 3: rest tile + RestSiteScene removed. The auto-heal that used
+        // to fire here now runs in ShopScene.applyLoopEndAutoHeal on shop entry.
 
         // ── Event: inline random effect ──
         if (data.scene === 'EventScene') {

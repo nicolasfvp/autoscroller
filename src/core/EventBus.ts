@@ -33,7 +33,6 @@ export interface GameEvents {
   'combat:combo-played': { displayName: string };
   'combat:enemy-killed': { enemyId: string };
   'combat:card-drawn': { cardId: string };
-  'combat:rest-used': { choice: string };
   'combat:shop-visited': Record<string, never>;
   'combat:stat-changed': { stat: string; delta: number };
 
