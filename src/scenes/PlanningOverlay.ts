@@ -26,6 +26,10 @@ export class PlanningOverlay extends Scene {
   private gridGeometry!: { cellW: number; period: number; centerX: number };
   /** Reserved-slot decoration overlays, parallel to tileVisuals. Recreated by buildLoopGrid. */
   private reservedDecorations: Phaser.GameObjects.GameObject[] = [];
+  /** Pending tooltip show; cancelled on pointerout. */
+  private tooltipTimer?: Phaser.Time.TimerEvent;
+  /** The currently displayed tooltip container (text + bg). Destroyed on hide. */
+  private tooltipObj?: Phaser.GameObjects.Container;
 
   // Drag-scroll input handlers — stored so cleanup() can remove them. The
   // overlay's `scene.events` listeners use `this` as the context, but the
@@ -517,24 +521,25 @@ export class PlanningOverlay extends Scene {
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
       const contextOk = !this.removeMode && this.hasOpenNormalSlot();
       const enabled = canAfford && contextOk;
+      // Tooltip + hover effect wired on every card (interactive even when
+      // unaffordable) so the player can read the blurb without committing
+      // to a pick. Only the click handler is gated by `enabled`.
+      frame.setInteractive({ useHandCursor: enabled });
+      this.attachTooltip(frame, x, y - frameHeight / 2, tileConfig.description);
+      frame.on('pointerover', () => {
+        const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
+        container.setScale(hoverScale);
+        frame.setTint(0xdddddd);
+      });
+      frame.on('pointerout', () => {
+        const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
+        container.setScale(baseScale);
+        frame.clearTint();
+      });
       if (!enabled) {
         container.setAlpha(0.5);
         if (!canAfford) costText.setColor('#880000');
       } else {
-        frame.setInteractive({ useHandCursor: true });
-
-        frame.on('pointerover', () => {
-          const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
-          container.setScale(hoverScale);
-          frame.setTint(0xdddddd);
-        });
-
-        frame.on('pointerout', () => {
-          const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
-          container.setScale(baseScale);
-          frame.clearTint();
-        });
-
         frame.on('pointerdown', () => this.selectInventoryTile(idx, tileConfig.key));
       }
 
@@ -607,13 +612,16 @@ export class PlanningOverlay extends Scene {
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
       const contextOk = !this.removeMode && subtileSlotsExist;
       const enabled = canAfford && contextOk;
+      // Tooltip + hover effect on every card so the player can read the
+      // description regardless of affordability/context. Click is gated.
+      frame.setInteractive({ useHandCursor: enabled });
+      this.attachTooltip(frame, x, rowY - FRAME / 2, tileConfig.description);
+      frame.on('pointerover', () => { container.setScale(1.1); frame.setTint(0xdddddd); });
+      frame.on('pointerout',  () => { container.setScale(1);   frame.clearTint(); });
       if (!enabled) {
         container.setAlpha(0.5);
         if (!canAfford) costText.setColor('#880000');
       } else {
-        frame.setInteractive({ useHandCursor: true });
-        frame.on('pointerover', () => { container.setScale(1.1); frame.setTint(0xdddddd); });
-        frame.on('pointerout',  () => { container.setScale(1);   frame.clearTint(); });
         // Subtile selection shares the same selectedTileKey + selectedCardIndex
         // pipeline, but tracks its container in subtileInventoryCards so
         // selectInventoryTile's deselection lookup can find the right ref.
@@ -815,6 +823,65 @@ export class PlanningOverlay extends Scene {
     return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && t.reserved === true && !t.enemyId);
   }
 
+  /**
+   * Attach 800ms-hover tooltip showing `description` to a frame. Cancels
+   * on pointerout. Only fires when the tile config carries a description.
+   */
+  private attachTooltip(
+    frame: Phaser.GameObjects.GameObject,
+    worldX: number,
+    worldY: number,
+    description: string | undefined,
+  ): void {
+    if (!description) return;
+    const interactive = frame as Phaser.GameObjects.GameObject & {
+      on: (ev: string, fn: () => void) => void;
+    };
+    interactive.on('pointerover', () => {
+      this.tooltipTimer?.remove();
+      this.tooltipTimer = this.time.delayedCall(800, () => {
+        this.showTooltip(worldX, worldY, description);
+      });
+    });
+    interactive.on('pointerout', () => {
+      this.tooltipTimer?.remove();
+      this.tooltipTimer = undefined;
+      this.hideTooltip();
+    });
+  }
+
+  private showTooltip(anchorX: number, anchorY: number, text: string): void {
+    this.hideTooltip();
+    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    // Build text first to measure size, then size the bg to fit.
+    const label = this.add.text(0, 0, text, {
+      fontSize: '12px',
+      color: '#ffffff',
+      fontFamily,
+      wordWrap: { width: 220 },
+      align: 'center',
+    }).setOrigin(0.5);
+    const pad = 8;
+    const w = label.width + pad * 2;
+    const h = label.height + pad * 2;
+    const bg = this.add.rectangle(0, 0, w, h, 0x101010, 0.92)
+      .setStrokeStyle(1, 0xffd700, 0.9);
+    // Anchor above the frame; if it would clip the top of the screen,
+    // flip below.
+    let cy = anchorY - 44;
+    if (cy - h / 2 < 8) cy = anchorY + 44;
+    const container = this.add.container(anchorX, cy, [bg, label]);
+    container.setDepth(2000);
+    this.tooltipObj = container;
+  }
+
+  private hideTooltip(): void {
+    if (this.tooltipObj) {
+      this.tooltipObj.destroy(true);
+      this.tooltipObj = undefined;
+    }
+  }
+
   /** "Shop" and "Forge" buttons on the planning overlay. Forge is its own scene now. */
   private buildShopForgeButtons(fontFamily: string): void {
     const shopBtn = this.add.text(150, 545, '🛒 Shop', {
@@ -859,6 +926,12 @@ export class PlanningOverlay extends Scene {
   }
 
   private cleanup(): void {
+    // Cancel pending tooltip + drop any visible tooltip so the timer
+    // doesn't fire into a destroyed scene.
+    this.tooltipTimer?.remove();
+    this.tooltipTimer = undefined;
+    this.hideTooltip();
+
     // Destroy belt tile visuals; the container is destroyed below.
     for (const tv of this.tileVisuals) {
       tv.destroy();
