@@ -7,8 +7,6 @@ import {
   canonicalCardId,
   multisetKey,
   FORGE_BASE_COST,
-  FORGE_DISCOUNT_BY_LEVEL,
-  FORGE_TIER_UNLOCK,
 } from './ElementSystem';
 import { hasElementsForRecipe, spendElements, type ElementInventory } from './ShardSystem';
 import { getAllCards, getCardById } from '../data/DataLoader';
