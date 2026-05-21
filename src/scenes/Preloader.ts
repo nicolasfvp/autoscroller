@@ -21,7 +21,8 @@ export class Preloader extends Scene {
 
     // Background objects (64x64, transparent)
     this.load.image('bg_basic', 'assets/map/tiles/bg_path.png');
-    this.load.image('bg_forest', 'assets/map/tiles/bg_forest.png');
+    // bg_forest.png not yet authored — TileVisual.BG_SPRITE_MAP falls back
+    // via textures.exists() and renders no decoration for forest tiles.
     this.load.image('bg_graveyard', 'assets/map/tiles/bg_graveyard.png');
     this.load.image('bg_swamp', 'assets/map/tiles/bg_swamp.png');
 
@@ -96,7 +97,8 @@ export class Preloader extends Scene {
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
     this.load.image('bg_city', 'assets/backgrounds/bg_city.png');
-    this.load.image('bg_run', 'assets/backgrounds/bg_run.png');
+    // bg_run.png not yet authored — GameScene falls back to bg_desert when
+    // bg_run is missing (see GameScene.ts createDesertBackgrounds).
     this.load.image('bg_battle_basic', 'assets/backgrounds/bg_battle_basic.png');
     this.load.image('bg_battle_forest', 'assets/backgrounds/bg_battle_forest.png');
     this.load.image('bg_battle_graveyard', 'assets/backgrounds/bg_battle_graveyard.png');
