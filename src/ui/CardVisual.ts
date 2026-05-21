@@ -342,7 +342,6 @@ function getMainEffect(card: CardDefinition, isUpgraded: boolean) {
       if (stack && STACK_DISPLAY[stack]) return { val: primary.value, ...STACK_DISPLAY[stack] };
       return { val: primary.value, label: 'STACK', color: '#ffffff' };
     }
-    case 'cleanse': return { val: primary.value, label: 'CLEAR', color: '#ffffff' };
     case 'aura':    return { val: primary.value, label: 'AURA',  color: '#bb99ff' };
   }
   return { val: primary.value, label: primary.type.toUpperCase(), color: '#ffffff' };
