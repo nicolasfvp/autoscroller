@@ -108,11 +108,23 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 9,
+    version: 10,
     forgeRecipes: [],
     deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
     seenKeywords: [],
   };
+}
+
+/**
+ * Shift card IDs from the pre-rename (t0/t1/t2) prefix scheme to the
+ * post-rename (t1/t2/t3) one. Done in reverse order to avoid collisions
+ * (t2 -> t3 first so the t1 -> t2 step doesn't double-promote).
+ */
+function shiftCardIdTiers(id: string): string {
+  if (id.startsWith('t2-')) return 't3-' + id.slice(3);
+  if (id.startsWith('t1-')) return 't2-' + id.slice(3);
+  if (id.startsWith('t0-')) return 't1-' + id.slice(3);
+  return id;
 }
 
 export function migrateMetaState(raw: any): MetaState {
@@ -231,6 +243,33 @@ export function migrateMetaState(raw: any): MetaState {
   if (raw.version === 8) {
     if (!Array.isArray(raw.seenKeywords)) raw.seenKeywords = [];
     raw.version = 9;
+  }
+
+  // v9 -> v10 migration: tier renumber (t0/t1/t2 -> t1/t2/t3). Shift every
+  // saved card-id reference so older saves don't pin 5 dead IDs into the
+  // deck builder (which then refuses to accept any new card because the
+  // pre-fill consumes all 5 starter slots with ghosts).
+  if (raw.version === 9) {
+    if (Array.isArray(raw.unlockedCards)) {
+      raw.unlockedCards = raw.unlockedCards.map(shiftCardIdTiers);
+    }
+    if (raw.deckPresets && typeof raw.deckPresets === 'object') {
+      for (const cls of Object.keys(raw.deckPresets)) {
+        const presets = raw.deckPresets[cls];
+        if (!Array.isArray(presets)) continue;
+        for (const p of presets) {
+          if (Array.isArray(p?.cardIds)) {
+            p.cardIds = p.cardIds.map(shiftCardIdTiers);
+          }
+        }
+      }
+    }
+    if (Array.isArray(raw.forgeRecipes)) {
+      for (const r of raw.forgeRecipes) {
+        if (r && typeof r.cardId === 'string') r.cardId = shiftCardIdTiers(r.cardId);
+      }
+    }
+    raw.version = 10;
   }
 
   return raw as MetaState;

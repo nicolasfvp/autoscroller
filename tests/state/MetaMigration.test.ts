@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { createDefaultMetaState, migrateMetaState } from '../../src/state/MetaState';
 
 describe('MetaState v9 defaults', () => {
-  it('createDefaultMetaState returns version 9', () => {
-    expect(createDefaultMetaState().version).toBe(9);
+  it('createDefaultMetaState returns version 10', () => {
+    expect(createDefaultMetaState().version).toBe(10);
   });
 
   it('createDefaultMetaState has tutorialSeen === false', () => {
@@ -72,7 +72,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v2);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
     expect(result.gameSpeed).toBe(1);
@@ -126,7 +126,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.materials).toEqual({}); // post-D-06 wipe
     expect(result.tutorialSeen).toBe(false);
     expect(result.audioPrefs).toEqual({ sfxVolume: 1, sfxEnabled: true });
@@ -160,7 +160,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v4);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
   });
 
   it("v5 object now wipes to v6 fresh defaults (D-06)", () => {
@@ -189,7 +189,7 @@ describe('MetaState v5 migration paths', () => {
     };
 
     const result = migrateMetaState(v5) as any;
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.unlockedCards).toEqual([]);
     expect(result._wipedFromVersion).toBe(5);
   });
@@ -225,7 +225,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
     };
 
     const result = migrateMetaState(v5);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.unlockedCards).toEqual([]);
     expect(result.unlockedRelics).toEqual([]);
     expect(result.unlockedTiles).toEqual([]);
@@ -263,7 +263,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 4,
     };
     const result = migrateMetaState(v4) as any;
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result._wipedFromVersion).toBe(5);  // wiped from the post-v4->v5 chain state
     expect(result.unlockedCards).toEqual([]);
   });
@@ -283,7 +283,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 3,
     };
     const result = migrateMetaState(v3) as any;
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result._wipedFromVersion).toBe(5);
   });
 
@@ -299,7 +299,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
       version: 1,
     };
     const result = migrateMetaState(v1);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
   });
 
   it('createDefaultMetaState() does NOT carry _wipedFromVersion', () => {
@@ -308,7 +308,7 @@ describe('v3/v4/v5 -> v6 full wipe (Phase 9)', () => {
   });
 
   it('createDefaultMetaState() returns version 8', () => {
-    expect(createDefaultMetaState().version).toBe(9);
+    expect(createDefaultMetaState().version).toBe(10);
   });
 });
 
@@ -321,7 +321,7 @@ describe('v6 -> v7 (Shadowblade removal)', () => {
       version: 6,
     };
     const result = migrateMetaState(v6) as any;
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.classXP).toEqual({ warrior: 100, mage: 50 });
     expect('shadowblade' in result.classXP).toBe(false);
     expect(result.selectedClass).toBe('warrior');
@@ -334,7 +334,7 @@ describe('v6 -> v7 (Shadowblade removal)', () => {
       version: 6,
     };
     const result = migrateMetaState(v6) as any;
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.classXP).toEqual({ warrior: 100, mage: 50 });
   });
 });
@@ -362,7 +362,7 @@ describe('v7 -> v8 migration (element/forge additions)', () => {
     };
 
     const result = migrateMetaState(v7);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(Array.isArray(result.forgeRecipes)).toBe(true);
     expect(result.forgeRecipes.length).toBe(0);
     expect(result.deckPresets).toBeDefined();
@@ -389,8 +389,56 @@ describe('v7 -> v8 migration (element/forge additions)', () => {
     delete v7.deckPresets;
 
     const result = migrateMetaState(v7);
-    expect(result.version).toBe(9);
+    expect(result.version).toBe(10);
     expect(result.forgeRecipes).toEqual(existingRecipes);
     expect(result.deckPresets.warrior.length).toBe(5);
+  });
+});
+
+describe('v9 -> v10 migration (tier renumber)', () => {
+  it('shifts saved card-id tier prefixes t0/t1/t2 -> t1/t2/t3 across unlockedCards, deckPresets, and forgeRecipes', () => {
+    const v9: any = {
+      ...createDefaultMetaState(),
+      version: 9,
+      unlockedCards: ['t0-attack', 't1-attack-attack', 't2-fire-water-air'],
+      deckPresets: {
+        warrior: [
+          {
+            name: 'Old Warrior',
+            cardIds: ['t1-attack-attack', 't1-defense-defense', 't1-attack-defense', 't1-agility-agility', 't1-attack-fire'],
+          },
+        ],
+        mage: [
+          {
+            name: 'Old Mage',
+            cardIds: ['t1-fire-fire', 't1-water-water', 't1-fire-water', 't1-air-earth', 't1-attack-fire'],
+          },
+        ],
+      },
+      forgeRecipes: [
+        { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't1-fire-fire', firstForgedAt: 1 },
+      ],
+    };
+    const result = migrateMetaState(v9) as any;
+    expect(result.version).toBe(10);
+    // Single-element basics promoted to t1-, two-element to t2-, three-element to t3-.
+    expect(result.unlockedCards).toEqual(['t1-attack', 't2-attack-attack', 't3-fire-water-air']);
+    // The 5 warrior preset cards (all formerly t1-) become t2- cards.
+    for (const id of result.deckPresets.warrior[0].cardIds) {
+      expect(id.startsWith('t2-')).toBe(true);
+    }
+    // Forge recipes also shift.
+    expect(result.forgeRecipes[0].cardId).toBe('t2-fire-fire');
+  });
+
+  it('leaves modern (already-v10) card ids untouched', () => {
+    const v9: any = {
+      ...createDefaultMetaState(),
+      version: 9,
+      unlockedCards: ['legacy-card-id', 'some-other'],
+    };
+    const result = migrateMetaState(v9) as any;
+    expect(result.version).toBe(10);
+    expect(result.unlockedCards).toEqual(['legacy-card-id', 'some-other']);
   });
 });
