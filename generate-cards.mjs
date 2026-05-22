@@ -15,8 +15,8 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ─────────────────────────── Config ──────────────────────────────
-const API_KEY = process.env.XAI_API_KEY
-  ?? 'REDACTED_XAI_API_KEY';
+const API_KEY = process.env.XAI_API_KEY;
+if (!API_KEY) { console.error('Error: XAI_API_KEY env var is required.'); process.exit(1); }
 const API_URL     = 'https://api.x.ai/v1/images/generations';
 const MODEL       = 'grok-imagine-image';
 const OUT_DIR     = path.join(__dirname, 'cards');
