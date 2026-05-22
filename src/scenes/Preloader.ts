@@ -261,10 +261,14 @@ export class Preloader extends Scene {
       this.load.image(`card_${id}`, `assets/cards/${id}.png`);
     }
 
-    // Hero-test sprites (temporary test assets)
+    // Warrior hero sprites: 2-frame idle + 11-frame attack cycle. Each
+    // frame is a separate 451x553 PNG (Phaser animations can't span
+    // multiple textures, so CombatScene cycles via setTexture).
     this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
     this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
-    this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
+    for (let i = 1; i <= 11; i++) {
+      this.load.image(`hero_test_${i}`, `assets/hero_test/${i}.png`);
+    }
 
     // Audio
     this.load.audio('theme_song', 'assets/audio/theme-song.mp3');

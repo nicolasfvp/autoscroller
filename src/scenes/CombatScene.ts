@@ -169,12 +169,15 @@ export class CombatScene extends Scene {
   }
 
   preload(): void {
-    console.log('[HERO_TEST] preload() running, textures.exists:', this.textures.exists('hero_test_idle'));
-    this.load.on('filecomplete', (key: string) => console.log('[HERO_TEST] loaded:', key));
-    this.load.on('loaderror', (file: { key: string; url: string }) => console.error('[HERO_TEST] FAILED:', file.key, file.url));
-    if (!this.textures.exists('hero_test_idle'))   this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
-    if (!this.textures.exists('hero_test_idle2'))  this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
-    if (!this.textures.exists('hero_test_attack')) this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
+    // Defensive: the warrior hero_test frames are normally loaded by
+    // Preloader, but reload here so an out-of-band scene launch still
+    // has the assets when create() runs.
+    if (!this.textures.exists('hero_test_idle'))  this.load.image('hero_test_idle',  'assets/hero_test/idle.png');
+    if (!this.textures.exists('hero_test_idle2')) this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
+    for (let i = 1; i <= 11; i++) {
+      const key = `hero_test_${i}`;
+      if (!this.textures.exists(key)) this.load.image(key, `assets/hero_test/${i}.png`);
+    }
   }
 
   init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
@@ -290,52 +293,67 @@ export class CombatScene extends Scene {
       const heroAttackKey = `${sp}_attack`;
       const heroDeathKey = `${sp}_death`;
 
-      // ── TEST BLOCK: hero_test sprites (496×608 individual frames) ──────────
-      // Phaser's animation system doesn't handle multi-texture (load.image) frames
-      // correctly. Use setTexture() + time.addEvent() for manual frame cycling.
+      // Warrior hero_test sprites: 2-frame idle + 11-frame attack via
+      // setTexture cycling (Phaser animations can't span separate-texture
+      // frames, so we drive the cycle from time.delayedCall instead).
       if (this.textures.exists('hero_test_idle')) {
-        // 496×608 at scale 0.7 → 347×426 on screen, centered at (200, 310)
-        // 328×553 spritesheet frames at scale 0.7 → ~230×387 on screen
         this.heroSprite = this.add.sprite(200, 330, 'hero_test_idle').setDepth(10).setScale(0.7);
 
-        // 2-frame idle cycle via setTexture (individual images, not a spritesheet)
         const hasIdle2 = this.textures.exists('hero_test_idle2');
         let idleFrame = 0;
-        const startIdle = () => this.time.addEvent({
+        let isAttacking = false;
+        this.time.addEvent({
           delay: 250, loop: true,
           callback: () => {
-            if (this.heroSprite && !this.heroSprite.anims.isPlaying) {
-              idleFrame = 1 - idleFrame;
-              this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
-            }
+            if (!this.heroSprite || isAttacking || !hasIdle2) return;
+            idleFrame = 1 - idleFrame;
+            this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
           },
         });
-        let idleCycle = hasIdle2 ? startIdle() : null;
 
-        // Register spritesheet attack animation once
-        if (!this.anims.exists('hero_test_attack')) {
-          this.anims.create({
-            key: 'hero_test_attack',
-            frames: this.anims.generateFrameNumbers('hero_test_attack', { start: 0, end: 7 }),
-            frameRate: 12,
-            repeat: 0,
-          });
-        }
+        // 11-frame attack cycle. 50ms/frame -> ~550ms total, leaving room
+        // for the 350ms delayedCall below before the queue updates.
+        const ATTACK_FRAME_DELAY_MS = 50;
+        const playAttackAnimation = () => {
+          if (!this.heroSprite || isAttacking) return;
+          isAttacking = true;
+          let frame = 1;
+          const tick = () => {
+            if (!this.heroSprite) { isAttacking = false; return; }
+            this.heroSprite.setTexture(`hero_test_${frame}`);
+            frame++;
+            if (frame <= 11) {
+              this.time.delayedCall(ATTACK_FRAME_DELAY_MS, tick);
+            } else {
+              isAttacking = false;
+              this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
+            }
+          };
+          tick();
+        };
 
-        // Patch onCardPlayed to trigger the spritesheet attack animation
+        // Patched onCardPlayed: every card triggers the attack animation;
+        // damage-bearing cards additionally play the slash/fireball SFX
+        // and the enemy tint flash. Keyword-intro teaching from the
+        // default handler is preserved so first-time keywords still pause
+        // the fight.
         const origOnCardPlayed = this.onCardPlayed;
         this.onCardPlayed = (data: GameEvents['combat:card-played']) => {
           if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+          const cardDef = getCardById(data.cardId);
+          if (cardDef) {
+            const rendered = formatCardDescription({
+              effects: cardDef.effects,
+              exhaust: cardDef.exhaust,
+              spend_armor: cardDef.spend_armor,
+              cooldown_scale: cardDef.cooldown_scale,
+            });
+            const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
+            keywordIntro.handleCardPlayed(this, fullText);
+          }
+          playAttackAnimation();
           if (data.damage > 0) {
             AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
-            this.heroSprite.play('hero_test_attack');
-            this.heroSprite.once('animationcomplete', () => {
-              if (this.heroSprite) {
-                idleFrame = 0;
-                this.heroSprite.setTexture('hero_test_idle');
-                if (hasIdle2 && !idleCycle) idleCycle = startIdle();
-              }
-            });
             if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
               this.enemySprite.setTintFill(0xffffff);
@@ -344,10 +362,8 @@ export class CombatScene extends Scene {
           }
           this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
         };
-        // Re-register with the patched handler
         eventBus.off('combat:card-played', origOnCardPlayed);
         eventBus.on('combat:card-played', this.onCardPlayed);
-      // ── END TEST BLOCK ─────────────────────────────────────────────────────
       } else if (this.textures.exists(heroIdleKey)) {
         if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
         if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
