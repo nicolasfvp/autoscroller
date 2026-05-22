@@ -96,10 +96,10 @@ function tickDoTs(engine: CombatEngine, cardId: string = 't2-attack-attack'): vo
   (engine as unknown as { tickActiveDoTs: (id: string) => void }).tickActiveDoTs(cardId);
 }
 
-describe('DoT mechanics — Burn (non-decaying flat 2)', () => {
+describe('DoT mechanics — Burn (per-stack with cap 8)', () => {
   beforeAll(async () => { await loadAllData(); });
 
-  it('deals flat 2 damage per tick regardless of stack count and does NOT decay', () => {
+  it('deals min(stacks, 8) damage per tick and does NOT decay', () => {
     const run = makeMockRun();
     setRun(run);
     try {
@@ -112,22 +112,36 @@ describe('DoT mechanics — Burn (non-decaying flat 2)', () => {
       tickDoTs(engine);
       tickDoTs(engine);
 
-      expect(startHP - state.enemyHP).toBe(6); // 2+2+2
+      expect(startHP - state.enemyHP).toBe(15); // 5+5+5
       expect(state.burnStacks).toBe(5); // stacks unchanged
     } finally {
       clearRun();
     }
   });
 
-  it('Burn 1 still deals 2 damage per tick (flat, not per-stack)', () => {
+  it('Burn 1 deals 1 damage per tick (one stack = one point)', () => {
     const run = makeMockRun();
     setRun(run);
     try {
       const state = makeState({ burnStacks: 1, enemyHP: 1000 });
       const engine = new (CombatEngine as unknown as new (s: CombatState) => CombatEngine)(state);
       tickDoTs(engine);
-      expect(state.enemyHP).toBe(998);
+      expect(state.enemyHP).toBe(999);
       expect(state.burnStacks).toBe(1);
+    } finally {
+      clearRun();
+    }
+  });
+
+  it('Burn caps at 8 damage per tick regardless of stack count', () => {
+    const run = makeMockRun();
+    setRun(run);
+    try {
+      const state = makeState({ burnStacks: 20, enemyHP: 1000 });
+      const engine = new (CombatEngine as unknown as new (s: CombatState) => CombatEngine)(state);
+      tickDoTs(engine);
+      expect(state.enemyHP).toBe(992); // 1000 - 8
+      expect(state.burnStacks).toBe(20);
     } finally {
       clearRun();
     }

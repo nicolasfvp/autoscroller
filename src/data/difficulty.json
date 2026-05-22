@@ -1,5 +1,5 @@
 {
-  "percentPerLoop": 0,
+  "percentPerLoop": 0.04,
   "percentPerBossKill": 0.10,
   "bossMultiplier": 1.0,
   "basicTileCombatChance": 0.18,
@@ -14,7 +14,7 @@
   "baseTilePointsPerLoop": 2,
   "tilePointScalePerLoop": 0,
   "deathMaterialPercent": 0.25,
-  "deathXpPercent": 0,
+  "deathXpPercent": 0.30,
   "resourceResetPercent": 0.5,
   "pricing": {
     "cardBasePrice": 60,

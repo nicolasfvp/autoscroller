@@ -367,8 +367,9 @@ export class CombatEngine {
    *   - Poison: stacks damage, decays every 2nd tick (slow burn).
    *   - Bleed: stacks * (enemyAttackedSinceLastBleedTick ? 2 : 1) damage,
    *            -1 stack/tick (swing-amplified).
-   *   - Burn: flat 2 damage while burnStacks > 0; stacks do NOT decay
-   *           (only consumed by Pyre cards via CardResolver).
+   *   - Burn: stacks * 1 damage per tick (soft-capped at 8) while
+   *           burnStacks > 0; stacks do NOT decay (only consumed by
+   *           Pyre cards via CardResolver).
    *   - Slow (renamed from Shock): stacks damage + cooldown slow in EnemyAI;
    *           -1 stack/tick.
    *   - Stun (renamed from Freeze): no damage; freezes enemy cooldown timer
@@ -430,12 +431,16 @@ export class CombatEngine {
       anyDotTicked = true;
     }
 
-    // Burn: non-decaying, fixed DoT. While burnStacks > 0, deal a flat 2
-    // damage per tick regardless of stack count. Stacks are only consumed by
-    // Pyre cards (handled in CardResolver post-damage).
+    // Burn: non-decaying DoT. Tick damage scales linearly with stack count
+    // and is soft-capped at 8 so a single deep-fire deck can't end fights
+    // on autopilot. Stacks are only consumed by Pyre cards (handled in
+    // CardResolver post-damage).
     if (state.burnStacks > 0) {
-      // C4 — Cinderkeep: tick damage = ceil(burnStacks / 4), min 2.
-      const dmg = cinderkeep ? Math.max(2, Math.ceil(state.burnStacks / 4)) : 2;
+      // Base: min(stacks, 8). C4 — Cinderkeep keeps its prior formula
+      // (ceil(stacks/4), min 2) since that relic is sold as a burn-tempo
+      // amplifier rather than a raw scaler.
+      const base = Math.min(state.burnStacks, 8);
+      const dmg = cinderkeep ? Math.max(base, Math.ceil(state.burnStacks / 4)) : base;
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
