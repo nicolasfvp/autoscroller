@@ -11,10 +11,10 @@ const VISIBLE_COUNT = 4;
 // Slot 0 left edge: 400 - 150*0.62/2 = 353.5  — clear of speed panel (x=8–276)
 // Slot 0 bottom:    525 + 240*0.62/2 = 599.4   — within canvas (600px)
 const SLOTS: [number, number, number][] = [
-  [400, 525, 0.62],   // 0 — PLAYING (active, gold border, pulse)
-  [540, 531, 0.54],   // 1 — NEXT
-  [660, 534, 0.49],   // 2
-  [760, 535, 0.44],   // 3
+  [400, 520, 0.62],   // 0 — PLAYING (active, gold border, pulse)
+  [540, 520, 0.54],   // 1 — NEXT
+  [660, 520, 0.49],   // 2
+  [760, 520, 0.44],   // 3
 ];
 const SLOT_INCOMING_X = 820; // off-screen right; new cards enter from here
 

@@ -295,7 +295,7 @@ export class CombatScene extends Scene {
       if (this.textures.exists('hero_test_idle')) {
         // 496×608 at scale 0.7 → 347×426 on screen, centered at (200, 310)
         // 328×553 spritesheet frames at scale 0.7 → ~230×387 on screen
-        this.heroSprite = this.add.sprite(200, 310, 'hero_test_idle').setDepth(10).setScale(0.7);
+        this.heroSprite = this.add.sprite(200, 330, 'hero_test_idle').setDepth(10).setScale(0.7);
 
         // 2-frame idle cycle via setTexture (individual images, not a spritesheet)
         const hasIdle2 = this.textures.exists('hero_test_idle2');
@@ -351,10 +351,10 @@ export class CombatScene extends Scene {
         if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
         if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
         if (!this.anims.exists(heroDeathKey)) this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
-        this.heroSprite = this.add.sprite(300, 300, heroIdleKey).setDepth(10).setScale(4);
+        this.heroSprite = this.add.sprite(300, 340, heroIdleKey).setDepth(10).setScale(4);
         this.heroSprite.play(heroIdleKey);
       } else {
-        this.heroSprite = this.add.sprite(300, 300, 'knight_idle').setDisplaySize(220, 220).setDepth(10);
+        this.heroSprite = this.add.sprite(300, 340, 'knight_idle').setDisplaySize(250, 250).setDepth(10);
       }
       
       // Phase 9 (CR-01 fix): monster texture keys namespaced `monster_*` to
@@ -363,7 +363,7 @@ export class CombatScene extends Scene {
       this.enemyTextureKey = `monster_${enemyDef.id}`;
 
       if (this.textures.exists(this.enemyTextureKey)) {
-        this.enemySprite = this.add.image(600, 350, this.enemyTextureKey).setDepth(10).setDisplaySize(500, 500);
+        this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
       } else {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
