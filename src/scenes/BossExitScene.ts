@@ -165,6 +165,11 @@ export class BossExitScene extends Scene {
 
   private async confirmSelection(): Promise<void> {
     if (!this.selectedChoice) return;
+    // Guard against double-fire: Enter+click or Space+click during the
+    // async safe-exit path can otherwise enter twice and double-bank
+    // materials before the camera fade actually starts.
+    if (this.transitioning) return;
+    this.transitioning = true;
 
     if (this.selectedChoice === 'exit') {
       this.loopRunner.onBossChoice('exit');

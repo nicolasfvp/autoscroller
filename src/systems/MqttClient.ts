@@ -102,6 +102,10 @@ class MqttClientSingleton {
         // Try the fallback broker once if the primary never managed to connect.
         if (!settled && !this.fallbackAttempted) {
           this.fallbackAttempted = true;
+          // Detach listeners so a delayed event on the dead client
+          // can't reach back into setStatus / this.handlers after we
+          // have already failed over.
+          try { client.removeAllListeners(); } catch { /* ignore */ }
           try { client.end(true); } catch { /* ignore */ }
           this.client = null;
           this.setStatus('connecting');
@@ -141,6 +145,10 @@ class MqttClientSingleton {
         if (settled) return;
         if (!this.fallbackAttempted) {
           this.fallbackAttempted = true;
+          // Detach listeners so a delayed event on the dead client
+          // can't reach back into setStatus / this.handlers after we
+          // have already failed over.
+          try { client.removeAllListeners(); } catch { /* ignore */ }
           try { client.end(true); } catch { /* ignore */ }
           this.client = null;
           this.setStatus('connecting');

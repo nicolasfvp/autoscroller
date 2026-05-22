@@ -144,7 +144,6 @@ export class CharacterSelectScene extends Scene {
         callback: () => { frame = 1 - frame; img.setTexture(cls.idleFrames![frame]); },
       });
     } else if (this.textures.exists(cls.spriteKey)) {
-      // Spritesheet-based animation (mage etc.)
       const animKey = `select_${cls.id}_idle`;
       if (!this.anims.exists(animKey)) {
         this.anims.create({

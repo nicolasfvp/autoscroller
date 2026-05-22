@@ -172,6 +172,7 @@ export class CombatScene extends Scene {
     this.initData = data;
   }
 
+
   /**
    * Apply pre-fight subtile effects to the freshly-built CombatState.
    * Runs once before the engine starts, mutating the state in place.
