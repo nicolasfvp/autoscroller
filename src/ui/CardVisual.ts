@@ -19,11 +19,6 @@ const RARITY_COLORS: Record<string, number> = {
   epic: 0x9400d3,
 };
 
-const CATEGORY_COLORS: Record<CardCategory, number> = {
-  attack: 0xcc3333,
-  defense: 0x3366cc,
-  magic: 0x9933cc,
-};
 
 const CATEGORY_EMOJIS: Record<CardCategory, string> = {
   attack: '⚔️',
@@ -59,7 +54,6 @@ export function createCardVisual(
   
   // Default values if card is missing
   const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
-  const categoryColor = card ? (CATEGORY_COLORS[card.category] ?? 0x888888) : 0x888888;
 
   // Base Background
   const bg = scene.add.rectangle(0, 0, w, h, CARD_BG);
@@ -69,173 +63,128 @@ export function createCardVisual(
 
   if (!card) return container;
 
-  // Header Area (Top)
   const iconEmoji = CATEGORY_EMOJIS[card.category] || '❓';
-  const headerIcon = scene.add.text(-w / 2 + 8, -h / 2 + 8, iconEmoji, {
-    fontSize: '14px',
-  }).setOrigin(0, 0);
-  container.add(headerIcon);
 
-  const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
-  const rarityLabel = scene.add.text(w / 2 - 8, -h / 2 + 10, (card.rarity || 'common').toUpperCase(), {
-    fontSize: '10px',
-    fontFamily: 'monospace',
-    color: rarityHex,
-    fontStyle: 'bold',
-  }).setOrigin(1, 0);
-  container.add(rarityLabel);
+  // ── Art zone: top 80% of card ─────────────────────────
+  const IMG_H = Math.round(h * 0.8);        // 192 px
+  const IMG_TOP = -h / 2;                    // -120
+  const imgCenterY = IMG_TOP + IMG_H / 2;   // -24
 
-  // Element identity dots — centered in the header band between the
-  // category emoji (top-left) and the rarity label (top-right). Each
-  // dot uses the canonical ELEMENTS color so a glance reads the card's
-  // element identity (1–4 dots depending on tier).
+  // Dark base (shown when no texture is loaded)
+  container.add(scene.add.rectangle(0, imgCenterY, w, IMG_H, 0x111118));
+
+  // Card image fills the full art zone
+  const imgKey = `card_${card.id}`;
+  if (scene.textures.exists(imgKey)) {
+    const img = scene.add.image(0, imgCenterY, imgKey);
+    img.setDisplaySize(w, IMG_H);
+    container.add(img);
+  } else {
+    container.add(
+      scene.add.text(0, imgCenterY, iconEmoji, { fontSize: '48px', color: '#ffffff' })
+        .setOrigin(0.5)
+        .setAlpha(0.6),
+    );
+  }
+
+  // Soft gradient at the bottom of the art so the info strip text is legible
+  const gOverlay = scene.add.graphics();
+  gOverlay.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.75, 0.75);
+  gOverlay.fillRect(-w / 2, IMG_TOP + IMG_H - 36, w, 36);
+  container.add(gOverlay);
+
+  // Element dots — top-left corner overlay
   const elems = ((card.elements ?? []) as ElementId[]).filter((e) => !!ELEMENTS[e]);
   if (elems.length > 0) {
     const dotR = 4;
     const dotGap = 3;
-    const dotsTotalW = elems.length * (dotR * 2) + (elems.length - 1) * dotGap;
-    const startX = -dotsTotalW / 2 + dotR;
-    const dotY = -h / 2 + 15;
-    elems.forEach((e, idx) => {
-      const dx = startX + idx * (dotR * 2 + dotGap);
+    let dotX = -w / 2 + 8 + dotR;
+    const dotY = IMG_TOP + 12;
+    for (const e of elems) {
       const elemColor = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-      const dot = scene.add.circle(dx, dotY, dotR, elemColor).setStrokeStyle(1, 0xffffff, 0.6);
-      container.add(dot);
-    });
-  }
-
-  // Image Area Gradient
-  const imgAreaTop = -h / 2 + 28;
-  const imgAreaHeight = 85;
-  const imgAreaY = imgAreaTop + imgAreaHeight / 2;
-  
-  const g = scene.add.graphics();
-  // Fill gradient style: Dark at top, category color at bottom
-  g.fillGradientStyle(0x111118, 0x111118, categoryColor, categoryColor, 1, 1, 0.4, 0.4);
-  g.fillRect(-w / 2 + 2, imgAreaTop, w - 4, imgAreaHeight);
-  container.add(g);
-
-  // Pixel art main image
-  const imgKey = `card_${card.id}`;
-  if (scene.textures.exists(imgKey)) {
-    const img = scene.add.image(0, imgAreaY - 5, imgKey);
-    // Limit bounds so it doesn't overflow
-    if (img.width > w - 10 || img.height > imgAreaHeight - 10) {
-      const scaleX = (w - 10) / img.width;
-      const scaleY = (imgAreaHeight - 10) / img.height;
-      img.setScale(Math.min(scaleX, scaleY));
+      container.add(scene.add.circle(dotX, dotY, dotR, elemColor).setStrokeStyle(1, 0xffffff, 0.5));
+      dotX += dotR * 2 + dotGap;
     }
-    container.add(img);
-  } else {
-    // Fallback if no asset loaded yet
-    const bigIcon = scene.add.text(0, imgAreaY - 5, iconEmoji, {
-      fontSize: '48px',
-      color: '#ffffff'
-    }).setOrigin(0.5);
-    bigIcon.setAlpha(0.6);
-    container.add(bigIcon);
   }
 
-  // Cooldown Badge
+  // Rarity label — top-right corner overlay
+  const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
+  container.add(
+    scene.add.text(w / 2 - 5, IMG_TOP + 5, (card.rarity || 'common').toUpperCase(), {
+      fontSize: '9px', fontFamily: 'monospace', fontStyle: 'bold',
+      color: rarityHex, stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(1, 0),
+  );
+
+  // Cooldown badge — bottom-right of art zone
   const cooldown = getEffectiveCooldown(card);
   if (cooldown) {
-    const cdBgWidth = 34;
-    const cdBgHeight = 16;
+    const cdW = 36, cdH = 16;
+    const cdX = w / 2 - cdW - 4;
+    const cdY = IMG_TOP + IMG_H - cdH - 4;
     const cdBg = scene.add.graphics();
     cdBg.fillStyle(0x000000, 0.8);
-    const cdStartX = w / 2 - cdBgWidth - 6;
-    const cdStartY = imgAreaTop + imgAreaHeight - cdBgHeight - 4;
-    cdBg.fillRoundedRect(cdStartX, cdStartY, cdBgWidth, cdBgHeight, 4);
-    cdBg.lineStyle(1, 0xaaaaaa, 0.8);
-    cdBg.strokeRoundedRect(cdStartX, cdStartY, cdBgWidth, cdBgHeight, 4);
+    cdBg.fillRoundedRect(cdX, cdY, cdW, cdH, 4);
+    cdBg.lineStyle(1, 0xaaaaaa, 0.6);
+    cdBg.strokeRoundedRect(cdX, cdY, cdW, cdH, 4);
     container.add(cdBg);
-
-    const cdText = scene.add.text(w / 2 - 23, cdStartY + cdBgHeight / 2, `⏱ ${cooldown}s`, {
-      fontSize: '9px',
-      color: '#ffffff',
-    }).setOrigin(0.5);
-    container.add(cdText);
+    container.add(
+      scene.add.text(cdX + cdW / 2, cdY + cdH / 2, `⏱ ${cooldown}s`, {
+        fontSize: '9px', color: '#ffffff',
+      }).setOrigin(0.5),
+    );
   }
 
-  // Name Strip
-  const nameStripY = -8;
-  const nameStripH = 26;
-  const nameBg = scene.add.rectangle(0, nameStripY, w - 4, nameStripH, categoryColor, 0.3);
-  container.add(nameBg);
+  // ── Info strip: bottom 20% (48 px) ────────────────────
+  const INFO_TOP = IMG_TOP + IMG_H;           // 72
+  const INFO_H = h / 2 - INFO_TOP;           // 48
+  const infoCenterY = INFO_TOP + INFO_H / 2; // 96
 
+  container.add(scene.add.rectangle(0, infoCenterY, w, INFO_H, 0x0a0a14, 0.92));
+
+  // Upgraded state
   let isUpgraded = false;
   try {
     const run = getRun();
-    // CardVisual has no deck index; treat the card as "shows upgraded" if
-    // *any* copy of this id is upgraded (best-effort display for hands/loot
-    // screens that don't have a position context).
     isUpgraded = run.deck.active.some((id, i) => id === cardId && run.deck.upgraded[i]);
-  } catch {
-    //
-  }
+  } catch { /**/ }
   const displayName = isUpgraded ? `${card.name}+` : card.name;
-  const nameColorStr = isUpgraded ? '#ffd700' : '#ffffff';
-  
-  const nameText = scene.add.text(0, nameStripY, displayName, {
-    fontSize: '14px',
-    fontStyle: 'bold',
-    fontFamily: 'monospace',
-    color: nameColorStr,
-  }).setOrigin(0.5);
-  container.add(nameText);
 
-  // Main Effect Breakdown
-  const mainEffectY = 30;
+  // Card name
+  container.add(
+    scene.add.text(0, INFO_TOP + 6, displayName, {
+      fontSize: '12px', fontStyle: 'bold', fontFamily: 'monospace',
+      color: isUpgraded ? '#ffd700' : '#ffffff',
+      stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0.5, 0),
+  );
+
+  // Main effect value (e.g. "4 DMG")
   const mainEff = getMainEffect(card, isUpgraded);
   if (mainEff) {
-    // Number text
-    const effVal = scene.add.text(-6, mainEffectY, String(mainEff.val), {
-      fontSize: '16px',
-      fontStyle: 'bold',
-      fontFamily: 'monospace',
-      color: mainEff.color,
-    }).setOrigin(1, 0.5);
-    container.add(effVal);
-
-    // Label text
-    const effLabel = scene.add.text(-2, mainEffectY, mainEff.label, {
-      fontSize: '14px',
-      fontStyle: 'bold',
-      fontFamily: 'monospace',
-      color: mainEff.color,
-    }).setOrigin(0, 0.5);
-    container.add(effLabel);
+    container.add(
+      scene.add.text(0, INFO_TOP + 22, `${mainEff.val} ${mainEff.label}`, {
+        fontSize: '13px', fontStyle: 'bold', fontFamily: 'monospace',
+        color: mainEff.color, stroke: '#000000', strokeThickness: 2,
+      }).setOrigin(0.5, 0),
+    );
   }
-  
-  // Description
-  const descY = 56;
-  const descText = scene.add.text(0, descY, getEffectiveDesc(card, isUpgraded), {
-    fontSize: '9px',
-    color: '#aaaaaa',
-    fontFamily: 'monospace',
-    align: 'center',
-    wordWrap: { width: w - 16 }
-  }).setOrigin(0.5, 0);
-  container.add(descText);
 
-  // Cost Banner
+  // Cost (compact)
   const cost = isUpgraded && card.upgraded?.cost ? card.upgraded.cost : card.cost;
   if (cost) {
-    const costStripH = 22;
-    const costBg = scene.add.rectangle(0, h / 2 - costStripH / 2, w - 4, costStripH, 0x000000, 0.6);
-    container.add(costBg);
-
-    const costStrings = [];
-    if (cost.mana) costStrings.push(`-${cost.mana} Mana`);
-    if (cost.defense) costStrings.push(`-${cost.defense} Defense`);
-    if (cost.stamina) costStrings.push(`-${cost.stamina} Stamina`);
-
-    const costText = scene.add.text(0, h / 2 - costStripH / 2, costStrings.join(', '), {
-      fontSize: '10px',
-      fontFamily: 'monospace',
-      color: '#ffcc66',
-    }).setOrigin(0.5);
-    container.add(costText);
+    const costParts: string[] = [];
+    if (cost.mana) costParts.push(`-${cost.mana} MP`);
+    if (cost.defense) costParts.push(`-${cost.defense} DEF`);
+    if (cost.stamina) costParts.push(`-${cost.stamina} STA`);
+    if (costParts.length > 0) {
+      container.add(
+        scene.add.text(0, INFO_TOP + 36, costParts.join('  '), {
+          fontSize: '9px', fontFamily: 'monospace',
+          color: '#ffcc66', stroke: '#000000', strokeThickness: 1,
+        }).setOrigin(0.5, 0),
+      );
+    }
   }
 
   // Set sizing and interactivity

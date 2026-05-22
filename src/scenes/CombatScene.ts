@@ -33,11 +33,12 @@ export class CombatScene extends Scene {
 
   // Visual representations
   private heroSprite!: Phaser.GameObjects.Sprite;
-  private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Rectangle;
+  private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
   private transitioning = false;
+  private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
@@ -71,7 +72,7 @@ export class CombatScene extends Scene {
       if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
       if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
         this.enemySprite.setTintFill(0xffffff);
-        this.time.delayedCall(100, () => { if (this.enemySprite) this.enemySprite.clearTint(); });
+        this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
       }
     }
     this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
@@ -157,7 +158,6 @@ export class CombatScene extends Scene {
         this.scene.resume(SCENE_KEYS.GAME);
       } else {
         loseAllRunXP(currentRun);
-        this.transitioning = true;
         this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
         this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(SCENE_KEYS.DEATH, { enemyName: enemyDef.name, stats: this.engine.getStats() }));
       }
@@ -167,7 +167,16 @@ export class CombatScene extends Scene {
   constructor() {
     super(SCENE_KEYS.COMBAT);
   }
- 
+
+  preload(): void {
+    console.log('[HERO_TEST] preload() running, textures.exists:', this.textures.exists('hero_test_idle'));
+    this.load.on('filecomplete', (key: string) => console.log('[HERO_TEST] loaded:', key));
+    this.load.on('loaderror', (file: { key: string; url: string }) => console.error('[HERO_TEST] FAILED:', file.key, file.url));
+    if (!this.textures.exists('hero_test_idle'))   this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
+    if (!this.textures.exists('hero_test_idle2'))  this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
+    if (!this.textures.exists('hero_test_attack')) this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
+  }
+
   init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
@@ -224,7 +233,6 @@ export class CombatScene extends Scene {
        return;
     }
     this.scene.bringToTop();
-    this.transitioning = false;
     this.cameras.main.setBackgroundColor(0x000000);
     // Hydrate the seen-keywords set from MetaState. Fire-and-forget — by the
     // time the first card resolves (≥ first card cooldown), IDB will have
@@ -281,15 +289,73 @@ export class CombatScene extends Scene {
       const heroIdleKey = `${sp}_idle`;
       const heroAttackKey = `${sp}_attack`;
       const heroDeathKey = `${sp}_death`;
-      
-      if (this.textures.exists(heroIdleKey)) {
+
+      // ── TEST BLOCK: hero_test sprites (496×608 individual frames) ──────────
+      // Phaser's animation system doesn't handle multi-texture (load.image) frames
+      // correctly. Use setTexture() + time.addEvent() for manual frame cycling.
+      if (this.textures.exists('hero_test_idle')) {
+        // 496×608 at scale 0.7 → 347×426 on screen, centered at (200, 310)
+        // 328×553 spritesheet frames at scale 0.7 → ~230×387 on screen
+        this.heroSprite = this.add.sprite(200, 330, 'hero_test_idle').setDepth(10).setScale(0.7);
+
+        // 2-frame idle cycle via setTexture (individual images, not a spritesheet)
+        const hasIdle2 = this.textures.exists('hero_test_idle2');
+        let idleFrame = 0;
+        const startIdle = () => this.time.addEvent({
+          delay: 250, loop: true,
+          callback: () => {
+            if (this.heroSprite && !this.heroSprite.anims.isPlaying) {
+              idleFrame = 1 - idleFrame;
+              this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
+            }
+          },
+        });
+        let idleCycle = hasIdle2 ? startIdle() : null;
+
+        // Register spritesheet attack animation once
+        if (!this.anims.exists('hero_test_attack')) {
+          this.anims.create({
+            key: 'hero_test_attack',
+            frames: this.anims.generateFrameNumbers('hero_test_attack', { start: 0, end: 7 }),
+            frameRate: 12,
+            repeat: 0,
+          });
+        }
+
+        // Patch onCardPlayed to trigger the spritesheet attack animation
+        const origOnCardPlayed = this.onCardPlayed;
+        this.onCardPlayed = (data: GameEvents['combat:card-played']) => {
+          if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+          if (data.damage > 0) {
+            AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+            this.heroSprite.play('hero_test_attack');
+            this.heroSprite.once('animationcomplete', () => {
+              if (this.heroSprite) {
+                idleFrame = 0;
+                this.heroSprite.setTexture('hero_test_idle');
+                if (hasIdle2 && !idleCycle) idleCycle = startIdle();
+              }
+            });
+            if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
+            if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
+              this.enemySprite.setTintFill(0xffffff);
+              this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
+            }
+          }
+          this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
+        };
+        // Re-register with the patched handler
+        eventBus.off('combat:card-played', origOnCardPlayed);
+        eventBus.on('combat:card-played', this.onCardPlayed);
+      // ── END TEST BLOCK ─────────────────────────────────────────────────────
+      } else if (this.textures.exists(heroIdleKey)) {
         if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
         if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
         if (!this.anims.exists(heroDeathKey)) this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
-        this.heroSprite = this.add.sprite(200, 350, heroIdleKey).setDepth(10).setScale(4);
+        this.heroSprite = this.add.sprite(300, 340, heroIdleKey).setDepth(10).setScale(4);
         this.heroSprite.play(heroIdleKey);
       } else {
-        this.heroSprite = this.add.sprite(200, 350, 'knight_idle').setDisplaySize(128, 128).setDepth(10);
+        this.heroSprite = this.add.sprite(300, 340, 'knight_idle').setDisplaySize(250, 250).setDepth(10);
       }
       
       // Phase 9 (CR-01 fix): monster texture keys namespaced `monster_*` to
@@ -298,7 +364,20 @@ export class CombatScene extends Scene {
       this.enemyTextureKey = `monster_${enemyDef.id}`;
 
       if (this.textures.exists(this.enemyTextureKey)) {
-        this.enemySprite = this.add.image(600, 350, this.enemyTextureKey).setDepth(10).setScale(4);
+        this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
+        const key2 = `${this.enemyTextureKey}_2`;
+        if (this.textures.exists(key2)) {
+          let frame = 0;
+          this.enemyIdleTimer = this.time.addEvent({
+            delay: 500, loop: true,
+            callback: () => {
+              if (this.enemySprite instanceof Phaser.GameObjects.Image) {
+                frame = 1 - frame;
+                this.enemySprite.setTexture(frame === 0 ? this.enemyTextureKey : key2);
+              }
+            },
+          });
+        }
       } else {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
@@ -306,6 +385,9 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this);
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
+      // Initialize HUD and Queue with initial state
+      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
 
       // Keyword glossary "?" — top-right corner. Depth above HUD so it stays
       // tappable when the HUD overlays the upper-right area.
@@ -365,6 +447,7 @@ export class CombatScene extends Scene {
     eventBus.off('combat:deck-reshuffled', this.onDeckReshuffled);
     eventBus.off('combat:enemy-attack', this.onEnemyAttack);
     eventBus.off('combat:end', this.onCombatEnd);
+    if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
     try { const run = getRun(); run.isInCombat = false; } catch {}

@@ -27,13 +27,13 @@ function makeRun(totalXP: number): RunState {
     loop: { count: 0, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: [],
+    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     isInCombat: false,
     currentScene: 'Game',
     stopAtShop: true,
     combatSpeed: 1,
     mapSpeed: 1,
     pool: { cards: [], relics: [], tiles: [] },
-    stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
   };
 }
 
