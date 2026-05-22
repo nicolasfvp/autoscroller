@@ -111,7 +111,7 @@ export function canAddCard(currentDeck: string[]): boolean {
   return currentDeck.length < DECK_MAX;
 }
 
-/** Generate a sensible default starter preset for a class. Picks Tier 1 cards to satisfy ratio. */
+/** Generate a sensible default starter preset for a class. Picks Tier 2 (two-element) cards to satisfy ratio. */
 export function getDefaultStarterPreset(className: string): DeckPreset {
   if (className === 'mage') {
     return {

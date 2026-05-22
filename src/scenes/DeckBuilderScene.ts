@@ -314,9 +314,10 @@ export class DeckBuilderScene extends Scene {
   }
 
   private getFilteredCards(): CardDefinition[] {
-    // Starter pool is Tier 0 (single-element teaching cards) + Tier 1. Element
-    // dropdown + name search still apply via the filter bar.
-    const starterPool = getAllCards().filter((c) => c.tier === 0 || c.tier === 1);
+    // Starter pool is Tier 1 (single-element teaching cards) + Tier 2
+    // (two-element starter cards). Element dropdown + name search still
+    // apply via the filter bar.
+    const starterPool = getAllCards().filter((c) => c.tier === 1 || c.tier === 2);
     return applyFilters(starterPool, this.cardFilters);
   }
 
