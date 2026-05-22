@@ -4,6 +4,8 @@ import { getLoopSpeed, getDifficultyConfig, getLoopGrowth } from './DifficultySc
 import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
 import { rand } from './SharedRNG';
+import { applyTravelBoots, applyTrailblazersBrand, applyLodestonePendant } from './LoopRelics';
+import { getRun, hasActiveRun } from '../state/RunState';
 
 const TILE_SIZE = 64;
 export const BUFFER_TILE_COUNT = 5; // Safe tiles at the start of every loop
@@ -30,7 +32,6 @@ export interface LoopRunState {
   loop: LoopStateData;
   economy: EconomyData;
   tileInventory: TileInventoryEntry[];
-  hero?: { xp: number };
 }
 
 export { TILE_SIZE };
@@ -133,28 +134,12 @@ export class LoopRunner {
     const tile = this.runState.loop.tiles[tileIndex];
     if (!tile || tile.defeatedThisLoop) return;
 
-    // C6 — Travel Boots: heal +1 HP on entering each tile.
-    if ((this.runState.relics ?? []).includes('travel_boots')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 1);
-    }
-
-    // C7 — Trailblazer's Brand: first time entering a combat tile each loop,
-    // heal 5 HP and gain +1 Stamina / +1 Mana. Combat tiles: any tile that
-    // actually resolves a fight on entry (basic with enemy, terrain with
-    // spawn roll succeeded, subtile with spawn roll succeeded, boss).
-    const isCombatTile =
-      (tile.type === 'basic' && !!tile.enemyId) ||
-      (tile.type === 'terrain' && !!tile.enemyId) ||
-      (tile.type === 'subtile' && !!tile.enemyId) ||
-      tile.type === 'boss';
-    if (isCombatTile
-        && !this.runState.loop.trailblazerFiredThisLoop
-        && (this.runState.relics ?? []).includes('trailblazers_brand')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 5);
-      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
-      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
-      this.runState.loop.trailblazerFiredThisLoop = true;
-    }
+    // C6 / C7: map-side relic triggers. These helpers reach into the live
+    // RunState (where hero HP/stamina/mana and the relic list actually
+    // live) rather than the LoopRunState slice that this runner owns. See
+    // LoopRelics.ts for the trigger conditions.
+    applyTravelBoots();
+    applyTrailblazersBrand(tile);
 
     // Subtile effects targeting this tile (Wave 6 consumers use this bag).
     const subtileEffects = effectsForTile(this.subtileEffectBag, tileIndex);
@@ -226,15 +211,11 @@ export class LoopRunner {
     const traversedLength = loop.length;
     loop.count++;
 
-    // C6 — Lodestone Pendant: on loop completion, heal 8 HP and +1 Stamina / +1 Mana.
-    if ((this.runState.relics ?? []).includes('lodestone_pendant')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 8);
-      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
-      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
-    }
-
-    // C7 — Trailblazer's Brand: reset the per-loop fired flag on new loop.
-    this.runState.loop.trailblazerFiredThisLoop = false;
+    // C6 / C7: Lodestone Pendant heals on loop completion and also resets
+    // Trailblazer's Brand per-loop flag (the reset runs unconditionally
+    // so the next loop's first combat tile can re-arm the brand even if
+    // Lodestone isn't equipped). See LoopRelics.ts.
+    applyLodestonePendant();
 
     // Award tile points
     const diffConfig = getDifficultyConfig();
@@ -328,9 +309,7 @@ export class LoopRunner {
       // Non-combat tiles never need enemy assignment — skip them up front
       // so we don't burn rng() calls (would also drift the seeded RNG state
       // once B.7/B.8 lands).
-      if (tile.type === 'buffer' || tile.type === 'shop' ||
-          tile.type === 'rest' || tile.type === 'event' ||
-          tile.type === 'treasure') {
+      if (tile.type === 'buffer' || tile.type === 'event' || tile.type === 'treasure') {
         continue;
       }
       tile.enemyId = undefined;
@@ -437,10 +416,13 @@ export class LoopRunner {
   onBossChoice(choice: 'exit' | 'continue'): RunEndResult | void {
     if (choice === 'exit') {
       this.state = 'run-ended';
+      // Pull live XP from RunState (LoopRunState no longer carries hero.xp;
+      // BossExitScene reads runXP from the same source for its banking path).
+      const runXP = hasActiveRun() ? (getRun().hero.runXP ?? 0) : 0;
       const result = resolveRunEnd(
         'safe',
         this.runState.economy.materials,
-        this.runState.hero?.xp ?? 0
+        runXP,
       );
       this.emit('run-exited', result);
       return result;

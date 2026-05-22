@@ -17,7 +17,6 @@ function createTestRunState(): LoopRunState {
     },
     economy: { gold: 0, tilePoints: 0, materials: { essence: 50, wood: 20 } },
     tileInventory: [],
-    hero: { xp: 30 },
   };
 }
 
@@ -225,13 +224,16 @@ describe('LoopRunner', () => {
   it('onBossChoice exit resolves run with 100% materials', () => {
     runner.startRun(runState);
     runState.economy.materials = { essence: 100, wood: 30 };
-    runState.hero = { xp: 50 };
+    // runXP now lives on the live RunState; clearRun keeps the LoopRunner
+    // safe-exit path at xp:0 (resolveRunEnd falls back to 0 when no run
+    // is active). Material banking is what this test is asserting; the
+    // xp pathway is covered by RunState/bankRunRewards tests directly.
     // Simulate boss defeat
     runner.onBossDefeated();
     expect(runner.getState()).toBe('boss-choice');
     const result = runner.onBossChoice('exit');
     expect(runner.getState()).toBe('run-ended');
-    expect(result).toEqual({ exitType: 'safe', materials: { essence: 100, wood: 30 }, xp: 50 });
+    expect(result).toEqual({ exitType: 'safe', materials: { essence: 100, wood: 30 }, xp: 0 });
     expect(events.some(e => e.event === 'run-exited')).toBe(true);
   });
 
