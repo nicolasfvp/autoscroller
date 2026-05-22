@@ -363,7 +363,7 @@ export class CombatScene extends Scene {
       this.enemyTextureKey = `monster_${enemyDef.id}`;
 
       if (this.textures.exists(this.enemyTextureKey)) {
-        this.enemySprite = this.add.image(600, 350, this.enemyTextureKey).setDepth(10).setDisplaySize(220, 220 );
+        this.enemySprite = this.add.image(600, 350, this.enemyTextureKey).setDepth(10).setDisplaySize(500, 500);
       } else {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
