@@ -66,19 +66,19 @@ const TOPICS: TutorialTopic[] = [
   },
   {
     id: 'loop',
-    label: '🗺 Loop',
-    title: 'The Loop & Tiles',
+    label: '🗺 Tiles',
+    title: 'Tiles & Placement',
     body:
-      'Each loop you place terrain tiles along the path. Each tile type\n' +
-      'has its own sprite and does something different when the hero\n' +
-      'steps on it:\n\n' +
-      '  • Combat — spawns harder enemies with better loot\n' +
-      '  • Rest — heal up at a safe spot\n' +
-      '  • Event — random encounter with a choice\n' +
-      '  • Treasure — free reward (cards, relics, gold)\n' +
-      '  • Boss — endgame fight; beating it lets you exit safely\n\n' +
-      'Beat the boss to EXIT SAFELY with full rewards.\n' +
-      'Die mid-loop and you keep only a fraction of what you earned.',
+      'During planning you place tiles on the loop path using Tile Points (TP).\n\n' +
+      '  • Click a tile in the inventory to select it, then click an empty\n' +
+      '    slot on the path to place it.\n' +
+      '  • Each tile costs TP. Your TP balance shows above the inventory.\n' +
+      '  • Combat tiles reserve adjacent slots. Reserved slots only accept\n' +
+      '    SUBTILES (ambush, mana well, war horn, …) that buff the fight.\n' +
+      '  • Remove Mode (toggle button) refunds 50% TP when you click a\n' +
+      '    placed tile — use it to rebuild your plan.\n\n' +
+      'Beat the boss to exit safely with full rewards. Die mid-loop and\n' +
+      'you keep only a fraction of what you earned.',
   },
 ];
 
