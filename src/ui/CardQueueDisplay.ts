@@ -1,42 +1,41 @@
-// Vertical card queue display for combat scene.
-// Shows 5 cards at a time, animates card play/skip/reshuffle.
+// Horizontal bottom-bar card queue for the combat scene.
+// 4 cards occupy the RIGHT half of the canvas (x ≥ 353) so they never overlap
+// the SpeedPanelScene (x=8–276, y=478–588, depth 999).
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
-const QUEUE_X = 740;
-const GAP = 15; // Espaço confortável
-const VISIBLE_COUNT = 3; // Menos cartas visíveis por vez para limpar a área central
-const START_Y = 110; // Cobre exatamente do limite final da barra de HP do inimigo e desce
+const VISIBLE_COUNT = 4;
+
+// [centerX, centerY, scale]
+// Slot 0 left edge: 400 - 150*0.62/2 = 353.5  — clear of speed panel (x=8–276)
+// Slot 0 bottom:    525 + 240*0.62/2 = 599.4   — within canvas (600px)
+const SLOTS: [number, number, number][] = [
+  [400, 525, 0.62],   // 0 — PLAYING (active, gold border, pulse)
+  [540, 531, 0.54],   // 1 — NEXT
+  [660, 534, 0.49],   // 2
+  [760, 535, 0.44],   // 3
+];
+const SLOT_INCOMING_X = 820; // off-screen right; new cards enter from here
 
 export class CardQueueDisplay {
-  private scene: Phaser.Scene;
-  private container: Phaser.GameObjects.Container;
+  private readonly scene: Phaser.Scene;
+  private readonly container: Phaser.GameObjects.Container;
   private cardContainers: Phaser.GameObjects.Container[] = [];
-  private arrowIndicator: Phaser.GameObjects.Triangle | null = null;
   private pulseTween: Phaser.Tweens.Tween | null = null;
   private currentDeckOrder: string[] = [];
   private currentPointer = 0;
   private animatingPlay = false;
   private pendingState: { deck: string[]; pointer: number } | null = null;
-  // Tweens spawned by onCardPlayed — tracked so destroy() can stop them.
-  // Without this, mid-animation shutdown leaves onUpdate/onComplete tweens
-  // running against destroyed containers.
-  private playTweens: Set<Phaser.Tweens.Tween> = new Set();
+  private readonly playTweens: Set<Phaser.Tweens.Tween> = new Set();
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.container = scene.add.container(0, 0);
-    this.container.setDepth(50);
+    this.container = scene.add.container(0, 0).setDepth(50);
   }
 
-  /**
-   * Refresh the queue display from current combat state.
-   */
   public update(state: CombatState, deckPointer: number): void {
     if (this.animatingPlay) {
-      // A play animation is mid-flight; queue this state and apply when it
-      // finishes so the rebuild doesn't kill the in-progress tweens.
       this.pendingState = { deck: state.deckOrder, pointer: deckPointer };
       return;
     }
@@ -45,143 +44,81 @@ export class CardQueueDisplay {
     this.rebuild();
   }
 
-  /**
-   * Helpers matemáticos para o Carrossel 
-   * Retorna a coordenada Y perfeita dado o slot index (0 = topo gigante, etc.)
-   */
-  private getSlotY(slotIndex: number): number {
-    let yCursor = START_Y;
-    for (let i = 0; i <= slotIndex; i++) {
-       const isTop = (i === 0);
-       const cardScale = isTop ? 0.65 : 0.45;
-       const currentCardHeight = 240 * cardScale;
-       if (i === slotIndex) {
-         return yCursor + currentCardHeight / 2;
-       }
-       yCursor += currentCardHeight + GAP;
-    }
-    return START_Y;
-  }
+  private getSlotX(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[0]; }
+  private getSlotY(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[1]; }
+  private getSlotScale(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[2]; }
 
   private rebuild(): void {
-    // Destroy old cards
-    for (const c of this.cardContainers) {
-      c.destroy();
-    }
+    for (const c of this.cardContainers) c.destroy();
     this.cardContainers = [];
-    if (this.arrowIndicator) {
-      this.arrowIndicator.destroy();
-      this.arrowIndicator = null;
-    }
-    if (this.pulseTween) {
-      this.pulseTween.destroy();
-      this.pulseTween = null;
-    }
+    if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
 
     const deck = this.currentDeckOrder;
     if (deck.length === 0) return;
 
     for (let i = 0; i < VISIBLE_COUNT && i < deck.length; i++) {
-      const deckIdx = (this.currentPointer + i) % deck.length;
-      const cardId = deck[deckIdx];
-      
-      const isTop = (i === 0);
-      const cardScale = isTop ? 0.65 : 0.45; 
-      
-      const y = this.getSlotY(i);
-      const cardVis = createCardVisual(this.scene, QUEUE_X, y, cardId, { scale: cardScale });
+      const cardId = deck[(this.currentPointer + i) % deck.length];
+      const scale = this.getSlotScale(i);
+      const cardVis = createCardVisual(this.scene, this.getSlotX(i), this.getSlotY(i), cardId, { scale });
       this.container.add(cardVis);
       this.cardContainers.push(cardVis);
 
-      if (isTop) {
-        // Current card: full opacity, accent pulse glow
+      if (i === 0) {
         cardVis.setAlpha(1);
-        // Gold stroke on current card background
         const bg = cardVis.getAt(0) as Phaser.GameObjects.Rectangle;
         if (bg) bg.setStrokeStyle(3, 0xffd700);
-        // Pulse tween
         this.pulseTween = this.scene.tweens.add({
           targets: cardVis,
-          scaleX: cardScale * 1.05, 
-          scaleY: cardScale * 1.05,
-          duration: 800,
-          yoyo: true,
-          repeat: -1,
-          ease: 'Sine.easeInOut',
+          scaleX: scale * 1.05, scaleY: scale * 1.05,
+          duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
         });
       } else {
-        // Next cards: dimmed
-        cardVis.setAlpha(0.7);
+        cardVis.setAlpha(i === 1 ? 0.8 : 0.55);
       }
     }
-
-    // Triangle arrow indicator left of current card
-    const firstCardHeight = 240 * 0.65;
-    const arrowY = START_Y + firstCardHeight / 2;
-    this.arrowIndicator = this.scene.add.triangle(
-      QUEUE_X - (150 * 0.65) / 2 - 14,
-      arrowY,
-      0, -6, 0, 6, 10, 0,
-      0xffd700,
-    );
-    this.container.add(this.arrowIndicator);
   }
 
-  /**
-   * Animate when a card is played: top card slides left and fades, others slide up.
-   */
   onCardPlayed(_deckPosition: number): void {
-    if (this.cardContainers.length === 0) return;
-    if (this.animatingPlay) return;
+    if (this.cardContainers.length === 0 || this.animatingPlay) return;
     this.animatingPlay = true;
     const topCard = this.cardContainers[0];
 
-    // "Explodes" in place and fade out effect - more dramatic
     const burst = this.scene.tweens.add({
       targets: topCard,
-      scaleX: 1.4, // Huge scale burst
-      scaleY: 1.4,
-      alpha: 0,
-      duration: 400, // Slightly longer so the explosion is visible
-      ease: 'Quad.easeOut', // Fast start, slowing down as it fades
-      onComplete: () => {
-        topCard.destroy();
-        this.playTweens.delete(burst);
-      },
+      scaleX: 1.4, scaleY: 1.4, alpha: 0,
+      duration: 380, ease: 'Quad.easeOut',
+      onComplete: () => { topCard.destroy(); this.playTweens.delete(burst); },
       onStop: () => { this.playTweens.delete(burst); },
     });
     this.playTweens.add(burst);
 
-    // Smooth incoming ghost card fading in from below the visible slots
     const incomingIdx = (this.currentPointer + VISIBLE_COUNT) % this.currentDeckOrder.length;
-    const incomingCardId = this.currentDeckOrder[incomingIdx];
-    
-    // Spawn it at the 4th slot position (which is off-screen visually)
-    const spawnY = this.getSlotY(VISIBLE_COUNT);
-    const incomingCard = createCardVisual(this.scene, QUEUE_X, spawnY, incomingCardId, { scale: 0.45 });
-    incomingCard.setAlpha(0); // starts invisible and fades in
+    const incomingCard = createCardVisual(
+      this.scene, SLOT_INCOMING_X, this.getSlotY(VISIBLE_COUNT - 1),
+      this.currentDeckOrder[incomingIdx], { scale: this.getSlotScale(VISIBLE_COUNT - 1) },
+    );
+    incomingCard.setAlpha(0);
     this.container.add(incomingCard);
 
-    // Slide up existing cards AND ghost bottom card, smoothly scaling them into their new slots!
     const slideTargets = [...this.cardContainers.slice(1), incomingCard];
-    
+
     for (let newIdx = 0; newIdx < slideTargets.length; newIdx++) {
       const card = slideTargets[newIdx];
-      const isBecomingTop = (newIdx === 0);
-      
+      const targetX = this.getSlotX(newIdx);
       const targetY = this.getSlotY(newIdx);
-      const targetScale = isBecomingTop ? 0.65 : 0.45;
-      const targetAlpha = isBecomingTop ? 1 : 0.8;
+      const targetScale = this.getSlotScale(newIdx);
+      let targetAlpha: number;
+      if (newIdx === 0) targetAlpha = 1;
+      else if (newIdx === 1) targetAlpha = 0.8;
+      else targetAlpha = 0.55;
+      const isLast = newIdx === slideTargets.length - 1;
 
-      const isLast = (newIdx === slideTargets.length - 1);
       const slide = this.scene.tweens.add({
         targets: card,
-        y: targetY,
-        scaleX: targetScale,
-        scaleY: targetScale,
+        x: targetX, y: targetY,
+        scaleX: targetScale, scaleY: targetScale,
         alpha: targetAlpha,
-        duration: 350,
-        ease: 'Cubic.easeOut',
+        duration: 350, ease: 'Cubic.easeOut',
         onComplete: () => {
           if (card === incomingCard) incomingCard.destroy();
           this.playTweens.delete(slide);
@@ -202,34 +139,23 @@ export class CardQueueDisplay {
     }
   }
 
-  /**
-   * Flash "Skipped" text on the current card.
-   */
   onCardSkipped(_deckPosition: number): void {
     if (this.cardContainers.length === 0) return;
-    const topCard = this.cardContainers[0];
-    const skipText = this.scene.add.text(topCard.x, topCard.y, 'Skipped', {
-      fontSize: '14px',
-      color: '#aaaaaa',
+    const skipText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1] - 90, 'Skipped', {
+      fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 
     this.scene.tweens.add({
       targets: skipText,
-      alpha: 0,
-      y: skipText.y - 20,
+      alpha: 0, y: skipText.y - 20,
       duration: 600,
       onComplete: () => skipText.destroy(),
     });
   }
 
-  /**
-   * Flash "Deck Reset" label at the bottom of the queue.
-   */
   onDeckReshuffled(): void {
-    const yReset = this.getSlotY(VISIBLE_COUNT) + 10;
-    const resetText = this.scene.add.text(QUEUE_X, yReset, 'Deck Reset', {
-      fontSize: '14px',
-      color: '#aaaaaa',
+    const resetText = this.scene.add.text(580, 490, 'Deck Reset', {
+      fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 
     this.scene.tweens.add({
@@ -241,24 +167,11 @@ export class CardQueueDisplay {
   }
 
   destroy(): void {
-    if (this.pulseTween) {
-      this.pulseTween.destroy();
-      this.pulseTween = null;
-    }
-    // Stop any in-flight play-animation tweens before destroying the cards
-    // they reference. Otherwise onUpdate fires against destroyed containers.
-    for (const tw of this.playTweens) {
-      tw.stop();
-    }
+    if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
+    for (const tw of this.playTweens) tw.stop();
     this.playTweens.clear();
-    for (const c of this.cardContainers) {
-      c.destroy();
-    }
+    for (const c of this.cardContainers) c.destroy();
     this.cardContainers = [];
-    if (this.arrowIndicator) {
-      this.arrowIndicator.destroy();
-      this.arrowIndicator = null;
-    }
     this.container.destroy();
   }
 }

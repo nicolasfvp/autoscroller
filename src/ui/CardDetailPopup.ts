@@ -4,7 +4,7 @@
 import Phaser from 'phaser';
 import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
-import { COLORS, FONTS } from './StyleConstants';
+import { FONTS } from './StyleConstants';
 import { createDelayedBackdrop } from './Backdrop';
 import { attachKeywordTooltip } from './KeywordTooltip';
 import { hideFilterBarInputs, showFilterBarInputs } from './FilterBarVisibility';
@@ -80,21 +80,12 @@ export function showCardDetail(
   const effectiveDesc = (isUpgraded && card.upgraded?.description) ? card.upgraded.description : card.description;
   const effectiveCooldown = (isUpgraded && card.upgraded?.cooldown != null) ? card.upgraded.cooldown : card.cooldown;
   const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
-  const effectiveEffects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
 
   const popup = scene.add.container(0, 0);
   popup.setDepth(500);
 
-  // Full-screen dimmed backdrop -- 100ms delay before interactive prevents
-  // the same pointerdown that opened the popup from closing it.
-  // The keyword tooltip handle is assigned below; the backdrop closes
-  // the popup AND cancels the pending tooltip timer so it doesn't fire
-  // (or fire and immediately get torn down with the popup).
   const backdrop = createDelayedBackdrop(scene, 100, 0.7);
   let tip: { cancel: () => void } | null = null;
-  // Hide any floating HTML <input>s (search bars) while the popup is open,
-  // since DOM elements outside the canvas always render above canvas content
-  // regardless of Phaser depth.
   hideFilterBarInputs();
   backdrop.on('pointerdown', () => {
     if (tip) tip.cancel();
@@ -102,159 +93,136 @@ export function showCardDetail(
     popup.destroy(true);
   });
   popup.once('destroy', () => showFilterBarInputs());
-  popup.add(backdrop);
+  popup.add(backdrop);  // index 0 — darkens scene behind popup
 
-  // Card panel
-  const panelW = 320;
-  const panelH = 420;
+  const panelW = 440;
   const px = 400;
-  const py = 280;
-
-  const panel = scene.add.rectangle(px, py, panelW, panelH, 0x1a1a2e, 0.98);
-  const rarityColor = RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common;
-  panel.setStrokeStyle(3, rarityColor);
-  popup.add(panel);
-
-  // Category color strip at top
-  const catColor = CATEGORY_COLORS[card.category] ?? 0x888888;
-  const strip = scene.add.rectangle(px, py - panelH / 2 + 4, panelW - 6, 8, catColor);
-  popup.add(strip);
-
+  const panelTop = 110;
   const fontFamily = FONTS.family;
-  let yPos = py - panelH / 2 + 30;
 
-  // Card name
+  const rarityColor = RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common;
+  const catColor = CATEGORY_COLORS[card.category] ?? 0x888888;
+
+  // ── Layout geometry ───────────────────────────────────
+  // Left column: card art at natural proportions (150×192)
+  // Right column: text info
+  const CARD_IMG_W = 150;
+  const CARD_IMG_H = 192;
+  const LEFT_COL_W = CARD_IMG_W + 20;           // 170px
+  const panelLeft = px - panelW / 2;            // 180
+  const leftColCX = panelLeft + LEFT_COL_W / 2; // 265
+  const rightColLeft = panelLeft + LEFT_COL_W + 8;      // 358
+  const rightColRight = px + panelW / 2 - 14;           // 606
+  const rightColCX = (rightColLeft + rightColRight) / 2; // 482
+  const rightColW = rightColRight - rightColLeft;        // 248
+
+  const contentTop = panelTop + 24;  // below strip (8px) + padding (16px)
+
+  // ── Left column: card image ───────────────────────────
+  const imgCY = contentTop + CARD_IMG_H / 2;
+
+  popup.add(scene.add.rectangle(leftColCX, imgCY, CARD_IMG_W + 4, CARD_IMG_H + 4, 0x060608));
+
+  const imgKey = `card_${card.id}`;
+  if (scene.textures.exists(imgKey)) {
+    const img = scene.add.image(leftColCX, imgCY, imgKey);
+    img.setDisplaySize(CARD_IMG_W, CARD_IMG_H);
+    popup.add(img);
+  } else {
+    const FALLBACK_EMOJI: Record<string, string> = { attack: '⚔️', defense: '🛡️', magic: '✨' };
+    popup.add(
+      scene.add.text(leftColCX, imgCY, FALLBACK_EMOJI[card.category] ?? '❓', {
+        fontSize: '64px',
+      }).setOrigin(0.5).setAlpha(0.4),
+    );
+  }
+
+  const artBorder = scene.add.graphics();
+  artBorder.lineStyle(2, rarityColor, 0.7);
+  artBorder.strokeRect(leftColCX - CARD_IMG_W / 2 - 2, contentTop - 2, CARD_IMG_W + 4, CARD_IMG_H + 4);
+  popup.add(artBorder);
+
+  // ── Right column: info ────────────────────────────────
+  let yPos = contentTop;
+
   const displayName = isUpgraded ? `${card.name}+` : card.name;
-  const nameColor = isUpgraded ? COLORS.accent : COLORS.textPrimary;
-  const nameText = scene.add.text(px, yPos, displayName, {
-    fontSize: '28px',
-    fontStyle: 'bold',
-    color: nameColor,
-    fontFamily,
-  }).setOrigin(0.5);
-  popup.add(nameText);
+  popup.add(
+    scene.add.text(rightColCX, yPos, displayName, {
+      fontSize: '21px', fontStyle: 'bold', fontFamily,
+      color: isUpgraded ? '#ffd700' : '#ffffff',
+      stroke: '#000000', strokeThickness: 4,
+      wordWrap: { width: rightColW }, align: 'center',
+    }).setOrigin(0.5, 0),
+  );
+  yPos += 28;
 
-  yPos += 30;
-
-  // Rarity + Category badges
   const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
-  const catHex = '#' + catColor.toString(16).padStart(6, '0');
   const rarityLabel = RARITY_LABELS[card.rarity] ?? card.rarity;
   const catLabel = CATEGORY_LABELS[card.category] ?? card.category;
+  popup.add(
+    scene.add.text(rightColCX, yPos, `${rarityLabel}  ·  ${catLabel}`, {
+      fontSize: '12px', color: rarityHex, fontFamily,
+    }).setOrigin(0.5, 0),
+  );
+  yPos += 20;
 
-  const badgeText = scene.add.text(px, yPos, `${rarityLabel} ${catLabel}`, {
-    fontSize: '14px',
-    color: rarityHex,
-    fontFamily,
-  }).setOrigin(0.5);
-  popup.add(badgeText);
+  popup.add(scene.add.rectangle(rightColCX, yPos, rightColW, 1, 0x333355));
+  yPos += 12;
 
-  yPos += 30;
-
-  // Divider
-  const divider1 = scene.add.rectangle(px, yPos, panelW - 40, 1, 0x444444);
-  popup.add(divider1);
-  yPos += 16;
-
-  // Description
-  const descText = scene.add.text(px, yPos, effectiveDesc, {
-    fontSize: '16px',
-    color: COLORS.textPrimary,
-    fontFamily,
-    wordWrap: { width: panelW - 40 },
-    align: 'center',
-    lineSpacing: 4,
+  const descText = scene.add.text(rightColCX, yPos, effectiveDesc, {
+    fontSize: '13px', color: '#bbbbcc', fontFamily,
+    wordWrap: { width: rightColW - 4 },
+    align: 'center', lineSpacing: 3,
   }).setOrigin(0.5, 0);
   popup.add(descText);
+  yPos += descText.height + 12;
 
-  yPos += descText.height + 20;
+  popup.add(scene.add.rectangle(rightColCX, yPos, rightColW, 1, 0x333355));
+  yPos += 12;
 
-  // Divider
-  const divider2 = scene.add.rectangle(px, yPos, panelW - 40, 1, 0x444444);
-  popup.add(divider2);
-  yPos += 16;
+  const addStat = (label: string, value: string, valColor: string = '#ffffff') => {
+    popup.add(scene.add.text(rightColLeft, yPos, label, { fontSize: '12px', color: '#778899', fontFamily }));
+    popup.add(scene.add.text(rightColRight, yPos, value, {
+      fontSize: '12px', fontStyle: 'bold', color: valColor, fontFamily,
+    }).setOrigin(1, 0));
+    yPos += 20;
+  };
 
-  // Stats section
-  const statsLeft = px - panelW / 2 + 30;
-  const statsRight = px + panelW / 2 - 30;
-
-  // Cooldown
-  const cdLabel = scene.add.text(statsLeft, yPos, 'Cooldown', {
-    fontSize: '14px', color: COLORS.textSecondary, fontFamily,
-  });
-  popup.add(cdLabel);
-  const cdVal = scene.add.text(statsRight, yPos, `${effectiveCooldown}s`, {
-    fontSize: '14px', color: COLORS.textPrimary, fontFamily,
-  }).setOrigin(1, 0);
-  popup.add(cdVal);
-  yPos += 22;
-
-  // Targeting
-  const targLabel = scene.add.text(statsLeft, yPos, 'Targeting', {
-    fontSize: '14px', color: COLORS.textSecondary, fontFamily,
-  });
-  popup.add(targLabel);
-  const targVal = scene.add.text(statsRight, yPos, TARGETING_LABELS[card.targeting] ?? card.targeting, {
-    fontSize: '14px', color: COLORS.textPrimary, fontFamily,
-  }).setOrigin(1, 0);
-  popup.add(targVal);
-  yPos += 22;
-
-  // Cost
+  if (effectiveCooldown) addStat('Cooldown', `${effectiveCooldown}s`, '#ffd700');
+  addStat('Targeting', TARGETING_LABELS[card.targeting] ?? card.targeting, '#88bbff');
   if (effectiveCost) {
-    const costLabel = scene.add.text(statsLeft, yPos, 'Cost', {
-      fontSize: '14px', color: COLORS.textSecondary, fontFamily,
-    });
-    popup.add(costLabel);
-
     let costStr = '';
-    let costColor: string = COLORS.textPrimary;
-    if (effectiveCost.stamina) { costStr = `${effectiveCost.stamina} Stamina`; costColor = '#ff8c00'; }
-    else if (effectiveCost.mana) { costStr = `${effectiveCost.mana} Mana`; costColor = '#6a5acd'; }
-    else if (effectiveCost.defense) { costStr = `${effectiveCost.defense} Defense`; costColor = '#3366cc'; }
-
-    const costVal = scene.add.text(statsRight, yPos, costStr, {
-      fontSize: '14px', color: costColor, fontFamily,
-    }).setOrigin(1, 0);
-    popup.add(costVal);
-    yPos += 22;
+    let costColor = '#ffcc66';
+    if (effectiveCost.stamina) { costStr = `-${effectiveCost.stamina} Stamina`; costColor = '#ff8c00'; }
+    else if (effectiveCost.mana) { costStr = `-${effectiveCost.mana} Mana`; costColor = '#9966ff'; }
+    else if (effectiveCost.defense) { costStr = `-${effectiveCost.defense} Defense`; costColor = '#6699ff'; }
+    if (costStr) addStat('Cost', costStr, costColor);
   }
 
-  // Effects breakdown removed: the card's `description` already reads as a
-  // curated player-facing summary (e.g. "Deal 4. Pyre 3. Burn 3.") so a
-  // raw type/value dump below it is redundant AND was rendering DoT cards
-  // as "Dot: 3 (Enemy)" which the player has no way to decode.
-  void effectiveEffects;
-  void catHex;
+  // ── Dynamic panel height ──────────────────────────────
+  // Height is determined by whichever column is taller.
+  const contentBottom = Math.max(contentTop + CARD_IMG_H, yPos);
+  const panelH = (contentBottom - panelTop) + 28;
+  const py = panelTop + panelH / 2;
+  const panelBot = panelTop + panelH;
 
-  // Upgraded indicator
-  if (isUpgraded) {
-    const upgText = scene.add.text(px, py + panelH / 2 - 20, 'UPGRADED', {
-      fontSize: '12px', color: COLORS.accent, fontFamily, fontStyle: 'bold',
-    }).setOrigin(0.5);
-    popup.add(upgText);
-  }
+  // Panel background and strip inserted at z=1/2 (behind content, above backdrop)
+  const panel = scene.add.rectangle(px, py, panelW, panelH, 0x11111e, 0.97);
+  panel.setStrokeStyle(3, rarityColor);
+  popup.addAt(panel, 1);
+  popup.addAt(scene.add.rectangle(px, panelTop + 4, panelW - 6, 8, catColor), 2);
 
-  // Dismiss hint
-  const hint = scene.add.text(px, py + panelH / 2 + 20, 'Click anywhere to close', {
-    fontSize: '12px', color: COLORS.textSecondary, fontFamily, fontStyle: 'italic',
-  }).setOrigin(0.5);
-  popup.add(hint);
+  // Dismiss hint below panel
+  popup.add(
+    scene.add.text(px, panelBot + 16, 'Click anywhere to close', {
+      fontSize: '11px', color: '#555566', fontFamily, fontStyle: 'italic',
+    }).setOrigin(0.5),
+  );
 
-  // Schedule keyword glossary tooltip (2s delay; cancelled if popup
-  // closes early via backdrop click).
-  tip = attachKeywordTooltip(scene, popup, effectiveDesc, {
-    x: px, y: py, w: panelW, h: panelH,
-  });
+  tip = attachKeywordTooltip(scene, popup, effectiveDesc, { x: px, y: py, w: panelW, h: panelH });
 
-  // Entrance animation
   popup.setAlpha(0);
-  scene.tweens.add({
-    targets: popup,
-    alpha: 1,
-    duration: 150,
-    ease: 'Sine.easeOut',
-  });
+  scene.tweens.add({ targets: popup, alpha: 1, duration: 150, ease: 'Sine.easeOut' });
 
   return popup;
 }

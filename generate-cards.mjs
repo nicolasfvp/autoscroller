@@ -16,7 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ─────────────────────────── Config ──────────────────────────────
 const API_KEY = process.env.XAI_API_KEY
-  ?? 'YOUR_API_KEY_HERE';
+  ?? 'REDACTED_XAI_API_KEY';
 const API_URL     = 'https://api.x.ai/v1/images/generations';
 const MODEL       = 'grok-imagine-image';
 const OUT_DIR     = path.join(__dirname, 'cards');
@@ -27,9 +27,10 @@ const MAX_RETRIES = 3;
 // ─────────────────────────── Style ───────────────────────────────
 const STYLE =
   'Detailed dark fantasy pixel art, high-quality pixel illustration with rich fine-grained ' +
-  'pixel shading and many color gradients, deep near-black background with subtle dark ' +
-  'purple-brown atmospheric tones, dramatic magical glow and light-source effects casting ' +
-  'colored shadows, mature gritty dark fantasy tone, cinematic portrait composition, ' +
+  'pixel shading, vibrant saturated colors with strong contrast, colorful magical energy effects, ' +
+  'deep near-black background that makes bright colors pop, dramatic glowing light sources ' +
+  'casting vivid colored shadows, bold color palette with blues greens purples oranges and reds, ' +
+  'mature dark fantasy tone with rich chromatic atmosphere, cinematic portrait composition, ' +
   'no text no UI no borders, style of Darkest Dungeon and Dead Cells premium pixel art. ';
 
 // ─────────────────────────── Element themes ──────────────────────
