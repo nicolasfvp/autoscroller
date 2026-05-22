@@ -255,11 +255,6 @@ export class Preloader extends Scene {
       this.load.image(`card_${id}`, `assets/cards/${id}.png`);
     }
 
-    // Hero-test sprites (temporary test assets)
-    this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
-    this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
-    this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
-
     // Audio
     this.load.audio('theme_song', 'assets/audio/theme-song.mp3');
     this.load.audio('town_song', 'assets/audio/town-song.mp3');
