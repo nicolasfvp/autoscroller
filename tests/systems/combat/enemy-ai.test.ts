@@ -93,9 +93,9 @@ describe('EnemyAI', () => {
     state.enemyPattern = 'scaling';
     state.enemyDamage = 10;
     ai = new EnemyAI(state);
-    stats.cardsPlayed = 10; // should add floor(10 * 0.5) = 5
+    stats.cardsPlayed = 10; // should add floor(10 * 0.16) = 1
     ai.tick(2000, state, stats);
-    expect(state.heroHP).toBe(85); // 100 - (10 + 5) = 85
+    expect(state.heroHP).toBe(89); // 100 - (10 + 1) = 89
   });
 
   it('conditional pattern deals more damage when hero HP < 50%', () => {
