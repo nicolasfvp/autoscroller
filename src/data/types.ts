@@ -226,11 +226,11 @@ export interface CardDefinition {
   rarity: "common" | "uncommon" | "rare" | "epic";
   /** Class restriction (Phase 9 / Design v2). Omit for neutral. */
   classRestriction?: "warrior" | "mage" | "neutral";
-  /** Element multiset that crafted this card (1-4 elements). Optional for legacy cards. */
+  /** Element multiset that crafted this card (1-3 elements). Optional for legacy cards. */
   elements?: ElementId[];
-  /** Tier 0 (1-element starter), 1 (2 elements), 2 (3 elements), or 3 (4 elements). Optional for legacy cards. */
+  /** Tier 1 (1 element), 2 (2 elements), or 3 (3 elements). Optional for legacy cards. */
   tier?: CardTier;
-  /** True for Tier-3 mock placeholders not yet implemented. */
+  /** True for cards intentionally locked from acquisition (rare). */
   locked?: boolean;
   /** v3: Exhaust — card fires once per combat and is then disabled until next combat. */
   exhaust?: boolean;

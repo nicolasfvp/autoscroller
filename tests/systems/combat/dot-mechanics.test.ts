@@ -30,7 +30,7 @@ function makeMockRun(): RunState {
       vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
     },
     deck: {
-      active: ['t1-attack-attack'],
+      active: ['t2-attack-attack'],
       inventory: {},
       upgraded: [false],
       droppedCards: [],
@@ -92,7 +92,7 @@ function makeCard(effects: CardEffect[]): CardDefinition {
 }
 
 /** Invoke the engine's private DoT tick method directly. */
-function tickDoTs(engine: CombatEngine, cardId: string = 't1-attack-attack'): void {
+function tickDoTs(engine: CombatEngine, cardId: string = 't2-attack-attack'): void {
   (engine as unknown as { tickActiveDoTs: (id: string) => void }).tickActiveDoTs(cardId);
 }
 

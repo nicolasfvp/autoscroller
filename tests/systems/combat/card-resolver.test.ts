@@ -42,7 +42,7 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
 
 function makeCard(overrides: Partial<CardDefinition> = {}): CardDefinition {
   return {
-    id: 't1-attack-attack', name: 'Strike', description: 'Deal 10 damage.',
+    id: 't2-attack-attack', name: 'Strike', description: 'Deal 10 damage.',
     category: 'attack',
     effects: [{ type: 'damage', value: 10, target: 'enemy' }],
     cooldown: 1.2, targeting: 'single', rarity: 'common',

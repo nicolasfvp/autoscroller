@@ -25,11 +25,11 @@ export const WARRIOR_BASE_STATS = {
 // Class element-budget rule (warrior: 7-10 physical / 0-3 elemental).
 
 export const WARRIOR_STARTER_DECK: string[] = [
-  't1-attack-attack',
-  't1-defense-defense',
-  't1-attack-defense',
-  't1-agility-agility',
-  't1-attack-fire',
+  't2-attack-attack',
+  't2-defense-defense',
+  't2-attack-defense',
+  't2-agility-agility',
+  't2-attack-fire',
 ];
 
 // -- Class Definition --

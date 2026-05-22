@@ -22,10 +22,10 @@ describe('DataLoader', () => {
     expect(getAllCards().length).toBeGreaterThanOrEqual(14);
   });
 
-  it('getCardById("t1-attack-attack") returns a card', () => {
-    const card = getCardById('t1-attack-attack');
+  it('getCardById("t2-attack-attack") returns a card', () => {
+    const card = getCardById('t2-attack-attack');
     expect(card).toBeDefined();
-    expect(card!.id).toBe('t1-attack-attack');
+    expect(card!.id).toBe('t2-attack-attack');
     expect(typeof card!.name).toBe('string');
     expect(card!.name.length).toBeGreaterThan(0);
   });
@@ -43,7 +43,7 @@ describe('DataLoader', () => {
     const ids = getStarterDeckIds('warrior');
     expect(ids.length).toBe(5);
     for (const id of ids) {
-      expect(id).toMatch(/^t[01]-/);
+      expect(id).toMatch(/^t[12]-/);
     }
   });
 

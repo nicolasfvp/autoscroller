@@ -5,7 +5,7 @@ import { CardResolver } from '../../../src/systems/combat/CardResolver';
 import type { RunState } from '../../../src/state/RunState';
 import type { CardDefinition, EnemyDefinition } from '../../../src/data/types';
 
-function makeRun(relicIds: string[] = [], deck: string[] = ['t1-attack-attack']): RunState {
+function makeRun(relicIds: string[] = [], deck: string[] = ['t2-attack-attack']): RunState {
   return {
     version: 3, runId: 't', seed: 'c5', generation: 1, startedAt: Date.now(),
     hero: {
@@ -62,7 +62,7 @@ describe('Relics C5 — Berserker Ring', () => {
 describe('Relics C5 — Constellation Sigil', () => {
   it('grants +1 to each primary stat of unique elements in the deck', () => {
     // Deck has attack (str), fire (int), water (spi), counter (str again).
-    const deck = ['t1-attack-fire', 't1-water-counter'];
+    const deck = ['t2-attack-fire', 't2-water-counter'];
     const state = createCombatState(makeRun(['constellation_sigil'], deck), makeEnemy());
     // attack, fire, water, counter → unique: 4. counter+attack both → strength. fire → int. water → spi.
     // STR baseline 1 + 1 (one bonus, set dedupes mapping). Actually the loop applies +1 per UNIQUE element, mapping each to its stat. So str gets +1 twice (attack + counter both feed strength). Expected: heroStrength = 1 + 2 = 3, heroIntellect = 1, heroSpirit = 1.

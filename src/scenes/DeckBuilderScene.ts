@@ -100,7 +100,7 @@ export class DeckBuilderScene extends Scene {
   private cardFilterBar: CardFilterBar | null = null;
   private cardFilters: CardFilters = {
     element: 'All',
-    tiers: new Set<0 | 1 | 2 | 3>([0, 1, 2, 3]),
+    tiers: new Set<1 | 2 | 3>([1, 2, 3]),
     search: '',
   };
 
@@ -145,7 +145,7 @@ export class DeckBuilderScene extends Scene {
     this.cardCells = [];
     this.cardFilters = {
       element: 'All',
-      tiers: new Set<0 | 1 | 2 | 3>([0, 1, 2, 3]),
+      tiers: new Set<1 | 2 | 3>([1, 2, 3]),
       search: '',
     };
     // Old bar reference from a previous mount must be cleared — the actual

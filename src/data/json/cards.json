@@ -1,27 +1,27 @@
 {
   "starterDecks": {
     "warrior": [
-      "t0-attack",
-      "t0-defense",
-      "t1-attack-defense",
-      "t1-agility-agility",
-      "t1-attack-fire"
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire"
     ],
     "mage": [
-      "t0-fire",
-      "t0-water",
-      "t1-fire-water",
-      "t1-air-earth",
-      "t1-attack-fire"
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire"
     ]
   },
   "cards": [
     {
-      "id": "t0-attack",
+      "id": "t1-attack",
       "name": "Jab",
       "description": "Deal 9.",
       "category": "attack",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "attack"
       ],
@@ -40,11 +40,11 @@
       }
     },
     {
-      "id": "t0-defense",
+      "id": "t1-defense",
       "name": "Guard",
       "description": "Armor 12.",
       "category": "defense",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "defense"
       ],
@@ -63,11 +63,11 @@
       }
     },
     {
-      "id": "t0-agility",
+      "id": "t1-agility",
       "name": "Quickstep",
       "description": "Deal 4. Deal 4.",
       "category": "attack",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "agility"
       ],
@@ -91,11 +91,11 @@
       }
     },
     {
-      "id": "t0-counter",
+      "id": "t1-counter",
       "name": "Riposte",
       "description": "On Hit 6s: Deal 3.",
       "category": "attack",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "counter"
       ],
@@ -121,11 +121,11 @@
       }
     },
     {
-      "id": "t0-fire",
+      "id": "t1-fire",
       "name": "Spark",
       "description": "Burn 3.",
       "category": "magic",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "fire"
       ],
@@ -145,11 +145,11 @@
       }
     },
     {
-      "id": "t0-water",
+      "id": "t1-water",
       "name": "Mend",
       "description": "Heal 6.",
       "category": "magic",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "water"
       ],
@@ -168,11 +168,11 @@
       }
     },
     {
-      "id": "t0-air",
+      "id": "t1-air",
       "name": "Gust",
       "description": "Haste 20% (5s).",
       "category": "magic",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "air"
       ],
@@ -193,11 +193,11 @@
       "rarity": "common"
     },
     {
-      "id": "t0-earth",
+      "id": "t1-earth",
       "name": "Quake",
       "description": "Slow 4.",
       "category": "magic",
-      "tier": 0,
+      "tier": 1,
       "elements": [
         "earth"
       ],
@@ -217,11 +217,11 @@
       }
     },
     {
-      "id": "t1-attack-attack",
+      "id": "t2-attack-attack",
       "name": "Reckless Strike",
       "description": "Deal 9 (scales STR). +2 Rage. Self Bleed 1.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "attack"
@@ -258,11 +258,11 @@
       }
     },
     {
-      "id": "t1-defense-defense",
+      "id": "t2-defense-defense",
       "name": "Bulwark Vow",
       "description": "Armor 7 (Scales VIT). Brace: +3 Rage.",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "defense",
         "defense"
@@ -300,11 +300,11 @@
       }
     },
     {
-      "id": "t1-agility-agility",
+      "id": "t2-agility-agility",
       "name": "Flurry Step",
       "description": "Deal 4. Deal 4 (scales DEX).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "agility"
@@ -334,11 +334,11 @@
       }
     },
     {
-      "id": "t1-counter-counter",
+      "id": "t2-counter-counter",
       "name": "Razor Stance",
       "description": "On Hit 10s: apply Bleed 1 (Scales DEX). Vengeance — On Hit 4s: apply +1 Bleed.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "counter",
         "counter"
@@ -392,11 +392,11 @@
       }
     },
     {
-      "id": "t1-fire-fire",
+      "id": "t2-fire-fire",
       "name": "Pyre",
       "description": "Deal 4. Pyre: 3. Burn 3.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "fire",
         "fire"
@@ -433,11 +433,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-water-water",
+      "id": "t2-water-water",
       "name": "Frostbind",
       "description": "Stun 1 (scales INT). Armor 4 (scales VIT). Vengeance: Stun 1.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "water",
         "water"
@@ -487,11 +487,11 @@
       }
     },
     {
-      "id": "t1-air-air",
+      "id": "t2-air-air",
       "name": "Tailwind",
       "description": "Deal 4 (Scales STR). Haste 20% (5s). +1 Mana.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "air"
@@ -528,11 +528,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-earth-earth",
+      "id": "t2-earth-earth",
       "name": "Tremor Lock",
       "description": "Stun 1 (Scales INT). Slow 4 (Scales INT). Shatter: Deal 5.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "earth",
         "earth"
@@ -582,11 +582,11 @@
       }
     },
     {
-      "id": "t1-agility-attack",
+      "id": "t2-agility-attack",
       "name": "Quickstrike",
       "description": "Deal 8 (Scales DEX).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "attack"
@@ -611,11 +611,11 @@
       }
     },
     {
-      "id": "t1-agility-counter",
+      "id": "t2-agility-counter",
       "name": "Sidestep & Slash",
       "description": "Deal 5. Vengeance: Deal 3. Bleed 2. +1 Stamina.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "counter"
@@ -656,11 +656,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-agility-defense",
+      "id": "t2-agility-defense",
       "name": "Parrying Stance",
       "description": "Armor 5 (scales DEX). +1 Stamina. Brace: Deal 4.",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "defense"
@@ -699,11 +699,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-agility-fire",
+      "id": "t2-agility-fire",
       "name": "Flame Dart",
       "description": "Deal 5 (scales DEX). Burn 2.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "fire"
@@ -731,11 +731,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-agility-water",
+      "id": "t2-agility-water",
       "name": "Mist Step",
       "description": "Heal 3 (scales SPI). +1 Stamina. +1 DEX (6s). Slow 1.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "water"
@@ -778,11 +778,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-agility-air",
+      "id": "t2-agility-air",
       "name": "Gale Cut",
       "description": "Deal 3 (Scales DEX). Haste 15% (4s). +1 Stamina.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "air"
@@ -819,11 +819,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-agility-earth",
+      "id": "t2-agility-earth",
       "name": "Tremor Dash",
       "description": "Deal 7 (Scales DEX). Armor 6 (Scales VIT).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "agility",
         "earth"
@@ -858,11 +858,11 @@
       }
     },
     {
-      "id": "t1-attack-counter",
+      "id": "t2-attack-counter",
       "name": "Bloodprice Strike",
       "description": "Lose 4 HP (Pierce). Deal 12 (scales STR). +2 Rage. +1 Stamina.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "counter"
@@ -909,11 +909,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-attack-defense",
+      "id": "t2-attack-defense",
       "name": "Shield Bash",
       "description": "Deal 10 (scales STR). Aura 6s: enemy Defense −3.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "defense"
@@ -948,11 +948,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-attack-fire",
+      "id": "t2-attack-fire",
       "name": "Kindle Strike",
       "description": "Deal 7 (Scales STR). Burn 3 (Scales INT). Vulnerable Fire 1 (5s).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "fire"
@@ -998,11 +998,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-attack-water",
+      "id": "t2-attack-water",
       "name": "Crimson Tithe",
       "description": "Lose 5 HP. +1 Stamina, +1 Mana (scales SPI). Aura 6s: HP loss → +1 Rage.",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "water"
@@ -1053,11 +1053,11 @@
       "cost": {}
     },
     {
-      "id": "t1-air-attack",
+      "id": "t2-air-attack",
       "name": "Stormstrike",
       "description": "Deal 6 (scales STR). Haste 20% (5s).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "attack"
@@ -1089,11 +1089,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-attack-earth",
+      "id": "t2-attack-earth",
       "name": "Granite Lunge",
       "description": "Armor 6 (Scales VIT). Deal 4 + 1 per 4 Armor (Scales STR).",
       "category": "attack",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "attack",
         "earth"
@@ -1129,11 +1129,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-counter-defense",
+      "id": "t2-counter-defense",
       "name": "Iron Reckoning",
       "description": "Armor 4 (scales VIT). Stance 8s: hits +1 per Rage (scales STR).",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "counter",
         "defense"
@@ -1169,11 +1169,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-counter-fire",
+      "id": "t2-counter-fire",
       "name": "Cinderscar",
       "description": "Burn 2 (scales INT). Vengeance: convert 2 Burn into Bleed.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "counter",
         "fire"
@@ -1209,11 +1209,11 @@
       }
     },
     {
-      "id": "t1-counter-water",
+      "id": "t2-counter-water",
       "name": "Bloodtide Mend",
       "description": "Heal 5 (scales SPI). Vengeance: Heal 3. Self Bleed 2.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "counter",
         "water"
@@ -1249,11 +1249,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-air-counter",
+      "id": "t2-air-counter",
       "name": "Hollow Echo",
       "description": "Deal 5 (scales STR). Vengeance: Deal 3. Haste 15% (4s).",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "counter"
@@ -1293,11 +1293,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-counter-earth",
+      "id": "t2-counter-earth",
       "name": "Thornwall",
       "description": "Armor 8 (scales VIT). Deal 5. Brace: Deal 6.",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "counter",
         "earth"
@@ -1339,11 +1339,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-defense-fire",
+      "id": "t2-defense-fire",
       "name": "Forge Spike Ward",
       "description": "Armor 5 (scales VIT). Aura 8s: on hit taken, deal 2 + 1 per 6 Armor (scales STR).",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "defense",
         "fire"
@@ -1387,11 +1387,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-defense-water",
+      "id": "t2-defense-water",
       "name": "Vow of the Tide",
       "description": "Armor 5 (scales VIT). Heal 3. +1 Stamina. +1 SPI (6s).",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "defense",
         "water"
@@ -1436,11 +1436,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-air-defense",
+      "id": "t2-air-defense",
       "name": "Cyclone Ward",
       "description": "Armor 5 (scales VIT). Haste 15% (4s).",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "defense"
@@ -1472,11 +1472,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-defense-earth",
+      "id": "t2-defense-earth",
       "name": "Bramble Bulwark",
       "description": "Armor 8 (scales VIT). Fortified 10: 6 Pierce.",
       "category": "defense",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "defense",
         "earth"
@@ -1510,11 +1510,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-fire-water",
+      "id": "t2-fire-water",
       "name": "Steam Surge",
       "description": "Deal 4. Empowered (if Burn): +4. Heal 4. +1 Stamina.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "fire",
         "water"
@@ -1557,11 +1557,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-air-fire",
+      "id": "t2-air-fire",
       "name": "Firestorm",
       "description": "Deal 4 AoE (scales STR). Burn 2. Stun 1.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "fire"
@@ -1603,11 +1603,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-earth-fire",
+      "id": "t2-earth-fire",
       "name": "Magma Vein",
       "description": "Armor 7. Deal 8. Burn 2.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "earth",
         "fire"
@@ -1643,11 +1643,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-air-water",
+      "id": "t2-air-water",
       "name": "Misting Veil",
       "description": "Heal 3 (Scales SPI). Haste 15% (5s). +1 INT (6s). +1 Mana.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "water"
@@ -1694,11 +1694,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-earth-water",
+      "id": "t2-earth-water",
       "name": "Mire Bloom",
       "description": "Armor 4 (Scales VIT). Heal 3 (Scales SPI). Deal 3 (Scales STR). +1 Mana.",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "earth",
         "water"
@@ -1745,11 +1745,11 @@
       "rarity": "common"
     },
     {
-      "id": "t1-air-earth",
+      "id": "t2-air-earth",
       "name": "Bedrock Snare",
       "description": "Slow 2 (Scales INT). If enemy Slow ≥ 4: Stun 1. Shatter: Deal 4 (Scales STR).",
       "category": "magic",
-      "tier": 1,
+      "tier": 2,
       "elements": [
         "air",
         "earth"
@@ -1805,11 +1805,11 @@
       "rarity": "common"
     },
     {
-      "id": "t2-attack-attack-attack",
+      "id": "t3-attack-attack-attack",
       "name": "Berserker's Ledger",
       "description": "Deal 8 ×3 (scales STR). Self Bleed 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -1842,11 +1842,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-defense-defense-defense",
+      "id": "t3-defense-defense-defense",
       "name": "Aegis of Returning Wrath",
       "description": "Armor 22 (scales VIT). Brace: 18 Pierce.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "defense",
@@ -1885,11 +1885,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-agility-agility",
+      "id": "t3-agility-agility-agility",
       "name": "Quickstep Sigil",
       "description": "Deal 5 ×3 (Scales DEX). Haste 30% (6s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -1926,11 +1926,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-counter-counter",
+      "id": "t3-counter-counter-counter",
       "name": "Crimson Spiral",
       "description": "Damage = Rage × 2 (Pierce, scales STR). +1 Bleed per Rage. Consume all Rage.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "counter",
@@ -1980,11 +1980,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-attack-defense",
+      "id": "t3-attack-attack-defense",
       "name": "Bulwark Salvo",
       "description": "Deal 6 + 1 per 2 Armor ×2 (scales STR, no consume).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -2012,11 +2012,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-attack-attack",
+      "id": "t3-agility-attack-attack",
       "name": "Triple Slash",
       "description": "Deal 6 ×3 (scales DEX).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -2043,11 +2043,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-attack-counter",
+      "id": "t3-attack-attack-counter",
       "name": "Bloodlash Salvo",
       "description": "Per Bleed: 3 Pierce (scales STR). Vengeance: +2 Pierce per Bleed. No consume.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -2094,11 +2094,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-defense-defense",
+      "id": "t3-attack-defense-defense",
       "name": "Body Slam Vow",
       "description": "2 Pierce (scales Armor). Armor 6.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "defense",
@@ -2131,11 +2131,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-defense-defense",
+      "id": "t3-agility-defense-defense",
       "name": "Phalanx Drift",
       "description": "Armor 22 (scales VIT). Haste 10% (8s). Brace: Deal 10.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "defense",
@@ -2183,11 +2183,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-defense-defense",
+      "id": "t3-counter-defense-defense",
       "name": "Reforge Vow",
       "description": "Aura 12s: Armor gained +50%. Armor 8 (scales VIT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "defense",
@@ -2225,11 +2225,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-agility-attack",
+      "id": "t3-agility-agility-attack",
       "name": "Pinprick Volley",
       "description": "5 Pierce ×3 (scales DEX).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -2257,11 +2257,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-agility-defense",
+      "id": "t3-agility-agility-defense",
       "name": "Veil of Steps",
       "description": "Armor 14 (scales DEX). Haste 20% (6s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -2297,11 +2297,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-agility-counter",
+      "id": "t3-agility-agility-counter",
       "name": "Quicksilver Bleed",
       "description": "Bleed 3. Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -2334,11 +2334,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-counter-counter",
+      "id": "t3-attack-counter-counter",
       "name": "Cleaver's Tax",
       "description": "Deal 12 Pierce (scales STR). Overload: -5 Rage, +20 dmg, lockout 4s.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "counter",
@@ -2396,11 +2396,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-counter-defense",
+      "id": "t3-counter-counter-defense",
       "name": "Wrathshell Vow",
       "description": "Exhaust. Channel 4s, then aura: +1 Rage every 3s. On hit taken: +1 Rage.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "counter",
@@ -2446,11 +2446,11 @@
       "exhaust": true
     },
     {
-      "id": "t2-agility-counter-counter",
+      "id": "t3-agility-counter-counter",
       "name": "Razor Cadence",
       "description": "Deal 5 ×3 (scales DEX). Each hit: Bleed 1. Vengeance: ×4 hits.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "counter",
@@ -2516,11 +2516,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-attack-defense",
+      "id": "t3-agility-attack-defense",
       "name": "Flowstrike",
       "description": "Deal 10 (scales STR). Armor 10. Haste 15% (6s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -2561,11 +2561,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-counter-defense",
+      "id": "t3-attack-counter-defense",
       "name": "Last Stand Bulwark",
       "description": "Armor 10 (scales VIT). Berserk (<50% HP): +10 Armor and 12 Pierce (scales STR).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "counter",
@@ -2618,11 +2618,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-attack-counter",
+      "id": "t3-agility-attack-counter",
       "name": "Vein Splitter",
       "description": "Deal 4 ×3 (scales DEX). Each hit: Bleed +1 per existing Bleed.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -2676,11 +2676,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-counter-defense",
+      "id": "t3-agility-counter-defense",
       "name": "Bramble Step",
       "description": "Armor 10 (scales DEX). Brace: Bleed 3.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "counter",
@@ -2719,11 +2719,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-fire-fire-fire",
+      "id": "t3-fire-fire-fire",
       "name": "Supernova",
       "description": "Exhaust. Consume all Burn: 5 Pierce per stack consumed (AoE, scales INT).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "fire",
         "fire",
@@ -2760,11 +2760,11 @@
       "exhaust": true
     },
     {
-      "id": "t2-water-water-water",
+      "id": "t3-water-water-water",
       "name": "Tidesong Aura",
       "description": "Heal 12 (scales SPI). +3 SPI (10s). +3 Mana.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "water",
         "water",
@@ -2805,11 +2805,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-air-air",
+      "id": "t3-air-air-air",
       "name": "Tempest Cadence",
       "description": "Deal 8 (scales DEX). Haste 30% (10s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -2845,11 +2845,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-earth-earth-earth",
+      "id": "t3-earth-earth-earth",
       "name": "Mountain's Answer",
       "description": "Armor 26 (scales VIT). Fortified 20: 22 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "earth",
@@ -2884,11 +2884,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-fire-fire-water",
+      "id": "t3-fire-fire-water",
       "name": "Quench Lance",
       "description": "Convert 3 Burn into Bleed. Deal 4 per Bleed (scales STR). Burn 2 (scales INT).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "fire",
         "fire",
@@ -2937,11 +2937,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-fire-fire",
+      "id": "t3-air-fire-fire",
       "name": "Pyre Surge",
       "description": "+2 to every Burn on enemy (scales INT). Vulnerable Fire 3 (8s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "fire",
@@ -2979,11 +2979,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-earth-fire-fire",
+      "id": "t3-earth-fire-fire",
       "name": "Magma Welling",
       "description": "Armor 14 (scales VIT). Burn 8 (scales INT). Slow cooldown.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "fire",
@@ -3020,11 +3020,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-fire-water-water",
+      "id": "t3-fire-water-water",
       "name": "Phoenix Aura",
       "description": "Heal 10 (scales SPI). Guard 50%: Armor 18 (12s).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "fire",
         "water",
@@ -3063,11 +3063,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-water-water",
+      "id": "t3-air-water-water",
       "name": "Misted Cadence",
       "description": "Heal 9 (scales SPI). Haste 25% (8s). +3 Mana.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "water",
@@ -3108,11 +3108,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-earth-water-water",
+      "id": "t3-earth-water-water",
       "name": "Brine Bedrock",
       "description": "Heal 10 (scales SPI). Vengeance: Poison 3.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "water",
@@ -3147,11 +3147,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-air-fire",
+      "id": "t3-air-air-fire",
       "name": "Cinder Squall",
       "description": "Slow 3 AoE (scales INT). If Slow ≥ 5: Stun 1. 2 damage per Slow stack.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -3210,11 +3210,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-air-water",
+      "id": "t3-air-air-water",
       "name": "Squall Aura",
       "description": "Heal 6. Haste 25% (8s). +4 Mana.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -3255,11 +3255,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-air-earth",
+      "id": "t3-air-air-earth",
       "name": "Dust Plague",
       "description": "Armor 8 (scales VIT). Aura 12s: every 2.5s apply Slow 1 AoE (scales INT). ≥5 Slow → Stun.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -3324,11 +3324,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-earth-earth-fire",
+      "id": "t3-earth-earth-fire",
       "name": "Magma Vow",
       "description": "Armor 14 (scales VIT). Vengeance: 14 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "earth",
@@ -3363,11 +3363,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-earth-earth-water",
+      "id": "t3-earth-earth-water",
       "name": "Bog Catalyst",
       "description": "Poison 2 (scales INT). Catalyze x2: doubles Poison on enemy.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "earth",
@@ -3402,11 +3402,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-earth-earth",
+      "id": "t3-air-earth-earth",
       "name": "Standing Stone",
       "description": "Armor 16 (scales VIT). Brace: Heal 8. Haste 10% (8s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "earth",
@@ -3454,11 +3454,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-fire-water",
+      "id": "t3-air-fire-water",
       "name": "Steaming Plague",
       "description": "Poison 3 AoE (scales INT). +2 extra Poison on already-poisoned enemies.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "fire",
@@ -3500,11 +3500,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-earth-fire-water",
+      "id": "t3-earth-fire-water",
       "name": "Alchemic Drain",
       "description": "Consume up to 4 Poison: Heal 4 per stack consumed (scales SPI).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "earth",
         "fire",
@@ -3539,11 +3539,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-earth-fire",
+      "id": "t3-air-earth-fire",
       "name": "Sandfury",
       "description": "Deal 8 ×2. Per Slow: 2 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "earth",
@@ -3580,11 +3580,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-earth-water",
+      "id": "t3-air-earth-water",
       "name": "Marsh Squall",
       "description": "Exhaust. Spread 50% Poison AoE. 4 Pierce per Poison consumed (scales INT).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "earth",
@@ -3632,11 +3632,11 @@
       "exhaust": true
     },
     {
-      "id": "t2-attack-attack-fire",
+      "id": "t3-attack-attack-fire",
       "name": "Cinder Thrust",
       "description": "Deal 10 ×2 (scales STR). Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -3669,11 +3669,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-attack-water",
+      "id": "t3-attack-attack-water",
       "name": "Soaking Blade",
       "description": "Deal 12 (scales STR). Poison 2. Empowered (if Poison): +7.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -3713,11 +3713,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-attack-attack",
+      "id": "t3-air-attack-attack",
       "name": "Galekick",
       "description": "Deal 7 ×2 (scales STR). Slow 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -3750,11 +3750,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-attack-earth",
+      "id": "t3-attack-attack-earth",
       "name": "Concussive Smash",
       "description": "Deal 14 (Scales STR). Stun 2 (Scales INT). Slow 3. Shatter: Deal 6.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "attack",
@@ -3810,11 +3810,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-defense-defense-fire",
+      "id": "t3-defense-defense-fire",
       "name": "Pyric Bulwark",
       "description": "Armor 12 (scales VIT). Aura 14s: on Armor gained ≥ 4 → Burn 1 (scales INT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "defense",
@@ -3860,11 +3860,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-defense-defense-water",
+      "id": "t3-defense-defense-water",
       "name": "Stagnant Bulwark",
       "description": "Armor 10 (scales VIT). Aura 12s: every 2s apply Poison 1 (scales INT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "defense",
@@ -3909,11 +3909,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-defense-defense",
+      "id": "t3-air-defense-defense",
       "name": "Stormgate",
       "description": "Armor 14 (scales VIT). Haste 15% (10s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "defense",
@@ -3949,11 +3949,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-defense-defense-earth",
+      "id": "t3-defense-defense-earth",
       "name": "Stoneward Reprisal",
       "description": "Armor 8 (scales VIT). Brace: Stun 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "defense",
@@ -3992,11 +3992,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-agility-fire",
+      "id": "t3-agility-agility-fire",
       "name": "Twinflame Flicker",
       "description": "Burn 3 (scales INT). Echo: re-apply Burn 2 after 1.5s.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -4041,11 +4041,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-agility-water",
+      "id": "t3-agility-agility-water",
       "name": "Slipstream",
       "description": "6 Pierce (scales DEX). Poison 2. Haste 15% (6s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -4088,11 +4088,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-agility-air",
+      "id": "t3-agility-agility-air",
       "name": "Zephyr Cascade",
       "description": "Slow 3. Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -4125,11 +4125,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-agility-earth",
+      "id": "t3-agility-agility-earth",
       "name": "Footwork Stone",
       "description": "Armor 12 (Scales DEX). Haste 25% (6s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "agility",
@@ -4165,11 +4165,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-counter-fire",
+      "id": "t3-counter-counter-fire",
       "name": "Vengeful Pyre",
       "description": "Exhaust. Devour 1 common: +12 Rage (scales STR). Burn 6 (scales INT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "counter",
@@ -4224,11 +4224,11 @@
       "exhaust": true
     },
     {
-      "id": "t2-counter-counter-water",
+      "id": "t3-counter-counter-water",
       "name": "Crimson Cascade",
       "description": "Self Bleed 1. Cascade (Bleed) 15s: on Bleed-kill, apply Bleed 4 to nearest (Scales SPI).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "counter",
@@ -4270,11 +4270,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-counter-counter",
+      "id": "t3-air-counter-counter",
       "name": "Wrath Squall",
       "description": "On 30 Rage: deal 40 (scales STR) + Slow 8 (scales INT). Reset Rage.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "counter",
@@ -4330,11 +4330,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-counter-earth",
+      "id": "t3-counter-counter-earth",
       "name": "Stonewrath",
       "description": "Armor 12 (scales VIT). Guard 50%: +6 Rage (15s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "counter",
@@ -4374,11 +4374,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-defense-fire",
+      "id": "t3-attack-defense-fire",
       "name": "Forge Strike",
       "description": "Deal 12 (scales STR). Armor 8. Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "defense",
@@ -4415,11 +4415,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-defense-water",
+      "id": "t3-attack-defense-water",
       "name": "Mire Cleave",
       "description": "Deal 10 (scales STR). Armor 8. Poison 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "defense",
@@ -4457,11 +4457,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-attack-defense",
+      "id": "t3-air-attack-defense",
       "name": "Stormhilt",
       "description": "Deal 8 ×2. Armor 6. Slow 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -4499,11 +4499,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-defense-earth",
+      "id": "t3-attack-defense-earth",
       "name": "Earthcleaver",
       "description": "Deal 14 (scales STR). Fortified 15: 8 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "defense",
@@ -4538,11 +4538,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-attack-fire",
+      "id": "t3-agility-attack-fire",
       "name": "Wickfencer",
       "description": "Deal 6 ×2. Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -4575,11 +4575,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-attack-water",
+      "id": "t3-agility-attack-water",
       "name": "Drowner's Dart",
       "description": "8 Pierce (scales DEX). Poison 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -4613,11 +4613,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-attack",
+      "id": "t3-agility-air-attack",
       "name": "Skywire",
       "description": "Deal 5 ×3 (scales DEX). Slow 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -4650,11 +4650,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-attack-earth",
+      "id": "t3-agility-attack-earth",
       "name": "Quarry Dance",
       "description": "Deal 10 (scales DEX). Fortified 10: Deal 8.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "attack",
@@ -4688,11 +4688,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-counter-fire",
+      "id": "t3-attack-counter-fire",
       "name": "Wrath Brand",
       "description": "Empowered (if Rage): +12 + 2 Burn. Consume(3) Rage.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "counter",
@@ -4738,11 +4738,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-counter-water",
+      "id": "t3-attack-counter-water",
       "name": "Necrotic Festering",
       "description": "Self Bleed 3 (Scales DEX). Apply Poison equal to your Bleed (Scales INT). Consume all Bleed: 4 Pierce per stack (Scales STR).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "counter",
@@ -4801,11 +4801,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-attack-counter",
+      "id": "t3-air-attack-counter",
       "name": "Thunderstrike Catalyst",
       "description": "Deal 6 (scales STR). Consume 4 Slow: +6 Pierce per stack consumed (scales INT).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -4853,11 +4853,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-counter-earth",
+      "id": "t3-attack-counter-earth",
       "name": "Granitewrath",
       "description": "Deal 14 (scales STR). Vengeance: 10 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "counter",
@@ -4892,11 +4892,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-defense-fire",
+      "id": "t3-agility-defense-fire",
       "name": "Ember Vault",
       "description": "Armor 10. Brace: Burn 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "defense",
@@ -4936,11 +4936,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-defense-water",
+      "id": "t3-agility-defense-water",
       "name": "Tidefoot Guard",
       "description": "Armor 12 (scales VIT). Poison 2 (scales INT). Haste 15% (6s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "defense",
@@ -4987,11 +4987,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-defense",
+      "id": "t3-agility-air-defense",
       "name": "Galeguard",
       "description": "Armor 10. Haste 25% (8s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -5027,11 +5027,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-defense-earth",
+      "id": "t3-agility-defense-earth",
       "name": "Quickstone",
       "description": "Armor 14. Guard 60%: Haste 30% (6s) (15s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "defense",
@@ -5076,11 +5076,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-defense-fire",
+      "id": "t3-counter-defense-fire",
       "name": "Ashen Bulwark",
       "description": "Armor 12 (scales VIT). Brace: Deal 12. Brace: Burn 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "defense",
@@ -5131,11 +5131,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-defense-water",
+      "id": "t3-counter-defense-water",
       "name": "Crimson Regen Mantle",
       "description": "Armor 8 (scales VIT). Aura 12s: while HP<50%, heal 3/s (scales SPI). DR 20%.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "defense",
@@ -5192,11 +5192,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-counter-defense",
+      "id": "t3-air-counter-defense",
       "name": "Glacial Pact",
       "description": "Slow 4 (scales INT). Armor 8 (scales VIT). Vengeance: Slow 3 + Haste 20% (5s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "counter",
@@ -5256,11 +5256,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-defense-earth",
+      "id": "t3-counter-defense-earth",
       "name": "Tombplate",
       "description": "Armor 18 (scales VIT). Guard 40%: Armor 10 (15s). Guard 40%: +4 Rage (15s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "defense",
@@ -5313,11 +5313,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-counter-fire",
+      "id": "t3-agility-counter-fire",
       "name": "Searing Razor",
       "description": "Bleed 2 (scales DEX). Burn 2 (scales INT). Aura 10s: CD -10% per 25% missing HP.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "counter",
@@ -5366,11 +5366,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-counter-water",
+      "id": "t3-agility-counter-water",
       "name": "Venom Dance",
       "description": "Poison 3 (scales INT). Spread to 2 targets (50%). Vengeance: convert 5 Bleed→Poison.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "counter",
@@ -5418,11 +5418,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-counter",
+      "id": "t3-agility-air-counter",
       "name": "Static Skirmish",
       "description": "Slow 3. Per Slow: 3 Pierce.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -5460,11 +5460,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-counter-earth",
+      "id": "t3-agility-counter-earth",
       "name": "Quickearth Rite",
       "description": "Armor 8. Vengeance: 10 Pierce.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "counter",
@@ -5500,11 +5500,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-fire-fire",
+      "id": "t3-attack-fire-fire",
       "name": "Cinderlance",
       "description": "Deal 8 ×2 (scales STR). Pyre: 3 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "fire",
@@ -5542,11 +5542,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-water-water",
+      "id": "t3-attack-water-water",
       "name": "Drowning Lance",
       "description": "Consume all Poison: 3 Pierce per stack consumed (scales INT).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "water",
@@ -5582,11 +5582,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-air-attack",
+      "id": "t3-air-air-attack",
       "name": "Tempest Pike",
       "description": "Deal 6 ×3. Slow 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -5619,11 +5619,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-earth-earth",
+      "id": "t3-attack-earth-earth",
       "name": "Mountain's Will",
       "description": "Deal 20 (scales STR). Fortified 20: 8 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "earth",
@@ -5658,11 +5658,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-fire-water",
+      "id": "t3-attack-fire-water",
       "name": "Tremor Detonate",
       "description": "Exhaust. Deal 6 + 3× (Poison + Bleed + Burn) (scales STR). Consume all.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "fire",
@@ -5747,11 +5747,11 @@
       "exhaust": true
     },
     {
-      "id": "t2-air-attack-fire",
+      "id": "t3-air-attack-fire",
       "name": "Galebrand",
       "description": "Deal 8 (scales STR). Slow 3. Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -5790,11 +5790,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-attack-earth-fire",
+      "id": "t3-attack-earth-fire",
       "name": "Slag Maul",
       "description": "Deal 14 (scales STR). Brace: Deal 12. Brace: Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "earth",
@@ -5845,11 +5845,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-attack-water",
+      "id": "t3-air-attack-water",
       "name": "Galetide",
       "description": "10 Pierce (scales STR). Poison 2. Slow 2.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -5889,11 +5889,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-attack-earth-water",
+      "id": "t3-attack-earth-water",
       "name": "Mirebreaker",
       "description": "Deal 14 (scales STR). Empowered (if Poison): +6 Pierce.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "attack",
         "earth",
@@ -5929,11 +5929,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-attack-earth",
+      "id": "t3-air-attack-earth",
       "name": "Cliffwind Maul",
       "description": "Deal 12 (scales STR). Fortified 12: 10 Pierce.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "attack",
@@ -5968,11 +5968,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-defense-fire-fire",
+      "id": "t3-defense-fire-fire",
       "name": "Citadel Inferno",
       "description": "Exhaust. Spend ALL Armor: AoE Pierce = Armor × 2 (scales STR). Requires Armor ≥ 10.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "fire",
@@ -6006,11 +6006,11 @@
       "spend_armor": "all"
     },
     {
-      "id": "t2-defense-water-water",
+      "id": "t3-defense-water-water",
       "name": "Brineward",
       "description": "Armor 14 (scales VIT). Heal 8 (scales SPI). Poison 2 (scales INT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "water",
@@ -6057,11 +6057,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-air-defense",
+      "id": "t3-air-air-defense",
       "name": "Galeward",
       "description": "Armor 12 (scales VIT). Haste 20% (10s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -6098,11 +6098,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-defense-earth-earth",
+      "id": "t3-defense-earth-earth",
       "name": "Bedrock Bulwark",
       "description": "Armor 16 (scales VIT). Aura 15s: on Armor break → re-arm Armor 6 (scales VIT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "earth",
@@ -6145,11 +6145,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-defense-fire-water",
+      "id": "t3-defense-fire-water",
       "name": "Steam Bulwark",
       "description": "Armor 14 (scales VIT). Brace: Poison 3. Brace: Burn 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "fire",
@@ -6201,11 +6201,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-defense-fire",
+      "id": "t3-air-defense-fire",
       "name": "Ember Aegis Gust",
       "description": "Convert all Burn → Armor (cap 20, scales VIT). Haste 15% (6s, scales INT).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "defense",
@@ -6245,11 +6245,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-defense-earth-fire",
+      "id": "t3-defense-earth-fire",
       "name": "Magmaplate",
       "description": "Armor 16 (scales VIT). Brace: Deal 14. Brace: Burn 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "earth",
@@ -6300,11 +6300,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-defense-water",
+      "id": "t3-air-defense-water",
       "name": "Mistplate",
       "description": "Armor 12. Poison 2. Slow 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "defense",
@@ -6342,11 +6342,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-defense-earth-water",
+      "id": "t3-defense-earth-water",
       "name": "Bogplate",
       "description": "Armor 14 (scales VIT). Vengeance: Poison 3.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "defense",
         "earth",
@@ -6382,11 +6382,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-defense-earth",
+      "id": "t3-air-defense-earth",
       "name": "Dustward",
       "description": "Armor 16 (scales VIT). Haste 10% (12s). Brace: Slow 4.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "defense",
@@ -6436,11 +6436,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-agility-fire-fire",
+      "id": "t3-agility-fire-fire",
       "name": "Cinder Sprint",
       "description": "Burn 3. Pyre: 4.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "fire",
@@ -6476,11 +6476,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-water-water",
+      "id": "t3-agility-water-water",
       "name": "Slipvenom Tempo",
       "description": "Poison 3 (scales INT). Haste 15% (6s). Echo if Poison ≥ 10.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "water",
@@ -6535,11 +6535,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-air",
+      "id": "t3-agility-air-air",
       "name": "Gale Echo",
       "description": "Aura 12s: Slow effects apply +1 extra (scales INT). Haste 15% (6s).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -6584,11 +6584,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-earth-earth",
+      "id": "t3-agility-earth-earth",
       "name": "Stonepacer",
       "description": "Armor 10. Haste 20% (8s).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "earth",
@@ -6624,11 +6624,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-fire-water",
+      "id": "t3-agility-fire-water",
       "name": "Boilstep",
       "description": "6 Pierce (scales DEX). Burn 2. Poison 2.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "fire",
@@ -6667,11 +6667,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-fire",
+      "id": "t3-agility-air-fire",
       "name": "Galecinder",
       "description": "Deal 5 ×2. Burn 2. Slow 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -6711,11 +6711,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-earth-fire",
+      "id": "t3-agility-earth-fire",
       "name": "Cinderquake",
       "description": "Deal 10 (scales DEX). Fortified 10: 4 Pierce + Burn 2.",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "earth",
@@ -6759,11 +6759,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-water",
+      "id": "t3-agility-air-water",
       "name": "Stormsplash",
       "description": "Poison 2. Slow 3. Burn 2.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -6802,11 +6802,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-earth-water",
+      "id": "t3-agility-earth-water",
       "name": "Mireglide",
       "description": "Armor 8. Poison 3. Haste 15% (6s).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "earth",
@@ -6848,11 +6848,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-agility-air-earth",
+      "id": "t3-agility-air-earth",
       "name": "Stormstone Tempo",
       "description": "Channel: Deal 6 (scales DEX, +25%/s held, max +100%). Shatter: 6 Pierce (scales STR).",
       "category": "attack",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "agility",
         "air",
@@ -6896,11 +6896,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-fire-fire",
+      "id": "t3-counter-fire-fire",
       "name": "Brine Crucible",
       "description": "Bleed 2 (Scales DEX). Convert all Burn → Bleed (1:2, Scales DEX). Overload: +3s next CD.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "fire",
@@ -6946,11 +6946,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-water-water",
+      "id": "t3-counter-water-water",
       "name": "Tidefoot Bloom",
       "description": "Convert all Poison → Bleed 1:1 (scales DEX). Echo 1 (6s, scales INT).",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "water",
@@ -6990,11 +6990,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-air-counter",
+      "id": "t3-air-air-counter",
       "name": "Stormrage",
       "description": "Empowered (if Rage): +8 Slow. Consume(4) Rage.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "air",
@@ -7032,11 +7032,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-earth-earth",
+      "id": "t3-counter-earth-earth",
       "name": "Tombrage",
       "description": "Armor 12 (scales VIT). Guard 40%: +8 Rage (15s).",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "earth",
@@ -7076,11 +7076,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-counter-fire-water",
+      "id": "t3-counter-fire-water",
       "name": "Venom Detonation",
       "description": "Burn 2. Poison 3. Pyre: 2.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "fire",
@@ -7123,11 +7123,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-counter-fire",
+      "id": "t3-air-counter-fire",
       "name": "Static Bleed",
       "description": "Self Bleed 2. Brace: Slow 4.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "counter",
@@ -7168,11 +7168,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-earth-fire",
+      "id": "t3-counter-earth-fire",
       "name": "Magmavow",
       "description": "Armor 10 (scales VIT). Brace: 16 Pierce. Brace: Burn 2.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "earth",
@@ -7224,11 +7224,11 @@
       "rarity": "rare"
     },
     {
-      "id": "t2-air-counter-water",
+      "id": "t3-air-counter-water",
       "name": "Tempestbleed",
       "description": "Self Bleed 2. Brace: Deal 6. Brace: Slow 2.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "counter",
@@ -7281,11 +7281,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-counter-earth-water",
+      "id": "t3-counter-earth-water",
       "name": "Bogwrath",
       "description": "Armor 10 (scales VIT). Brace: Poison 4. Brace: +3 Rage.",
       "category": "magic",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "counter",
         "earth",
@@ -7338,11 +7338,11 @@
       "rarity": "uncommon"
     },
     {
-      "id": "t2-air-counter-earth",
+      "id": "t3-air-counter-earth",
       "name": "Tectonic Reckoning",
       "description": "Exhaust. Stun 3 AoE (scales INT). Force-trigger every card you own once.",
       "category": "defense",
-      "tier": 2,
+      "tier": 3,
       "elements": [
         "air",
         "counter",

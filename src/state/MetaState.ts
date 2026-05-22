@@ -60,14 +60,14 @@ export interface MetaState {
 
 const DEFAULT_PRESETS: Record<string, DeckPresetEntry[]> = {
   warrior: [
-    { name: 'Default Warrior', cardIds: ['t1-attack-attack', 't1-defense-defense', 't1-attack-defense', 't1-agility-agility', 't1-attack-fire'] },
+    { name: 'Default Warrior', cardIds: ['t2-attack-attack', 't2-defense-defense', 't2-attack-defense', 't2-agility-agility', 't2-attack-fire'] },
     { name: 'Preset 2', cardIds: [] },
     { name: 'Preset 3', cardIds: [] },
     { name: 'Preset 4', cardIds: [] },
     { name: 'Preset 5', cardIds: [] },
   ],
   mage: [
-    { name: 'Default Mage', cardIds: ['t1-fire-fire', 't1-water-water', 't1-fire-water', 't1-air-earth', 't1-attack-fire'] },
+    { name: 'Default Mage', cardIds: ['t2-fire-fire', 't2-water-water', 't2-fire-water', 't2-air-earth', 't2-attack-fire'] },
     { name: 'Preset 2', cardIds: [] },
     { name: 'Preset 3', cardIds: [] },
     { name: 'Preset 4', cardIds: [] },

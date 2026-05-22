@@ -117,11 +117,11 @@ export function getDefaultStarterPreset(className: string): DeckPreset {
     return {
       name: 'Default Mage',
       cardIds: [
-        't1-fire-fire',     // 2 elemental
-        't1-water-water',   // 2 elemental
-        't1-fire-water',    // 2 elemental
-        't1-air-earth',     // 2 elemental
-        't1-attack-fire',   // 1 physical + 1 elemental
+        't2-fire-fire',     // 2 elemental
+        't2-water-water',   // 2 elemental
+        't2-fire-water',    // 2 elemental
+        't2-air-earth',     // 2 elemental
+        't2-attack-fire',   // 1 physical + 1 elemental
       ],
     };
   }
@@ -129,11 +129,11 @@ export function getDefaultStarterPreset(className: string): DeckPreset {
   return {
     name: 'Default Warrior',
     cardIds: [
-      't1-attack-attack',     // 2 physical
-      't1-defense-defense',   // 2 physical
-      't1-attack-defense',    // 2 physical
-      't1-agility-agility',   // 2 physical
-      't1-attack-fire',       // 1 physical + 1 elemental
+      't2-attack-attack',     // 2 physical
+      't2-defense-defense',   // 2 physical
+      't2-attack-defense',    // 2 physical
+      't2-agility-agility',   // 2 physical
+      't2-attack-fire',       // 1 physical + 1 elemental
     ],
   };
 }

@@ -26,7 +26,7 @@ function makeRun(relicIds: string[] = []): RunState {
       moveSpeed: 2,
       vitality: 0, dexterity: 0, intellect: 0, spirit: 0, statDeltas: {},
     },
-    deck: { active: ['t1-attack-attack'], inventory: {}, upgraded: [false], droppedCards: [] },
+    deck: { active: ['t2-attack-attack'], inventory: {}, upgraded: [false], droppedCards: [] },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 20 },
     economy: { gold: 0, tilePoints: 0, tileInventory: {}, materials: {} },
     relics: relicIds,

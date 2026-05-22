@@ -20,19 +20,19 @@ vi.mock('../../../src/core/EventBus', () => ({
 // 5-card mix of attack + defense; we approximate "attack-light" and
 // "tank-light" loadouts with proxies that bias damage vs survivability.
 const ATTACK_LIGHT_DECK = [
-  't1-attack-attack',
-  't1-attack-attack',
-  't1-attack-attack',
-  't1-attack-defense',
-  't1-defense-defense',
+  't2-attack-attack',
+  't2-attack-attack',
+  't2-attack-attack',
+  't2-attack-defense',
+  't2-defense-defense',
 ];
 
 const TANK_LIGHT_DECK = [
-  't1-defense-defense',
-  't1-defense-defense',
-  't1-defense-defense',
-  't1-attack-defense',
-  't1-attack-attack',
+  't2-defense-defense',
+  't2-defense-defense',
+  't2-defense-defense',
+  't2-attack-defense',
+  't2-attack-attack',
 ];
 
 function makeStarterRun(deck: string[] = ATTACK_LIGHT_DECK): RunState {

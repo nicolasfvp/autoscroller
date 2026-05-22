@@ -378,7 +378,7 @@ describe('v7 -> v8 migration (element/forge additions)', () => {
 
   it('v7 save preserves existing forgeRecipes if present', () => {
     const existingRecipes = [
-      { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't1-fire-fire', firstForgedAt: 12345 },
+      { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't2-fire-fire', firstForgedAt: 12345 },
     ];
     const v7: any = {
       ...createDefaultMetaState(),

@@ -24,15 +24,17 @@ describe('cards.json', () => {
     }
   });
 
-  it('every Tier 1 card has tier === 1 and every Tier 2 card has tier === 2', () => {
-    // Element-based system (post-Phase 10): cards are tagged by tier.
-    // Verify the canonical t1-/t2- prefix matches the tier field.
+  it('every t{N}- card has tier === N (T1=1 element, T2=2, T3=3)', () => {
+    // Element-based system: card IDs are t{tier}-{elements}. Verify the
+    // canonical prefix matches the tier field.
     const offenders: string[] = [];
     for (const card of cards as any[]) {
       if (card.id.startsWith('t1-') && card.tier !== 1) {
         offenders.push(`${card.id}: tier=${card.tier}, expected 1`);
       } else if (card.id.startsWith('t2-') && card.tier !== 2) {
         offenders.push(`${card.id}: tier=${card.tier}, expected 2`);
+      } else if (card.id.startsWith('t3-') && card.tier !== 3) {
+        offenders.push(`${card.id}: tier=${card.tier}, expected 3`);
       }
     }
     expect(offenders, offenders.join('; ')).toEqual([]);
@@ -213,23 +215,23 @@ describe('Phase 10 (element system) content totals + coverage', () => {
   const cards = cardsData.cards;
   const relics = relicsData as any[];
 
-  it('cards.json has exactly 164 entries (8 Tier 0 + 36 Tier 1 + 120 Tier 2)', () => {
+  it('cards.json has exactly 164 entries (8 Tier 1 + 36 Tier 2 + 120 Tier 3)', () => {
     expect(cards.length).toBe(164);
   });
 
-  it('cards.json contains exactly 8 Tier 0 cards (one per element)', () => {
-    const t0 = (cards as any[]).filter((c) => c.tier === 0);
-    expect(t0.length).toBe(8);
-  });
-
-  it('cards.json contains exactly 36 Tier 1 cards', () => {
+  it('cards.json contains exactly 8 Tier 1 cards (one per element)', () => {
     const t1 = (cards as any[]).filter((c) => c.tier === 1);
-    expect(t1.length).toBe(36);
+    expect(t1.length).toBe(8);
   });
 
-  it('cards.json contains exactly 120 Tier 2 cards', () => {
+  it('cards.json contains exactly 36 Tier 2 cards', () => {
     const t2 = (cards as any[]).filter((c) => c.tier === 2);
-    expect(t2.length).toBe(120);
+    expect(t2.length).toBe(36);
+  });
+
+  it('cards.json contains exactly 120 Tier 3 cards', () => {
+    const t3 = (cards as any[]).filter((c) => c.tier === 3);
+    expect(t3.length).toBe(120);
   });
 
   it('relics.json has exactly 80 entries', () => {

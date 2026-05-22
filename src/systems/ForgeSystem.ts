@@ -44,7 +44,7 @@ export function isTierUnlocked(_tier: CardTier, _forgeLevel: number): boolean {
 
 /** Look up a card definition by its element multiset. Returns null if no card matches. */
 export function findCardForElements(elements: ElementId[]): CardDefinition | null {
-  if (elements.length < 2 || elements.length > 4) return null;
+  if (elements.length < 1 || elements.length > 3) return null;
   const id = canonicalCardId(elements);
   // First try canonical id (alphabetical sort) — matches our spec.
   const direct = getCardById(id);
@@ -75,9 +75,9 @@ export function validateForge(
   deckSize: number,
   deckMax: number,
 ): ForgeValidation {
-  if (elements.length < 2 || elements.length > 4) return { ok: false, reason: 'no_card' };
-  // Tier mapping: 2 elements → tier 1, 3 → tier 2, 4 → tier 3. See ElementSystem.canonicalCardId.
-  const tier = (elements.length - 1) as CardTier;
+  if (elements.length < 1 || elements.length > 3) return { ok: false, reason: 'no_card' };
+  // Tier mapping: 1 element → tier 1, 2 → tier 2, 3 → tier 3. See ElementSystem.canonicalCardId.
+  const tier = elements.length as CardTier;
   if (!isTierUnlocked(tier, forgeLevel)) return { ok: false, reason: 'tier_locked' };
   const card = findCardForElements(elements);
   if (!card || card.locked) return { ok: false, reason: 'no_card' };
@@ -107,11 +107,11 @@ export function executeForge(
   forgeLevel: number,
   knownRecipes: ForgeRecipe[],
 ): ForgeResult {
-  if (elements.length < 2 || elements.length > 4) {
-    throw new Error(`executeForge: invalid element count ${elements.length} (must be 2-4)`);
+  if (elements.length < 1 || elements.length > 3) {
+    throw new Error(`executeForge: invalid element count ${elements.length} (must be 1-3)`);
   }
-  // Tier mapping: 2 elements → tier 1, 3 → tier 2, 4 → tier 3. See ElementSystem.canonicalCardId.
-  const tier = (elements.length - 1) as CardTier;
+  // Tier mapping: 1 element → tier 1, 2 → tier 2, 3 → tier 3. See ElementSystem.canonicalCardId.
+  const tier = elements.length as CardTier;
   const card = findCardForElements(elements)!;
   const cost = getForgeGoldCost(tier, forgeLevel);
   spendElements(elementInv, elements);

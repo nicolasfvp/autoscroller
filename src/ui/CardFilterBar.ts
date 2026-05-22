@@ -46,7 +46,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
 
   // Sub-elements we need to mutate after construction.
   private dropdownLabel!: Phaser.GameObjects.Text;
-  private tierLabels: Array<{ tier: 0 | 1 | 2 | 3; box: Phaser.GameObjects.Rectangle; check: Phaser.GameObjects.Text }> = [];
+  private tierLabels: Array<{ tier: 1 | 2 | 3; box: Phaser.GameObjects.Rectangle; check: Phaser.GameObjects.Text }> = [];
   private dropdownPanel: Phaser.GameObjects.Container | null = null;
   private inputEl: HTMLInputElement | null = null;
 
@@ -68,7 +68,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     this.onChange = onChange;
     this.filters = {
       element: 'All',
-      tiers: new Set<0 | 1 | 2 | 3>([0, 1, 2, 3]),
+      tiers: new Set<1 | 2 | 3>([1, 2, 3]),
       search: '',
     };
 
@@ -158,8 +158,8 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     const baseY = (BAR_HEIGHT - 18) / 2;
     const cellW = 56;
 
-    [0, 1, 2, 3].forEach((tier, i) => {
-      const t = tier as 0 | 1 | 2 | 3;
+    [1, 2, 3].forEach((tier, i) => {
+      const t = tier as 1 | 2 | 3;
       const cx = baseX + i * cellW;
       const box = this.scene.add.rectangle(cx, baseY, 18, 18, 0x2a1408, 0.95)
         .setOrigin(0, 0)

@@ -227,8 +227,8 @@ export class ForgeScene extends Scene {
       const visual = createCardVisual(this, PANEL_CX, cardAreaCenterY, card.id, { scale: 0.5 });
       this.container.add(visual);
     } else {
-      const headline = this.forgeSlots.length >= 2 ? '???' : 'Pick 2-4 elements';
-      const subline = this.forgeSlots.length >= 2
+      const headline = this.forgeSlots.length >= 1 ? '???' : 'Pick 1-3 elements';
+      const subline = this.forgeSlots.length >= 1
         ? 'Tap an element above to swap, or Clear to reset.'
         : 'Tap an element above to add to the recipe.';
       this.container.add([

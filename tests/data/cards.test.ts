@@ -7,14 +7,14 @@ const cards: CardDefinition[] = cardsData.cards as CardDefinition[];
 // Sample Tier 1 cards expected to exist in the element-based card pool.
 // IDs follow the canonical `t{tier}-{elements_sorted}` format (see docs/CARDS_SYSTEM.md §9).
 const EXPECTED_IDS = [
-  't1-attack-attack',
-  't1-defense-defense',
-  't1-agility-agility',
-  't1-counter-counter',
-  't1-fire-fire',
-  't1-water-water',
-  't1-air-air',
-  't1-earth-earth',
+  't2-attack-attack',
+  't2-defense-defense',
+  't2-agility-agility',
+  't2-counter-counter',
+  't2-fire-fire',
+  't2-water-water',
+  't2-air-air',
+  't2-earth-earth',
 ];
 
 describe('cards.json data validation', () => {
@@ -56,7 +56,7 @@ describe('cards.json data validation', () => {
     // The point here is to verify the loader correctly parses cooldowns — we
     // read the source-of-truth values straight from cards.json (not hardcode
     // them in the test) so the assertion stays stable across balance passes.
-    const sampleIds = ['t1-attack-attack', 't1-fire-fire', 't1-defense-defense'];
+    const sampleIds = ['t2-attack-attack', 't2-fire-fire', 't2-defense-defense'];
     for (const id of sampleIds) {
       const raw = (cardsData.cards as any[]).find((c) => c.id === id);
       const loaded = cards.find((c) => c.id === id);
