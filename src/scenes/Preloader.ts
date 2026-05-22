@@ -87,11 +87,13 @@ export class Preloader extends Scene {
       { id: 'depths_horror', folder: 'swamp', file: 'depths horror.png' },
       { id: 'toxic_gooze', folder: 'swamp', file: 'toxic gooze.png' },
       { id: 'venomous_kobra', folder: 'swamp', file: 'venomous kobra.png' },
-      { id: 'lost_lizard', folder: '', file: 'lost_lizard.png' }
+      { id: 'lost_lizard', folder: '', file: 'lost_lizard_1.png' }
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
       this.load.image(`monster_${m.id}`, path);
+      const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
+      this.load.image(`monster_${m.id}_2`, path2);
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)

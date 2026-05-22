@@ -38,6 +38,7 @@ export class CombatScene extends Scene {
 
   private gameSpeed: number = 1;
   private transitioning = false;
+  private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
@@ -364,6 +365,19 @@ export class CombatScene extends Scene {
 
       if (this.textures.exists(this.enemyTextureKey)) {
         this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
+        const key2 = `${this.enemyTextureKey}_2`;
+        if (this.textures.exists(key2)) {
+          let frame = 0;
+          this.enemyIdleTimer = this.time.addEvent({
+            delay: 500, loop: true,
+            callback: () => {
+              if (this.enemySprite instanceof Phaser.GameObjects.Image) {
+                frame = 1 - frame;
+                this.enemySprite.setTexture(frame === 0 ? this.enemyTextureKey : key2);
+              }
+            },
+          });
+        }
       } else {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
@@ -433,6 +447,7 @@ export class CombatScene extends Scene {
     eventBus.off('combat:deck-reshuffled', this.onDeckReshuffled);
     eventBus.off('combat:enemy-attack', this.onEnemyAttack);
     eventBus.off('combat:end', this.onCombatEnd);
+    if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
     try { const run = getRun(); run.isInCombat = false; } catch {}
