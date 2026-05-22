@@ -268,6 +268,10 @@ export function migrateRunState(raw: any): RunState | null {
     if (raw.hero?.className === 'shadowblade') raw.hero.className = 'warrior';
     raw.version = 5;
   }
+  // v5 → v6: no structural changes — version bumped to refresh in-combat fixtures.
+  if (raw.version === 5) {
+    raw.version = 6;
+  }
   return raw as RunState;
 }
 

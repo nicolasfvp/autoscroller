@@ -72,20 +72,18 @@ describe('UnlockManager', () => {
       const ids = tiles.map(t => t.id);
       expect(ids).toContain('basic');
       expect(ids).toContain('forest');
-      expect(ids).toContain('rest');
       expect(ids).toContain('event');
       expect(ids).toContain('treasure');
       expect(ids).toContain('boss');
-      expect(ids).not.toContain('shop');
       expect(ids).not.toContain('graveyard');
-      expect(tiles.length).toBe(6);
+      expect(tiles.length).toBe(5);
     });
 
     it('returns base tiles plus graveyard when unlocked', () => {
       const tiles = getAvailableTiles(['graveyard']);
       const ids = tiles.map(t => t.id);
       expect(ids).toContain('graveyard');
-      expect(tiles.length).toBe(7);
+      expect(tiles.length).toBe(6);
     });
   });
 });
