@@ -13,6 +13,7 @@ import { eventBus } from '../core/EventBus';
 import { clearPendingLoot } from '../systems/PendingLoot';
 import { getStorehouseEffects } from '../systems/MetaProgressionSystem';
 import { resetRNG } from '../systems/LootGenerator';
+import { dailySeedString, deriveDailyRunConfig } from '../systems/DailySeed';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -89,6 +90,9 @@ export interface LoopState {
   positionInLoop?: number;
   /** Difficulty multiplier for the current loop. Persisted on save. */
   difficultyMultiplier?: number;
+  /** C7 — Trailblazer's Brand: set true after the relic fires on the first
+   *  combat tile in the current loop. Reset to false on loop completion. */
+  trailblazerFiredThisLoop?: boolean;
 }
 
 export interface EconomyState {
@@ -127,6 +131,11 @@ export interface RunState {
   runId: string;
   /** Seed string used to construct the run's SeededRNG (deterministic replays). */
   seed: string;
+  /**
+   * Run mode. 'daily' opts into the MQTT-ticker broadcast and a separate
+   * save slot so it doesn't clobber a normal run in progress. Absent = normal.
+   */
+  mode?: 'normal' | 'daily';
   /** Run generation (heir system) */
   generation: number;
   /** Timestamp of run start */
@@ -165,7 +174,7 @@ export interface RunState {
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
-export const RUN_STATE_VERSION = 5;
+export const RUN_STATE_VERSION = 6;
 
 /**
  * Apply schema migrations to a raw save blob and return a usable RunState.
@@ -358,6 +367,20 @@ export function createNewRun(
       goldEarned: 0,
     },
   };
+}
+
+/**
+ * Build a fresh Daily Run. Class + starter deck are derived from
+ * `daily-YYYY-MM-DD` so every player worldwide gets the same setup. Marked
+ * with `mode: 'daily'` so SaveManager routes it to its own slot and the
+ * MQTT broadcaster knows to start publishing.
+ */
+export function createNewDailyRun(metaState?: MetaState, date: Date = new Date()): RunState {
+  const seed = dailySeedString(date);
+  const config = deriveDailyRunConfig(seed);
+  const run = createNewRun(metaState, 1, config.className, seed, config.starterDeck);
+  run.mode = 'daily';
+  return run;
 }
 
 // ── Module-level accessor ───────────────────────────────────

@@ -33,8 +33,6 @@ function makeMinState(overrides: Partial<CombatState> = {}): CombatState {
     slowStacks: 0,
     enemyAttackedSinceLastBleedTick: false,
     poisonTickParity: 0,
-    arcaneStacks: 0,
-    arcaneStacksCap: 10,
     rageStacks: 0,
     heroBurnStacks: 0,
     heroBleedStacks: 0,

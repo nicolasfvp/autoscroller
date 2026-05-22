@@ -1,12 +1,22 @@
 import tilesData from '../data/tiles.json';
 
-export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'rest' | 'event' | 'treasure' | 'boss';
-export type TerrainType = 'forest' | 'graveyard' | 'swamp';
+export type TileSlotType = 'basic' | 'buffer' | 'terrain' | 'subtile' | 'event' | 'treasure' | 'boss';
+export type TerrainType = 'forest' | 'graveyard' | 'swamp' | 'desert' | 'lava';
+
+export type SubtileEffectKey =
+  | 'ambush' | 'magma_burst'
+  | 'mana_well' | 'tactical'
+  | 'burn_altar' | 'bleed_totem' | 'resonance'
+  | 'war_horn';
 
 export interface TileConfig {
   type: TileSlotType;
   terrain?: TerrainType;
+  /** Subtile effect identifier. Only set on `type === 'subtile'` entries. */
+  effect?: SubtileEffectKey;
   name: string;
+  /** Short hover-tooltip blurb shown in the planning picker. */
+  description?: string;
   color: number;
   /** Optional hex string equivalent of color (Phase 9 design v2 LOCKED palette). */
   hexColor?: string;
@@ -20,13 +30,20 @@ export interface TileSlot {
   type: TileSlotType;
   terrain?: TerrainType;
   /**
-   * Phase 9: tile registry key (e.g. 'library', 'arena', 'shrine_of_pact').
-   * Carried separately from `type` so adjacency resolution can match the
-   * specific registry key for tiles that share an existing `type` umbrella
-   * (e.g. library/arena/shrine_of_pact all use type='event' but need
-   * distinct adjacency keys per design/04 §7).
+   * Registry key for the specific tile entry. Carried separately from
+   * `type` so subtile slots (which all share type='subtile') resolve
+   * back to their distinct entries (subtile_ambush, subtile_warhorn, ...)
+   * for sprite lookup and effect resolution.
    */
   kind?: string;
+  /** Subtile effect ID. Only populated when `type === 'subtile'`. */
+  subtileEffect?: SubtileEffectKey;
+  /**
+   * Marks an empty slot earmarked by an adjacent combat/boss tile for a
+   * subtile placement. Reserved slots accept only subtile entries during
+   * planning; non-reserved empty slots accept only non-subtile entries.
+   */
+  reserved?: boolean;
   defeatedThisLoop: boolean;
   /** Pre-assigned enemy ID for combat tiles (visible on the world map) */
   enemyId?: string;
@@ -63,6 +80,16 @@ export function createTileSlot(key: string): TileSlot {
     type: config.type,
     terrain: config.terrain,
     kind: key,
+    subtileEffect: config.effect,
+    defeatedThisLoop: false,
+  };
+}
+
+/** Build an empty slot marked as reserved for a subtile placement. */
+export function createReservedSlot(): TileSlot {
+  return {
+    type: 'basic',
+    reserved: true,
     defeatedThisLoop: false,
   };
 }

@@ -212,8 +212,6 @@ describe('CombatState — Phase 9 transient fields', () => {
     expect(state.burnStacks).toBe(0);
     expect(state.stunStacks).toBe(0);
     expect(state.slowStacks).toBe(0);
-    expect(state.arcaneStacks).toBe(0);
-    expect(state.arcaneStacksCap).toBe(10);
     expect(state.rageStacks).toBe(0);
   });
 

@@ -9,6 +9,8 @@ import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { attachKeywordHover, scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
+import { addGlossaryButton } from '../ui/GlossaryButton';
+import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 import { getCardById } from '../data/DataLoader';
 
 const COLS = 6;
@@ -102,6 +104,11 @@ export class DeckCustomizationScene extends Scene {
       stroke: '#000000',
       strokeThickness: 1,
     }).setOrigin(0.5);
+
+    // Keyword glossary "?" — top-right corner, above the deck frame.
+    // Hydrate seen-keywords so the glossary filters correctly on first open.
+    void keywordIntro.init();
+    addGlossaryButton(this, 770, 30);
 
     // ── Dropped cards strip ──
     this.droppedStrip = this.add.container(0, 0);

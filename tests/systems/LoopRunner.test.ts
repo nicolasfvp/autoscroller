@@ -265,18 +265,7 @@ describe('LoopRunner', () => {
     expect(combatEvent!.data.enemyId).toBe('slime'); // first in forest pool
   });
 
-  it('rest tile entry emits open-scene with RestSiteScene', () => {
-    runner.startRun(runState);
-    runState.loop.tiles[1] = { type: 'rest', defeatedThisLoop: false };
-    runState.loop.tiles[0].defeatedThisLoop = true;
-    for (let i = 0; i < 5; i++) {
-      if (runner.getState() !== 'traversing') break;
-      runner.tick(500);
-    }
-    const sceneEvent = events.find(e => e.event === 'open-scene');
-    expect(sceneEvent).toBeDefined();
-    expect(sceneEvent!.data.scene).toBe('RestSiteScene');
-  });
+  // Wave 3: rest tile removed; auto-heal moved to ShopScene.applyLoopEndAutoHeal.
 
   it('resumeTraversal transitions back to traversing', () => {
     runner.startRun(runState);
@@ -304,23 +293,7 @@ describe('LoopRunner', () => {
     expect(runner.getState()).toBe('boss-choice');
   });
 
-  it('confirmPlanning recalculates synergy buffs', () => {
-    runner.startRun(runState);
-    for (const t of runState.loop.tiles) {
-      t.defeatedThisLoop = true;
-    }
-    for (let i = 0; i < 25; i++) {
-      if (runner.getState() !== 'traversing') break;
-      runner.tick(1000);
-    }
-    // Place two adjacent forest tiles in basic slots (5 = first basic, 6 = second).
-    // Clear pre-assigned enemies (rng=0 < basicTileCombatChance assigns them).
-    runState.loop.tiles[5].enemyId = undefined;
-    runState.loop.tiles[6].enemyId = undefined;
-    runner.placeTile(5, 'forest');
-    runner.placeTile(6, 'forest');
-    runner.confirmPlanning();
-    const buffs = runner.getActiveBuffs();
-    expect(buffs.some(b => b.type === 'goldDropBonus')).toBe(true);
-  });
+  // Wave 2: adjacency synergy buffs removed along with SynergyResolver.
+  // confirmPlanning no longer recomputes buffs; subtile effect resolution
+  // happens per-combat in Wave 4+ via SubtileResolver.
 });

@@ -27,7 +27,10 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     enemyHP: 100, enemyMaxHP: 100,
     enemyDefense: 0, enemyDamage: 10,
     enemyAttackCooldown: 2000,
+    enemyBaseAttackCooldown: 2000,
     enemyPattern: 'fixed',
+    firstCardCostsZero: false,
+    firstNCardsStaminaDiscount: 0,
     enemySpecialEffect: null,
     enemyAffinity: null,
     activePassives: [],
@@ -41,11 +44,11 @@ function makeState(overrides: Partial<CombatState> = {}): CombatState {
     phoenixUsed: false,
     heroVitality: 0, heroDexterity: 0, heroIntellect: 0, heroSpirit: 0,
     poisonStacks: 0, bleedStacks: 0, burnStacks: 0,
-    stunStacks: 0, slowStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    stunStacks: 0, slowStacks: 0, rageStacks: 0,
     enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     ...overrides,
-  };
+  } as CombatState;
 }
 
 describe('EnemyAI', () => {

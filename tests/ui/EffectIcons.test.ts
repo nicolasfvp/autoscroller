@@ -12,7 +12,6 @@ function makeMinState(overrides: Partial<CombatState> = {}): CombatState {
     burnStacks: 0,
     stunStacks: 0,
     slowStacks: 0,
-    arcaneStacks: 0,
     rageStacks: 0,
     heroBurnStacks: 0,
     heroBleedStacks: 0,
@@ -33,11 +32,10 @@ describe('computeEnemyChips', () => {
       burnStacks: 5,
       stunStacks: 1,
       slowStacks: 4,
-      arcaneStacks: 6,
     }));
     expect(chips.map(c => c.key)).toEqual([
       'enemy-poison', 'enemy-bleed', 'enemy-burn',
-      'enemy-stun', 'enemy-slow', 'enemy-arcane',
+      'enemy-stun', 'enemy-slow',
     ]);
     expect(chips[0].label).toBe('3');
     expect(chips[2].label).toBe('5');

@@ -157,12 +157,6 @@
         "dropChance": 0.7,
         "minQuantity": 1,
         "maxQuantity": 2
-      },
-      {
-        "tileType": "rest",
-        "dropChance": 0.7,
-        "minQuantity": 1,
-        "maxQuantity": 2
       }
     ]
   },
@@ -205,12 +199,6 @@
       {
         "tileType": "treasure",
         "dropChance": 0.8,
-        "minQuantity": 1,
-        "maxQuantity": 2
-      },
-      {
-        "tileType": "rest",
-        "dropChance": 0.7,
         "minQuantity": 1,
         "maxQuantity": 2
       }

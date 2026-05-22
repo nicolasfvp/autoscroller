@@ -1,7 +1,9 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { ShopSystem } from '../systems/ShopSystem';
-import { getRelicById } from '../data/DataLoader';
+import { getRelicById, getCardById } from '../data/DataLoader';
+import { relicSynergizesWithDeck } from '../systems/cards/SynergyDetection';
+import type { CardDefinition } from '../data/types';
 import { FONTS } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -68,6 +70,10 @@ export class ShopScene extends Scene {
   private modalContainer!: Phaser.GameObjects.Container;
   /** Scene to wake/resume when the shop closes. Defaults to GameScene. */
   private parentSceneKey: string = SCENE_KEYS.GAME;
+  /** C7 — Relics roll cached for the duration of this shop visit, so opening
+   *  the relic modal multiple times shows the same picks until the player
+   *  leaves and re-enters the shop. */
+  private cachedRelicRoll?: import('../systems/ShopSystem').ShopRelic[];
 
   constructor() { super(SCENE_KEYS.SHOP); }
 
@@ -80,6 +86,12 @@ export class ShopScene extends Scene {
       const run = getRun();
       run.economy.removalsThisShop = 0;
       run.economy.reordersThisShop = 0;
+
+      // Wave 3: rest tiles removed. The auto-heal that used to live on the
+      // rest tile now fires on shop entry (one shop visit per loop). Hearty
+      // Meal multiplies the heal and tops up stamina; Lodestone Pendant
+      // already fires in LoopRunner.onLoopCompleted independently.
+      this.applyLoopEndAutoHeal(run);
 
       this.scene.bringToTop();
 
@@ -123,6 +135,24 @@ export class ShopScene extends Scene {
     } catch (err) {
       console.error('[ShopScene] Critical error in create():', err);
       this.close();
+    }
+  }
+
+  /**
+   * Wave 3: loop-end auto-heal that replaces the deleted rest tile.
+   * Base 30% HP recovery (matches the old rest_choice 'rest' value).
+   * Hearty Meal relic adds +50% heal and +2 stamina, mirroring its prior
+   * behavior on rest tiles. Lodestone Pendant still fires independently
+   * in LoopRunner.onLoopCompleted, so it is not re-applied here.
+   */
+  private applyLoopEndAutoHeal(run: ReturnType<typeof getRun>): void {
+    const baseRecoveryPct = 0.3;
+    const heartyMeal = (run.relics ?? []).includes('hearty_meal');
+    const recoveryPct = baseRecoveryPct * (heartyMeal ? 1.5 : 1.0);
+    const heal = Math.floor(run.hero.maxHP * recoveryPct);
+    run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
+    if (heartyMeal) {
+      run.hero.currentStamina = Math.min(run.hero.maxStamina, run.hero.currentStamina + 2);
     }
   }
 
@@ -319,12 +349,29 @@ export class ShopScene extends Scene {
   }
 
   private modalRelics(): void {
-    const run = getRun(); const relics = ShopSystem.getShopRelics(run, run.pool.relics);
+    const run = getRun();
+    if (!this.cachedRelicRoll) {
+      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
+    }
+    const relics = this.cachedRelicRoll;
+    // Resolve the active deck once so the per-relic synergy check doesn't
+    // re-hydrate cards inside the renderCell loop.
+    const deckCards: CardDefinition[] = [];
+    for (const id of run.deck.active) {
+      const c = getCardById(id);
+      if (c) deckCards.push(c);
+    }
     this.createShopModal({
       title: '💎 Buy Relics', emptyMessage: 'Out of stock.', items: relics, cols: 2, cellW: 202, cellH: 76, reopenKey: 'relics',
       canAfford: (r) => run.economy.gold >= r.price, onSelect: (r) => ShopSystem.buyRelic(run, r.relicId, r.price),
       renderCell: (r, _i, x, cy, ok, bg) => {
-        bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020); const d = getRelicById(r.relicId);
+        const d = getRelicById(r.relicId);
+        const synergizes = ok && !!d?.description && relicSynergizesWithDeck(d.description, deckCards);
+        if (synergizes) {
+          bg.setStrokeStyle(2, 0xffd700, 0.85);
+        } else {
+          bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020);
+        }
         const img = this.add.image(x - 65, cy, `relic_${r.relicId}`).setDisplaySize(48, 48); if (!ok) img.setTint(0x555555);
         const n = this.add.text(x + 15, cy - 20, d?.name ?? r.name, { fontSize: '14px', fontStyle: 'bold', color: ok ? GOLD : DIM, fontFamily: FF, stroke: '#000', strokeThickness: 2 }).setOrigin(0.5);
         const ds = this.add.text(x + 15, cy + 2, d?.description ?? '...', { fontSize: '10px', color: ok ? CYAN : DIM, fontFamily: FF, wordWrap: { width: 126 }, align: 'center' }).setOrigin(0.5);

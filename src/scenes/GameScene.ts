@@ -9,18 +9,17 @@ import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
-import { drainPendingLoot, hasPendingLoot, addPendingLoot } from '../systems/PendingLoot';
+import { drainPendingLoot, hasPendingLoot } from '../systems/PendingLoot';
 import { showLootNotifications } from '../ui/LootNotification';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
-import { resolveInlineEvent, setActiveBuffs as setEventBuffs } from '../systems/InlineEvents';
+import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
 import { setActiveRNG, rand } from '../systems/SharedRNG';
-import { setActiveBuffs as setCardBuffs, clearActiveBuffs as clearCardBuffs } from '../systems/combat/CardResolver';
-import { setActiveBuffs as setLootBuffs } from '../systems/CombatLoot';
-import { setActiveBuffs as setRestBuffs } from '../systems/RestSiteSystem';
-import { setActiveBuffs as setMetaBuffs } from '../systems/MetaProgressionSystem';
-import type { SynergyBuff } from '../systems/SynergyResolver';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { dailyRunBroadcaster } from '../systems/DailyRunBroadcaster';
+import { dailyRunTicker } from '../systems/DailyRunTicker';
+import { DailyTickerPanel } from '../ui/DailyTickerPanel';
+import { ensureNickname } from '../systems/DailySeed';
 
 /**
  * GameScene -- thin Phaser wrapper over LoopRunner.
@@ -52,7 +51,7 @@ export class GameScene extends Scene {
 
   // Auto-save subscription (cleared on shutdown to avoid stacked listeners)
   private autoSaveUnsubscribe?: () => void;
-  
+
   // Parallax Backgrounds
   private bgSky?: Phaser.GameObjects.TileSprite;
   private bgDesert?: Phaser.GameObjects.TileSprite;
@@ -242,6 +241,17 @@ export class GameScene extends Scene {
     // reload and without us caching the value here.
     this.autoSaveUnsubscribe = saveManager.setupAutoSave(() => getRun());
 
+    // Daily Run wiring — only when this run was started in daily mode.
+    // Ticker + broadcaster live at module level so they survive the
+    // GameScene <-> CombatScene swap; the panel UI self-destructs on
+    // scene shutdown so we don't need to hold the reference.
+    if (run.mode === 'daily') {
+      const nickname = ensureNickname();
+      dailyRunBroadcaster.start(run.runId, nickname);
+      dailyRunTicker.start();
+      new DailyTickerPanel(this, { selfRunId: run.runId });
+    }
+
     // Initial visual setup: ensure tiles and HUD are populated immediately
     this.updateTilePool();
     
@@ -384,30 +394,22 @@ export class GameScene extends Scene {
     switch (event) {
       case 'combat-start': {
         this.scene.pause(SCENE_KEYS.GAME);
-        this.scene.launch(SCENE_KEYS.COMBAT, { 
-          enemyId: data.enemyId, 
-          isBoss: data.isBoss, 
-          terrain: data.terrain ?? 'basic' 
+        this.scene.launch(SCENE_KEYS.COMBAT, {
+          enemyId: data.enemyId,
+          isBoss: data.isBoss,
+          terrain: data.terrain ?? 'basic',
+          // Wave 4 wiring: forward the resolved subtile effect list for this
+          // combat target. Wave 6 consumes the bag in CombatScene.init to
+          // pre-apply enemy/hero stacks and arm build amplifiers.
+          subtileEffects: data.subtileEffects ?? [],
         });
         break;
       }
       case 'open-scene': {
         const run = getRun();
 
-        // ── Rest: heal 30% inline ──
-        if (data.scene === 'RestSiteScene') {
-          const heal = Math.floor(run.hero.maxHP * 0.3);
-          run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
-          run.hero.currentStamina = run.hero.maxStamina;
-          run.hero.currentMana = run.hero.maxMana;
-          addPendingLoot([{ label: `+${heal} HP, full STA/MP (rest)`, color: '#00ff00' }]);
-          this.showPendingNotifications();
-          // Force immediate HUD update so HP bar reflects heal (feedback #31)
-          this.syncRunState();
-          if (this.hud) this.hud.update(run);
-          this.loopRunner.resumeTraversal();
-          break;
-        }
+        // Wave 3: rest tile + RestSiteScene removed. The auto-heal that used
+        // to fire here now runs in ShopScene.applyLoopEndAutoHeal on shop entry.
 
         // ── Event: inline random effect ──
         if (data.scene === 'EventScene') {
@@ -512,11 +514,8 @@ export class GameScene extends Scene {
         break;
       }
       case 'loop-started': {
-        // Loop resumed after planning -- broadcast adjacency buffs to the
-        // systems that consume them (combat damage, loot rolls, events,
-        // rest healing, run-end XP banking). Cleared again on shutdown.
-        const buffs: SynergyBuff[] = data?.buffs ?? this.loopRunner.getActiveBuffs();
-        this.applyBuffsToSystems(buffs);
+        // Synergy buff distribution removed in Wave 2. Subtile effects are
+        // computed and dispatched per-combat in Wave 4+ via a different path.
         break;
       }
       case 'run-exited': {
@@ -566,14 +565,6 @@ export class GameScene extends Scene {
   }
 
 
-  private applyBuffsToSystems(buffs: SynergyBuff[]): void {
-    setCardBuffs(buffs);
-    setLootBuffs(buffs);
-    setEventBuffs(buffs);
-    setRestBuffs(buffs);
-    setMetaBuffs(buffs);
-  }
-
   private cleanup(): void {
     if (this.autoSaveUnsubscribe) {
       this.autoSaveUnsubscribe();
@@ -586,11 +577,5 @@ export class GameScene extends Scene {
     // Drop the module-level RNG so it can't bleed into the next run / a
     // standalone scene that opens after game shutdown.
     setActiveRNG(null);
-    // Clear adjacency buffs so they don't survive into a next run/scene.
-    clearCardBuffs();
-    setLootBuffs([]);
-    setEventBuffs([]);
-    setRestBuffs([]);
-    setMetaBuffs([]);
   }
 }

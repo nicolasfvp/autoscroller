@@ -3,31 +3,10 @@ import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import difficultyConfig from '../data/difficulty.json';
 import type { RunState } from '../state/RunState';
 import { rand } from './SharedRNG';
-import type { SynergyBuff } from './SynergyResolver';
 import { eventBus } from '../core/EventBus';
+import { getRelicData } from './combat/RelicSystem';
 
 const pricing = (difficultyConfig as any).pricing;
-
-// Phase 9: tile-adjacency cardUpgradeDiscount (Library+Shop) is sourced from
-// SynergyResolver via the same setActiveBuffs() module pattern CardResolver
-// and RestSiteSystem use. The LoopRunner pushes the current buff set here
-// when it pushes to the other consumers, so ShopSystem.upgradeCard can shave
-// the upgrade price without a synergy-resolver dependency injection rewrite.
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-export function getCardUpgradeDiscount(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'cardUpgradeDiscount') bonus += buff.value;
-  }
-  // Clamp to [0, 1) — the math below survives 1.0 but a 100%+ discount would
-  // negate the gold sink the relic was tuned around.
-  return Math.min(0.95, Math.max(0, bonus));
-}
 
 export interface ShopCard {
   cardId: string;
@@ -65,10 +44,16 @@ export class ShopSystem {
     );
   }
 
-  static getRelicPrice(rarity: string, loopCount: number): number {
-    const base = pricing.relicPriceByRarity[rarity] ?? 150;
-    const cap = pricing.relicPriceCap[rarity] ?? 300;
-    return Math.min(base + loopCount * pricing.relicPricePerLoop, cap);
+  static getRelicPrice(rarity: string, loopCount: number, runState?: RunState): number {
+    const base = pricing.relicPriceByRarity[rarity] ?? 180;
+    const cap = pricing.relicPriceCap[rarity] ?? 320;
+    const perLoop = pricing.relicPricePerLoop[rarity] ?? 12;
+    let price = Math.min(base + loopCount * perLoop, cap);
+    // C7 — Beacon Lantern: -10% relic prices while held.
+    if (runState && (runState.relics ?? []).includes('beacon_lantern')) {
+      price = Math.floor(price * 0.9);
+    }
+    return price;
   }
 
   // ── Shop operations ────────────────────────────────────────
@@ -119,12 +104,20 @@ export class ShopSystem {
   static getShopRelics(runState: RunState, availableRelicIds: string[], loopCount: number = 0): ShopRelic[] {
     const unowned = availableRelicIds.filter(id => !runState.relics.includes(id));
     const shuffled = fisherYates([...unowned]);
-    const count = Math.min(1 + Math.floor(rand() * 2), shuffled.length);
-    return shuffled.slice(0, count).map(id => ({
-      relicId: id,
-      name: id,
-      price: ShopSystem.getRelicPrice('common', loopCount), // default to common; callers can override
-    }));
+    // C7 — Beacon Lantern: +2 relics per shop. Base shop size is 5.
+    const baseCount = 5;
+    const lanternBonus = (runState.relics ?? []).includes('beacon_lantern') ? 2 : 0;
+    const count = Math.min(baseCount + lanternBonus, shuffled.length);
+    return shuffled.slice(0, count).map(id => {
+      // Read the relic's actual rarity so pricing is correct per tier.
+      const relic = getRelicData(id);
+      const rarity = relic?.rarity ?? 'common';
+      return {
+        relicId: id,
+        name: relic?.name ?? id,
+        price: ShopSystem.getRelicPrice(rarity, loopCount, runState),
+      };
+    });
   }
 
   static buyRelic(runState: RunState, relicId: string, price: number): boolean {
@@ -154,13 +147,9 @@ export class ShopSystem {
   ): boolean {
     if (deckIndex < 0 || deckIndex >= runState.deck.active.length) return false;
     if (runState.deck.upgraded[deckIndex]) return false;
-    // Phase 9: shave the upgrade price by the active cardUpgradeDiscount buff
-    // (Library + Shop adjacency = 0.20 per design/04 §7). The discount is
-    // floored after the multiplier so a 20% discount on a 50g common upgrade
-    // costs 40g, not 39.99g.
-    const basePrice = ShopSystem.getUpgradePrice(rarity);
-    const discount = getCardUpgradeDiscount();
-    const price = Math.max(0, Math.floor(basePrice * (1 - discount)));
+    // Tile-adjacency Library+Shop discount removed in Wave 2; upgrade
+    // pricing is now the base price by rarity.
+    const price = ShopSystem.getUpgradePrice(rarity);
     if (runState.economy.gold < price) return false;
     runState.economy.gold -= price;
     runState.deck.upgraded[deckIndex] = true;

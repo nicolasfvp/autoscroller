@@ -12,7 +12,7 @@ export interface BossEncounterData {
 // Base stats for the boss enemy
 const BOSS_BASE_STATS = {
   baseHP: 150,
-  attack: { damage: 25 },
+  attack: { damage: 15 },
   baseDefense: 10,
   goldReward: { min: 50, max: 80 },
 };

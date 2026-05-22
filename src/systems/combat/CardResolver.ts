@@ -3,7 +3,6 @@
 
 import type { CardDefinition, CardEffect, SynergyDefinition, StatId, StackId, ScaleSourceKind } from '../../data/types';
 import type { CombatState } from './CombatState';
-import type { SynergyBuff } from '../SynergyResolver';
 import { readStat } from '../hero/HeroStatsResolver';
 import { applyHeroDamage } from './EnemyAI';
 import { createAura, sumModifier, sumModifierStackScaled, fireRecurringTrigger, applyTriggeredPayload } from './StatusEffects';
@@ -16,26 +15,6 @@ export interface ResolveResult {
   cooldownDebtSec?: number;
   /** v3: Tectonic Reckoning — request the engine to force-trigger all cards. */
   forceTriggerAll?: boolean;
-}
-
-// Module-level active adjacency buffs from LoopRunner.
-// `damageBonus` is summed and added as a flat damage multiplier (e.g. 0.20 → +20%).
-let activeBuffs: SynergyBuff[] = [];
-
-export function setActiveBuffs(buffs: SynergyBuff[]): void {
-  activeBuffs = buffs ?? [];
-}
-
-export function clearActiveBuffs(): void {
-  activeBuffs = [];
-}
-
-function getDamageBuffMultiplier(): number {
-  let bonus = 0;
-  for (const buff of activeBuffs) {
-    if (buff.type === 'damageBonus') bonus += buff.value;
-  }
-  return 1 + bonus;
 }
 
 /** v3: stack pool snapshot taken at the start of every card resolution. Used
@@ -53,7 +32,6 @@ export function snapshotStacks(state: CombatState): PreConsumeSnapshot {
     burn: state.burnStacks,
     stun: state.stunStacks,
     slow: state.slowStacks,
-    arcane: state.arcaneStacks,
     rage: state.rageStacks,
     hero_bleed: state.heroBleedStacks,
     hero_burn: state.heroBurnStacks,
@@ -76,7 +54,13 @@ export class CardResolver {
   canAfford(card: CardDefinition, state: CombatState, isUpgraded: boolean = false): boolean {
     const cost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
     if (!cost) return true;
-    if (cost.stamina !== undefined && state.heroStamina < cost.stamina) return false;
+    // Smoldering Torch: while firstCardCostsZero is armed, the upcoming card is free.
+    if (state.firstCardCostsZero) return true;
+    // Vanguard Cuffs: stamina cost is reduced by 1 (min 0) for the next N cards.
+    const staminaCost = (cost.stamina !== undefined && state.firstNCardsStaminaDiscount > 0)
+      ? Math.max(0, cost.stamina - 1)
+      : cost.stamina;
+    if (staminaCost !== undefined && state.heroStamina < staminaCost) return false;
     if (cost.mana !== undefined && state.heroMana < cost.mana) return false;
     if (cost.defense !== undefined && state.heroDefense < cost.defense) return false;
     return true;
@@ -105,12 +89,30 @@ export class CardResolver {
     const effectiveEffects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
     const effectiveCost = (isUpgraded && card.upgraded?.cost) ? card.upgraded.cost : card.cost;
 
-    // Pay costs (unless synergy provides cost_waive)
+    // Pay costs (unless synergy provides cost_waive).
+    // C1 relic flags: Smoldering Torch zeros the whole cost; Vanguard Cuffs
+    // shaves 1 Stamina from the next N cards.
     const waiveCost = synergyBonus?.bonus.type === 'cost_waive';
     if (effectiveCost && !waiveCost) {
-      if (effectiveCost.stamina) state.heroStamina -= effectiveCost.stamina;
-      if (effectiveCost.mana) state.heroMana -= effectiveCost.mana;
-      if (effectiveCost.defense) state.heroDefense -= effectiveCost.defense;
+      if (state.firstCardCostsZero) {
+        state.firstCardCostsZero = false;
+      } else {
+        let staminaToPay = effectiveCost.stamina ?? 0;
+        let manaToPay = effectiveCost.mana ?? 0;
+        if (state.firstNCardsStaminaDiscount > 0 && staminaToPay > 0) {
+          staminaToPay = Math.max(0, staminaToPay - 1);
+          state.firstNCardsStaminaDiscount -= 1;
+        }
+        // C6 — Ash Eater: pending Pyre-payoff discount on the next card.
+        if (state.relicCounters && (state.relicCounters['ash_eater_pending'] ?? 0) > 0) {
+          if (staminaToPay > 0) staminaToPay = Math.max(0, staminaToPay - 1);
+          if (manaToPay > 0) manaToPay = Math.max(0, manaToPay - 1);
+          state.relicCounters['ash_eater_pending'] = 0;
+        }
+        if (staminaToPay) state.heroStamina -= staminaToPay;
+        if (manaToPay) state.heroMana -= manaToPay;
+        if (effectiveCost.defense) state.heroDefense -= effectiveCost.defense;
+      }
     }
 
     // v3: capture pre-consume snapshot of every relevant stack pool so that
@@ -203,7 +205,11 @@ export class CardResolver {
       if (cond.self_has_stack !== undefined) {
         const stacks = readStackCount(state, cond.self_has_stack, 'self');
         if (stacks <= 0) return;
-        if (cond.per_stack) effectiveValue *= stacks;
+        if (cond.per_stack) {
+          // C5 — Berserker Ring: Berserk bonuses (per-Rage-stack self-conditions) double.
+          const berserkerMult = (cond.self_has_stack === 'rage' && state.activeRelicIds.includes('berserker_ring')) ? 2 : 1;
+          effectiveValue *= stacks * berserkerMult;
+        }
       }
       if (cond.hero_hp_pct_below !== undefined) {
         const pct = (state.heroHP / Math.max(1, state.heroMaxHP)) * 100;
@@ -234,6 +240,14 @@ export class CardResolver {
         // `devour` effect in the same cast successfully consumed a slot.
         const ok = (result as ResolveResult & { _devourSucceeded?: boolean })._devourSucceeded === true;
         if (!ok) return;
+      }
+      // v4 Vengeance: fires when hero took HP damage within the configured
+      // window. `lastHeroDamageMs` is null until the first hit lands, so
+      // condition fails silently at full HP / first-card resolutions.
+      if (cond.took_damage_within_ms !== undefined) {
+        const last = state.lastHeroDamageMs;
+        if (last === null) return;
+        if (state.combatElapsedMs - last > cond.took_damage_within_ms) return;
       }
     }
 
@@ -267,6 +281,14 @@ export class CardResolver {
       cond?.enemy_has_stack === 'burn' &&
       cond?.per_stack === true
     ) {
+      // C6 — Ash Eater: Pyre detonation grants +1 Mana / +1 Stamina and discounts
+      // the next card by 1 of each. Read before burnStacks reset so the relic only
+      // fires when this cast had Burn to consume.
+      if (state.burnStacks > 0 && state.activeRelicIds.includes('ash_eater')) {
+        state.heroMana = Math.min(state.heroMaxMana, state.heroMana + 1);
+        state.heroStamina = Math.min(state.heroMaxStamina, state.heroStamina + 1);
+        state.relicCounters['ash_eater_pending'] = 1;
+      }
       state.burnStacks = 0;
     }
 
@@ -341,7 +363,10 @@ export class CardResolver {
         // (design/00 §3). We don't know the card category at this layer, so
         // INT scaling is applied via the explicit `scale: { stat: 'int' }`
         // metadata on magic cards — keeps the resolver category-agnostic.
-        const buffMult = getDamageBuffMultiplier();
+        // Tile-adjacency damage buff removed in Wave 2; subtile build
+        // amplifiers (burn_altar / bleed_totem / resonance) land in Wave 6
+        // via a different per-fight consumption pathway.
+        const buffMult = 1;
         // v3: hero_hit_bonus — flat-per-hit addend, optionally scaled per
         // stack named in the aura's modifier.stack field (Iron Reckoning =
         // +value × Rage). Applied to the pre-multiplier value so STR scales it.
@@ -358,7 +383,19 @@ export class CardResolver {
         // (Empower-style buffs). Combined multiplicatively with buffMult.
         const dealtPct = sumModifier(state.heroAuras, 'damage_dealt_pct');
         const dealtMult = 1 + dealtPct;
-        const baseDmg = (resolvedValue + hitBonus) * state.heroStrength * damageMultiplier * buffMult * channelMult * dealtMult;
+        // C4 — Cinderkeep: Pyre detonations (damage scaling per Burn stack with consume) gain +25%.
+        const isPyreDetonation = rawEffect?.condition?.enemy_has_stack === 'burn' && rawEffect?.condition?.per_stack === true;
+        const cinderkeepMult = (isPyreDetonation && state.activeRelicIds.includes('cinderkeep')) ? 1.25 : 1.0;
+        // C5 — Glass Cannon: +75% damage dealt (paired with +50% damage taken in applyHeroDamage).
+        const glassCannonMult = state.activeRelicIds.includes('glass_cannon') ? 1.75 : 1.0;
+        // v4: STR is now a soft multiplier (+25% per point above 1) instead of
+        // a flat ×STR. Keeps STR=1 (baseline) at 1.0×, but lets DEX/INT-scaled
+        // cards remain competitive. Curve: STR 1→1.0, 4→1.75, 10→3.25.
+        const strMult = 1 + Math.max(0, state.heroStrength - 1) * 0.25;
+        // Wave 8: Resonance Crystal multiplies magic-category damage. Falls
+        // back to 1× for non-magic cards so other categories are unaffected.
+        const resonanceMult = (card?.category === 'magic') ? state.subtileSpellDamageMult : 1;
+        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * channelMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult;
         // Enemy defense is the base value plus any timed 'def' aura modifiers
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
@@ -408,6 +445,11 @@ export class CardResolver {
           const flat = sumModifier(state.heroAuras, 'armor_bonus_flat');
           armorAmt = Math.floor(armorAmt * (1 + pct) + flat);
         }
+        // C2 — Burnished Sigil: every Nth Defense card multiplies the next armor effect.
+        if (state.nextArmorMultiplier && state.nextArmorMultiplier !== 1.0) {
+          armorAmt = Math.floor(armorAmt * state.nextArmorMultiplier);
+          state.nextArmorMultiplier = 1.0;
+        }
         state.heroDefense += armorAmt;
         result.armorGained += armorAmt;
         break;
@@ -442,9 +484,15 @@ export class CardResolver {
         // v3: burn_taken — adds N to every burn application landed on the
         // bearer (enemy auras carry the vulnerability). Kindle Strike,
         // Pyre Surge apply this aura on the enemy.
+        // Wave 8: subtile Burn Altar bonus is added on top, only when the
+        // base application is non-zero (so a no-op card doesn't suddenly
+        // start applying burn just because an altar is in range).
         let appliedValue = resolvedValue;
-        if (which === 'burn' && target === 'enemy' && state.enemyAuras && state.enemyAuras.length > 0) {
-          appliedValue += sumModifier(state.enemyAuras, 'burn_taken');
+        if (which === 'burn' && target === 'enemy' && resolvedValue > 0) {
+          if (state.enemyAuras && state.enemyAuras.length > 0) {
+            appliedValue += sumModifier(state.enemyAuras, 'burn_taken');
+          }
+          appliedValue += state.subtileBurnApplyBonus;
         }
         switch (which) {
           case 'poison': state.poisonStacks += appliedValue; break;
@@ -452,13 +500,22 @@ export class CardResolver {
           case 'burn': state.burnStacks += appliedValue; break;
           case 'stun': state.stunStacks += appliedValue; break;
           case 'slow': state.slowStacks += appliedValue; break;
-          case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + appliedValue); break;
           case 'rage': state.rageStacks += appliedValue; break;
         }
         // v3: on_slow_applied — Gale Echo's per-apply +1 slow extra.
         if (which === 'slow' && resolvedValue > 0 && state.heroAuras && state.heroAuras.length > 0) {
           const payloads = fireRecurringTrigger(state.heroAuras, 'on_slow_applied');
           for (const p of payloads) applyTriggeredPayload(state, p);
+        }
+        // C5 — Frostbite Charm: on Slow application, deal 2 damage to enemy.
+        if (which === 'slow' && resolvedValue > 0 && target === 'enemy'
+            && state.activeRelicIds.includes('frostbite_charm')) {
+          state.enemyHP -= 2;
+        }
+        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun.
+        if (which === 'slow' && resolvedValue >= 3 && target === 'enemy'
+            && state.activeRelicIds.includes('stormglass_lens')) {
+          state.stunStacks += 1;
         }
         // v3: on_enemy_stack_threshold — Cinder Squall / Dust Plague follow-up.
         checkEnemyStackThreshold(state, which);
@@ -468,11 +525,10 @@ export class CardResolver {
       }
 
       case 'stack': {
-        // Pitfall 8: arcane caps at arcaneStacksCap with silent truncation.
         // Tier-2 consume_stack: negative values that consume up to |value|
         // from the named target's current pool (clamped to existing count).
         // Used for threshold-and-spend payoffs (rage vents, burn detonators).
-        const which: StackId = stack ?? 'arcane';
+        const which: StackId = stack ?? 'rage';
         if (rawEffect?.consume_stack && resolvedValue < 0) {
           const wantConsume = -resolvedValue;
           const consumeFrom = (cur: number) => Math.max(0, cur - Math.min(cur, wantConsume));
@@ -483,7 +539,6 @@ export class CardResolver {
               case 'burn': state.burnStacks = consumeFrom(state.burnStacks); break;
               case 'stun': state.stunStacks = consumeFrom(state.stunStacks); break;
               case 'slow': state.slowStacks = consumeFrom(state.slowStacks); break;
-              case 'arcane': state.arcaneStacks = consumeFrom(state.arcaneStacks); break;
               case 'rage': state.rageStacks = consumeFrom(state.rageStacks); break;
             }
           } else {
@@ -492,20 +547,28 @@ export class CardResolver {
               case 'rage': state.rageStacks = consumeFrom(state.rageStacks); break;
               case 'burn': state.heroBurnStacks = consumeFrom(state.heroBurnStacks); break;
               case 'bleed': state.heroBleedStacks = consumeFrom(state.heroBleedStacks); break;
-              case 'arcane': state.arcaneStacks = consumeFrom(state.arcaneStacks); break;
               default: break;
             }
           }
           break;
         }
         switch (which) {
-          case 'arcane': state.arcaneStacks = Math.min(state.arcaneStacksCap, state.arcaneStacks + resolvedValue); break;
           case 'rage': state.rageStacks += resolvedValue; break;
           case 'poison': state.poisonStacks += resolvedValue; break;
           case 'bleed': state.bleedStacks += resolvedValue; break;
           case 'burn': state.burnStacks += resolvedValue; break;
           case 'stun': state.stunStacks += resolvedValue; break;
           case 'slow': state.slowStacks += resolvedValue; break;
+        }
+        // C5 — Frostbite Charm: on Slow application (any positive), 2 enemy damage.
+        if (which === 'slow' && resolvedValue > 0 && target === 'enemy'
+            && state.activeRelicIds.includes('frostbite_charm')) {
+          state.enemyHP -= 2;
+        }
+        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun.
+        if (which === 'slow' && resolvedValue >= 3 && target === 'enemy'
+            && state.activeRelicIds.includes('stormglass_lens')) {
+          state.stunStacks += 1;
         }
         // v3: threshold triggers fire after the stack mutation. Target=self
         // routes to checkSelfStackThreshold (Wrath Squall rage cap, etc.).
@@ -532,7 +595,7 @@ export class CardResolver {
         // a +1 VIT card many times still snowballs across long boss fights.
         let magnitude = value;
         if (card?.id) {
-          const tierCap = card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
+          const tierCap = card.tier === 0 ? 5 : card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
           const already = state.buffMagnitudePerCard[card.id] ?? 0;
           const remaining = Math.max(0, tierCap - already);
           magnitude = Math.min(magnitude, remaining);
@@ -565,7 +628,10 @@ export class CardResolver {
       case 'multiply_stack': {
         // Multiplica os stacks atuais do alvo por `factor` (Catalyst pattern).
         const stk = stack;
-        const factor = Math.max(1, rawEffect?.factor ?? 2);
+        // C4 — Catalyst Core: all Catalyze multipliers +1 (×2 → ×3, etc.).
+        const catalystCore = state.activeRelicIds.includes('catalyst_core');
+        const baseFactor = Math.max(1, rawEffect?.factor ?? 2);
+        const factor = catalystCore ? baseFactor + 1 : baseFactor;
         if (!stk) break;
         const cur = readStackCount(state, stk, target === 'self' ? 'self' : 'enemy');
         const after = Math.floor(cur * factor);
@@ -612,6 +678,11 @@ export class CardResolver {
           } else {
             addStack(state, toStack as StackId, side, produced);
           }
+        }
+        // C5 — Soulforge Chalice: re-apply 50% of consumed source stack after Convert.
+        if (consumed > 0 && state.activeRelicIds.includes('soulforge_chalice')) {
+          const replay = Math.floor(consumed * 0.5);
+          if (replay > 0) addStack(state, fromStack, side, replay);
         }
         break;
       }
@@ -719,9 +790,6 @@ function addStack(state: CombatState, which: StackId, side: 'enemy' | 'self', am
       case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); return;
       case 'burn': state.heroBurnStacks = Math.max(0, state.heroBurnStacks + amount); return;
       case 'bleed': state.heroBleedStacks = Math.max(0, state.heroBleedStacks + amount); return;
-      case 'arcane':
-        state.arcaneStacks = Math.min(state.arcaneStacksCap, Math.max(0, state.arcaneStacks + amount));
-        return;
       default: return;
     }
   }
@@ -732,9 +800,6 @@ function addStack(state: CombatState, which: StackId, side: 'enemy' | 'self', am
     case 'stun': state.stunStacks = Math.max(0, state.stunStacks + amount); return;
     case 'slow': state.slowStacks = Math.max(0, state.slowStacks + amount); return;
     case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); return;
-    case 'arcane':
-      state.arcaneStacks = Math.min(state.arcaneStacksCap, Math.max(0, state.arcaneStacks + amount));
-      return;
   }
 }
 
@@ -745,7 +810,6 @@ function readStackCount(state: CombatState, which: StackId, side: 'self' | 'enem
       case 'burn': return state.heroBurnStacks;
       case 'bleed': return state.heroBleedStacks;
       case 'rage': return state.rageStacks;
-      case 'arcane': return state.arcaneStacks;
       default: return 0;
     }
   }
@@ -755,7 +819,6 @@ function readStackCount(state: CombatState, which: StackId, side: 'self' | 'enem
     case 'burn': return state.burnStacks;
     case 'stun': return state.stunStacks;
     case 'slow': return state.slowStacks;
-    case 'arcane': return state.arcaneStacks;
     case 'rage': return state.rageStacks;
   }
   return 0;

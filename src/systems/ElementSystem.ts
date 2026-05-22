@@ -23,7 +23,7 @@ export interface ElementDefinition {
 
 export const ELEMENTS: Record<ElementId, ElementDefinition> = {
   attack:   { id: 'attack',   name: 'Attack',   category: 'physical',  primaryStat: 'str', identity: 'Direct damage, rage stacks',          color: '#DC2626', icon: 'sword' },
-  defense:  { id: 'defense',  name: 'Defense',  category: 'physical',  primaryStat: 'vit', identity: 'Armor, mitigation, taunt',            color: '#6B7280', icon: 'shield' },
+  defense:  { id: 'defense',  name: 'Defense',  category: 'physical',  primaryStat: 'vit', identity: 'Armor, mitigation, retaliation',     color: '#6B7280', icon: 'shield' },
   agility:  { id: 'agility',  name: 'Agility',  category: 'physical',  primaryStat: 'dex', identity: 'Cooldown reduction, dodge',           color: '#FACC15', icon: 'feather' },
   counter:  { id: 'counter',  name: 'Counter',  category: 'physical',  primaryStat: 'str', identity: 'Reflect damage, retaliate',           color: '#B91C1C', icon: 'crossed-swords' },
   fire:     { id: 'fire',     name: 'Fire',     category: 'elemental', primaryStat: 'int', identity: 'Burn DoT, sustained damage',          color: '#F97316', icon: 'flame' },

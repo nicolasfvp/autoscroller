@@ -29,7 +29,7 @@ function makeState(over: Partial<CombatState> = {}): CombatState {
     cooldownMultiplier: 1.0, firstCardDamageMultiplier: 1.0,
     _bloodPactBonus: 0, phoenixUsed: false,
     poisonStacks: 0, bleedStacks: 0, burnStacks: 0, stunStacks: 0,
-    slowStacks: 0, arcaneStacks: 0, arcaneStacksCap: 10, rageStacks: 0,
+    slowStacks: 0, rageStacks: 0,
     enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     buffMagnitudePerCard: {},

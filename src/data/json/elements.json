@@ -14,7 +14,7 @@
       "name": "Defense",
       "category": "physical",
       "primaryStat": "vit",
-      "identity": "Armor, mitigation, taunt",
+      "identity": "Armor, mitigation, retaliation",
       "color": "#6B7280",
       "icon": "shield"
     },
@@ -109,10 +109,11 @@
     "min": 5,
     "max": 15,
     "starterSize": 5,
+    "starterT0Min": 1,
     "starterElementBudget": 10,
     "classRatios": {
-      "warrior": { "physicalMin": 7, "physicalMax": 10, "elementalMin": 0, "elementalMax": 3 },
-      "mage": { "physicalMin": 0, "physicalMax": 3, "elementalMin": 7, "elementalMax": 10 }
+      "warrior": { "physicalMin": 7, "physicalMax": 10, "elementalMin": 0, "elementalMax": 2 },
+      "mage": { "physicalMin": 0, "physicalMax": 2, "elementalMin": 7, "elementalMax": 10 }
     },
     "presetsPerClass": 5
   }

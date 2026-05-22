@@ -9,6 +9,8 @@ const TILE_SPRITE_MAP: Record<string, string> = {
   forest: 'tile_forest',
   graveyard: 'tile_graveyard',
   swamp: 'tile_swamp',
+  desert: 'tile_desert',
+  lava: 'tile_lava',
   rest: 'tile_rest',
   event: 'tile_event',
   treasure: 'tile_treasure',
@@ -25,9 +27,13 @@ const BG_SPRITE_MAP: Record<string, string> = {
   treasure: 'bg_treasure',
 };
 
-/** Get the terrain key for a tile slot */
+/** Get the terrain key for a tile slot.
+ * Wave 5+: also fall back to `kind` (the registry key) so subtile slots —
+ * which have type='subtile' and no terrain — resolve to their specific
+ * entry (subtile_ambush, subtile_warhorn, ...) instead of throwing on a
+ * missing 'subtile' config lookup. */
 function getTileTerrainKey(slot: TileSlot): string {
-  return slot.terrain ?? slot.type;
+  return slot.terrain ?? slot.kind ?? slot.type;
 }
 
 /**
@@ -40,10 +46,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
   private bgObject: Phaser.GameObjects.Image | null = null;
   private enemySprite: Phaser.GameObjects.Sprite | null = null;
   private iconText: Phaser.GameObjects.Text;
-  private leftSynergy: Phaser.GameObjects.Rectangle | null = null;
-  private rightSynergy: Phaser.GameObjects.Rectangle | null = null;
   private tileScale: number;
-  private synergyState: 'left' | 'right' | 'both' | 'none' = 'none';
 
   constructor(
     scene: Phaser.Scene,
@@ -172,28 +175,6 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
   }
 
-  setSynergyEdge(side: 'left' | 'right' | 'both' | 'none'): void {
-    // Skip the rebuild if state hasn't changed — updateTile() runs every
-    // frame for visible tiles and was thrashing graphics objects.
-    if (side === this.synergyState) return;
-    this.synergyState = side;
-
-    const size = TILE_SIZE * this.tileScale;
-    const stripW = 4 * this.tileScale;
-
-    if (this.leftSynergy) { this.leftSynergy.destroy(); this.leftSynergy = null; }
-    if (this.rightSynergy) { this.rightSynergy.destroy(); this.rightSynergy = null; }
-
-    if (side === 'left' || side === 'both') {
-      this.leftSynergy = this.scene.add.rectangle(-size / 2 + stripW / 2, 0, stripW, size, 0x00ffcc);
-      this.add(this.leftSynergy);
-    }
-    if (side === 'right' || side === 'both') {
-      this.rightSynergy = this.scene.add.rectangle(size / 2 - stripW / 2, 0, stripW, size, 0x00ffcc);
-      this.add(this.rightSynergy);
-    }
-  }
-
   updateTile(tileSlot: TileSlot, index: number = 0): void {
     const key = getTileTerrainKey(tileSlot);
     let fillColor: number;
@@ -230,7 +211,6 @@ export class TileVisual extends Phaser.GameObjects.Container {
 
     const updateConfig = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
     this.iconText.setText(updateConfig?.icon ?? '');
-    this.setSynergyEdge('none');
 
     // Enemy sprite reconcile: pool tiles change enemyId between basic and
     // boss/combat tiles as the loop advances. Without this, the only path

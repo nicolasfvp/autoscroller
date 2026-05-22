@@ -4,7 +4,6 @@ import relicsData from '../../src/data/json/relics.json';
 import enemiesData from '../../src/data/json/enemies.json';
 import buildingsData from '../../src/data/json/buildings.json';
 import passivesData from '../../src/data/json/passives.json';
-import synergiesData from '../../src/data/json/synergies.json';
 import { createDefaultMetaState } from '../../src/state/MetaState';
 
 describe('cards.json', () => {
@@ -83,8 +82,8 @@ describe('relics.json', () => {
     }
   });
 
-  it('3 common relics (bronze_scale, energy_potion, arcane_crystal) have NO unlockSource', () => {
-    const commonIds = ['bronze_scale', 'energy_potion', 'arcane_crystal'];
+  it('3 common neutral relics (bronze_scale, energy_tonic, arcane_crystal) have NO unlockSource', () => {
+    const commonIds = ['bronze_scale', 'energy_tonic', 'arcane_crystal'];
     for (const id of commonIds) {
       const relic = relics.find((r: any) => r.id === id);
       expect(relic).toBeDefined();
@@ -92,17 +91,10 @@ describe('relics.json', () => {
     }
   });
 
-  it('4 v1-surviving gated relics (iron_will, berserker_ring, demon_heart, phoenix_feather) DO have unlockSource', () => {
-    // warrior_spirit dropped from v2 (replaced by warrior-class-exclusive relics per design/01_warrior.md §6).
-    const gatedIds = ['berserker_ring', 'demon_heart', 'phoenix_feather'];
-    for (const id of gatedIds) {
-      const relic = relics.find((r: any) => r.id === id);
-      expect(relic, `gated relic ${id} missing`).toBeDefined();
-      expect(relic).toHaveProperty('unlockSource');
+  it('v2 invariant: no relic carries unlockSource (all available from shop/treasure)', () => {
+    for (const relic of relics) {
+      expect(relic, `relic ${relic.id} should not carry unlockSource in v2`).not.toHaveProperty('unlockSource');
     }
-    // iron_will is now a neutral rare with damage_taken trigger; v2 keeps it ungated (passive bonus).
-    const ironWill = relics.find((r: any) => r.id === 'iron_will');
-    expect(ironWill, 'iron_will present in v2').toBeDefined();
   });
 });
 
@@ -159,12 +151,6 @@ describe('buildings.json', () => {
   });
 });
 
-describe('synergies.json', () => {
-  it('is empty in Phase 10 (synergy system replaced by element combinations)', () => {
-    expect((synergiesData as any[]).length).toBe(0);
-  });
-});
-
 describe('passives.json', () => {
   const passives = passivesData as any;
 
@@ -207,8 +193,9 @@ describe('MetaState', () => {
     expect(state.unlockedTiles).toEqual([]);
     expect(state.runHistory).toEqual([]);
     expect(state.totalRuns).toBe(0);
-    // Phase 10 / Design v3: bumped to v8 with forgeRecipes + deckPresets.
-    expect(state.version).toBe(8);
+    // Beginner-mode redesign: bumped to v9 with seenKeywords for contextual
+    // keyword teaching.
+    expect(state.version).toBe(9);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);
@@ -226,8 +213,13 @@ describe('Phase 10 (element system) content totals + coverage', () => {
   const cards = cardsData.cards;
   const relics = relicsData as any[];
 
-  it('cards.json has exactly 156 entries (36 Tier 1 + 120 Tier 2)', () => {
-    expect(cards.length).toBe(156);
+  it('cards.json has exactly 164 entries (8 Tier 0 + 36 Tier 1 + 120 Tier 2)', () => {
+    expect(cards.length).toBe(164);
+  });
+
+  it('cards.json contains exactly 8 Tier 0 cards (one per element)', () => {
+    const t0 = (cards as any[]).filter((c) => c.tier === 0);
+    expect(t0.length).toBe(8);
   });
 
   it('cards.json contains exactly 36 Tier 1 cards', () => {
@@ -240,19 +232,14 @@ describe('Phase 10 (element system) content totals + coverage', () => {
     expect(t2.length).toBe(120);
   });
 
-  it('relics.json has exactly 39 entries', () => {
-    expect(relics.length).toBe(39);
-  });
-
-  it('synergies.json has exactly 0 entries (system removed)', () => {
-    expect((synergiesData as any[]).length).toBe(0);
+  it('relics.json has exactly 80 entries', () => {
+    expect(relics.length).toBe(80);
   });
 
   it('all card effect.type values are in the known enumeration', () => {
     const allowed = new Set([
       'damage', 'heal', 'armor', 'stamina', 'mana', 'debuff',
       'buff', 'debuff_stat', 'dot', 'stack',
-      'consume_combo', 'gain_combo', 'stealth', 'taunt',
       // Tier-1 redesign: time-decaying status effect on hero/enemy.
       'aura',
       // v3 archetype redesigns:

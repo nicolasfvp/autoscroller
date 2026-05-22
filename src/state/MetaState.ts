@@ -48,6 +48,10 @@ export interface MetaState {
   forgeRecipes: ForgeRecipeEntry[];
   /** Saved starter-deck presets, 5 per class. */
   deckPresets: Record<string, DeckPresetEntry[]>;
+  /** Keywords the player has encountered in-game at least once. Drives the
+   *  contextual keyword-intro overlay (first-encounter pause + explanation)
+   *  and gates the persistent glossary panel to learned terms only. */
+  seenKeywords: string[];
   /** One-shot flag set by migrateMetaState on a v3/v4/v5 -> v6 wipe.
    *  Plan 4 reads & strips this before MetaPersistence.saveMetaState.
    *  (Pitfall 5: not part of the persisted shape.) */
@@ -104,9 +108,10 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 8,
+    version: 9,
     forgeRecipes: [],
     deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
+    seenKeywords: [],
   };
 }
 
@@ -218,6 +223,14 @@ export function migrateMetaState(raw: any): MetaState {
       if (!Array.isArray(raw.deckPresets.mage)) raw.deckPresets.mage = JSON.parse(JSON.stringify(DEFAULT_PRESETS.mage));
     }
     raw.version = 8;
+  }
+
+  // v8 -> v9 migration: seenKeywords tracking for beginner-mode contextual
+  // teaching. Empty array on existing saves means returning players see the
+  // intro overlay once for any keyword they happen to play, then move on.
+  if (raw.version === 8) {
+    if (!Array.isArray(raw.seenKeywords)) raw.seenKeywords = [];
+    raw.version = 9;
   }
 
   return raw as MetaState;

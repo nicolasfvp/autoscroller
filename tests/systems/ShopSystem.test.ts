@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { ShopSystem, setActiveBuffs as setShopActiveBuffs } from '../../src/systems/ShopSystem';
+import { describe, it, expect } from 'vitest';
+import { ShopSystem } from '../../src/systems/ShopSystem';
 
 function makeRunState(overrides: any = {}): any {
   return {
@@ -70,15 +70,15 @@ describe('ShopSystem', () => {
   // ── Scaling relic prices ─────────────────────────────────
   describe('getRelicPrice', () => {
     it('common relic at loop 1', () => {
-      expect(ShopSystem.getRelicPrice('common', 1)).toBe(90); // 80 + 1*10
+      expect(ShopSystem.getRelicPrice('common', 1)).toBe(98); // 90 + 1*8
     });
 
-    it('legendary relic at loop 5 below cap', () => {
-      expect(ShopSystem.getRelicPrice('legendary', 5)).toBe(450); // 400 + 5*10 = 450 < 600
+    it('rare relic at loop 5 below cap', () => {
+      expect(ShopSystem.getRelicPrice('rare', 5)).toBe(450); // 360 + 5*18 = 450 < 600
     });
 
     it('common relic caps at high loop', () => {
-      expect(ShopSystem.getRelicPrice('common', 100)).toBe(150); // capped
+      expect(ShopSystem.getRelicPrice('common', 100)).toBe(160); // capped
     });
   });
 
@@ -238,41 +238,7 @@ describe('ShopSystem', () => {
     });
   });
 
-  // -- Phase 9: Library+Shop cardUpgradeDiscount (design/04 §7) --
-  describe('upgradeCard with cardUpgradeDiscount (Library+Shop adjacency)', () => {
-    afterEach(() => {
-      // Reset module-level buffs so other tests aren't polluted.
-      setShopActiveBuffs([]);
-    });
-
-    it('applies a 20% discount when cardUpgradeDiscount buff is active', () => {
-      setShopActiveBuffs([{ tileIndex: 0, type: 'cardUpgradeDiscount', value: 0.20 }]);
-      const run = makeRunState();
-      // common upgrade is 50g; with 0.20 discount -> 40g.
-      const ok = ShopSystem.upgradeCard(run, 0, 'common');
-      expect(ok).toBe(true);
-      expect(run.economy.gold).toBe(160); // 200 - 40
-      expect(run.deck.upgraded[0]).toBe(true);
-    });
-
-    it('falls back to full price when no discount buff is active', () => {
-      setShopActiveBuffs([]);
-      const run = makeRunState();
-      const ok = ShopSystem.upgradeCard(run, 0, 'common');
-      expect(ok).toBe(true);
-      expect(run.economy.gold).toBe(150); // 200 - 50
-    });
-
-    it('sums multiple cardUpgradeDiscount buffs (capped at 95%)', () => {
-      setShopActiveBuffs([
-        { tileIndex: 0, type: 'cardUpgradeDiscount', value: 0.20 },
-        { tileIndex: 1, type: 'cardUpgradeDiscount', value: 0.30 },
-      ]);
-      const run = makeRunState();
-      // 0.50 discount on 50g common -> 25g.
-      const ok = ShopSystem.upgradeCard(run, 0, 'common');
-      expect(ok).toBe(true);
-      expect(run.economy.gold).toBe(175);
-    });
-  });
+  // Wave 2: Library+Shop cardUpgradeDiscount adjacency buff removed along
+  // with the rest of the synergy system. Upgrade pricing is now flat per
+  // rarity; covered by the basic upgradeCard tests above.
 });

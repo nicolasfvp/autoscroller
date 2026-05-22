@@ -35,7 +35,7 @@ export class PauseScene extends Scene {
     panel.setMask(shape.createGeometryMask());
 
     // Title
-    this.add.text(400, 120, 'PAUSED', {
+    this.add.text(400, 105, 'PAUSED', {
       fontSize: '48px',
       fontStyle: 'bold',
       color: '#ffffff',
@@ -45,15 +45,22 @@ export class PauseScene extends Scene {
       shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
     }).setOrigin(0.5);
 
-    // Buttons
-    this.createChunkyButton(400, 210, 260, 50, 'Resume', 0xffa000, '#111111', () => this.resume());
-    
-    this.createChunkyButton(400, 280, 260, 50, 'View Deck', 0xdab988, '#111111', () => {
+    // Buttons — stride 60px to fit 5 chunky buttons inside the panel.
+    this.createChunkyButton(400, 180, 260, 50, 'Resume', 0xffa000, '#111111', () => this.resume());
+
+    this.createChunkyButton(400, 240, 260, 50, 'View Deck', 0xdab988, '#111111', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
     });
 
-    this.createChunkyButton(400, 350, 260, 50, 'Settings', 0xdab988, '#111111', () => {
+    // Tutorial — replay the topic-tab tutorial. Routes back to the pause
+    // overlay on close via the replay/parentScene flags.
+    this.createChunkyButton(400, 300, 260, 50, 'Tutorial', 0xdab988, '#111111', () => {
+      this.scene.pause();
+      this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
+    });
+
+    this.createChunkyButton(400, 360, 260, 50, 'Settings', 0xdab988, '#111111', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.SETTINGS);
     });
@@ -61,10 +68,12 @@ export class PauseScene extends Scene {
     this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', async () => {
       // Tear down the active run AND wipe the persisted save before
       // returning to the menu — otherwise MainMenu will offer "Continue"
-      // pointing at the abandoned run.
+      // pointing at the abandoned run. Use clearByMode so abandoning a
+      // daily run doesn't wipe the player's separate normal save.
+      const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
-      await saveManager.clear();
+      await saveManager.clearByMode(mode);
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
     });

@@ -10,10 +10,15 @@ describe('KeywordDefinitions', () => {
       const expected = [
         // Stack types
         'Burn', 'Bleed', 'Poison', 'Slow', 'Stun', 'Rage',
-        // Modifier keywords
+        // Modifier keywords (v4: Taunt, Berserk/Expose-style condition keywords
+        // re-introduced as aura prefixes; Frenzy removed entirely).
         'Pyre', 'Empowered', 'Vengeance', 'Steady', 'Fortified', 'Brace',
-        'Guard', 'Berserk', 'Haste', 'Expose', 'Pierce', 'Consume',
-        'Drain', 'Taunt',
+        'Guard', 'Berserk', 'Haste', 'Expose', 'Pierce', 'Consume', 'Drain',
+        'Aura', 'Echo', 'Overload', 'Channel', 'Devour', 'Stance', 'Catalyze',
+        'Convert', 'Spread', 'Exhaust', 'DR', 'Shatter', 'Reflex',
+        'Juggernaut', 'Rupture', 'Bloodforge', 'Cascade', 'Frost Echo',
+        'Threshold', 'Siphon', 'Vulnerable', 'Mitigate', 'Empower',
+        'Weakened', 'Strip', 'Reforce', 'On Hit',
         // Stat keywords
         'Heal', 'Armor', 'Scales',
       ];

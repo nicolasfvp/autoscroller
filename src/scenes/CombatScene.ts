@@ -4,9 +4,12 @@
 import { Scene } from 'phaser';
 import { eventBus, type GameEvents } from '../core/EventBus';
 import { getRun } from '../state/RunState';
-import { getEnemyById } from '../data/DataLoader';
-import { createCombatState } from '../systems/combat/CombatState';
+import { getEnemyById, getCardById } from '../data/DataLoader';
+import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
+import { formatCardDescription } from '../systems/cards/CardText';
+import { createCombatState, type CombatState } from '../systems/combat/CombatState';
 import { CombatEngine } from '../systems/combat/CombatEngine';
+import type { SubtileEffect } from '../systems/SubtileResolver';
 import { CombatHUD } from '../ui/CombatHUD';
 import { CardQueueDisplay } from '../ui/CardQueueDisplay';
 import { showSynergyFlash } from '../ui/SynergyFlash';
@@ -18,6 +21,9 @@ import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { dailyRunTicker } from '../systems/DailyRunTicker';
+import { DailyTickerPanel } from '../ui/DailyTickerPanel';
+import { addGlossaryButton } from '../ui/GlossaryButton';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -31,10 +37,28 @@ export class CombatScene extends Scene {
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
-  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string };
+  private transitioning = false;
+  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+    // Contextual keyword teaching: if this card introduces a keyword the
+    // player hasn't learned, the intro service queues an overlay that
+    // pauses combat until dismissed. Combine the static description with
+    // the dynamic CardText render so engine-generated keyword tokens
+    // (Burn N, Scales STR, Vengeance) trigger the same first-encounter
+    // pause as author-written ones.
+    const cardDef = getCardById(data.cardId);
+    if (cardDef) {
+      const rendered = formatCardDescription({
+        effects: cardDef.effects,
+        exhaust: cardDef.exhaust,
+        spend_armor: cardDef.spend_armor,
+        cooldown_scale: cardDef.cooldown_scale,
+      });
+      const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
+      keywordIntro.handleCardPlayed(this, fullText);
+    }
     if (data.damage > 0) {
       AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
@@ -124,7 +148,11 @@ export class CombatScene extends Scene {
           currentRun.loop.lastBossDefeated = true;
           currentRun.loop.bossesDefeated = (currentRun.loop.bossesDefeated ?? 0) + 1;
         }
-        generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward, xpEarned);
+        // C2 relics: kill-bonus relics queued gold onto CombatState; add it to
+        // the base reward so it flows through normal loot processing (which
+        // also pipes the right notification).
+        const goldBonus = finalState.pendingGoldBonus ?? 0;
+        generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward + goldBonus, xpEarned);
         this.scene.stop();
         this.scene.resume(SCENE_KEYS.GAME);
       } else {
@@ -148,8 +176,51 @@ export class CombatScene extends Scene {
     if (!this.textures.exists('hero_test_attack')) this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
   }
 
-  init(data: { enemyId: string; isBoss?: boolean; terrain?: string }): void {
+  init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
+  }
+
+  /**
+   * Apply pre-fight subtile effects to the freshly-built CombatState.
+   * Runs once before the engine starts, mutating the state in place.
+   *
+   * Pre-fight stack init  : ambush / magma_burst / mana_well / tactical
+   * Build amplifiers (Wave 8 fields): burn_altar / bleed_totem / resonance
+   * War Horn is consumed upstream in LoopRunner.getCombatSpawnChance.
+   */
+  private applySubtileEffects(state: CombatState, effects: SubtileEffect[]): void {
+    for (const e of effects) {
+      const n = e.stacks;
+      switch (e.effect) {
+        case 'ambush':
+          state.slowStacks += 2 * n;
+          state.bleedStacks += 3 * n;
+          break;
+        case 'magma_burst':
+          state.burnStacks += 5 * n;
+          break;
+        case 'mana_well':
+          state.heroMana += 2 * n;
+          break;
+        case 'tactical':
+          // "Free defense card pre-played" — model as +5 armor per stack
+          // at fight start, mirroring a basic defense card's payout.
+          state.heroDefense += 5 * n;
+          break;
+        case 'burn_altar':
+          state.subtileBurnApplyBonus += n;
+          break;
+        case 'bleed_totem':
+          state.subtileBleedTickBonus += n;
+          break;
+        case 'resonance':
+          state.subtileSpellDamageMult += 0.15 * n;
+          break;
+        // war_horn handled upstream in LoopRunner.
+        default:
+          break;
+      }
+    }
   }
 
   create(): void {
@@ -162,6 +233,12 @@ export class CombatScene extends Scene {
     }
     this.scene.bringToTop();
     this.cameras.main.setBackgroundColor(0x000000);
+    // Hydrate the seen-keywords set from MetaState. Fire-and-forget — by the
+    // time the first card resolves (≥ first card cooldown), IDB will have
+    // returned and the intro service can gate appropriately. If the player
+    // somehow plays a card before init finishes, the service silently skips
+    // (returns no-op) and the keyword stays unseen for next time.
+    void keywordIntro.init();
 
     try {
       const run = getRun();
@@ -203,6 +280,8 @@ export class CombatScene extends Scene {
       };
 
       const combatState = createCombatState(run, scaledEnemy);
+      // Wave 6: apply pre-fight subtile effects before the engine takes over.
+      this.applySubtileEffects(combatState, data.subtileEffects ?? []);
       this.engine = new CombatEngine(combatState);
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
@@ -292,11 +371,13 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this);
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
-      
       // Initialize HUD and Queue with initial state
       this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
       this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
 
+      // Keyword glossary "?" — top-right corner. Depth above HUD so it stays
+      // tappable when the HUD overlays the upper-right area.
+      addGlossaryButton(this, 775, 20, 600);
       // Speed slider lives in the persistent SpeedPanelScene; it writes to
       // run.combatSpeed directly so this scene's `gameSpeed` is re-read each
       // tick (see update()) rather than wired through a per-scene slider.
@@ -308,6 +389,14 @@ export class CombatScene extends Scene {
       eventBus.on('combat:enemy-attack', this.onEnemyAttack);
       eventBus.on('combat:end', this.onCombatEnd);
 
+      // Daily Run ticker overlay — visible during combat too so the player
+      // can see other racers tick up while they're fighting. Panel
+      // self-destructs on scene shutdown via Phaser events.
+      if (run.mode === 'daily') {
+        dailyRunTicker.start();
+        new DailyTickerPanel(this, { selfRunId: run.runId });
+      }
+
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
       console.error('[CombatScene] Critical error in create():', err);
@@ -318,6 +407,13 @@ export class CombatScene extends Scene {
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
+      // Pause the simulation while a contextual keyword-intro overlay is
+      // up so the player can read the explanation without enemies still
+      // ticking down in the background.
+      if (keywordIntro.isPaused()) {
+        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+        return;
+      }
       // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
       // to run.combatSpeed without notifying us, so polling is the contract.
       try { this.gameSpeed = getRun().combatSpeed ?? this.gameSpeed; } catch { /* run cleared */ }

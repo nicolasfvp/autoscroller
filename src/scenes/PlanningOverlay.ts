@@ -1,7 +1,6 @@
 import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
 import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
-import { resolveAdjacencySynergies } from '../systems/SynergyResolver';
 import { TileVisual } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -16,11 +15,21 @@ export class PlanningOverlay extends Scene {
   private selectedTileKey: string | null = null;
   private tileVisuals: TileVisual[] = [];
   private inventoryCards: Phaser.GameObjects.Container[] = [];
+  /** Wave 5: separate cards for the subtile-only second row. */
+  private subtileInventoryCards: Phaser.GameObjects.Container[] = [];
   private selectedCardIndex: number = -1;
+  /** Wave 5: when true, slot clicks remove placed tiles instead of placing. */
+  private removeMode: boolean = false;
   private tpBalanceText!: Phaser.GameObjects.Text;
   private scrollOffset: number = 0;
   private gridContainer!: Phaser.GameObjects.Container;
   private gridGeometry!: { cellW: number; period: number; centerX: number };
+  /** Reserved-slot decoration overlays, parallel to tileVisuals. Recreated by buildLoopGrid. */
+  private reservedDecorations: Phaser.GameObjects.GameObject[] = [];
+  /** Pending tooltip show; cancelled on pointerout. */
+  private tooltipTimer?: Phaser.Time.TimerEvent;
+  /** The currently displayed tooltip container (text + bg). Destroyed on hide. */
+  private tooltipObj?: Phaser.GameObjects.Container;
 
   // Drag-scroll input handlers — stored so cleanup() can remove them. The
   // overlay's `scene.events` listeners use `this` as the context, but the
@@ -156,6 +165,10 @@ export class PlanningOverlay extends Scene {
 
     this.buildShopForgeButtons(fontFamily);
 
+    // Wave 5: Remove Mode toggle. Lives next to Start Loop on its own row
+    // so it's discoverable without crowding the existing button line.
+    this.buildRemoveModeButton(fontFamily);
+
     // Enable drag scroll for long loops
     this.setupDragScroll();
 
@@ -191,7 +204,7 @@ export class PlanningOverlay extends Scene {
     // non-clickable; they're just no longer invisible.
     const period = tiles.length * cellW;
     const centerX = 400;
-    const y = 240;
+    const y = 170;
 
     this.gridGeometry = { cellW, period, centerX };
 
@@ -200,47 +213,61 @@ export class PlanningOverlay extends Scene {
       tv.destroy();
     }
     this.tileVisuals = [];
+    for (const deco of this.reservedDecorations) deco.destroy();
+    this.reservedDecorations = [];
     this.gridContainer.removeAll(true);
 
-    // Build synergy data
-    const synergies = resolveAdjacencySynergies(tiles);
-    const synergyByTile = new Map<number, { left: boolean; right: boolean }>();
-    for (const buff of synergies) {
-      const existing = synergyByTile.get(buff.tileIndex) ?? { left: false, right: false };
-      existing.right = true;
-      synergyByTile.set(buff.tileIndex, existing);
-      // Next tile gets left synergy
-      const nextIdx = (buff.tileIndex + 1) % tiles.length;
-      const nextExisting = synergyByTile.get(nextIdx) ?? { left: false, right: false };
-      nextExisting.left = true;
-      synergyByTile.set(nextIdx, nextExisting);
-    }
-
     for (let i = 0; i < tiles.length; i++) {
+      const slot = tiles[i];
       // Initial position; updateTilePositions() handles the wrap math.
-      const tv = new TileVisual(this, 0, y, tiles[i], scale, i, true);
+      const tv = new TileVisual(this, 0, y, slot, scale, i, true);
       tv.setData('beltSlot', i);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
 
-      // Set synergy edges
-      const syn = synergyByTile.get(i);
-      if (syn) {
-        if (syn.left && syn.right) tv.setSynergyEdge('both');
-        else if (syn.left) tv.setSynergyEdge('left');
-        else if (syn.right) tv.setSynergyEdge('right');
-      }
-
       // Buffer tiles are part of the path but not editable — dim them so
       // players can see they exist without thinking they can be replaced.
-      if (tiles[i].type === 'buffer') {
+      if (slot.type === 'buffer') {
         tv.setAlpha(0.35);
         continue;
       }
 
-      // Make basic slots clickable for placement
-      if (tiles[i].type === 'basic') {
+      // Wave 5: reserved (empty) slot decoration — faint cyan glow + a
+      // small ghost "S" marker so the player can spot reservation targets.
+      if (slot.type === 'basic' && slot.reserved) {
+        tv.setAlpha(0.85);
+        const glow = this.add.rectangle(0, y, tileSize + 4, tileSize + 4, 0x00ffcc, 0.18)
+          .setStrokeStyle(1, 0x00ffcc, 0.7);
+        glow.setData('beltSlot', i);
+        this.gridContainer.add(glow);
+        // Place glow behind the tile visual.
+        this.gridContainer.sendToBack(glow);
+        this.reservedDecorations.push(glow);
+
+        const ghost = this.add.text(0, y, 'S', {
+          fontSize: `${Math.round(tileSize * 0.5)}px`,
+          color: '#00ffcc',
+          fontStyle: 'bold',
+          fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+        }).setOrigin(0.5).setAlpha(0.55);
+        ghost.setData('beltSlot', i);
+        this.gridContainer.add(ghost);
+        this.reservedDecorations.push(ghost);
+
+        tv.onClick(() => this.onSlotClicked(i));
+        continue;
+      }
+
+      // Empty (non-reserved) basic slots: clickable for normal-tile placement.
+      if (slot.type === 'basic') {
         tv.setAlpha(0.6);
+        tv.onClick(() => this.onSlotClicked(i));
+        continue;
+      }
+
+      // Wave 5: placed (non-basic, non-buffer, non-boss) tiles are clickable
+      // so Remove Mode can target them. Boss tiles stay locked.
+      if (slot.type !== 'boss') {
         tv.onClick(() => this.onSlotClicked(i));
       }
     }
@@ -268,19 +295,41 @@ export class PlanningOverlay extends Scene {
     const rightBound = 800 + cellW;
     const baseLeft = centerX - period / 2 + cellW / 2;
 
-    for (const tv of this.tileVisuals) {
-      const slot = tv.getData('beltSlot') as number;
+    const placeAt = (obj: Phaser.GameObjects.GameObject & { x: number }, slot: number) => {
       let x = baseLeft + slot * cellW + this.scrollOffset;
-      // Normalize to [leftBound, leftBound + period)
       x = ((x - leftBound) % period + period) % period + leftBound;
-      // After normalization x is in [leftBound, leftBound+period); if the
-      // belt is shorter than the screen this still gives a contiguous strip.
       if (x > rightBound) x -= period;
-      tv.x = x;
+      obj.x = x;
+    };
+
+    for (const tv of this.tileVisuals) {
+      placeAt(tv, tv.getData('beltSlot') as number);
+    }
+    // Wave 5: keep reserved-slot decorations aligned with their host tile.
+    for (const deco of this.reservedDecorations) {
+      const slot = deco.getData('beltSlot') as number;
+      placeAt(deco as Phaser.GameObjects.GameObject & { x: number }, slot);
     }
   }
 
   private onSlotClicked(slotIndex: number): void {
+    // Wave 5: Remove Mode short-circuits placement. Clicking a placed
+    // (non-basic, non-buffer, non-boss) tile triggers loopRunner.removeTile
+    // which handles the 50% refund and orphan-subtile cascade.
+    if (this.removeMode) {
+      const removed = this.loopRunner.removeTile(slotIndex);
+      if (removed) {
+        this.buildLoopGrid();
+        this.refreshInventory();
+      } else {
+        const slot = this.loopRunState.loop.tiles[slotIndex];
+        if (slot?.type === 'boss') this.showToast('Boss tile cannot be removed.');
+        else if (slot?.type === 'basic') this.showToast('Slot is already empty.');
+        else this.showToast('Cannot remove that tile.');
+      }
+      return;
+    }
+
     if (!this.selectedTileKey) return;
 
     const success = this.loopRunner.placeTile(slotIndex, this.selectedTileKey);
@@ -324,14 +373,15 @@ export class PlanningOverlay extends Scene {
   }
 
   private buildInventoryPanel(fontFamily: string): void {
-    // Panel background
-    const board = this.add.image(400, 420, 'tile_selection_board');
-    // Reducing size as requested
+    // Panel background — shifted up to make room for the subtile row beneath
+    // the main tile row while keeping the "don't stop here for" + Remove Mode
+    // toolbar at y=505 untouched.
+    const board = this.add.image(400, 350, 'tile_selection_board');
     board.setDisplaySize(720, 190);
 
 
     // Tile point balance - repositioned and styled
-    this.tpBalanceText = this.add.text(720, 360, `${this.loopRunState.economy.tilePoints} TP`, {
+    this.tpBalanceText = this.add.text(720, 290, `${this.loopRunState.economy.tilePoints} TP`, {
       fontSize: '22px', color: '#00e5ff', fontFamily,
       fontStyle: 'bold',
       stroke: '#000000',
@@ -349,11 +399,21 @@ export class PlanningOverlay extends Scene {
       card.destroy();
     }
     this.inventoryCards = [];
+    // Wave 5: clear the parallel subtile row too.
+    for (const card of this.subtileInventoryCards) {
+      card.destroy();
+    }
+    this.subtileInventoryCards = [];
 
     // Update TP balance
     this.tpBalanceText.setText(`${this.loopRunState.economy.tilePoints} TP`);
 
-    const placeableTiles = getAllPlaceableTiles();
+    // Wave 5: split placeable tiles into the two pickers. Subtiles render
+    // in a dedicated row below the main inventory and dim out when there
+    // is no reserved slot to receive them.
+    const allPlaceable = getAllPlaceableTiles();
+    const placeableTiles = allPlaceable.filter(t => t.type !== 'subtile');
+    const subtileTiles = allPlaceable.filter(t => t.type === 'subtile');
 
     // ── Responsive sizing: shrink tiles to always fit within the panel ──
     const MAX_W       = 720;                       // usable horizontal space
@@ -401,7 +461,7 @@ export class PlanningOverlay extends Scene {
     const totalRowW = cols * frameWidth + (cols - 1) * gap;
     const startX    = 400 - totalRowW / 2 + frameWidth / 2;
     // Centre vertically in the board area
-    const rowStartY = rows === 2 ? 400 : 420;
+    const rowStartY = rows === 2 ? 330 : 350;
 
     placeableTiles.forEach((tileConfig, idx) => {
       const col = idx % cols;
@@ -455,31 +515,147 @@ export class PlanningOverlay extends Scene {
         container.add(countText);
       }
 
-      // Affordability
+      // Affordability + Wave 5 context guards: normal tiles need a non-reserved
+      // empty slot somewhere on the loop, and the picker is disabled entirely
+      // while Remove Mode is active.
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
-      if (!canAfford) {
+      const contextOk = !this.removeMode && this.hasOpenNormalSlot();
+      const enabled = canAfford && contextOk;
+      // Tooltip + hover effect wired on every card (interactive even when
+      // unaffordable) so the player can read the blurb without committing
+      // to a pick. Only the click handler is gated by `enabled`.
+      frame.setInteractive({ useHandCursor: enabled });
+      this.attachTooltip(frame, x, y - frameHeight / 2, tileConfig.description);
+      frame.on('pointerover', () => {
+        const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
+        container.setScale(hoverScale);
+        frame.setTint(0xdddddd);
+      });
+      frame.on('pointerout', () => {
+        const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
+        container.setScale(baseScale);
+        frame.clearTint();
+      });
+      if (!enabled) {
         container.setAlpha(0.5);
-        costText.setColor('#880000');
+        if (!canAfford) costText.setColor('#880000');
       } else {
-        frame.setInteractive({ useHandCursor: true });
-        
-        frame.on('pointerover', () => {
-          const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
-          container.setScale(hoverScale);
-          frame.setTint(0xdddddd);
-        });
-        
-        frame.on('pointerout', () => {
-          const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
-          container.setScale(baseScale);
-          frame.clearTint();
-        });
-
         frame.on('pointerdown', () => this.selectInventoryTile(idx, tileConfig.key));
       }
 
       this.inventoryCards.push(container);
     });
+
+    // Wave 5: render the dedicated subtile row underneath the main panel.
+    this.renderSubtileRow(subtileTiles, fontFamily);
+  }
+
+  /**
+   * Wave 5: subtile picker. Renders below the main inventory panel as a
+   * single row of smaller frames. Entries dim out when no reserved slot
+   * exists to receive them (or when Remove Mode is active).
+   */
+  private renderSubtileRow(
+    subtileTiles: ReturnType<typeof getAllPlaceableTiles>,
+    fontFamily: string,
+  ): void {
+    if (subtileTiles.length === 0) return;
+
+    const FRAME = 44;
+    const GAP = 22;
+    const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
+    const startX = 400 - total / 2 + FRAME / 2;
+    const rowY = 445;
+
+    const subtileSlotsExist = this.hasOpenReservedSlot();
+
+    subtileTiles.forEach((tileConfig, idx) => {
+      const x = startX + idx * (FRAME + GAP);
+      const container = this.add.container(x, rowY);
+
+      const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(FRAME, FRAME);
+      container.add(frame);
+
+      const pseudoSlot: TileSlot = {
+        type: tileConfig.type,
+        terrain: tileConfig.terrain,
+        kind: tileConfig.key,           // needed so TileVisual resolves to the specific subtile_* config
+        subtileEffect: tileConfig.effect,
+        defeatedThisLoop: false,
+      };
+      const previewSize = Math.round(FRAME * 0.65);
+      const scale = previewSize / TILE_SIZE;
+      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
+      container.add(preview);
+
+      // Name label below the frame, cost label below the name.
+      const nameText = this.add.text(0, FRAME / 2 + 6, tileConfig.name, {
+        fontSize: '9px', color: '#ffdca0', fontFamily,
+      }).setOrigin(0.5);
+      container.add(nameText);
+
+      const costText = this.add.text(0, FRAME / 2 + 18, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '10px', color: '#ff4444', fontFamily, fontStyle: 'bold',
+      }).setOrigin(0.5);
+      container.add(costText);
+
+      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileConfig.key);
+      const freeCount = invEntry?.count ?? 0;
+      if (freeCount > 0) {
+        const badge = this.add.text(FRAME / 2 - 4, -FRAME / 2 + 4, `x${freeCount}`, {
+          fontSize: '10px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 2, y: 1 },
+        }).setOrigin(1, 0);
+        container.add(badge);
+      }
+
+      const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
+      const contextOk = !this.removeMode && subtileSlotsExist;
+      const enabled = canAfford && contextOk;
+      // Tooltip + hover effect on every card so the player can read the
+      // description regardless of affordability/context. Click is gated.
+      frame.setInteractive({ useHandCursor: enabled });
+      this.attachTooltip(frame, x, rowY - FRAME / 2, tileConfig.description);
+      frame.on('pointerover', () => { container.setScale(1.1); frame.setTint(0xdddddd); });
+      frame.on('pointerout',  () => { container.setScale(1);   frame.clearTint(); });
+      if (!enabled) {
+        container.setAlpha(0.5);
+        if (!canAfford) costText.setColor('#880000');
+      } else {
+        // Subtile selection shares the same selectedTileKey + selectedCardIndex
+        // pipeline, but tracks its container in subtileInventoryCards so
+        // selectInventoryTile's deselection lookup can find the right ref.
+        frame.on('pointerdown', () => this.selectSubtile(idx, tileConfig.key));
+      }
+
+      this.subtileInventoryCards.push(container);
+    });
+  }
+
+  /**
+   * Wave 5: subtile picker selection. Mirrors selectInventoryTile but
+   * operates on the subtileInventoryCards array so highlight/deselect
+   * find the correct container.
+   */
+  private selectSubtile(cardIndex: number, tileKey: string): void {
+    // Deselect anything in either pool.
+    if (this.selectedCardIndex >= 0) {
+      const prevMain = this.inventoryCards[this.selectedCardIndex];
+      const prevSub = this.subtileInventoryCards[this.selectedCardIndex];
+      if (prevMain) prevMain.setScale(1);
+      if (prevSub) prevSub.setScale(1);
+    }
+
+    if (this.selectedTileKey === tileKey) {
+      // Toggle off
+      this.selectedTileKey = null;
+      this.selectedCardIndex = -1;
+      return;
+    }
+
+    this.selectedTileKey = tileKey;
+    this.selectedCardIndex = cardIndex;
+    this.subtileInventoryCards[cardIndex]?.setScale(1.05);
   }
 
   private selectInventoryTile(cardIndex: number, tileKey: string): void {
@@ -512,7 +688,7 @@ export class PlanningOverlay extends Scene {
     const DRAG_THRESHOLD = 4; // pixels — below this, treat as a click
 
     this.onPointerDown = (pointer: Phaser.Input.Pointer) => {
-      if (pointer.y > 200 && pointer.y < 300) {
+      if (pointer.y > 130 && pointer.y < 230) {
         dragging = true;
         dragMoved = false;
         startPointerX = pointer.x;
@@ -549,7 +725,7 @@ export class PlanningOverlay extends Scene {
       _dx: number,
       dy: number,
     ) => {
-      if (pointer.y < 200 || pointer.y > 300) return;
+      if (pointer.y < 130 || pointer.y > 230) return;
       this.scrollOffset -= dy;
       this.updateTilePositions();
     };
@@ -602,6 +778,110 @@ export class PlanningOverlay extends Scene {
     refresh();
   }
 
+  /** Wave 5: Remove Mode toggle. When active, slot clicks remove placed tiles. */
+  private buildRemoveModeButton(fontFamily: string): void {
+    const btn = this.add.text(720, 505, '🗑 Remove: OFF', {
+      fontSize: '14px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+      stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true });
+
+    const refresh = () => {
+      btn.setText(this.removeMode ? '🗑 Remove: ON' : '🗑 Remove: OFF');
+      btn.setColor(this.removeMode ? '#ff6655' : '#aaddff');
+    };
+
+    btn.on('pointerover', () => btn.setAlpha(0.85));
+    btn.on('pointerout',  () => btn.setAlpha(1));
+    btn.on('pointerdown', () => {
+      this.removeMode = !this.removeMode;
+      // Mutually exclusive with placement selection — entering remove mode
+      // clears the picker, exiting leaves the player free to pick again.
+      if (this.removeMode) {
+        this.selectedTileKey = null;
+        if (this.selectedCardIndex >= 0 && this.inventoryCards[this.selectedCardIndex]) {
+          this.inventoryCards[this.selectedCardIndex].setScale(1);
+        }
+        if (this.selectedCardIndex >= 0 && this.subtileInventoryCards[this.selectedCardIndex]) {
+          this.subtileInventoryCards[this.selectedCardIndex].setScale(1);
+        }
+        this.selectedCardIndex = -1;
+      }
+      refresh();
+      this.refreshInventory();
+    });
+
+    refresh();
+  }
+
+  /** Wave 5: any empty basic slot that is NOT reserved — target for normal tiles. */
+  private hasOpenNormalSlot(): boolean {
+    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && !t.reserved && !t.enemyId);
+  }
+
+  /** Wave 5: any empty basic slot that IS reserved — target for subtile placement. */
+  private hasOpenReservedSlot(): boolean {
+    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && t.reserved === true && !t.enemyId);
+  }
+
+  /**
+   * Attach 800ms-hover tooltip showing `description` to a frame. Cancels
+   * on pointerout. Only fires when the tile config carries a description.
+   */
+  private attachTooltip(
+    frame: Phaser.GameObjects.GameObject,
+    worldX: number,
+    worldY: number,
+    description: string | undefined,
+  ): void {
+    if (!description) return;
+    const interactive = frame as Phaser.GameObjects.GameObject & {
+      on: (ev: string, fn: () => void) => void;
+    };
+    interactive.on('pointerover', () => {
+      this.tooltipTimer?.remove();
+      this.tooltipTimer = this.time.delayedCall(800, () => {
+        this.showTooltip(worldX, worldY, description);
+      });
+    });
+    interactive.on('pointerout', () => {
+      this.tooltipTimer?.remove();
+      this.tooltipTimer = undefined;
+      this.hideTooltip();
+    });
+  }
+
+  private showTooltip(anchorX: number, anchorY: number, text: string): void {
+    this.hideTooltip();
+    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    // Build text first to measure size, then size the bg to fit.
+    const label = this.add.text(0, 0, text, {
+      fontSize: '12px',
+      color: '#ffffff',
+      fontFamily,
+      wordWrap: { width: 220 },
+      align: 'center',
+    }).setOrigin(0.5);
+    const pad = 8;
+    const w = label.width + pad * 2;
+    const h = label.height + pad * 2;
+    const bg = this.add.rectangle(0, 0, w, h, 0x101010, 0.92)
+      .setStrokeStyle(1, 0xffd700, 0.9);
+    // Anchor above the frame; if it would clip the top of the screen,
+    // flip below.
+    let cy = anchorY - 44;
+    if (cy - h / 2 < 8) cy = anchorY + 44;
+    const container = this.add.container(anchorX, cy, [bg, label]);
+    container.setDepth(2000);
+    this.tooltipObj = container;
+  }
+
+  private hideTooltip(): void {
+    if (this.tooltipObj) {
+      this.tooltipObj.destroy(true);
+      this.tooltipObj = undefined;
+    }
+  }
+
   /** "Shop" and "Forge" buttons on the planning overlay. Forge is its own scene now. */
   private buildShopForgeButtons(fontFamily: string): void {
     const shopBtn = this.add.text(150, 545, '🛒 Shop', {
@@ -646,6 +926,12 @@ export class PlanningOverlay extends Scene {
   }
 
   private cleanup(): void {
+    // Cancel pending tooltip + drop any visible tooltip so the timer
+    // doesn't fire into a destroyed scene.
+    this.tooltipTimer?.remove();
+    this.tooltipTimer = undefined;
+    this.hideTooltip();
+
     // Destroy belt tile visuals; the container is destroyed below.
     for (const tv of this.tileVisuals) {
       tv.destroy();
@@ -656,6 +942,12 @@ export class PlanningOverlay extends Scene {
       card.destroy();
     }
     this.inventoryCards = [];
+    // Wave 5: also clean up the subtile inventory row.
+    for (const card of this.subtileInventoryCards) {
+      card.destroy();
+    }
+    this.subtileInventoryCards = [];
+    this.reservedDecorations = [];
 
     if (this.gridContainer) {
       this.gridContainer.destroy(true);
