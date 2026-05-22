@@ -308,7 +308,7 @@ export class BuildingPanelScene extends Scene {
         const color = hasEnough ? '#ffffff' : '#ff5555';
         
         // Render icon if available
-        const hasIcon = ['iron', 'crystal', 'scroll', 'wood', 'stone', 'bone', 'essence'].includes(mat.toLowerCase());
+        const hasIcon = ['iron', 'crystal', 'scroll', 'wood', 'stone', 'bone', 'essence', 'herbs'].includes(mat.toLowerCase());
         if (hasIcon) {
           costContainer.add(this.add.image(costX - 16, 0, `mat_${mat.toLowerCase()}`).setDisplaySize(24, 24));
           costContainer.add(this.add.text(costX + 14, 2, `${required}`, {

@@ -45,14 +45,15 @@ describe('CollectionRegistry', () => {
     it('returns bosses total matching boss-type enemies in data', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      // enemies.json currently has 3 bosses: doom_knight, iron_golem, lizard_king
-      expect(status.bosses.total).toBe(3);
+      // enemies.json bosses: doom_knight, iron_golem, lizard_king,
+      // boss_demon, boss_berserker, boss_mage, boss_hydra
+      expect(status.bosses.total).toBe(7);
     });
 
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.tiles.total).toBe(9); // 6 base + 3 unlockable (shop tile removed)
+      expect(status.tiles.total).toBe(8); // 6 base + 2 unlockable (shop tile removed)
       expect(status.tiles.unlocked).toBe(6); // only base tiles
     });
   });

@@ -88,11 +88,13 @@ export class Preloader extends Scene {
       { id: 'depths_horror', folder: 'swamp', file: 'depths horror.png' },
       { id: 'toxic_gooze', folder: 'swamp', file: 'toxic gooze.png' },
       { id: 'venomous_kobra', folder: 'swamp', file: 'venomous kobra.png' },
-      { id: 'lost_lizard', folder: '', file: 'lost_lizard.png' }
+      { id: 'lost_lizard', folder: '', file: 'lost_lizard_1.png' }
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
       this.load.image(`monster_${m.id}`, path);
+      const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
+      this.load.image(`monster_${m.id}_2`, path2);
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
@@ -161,6 +163,7 @@ export class Preloader extends Scene {
     this.load.image('mat_stone', 'assets/icons/stone.png');
     this.load.image('mat_bone', 'assets/icons/stone.png');
     this.load.image('mat_essence', 'assets/icons/essence.png');
+    this.load.image('mat_herbs', 'assets/icons/herbs.png');
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
@@ -180,28 +183,88 @@ export class Preloader extends Scene {
     }
 
     // Card Illustrations
-    // Phase 9 (Design v2) audit: every ID below survives in v2 cards.json
-    // (verified via cards.json membership check 2026-05-11). v2 cards
-    // without preload entries fall back to the default card visual via
-    // the existing preload-skip path.
-    const cardIds = [
+    // Legacy card art (old system — kept for compatibility with any remaining references)
+    const legacyJpgCards = new Set([
+      'chain-lightning', 'energy-surge', 'haste', 'poison-cloud', 'sacrifice', 'soul-rend',
+      'berserker', 'bulwark', 'doom-blade', 'heavy-hit', 'last-stand', 'mana-drain',
+      'meditate', 'parry', 'strike', 'vampiric-touch', 'weaken'
+    ]);
+    const legacyCardIds = [
       'strike', 'heavy-hit', 'fury', 'berserker', 'counter-strike', 'defend', 'shield-wall',
       'fortify', 'iron-skin', 'fireball', 'heal', 'arcane-shield', 'rejuvenate', 'mana-drain',
       'weaken', 'cleave', 'reckless-charge', 'execute', 'doom-blade', 'parry', 'bulwark',
       'last-stand', 'meditate', 'vampiric-touch', 'haste', 'energy-surge', 'poison-cloud',
       'soul-rend', 'sacrifice', 'chain-lightning'
     ];
-
-    const jpgCards = new Set([
-      'chain-lightning', 'energy-surge', 'haste', 'poison-cloud', 'sacrifice', 'soul-rend',
-      'berserker', 'bulwark', 'doom-blade', 'heavy-hit', 'last-stand', 'mana-drain',
-      'meditate', 'parry', 'strike', 'vampiric-touch', 'weaken'
-    ]);
-
-    for (const id of cardIds) {
-      const ext = jpgCards.has(id) ? '.jpg' : '.png';
+    for (const id of legacyCardIds) {
+      const ext = legacyJpgCards.has(id) ? '.jpg' : '.png';
       this.load.image(`card_${id}`, `assets/cards/${id}${ext}`);
     }
+
+    // New element-based card art (Tier 1 + Tier 2, all PNG)
+    const newCardIds = [
+      // T1 — pure elements
+      't1-attack-attack', 't1-defense-defense', 't1-agility-agility', 't1-counter-counter',
+      't1-fire-fire', 't1-water-water', 't1-air-air', 't1-earth-earth',
+      // T1 — cross elements
+      't1-agility-attack', 't1-agility-counter', 't1-agility-defense', 't1-agility-fire',
+      't1-agility-water', 't1-agility-air', 't1-agility-earth',
+      't1-attack-counter', 't1-attack-defense', 't1-attack-fire', 't1-attack-water',
+      't1-air-attack', 't1-attack-earth', 't1-counter-defense', 't1-counter-fire',
+      't1-counter-water', 't1-air-counter', 't1-counter-earth', 't1-defense-fire',
+      't1-defense-water', 't1-air-defense', 't1-defense-earth', 't1-fire-water',
+      't1-air-fire', 't1-earth-fire', 't1-air-water', 't1-earth-water', 't1-air-earth',
+      // T2 — physical pure
+      't2-attack-attack-attack', 't2-defense-defense-defense',
+      't2-agility-agility-agility', 't2-counter-counter-counter',
+      // T2 — elemental pure
+      't2-fire-fire-fire', 't2-water-water-water', 't2-air-air-air', 't2-earth-earth-earth',
+      // T2 — physical mixed
+      't2-attack-attack-defense', 't2-agility-attack-attack', 't2-attack-attack-counter',
+      't2-attack-defense-defense', 't2-agility-defense-defense', 't2-counter-defense-defense',
+      't2-agility-agility-attack', 't2-agility-agility-defense', 't2-agility-agility-counter',
+      't2-attack-counter-counter', 't2-counter-counter-defense', 't2-agility-counter-counter',
+      't2-agility-attack-defense', 't2-attack-counter-defense', 't2-agility-attack-counter',
+      't2-agility-counter-defense',
+      // T2 — elemental mixed
+      't2-fire-fire-water', 't2-air-fire-fire', 't2-earth-fire-fire',
+      't2-fire-water-water', 't2-air-water-water', 't2-earth-water-water',
+      't2-air-air-fire', 't2-air-air-water', 't2-air-air-earth',
+      't2-earth-earth-fire', 't2-earth-earth-water', 't2-air-earth-earth',
+      't2-air-fire-water', 't2-earth-fire-water', 't2-air-earth-fire',
+      't2-air-earth-water',
+      // T2 — physical × elemental
+      't2-attack-attack-fire', 't2-attack-attack-water', 't2-air-attack-attack', 't2-attack-attack-earth',
+      't2-defense-defense-fire', 't2-defense-defense-water', 't2-air-defense-defense', 't2-defense-defense-earth',
+      't2-agility-agility-fire', 't2-agility-agility-water', 't2-agility-agility-air', 't2-agility-agility-earth',
+      't2-counter-counter-fire', 't2-counter-counter-water', 't2-air-counter-counter', 't2-counter-counter-earth',
+      't2-attack-defense-fire', 't2-attack-defense-water', 't2-air-attack-defense', 't2-attack-defense-earth',
+      't2-agility-attack-fire', 't2-agility-attack-water', 't2-agility-air-attack', 't2-agility-attack-earth',
+      't2-attack-counter-fire', 't2-attack-counter-water', 't2-air-attack-counter', 't2-attack-counter-earth',
+      't2-agility-defense-fire', 't2-agility-defense-water', 't2-agility-air-defense', 't2-agility-defense-earth',
+      't2-counter-defense-fire', 't2-counter-defense-water', 't2-air-counter-defense', 't2-counter-defense-earth',
+      't2-agility-counter-fire', 't2-agility-counter-water', 't2-agility-air-counter', 't2-agility-counter-earth',
+      't2-attack-fire-fire', 't2-attack-water-water', 't2-air-air-attack', 't2-attack-earth-earth',
+      't2-attack-fire-water', 't2-air-attack-fire', 't2-attack-earth-fire', 't2-air-attack-water',
+      't2-attack-earth-water', 't2-air-attack-earth',
+      't2-defense-fire-fire', 't2-defense-water-water', 't2-air-air-defense', 't2-defense-earth-earth',
+      't2-defense-fire-water', 't2-air-defense-fire', 't2-defense-earth-fire', 't2-air-defense-water',
+      't2-defense-earth-water', 't2-air-defense-earth',
+      't2-agility-fire-fire', 't2-agility-water-water', 't2-agility-air-air', 't2-agility-earth-earth',
+      't2-agility-fire-water', 't2-agility-air-fire', 't2-agility-earth-fire', 't2-agility-air-water',
+      't2-agility-earth-water', 't2-agility-air-earth',
+      't2-counter-fire-fire', 't2-counter-water-water', 't2-air-air-counter', 't2-counter-earth-earth',
+      't2-counter-fire-water', 't2-air-counter-fire', 't2-counter-earth-fire', 't2-air-counter-water',
+      't2-counter-earth-water', 't2-air-counter-earth',
+    ];
+    for (const id of newCardIds) {
+      this.load.image(`card_${id}`, `assets/cards/${id}.png`);
+    }
+
+    // Hero-test sprites (temporary test assets)
+    this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
+    this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
+    this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
 
     // Audio
     this.load.audio('theme_song', 'assets/audio/theme-song.mp3');

@@ -17,7 +17,6 @@ function makeRunState(): any {
     stopAtShop: true,
     combatSpeed: 1,
     mapSpeed: 1,
-    pool: { cards: [], relics: [], tiles: [] },
   };
 }
 
