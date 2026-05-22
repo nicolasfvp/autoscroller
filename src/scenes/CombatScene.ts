@@ -37,7 +37,6 @@ export class CombatScene extends Scene {
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
-  private transitioning = false;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 

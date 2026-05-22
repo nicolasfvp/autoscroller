@@ -18,6 +18,7 @@ export interface LoopStateData {
   tiles: TileSlot[];
   positionInLoop: number;
   difficultyMultiplier: number;
+  trailblazerFiredThisLoop?: boolean;
 }
 
 export interface EconomyData {
@@ -30,7 +31,16 @@ export interface LoopRunState {
   loop: LoopStateData;
   economy: EconomyData;
   tileInventory: TileInventoryEntry[];
-  hero?: { xp: number };
+  relics?: string[];
+  hero?: {
+    xp: number;
+    currentHP?: number;
+    maxHP?: number;
+    currentStamina?: number;
+    maxStamina?: number;
+    currentMana?: number;
+    maxMana?: number;
+  };
 }
 
 export { TILE_SIZE };
@@ -133,9 +143,11 @@ export class LoopRunner {
     const tile = this.runState.loop.tiles[tileIndex];
     if (!tile || tile.defeatedThisLoop) return;
 
+    const hero = this.runState.hero;
+
     // C6 — Travel Boots: heal +1 HP on entering each tile.
-    if ((this.runState.relics ?? []).includes('travel_boots')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 1);
+    if (hero && (this.runState.relics ?? []).includes('travel_boots')) {
+      hero.currentHP = Math.min(hero.maxHP ?? hero.currentHP ?? 0, (hero.currentHP ?? 0) + 1);
     }
 
     // C7 — Trailblazer's Brand: first time entering a combat tile each loop,
@@ -147,12 +159,12 @@ export class LoopRunner {
       (tile.type === 'terrain' && !!tile.enemyId) ||
       (tile.type === 'subtile' && !!tile.enemyId) ||
       tile.type === 'boss';
-    if (isCombatTile
+    if (hero && isCombatTile
         && !this.runState.loop.trailblazerFiredThisLoop
         && (this.runState.relics ?? []).includes('trailblazers_brand')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 5);
-      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
-      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
+      hero.currentHP = Math.min(hero.maxHP ?? hero.currentHP ?? 0, (hero.currentHP ?? 0) + 5);
+      hero.currentStamina = Math.min(hero.maxStamina ?? hero.currentStamina ?? 0, (hero.currentStamina ?? 0) + 1);
+      hero.currentMana = Math.min(hero.maxMana ?? hero.currentMana ?? 0, (hero.currentMana ?? 0) + 1);
       this.runState.loop.trailblazerFiredThisLoop = true;
     }
 
@@ -227,10 +239,11 @@ export class LoopRunner {
     loop.count++;
 
     // C6 — Lodestone Pendant: on loop completion, heal 8 HP and +1 Stamina / +1 Mana.
-    if ((this.runState.relics ?? []).includes('lodestone_pendant')) {
-      this.runState.hero.currentHP = Math.min(this.runState.hero.maxHP, this.runState.hero.currentHP + 8);
-      this.runState.hero.currentStamina = Math.min(this.runState.hero.maxStamina, this.runState.hero.currentStamina + 1);
-      this.runState.hero.currentMana = Math.min(this.runState.hero.maxMana, this.runState.hero.currentMana + 1);
+    const hero = this.runState.hero;
+    if (hero && (this.runState.relics ?? []).includes('lodestone_pendant')) {
+      hero.currentHP = Math.min(hero.maxHP ?? hero.currentHP ?? 0, (hero.currentHP ?? 0) + 8);
+      hero.currentStamina = Math.min(hero.maxStamina ?? hero.currentStamina ?? 0, (hero.currentStamina ?? 0) + 1);
+      hero.currentMana = Math.min(hero.maxMana ?? hero.currentMana ?? 0, (hero.currentMana ?? 0) + 1);
     }
 
     // C7 — Trailblazer's Brand: reset the per-loop fired flag on new loop.
@@ -328,8 +341,7 @@ export class LoopRunner {
       // Non-combat tiles never need enemy assignment — skip them up front
       // so we don't burn rng() calls (would also drift the seeded RNG state
       // once B.7/B.8 lands).
-      if (tile.type === 'buffer' || tile.type === 'shop' ||
-          tile.type === 'rest' || tile.type === 'event' ||
+      if (tile.type === 'buffer' || tile.type === 'event' ||
           tile.type === 'treasure') {
         continue;
       }

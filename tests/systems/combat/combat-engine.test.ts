@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, beforeAll, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import { createCombatState } from '../../../src/systems/combat/CombatState';
 import { type RunState, setRun, clearRun } from '../../../src/state/RunState';
