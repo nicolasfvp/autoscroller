@@ -52,6 +52,7 @@ export class Preloader extends Scene {
     // Hero warrior assets
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
+    this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
     // Character selection preview frames
     this.load.image('warrior_select_1', 'assets/characters/hero/selection/knight_1.png');
