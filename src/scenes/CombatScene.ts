@@ -168,15 +168,6 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
 
-  preload(): void {
-    console.log('[HERO_TEST] preload() running, textures.exists:', this.textures.exists('hero_test_idle'));
-    this.load.on('filecomplete', (key: string) => console.log('[HERO_TEST] loaded:', key));
-    this.load.on('loaderror', (file: { key: string; url: string }) => console.error('[HERO_TEST] FAILED:', file.key, file.url));
-    if (!this.textures.exists('hero_test_idle'))   this.load.image('hero_test_idle', 'assets/hero_test/idle.png');
-    if (!this.textures.exists('hero_test_idle2'))  this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
-    if (!this.textures.exists('hero_test_attack')) this.load.spritesheet('hero_test_attack', 'assets/hero_test/atack.png', { frameWidth: 451, frameHeight: 553 });
-  }
-
   init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
@@ -288,54 +279,51 @@ export class CombatScene extends Scene {
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
       const heroIdleKey = `${sp}_idle`;
       const heroAttackKey = `${sp}_attack`;
-      const heroDeathKey = `${sp}_death`;
 
-      // ── TEST BLOCK: hero_test sprites (496×608 individual frames) ──────────
-      // Phaser's animation system doesn't handle multi-texture (load.image) frames
-      // correctly. Use setTexture() + time.addEvent() for manual frame cycling.
-      if (this.textures.exists('hero_test_idle')) {
-        // 496×608 at scale 0.7 → 347×426 on screen, centered at (200, 310)
-        // 328×553 spritesheet frames at scale 0.7 → ~230×387 on screen
-        this.heroSprite = this.add.sprite(200, 330, 'hero_test_idle').setDepth(10).setScale(0.7);
+      if (this.textures.exists(heroIdleKey)) {
+        this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(0.7);
 
-        // 2-frame idle cycle via setTexture (individual images, not a spritesheet)
-        const hasIdle2 = this.textures.exists('hero_test_idle2');
+        // 2-frame idle cycle (individual images, not a spritesheet)
+        const idle2Key = `${sp}_idle2`;
+        const hasIdle2 = this.textures.exists(idle2Key);
         let idleFrame = 0;
         const startIdle = () => this.time.addEvent({
           delay: 250, loop: true,
           callback: () => {
             if (this.heroSprite && !this.heroSprite.anims.isPlaying) {
               idleFrame = 1 - idleFrame;
-              this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
+              this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
             }
           },
         });
         let idleCycle = hasIdle2 ? startIdle() : null;
 
-        // Register spritesheet attack animation once
-        if (!this.anims.exists('hero_test_attack')) {
+        if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
           this.anims.create({
-            key: 'hero_test_attack',
-            frames: this.anims.generateFrameNumbers('hero_test_attack', { start: 0, end: 7 }),
+            key: heroAttackKey,
+            frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: 7 }),
             frameRate: 12,
             repeat: 0,
           });
         }
 
-        // Patch onCardPlayed to trigger the spritesheet attack animation
+        // Patch onCardPlayed to drive the attack animation and resume idle
         const origOnCardPlayed = this.onCardPlayed;
         this.onCardPlayed = (data: GameEvents['combat:card-played']) => {
           if (this.cardQueue) this.cardQueue.onCardPlayed(0);
           if (data.damage > 0) {
             AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
-            this.heroSprite.play('hero_test_attack');
-            this.heroSprite.once('animationcomplete', () => {
-              if (this.heroSprite) {
-                idleFrame = 0;
-                this.heroSprite.setTexture('hero_test_idle');
-                if (hasIdle2 && !idleCycle) idleCycle = startIdle();
-              }
-            });
+            if (this.anims.exists(heroAttackKey)) {
+              idleCycle?.destroy(); idleCycle = null;
+              this.heroSprite.play(heroAttackKey);
+              this.heroSprite.once('animationcomplete', () => {
+                if (this.heroSprite) {
+                  idleFrame = 0;
+                  this.heroSprite.setTexture(heroIdleKey);
+                  if (hasIdle2) idleCycle = startIdle();
+                }
+              });
+            }
             if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
               this.enemySprite.setTintFill(0xffffff);
@@ -344,16 +332,8 @@ export class CombatScene extends Scene {
           }
           this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
         };
-        // Re-register with the patched handler
         eventBus.off('combat:card-played', origOnCardPlayed);
         eventBus.on('combat:card-played', this.onCardPlayed);
-      // ── END TEST BLOCK ─────────────────────────────────────────────────────
-      } else if (this.textures.exists(heroIdleKey)) {
-        if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
-        if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
-        if (!this.anims.exists(heroDeathKey)) this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
-        this.heroSprite = this.add.sprite(300, 340, heroIdleKey).setDepth(10).setScale(4);
-        this.heroSprite.play(heroIdleKey);
       } else {
         this.heroSprite = this.add.sprite(300, 340, 'knight_idle').setDisplaySize(250, 250).setDepth(10);
       }

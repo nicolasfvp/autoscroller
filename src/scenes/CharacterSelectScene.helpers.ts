@@ -7,6 +7,8 @@ export interface ClassOption {
   name: string;
   description: string;
   spriteKey: string;
+  /** Two individual image keys for a manual idle toggle animation. */
+  idleFrames?: [string, string];
   /** Phase 9: optional tint for placeholder visuals. */
   spriteTint?: number;
   /** Phase 9: fallback colored rect when sprite texture not loaded. */
@@ -23,7 +25,8 @@ export const CLASS_CARDS: ClassOption[] = [
     id: 'warrior',
     name: 'Warrior',
     description: 'Balanced melee fighter.\nHigh HP and stamina.',
-    spriteKey: 'hero_idle',
+    spriteKey: 'warrior_select_1',
+    idleFrames: ['warrior_select_1', 'warrior_select_2'],
     fallbackColor: 0x4488ff,
     stats: { hp: 100, stamina: 50, mana: 30 },
     deckHint: 'Strikes, Defends, Heavy Hit',

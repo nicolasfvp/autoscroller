@@ -48,17 +48,13 @@ export class Preloader extends Scene {
     this.load.image('snake_sprite', 'assets/characters/sprites/snake_generated.png');
     this.load.image('judge_sprite', 'assets/characters/sprites/judge_generated.png');
 
-    // Knight spritesheet (legacy character)
-    this.load.spritesheet('knight_idle', 'assets/characters/sprites/FreeKnight_v1/Colour1/Outline/120x80_PNGSheets/_Idle.png', {
-      frameWidth: 120,
-      frameHeight: 80
-    });
-
-    // Hero spritesheets (64x64 per frame, horizontal strips)
-    this.load.spritesheet('hero_walk', 'assets/characters/hero/spritesheets/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_idle', 'assets/characters/hero/spritesheets/hero_idle.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_attack', 'assets/characters/hero/spritesheets/hero_attack.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('hero_death', 'assets/characters/hero/spritesheets/hero_death.png', { frameWidth: 64, frameHeight: 64 });
+    // Hero warrior assets
+    this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
+    this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
+    // Character selection preview frames
+    this.load.image('warrior_select_1', 'assets/characters/hero/selection/knight_1.png');
+    this.load.image('warrior_select_2', 'assets/characters/hero/selection/knight_2.png');
 
     // Mage hero spritesheets (64x64 per frame, horizontal strips)
     this.load.spritesheet('mage_walk', 'assets/characters/mage/spritesheets/mage_walk.png', { frameWidth: 64, frameHeight: 64 });

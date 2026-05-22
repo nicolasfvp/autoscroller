@@ -134,7 +134,17 @@ export class CharacterSelectScene extends Scene {
     });
 
     // Character sprite preview (animated).
-    if (this.textures.exists(cls.spriteKey)) {
+    if (cls.idleFrames && cls.idleFrames.every(k => this.textures.exists(k))) {
+      // Two-image idle toggle
+      const img = this.add.image(0, -60, cls.idleFrames[0]).setScale(0.55);
+      container.add(img);
+      let frame = 0;
+      this.time.addEvent({
+        delay: 500, loop: true,
+        callback: () => { frame = 1 - frame; img.setTexture(cls.idleFrames![frame]); },
+      });
+    } else if (this.textures.exists(cls.spriteKey)) {
+      // Spritesheet-based animation (mage etc.)
       const animKey = `select_${cls.id}_idle`;
       if (!this.anims.exists(animKey)) {
         this.anims.create({
