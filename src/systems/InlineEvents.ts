@@ -1,10 +1,12 @@
 // Inline event resolution -- random effects applied without blocking the game.
-// Events can: heal, give gold, damage, take gold, slow hero, trigger easy combat, or spawn rare enemy.
-// Zero Phaser dependency. Queues notifications via PendingLoot.
+// Zero Phaser dependency (GameScene observes side-effect flags). Queues
+// notifications via PendingLoot.
 
-import type { RunState } from '../state/RunState';
+import { hasActiveRun, getRun, type RunState } from '../state/RunState';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
+import { addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
+import { ELEMENTS, type ElementId } from './ElementSystem';
 
 interface EventResult {
   notifications: LootEntry[];
@@ -12,24 +14,26 @@ interface EventResult {
   combatEnemyId?: string;
   /** Temporary speed debuff duration in ms (applied by GameScene) */
   slowDurationMs?: number;
+  /** Marks a "meme" / cosmetic-only outcome — GameScene plays the gag overlay. */
+  memeKey?: string;
 }
 
 interface EventOption {
   weight: number;
-  /** Marks the option as a beneficial outcome — gets eventBonus weight uplift. */
+  /** Marks the option as a beneficial outcome — informational for future tuning. */
   positive?: boolean;
   apply: (run: RunState) => EventResult;
 }
 
-// Easy enemy pool for random battle events
-const EASY_ENEMIES = ['slime', 'goblin'];
-// Rare event enemy (gives more gold)
-const RARE_ENEMY = 'elite_knight';
+// Low-tier enemy pool used by Cursed Treasure's forced fight. IDs verified
+// against src/data/json/enemies.json — these are intentionally weak so the
+// gold payout feels worth the risk even at later loops.
+const CURSED_TREASURE_EASY_POOL = ['lost_lizard', 'pocket_cat', 'mush'];
 
 const EVENT_TABLE: EventOption[] = [
-  // Heal 20% HP
+  // ── Heal 20% HP (common positive)
   {
-    weight: 20,
+    weight: 18,
     positive: true,
     apply(run) {
       const heal = Math.floor(run.hero.maxHP * 0.2);
@@ -37,9 +41,9 @@ const EVENT_TABLE: EventOption[] = [
       return { notifications: [{ label: `+${heal} HP`, color: '#00ff00' }] };
     },
   },
-  // Give gold (15-40)
+  // ── Give gold (15-40, common positive)
   {
-    weight: 20,
+    weight: 18,
     positive: true,
     apply(run) {
       const amount = 15 + Math.floor(rand() * 26);
@@ -48,39 +52,18 @@ const EVENT_TABLE: EventOption[] = [
       return { notifications: [{ label: `+${amount} Gold`, color: '#ffd700' }] };
     },
   },
-  // Random easy battle
+  // ── Take damage (low, non-lethal)
   {
-    weight: 15,
-    apply() {
-      const enemyId = EASY_ENEMIES[Math.floor(rand() * EASY_ENEMIES.length)];
-      return {
-        notifications: [{ label: 'Ambush!', color: '#ff4444' }],
-        combatEnemyId: enemyId,
-      };
-    },
-  },
-  // Rare enemy (more gold reward)
-  {
-    weight: 5,
-    apply() {
-      return {
-        notifications: [{ label: 'Rare Enemy!', color: '#ff00ff' }],
-        combatEnemyId: RARE_ENEMY,
-      };
-    },
-  },
-  // Take damage (low, non-lethal)
-  {
-    weight: 15,
+    weight: 14,
     apply(run) {
       const dmg = Math.floor(run.hero.maxHP * 0.08);
       run.hero.currentHP = Math.max(1, run.hero.currentHP - dmg);
       return { notifications: [{ label: `-${dmg} HP (trap!)`, color: '#ff4444' }] };
     },
   },
-  // Lose gold
+  // ── Pickpocket gold
   {
-    weight: 10,
+    weight: 9,
     apply(run) {
       const amount = Math.min(run.economy.gold, 5 + Math.floor(rand() * 16));
       if (amount <= 0) {
@@ -90,9 +73,9 @@ const EVENT_TABLE: EventOption[] = [
       return { notifications: [{ label: `-${amount} Gold (pickpocket!)`, color: '#ff8800' }] };
     },
   },
-  // Slow (temporary speed reduction)
+  // ── Slow (temporary speed reduction)
   {
-    weight: 10,
+    weight: 9,
     apply() {
       return {
         notifications: [{ label: 'Slowed! (3s)', color: '#8888ff' }],
@@ -100,7 +83,7 @@ const EVENT_TABLE: EventOption[] = [
       };
     },
   },
-  // Stamina/mana restore
+  // ── Stamina/mana restore
   {
     weight: 5,
     positive: true,
@@ -112,15 +95,103 @@ const EVENT_TABLE: EventOption[] = [
       return { notifications: [{ label: `+${staRestore} STA, +${manaRestore} MP`, color: '#00ccff' }] };
     },
   },
+  // ── Element Shrine: +2-4 shards of one random element
+  {
+    weight: 4,
+    positive: true,
+    apply(run) {
+      const elementIds = Object.keys(ELEMENTS) as ElementId[];
+      const elementId = elementIds[Math.floor(rand() * elementIds.length)];
+      const amount = 2 + Math.floor(rand() * 3); // 2-4
+      const delta: ShardInventory = { [elementId]: amount } as ShardInventory;
+      if (!run.economy.shards) run.economy.shards = {};
+      if (!run.economy.elements) run.economy.elements = {};
+      addShardsAndConvert(
+        run.economy.shards as ShardInventory,
+        run.economy.elements as ElementInventory,
+        delta,
+      );
+      const el = ELEMENTS[elementId];
+      return {
+        notifications: [{ label: `Element Shrine! +${amount} ${el.name} shard`, color: el.color }],
+      };
+    },
+  },
+  // ── Cursed Treasure: +gold burst then forced easy combat
+  {
+    weight: 9,
+    apply(run) {
+      const goldBurst = 30 + Math.floor(rand() * 31); // 30-60
+      run.economy.gold += goldBurst;
+      run.stats.goldEarned += goldBurst;
+      const enemyId =
+        CURSED_TREASURE_EASY_POOL[Math.floor(rand() * CURSED_TREASURE_EASY_POOL.length)];
+      return {
+        notifications: [{ label: `Cursed Treasure! +${goldBurst}g, fight follows`, color: '#ffaa00' }],
+        combatEnemyId: enemyId,
+      };
+    },
+  },
+  // ── Hidden Path: bonus gold on each tile entered for the next 15 tiles
+  {
+    weight: 8,
+    positive: true,
+    apply(run) {
+      run.economy.hiddenPathTilesRemaining = 15;
+      run.economy.hiddenPathTileGold = 3;
+      return {
+        notifications: [{ label: 'Hidden Path! +3g per tile (15 tiles)', color: '#ffd700' }],
+      };
+    },
+  },
+  // ── Wandering Healer: full HP restore (rare strong positive)
+  {
+    weight: 5,
+    positive: true,
+    apply(run) {
+      const heal = run.hero.maxHP - run.hero.currentHP;
+      run.hero.currentHP = run.hero.maxHP;
+      return {
+        notifications: [{ label: `Wandering Healer! +${heal} HP (full restore)`, color: '#aaffaa' }],
+      };
+    },
+  },
+  // ── Meme: OIIAOIIA spinning cat (ultra rare, cosmetic only)
+  {
+    weight: 1,
+    apply() {
+      return {
+        notifications: [{ label: 'oiiaoiiaoiiaoiiaoiia', color: '#ff66ff' }],
+        memeKey: 'oiiaoiia',
+      };
+    },
+  },
 ];
+
+/**
+ * Per-tile hook: while the Hidden Path event's counter is positive, every
+ * tile crossed deposits a small gold bonus. Called from LoopRunner.onTileEntered.
+ * Goes through getRun() (not the LoopRunState slice) since the live economy +
+ * stats both live on RunState.
+ */
+export function applyHiddenPathTileBonus(): void {
+  if (!hasActiveRun()) return;
+  const run = getRun();
+  const remaining = run.economy.hiddenPathTilesRemaining ?? 0;
+  if (remaining <= 0) return;
+  const bonus = run.economy.hiddenPathTileGold ?? 0;
+  if (bonus > 0) {
+    run.economy.gold += bonus;
+    run.stats.goldEarned += bonus;
+  }
+  run.economy.hiddenPathTilesRemaining = remaining - 1;
+}
 
 /**
  * Resolve a random event inline and apply effects to RunState.
  * Returns combat enemy ID if the event triggers a fight.
  */
 export function resolveInlineEvent(run: RunState): EventResult {
-  // Tile-adjacency eventBonus weight uplift removed in Wave 2; events now
-  // use their declared weights directly.
   const totalWeight = EVENT_TABLE.reduce((sum, e) => sum + e.weight, 0);
   let roll = rand() * totalWeight;
 

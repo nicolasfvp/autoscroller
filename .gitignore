@@ -7,3 +7,8 @@ dist/
 *.log
 data/generated/
 
+# Scratch outputs from local generator/verify scripts. Production copies of
+# tile sprites live under public/assets/map/tiles/.
+verify-shots/
+verify-screenshots/
+

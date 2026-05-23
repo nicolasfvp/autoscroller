@@ -58,7 +58,7 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
     }));
 
   const baseTiles = ['basic', 'forest', 'event', 'treasure', 'boss'];
-  const unlockableTiles = ['graveyard', 'swamp', 'volcano'];
+  const unlockableTiles = ['graveyard', 'swamp', 'desert', 'lava'];
   const allTiles = [...baseTiles, ...unlockableTiles];
   const tiles = allTiles.map(id => ({
     id,

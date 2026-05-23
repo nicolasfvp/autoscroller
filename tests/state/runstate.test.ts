@@ -72,9 +72,9 @@ describe('RunState', () => {
   });
 });
 
-describe('RunState v5 (element/shard system) — stat axes + statDeltas wiring', () => {
-  it('RUN_STATE_VERSION is 5 (element/shard inventory added)', () => {
-    expect(RUN_STATE_VERSION).toBe(5);
+describe('RunState v6 (element/shard system) — stat axes + statDeltas wiring', () => {
+  it('RUN_STATE_VERSION is 6 (element/shard inventory added)', () => {
+    expect(RUN_STATE_VERSION).toBe(6);
   });
 
   it('createNewRun has hero.statDeltas === {} (new run never has deltas)', () => {
@@ -120,7 +120,7 @@ describe('RunState v4 -> v5 migration (element/shard + shadowblade fallback)', (
 
     const result = migrateRunState(v4);
     expect(result).not.toBeNull();
-    expect(result!.version).toBe(5);
+    expect(result!.version).toBe(6);
     expect(typeof result!.economy.shards).toBe('object');
     expect(typeof result!.economy.elements).toBe('object');
     expect(result!.economy.shards).toEqual({});
@@ -155,7 +155,7 @@ describe('RunState v4 -> v5 migration (element/shard + shadowblade fallback)', (
 
     const result = migrateRunState(v4);
     expect(result).not.toBeNull();
-    expect(result!.version).toBe(5);
+    expect(result!.version).toBe(6);
     expect(result!.hero.className).toBe('warrior');
   });
 });

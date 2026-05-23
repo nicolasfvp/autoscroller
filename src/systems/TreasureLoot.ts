@@ -1,16 +1,13 @@
-// Inline treasure loot generation -- produces gold + cards without a blocking scene.
-// Cards go to droppedCards, notifications queued via PendingLoot.
-// Zero Phaser dependency.
+// Inline treasure loot generation -- gold + materials, applied directly to
+// RunState. Zero Phaser dependency. Card drops were removed in the post-Phase-10
+// economy: cards now come from the Forge only.
 
 import type { RunState } from '../state/RunState';
-import { getAllCards } from '../data/DataLoader';
-import type { CardDefinition } from '../data/types';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
 
 /**
  * Generate treasure loot and apply it directly to RunState.
- * Gold is added to economy, cards go to droppedCards.
  */
 export function generateTreasureLoot(run: RunState): void {
   const entries: LootEntry[] = [];
@@ -32,19 +29,6 @@ export function generateTreasureLoot(run: RunState): void {
     if (!run.economy.materials) run.economy.materials = {};
     run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
     entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
-  }
-
-  // Card drop: 50% chance (increased from 40%)
-  if (rand() < 0.5) {
-    const allCards = getAllCards();
-    const pool = allCards.filter((c: CardDefinition & { rarity?: string }) =>
-      run.pool.cards.includes(c.id) && (c.rarity === 'common' || c.rarity === 'uncommon')
-    );
-    if (pool.length > 0) {
-      const card = pool[Math.floor(rand() * pool.length)];
-      run.deck.droppedCards.push(card.id);
-      entries.push({ label: `+Card: ${card.name}`, color: '#ffffff' });
-    }
   }
 
   addPendingLoot(entries);

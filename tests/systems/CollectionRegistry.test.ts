@@ -53,8 +53,9 @@ describe('CollectionRegistry', () => {
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      expect(status.tiles.total).toBe(8); // 6 base + 2 unlockable (shop tile removed)
-      expect(status.tiles.unlocked).toBe(6); // only base tiles
+      // 5 base (basic/forest/event/treasure/boss) + 4 unlockable (graveyard/swamp/desert/lava)
+      expect(status.tiles.total).toBe(9);
+      expect(status.tiles.unlocked).toBe(5); // only base tiles
     });
   });
 
@@ -70,8 +71,9 @@ describe('CollectionRegistry', () => {
     it('returns higher percent when more items are unlocked', () => {
       const defaultState = createDefaultMetaState();
       const unlockedState = createDefaultMetaState();
-      // v2 relics have no gating, so move a tile to drive the percent up.
-      unlockedState.unlockedTiles = ['graveyard'];
+      // v2 relics have no gating, so move tiles to drive the percent up.
+      // ~260 total items — need a multi-tile diff to clear integer rounding.
+      unlockedState.unlockedTiles = ['graveyard', 'swamp', 'desert', 'lava'];
       expect(getCompletionPercent(unlockedState)).toBeGreaterThan(getCompletionPercent(defaultState));
     });
   });

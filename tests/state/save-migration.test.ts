@@ -98,7 +98,7 @@ describe('Phase 9 save migration (D-06 + D-07)', () => {
       version: 3,
     };
     const migrated = migrateMetaState(v3) as any;
-    expect(migrated.version).toBe(10);
+    expect(migrated.version).toBe(11);
     expect(migrated._wipedFromVersion).toBe(5);
   });
 });

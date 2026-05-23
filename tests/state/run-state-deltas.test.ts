@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { createNewRun, RUN_STATE_VERSION, migrateRunState } from '../../src/state/RunState';
 import { resolveHeroStats, readStat } from '../../src/systems/hero/HeroStatsResolver';
 
-describe('RunState v5 stat axes + statDeltas (Phase 9/10)', () => {
-  it('RUN_STATE_VERSION is 5', () => {
-    expect(RUN_STATE_VERSION).toBe(5);
+describe('RunState v6 stat axes + statDeltas (Phase 9/10)', () => {
+  it('RUN_STATE_VERSION is 6', () => {
+    expect(RUN_STATE_VERSION).toBe(6);
   });
 
   it('createNewRun returns hero with stat axes at 0 (warrior)', () => {
@@ -55,7 +55,7 @@ describe('RunState v5 stat axes + statDeltas (Phase 9/10)', () => {
     };
     const migrated = migrateRunState(v3Save);
     expect(migrated).not.toBeNull();
-    expect(migrated!.version).toBe(5);
+    expect(migrated!.version).toBe(6);
     expect(migrated!.hero.vitality).toBe(0);
     expect(migrated!.hero.dexterity).toBe(0);
     expect(migrated!.hero.intellect).toBe(0);
@@ -76,7 +76,7 @@ describe('RunState v5 stat axes + statDeltas (Phase 9/10)', () => {
     };
     const migrated = migrateRunState(v0Save);
     expect(migrated).not.toBeNull();
-    expect(migrated!.version).toBe(5);
+    expect(migrated!.version).toBe(6);
     expect(migrated!.hero.vitality).toBe(0);
     expect(migrated!.hero.statDeltas).toEqual({});
   });
@@ -101,7 +101,7 @@ describe('RunState v5 stat axes + statDeltas (Phase 9/10)', () => {
       stats: { damageDealt: 0, cardsPlayed: 0, combosTriggered: 0, goldEarned: 0 },
     };
     const migrated = migrateRunState(v4Save);
-    expect(migrated!.version).toBe(5);
+    expect(migrated!.version).toBe(6);
     expect(migrated!.hero.statDeltas).toEqual({ vit: 5 });
   });
 });

@@ -5,9 +5,10 @@ import { getEnemyPoolForTerrain } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
 import { rand } from './SharedRNG';
 import { applyTravelBoots, applyTrailblazersBrand, applyLodestonePendant } from './LoopRelics';
+import { applyHiddenPathTileBonus } from './InlineEvents';
 import { getRun, hasActiveRun } from '../state/RunState';
 
-const TILE_SIZE = 64;
+const TILE_SIZE = 96;
 export const BUFFER_TILE_COUNT = 5; // Safe tiles at the start of every loop
 
 export type LoopState = 'idle' | 'traversing' | 'tile-interaction' | 'planning' | 'boss-choice' | 'run-ended';
@@ -133,6 +134,11 @@ export class LoopRunner {
   private onTileEntered(tileIndex: number): void {
     const tile = this.runState.loop.tiles[tileIndex];
     if (!tile || tile.defeatedThisLoop) return;
+
+    // Hidden Path event bonus — runs through the live RunState (the runner's
+    // LoopRunState slice doesn't expose gold/stats directly). See
+    // InlineEvents.applyHiddenPathTileBonus.
+    applyHiddenPathTileBonus();
 
     // C6 / C7: map-side relic triggers. These helpers reach into the live
     // RunState (where hero HP/stamina/mana and the relic list actually
@@ -560,9 +566,19 @@ export class LoopRunner {
     for (let i = 0; i < tiles.length; i++) {
       const slot = tiles[i];
       if (slot.type !== 'basic' || slot.enemyId) continue;
-      const leftIsCombat = i > 0 && tiles[i - 1].type === 'terrain';
-      const rightIsCombat = i + 1 < tiles.length && tiles[i + 1].type === 'terrain';
+      const left = i > 0 ? tiles[i - 1] : null;
+      const right = i + 1 < tiles.length ? tiles[i + 1] : null;
+      const leftIsCombat = left?.type === 'terrain';
+      const rightIsCombat = right?.type === 'terrain';
       slot.reserved = leftIsCombat || rightIsCombat;
+      // Track the host's terrain so TileVisual can pick the sparse
+      // "extension" sprite (tile_reserved_<terrain>). Prefer the left
+      // host arbitrarily when both sides are combat tiles.
+      if (slot.reserved) {
+        slot.hostTerrain = (leftIsCombat ? left!.terrain : right!.terrain) ?? undefined;
+      } else {
+        slot.hostTerrain = undefined;
+      }
     }
   }
 
