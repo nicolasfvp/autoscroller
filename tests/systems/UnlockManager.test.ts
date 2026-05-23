@@ -75,6 +75,8 @@ describe('UnlockManager', () => {
       expect(ids).toContain('event');
       expect(ids).toContain('treasure');
       expect(ids).toContain('boss');
+      expect(ids).not.toContain('rest');
+      expect(ids).not.toContain('shop');
       expect(ids).not.toContain('graveyard');
       expect(tiles.length).toBe(5);
     });

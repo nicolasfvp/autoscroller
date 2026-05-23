@@ -10,27 +10,32 @@ export class Preloader extends Scene {
   }
 
   preload(): void {
-    // Ground tiles (64x64, seamless, extracted from tilesets)
+    // Tile sprites — single 256x256 all-in-one diorama per tile (decorations
+    // baked in). No more bg_* overlay layer; one image fully represents the
+    // tile. Phaser downscales to TILE_SIZE at draw time.
     this.load.image('tile_basic', 'assets/map/tiles/tile_basic.png');
-    this.load.image('tile_sand', 'assets/map/tiles/sand_tile.jpg');
-    this.load.image('tile_forest', 'assets/map/tiles/tile_meadow.png');
+    this.load.image('tile_forest', 'assets/map/tiles/tile_forest.png');
     this.load.image('tile_graveyard', 'assets/map/tiles/tile_graveyard.png');
     this.load.image('tile_swamp', 'assets/map/tiles/tile_swamp.png');
     this.load.image('tile_desert', 'assets/map/tiles/tile_desert.png');
-    // tile_lava.png not yet authored — TileVisual falls back to color fill.
+    this.load.image('tile_lava', 'assets/map/tiles/tile_lava.png');
 
-    // Background objects (64x64, transparent)
-    this.load.image('bg_basic', 'assets/map/tiles/bg_path.png');
-    // bg_forest.png not yet authored — TileVisual.BG_SPRITE_MAP falls back
-    // via textures.exists() and renders no decoration for forest tiles.
-    this.load.image('bg_graveyard', 'assets/map/tiles/bg_graveyard.png');
-    this.load.image('bg_swamp', 'assets/map/tiles/bg_swamp.png');
+    // Subtile sprites (8 effect-spot variants).
+    const subtileIds = [
+      'ambush', 'magma', 'manawell', 'camp',
+      'burnaltar', 'bleedtotem', 'resonance', 'warhorn',
+    ];
+    for (const id of subtileIds) {
+      this.load.image(`tile_subtile_${id}`, `assets/map/tiles/tile_subtile_${id}.png`);
+    }
 
-    // Special Floating/Resting objects
-    this.load.image('bg_event', 'assets/map/objects/event_icon.png');
-    this.load.image('bg_treasure', 'assets/map/objects/treasure_chest.png');
-    this.load.image('bg_rest', 'assets/map/objects/rest_tent.png');
-    this.load.image('bg_shop', 'assets/map/objects/shop_stall.png');
+    // Reserved-slot sprites: sparse extension of each combat terrain. The
+    // reserved sprite is picked at render time based on the slot's host
+    // terrain (set by LoopRunner.recomputeReservations).
+    const reservedIds = ['forest', 'graveyard', 'swamp', 'desert', 'lava'];
+    for (const id of reservedIds) {
+      this.load.image(`tile_reserved_${id}`, `assets/map/tiles/tile_reserved_${id}.png`);
+    }
 
     // Building Icons
     this.load.image('icon_forge', 'assets/buildings/icons/icon_forge.png');
@@ -110,9 +115,7 @@ export class Preloader extends Scene {
     this.load.image('bg_desert', 'assets/backgrounds/desert.png');
     this.load.image('bg_desert_sky', 'assets/backgrounds/desert-background.jpg');
 
-    // Special tile icons (64x64)
-    this.load.image('tile_shop', 'assets/map/tiles/tile_shop.png');
-    this.load.image('tile_rest', 'assets/map/tiles/tile_rest.png');
+    // Special tile sprites (256x256, baked-in decoration).
     this.load.image('tile_event', 'assets/map/tiles/tile_event.png');
     this.load.image('tile_treasure', 'assets/map/tiles/tile_treasure.png');
     this.load.image('tile_boss', 'assets/map/tiles/tile_boss.png');
@@ -146,6 +149,7 @@ export class Preloader extends Scene {
     this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
+    this.load.image('card_mold', 'assets/ui/panels/card_mold.png');
 
     // UI Buttons
     this.load.image('btn_continue_run', 'assets/ui/buttons/continue-run.png');
@@ -289,6 +293,19 @@ export class Preloader extends Scene {
     this.load.audio('sfx_hurt', 'assets/audio/hurt.m4a');
     this.load.audio('sfx_cashing', 'assets/audio/cashing.m4a');
     this.load.audio('ambience_wind', 'assets/audio/wind.wav');
+
+    // ── Meme assets (optional) ─────────────────────────────────────
+    // OIIAOIIA spinning cat — ultra-rare event outcome. Loaded best-effort:
+    // if the file isn't on disk, Phaser logs a 404 once and the game falls
+    // back to a cat-emoji placeholder. Drop your assets at the paths below
+    // to enable the full version.
+    this.load.image('meme_oiiaoiia', 'assets/meme/oiiaoiia.png');
+    this.load.audio('sfx_oiiaoiia', 'assets/audio/oiiaoiia.mp3');
+    this.load.on('loaderror', (file: { key: string }) => {
+      if (file.key === 'meme_oiiaoiia' || file.key === 'sfx_oiiaoiia') {
+        // Expected when the meme assets aren't authored yet; swallow.
+      }
+    });
   }
 
   async create(): Promise<void> {

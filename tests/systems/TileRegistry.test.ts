@@ -2,9 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { getTileConfig, getAllPlaceableTiles, createTileSlot, createBasicLoop } from '../../src/systems/TileRegistry';
 
 describe('TileRegistry', () => {
-  it('has core tile types', () => {
-    const allKeys = ['basic', 'forest', 'graveyard', 'swamp', 'desert', 'lava', 'event', 'treasure', 'boss'];
-    for (const key of allKeys) {
+  it('has the expected core + subtile entries (rest/shop removed)', () => {
+    const coreKeys = ['basic', 'forest', 'graveyard', 'swamp', 'desert', 'lava', 'event', 'treasure', 'boss'];
+    const subtileKeys = [
+      'subtile_ambush', 'subtile_magma', 'subtile_manawell', 'subtile_camp',
+      'subtile_burnaltar', 'subtile_bleedtotem', 'subtile_resonance', 'subtile_warhorn',
+    ];
+    for (const key of [...coreKeys, ...subtileKeys]) {
       expect(() => getTileConfig(key)).not.toThrow();
     }
   });
@@ -30,11 +34,14 @@ describe('TileRegistry', () => {
     expect(config.tilePointCost).toBe(0);
   });
 
-  it('getAllPlaceableTiles returns only manually placeable tiles (no basic/boss)', () => {
+  it('getAllPlaceableTiles returns 15 tile types (7 main + 8 subtiles)', () => {
     const placeable = getAllPlaceableTiles();
+    expect(placeable).toHaveLength(15);
+    // Should not include basic or boss (both unplaceable)
     expect(placeable.every(t => t.canPlaceManually)).toBe(true);
-    expect(placeable.some(t => t.key === 'basic')).toBe(false);
-    expect(placeable.some(t => t.key === 'boss')).toBe(false);
+    const keys = placeable.map(t => t.key);
+    expect(keys).not.toContain('basic');
+    expect(keys).not.toContain('boss');
   });
 
   it('createTileSlot creates a TileSlot from key', () => {

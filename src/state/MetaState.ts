@@ -43,6 +43,10 @@ export interface MetaState {
   };
   gameSpeed: number;     // 1 or 2
   autoSave: boolean;     // default true
+  /** UI scale multiplier for every card visual. Range 0.75..1.25 in
+   *  ~6% steps (-25% / -12% / 0 / +12% / +25%). Read by CardFace via
+   *  getMetaStateSync(); default is 1. */
+  cardScale: number;
   version: number;
   /** Discovered forge recipes (element multisets) — meta-persistent. */
   forgeRecipes: ForgeRecipeEntry[];
@@ -108,7 +112,8 @@ export function createDefaultMetaState(): MetaState {
     audioPrefs: { sfxVolume: 1, sfxEnabled: true },
     gameSpeed: 1,
     autoSave: true,
-    version: 10,
+    cardScale: 1,
+    version: 11,
     forgeRecipes: [],
     deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
     seenKeywords: [],
@@ -270,6 +275,12 @@ export function migrateMetaState(raw: any): MetaState {
       }
     }
     raw.version = 10;
+  }
+
+  // v10 -> v11 migration: cardScale UI preference. Default to 1 (no change).
+  if (raw.version === 10) {
+    if (typeof raw.cardScale !== 'number') raw.cardScale = 1;
+    raw.version = 11;
   }
 
   return raw as MetaState;

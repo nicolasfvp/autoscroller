@@ -5,18 +5,21 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
-const VISIBLE_COUNT = 4;
+const VISIBLE_COUNT = 5;
 
-// [centerX, centerY, scale]
-// Slot 0 left edge: 400 - 150*0.62/2 = 353.5  — clear of speed panel (x=8–276)
-// Slot 0 bottom:    525 + 240*0.62/2 = 599.4   — within canvas (600px)
-const SLOTS: [number, number, number][] = [
-  [400, 520, 0.62],   // 0 — PLAYING (active, gold border, pulse)
-  [540, 520, 0.54],   // 1 — NEXT
-  [660, 520, 0.49],   // 2
-  [760, 520, 0.44],   // 3
+// [centerX, centerY, scale, alpha]
+// Queue lives in the bottom-right corner. The staircase steps DOWN-RIGHT so
+// the last 3 cards descend into the corner; new cards rise up from below.
+// Alpha decays in even 0.20 steps for a smooth front-to-back gradient.
+const SLOTS: [number, number, number, number][] = [
+  [500, 490, 0.62, 1.00],   // 0 — PLAYING (front, top-left of the cluster)
+  [598, 505, 0.56, 0.80],   // 1 — NEXT
+  [665, 525, 0.42, 0.60],   // 2 — stair starts descending
+  [705, 545, 0.36, 0.40],   // 3 — stair, aglutinated
+  [735, 560, 0.32, 0.20],   // 4 — corner
 ];
-const SLOT_INCOMING_X = 820; // off-screen right; new cards enter from here
+const SLOT_INCOMING_X = 735; // same column as slot 4 — cards slide UP into it
+const SLOT_INCOMING_Y = 650; // off-screen bottom
 
 export class CardQueueDisplay {
   private readonly scene: Phaser.Scene;
@@ -47,6 +50,7 @@ export class CardQueueDisplay {
   private getSlotX(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[0]; }
   private getSlotY(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[1]; }
   private getSlotScale(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[2]; }
+  private getSlotAlpha(i: number): number { return (SLOTS[i] ?? SLOTS[VISIBLE_COUNT - 1])[3]; }
 
   private rebuild(): void {
     for (const c of this.cardContainers) c.destroy();
@@ -59,21 +63,22 @@ export class CardQueueDisplay {
     for (let i = 0; i < VISIBLE_COUNT && i < deck.length; i++) {
       const cardId = deck[(this.currentPointer + i) % deck.length];
       const scale = this.getSlotScale(i);
-      const cardVis = createCardVisual(this.scene, this.getSlotX(i), this.getSlotY(i), cardId, { scale });
+      // Build the card at unit scale (intrinsic size) and apply the slot
+      // scale via transform — this is what lets the slide tween animate
+      // scaleX/scaleY between slots. Building at a baked size leaves
+      // container.scaleX at 1.0, and the tween then shrinks it again.
+      const cardVis = createCardVisual(this.scene, this.getSlotX(i), this.getSlotY(i), cardId);
+      cardVis.setScale(scale);
+      cardVis.setAlpha(this.getSlotAlpha(i));
       this.container.add(cardVis);
       this.cardContainers.push(cardVis);
 
       if (i === 0) {
-        cardVis.setAlpha(1);
-        const bg = cardVis.getAt(0) as Phaser.GameObjects.Rectangle;
-        if (bg) bg.setStrokeStyle(3, 0xffd700);
         this.pulseTween = this.scene.tweens.add({
           targets: cardVis,
           scaleX: scale * 1.05, scaleY: scale * 1.05,
           duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
         });
-      } else {
-        cardVis.setAlpha(i === 1 ? 0.8 : 0.55);
       }
     }
   }
@@ -82,6 +87,11 @@ export class CardQueueDisplay {
     if (this.cardContainers.length === 0 || this.animatingPlay) return;
     this.animatingPlay = true;
     const topCard = this.cardContainers[0];
+
+    // Stop the idle pulse before the burst — otherwise the yoyo keeps dragging
+    // scale back toward the resting value and the card visibly shrinks before
+    // the burst overpowers it.
+    if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
 
     const burst = this.scene.tweens.add({
       targets: topCard,
@@ -94,9 +104,10 @@ export class CardQueueDisplay {
 
     const incomingIdx = (this.currentPointer + VISIBLE_COUNT) % this.currentDeckOrder.length;
     const incomingCard = createCardVisual(
-      this.scene, SLOT_INCOMING_X, this.getSlotY(VISIBLE_COUNT - 1),
-      this.currentDeckOrder[incomingIdx], { scale: this.getSlotScale(VISIBLE_COUNT - 1) },
+      this.scene, SLOT_INCOMING_X, SLOT_INCOMING_Y,
+      this.currentDeckOrder[incomingIdx],
     );
+    incomingCard.setScale(this.getSlotScale(VISIBLE_COUNT - 1));
     incomingCard.setAlpha(0);
     this.container.add(incomingCard);
 
@@ -107,10 +118,7 @@ export class CardQueueDisplay {
       const targetX = this.getSlotX(newIdx);
       const targetY = this.getSlotY(newIdx);
       const targetScale = this.getSlotScale(newIdx);
-      let targetAlpha: number;
-      if (newIdx === 0) targetAlpha = 1;
-      else if (newIdx === 1) targetAlpha = 0.8;
-      else targetAlpha = 0.55;
+      const targetAlpha = this.getSlotAlpha(newIdx);
       const isLast = newIdx === slideTargets.length - 1;
 
       const slide = this.scene.tweens.add({

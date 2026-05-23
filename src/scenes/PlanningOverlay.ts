@@ -224,27 +224,17 @@ export class PlanningOverlay extends Scene {
         continue;
       }
 
-      // Wave 5: reserved (empty) slot decoration — faint cyan glow + a
-      // small ghost "S" marker so the player can spot reservation targets.
+      // Wave 5: reserved (empty) slot decoration. The slot already renders
+      // a sparse "extension of host terrain" sprite (tile_reserved_<terrain>),
+      // so the only added hint here is a faint cyan border so the player can
+      // still spot reservation targets at a glance.
       if (slot.type === 'basic' && slot.reserved) {
-        tv.setAlpha(0.85);
         const glow = this.add.rectangle(0, y, tileSize + 4, tileSize + 4, 0x00ffcc, 0.18)
           .setStrokeStyle(1, 0x00ffcc, 0.7);
         glow.setData('beltSlot', i);
         this.gridContainer.add(glow);
-        // Place glow behind the tile visual.
         this.gridContainer.sendToBack(glow);
         this.reservedDecorations.push(glow);
-
-        const ghost = this.add.text(0, y, 'S', {
-          fontSize: `${Math.round(tileSize * 0.5)}px`,
-          color: '#00ffcc',
-          fontStyle: 'bold',
-          fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
-        }).setOrigin(0.5).setAlpha(0.55);
-        ghost.setData('beltSlot', i);
-        this.gridContainer.add(ghost);
-        this.reservedDecorations.push(ghost);
 
         tv.onClick(() => this.onSlotClicked(i));
         continue;
@@ -476,7 +466,7 @@ export class PlanningOverlay extends Scene {
       
       const previewSize = Math.round(frameWidth * 0.65);
       const scale = previewSize / TILE_SIZE;
-      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
+      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
       
       if (['rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
         preview.hideFloor();
@@ -577,7 +567,7 @@ export class PlanningOverlay extends Scene {
       };
       const previewSize = Math.round(FRAME * 0.65);
       const scale = previewSize / TILE_SIZE;
-      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false, true);
+      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
       container.add(preview);
 
       // Name label below the frame, cost label below the name.

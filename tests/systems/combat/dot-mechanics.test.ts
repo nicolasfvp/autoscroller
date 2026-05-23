@@ -71,6 +71,7 @@ function makeState(over: Partial<CombatState> = {}): CombatState {
     slowStacks: 0, rageStacks: 0,
     enemyAttackedSinceLastBleedTick: false, poisonTickParity: 0,
     nextCardCooldownReduction: 0,
+    subtileBleedTickBonus: 0,
     buffMagnitudePerCard: {},
     heroAuras: [], enemyAuras: [],
     heroBurnStacks: 0, heroBleedStacks: 0,

@@ -115,6 +115,14 @@ export interface EconomyState {
    * combat loot doesn't have to load MetaState async every kill.
    */
   gatheringBoost?: number;
+  /**
+   * Number of upcoming tile crossings that award bonus gold (Hidden Path
+   * event). Each tile entered decrements this and adds `hiddenPathTileGold`
+   * gold to economy.
+   */
+  hiddenPathTilesRemaining?: number;
+  /** Bonus gold awarded per tile while hiddenPathTilesRemaining > 0. */
+  hiddenPathTileGold?: number;
 }
 
 export interface RunStats {
@@ -268,7 +276,9 @@ export function migrateRunState(raw: any): RunState | null {
     if (raw.hero?.className === 'shadowblade') raw.hero.className = 'warrior';
     raw.version = 5;
   }
-  // v5 → v6: no structural changes — version bumped to refresh in-combat fixtures.
+  // v5 -> v6: introduces optional hiddenPathTilesRemaining / hiddenPathTileGold
+  // on EconomyState (Hidden Path event). Both default to undefined (treated as 0)
+  // so no backfill is required — the version bump just lets the D-07 guard pass.
   if (raw.version === 5) {
     raw.version = 6;
   }

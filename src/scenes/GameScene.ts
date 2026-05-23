@@ -397,6 +397,41 @@ export class GameScene extends Scene {
     this.loopRunState.economy.tilePoints = run.economy.tilePoints;
   }
 
+  /**
+   * Render the OIIAOIIA spinning cat meme overlay center-screen. Cosmetic
+   * only — triggered by the ultra-rare meme event outcome. Falls back to a
+   * pure-text label if `meme_oiiaoiia` sprite isn't preloaded; falls back
+   * silently on audio if `sfx_oiiaoiia` isn't preloaded.
+   */
+  private playMemeOverlay(key: string): void {
+    if (key !== 'oiiaoiia') return;
+    const cx = 400, cy = 300;
+    const display: Phaser.GameObjects.GameObject = this.textures.exists('meme_oiiaoiia')
+      ? this.add.image(cx, cy, 'meme_oiiaoiia').setDisplaySize(220, 220).setDepth(10000)
+      : this.add.text(cx, cy, '🐱', { fontSize: '180px' }).setOrigin(0.5).setDepth(10000);
+    (display as Phaser.GameObjects.Image | Phaser.GameObjects.Text).setAlpha(0);
+    this.tweens.add({ targets: display, alpha: 1, duration: 200 });
+    // Continuous spin — mimics the 3D cat's vertical rotation.
+    this.tweens.add({
+      targets: display,
+      angle: 360,
+      duration: 600,
+      repeat: 4,
+      ease: 'Linear',
+    });
+    if (this.cache.audio.exists('sfx_oiiaoiia')) {
+      this.sound.play('sfx_oiiaoiia', { volume: 0.6 });
+    }
+    this.time.delayedCall(3200, () => {
+      this.tweens.add({
+        targets: display,
+        alpha: 0,
+        duration: 250,
+        onComplete: () => display.destroy(),
+      });
+    });
+  }
+
   /** Drain pending loot and show floating notifications above hero */
   private showPendingNotifications(): void {
     if (hasPendingLoot()) {
@@ -431,6 +466,11 @@ export class GameScene extends Scene {
           const result = resolveInlineEvent(run);
           this.syncEconomyToLoopState(run);
           this.showPendingNotifications();
+          // Meme overlay (e.g. OIIAOIIA spinning cat). Cosmetic only — fires
+          // alongside the standard pathways below.
+          if (result.memeKey) {
+            this.playMemeOverlay(result.memeKey);
+          }
           // If the event triggers combat, launch it
           if (result.combatEnemyId) {
             this.scene.pause(SCENE_KEYS.GAME);

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { createNewRun, RUN_STATE_VERSION, migrateRunState } from '../../src/state/RunState';
 import { resolveHeroStats, readStat } from '../../src/systems/hero/HeroStatsResolver';
 
-describe('RunState v5 stat axes + statDeltas (Phase 9/10)', () => {
-  it('RUN_STATE_VERSION is 5', () => {
+describe('RunState v6 stat axes + statDeltas (Phase 9/10)', () => {
+  it('RUN_STATE_VERSION is 6', () => {
     expect(RUN_STATE_VERSION).toBe(6);
   });
 

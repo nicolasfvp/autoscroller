@@ -72,8 +72,8 @@ describe('RunState', () => {
   });
 });
 
-describe('RunState v5 (element/shard system) — stat axes + statDeltas wiring', () => {
-  it('RUN_STATE_VERSION is 6', () => {
+describe('RunState v6 (element/shard system) — stat axes + statDeltas wiring', () => {
+  it('RUN_STATE_VERSION is 6 (element/shard inventory added)', () => {
     expect(RUN_STATE_VERSION).toBe(6);
   });
 

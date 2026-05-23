@@ -79,4 +79,9 @@ const config: Phaser.Types.Core.GameConfig = {
     ]
 }
 
-new Phaser.Game(config)
+const game = new Phaser.Game(config)
+// Verification hook — exposes the Phaser game so an automation client can
+// drive scene transitions during card-face renderer verification. Harmless
+// in prod (no behavior change), but easy to remove later if undesired.
+;(globalThis as any).__game = game
+

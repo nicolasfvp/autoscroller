@@ -2,48 +2,55 @@ import Phaser from 'phaser';
 import { getTileConfig, type TileSlot } from '../systems/TileRegistry';
 import { TILE_SIZE } from '../systems/LoopRunner';
 
-/** Maps tile keys to their sprite texture keys */
+/** Maps tile registry keys to their sprite texture keys. Single layer per
+ * tile — decorations are baked into the source PNG, no overlay system. */
 const TILE_SPRITE_MAP: Record<string, string> = {
-  basic: 'tile_sand',
-  buffer: 'tile_sand',
+  // Path / buffer / fallback
+  basic: 'tile_basic',
+  buffer: 'tile_basic',
+  // Combat terrains
   forest: 'tile_forest',
   graveyard: 'tile_graveyard',
   swamp: 'tile_swamp',
   desert: 'tile_desert',
   lava: 'tile_lava',
-  rest: 'tile_rest',
+  // Specials
   event: 'tile_event',
   treasure: 'tile_treasure',
   boss: 'tile_boss',
-};
-
-/** Maps tile keys to their background object texture keys */
-const BG_SPRITE_MAP: Record<string, string> = {
-  forest: 'bg_forest',
-  graveyard: 'bg_graveyard',
-  swamp: 'bg_swamp',
-  rest: 'bg_rest',
-  event: 'bg_event',
-  treasure: 'bg_treasure',
+  // Subtiles (8) — keys must match TileRegistry entries.
+  subtile_ambush: 'tile_subtile_ambush',
+  subtile_magma: 'tile_subtile_magma',
+  subtile_manawell: 'tile_subtile_manawell',
+  subtile_camp: 'tile_subtile_camp',
+  subtile_burnaltar: 'tile_subtile_burnaltar',
+  subtile_bleedtotem: 'tile_subtile_bleedtotem',
+  subtile_resonance: 'tile_subtile_resonance',
+  subtile_warhorn: 'tile_subtile_warhorn',
 };
 
 /** Get the terrain key for a tile slot.
  * Wave 5+: also fall back to `kind` (the registry key) so subtile slots —
- * which have type='subtile' and no terrain — resolve to their specific
- * entry (subtile_ambush, subtile_warhorn, ...) instead of throwing on a
- * missing 'subtile' config lookup. */
+ * which have type='subtile' and no terrain — resolve to their distinct
+ * entries (subtile_ambush, subtile_warhorn, ...) for sprite lookup. */
 function getTileTerrainKey(slot: TileSlot): string {
   return slot.terrain ?? slot.kind ?? slot.type;
 }
 
+/** Reserved (empty subtile slot) sprite picked from the host combat terrain. */
+function getReservedSpriteKey(slot: TileSlot): string | null {
+  if (slot.type !== 'basic' || !slot.reserved || !slot.hostTerrain) return null;
+  return `tile_reserved_${slot.hostTerrain}`;
+}
+
 /**
  * TileVisual -- reusable Phaser Container for rendering a single tile.
- * Used in both the world view (scale=1, 80x80) and planning view (scale=0.5, 40x40).
+ * Used in both the world view (scale=1, TILE_SIZE px) and planning view
+ * (scale=0.5, half size). Source PNGs are 256x256; Phaser downscales.
  */
 export class TileVisual extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Rectangle;
   private sprite: Phaser.GameObjects.Image | null = null;
-  private bgObject: Phaser.GameObjects.Image | null = null;
   private enemySprite: Phaser.GameObjects.Sprite | null = null;
   private iconText: Phaser.GameObjects.Text;
   private tileScale: number;
@@ -56,7 +63,6 @@ export class TileVisual extends Phaser.GameObjects.Container {
     scale: number = 1,
     index: number = 0,
     interactive: boolean = false,
-    isInventory: boolean = false
   ) {
     super(scene, x, y);
 
@@ -76,33 +82,16 @@ export class TileVisual extends Phaser.GameObjects.Container {
     this.bg = scene.add.rectangle(0, 0, size, size, fillColor);
     this.add(this.bg);
 
-    // Tile sprite (64x64 image scaled to fill)
-    const spriteKey = TILE_SPRITE_MAP[key];
+    // Tile sprite (single all-in-one diorama, decoration baked in). Reserved
+    // slots use the host terrain's sparse extension sprite when available.
+    const reservedKey = getReservedSpriteKey(tileSlot);
+    const spriteKey = reservedKey && scene.textures.exists(reservedKey)
+      ? reservedKey
+      : TILE_SPRITE_MAP[key];
     if (spriteKey && scene.textures.exists(spriteKey)) {
       this.sprite = scene.add.image(0, 0, spriteKey);
       this.sprite.setDisplaySize(size, size);
       this.add(this.sprite);
-    }
-
-    // Background object (trees, tombstones, tents, chests, etc.)
-    const bgKey = BG_SPRITE_MAP[key];
-    if (bgKey && scene.textures.exists(bgKey)) {
-      const objectMultipler = isInventory ? 1.1 : 1.15;
-
-      this.bgObject = scene.add.image(0, 0, bgKey);
-
-      if (isInventory) {
-        // Centered for inventory frames
-        this.bgObject.setOrigin(0.5, 0.5);
-        this.bgObject.y = 0;
-      } else {
-        // Standing on floor for world map
-        this.bgObject.setOrigin(0.5, 1.0);
-        this.bgObject.y = size * 0.1;
-      }
-
-      this.bgObject.setDisplaySize(size * objectMultipler, size * objectMultipler);
-      this.add(this.bgObject);
     }
 
     // Icon text (only for tiles without sprites)
@@ -187,7 +176,10 @@ export class TileVisual extends Phaser.GameObjects.Container {
 
     this.bg.setFillStyle(fillColor);
 
-    const spriteKey = TILE_SPRITE_MAP[key];
+    const reservedKey = getReservedSpriteKey(tileSlot);
+    const spriteKey = reservedKey && this.scene.textures.exists(reservedKey)
+      ? reservedKey
+      : TILE_SPRITE_MAP[key];
     if (spriteKey && this.scene.textures.exists(spriteKey)) {
       if (this.sprite) {
         this.sprite.setTexture(spriteKey);
@@ -197,16 +189,6 @@ export class TileVisual extends Phaser.GameObjects.Container {
     } else {
       if (this.sprite) this.sprite.setVisible(false);
       this.iconText.setVisible(true);
-    }
-
-    const bgKey = BG_SPRITE_MAP[key];
-    if (bgKey && this.scene.textures.exists(bgKey)) {
-      if (this.bgObject) {
-        this.bgObject.setTexture(bgKey);
-        this.bgObject.setVisible(true);
-      }
-    } else {
-      if (this.bgObject) this.bgObject.setVisible(false);
     }
 
     const updateConfig = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
@@ -233,8 +215,14 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
   }
 
+  /**
+   * Hide the colored fallback rectangle so the tile_frame card art (or any
+   * other backdrop) shows around the tile sprite. Used by the planning
+   * inventory previews. The tile sprite itself stays visible — with the
+   * unified-card-face tile system, the sprite IS the icon (decoration baked
+   * in), so hiding it would leave the inventory card blank.
+   */
   hideFloor(): void {
     if (this.bg) this.bg.setVisible(false);
-    if (this.sprite) this.sprite.setVisible(false);
   }
 }

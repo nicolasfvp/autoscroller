@@ -44,6 +44,12 @@ export interface TileSlot {
    * planning; non-reserved empty slots accept only non-subtile entries.
    */
   reserved?: boolean;
+  /**
+   * Terrain key of the adjacent combat tile that projected this reservation.
+   * Used by TileVisual to render the matching sparse "extension" sprite
+   * (tile_reserved_<hostTerrain>). Populated by LoopRunner.recomputeReservations.
+   */
+  hostTerrain?: TerrainType;
   defeatedThisLoop: boolean;
   /** Pre-assigned enemy ID for combat tiles (visible on the world map) */
   enemyId?: string;
