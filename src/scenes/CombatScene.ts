@@ -284,6 +284,7 @@ export class CombatScene extends Scene {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
         this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? 0.495 : 0.7);
+        this.add.ellipse(200, 472, 110, 22, 0x000000, 0.35).setDepth(9);
 
         const idle2Key = `${sp}_idle2`;
         const hasIdle2 = this.textures.exists(idle2Key);
@@ -388,6 +389,7 @@ export class CombatScene extends Scene {
 
       if (this.textures.exists(this.enemyTextureKey)) {
         this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
+        this.add.ellipse(600, 472, 110, 22, 0x000000, 0.35).setDepth(9);
         const key2 = `${this.enemyTextureKey}_2`;
         if (this.textures.exists(key2)) {
           let frame = 0;
