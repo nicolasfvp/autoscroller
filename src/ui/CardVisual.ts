@@ -1,5 +1,17 @@
 // Reusable card visual component -- Phaser Container factory.
-// Renders a card to match the detailed mock-up with headers, images, cooldowns, and effects.
+// Renders a card to match the standard-face spec in docs/CARD_AUDIT §1.1:
+//   ┌───────────────────────────────┐
+//   │ [⏱Ns]  [elem icons]  [cost]   │  ← header row
+//   ├───────────────────────────────┤
+//   │              ART              │
+//   ├───────────────────────────────┤
+//   │           NAME                │
+//   └───────────────────────────────┘
+//
+// Standard face shows only the name in the info strip — the full prose body
+// and per-stat rows live in the extended view (CardDetailPopup). The visual
+// summary tokens described in §1.5 are deferred to a follow-up; this commit
+// covers the header overhaul (cost/elements/cooldown placement).
 
 import { getCardById } from '../data/DataLoader';
 import { getRun } from '../state/RunState';
@@ -8,7 +20,8 @@ import { attachKeywordHover } from './KeywordTooltip';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { ELEMENTS, type ElementId } from '../systems/ElementSystem';
 import { formatCardDescription } from '../systems/cards/CardText';
-import type { CardCategory, CardDefinition } from '../data/types';
+import { getTokenStyle } from './IconTokens';
+import type { CardCategory, CardCost, CardDefinition, CardEffect } from '../data/types';
 
 // ── Constants ─────────────────────────────────────────
 
@@ -51,7 +64,7 @@ export function createCardVisual(
   const h = STANDARD_CARD_HEIGHT;
 
   const container = scene.add.container(x, y);
-  
+
   // Default values if card is missing
   const rarityColor = card ? (RARITY_COLORS[card.rarity] ?? RARITY_COLORS.common) : RARITY_COLORS.common;
 
@@ -65,10 +78,29 @@ export function createCardVisual(
 
   const iconEmoji = CATEGORY_EMOJIS[card.category] || '❓';
 
-  // ── Art zone: top 80% of card ─────────────────────────
-  const IMG_H = Math.round(h * 0.8);        // 192 px
-  const IMG_TOP = -h / 2;                    // -120
-  const imgCenterY = IMG_TOP + IMG_H / 2;   // -24
+  // Upgrade flag (used by name + cost overlay below).
+  let isUpgraded = false;
+  try {
+    const run = getRun();
+    isUpgraded = run.deck.active.some((id, i) => id === cardId && run.deck.upgraded[i]);
+  } catch { /**/ }
+
+  // ── Header strip (top): cooldown TL + cost block TR ──────────────────
+  // Header is a darkened band at the top of the card. The art bleeds under
+  // it (cut by the header at the middle-top), and a small padding row
+  // separates the visible art from the header for breathing room.
+  const HEADER_H = 38;
+  const HEADER_TOP = -h / 2;                     // -120
+  const HEADER_PAD = 4;
+  const HEADER_BOTTOM_PAD = 6;                   // padding from top strip → visible art
+
+  // ── Art zone: upsized to ~77% of card height ──────────────────────────
+  // Art now bleeds across most of the card; the header overlay at the top
+  // visually "cuts" the middle-top section. Bottom info strip is halved
+  // (55 px instead of 110) so the art has room to breathe.
+  const IMG_H = 185;
+  const IMG_TOP = -h / 2;                        // -120
+  const imgCenterY = IMG_TOP + IMG_H / 2;        // -27.5
 
   // Dark base (shown when no texture is loaded)
   container.add(scene.add.rectangle(0, imgCenterY, w, IMG_H, 0x111118));
@@ -93,97 +125,147 @@ export function createCardVisual(
   gOverlay.fillRect(-w / 2, IMG_TOP + IMG_H - 36, w, 36);
   container.add(gOverlay);
 
-  // Element dots — top-left corner overlay
-  const elems = ((card.elements ?? []) as ElementId[]).filter((e) => !!ELEMENTS[e]);
-  if (elems.length > 0) {
-    const dotR = 4;
-    const dotGap = 3;
-    let dotX = -w / 2 + 8 + dotR;
-    const dotY = IMG_TOP + 12;
-    for (const e of elems) {
-      const elemColor = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-      container.add(scene.add.circle(dotX, dotY, dotR, elemColor).setStrokeStyle(1, 0xffffff, 0.5));
-      dotX += dotR * 2 + dotGap;
-    }
-  }
+  // Header backing — a solid darkened strip that "cuts" the top of the art.
+  // The strip is opaque so the art bleeds under it but isn't visible there;
+  // a HEADER_BOTTOM_PAD row of card-bg color sits right below the header,
+  // creating a visible padding gap before the main art content appears.
+  const hOverlay = scene.add.graphics();
+  hOverlay.fillStyle(0x000000, 0.95);
+  hOverlay.fillRect(-w / 2, HEADER_TOP, w, HEADER_H);
+  // Padding strip — same bg color as the card so the art "starts" lower.
+  hOverlay.fillStyle(CARD_BG, 1);
+  hOverlay.fillRect(-w / 2, HEADER_TOP + HEADER_H, w, HEADER_BOTTOM_PAD);
+  // Thin rarity-color line as a divider between header and padding.
+  hOverlay.lineStyle(1, rarityColor, 0.7);
+  hOverlay.lineBetween(-w / 2, HEADER_TOP + HEADER_H, w / 2, HEADER_TOP + HEADER_H);
+  container.add(hOverlay);
 
-  // Rarity label — top-right corner overlay
-  const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
-  container.add(
-    scene.add.text(w / 2 - 5, IMG_TOP + 5, (card.rarity || 'common').toUpperCase(), {
-      fontSize: '9px', fontFamily: 'monospace', fontStyle: 'bold',
-      color: rarityHex, stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(1, 0),
-  );
-
-  // Cooldown badge — bottom-right of art zone
+  // Cooldown badge — TOP-LEFT. Scaled up to match the new 3× cost icons.
   const cooldown = getEffectiveCooldown(card);
   if (cooldown) {
-    const cdW = 36, cdH = 16;
-    const cdX = w / 2 - cdW - 4;
-    const cdY = IMG_TOP + IMG_H - cdH - 4;
+    const cdW = 48, cdH = 22;
+    const cdX = -w / 2 + HEADER_PAD;
+    const cdY = HEADER_TOP + (HEADER_H - cdH) / 2;
     const cdBg = scene.add.graphics();
-    cdBg.fillStyle(0x000000, 0.8);
+    cdBg.fillStyle(0x000000, 0.85);
     cdBg.fillRoundedRect(cdX, cdY, cdW, cdH, 4);
-    cdBg.lineStyle(1, 0xaaaaaa, 0.6);
+    cdBg.lineStyle(1, 0xaaaaaa, 0.7);
     cdBg.strokeRoundedRect(cdX, cdY, cdW, cdH, 4);
     container.add(cdBg);
     container.add(
       scene.add.text(cdX + cdW / 2, cdY + cdH / 2, `⏱ ${cooldown}s`, {
-        fontSize: '9px', color: '#ffffff',
+        fontSize: '13px', fontStyle: 'bold', color: '#ffffff',
       }).setOrigin(0.5),
     );
   }
 
-  // ── Info strip: bottom 20% (48 px) ────────────────────
-  const INFO_TOP = IMG_TOP + IMG_H;           // 72
-  const INFO_H = h / 2 - INFO_TOP;           // 48
-  const infoCenterY = INFO_TOP + INFO_H / 2; // 96
+  // (Elements are rendered in the bottom info strip below the name — see
+  // below. The header just hosts cooldown + cost block.)
+  const elems = ((card.elements ?? []) as ElementId[]).filter((e) => !!ELEMENTS[e]);
 
-  container.add(scene.add.rectangle(0, infoCenterY, w, INFO_H, 0x0a0a14, 0.92));
-
-  // Upgraded state
-  let isUpgraded = false;
-  try {
-    const run = getRun();
-    isUpgraded = run.deck.active.some((id, i) => id === cardId && run.deck.upgraded[i]);
-  } catch { /**/ }
-  const displayName = isUpgraded ? `${card.name}+` : card.name;
-
-  // Card name
-  container.add(
-    scene.add.text(0, INFO_TOP + 6, displayName, {
-      fontSize: '12px', fontStyle: 'bold', fontFamily: 'monospace',
-      color: isUpgraded ? '#ffd700' : '#ffffff',
-      stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0.5, 0),
-  );
-
-  // Main effect value (e.g. "4 DMG")
-  const mainEff = getMainEffect(card, isUpgraded);
-  if (mainEff) {
-    container.add(
-      scene.add.text(0, INFO_TOP + 22, `${mainEff.val} ${mainEff.label}`, {
-        fontSize: '13px', fontStyle: 'bold', fontFamily: 'monospace',
-        color: mainEff.color, stroke: '#000000', strokeThickness: 2,
-      }).setOrigin(0.5, 0),
-    );
+  // Cost block — TOP-RIGHT. Stacks vertically; each row is `quantity[icon]`.
+  // Pulls from card.cost (stamina/mana/defense), consume_stack effects, the
+  // top-level spend_armor flag, and exhaust. See CARD_AUDIT §1.2.
+  //
+  // Icons sized 2.5× the previous 11 px = 27 px so they read clearly without
+  // crowding the art. Value text is also 2.5× (was 9 px → now 22 px), bold
+  // and colored to match the token's palette. Rows may extend below the
+  // header band for high-cost cards (Marsh Squall, Tremor Detonate).
+  const costRows = buildCostRows(card, isUpgraded);
+  if (costRows.length > 0) {
+    const rowFontSize = 22;
+    const iconSize = 27;
+    const rowLineHeight = iconSize + 2;
+    const iconGap = 2;
+    const rightEdge = w / 2 - HEADER_PAD;
+    let rowY = HEADER_TOP + 4;
+    for (const row of costRows) {
+      const spriteKey = `icon_${row.token}`;
+      const rowCenterY = rowY + iconSize / 2;
+      if (scene.textures.exists(spriteKey)) {
+        // Sprite path: icon on the right, colored qty text to its left.
+        const iconX = rightEdge - iconSize / 2;
+        const img = scene.add.image(iconX, rowCenterY, spriteKey);
+        img.setDisplaySize(iconSize, iconSize);
+        container.add(img);
+        if (row.qty) {
+          container.add(
+            scene.add.text(iconX - iconSize / 2 - iconGap, rowCenterY, row.qty, {
+              fontSize: `${rowFontSize}px`,
+              fontFamily: 'monospace',
+              fontStyle: 'bold',
+              color: row.color,
+              stroke: '#000000',
+              strokeThickness: 4,
+            }).setOrigin(1, 0.5),
+          );
+        }
+      } else {
+        // Fallback: colored caps label (legacy behavior, scaled up too).
+        const rowTxt = scene.add.text(rightEdge, rowCenterY, `${row.qty}${row.fallbackLabel}`, {
+          fontSize: `${rowFontSize}px`,
+          fontFamily: 'monospace',
+          fontStyle: 'bold',
+          color: row.color,
+          stroke: '#000000',
+          strokeThickness: 4,
+        }).setOrigin(1, 0.5);
+        container.add(rowTxt);
+      }
+      rowY += rowLineHeight;
+    }
   }
 
-  // Cost (compact)
-  const cost = isUpgraded && card.upgraded?.cost ? card.upgraded.cost : card.cost;
-  if (cost) {
-    const costParts: string[] = [];
-    if (cost.mana) costParts.push(`-${cost.mana} MP`);
-    if (cost.defense) costParts.push(`-${cost.defense} DEF`);
-    if (cost.stamina) costParts.push(`-${cost.stamina} STA`);
-    if (costParts.length > 0) {
-      container.add(
-        scene.add.text(0, INFO_TOP + 36, costParts.join('  '), {
-          fontSize: '9px', fontFamily: 'monospace',
-          color: '#ffcc66', stroke: '#000000', strokeThickness: 1,
-        }).setOrigin(0.5, 0),
-      );
+  // ── Info strip: bottom — name on top, element row below ─────────
+  // Halved (was 110 → now 55) so the upsized art has more room. Name sits
+  // at the top of the strip; element row sits at the bottom.
+  const INFO_TOP = IMG_TOP + IMG_H;              // -120 + 185 = 65
+  const INFO_H = h / 2 - INFO_TOP;               // 120 - 65 = 55
+
+  container.add(scene.add.rectangle(0, INFO_TOP + INFO_H / 2, w, INFO_H, 0x0a0a14, 0.95));
+
+  const displayName = isUpgraded ? `${card.name}+` : card.name;
+
+  // Name — top of info strip, centered horizontally, nudged up to give
+  // breathing room between it and the element row.
+  const nameY = INFO_TOP + 7;
+  container.add(
+    scene.add.text(0, nameY, displayName, {
+      fontSize: '12px', fontStyle: 'bold', fontFamily: 'monospace',
+      color: isUpgraded ? '#ffd700' : '#ffffff',
+      stroke: '#000000', strokeThickness: 3,
+      align: 'center',
+      wordWrap: { width: w - 8 },
+    }).setOrigin(0.5, 0.5),
+  );
+
+  // Element badges — bottom-middle of info strip. Sized at 2× the original
+  // 12 px = 24 px per user spec (smaller than the cost icons so they don't
+  // crowd the name).
+  if (elems.length > 0) {
+    const elemSize = 24;
+    const elemGap = 3;
+    const rowW = elems.length * elemSize + (elems.length - 1) * elemGap;
+    let elemX = -rowW / 2 + elemSize / 2;
+    const elemY = INFO_TOP + INFO_H - elemSize / 2 - 3;
+    for (const e of elems) {
+      const spriteKey = scene.textures.exists(`icon_${e}`)
+        ? `icon_${e}`
+        : scene.textures.exists(`elem_${e}`)
+          ? `elem_${e}`
+          : null;
+      if (spriteKey) {
+        const img = scene.add.image(elemX, elemY, spriteKey);
+        img.setDisplaySize(elemSize, elemSize);
+        container.add(img);
+      } else {
+        const elemColor = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
+        container.add(
+          scene.add.circle(elemX, elemY, elemSize / 2, elemColor)
+            .setStrokeStyle(2, 0xffffff, 0.7),
+        );
+      }
+      elemX += elemSize + elemGap;
     }
   }
 
@@ -205,7 +287,7 @@ export function createCardVisual(
     });
     bg.setStrokeStyle(3, 0xffffff);
   });
-  
+
   container.on('pointerout', () => {
     scene.tweens.add({
       targets: container,
@@ -261,8 +343,10 @@ function getEffectiveCooldown(card: CardDefinition): number | undefined {
 }
 
 // Per-stack display palette so the main label matches the keyword color
-// used elsewhere in the UI (status DoTs and keyword tooltip).
-const STACK_DISPLAY: Record<string, { label: string; color: string }> = {
+// used elsewhere in the UI (status DoTs and keyword tooltip). Re-exported
+// for legacy call sites; IconTokens.TOKEN_STYLES is the authoritative
+// source of truth for the broader palette.
+export const STACK_DISPLAY: Record<string, { label: string; color: string }> = {
   burn:   { label: 'BURN',   color: '#ff8c00' },
   bleed:  { label: 'BLEED',  color: '#ff5555' },
   poison: { label: 'POISON', color: '#88dd55' },
@@ -271,27 +355,63 @@ const STACK_DISPLAY: Record<string, { label: string; color: string }> = {
   rage:   { label: 'RAGE',   color: '#ff7733' },
 };
 
-function getMainEffect(card: CardDefinition, isUpgraded: boolean) {
-  const effects = isUpgraded && card.upgraded?.effects ? card.upgraded.effects : card.effects;
-  if (!effects || effects.length === 0) return null;
-  const primary = effects[0];
+/**
+ * Build the cost block rows for the standard face header (top-right).
+ * Each row is `quantity[token]` rendered as bracket-stripped caps (BURN, STAM,
+ * etc.). Sources:
+ *   - card.cost.stamina / .mana / .defense  → numeric resource cost
+ *   - effect with consume_stack:true + negative value → N[stack] or X[stack]
+ *   - card.spend_armor → N[armor] or X[armor]
+ *   - card.exhaust → [exhaust] badge (no quantity)
+ */
+interface CostRow {
+  /** Token id, e.g. "stam", "burn", "exhaust" — used to look up `icon_<token>`. */
+  token: string;
+  /** Quantity rendered to the LEFT of the icon (empty string for badge-only). */
+  qty: string;
+  /** Fallback label used when no `icon_<token>` texture is loaded. */
+  fallbackLabel: string;
+  /** Fallback color matching the token style. */
+  color: string;
+}
 
-  switch (primary.type) {
-    case 'damage': return { val: primary.value, label: 'DMG', color: '#ff6666' };
-    case 'armor':  return { val: primary.value, label: 'ARM', color: '#66bbff' };
-    case 'heal':   return { val: primary.value, label: 'HP',  color: '#66ff66' };
-    case 'mana':   return { val: primary.value, label: 'MP',  color: '#cc66ff' };
-    case 'stamina':return { val: primary.value, label: 'STA', color: '#ffcc66' };
-    case 'dot':
-    case 'stack': {
-      // Use the named stack (Burn/Bleed/Poison/Slow/Stun/Rage) as the label
-      // rather than the raw effect type. "DOT" by itself is meaningless to the
-      // player; the stack name reads as the card's intent.
-      const stack = (primary as { stack?: string }).stack;
-      if (stack && STACK_DISPLAY[stack]) return { val: primary.value, ...STACK_DISPLAY[stack] };
-      return { val: primary.value, label: 'STACK', color: '#ffffff' };
+function buildCostRows(card: CardDefinition, isUpgraded: boolean): CostRow[] {
+  const rows: CostRow[] = [];
+  const cost: CardCost | undefined = isUpgraded && card.upgraded?.cost ? card.upgraded.cost : card.cost;
+  const effects = isUpgraded && card.upgraded?.effects ? card.upgraded.effects : card.effects;
+
+  const push = (qty: string | number, token: string) => {
+    const style = getTokenStyle(token);
+    if (!style) return;
+    rows.push({ token, qty: String(qty), fallbackLabel: style.label, color: style.color });
+  };
+
+  // Resource costs from card.cost (numeric — no "all" semantics here).
+  if (cost?.stamina) push(cost.stamina, 'stam');
+  if (cost?.mana) push(cost.mana, 'mana');
+  if (cost?.defense) push(cost.defense, 'defense');
+
+  // Stack consumptions from effects (consume_stack: true + value < 0).
+  if (effects) {
+    for (const fx of effects as CardEffect[]) {
+      if (fx.type !== 'stack' || !fx.consume_stack || !fx.stack) continue;
+      const amount = Math.abs(fx.value);
+      const qty = amount >= 99 ? 'X' : String(amount);
+      push(qty, fx.stack);
     }
-    case 'aura':    return { val: primary.value, label: 'AURA',  color: '#bb99ff' };
   }
-  return { val: primary.value, label: primary.type.toUpperCase(), color: '#ffffff' };
+
+  // Card-level armor spend (Citadel Inferno style detonators).
+  if (card.spend_armor !== undefined) {
+    const qty = card.spend_armor === 'all' ? 'X' : String(card.spend_armor);
+    push(qty, 'armor');
+  }
+
+  // Exhaust badge — no quantity, just the token glyph.
+  if (card.exhaust) {
+    const style = getTokenStyle('exhaust');
+    if (style) rows.push({ token: 'exhaust', qty: '', fallbackLabel: style.label, color: style.color });
+  }
+
+  return rows;
 }

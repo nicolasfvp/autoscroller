@@ -1,471 +1,753 @@
-// Keyword-driven card description formatter.
-// Single source of truth for the human-readable text on every card view.
-// Keywords (Pyre, Empowered, Vengeance, Fortified, Brace, Guard, Haste,
-// Pierce, Burn, Bleed, Poison, Slow, Stun, Rage, Consume, Drain, Heal,
-// Armor, Scales, Aura, Echo, Overload, Channel, Devour, Stance, Catalyze,
-// Convert, Spread, Exhaust, DR) are tooltip-linkable.
+// New card-description formatter (CARD_AUDIT §1, §11, §12).
 //
-// Pipeline: each effect → { prefix, body }. Consecutive effects with the same
-// prefix are merged with " + " so "Berserk: 5 Pierce + 1 Bleed" comes out of
-// two underlying effects (a damage and a dot) that both share Berserk gating.
+// Output uses the bracketed-icon prose convention. Single source of truth for
+// the human-readable text on every card view.
+//
+// Conventions enforced here:
+//   - Stack/stat references are icon tokens: [burn] [str] [armor] [HP] etc.
+//   - Stat scalers glue to the number they scale: "Deal 9([str])."
+//   - No comparison operators: "more then 50%[HP]", "at least 10[armor]".
+//   - No "Aura Ns:": "For N seconds: ..."
+//   - No "(scales STR)": trailing "([str])".
+//   - Aura triggers are prose ("every time you hit an enemy") except Brace
+//     and Vengeance which stay as named keywords.
+//   - Conditional gates are inline prose (no Empowered/Guard/Fortified/
+//     Shatter/Berserk keywords).
+//   - Brace/Vengeance/Haste/Exhaust remain as keyword prefixes.
+//   - The cost block (rendered elsewhere) shows consumed resources; the body
+//     describes per-consumed-stack payoffs in plain prose.
 
 import type { CardDefinition, CardEffect, CardEffectCondition, StackId, StatId } from '../../data/types';
 
-const STACK_NAME: Record<string, string> = {
-  burn: 'Burn', bleed: 'Bleed', poison: 'Poison', slow: 'Slow', stun: 'Stun', rage: 'Rage',
-};
-const STAT_NAME: Record<string, string> = {
-  str: 'STR', vit: 'VIT', dex: 'DEX', int: 'INT', spi: 'SPI',
-};
+// -- Icon tokens --------------------------------------------------------
 
-function stackName(s?: StackId | string): string {
+const STACK_TOKEN: Record<string, string> = {
+  burn: '[burn]', bleed: '[bleed]', poison: '[poison]', slow: '[slow]', stun: '[stun]', rage: '[rage]',
+};
+const STAT_TOKEN: Record<string, string> = {
+  str: '[str]', vit: '[vit]', dex: '[dex]', int: '[int]', spi: '[spi]',
+};
+function stackTok(s?: StackId | string): string {
   if (!s) return '';
-  return STACK_NAME[s] ?? s;
+  return STACK_TOKEN[s] ?? `[${s}]`;
 }
-function statName(s?: StatId | string): string {
+function statTok(s?: StatId | string): string {
   if (!s) return '';
-  return STAT_NAME[s] ?? String(s).toUpperCase();
+  return STAT_TOKEN[s] ?? `[${s}]`;
 }
-function scaleSuffix(fx: CardEffect): string {
+
+// Returns "([str])" or "" for a CardEffect's scale clause. The scaler glues
+// directly to the number it scales — the caller decides where to place it.
+function scalerSuffix(fx: CardEffect): string {
   if (!fx.scale) return '';
-  // v3: source:"armor" means "read hero Armor as the scaling stat". When the
-  // effect base value is 0, the rendering elsewhere uses "= Armor × N" form
-  // and this suffix is empty. Otherwise, give the formula explicitly.
-  if (fx.scale.source === 'armor') {
-    if (fx.value === 0) return '';
-    const v = fx.scale.value ?? 1;
-    const per = fx.scale.per ?? 1;
-    const inc = v === 1 ? `+1 per ${per} Armor` : `+${v} per ${per} Armor`;
-    return ` (${inc})`;
-  }
-  // v3: cross-stack source — the body already reads the source stack inline
-  // (e.g. "Apply Poison equal to your Bleed"), so don't repeat as "(scales)".
-  if (fx.scale.source === 'self_stack' || fx.scale.source === 'consumed_stack') {
+  // Body-driven scale sources (armor / consumed stacks / self stacks) already
+  // narrate their math inline; don't double-emit a stat tag.
+  const src = fx.scale.source;
+  if (src === 'armor' || src === 'consumed_stack' || src === 'self_stack' ||
+      src === 'enemy_pre_consume_stack' || src === 'missing_hp_pct' || src === 'rage') {
     return '';
   }
-  return ` (Scales ${statName(fx.scale.stat)})`;
-}
-function multiHitSuffix(fx: CardEffect): string {
-  const extra = fx.multi_hit ?? 0;
-  return extra > 0 ? ` ×${1 + extra}` : '';
+  if (!fx.scale.stat) return '';
+  return `(${statTok(fx.scale.stat)})`;
 }
 
-// A formatted effect is either a "plain" line (no prefix) or a keyword-prefixed
-// fragment. Keyword fragments with the same `prefix` can be merged with " + ".
-interface Fragment {
-  prefix: string | null;  // null = render the body as-is, no leading keyword
-  body: string;
+// -- Targeting helpers --------------------------------------------------
+
+function aoeSuffix(fx: CardEffect): string {
+  return fx.target === 'aoe' ? ' to all enemies' : '';
 }
 
-function prefixFromCondition(cond: CardEffectCondition | undefined, fx: CardEffect): string | null {
-  if (!cond) return null;
-  // v4 Vengeance: took HP damage in the last N ms. Render with the canonical
-  // "Vengeance" keyword (matches glossary).
-  if (cond.took_damage_within_ms !== undefined) return 'Vengeance';
-  if (cond.enemy_has_stack === 'burn' && cond.per_stack) return 'Pyre';
-  if (cond.enemy_has_stack && cond.per_stack) return `Per ${stackName(cond.enemy_has_stack)}`;
-  if (cond.self_has_stack === 'rage' && cond.per_stack) return 'Berserk';
-  if (cond.self_has_stack && cond.per_stack) return `Per ${stackName(cond.self_has_stack)}`;
-  if (cond.enemy_has_stack) return `Empowered (if ${stackName(cond.enemy_has_stack)})`;
-  if (cond.self_has_stack) return `Empowered (if ${stackName(cond.self_has_stack)})`;
-  // hero_hp_pct_below is now Berserk (low-HP threshold, used by Last Stand
-  // Bulwark and similar). Vengeance was migrated to took_damage_within_ms above.
-  if (cond.hero_hp_pct_below !== undefined) return `Berserk (<${cond.hero_hp_pct_below}% HP)`;
-  if (cond.hero_hp_pct_atleast !== undefined) return `Steady (>${cond.hero_hp_pct_atleast}% HP)`;
-  if (cond.self_armor_atleast !== undefined) return `Fortified ${cond.self_armor_atleast}`;
-  // v3 conditions
-  if (cond.enemy_stunned === true) return 'Shatter';
-  if (cond.enemy_stack_atleast)
-    return `If enemy ${stackName(cond.enemy_stack_atleast.stack)} ≥ ${cond.enemy_stack_atleast.value}`;
-  if (cond.self_stack_atleast)
-    return `If your ${stackName(cond.self_stack_atleast.stack)} ≥ ${cond.self_stack_atleast.value}`;
-  if (cond.devour_succeeded === true) return 'After Devour';
-  void fx;
+// -- Condition formatting ----------------------------------------------
+
+interface CondGate {
+  /** What appears before the colon: "Vengeance", "Brace", "If enemy has [burn]", ... */
+  prefix: string;
+  /** Stable signature used to merge consecutive same-condition effects. */
+  key: string;
+  /** Whether this is a "relative bonus" gate (uses "more"). */
+  relative: boolean;
+}
+
+function condFromEffect(fx: CardEffect): CondGate | null {
+  const c = fx.condition;
+  if (!c) return null;
+  // Vengeance — kept keyword.
+  if (c.took_damage_within_ms !== undefined) {
+    return { prefix: 'Vengeance', key: 'vengeance', relative: true };
+  }
+  // Berserk-style low-HP gate.
+  if (c.hero_hp_pct_below !== undefined) {
+    return {
+      prefix: `If you have less then ${c.hero_hp_pct_below}%[HP]`,
+      key: `hp_below:${c.hero_hp_pct_below}`,
+      relative: true,
+    };
+  }
+  if (c.hero_hp_pct_atleast !== undefined) {
+    return {
+      prefix: `If you have more then ${c.hero_hp_pct_atleast}%[HP]`,
+      key: `hp_atleast:${c.hero_hp_pct_atleast}`,
+      relative: true,
+    };
+  }
+  if (c.self_armor_atleast !== undefined) {
+    return {
+      prefix: `If [armor] is at least ${c.self_armor_atleast}`,
+      key: `armor:${c.self_armor_atleast}`,
+      relative: true,
+    };
+  }
+  if (c.enemy_stunned === true) {
+    return { prefix: 'If enemy is [stun]', key: 'enemy_stunned', relative: true };
+  }
+  if (c.enemy_stack_atleast) {
+    const v = c.enemy_stack_atleast.value;
+    const s = c.enemy_stack_atleast.stack;
+    return {
+      prefix: `If enemy has at least ${v}${stackTok(s)}`,
+      key: `enemy_stack_at:${s}:${v}`,
+      relative: true,
+    };
+  }
+  if (c.self_stack_atleast) {
+    const v = c.self_stack_atleast.value;
+    const s = c.self_stack_atleast.stack;
+    return {
+      prefix: `If you have at least ${v}${stackTok(s)}`,
+      key: `self_stack_at:${s}:${v}`,
+      relative: true,
+    };
+  }
+  // Per-stack reads are NOT a gate — they multiply the value. Handled inline.
+  if (c.per_stack) return null;
+  if (c.enemy_has_stack) {
+    return {
+      prefix: `If enemy has ${stackTok(c.enemy_has_stack)}`,
+      key: `enemy_has:${c.enemy_has_stack}`,
+      // Without scale/pierce, a flat damage bonus reads as "+N damage"; the
+      // damage formatter checks `relative` to decide between "+N" and "more".
+      relative: false,
+    };
+  }
+  if (c.self_has_stack) {
+    return {
+      prefix: `If you have ${stackTok(c.self_has_stack)}`,
+      key: `self_has:${c.self_has_stack}`,
+      relative: false,
+    };
+  }
+  if (c.devour_succeeded === true) {
+    return {
+      prefix: 'Permanently remove 1 common card from your deck this combat',
+      key: 'devour',
+      relative: false,
+    };
+  }
   return null;
 }
 
-function damageBody(fx: CardEffect, prefix: string | null): string {
+// -- Body formatters ----------------------------------------------------
+
+/** True for "deal N more" / "apply N more [stack]" wording inside a gate. */
+function useRelativePhrasing(fx: CardEffect, gate: CondGate | null): boolean {
+  if (!gate) return false;
+  if (gate.relative) return true;
+  // enemy_has_stack / self_has_stack with scale or pierce read as separate actions.
+  const hasScale = !!fx.scale && fx.scale.source !== 'armor';
+  if (fx.type === 'damage' && (hasScale || fx.pierce_armor)) return true;
+  return false;
+}
+
+function multiHitTimes(fx: CardEffect): number {
+  const extra = fx.multi_hit ?? 0;
+  return 1 + extra;
+}
+
+function timesWord(n: number, scaler: string): string {
+  if (n <= 1) return '';
+  if (n === 2) return ` twice${scaler ? '' : ''}`;
+  if (n === 3) return ' three times';
+  if (n === 4) return ' four times';
+  if (n === 5) return ' five times';
+  return ` ${n} times`;
+}
+
+// Damage rendering (no leading condition prefix).
+function damageBody(fx: CardEffect, gate: CondGate | null): string {
   const v = fx.value;
-  const p = !!fx.pierce_armor;
-  const cond = fx.condition ?? {};
+  const pierce = !!fx.pierce_armor;
+  const word = pierce ? 'Pierce' : '';
+  const relative = useRelativePhrasing(fx, gate);
+  const scaler = scalerSuffix(fx);
+  const aoe = aoeSuffix(fx);
 
-  // Self-damage cards: render as "Lose N HP", not "Deal N" (which implies enemy).
+  // Self-damage: "Lose N[HP]".
   if (fx.target === 'self') {
-    const word = p ? 'HP (Pierce)' : 'HP';
-    return `Lose ${v} ${word}${scaleSuffix(fx)}`;
+    const pcs = pierce ? ' (Pierce)' : '';
+    return `Lose ${v}[HP]${pcs}${scaler}`;
   }
 
-  // v3: consume_stack_value — damage per consumed stack. The "Consume(N) <stack>"
-  // bookkeeping is baked into the fragment prefix by formatCardDescription, so
-  // the body just states the per-stack payload.
-  // value=0 means the contribution is entirely from the scale clause (e.g.
-  // Crimson Spiral = Rage × STR), so drop the leading "0".
+  // Per-stack scaling — "Deal N([scale]) [Pierce] per [stack] on enemy".
+  const c = fx.condition ?? {};
+  if (c.per_stack && (c.enemy_has_stack || c.self_has_stack)) {
+    const stk = c.enemy_has_stack ?? c.self_has_stack!;
+    const side = c.enemy_has_stack ? 'on enemy' : 'on yourself';
+    // value=0 with scale.value=N means the scale.value is the per-stack
+    // damage; promote it into the leading number.
+    const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
+    const statS = fx.scale?.stat ? `(${statTok(fx.scale.stat)})` : '';
+    if (pierce) {
+      return `Deal ${lead}${statS} Pierce per ${stackTok(stk)} ${side}${aoe}`;
+    }
+    return `Deal ${lead}${statS} damage per ${stackTok(stk)} ${side}${aoe}`;
+  }
+
+  // consume_stack_value: damage scales by stacks consumed within this cast.
+  // value=0 with scale.value=N means "deal N per stack consumed" — promote
+  // the scale.value into the leading number ("Deal 2([str]) Pierce per ...").
   if (fx.consume_stack_value) {
-    const word = p ? 'Pierce' : 'damage';
-    const num = v === 0 ? '' : `${v} `;
-    return `${num}${word} per stack${multiHitSuffix(fx)}${scaleSuffix(fx)}`;
+    const stk = fx.consume_stack_value;
+    const target = fx.target === 'aoe' ? ' to all enemies' : '';
+    const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
+    const statS = fx.scale?.stat ? `(${statTok(fx.scale.stat)})` : '';
+    if (pierce) {
+      return `Deal ${lead}${statS} Pierce per ${stackTok(stk)} consumed${target}`;
+    }
+    return `Deal ${lead}${statS} per ${stackTok(stk)} consumed${target}`;
   }
 
-  // v3: armor-source damage with value=0 means "= Armor × scale.value".
-  if (fx.scale?.source === 'armor' && v === 0 && fx.scale.value) {
-    const word = p ? 'Pierce' : 'damage';
-    const mult = fx.scale.value === 1 ? '' : ` × ${fx.scale.value}`;
-    return `${word} = Armor${mult}${multiHitSuffix(fx)}`;
+  // Armor-source damage: "Deal N([str]) [Pierce] per K[armor] you have".
+  if (fx.scale?.source === 'armor') {
+    const per = fx.scale.per ?? 1;
+    const inc = fx.scale.value ?? 1;
+    const statS = fx.scale.stat ? `(${statTok(fx.scale.stat)})` : '';
+    if (v === 0) {
+      // "Deal damage equal to your [armor]" / "Deal 2 Pierce per 1[armor]..."
+      if (per === 1 && inc === 1 && !pierce) {
+        return `Deal damage equal to your [armor]`;
+      }
+      if (pierce) {
+        if (per === 1 && inc === 1) return `Deal Pierce per 1[armor] you have`;
+        return `Deal ${inc}${statS} Pierce per ${per}[armor] you have`;
+      }
+      return `Deal ${inc}${statS} damage per ${per}[armor] you have`;
+    }
+    const w = pierce ? ' Pierce' : '';
+    return `Deal ${v}${w}, +${inc}${statS} damage per ${per}[armor] you have${aoe}`;
   }
 
-  // Per-stack reads — the value is "per-stack damage", no "Deal" verb.
-  if (cond.per_stack && (cond.enemy_has_stack || cond.self_has_stack)) {
-    return `${v}${p ? ' Pierce' : ''}${scaleSuffix(fx)}`;
+  // Relative phrasing inside a gate — "deal N([str]) more [Pierce]".
+  if (relative) {
+    const pcs = pierce ? ' Pierce' : '';
+    const times = multiHitTimes(fx);
+    const t = timesWord(times, scaler);
+    if (times >= 2) return `deal ${v}${scaler}${pcs}${t} more${aoe}`;
+    return `deal ${v}${scaler} more${pcs}${aoe}`;
   }
-  // Conditional flat bonus (Empowered if X) — present as "+N"
-  if (!cond.per_stack && (cond.enemy_has_stack || cond.self_has_stack)) {
-    return `+${v}${p ? ' Pierce' : ''}${scaleSuffix(fx)}`;
+
+  // Non-relative gated damage with no scale and no pierce → "+N damage".
+  if (gate && !relative) {
+    if (!fx.scale && !pierce) return `+${v} damage`;
+    if (!fx.scale && pierce) return `+${v} Pierce`;
+    // Scale + non-relative — treat as relative anyway.
+    return `deal ${v}${scaler}${pierce ? ' Pierce' : ''}${aoe}`;
   }
-  // Gated full attack — keep "Deal N" / "N Pierce" verb form for clarity.
-  const verbed = p ? `${v} Pierce` : `Deal ${v}`;
-  const channelPrefix = fx.channel ? 'Channel: ' : '';
-  const channelNote = fx.channel
-    ? ` (scales with cooldown, up to +${Math.round(fx.channel.max_bonus * 100)}%)`
-    : '';
-  const trail = `${multiHitSuffix(fx)}${scaleSuffix(fx)}${channelNote}`;
-  const siphonNote = fx.siphon ? ` Siphon ${Math.round(fx.siphon * 100)}%.` : '';
-  if (prefix) return `${channelPrefix}${verbed}${trail}${siphonNote}`;
-  return `${channelPrefix}${verbed}${trail}${siphonNote}`;
+
+  // Unconditional damage — "Deal N([str]) [Pierce] [twice/three times] [to all enemies]".
+  const times = multiHitTimes(fx);
+  const t = timesWord(times, scaler);
+  if (pierce) {
+    return `Deal ${v}${scaler} Pierce${t}${aoe}`;
+  }
+  return `Deal ${v}${scaler}${t}${aoe}`;
+  void word;
 }
 
-function dotBody(fx: CardEffect, prefix: string | null): string {
-  const s = stackName(fx.stack);
-  const cond = fx.condition ?? {};
-  const isConditional = !!prefix;
-  const isPerStack = !!cond.per_stack;
-  const perHit = fx.per_hit ? ' per hit' : '';
-  // Under a keyword prefix, dots read as "+N <Stack>" (a bonus stack application).
-  if (isConditional && (isPerStack || cond.enemy_has_stack || cond.self_has_stack)) {
-    return `+${fx.value} ${s}${perHit}${scaleSuffix(fx)}`;
+// DoT (stack-application) rendering. Scaler goes AFTER the icon —
+// "Apply 1[bleed]([dex])", "Apply 3[poison]([int]) to all enemies".
+function dotBody(fx: CardEffect, gate: CondGate | null): string {
+  const v = fx.value;
+  const stk = stackTok(fx.stack);
+  const scaler = scalerSuffix(fx);
+  const aoe = fx.target === 'aoe' ? ' to all enemies' : '';
+  const relative = useRelativePhrasing(fx, gate);
+  const perHit = !!fx.per_hit;
+
+  if (fx.target === 'self_dot') {
+    if (relative) return `apply ${v}${stk}${scaler} more to yourself`;
+    return `Apply ${v}${stk}${scaler} to yourself`;
   }
-  if (fx.target === 'self_dot') return `Self ${s} ${fx.value}${perHit}${scaleSuffix(fx)}`;
-  if (fx.target === 'aoe') return `${s} ${fx.value} AoE${perHit}${scaleSuffix(fx)}`;
-  return `${s} ${fx.value}${perHit}${scaleSuffix(fx)}`;
+
+  if (perHit) {
+    if (relative) return `each hit applies ${v} more ${stk}${scaler}`;
+    return `each hit applies ${v}${stk}${scaler}`;
+  }
+
+  // Per-stack: "apply 1[bleed] per [burn] consumed/on enemy".
+  const c = fx.condition ?? {};
+  if (c.per_stack && (c.enemy_has_stack || c.self_has_stack)) {
+    const src = c.enemy_has_stack ?? c.self_has_stack!;
+    const side = c.enemy_has_stack ? 'on enemy' : 'on yourself';
+    return `Apply ${v}${stk}${scaler} for each ${stackTok(src)} ${side}`;
+  }
+  if (fx.consume_stack_value) {
+    return `Apply ${v}${stk}${scaler} per ${stackTok(fx.consume_stack_value)} consumed`;
+  }
+
+  if (relative) return `apply ${v} more ${stk}${scaler}${aoe}`;
+  return `Apply ${v}${stk}${scaler}${aoe}`;
 }
 
-function fragmentForEffect(fx: CardEffect): Fragment {
-  if (fx.type === 'damage') {
-    const prefix = prefixFromCondition(fx.condition, fx);
-    return { prefix, body: damageBody(fx, prefix) };
+// Heal rendering — "Heal N([spi])".
+function healBody(fx: CardEffect, gate: CondGate | null): string {
+  const v = fx.value;
+  const scaler = scalerSuffix(fx);
+  const relative = useRelativePhrasing(fx, gate);
+  if (fx.consume_stack_value) {
+    return `Heal ${v}${scaler} per ${stackTok(fx.consume_stack_value)} consumed`;
   }
-  if (fx.type === 'dot') {
-    const prefix = prefixFromCondition(fx.condition, fx);
-    return { prefix, body: dotBody(fx, prefix) };
-  }
-  if (fx.type === 'stack') {
-    const s = stackName(fx.stack);
-    if (fx.consume_stack) {
-      const cost = Math.abs(fx.value);
-      const tok = cost >= 99 ? 'All' : String(cost);
-      return { prefix: `Consume(${tok}) ${s}`, body: '' };
-    }
-    // v3: spread — "Spread 50% Poison to all enemies"
-    if (fx.spread) {
-      const pct = Math.round(fx.spread.ratio * 100);
-      const tgt = fx.spread.target === 'aoe' ? 'all enemies' : 'nearest';
-      const max = fx.spread.max_targets ? ` (max ${fx.spread.max_targets})` : '';
-      return { prefix: null, body: `Spread ${pct}% ${s} to ${tgt}${max}` };
-    }
-    // v3: cross-stack source (Necrotic Festering: apply Poison = your Bleed)
-    if (fx.value === 0 && fx.scale?.source === 'self_stack' && fx.scale.stack) {
-      return {
-        prefix: null,
-        body: `Apply ${s} equal to your ${stackName(fx.scale.stack)}${scaleSuffix(fx)}`,
-      };
-    }
-    const sign = fx.value >= 0 ? '+' : '';
-    return { prefix: null, body: `${sign}${fx.value} ${s}${scaleSuffix(fx)}` };
-  }
-  if (fx.type === 'heal' || fx.type === 'armor') {
-    const prefix = prefixFromCondition(fx.condition, fx);
-    // v3: when paired with consume_stack_value, body reads "Heal 4 per stack".
-    // The formatCardDescription wrapper injects the "Consume(N) <stack>:" prefix.
-    const perStack = fx.consume_stack_value ? ' per stack' : '';
-    const body = fx.type === 'heal'
-      ? `Heal ${fx.value}${perStack}${scaleSuffix(fx)}`
-      : `Armor ${fx.value}${perStack}${scaleSuffix(fx)}`;
-    return { prefix, body };
-  }
-  if (fx.type === 'stamina' || fx.type === 'mana') {
-    const name = fx.type === 'stamina' ? 'Stamina' : 'Mana';
-    if (fx.target === 'enemy') return { prefix: null, body: `Drain ${Math.abs(fx.value)} ${name}` };
-    const sign = fx.value >= 0 ? '+' : '';
-    return { prefix: null, body: `${sign}${fx.value} ${name}` };
-  }
-  if (fx.type === 'aura') return { prefix: null, body: formatAura(fx) };
-  if (fx.type === 'debuff') return { prefix: null, body: `Enemy −${fx.value} Defense` };
-  if (fx.type === 'buff') return {
-    prefix: null,
-    body: `+${fx.value} ${fx.scale?.stat ? statName(fx.scale.stat) : 'stat'}`,
-  };
-  if (fx.type === 'debuff_stat') return {
-    prefix: null,
-    body: `Enemy −${fx.value} ${fx.scale?.stat ? statName(fx.scale.stat) : 'stat'}`,
-  };
-
-  // -- v3 archetype redesign effect types --
-
-  if (fx.type === 'convert_stack') {
-    const from = stackName(fx.from);
-    const to = (fx.to as string) === 'armor' ? 'Armor' : stackName(fx.to);
-    const amount = (fx.value ?? 0) >= 99 ? 'all' : String(fx.value);
-    const factor = fx.factor && fx.factor !== 1 ? ` ×${fx.factor}` : '';
-    const cap = fx.cap !== undefined ? ` (cap ${fx.cap})` : '';
-    const prefix = prefixFromCondition(fx.condition, fx);
-    return { prefix, body: `Convert ${amount} ${from} → ${to}${factor}${cap}${scaleSuffix(fx)}` };
-  }
-
-  if (fx.type === 'multiply_stack') {
-    const s = stackName(fx.stack);
-    const factor = fx.factor ?? 2;
-    return { prefix: null, body: `Catalyze ×${factor} ${s}` };
-  }
-
-  if (fx.type === 'stack_boost') {
-    const s = stackName(fx.stack);
-    return { prefix: null, body: `+${fx.value} to every ${s} on target${scaleSuffix(fx)}` };
-  }
-
-  if (fx.type === 'echo') {
-    const secs = fx.ttl_ms ? ` (${Math.round((fx.ttl_ms as number) / 1000)}s)` : '';
-    const prefix = prefixFromCondition(fx.condition, fx);
-    return { prefix, body: `Echo ${fx.value}${secs}` };
-  }
-
-  if (fx.type === 'cd_debt') {
-    return { prefix: 'Overload', body: `next play +${fx.value.toFixed(1)}s CD` };
-  }
-
-  if (fx.type === 'devour') {
-    const rarity = fx.devour?.rarity ? ` ${fx.devour.rarity}` : '';
-    const count = fx.devour?.count ?? 1;
-    return { prefix: null, body: `Devour ${count}${rarity} card from deck` };
-  }
-
-  if (fx.type === 'force_trigger_all_cards') {
-    return { prefix: null, body: 'Trigger every card you own once' };
-  }
-
-  return { prefix: null, body: String((fx as { type: string }).type) };
+  if (relative) return `heal ${v}${scaler} more`;
+  return `Heal ${v}${scaler}`;
 }
 
-function formatAuraThenList(then: CardEffect | CardEffect[] | undefined): string {
+// Armor rendering — "Gain N[armor]([vit])".
+function armorBody(fx: CardEffect, gate: CondGate | null): string {
+  const v = fx.value;
+  const scaler = scalerSuffix(fx);
+  const relative = useRelativePhrasing(fx, gate);
+  if (relative) return `gain ${v} more [armor]${scaler}`;
+  return `Gain ${v}[armor]${scaler}`;
+}
+
+// Stack (raw apply/grant, not a DoT) rendering.
+function stackBody(fx: CardEffect, gate: CondGate | null): string {
+  const v = fx.value;
+  const stk = stackTok(fx.stack);
+  const scaler = scalerSuffix(fx);
+  const relative = useRelativePhrasing(fx, gate);
+
+  // Spread: "for each 2[poison] applied, apply 1[poison] to up to N other enemies".
+  if (fx.spread) {
+    const pct = Math.round(fx.spread.ratio * 100);
+    const max = fx.spread.max_targets ? ` to up to ${fx.spread.max_targets} other enemies` : '';
+    return `${pct}% of enemy's ${stk} spreads${max}`;
+  }
+
+  // consume_stack with value < 0 → handled by buildConsumeSpec; this shouldn't print.
+  if (fx.consume_stack) return '';
+
+  // Cross-stack source ("value 0 + scale.source: self_stack").
+  if (v === 0 && fx.scale?.source === 'self_stack' && fx.scale.stack) {
+    return `Apply 1${stk}${scaler} for each ${stackTok(fx.scale.stack)} on yourself`;
+  }
+
+  // Rage gain (target self) — special §11.H Wrathshell Vow places scaler
+  // BEFORE the icon: "Gain 6([str])[rage]". The visual "rage is something
+  // you carry" reads better this way.
+  if (fx.target === 'self' && fx.stack === 'rage') {
+    if (relative) return `gain ${v}${scaler} more ${stk}`;
+    if (v >= 0) return `Gain ${v}${scaler}${stk}`;
+    return `Lose ${Math.abs(v)}${scaler}${stk}`;
+  }
+
+  // Generic stack application. Scaler glues AFTER the icon.
+  if (relative) return `apply ${v} more ${stk}${scaler}`;
+  return `Apply ${v}${stk}${scaler}`;
+}
+
+// Stamina/mana rendering.
+function resourceBody(fx: CardEffect): string {
+  const tok = fx.type === 'stamina' ? '[stam]' : '[mana]';
+  if (fx.value === 0) return '';
+  const sign = fx.value > 0 ? '+' : '-';
+  return `Gain ${sign === '+' ? '' : '-'}${Math.abs(fx.value)}${tok}`.replace(/Gain -/, 'Lose ');
+}
+
+// Cross-stack converter rendering. CARD_AUDIT §11.F drops the "Convert"
+// keyword entirely — the body now reads as a per-stack apply ("Apply N[to]
+// per [from] consumed", with the consumed stack reflected in the cost block).
+function convertBody(fx: CardEffect): string {
+  const from = stackTok(fx.from);
+  // `fx.to` is typed as StackId but a few JSON entries use "armor" as a
+  // pseudo-target — bypass the union via string comparison.
+  const toStr = String(fx.to ?? '');
+  const isArmor = toStr === 'armor';
+  const to = isArmor ? '[armor]' : stackTok(fx.to);
+  const amount = (fx.value ?? 0) >= 99 ? 'all' : String(fx.value);
+  const factor = fx.factor && fx.factor !== 1 ? fx.factor : 1;
+  const cap = fx.cap !== undefined ? ` (max ${fx.cap})` : '';
+  const scaler = scalerSuffix(fx);
+
+  // Spend-all variant: "Apply N[to] per [from] consumed" (factor scales).
+  if (amount === 'all') {
+    if (isArmor) {
+      return `Gain 1${scaler}[armor] per ${from} consumed${cap}`;
+    }
+    const perOutput = factor === 1
+      ? `Apply 1${scaler}${to}`
+      : `Apply ${factor}${scaler}${to}`;
+    return `${perOutput} per ${from} consumed${cap}`;
+  }
+
+  // Fixed-amount variant: "Apply N[to] (from consumed [from])".
+  const N = Number(amount);
+  if (isArmor) {
+    return `Gain ${N}${scaler}[armor] (from consumed ${from})${cap}`;
+  }
+  const outN = N * factor;
+  return `Apply ${outN}${scaler}${to} (from consumed ${from})`;
+}
+
+// Multiply_stack rendering ("double the [poison] on enemy").
+function multiplyBody(fx: CardEffect): string {
+  const stk = stackTok(fx.stack);
+  const factor = fx.factor ?? 2;
+  const onWho = fx.target === 'self' ? 'on yourself' : 'on enemy';
+  if (factor === 2) return `double the ${stk} ${onWho}`;
+  return `multiply ${stk} ${onWho} by ${factor}`;
+}
+
+// Stack_boost rendering ("Add N to every [burn] on enemy").
+function stackBoostBody(fx: CardEffect): string {
+  const stk = stackTok(fx.stack);
+  const scaler = scalerSuffix(fx);
+  const onWho = fx.target === 'self' ? 'on yourself' : 'on enemy';
+  return `Add ${fx.value}${scaler} to every ${stk} ${onWho}`;
+}
+
+// Echo / cd_debt / devour / debuff / buff / debuff_stat / force_trigger.
+function echoBody(fx: CardEffect): string {
+  const secs = fx.ttl_ms ? Math.round((fx.ttl_ms as number) / 1000) : 0;
+  const scaler = scalerSuffix(fx);
+  if (secs > 0) return `For ${secs} seconds: the next card triggers ${fx.value === 1 ? 'twice' : `${fx.value + 1} times`}${scaler}`;
+  return `The next card triggers ${fx.value === 1 ? 'twice' : `${fx.value + 1} times`}${scaler}`;
+}
+function cdDebtBody(fx: CardEffect): string {
+  return `Next card delays ${fx.value} more seconds`;
+}
+function buffBody(fx: CardEffect): string {
+  const stat = fx.scale?.stat ? statTok(fx.scale.stat) : '';
+  const sign = fx.value >= 0 ? '+' : '';
+  return `${sign}${fx.value} ${stat}`;
+}
+function debuffStatBody(fx: CardEffect): string {
+  const stat = fx.scale?.stat ? statTok(fx.scale.stat) : 'a stat';
+  return `enemy has −${fx.value} ${stat}`;
+}
+function debuffBody(fx: CardEffect): string {
+  return `enemy has −${fx.value} Defense`;
+}
+
+// -- Aura formatting ----------------------------------------------------
+
+/** Lowercases the first character of `s` (leaves the rest alone). Used to
+ *  splice a sub-effect body into a larger prose clause like
+ *  "For 15 seconds: every 2 seconds, <body>". */
+function lcFirst(s: string): string {
+  if (!s) return s;
+  return s[0].toLowerCase() + s.slice(1);
+}
+
+function effectListBody(then: CardEffect | CardEffect[] | undefined): string {
   if (!then) return '';
   const arr = Array.isArray(then) ? then : [then];
-  return arr.map((e) => formatEffectStandalone(e)).join(' + ');
+  return arr.map((e) => fragmentForEffect(e).body).filter(Boolean).join(' and ');
 }
 
+function auraTriggerPhrase(fx: CardEffect): string {
+  switch (fx.trigger) {
+    case 'on_hit_dealt':       return 'every time you hit an enemy';
+    case 'on_hit_taken':       return 'every time you take damage';
+    case 'on_self_damage':     return 'every time you lose [HP]';
+    case 'on_self_dot_tick':   return 'every time a self DoT ticks';
+    case 'on_slow_applied':    return 'every time you apply [slow]';
+    case 'on_armor_gained': {
+      const n = fx.min_amount ?? 1;
+      return `every time you gain at least ${n}[armor]`;
+    }
+    case 'on_kill_with_stack': {
+      const s = stackTok(fx.threshold_stack);
+      return `every time you kill an enemy with ${s}`;
+    }
+    case 'on_stack_threshold': {
+      const s = stackTok(fx.threshold_stack);
+      const t = fx.threshold ?? 0;
+      return `when you reach ${t}${s}`;
+    }
+    case 'on_enemy_stack_threshold': {
+      const s = stackTok(fx.threshold_stack);
+      const t = fx.threshold ?? 0;
+      return `when enemy has at least ${t}${s}`;
+    }
+    case 'on_hp_pct_below': {
+      const th = fx.threshold ?? 50;
+      return `if you have less then ${th}%[HP]`;
+    }
+    default: return '';
+  }
+}
+
+// Format an aura effect into prose. Returns the body without a trailing period.
 function formatAura(fx: CardEffect): string {
-  const secs = Math.round((fx.ttl_ms ?? 0) / 1000);
-  const dur = secs > 0 ? ` (${secs}s)` : fx.ttl_ms === null ? ' (permanent)' : '';
-  const channelStr = fx.channel_ms ? ` after Channel ${Math.round(fx.channel_ms / 1000)}s` : '';
-  const tickStr = fx.tick_ms ? ` every ${(fx.tick_ms / 1000).toFixed(1)}s` : '';
-  const thenBody = formatAuraThenList(fx.then);
+  const secs = fx.ttl_ms ? Math.round((fx.ttl_ms as number) / 1000) : 0;
+  const dur = secs > 0 ? `For ${secs} seconds` : (fx.ttl_ms === null ? 'For the rest of combat' : '');
   const trig = fx.trigger;
 
-  // v1 triggers
-  if (trig === 'on_armor_break' && thenBody) return `Brace${channelStr}: ${thenBody}${dur}`;
-  if (trig === 'on_hp_pct_below' && thenBody) {
-    const th = fx.threshold ?? 50;
-    return `Guard ${th}%: ${thenBody}${dur}`;
+  // Brace — kept keyword. Brace duration is omitted from prose.
+  if (trig === 'on_armor_break') {
+    const body = effectListBody(fx.then);
+    return `Brace: ${body}`;
   }
 
-  // v3 triggers
-  if (trig === 'on_hit_dealt' && thenBody)   return `On Hit: ${thenBody}${dur}`;
-  if (trig === 'on_hit_taken' && thenBody)   return `Reflex: ${thenBody}${dur}`;
-  if (trig === 'on_armor_gained' && thenBody) {
-    const min = fx.min_amount ? ` (≥${fx.min_amount})` : '';
-    return `Juggernaut${min}: ${thenBody}${dur}`;
-  }
-  if (trig === 'on_self_damage' && thenBody) return `Rupture: ${thenBody}${dur}`;
-  if (trig === 'on_self_dot_tick' && thenBody) return `Bloodforge: ${thenBody}${dur}`;
-  if (trig === 'on_stack_threshold' && thenBody) {
-    const s = stackName(fx.threshold_stack);
-    const t = fx.threshold ?? 0;
-    return `On ${s} ≥ ${t}: ${thenBody}${dur}`;
-  }
-  if (trig === 'on_enemy_stack_threshold' && thenBody) {
-    const s = stackName(fx.threshold_stack);
-    const t = fx.threshold ?? 0;
-    return `Threshold ${s} ≥ ${t}: ${thenBody}${dur}`;
-  }
-  if (trig === 'on_kill_with_stack' && thenBody) {
-    const s = stackName(fx.threshold_stack);
-    return `Cascade (${s}): ${thenBody}${dur}`;
-  }
-  if (trig === 'on_slow_applied' && thenBody) return `Frost Echo: ${thenBody}${dur}`;
-  if (trig === 'passive_armor_scaler' && fx.modifier) {
-    // Falls through to modifier formatter below.
-  }
-
-  // Tick-only auras (Stagnant Bulwark / Dust Plague / Twinflame Flicker / Crimson Regen)
-  if (fx.tick_ms && thenBody) {
-    return `Aura${dur}${channelStr}${tickStr}: ${thenBody}`;
-  }
-
-  // Channel-only aura (warm-up then permanent passive — Wrathshell Vow tick part)
-  if (fx.channel_ms && thenBody) {
-    return `Aura${dur}${channelStr}: ${thenBody}`;
-  }
-
-  // Modifier auras
-  if (fx.modifier) {
+  // Modifier-only auras: Haste / DR (damage_taken_pct) / Empower (damage_dealt_pct) / Reforce (armor_bonus_pct) / Vulnerable / etc.
+  if (!trig && fx.modifier && !fx.tick_ms) {
     const k = fx.modifier.kind;
     const v = fx.modifier.value;
-    if (k === 'cd_reduction') return `Haste ${Math.round(v * 100)}%${dur}`;
-    if (k === 'def') {
-      if (fx.target === 'enemy') return `Expose ${Math.abs(v)}${dur}`;
-      const sign = v >= 0 ? '+' : '';
-      return `${sign}${v} Defense${dur}`;
+    if (k === 'cd_reduction') {
+      const pct = Math.round(v * 100);
+      return secs > 0 ? `Haste ${pct}% for ${secs} seconds` : `Haste ${pct}%`;
     }
-    // v3 modifier kinds
-    if (k === 'burn_taken') return `Vulnerable Fire +${v}${dur}`;
-    if (k === 'armor_bonus_pct') return `Reforce +${Math.round(v * 100)}% Armor gained${dur}`;
-    if (k === 'armor_bonus_flat') return `Reforce +${v} flat Armor gained${dur}`;
+    if (k === 'def') {
+      if (fx.target === 'enemy') {
+        return `${dur}: enemy has −${Math.abs(v)} Defense`;
+      }
+      const sign = v >= 0 ? '+' : '';
+      return `${dur}: ${sign}${v} Defense`;
+    }
     if (k === 'damage_taken_pct') {
       const pct = Math.round(Math.abs(v) * 100);
-      return v < 0 ? `Mitigate ${pct}% incoming${dur}` : `Vulnerable +${pct}% incoming${dur}`;
+      const phrase = v < 0 ? `take ${pct}% less damage` : `take ${pct}% more damage`;
+      return secs > 0 ? `${dur}: ${phrase}` : phrase;
     }
     if (k === 'damage_dealt_pct') {
       const pct = Math.round(Math.abs(v) * 100);
-      return v >= 0 ? `Empower +${pct}% damage${dur}` : `Weakened −${pct}% damage${dur}`;
+      const phrase = v >= 0 ? `deal ${pct}% more damage` : `deal ${pct}% less damage`;
+      return `${dur}: ${phrase}`;
+    }
+    if (k === 'burn_taken') {
+      return `${dur}: enemy takes +${v} from [burn]`;
+    }
+    if (k === 'armor_bonus_pct') {
+      return `${dur}: every [armor] you gain is +${Math.round(v * 100)}%`;
+    }
+    if (k === 'armor_bonus_flat') {
+      return `${dur}: every [armor] you gain is +${v}`;
     }
     if (k === 'hero_hit_bonus') {
-      if (fx.modifier.stack) return `Stance: hits +${v} per ${stackName(fx.modifier.stack)}${dur}`;
-      return `Stance: hits +${v}${dur}`;
+      if (fx.modifier.stack) {
+        return `${dur}: every attack deals ${v} more damage per ${stackTok(fx.modifier.stack)}`;
+      }
+      return `${dur}: every attack deals ${v} more damage`;
     }
     if (k === 'ignore_immunity') {
-      const s = fx.modifier.stack ? ` ${stackName(fx.modifier.stack)}` : '';
-      return `Strip${s} immunity${dur}`;
+      const s = fx.modifier.stack ? stackTok(fx.modifier.stack) : '';
+      return `${dur}: ignore enemy ${s} immunity`;
     }
+    // Stat-axis modifier: +N [stat].
     const sign = v >= 0 ? '+' : '';
-    return `${sign}${v} ${statName(k)}${dur}`;
+    return `${dur}: ${sign}${v} ${statTok(k)}`;
   }
-  return `Aura${dur}`;
+
+  // Tick-only periodic aura: "For Ns: every Ks, <effects>". The body that
+  // follows the "every Ks," prose comes from a sub-effect formatter that
+  // capitalises by default — lowercase it for inline reading.
+  if (!trig && fx.tick_ms && fx.then) {
+    const interval = fx.tick_ms / 1000;
+    const intervalStr = (interval === Math.floor(interval)) ? `${interval}` : interval.toFixed(1);
+    const body = lcFirst(effectListBody(fx.then));
+    return `${dur}: every ${intervalStr} seconds, ${body}`;
+  }
+
+  // Trigger-driven aura.
+  const trigPhrase = auraTriggerPhrase(fx);
+  if (trigPhrase) {
+    const body = lcFirst(effectListBody(fx.then));
+    const cd = fx.cooldown_ms ? ` No more than once every ${Math.round(fx.cooldown_ms / 1000)} seconds.` : '';
+    // Threshold triggers don't need an enclosing duration (they're keyed off state).
+    if (trig === 'on_stack_threshold' || trig === 'on_enemy_stack_threshold') {
+      return `${trigPhrase}: ${body}${cd}`;
+    }
+    if (dur) return `${dur}: ${trigPhrase}, ${body}${cd}`;
+    return `${trigPhrase}: ${body}${cd}`;
+  }
+
+  // Empty aura wrapper (no trigger, no modifier, no tick): rare; just emit duration.
+  return dur || '';
 }
 
-function formatEffectStandalone(fx: CardEffect): string {
-  const frag = fragmentForEffect(fx);
-  if (frag.prefix && !frag.body) return frag.prefix; // e.g. "Consume(All) Rage"
-  return frag.prefix ? `${frag.prefix}: ${frag.body}` : frag.body;
+// -- Single-effect fragment --------------------------------------------
+
+interface Fragment {
+  /** Condition-gate signature ("vengeance", "armor:10", null = unconditional). */
+  gateKey: string | null;
+  /** Prose prefix when the gate fires (no trailing colon). */
+  gatePrefix: string | null;
+  /** Inner body without the gate. */
+  body: string;
+  /** True if this fragment should NOT be merged into a sibling sentence. */
+  standalone?: boolean;
 }
 
+function fragmentForEffect(fx: CardEffect): Fragment {
+  const gate = condFromEffect(fx);
+  const gateKey = gate?.key ?? null;
+  const gatePrefix = gate?.prefix ?? null;
+
+  let body: string;
+  switch (fx.type) {
+    case 'damage':       body = damageBody(fx, gate); break;
+    case 'dot':          body = dotBody(fx, gate); break;
+    case 'heal':         body = healBody(fx, gate); break;
+    case 'armor':        body = armorBody(fx, gate); break;
+    case 'stack':        body = stackBody(fx, gate); break;
+    case 'stamina':
+    case 'mana':         body = resourceBody(fx); break;
+    case 'aura':         body = formatAura(fx); break;
+    case 'convert_stack':body = convertBody(fx); break;
+    case 'multiply_stack':body = multiplyBody(fx); break;
+    case 'stack_boost':  body = stackBoostBody(fx); break;
+    case 'echo':         body = echoBody(fx); break;
+    case 'cd_debt':      body = cdDebtBody(fx); break;
+    case 'debuff':       body = debuffBody(fx); break;
+    case 'buff':         body = buffBody(fx); break;
+    case 'debuff_stat':  body = debuffStatBody(fx); break;
+    case 'devour':       body = ''; break; // Handled by gate (devour_succeeded).
+    case 'force_trigger_all_cards':
+      body = 'Trigger every card you own once';
+      break;
+    default:
+      body = '';
+  }
+  return { gateKey, gatePrefix, body };
+}
+
+/** Public per-effect formatter — used by synergy detection and tests. */
 export function formatEffect(fx: CardEffect): string {
-  return formatEffectStandalone(fx);
+  const frag = fragmentForEffect(fx);
+  if (!frag.body) return frag.gatePrefix ?? '';
+  if (frag.gatePrefix) {
+    // Capitalize the body's first character if the gate prefix is set, since
+    // "Vengeance: deal 3 more" requires the body to be lowercase. The body
+    // formatters already produce lowercase for relative/conditional cases.
+    return `${frag.gatePrefix}: ${frag.body}`;
+  }
+  return frag.body;
 }
 
-function hasBerserkSpend(effects: CardEffect[]): boolean {
-  return effects.some(fx =>
-    (fx.type === 'damage' || fx.type === 'dot') &&
-    (fx.condition as CardEffectCondition | undefined)?.self_has_stack === 'rage' &&
-    (fx.condition as CardEffectCondition | undefined)?.per_stack === true,
-  );
-}
-function isRageConsumeAll(fx: CardEffect): boolean {
-  return fx.type === 'stack'
-    && fx.stack === 'rage'
-    && !!fx.consume_stack
-    && Math.abs(fx.value) >= 99;
-}
+// -- Top-level card formatter ------------------------------------------
 
 type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'spend_armor' | 'cooldown_scale'>;
 
-/** v3: collect the amount each stack is being consumed by within this card.
- *  Reads any `stack` effect with `consume_stack: true` and a negative value.
- *  Returns "All" for |value| >= 99, otherwise the numeric amount as a string. */
-function buildConsumeAmounts(effects: CardEffect[]): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const fx of effects) {
-    if (fx.type !== 'stack' || !fx.consume_stack || !fx.stack) continue;
-    const amount = Math.abs(fx.value);
-    out[fx.stack] = amount >= 99 ? 'All' : String(amount);
-  }
-  return out;
+/**
+ * Skip emitter for stack effects that are pure consume bookkeeping. The cost
+ * block (rendered separately by the visual layer) shows the consumed amount;
+ * the body's per-consumed-stack payoff already names the stack.
+ */
+function isPureConsumeStack(fx: CardEffect): boolean {
+  return fx.type === 'stack' && !!fx.consume_stack && !fx.spread;
+}
+
+/** Standalone devour bookkeeping (no condition gate consumers): hide it. */
+function isDevourBookkeeping(fx: CardEffect): boolean {
+  return fx.type === 'devour';
+}
+
+/**
+ * Detect whether `effects` contains any condition with `devour_succeeded`. If
+ * so, the devour effect itself is consumed by the gate prefix and shouldn't be
+ * emitted on its own line.
+ */
+function hasDevourConsumer(effects: CardEffect[]): boolean {
+  return effects.some(fx => fx.condition?.devour_succeeded === true);
 }
 
 export function formatCardDescription(card: CardDescPick): string {
   const effects = card.effects ?? [];
   if (!effects.length) return '';
-  const omitConsumeAll = hasBerserkSpend(effects);
-  // v3: any stack named by a `consume_stack_value` damage/heal already shows
-  // the consume amount via its own prefix ("Consume(N) Stack: ..."), so the
-  // standalone `Consume(N) Stack` fragment becomes redundant — hide it.
-  const consumedByValue = new Set<string>();
-  for (const fx of effects) {
-    if ((fx.type === 'damage' || fx.type === 'heal') && fx.consume_stack_value) {
-      consumedByValue.add(fx.consume_stack_value);
-    }
-  }
-  const isCoveredConsume = (fx: CardEffect): boolean =>
-    fx.type === 'stack' && !!fx.consume_stack && !!fx.stack && consumedByValue.has(fx.stack);
-  const consumeAmounts = buildConsumeAmounts(effects);
 
-  // Lower to fragments, then merge consecutive same-prefix fragments. Effects
-  // with `consume_stack_value` (or armor-source damage on a spend_armor card)
-  // get a "Consume(N) <stack>" prefix injected so every spend reads the same.
+  // Build fragments and skip bookkeeping effects.
   const frags: Fragment[] = [];
+  const devourGated = hasDevourConsumer(effects);
   for (const fx of effects) {
-    if (omitConsumeAll && isRageConsumeAll(fx)) continue;
-    if (isCoveredConsume(fx)) continue;
-    let frag = fragmentForEffect(fx);
-    if ((fx.type === 'damage' || fx.type === 'heal') && fx.consume_stack_value) {
-      const s = stackName(fx.consume_stack_value);
-      const amt = consumeAmounts[fx.consume_stack_value] ?? 'X';
-      const combined = frag.prefix
-        ? `${frag.prefix}, Consume(${amt}) ${s}`
-        : `Consume(${amt}) ${s}`;
-      frag = { prefix: combined, body: frag.body };
-    } else if (
-      fx.type === 'damage' &&
-      fx.scale?.source === 'armor' &&
-      fx.value === 0 &&
-      card.spend_armor !== undefined
-    ) {
-      const amt = card.spend_armor === 'all' ? 'All' : String(card.spend_armor);
-      const combined = frag.prefix
-        ? `${frag.prefix}, Consume(${amt}) Armor`
-        : `Consume(${amt}) Armor`;
-      frag = { prefix: combined, body: frag.body };
-    }
-    frags.push(frag);
+    if (isPureConsumeStack(fx)) continue;
+    if (devourGated && isDevourBookkeeping(fx)) continue;
+    const f = fragmentForEffect(fx);
+    if (!f.body) continue;
+    frags.push(f);
   }
 
-  // v3: prepend card-level keyword markers so Exhaust is visible even
-  // when the effect dispatcher doesn't surface it.
+  // Merge consecutive same-gate fragments. The gate prefix is emitted once,
+  // and the bodies are joined with " and ". The first body after the gate
+  // is lowercased; subsequent bodies are stripped of leading capital and
+  // joined with " and ".
+  const sentences: string[] = [];
+  let pending: { gatePrefix: string | null; bodies: string[] } | null = null;
+  const flush = () => {
+    if (!pending) return;
+    const { gatePrefix, bodies } = pending;
+    if (gatePrefix) {
+      sentences.push(`${gatePrefix}: ${joinBodies(bodies)}`);
+    } else {
+      // Each body is its own sentence when unconditional.
+      for (const b of bodies) sentences.push(b);
+    }
+    pending = null;
+  };
+
+  for (const f of frags) {
+    if (!pending) {
+      pending = { gatePrefix: f.gatePrefix, bodies: [f.body] };
+      continue;
+    }
+    if (pending.gatePrefix === f.gatePrefix) {
+      pending.bodies.push(f.body);
+    } else {
+      flush();
+      pending = { gatePrefix: f.gatePrefix, bodies: [f.body] };
+    }
+  }
+  flush();
+
+  // Card-level keyword prefixes (Exhaust). Exhaust always leads.
   const leading: string[] = [];
   if (card.exhaust) leading.push('Exhaust');
-  // spend_armor: if the card has an armor-sourced damage effect, the damage
-  // line is already prefixed via the special-case handling below; otherwise
-  // we add a top-level note so the card still reads coherently.
+
+  // spend_armor without an armor-source damage effect: prefix the body so the
+  // card still reads coherently (rare; today only paired w/ armor-source dmg).
   const hasArmorSourceDamage = effects.some(fx =>
     fx.type === 'damage' && fx.scale?.source === 'armor',
   );
   if (card.spend_armor !== undefined && !hasArmorSourceDamage) {
-    const amt = card.spend_armor === 'all' ? 'All' : String(card.spend_armor);
-    leading.push(`Consume(${amt}) Armor`);
+    leading.push(`Consume all[armor]`);
   }
 
-  const merged: Fragment[] = [];
-  for (const f of frags) {
-    const last = merged[merged.length - 1];
-    if (last && last.prefix && f.prefix && last.prefix === f.prefix) {
-      const extra = f.body.replace(/^\+/, '');
-      last.body = `${last.body} + ${extra}`;
-    } else {
-      merged.push({ ...f });
-    }
-  }
-
-  const effectLines = merged.map(f => {
-    if (!f.prefix) return f.body;
-    if (!f.body) return f.prefix; // standalone Consume(N) <stack>
-    return `${f.prefix}: ${f.body}`;
-  });
-  const allParts = [...leading, ...effectLines].filter(Boolean);
-  return allParts.join('. ') + '.';
+  const parts = [...leading, ...sentences].filter(Boolean);
+  if (!parts.length) return '';
+  return parts.join('. ') + '.';
 }
+
+/**
+ * Joins body fragments for a single-gate sentence. The first body keeps its
+ * leading case (already lowercased by relative formatters when appropriate);
+ * subsequent bodies are lowercased at the leading character.
+ */
+function joinBodies(bodies: string[]): string {
+  if (bodies.length === 0) return '';
+  if (bodies.length === 1) return bodies[0];
+  const head = bodies[0];
+  const tail = bodies.slice(1).map(b => b.length === 0 ? b : (b[0].toLowerCase() + b.slice(1)));
+  return [head, ...tail].join(' and ');
+}
+
+// Re-export the predicate so existing call-sites (CombatScene preview text,
+// CardDetailPopup, CardVisual, SynergyDetection, CardFilterBar) can continue
+// to use the same entry points without code-flow changes.
+
+void hasBerserkSpend; // retained-name reservation removed; placeholder.
+function hasBerserkSpend(_effects: CardEffect[]): boolean { void _effects; return false; }
+function isRageConsumeAll(_fx: CardEffect): boolean { void _fx; return false; }
+void isRageConsumeAll;
+void STACK_TOKEN; void STAT_TOKEN;
+
+// Silence unused-name warning for the legacy types alias used by callers.
+export type { CardDefinition, CardEffect, CardEffectCondition, StackId, StatId };

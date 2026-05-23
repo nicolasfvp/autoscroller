@@ -4,30 +4,25 @@ import {
   detectKeywords,
 } from '../../src/ui/KeywordDefinitions';
 
+// Post-audit (CARD_AUDIT.md §11.E): the glossary now ships exactly four
+// keywords. All former stack/stat keywords and most modifier keywords were
+// dropped — their mechanics are rendered as prose or icon tokens directly
+// in card text now. The tests below pin that contract.
+
 describe('KeywordDefinitions', () => {
   describe('KEYWORD_DEFINITIONS', () => {
-    it('includes every spec keyword exactly once', () => {
-      const expected = [
-        // Stack types
-        'Burn', 'Bleed', 'Poison', 'Slow', 'Stun', 'Rage',
-        // Modifier keywords (v4: Taunt, Berserk/Expose-style condition keywords
-        // re-introduced as aura prefixes; Frenzy removed entirely).
-        'Pyre', 'Empowered', 'Vengeance', 'Steady', 'Fortified', 'Brace',
-        'Guard', 'Berserk', 'Haste', 'Expose', 'Pierce', 'Consume', 'Drain',
-        'Aura', 'Echo', 'Overload', 'Channel', 'Devour', 'Stance', 'Catalyze',
-        'Convert', 'Spread', 'Exhaust', 'DR', 'Shatter', 'Reflex',
-        'Juggernaut', 'Rupture', 'Bloodforge', 'Cascade', 'Frost Echo',
-        'Threshold', 'Siphon', 'Vulnerable', 'Mitigate', 'Empower',
-        'Weakened', 'Strip', 'Reforce', 'On Hit',
-        // Stat keywords
-        'Heal', 'Armor', 'Scales',
-      ];
-      const keywords = KEYWORD_DEFINITIONS.map(d => d.keyword);
-      for (const k of expected) {
-        expect(keywords).toContain(k);
-      }
+    it('ships exactly the 4 kept keywords (Brace, Vengeance, Haste, Exhaust)', () => {
+      const expected = ['Brace', 'Exhaust', 'Haste', 'Vengeance'];
+      const keywords = KEYWORD_DEFINITIONS.map((d) => d.keyword).sort();
+      expect(keywords).toEqual(expected);
       // No duplicates in the source of truth
       expect(new Set(keywords).size).toBe(keywords.length);
+    });
+
+    it('every kept entry is a modifier', () => {
+      for (const def of KEYWORD_DEFINITIONS) {
+        expect(def.category).toBe('modifier');
+      }
     });
 
     it('every definition is non-empty', () => {
@@ -38,37 +33,48 @@ describe('KeywordDefinitions', () => {
   });
 
   describe('detectKeywords()', () => {
-    it('detects Burn as a standalone word', () => {
-      const hits = detectKeywords('Apply 3 Burn to the enemy.');
-      expect(hits.map(h => h.keyword)).toContain('Burn');
+    it('detects Brace as a standalone word', () => {
+      const hits = detectKeywords('Brace: gain bonus armor.');
+      expect(hits.map((h) => h.keyword)).toContain('Brace');
     });
 
-    it('does NOT detect Burn inside "Burning"', () => {
-      const hits = detectKeywords('The Burning forest crackles.');
-      expect(hits.map(h => h.keyword)).not.toContain('Burn');
+    it('detects Vengeance, Haste, and Exhaust', () => {
+      const hits = detectKeywords('Exhaust. Vengeance: gain Haste 20% for 4s.');
+      const keywords = hits.map((h) => h.keyword);
+      expect(keywords).toContain('Vengeance');
+      expect(keywords).toContain('Haste');
+      expect(keywords).toContain('Exhaust');
     });
 
-    it('does NOT detect Bleed inside "Bleeds"', () => {
-      // Bleeds has Bleed as prefix; word boundary should reject it.
-      const hits = detectKeywords('Target Bleeds heavily.');
-      expect(hits.map(h => h.keyword)).not.toContain('Bleed');
+    it('does NOT detect dropped keywords like Burn / Bleed', () => {
+      const hits = detectKeywords('Apply 3 Burn. Then Bleed the target.');
+      const keywords = hits.map((h) => h.keyword);
+      expect(keywords).not.toContain('Burn');
+      expect(keywords).not.toContain('Bleed');
+    });
+
+    it('does NOT detect Brace inside "Bracelet"', () => {
+      const hits = detectKeywords('A shiny Bracelet drops.');
+      expect(hits.map((h) => h.keyword)).not.toContain('Brace');
+    });
+
+    it('does NOT detect Haste inside "Hasten"', () => {
+      const hits = detectKeywords('Hasten the fall.');
+      expect(hits.map((h) => h.keyword)).not.toContain('Haste');
     });
 
     it('deduplicates a keyword that appears multiple times', () => {
-      const hits = detectKeywords('Burn the target. Then Burn again. Final Burn.');
-      const burnCount = hits.filter(h => h.keyword === 'Burn').length;
-      expect(burnCount).toBe(1);
+      const hits = detectKeywords('Exhaust. Then Exhaust again. Final Exhaust.');
+      const count = hits.filter((h) => h.keyword === 'Exhaust').length;
+      expect(count).toBe(1);
     });
 
-    it('orders results: stack -> modifier -> stat, alphabetical within each', () => {
-      const desc = 'Scales with STR. Apply Burn, then Pyre. Also Heal and Bleed.';
+    it('orders results alphabetically within the modifier category', () => {
+      // All kept entries are modifiers, so ordering reduces to alphabetical.
+      const desc = 'Vengeance: Brace. Then Haste. Finally Exhaust.';
       const hits = detectKeywords(desc);
-      const keywords = hits.map(h => h.keyword);
-      // Expected ordering for the detected subset:
-      //   stack:    Bleed, Burn   (alphabetical)
-      //   modifier: Pyre
-      //   stat:     Heal, Scales  (alphabetical)
-      expect(keywords).toEqual(['Bleed', 'Burn', 'Pyre', 'Heal', 'Scales']);
+      const keywords = hits.map((h) => h.keyword);
+      expect(keywords).toEqual(['Brace', 'Exhaust', 'Haste', 'Vengeance']);
     });
 
     it('returns empty array when no keywords present', () => {
@@ -79,17 +85,17 @@ describe('KeywordDefinitions', () => {
       expect(detectKeywords('')).toEqual([]);
     });
 
-    it('is case-sensitive on first letter (does not match "burn")', () => {
-      const hits = detectKeywords('burn the candle.');
-      expect(hits.map(h => h.keyword)).not.toContain('Burn');
+    it('is case-sensitive on first letter (does not match "brace")', () => {
+      const hits = detectKeywords('brace yourself.');
+      expect(hits.map((h) => h.keyword)).not.toContain('Brace');
     });
 
     it('matches keywords adjacent to punctuation', () => {
-      const hits = detectKeywords('Apply Burn, Bleed; and Poison.');
-      const keywords = hits.map(h => h.keyword);
-      expect(keywords).toContain('Burn');
-      expect(keywords).toContain('Bleed');
-      expect(keywords).toContain('Poison');
+      const hits = detectKeywords('Brace, Vengeance; and Haste.');
+      const keywords = hits.map((h) => h.keyword);
+      expect(keywords).toContain('Brace');
+      expect(keywords).toContain('Vengeance');
+      expect(keywords).toContain('Haste');
     });
   });
 });

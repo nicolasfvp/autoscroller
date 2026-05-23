@@ -167,6 +167,24 @@ export class Preloader extends Scene {
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
+    // Card token icons (audit §1.2): bracketed icon tokens like [burn], [str].
+    // IconTokens.renderTokenText prefers `icon_${token}` textures when present
+    // and falls back to colored caps text otherwise.
+    const cardTokenIds = [
+      // Stack DoTs / status
+      'burn', 'bleed', 'poison', 'slow', 'stun', 'rage',
+      // Stats
+      'str', 'vit', 'dex', 'int', 'spi',
+      // Resources / vitals
+      'stam', 'mana', 'HP', 'armor', 'exhaust',
+      // Elements
+      'attack', 'defense', 'agility', 'counter',
+      'fire', 'water', 'air', 'earth',
+    ];
+    for (const token of cardTokenIds) {
+      this.load.image(`icon_${token}`, `assets/icons/tokens/${token}.png`);
+    }
+
     // Relic Illustrations
     // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
     // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic

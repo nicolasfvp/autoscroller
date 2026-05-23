@@ -45,6 +45,8 @@ const MOD_META: Record<AuraModifierKind, { icon: string; color: string; name: st
   damage_dealt_pct: { icon: '⚔', color: '#ffaa44', name: 'Empower' },
   hero_hit_bonus: { icon: '⚔', color: '#ffaa44', name: 'Stance' },
   ignore_immunity: { icon: '☠', color: '#c490ff', name: 'Pierce Imm.' },
+  // Audit §11.I-13 (Pyre Surge): element-filtered damage taken modifier.
+  fire_damage_taken_pct: { icon: '🔥', color: '#ff5a3d', name: 'Vuln Fire' },
 };
 
 interface AggregatedMod {

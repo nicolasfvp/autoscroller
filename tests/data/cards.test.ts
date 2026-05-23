@@ -28,12 +28,13 @@ describe('cards.json data validation', () => {
 
   it('every card has cooldown as a number between 0.5 and 6.0', () => {
     // v3: cap raised from 5.0 → 6.0 to make room for Exhaust finishers
-    // (Wrathshell Vow 6.0 channel-form, Tremor Detonate 5.5) which sit
-    // outside the regular loop cadence anyway.
+    // (Tremor Detonate 5.5). Audit §11.I-11 merges Wrathshell Vow's 4s
+    // channel warm-up into its cooldown (6→10), so the upper bound is
+    // raised to 10.0 to cover that Exhaust-locked finisher.
     for (const card of cards) {
       expect(card.cooldown).toBeTypeOf('number');
       expect(card.cooldown).toBeGreaterThanOrEqual(0.5);
-      expect(card.cooldown).toBeLessThanOrEqual(6.0);
+      expect(card.cooldown).toBeLessThanOrEqual(10.0);
     }
   });
 

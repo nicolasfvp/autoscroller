@@ -30,7 +30,11 @@ export type AuraModifierKind =
   | "damage_taken_pct"    // negative fraction reduces incoming damage to bearer
   | "damage_dealt_pct"    // positive fraction boosts outgoing damage by bearer
   | "hero_hit_bonus"      // flat add to every damage hit by bearer (Iron Reckoning)
-  | "ignore_immunity";    // bearer ignores stack immunity of named stack
+  | "ignore_immunity"     // bearer ignores stack immunity of named stack
+  // Audit §11.I-13: element-filtered damage taken modifier (Pyre Surge doubles
+  // incoming fire damage on enemy for 8s). Value is the multiplicative fraction
+  // (1.0 = +100%). When set, only damage tagged with the named element is scaled.
+  | "fire_damage_taken_pct";
 
 export type AuraTriggerKind =
   // v1 (already runtime-supported)
@@ -163,8 +167,11 @@ export interface CardEffect {
   factor?: number;
   /** v3: spread an applied stack to AoE / nearest targets. */
   spread?: { ratio: number; target: "aoe" | "enemy_nearest"; max_targets?: number };
-  /** v3: devour params (consume one deck card permanently for combat). */
-  devour?: { from_deck?: boolean; rarity?: "common" | "uncommon" | "rare" | "epic"; count?: number };
+  /** v3: devour params (consume one deck card permanently for combat).
+   *  Audit §11.H: `exhaust_next` is the Vengeful Pyre variant — instead of
+   *  removing a card from the deck, exhaust the next card in the play queue
+   *  for the rest of combat. Engine work outstanding. */
+  devour?: { from_deck?: boolean; rarity?: "common" | "uncommon" | "rare" | "epic"; count?: number; exhaust_next?: boolean };
   /** Gate / multiplier: see CardEffectCondition. */
   condition?: CardEffectCondition;
   /** Aura: lifetime in ms before this effect decays off the target. null = no decay (manual). */
