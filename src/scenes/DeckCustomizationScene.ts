@@ -5,7 +5,7 @@
 
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { FONTS, LAYOUT } from '../ui/StyleConstants';
+import { FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { attachKeywordHover, scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
@@ -110,6 +110,8 @@ export class DeckCustomizationScene extends Scene {
     void keywordIntro.init();
     addGlossaryButton(this, 770, 30);
 
+    createButton(this, 30, 30, 'Back', () => this.close(), 'secondary');
+
     // ── Dropped cards strip ──
     this.droppedStrip = this.add.container(0, 0);
     if (hasDropped) {
@@ -169,10 +171,6 @@ export class DeckCustomizationScene extends Scene {
       if (!this.dragCard) return;
       this.dropCard();
     });
-
-    // ── Buttons ──
-    this.input.keyboard?.on('keydown-D', () => this.close());
-    this.input.keyboard?.on('keydown-ESC', () => this.close());
 
     this.events.on('shutdown', this.cleanup, this);
   }

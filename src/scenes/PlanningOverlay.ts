@@ -114,15 +114,6 @@ export class PlanningOverlay extends Scene {
       this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
     });
 
-    this.input.keyboard?.on('keydown-D', () => {
-      this.scene.sleep();
-      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PLANNING });
-    });
-    this.input.keyboard?.on('keydown-R', () => {
-      this.scene.sleep();
-      this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
-    });
-
     // "Don't stop here for: 1 / 5 / 10 / 25" — auto-skips the next N planning
     // phases. Boss-loop planning (1 loop before the boss tile spawns) always
     // stops regardless of the chosen value; the skip counter is consumed by

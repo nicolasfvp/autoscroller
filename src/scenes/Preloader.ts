@@ -54,15 +54,14 @@ export class Preloader extends Scene {
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
-    // Character selection preview frames
-    this.load.image('warrior_select_1', 'assets/characters/hero/selection/knight_1.png');
-    this.load.image('warrior_select_2', 'assets/characters/hero/selection/knight_2.png');
+    // Warrior selection preview (2-frame idle, 500x437 per frame)
+    this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
 
-    // Mage hero spritesheets (64x64 per frame, horizontal strips)
-    this.load.spritesheet('mage_walk', 'assets/characters/mage/spritesheets/mage_walk.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_idle', 'assets/characters/mage/spritesheets/mage_idle.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_attack', 'assets/characters/mage/spritesheets/mage_attack.png', { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet('mage_death', 'assets/characters/mage/spritesheets/mage_death.png', { frameWidth: 64, frameHeight: 64 });
+    // Mage selection preview (7-frame idle, 386x501 per frame)
+    this.load.spritesheet('mage_select', 'assets/characters/mage/selection/spritesheet.png', { frameWidth: 386, frameHeight: 501 });
+
+    // Mage hero spritesheets — not yet wired up; load deferred until
+    // CombatScene integration (textures exceed common WebGL max-size limits).
 
     // Monster static images
     const staticMonsters = [

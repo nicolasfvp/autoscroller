@@ -160,13 +160,9 @@ export class TutorialScene extends Scene {
     }).setOrigin(0, 0);
 
     // Done / close button
-    const closeLabel = this.replayMode ? 'Close (R)' : 'Start Game';
+    const closeLabel = this.replayMode ? 'Close' : 'Start Game';
     createButton(this, LAYOUT.centerX, 540, closeLabel, () => this.completeTutorial(), 'primary');
 
-    if (this.replayMode) {
-      this.input.keyboard?.on('keydown-R', () => this.completeTutorial());
-      this.input.keyboard?.on('keydown-ESC', () => this.completeTutorial());
-    }
 
     // Tab-key cycling between topics for keyboard-driven readers.
     this.input.keyboard?.on('keydown-TAB', (ev: KeyboardEvent) => {

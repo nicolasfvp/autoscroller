@@ -9,6 +9,10 @@ export interface ClassOption {
   spriteKey: string;
   /** Two individual image keys for a manual idle toggle animation. */
   idleFrames?: [string, string];
+  /** Scale override for spritesheet-based selection previews. */
+  spriteScale?: number;
+  /** Frame rate override for spritesheet-based selection previews (default 4). */
+  spriteFrameRate?: number;
   /** Phase 9: optional tint for placeholder visuals. */
   spriteTint?: number;
   /** Phase 9: fallback colored rect when sprite texture not loaded. */
@@ -25,8 +29,9 @@ export const CLASS_CARDS: ClassOption[] = [
     id: 'warrior',
     name: 'Warrior',
     description: 'Balanced melee fighter.\nHigh HP and stamina.',
-    spriteKey: 'warrior_select_1',
-    idleFrames: ['warrior_select_1', 'warrior_select_2'],
+    spriteKey: 'warrior_select',
+    spriteScale: 0.46,
+    spriteFrameRate: 2,
     fallbackColor: 0x4488ff,
     stats: { hp: 100, stamina: 50, mana: 30 },
     deckHint: 'Strikes, Defends, Heavy Hit',
@@ -35,7 +40,9 @@ export const CLASS_CARDS: ClassOption[] = [
     id: 'mage',
     name: 'Mage',
     description: 'Powerful spellcaster.\nHigh mana, low HP.',
-    spriteKey: 'mage_idle',
+    spriteKey: 'mage_select',
+    spriteScale: 0.39,
+    spriteFrameRate: 10,
     fallbackColor: 0x9944ff,
     stats: { hp: 70, stamina: 30, mana: 60 },
     deckHint: 'Fireballs, Heals, Mana Drain',
@@ -61,7 +68,7 @@ export interface CardLayout {
  */
 export function computeCardLayout(canvasWidth = 800, classCount = CLASS_CARDS.length): CardLayout {
   const cardW = 230;
-  const cardH = 400;
+  const cardH = 460;
   const gap = 24;
   const totalW = classCount * cardW + (classCount - 1) * gap;
   const margin = (canvasWidth - totalW) / 2;

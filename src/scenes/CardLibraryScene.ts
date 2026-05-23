@@ -41,7 +41,6 @@ export class CardLibraryScene extends Phaser.Scene {
   private filteredCards: CardDefinition[] = [];
   private scrollY = 0;
   private wheelHandler: ((p: unknown, go: unknown, dx: number, dy: number) => void) | null = null;
-  private escKey: Phaser.Input.Keyboard.Key | null = null;
 
   constructor() {
     super(SCENE_KEYS.LIBRARY);
@@ -86,12 +85,6 @@ export class CardLibraryScene extends Phaser.Scene {
     closeBg.on('pointerover', () => closeBg.setFillStyle(0xff3333));
     closeBg.on('pointerout',  () => closeBg.setFillStyle(0xcc0000));
     closeBg.on('pointerdown', () => this.closeLibrary());
-
-    // ESC key also closes — bind once and stash so we can unbind on shutdown.
-    if (this.input.keyboard) {
-      this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-      this.escKey.on('down', this.handleEsc, this);
-    }
 
     // Filter bar — width 720, anchored top-left at x=40, y=70.
     this.filterBar = new CardFilterBar(this, 40, 70, 720, (filters) => this.onFiltersChanged(filters));
@@ -187,10 +180,6 @@ export class CardLibraryScene extends Phaser.Scene {
 
   // ── Close / lifecycle ───────────────────────────────────
 
-  private handleEsc(): void {
-    this.closeLibrary();
-  }
-
   private closeLibrary(): void {
     const parent = this.parentKey;
     this.scene.stop();
@@ -205,11 +194,6 @@ export class CardLibraryScene extends Phaser.Scene {
     if (this.wheelHandler) {
       this.input.off('wheel', this.wheelHandler);
       this.wheelHandler = null;
-    }
-    if (this.escKey) {
-      this.escKey.off('down', this.handleEsc, this);
-      // Phaser's Key objects are GC'd with the keyboard plugin; no manual destroy.
-      this.escKey = null;
     }
     if (this.filterBar) {
       // Container.destroy unbinds the bar's DOM input.

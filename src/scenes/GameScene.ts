@@ -242,28 +242,6 @@ export class GameScene extends Scene {
     // panel). It writes run.mapSpeed directly; this scene re-reads that on
     // every update() so changes apply immediately.
 
-    // Keyboard shortcuts
-    this.input.keyboard?.on('keydown-D', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
-      }
-    });
-
-    this.input.keyboard?.on('keydown-R', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
-      }
-    });
-
-    this.input.keyboard?.on('keydown-ESC', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.PAUSE);
-      }
-    });
-
     // Resume handler (return from combat/shop/etc overlay)
     this.events.on('resume', () => this.syncStateAfterTransition());
     this.events.on('wake', () => this.syncStateAfterTransition());
