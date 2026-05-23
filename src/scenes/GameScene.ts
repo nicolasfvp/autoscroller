@@ -170,7 +170,6 @@ export class GameScene extends Scene {
         materials: { ...(run.economy.materials || {}) },
       },
       tileInventory: initialTileInventory,
-      hero: { xp: run.hero.runXP || 0 }
     };
 
     this.loopRunner = new LoopRunner((event: string, data: any) => {

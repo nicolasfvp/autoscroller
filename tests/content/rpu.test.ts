@@ -14,20 +14,15 @@ import type { CardDefinition } from "../../src/data/types";
 
 describe("Phase 10 card pool — structural sanity", () => {
   const cards = cardsData.cards as CardDefinition[];
-  const tier1 = cards.filter((c) => (c as any).tier === 1);
   const tier2 = cards.filter((c) => (c as any).tier === 2);
+  const tier3 = cards.filter((c) => (c as any).tier === 3);
 
-  it("contains 36 Tier 1 cards", () => {
-    expect(tier1.length).toBe(36);
+  it("contains 36 Tier 2 cards", () => {
+    expect(tier2.length).toBe(36);
   });
 
-  it("contains 120 Tier 2 cards", () => {
-    expect(tier2.length).toBe(120);
-  });
-
-  it("every Tier 1 card has at least one effect", () => {
-    const empty = tier1.filter((c) => !c.effects || c.effects.length === 0);
-    expect(empty.map((c) => c.id)).toEqual([]);
+  it("contains 120 Tier 3 cards", () => {
+    expect(tier3.length).toBe(120);
   });
 
   it("every Tier 2 card has at least one effect", () => {
@@ -35,9 +30,14 @@ describe("Phase 10 card pool — structural sanity", () => {
     expect(empty.map((c) => c.id)).toEqual([]);
   });
 
-  it("every Tier 1 card declares exactly 2 elements (per §3)", () => {
+  it("every Tier 3 card has at least one effect", () => {
+    const empty = tier3.filter((c) => !c.effects || c.effects.length === 0);
+    expect(empty.map((c) => c.id)).toEqual([]);
+  });
+
+  it("every Tier 2 card declares exactly 2 elements (per §3)", () => {
     const offenders: string[] = [];
-    for (const c of tier1) {
+    for (const c of tier2) {
       const elems = (c as any).elements;
       if (!Array.isArray(elems) || elems.length !== 2) {
         offenders.push(`${c.id}: elements=${JSON.stringify(elems)}`);
@@ -46,9 +46,9 @@ describe("Phase 10 card pool — structural sanity", () => {
     expect(offenders, offenders.join("; ")).toEqual([]);
   });
 
-  it("every Tier 2 card declares exactly 3 elements (per §3)", () => {
+  it("every Tier 3 card declares exactly 3 elements (per §3)", () => {
     const offenders: string[] = [];
-    for (const c of tier2) {
+    for (const c of tier3) {
       const elems = (c as any).elements;
       if (!Array.isArray(elems) || elems.length !== 3) {
         offenders.push(`${c.id}: elements=${JSON.stringify(elems)}`);
@@ -71,32 +71,26 @@ describe("Phase 10 card pool — structural sanity", () => {
     expect(offenders, offenders.join("; ")).toEqual([]);
   });
 
-  it("at least 50% of Tier 1 cards carry a stat-scale OR a condition gate", () => {
-    // Original §15 rule required ≥80% scale coverage. The Tier-1 redesign
+  it("at least 50% of Tier 2 cards carry a stat-scale OR a condition gate", () => {
+    // Original §15 rule required ≥80% scale coverage. The 2-element redesign
     // shifts mechanical weight from stat scaling to state-based `condition`
     // gates (enemy_has_stack, hero_hp_pct_below, self_armor_atleast). Either
-    // mechanism counts as a real differentiator beyond raw numbers, so the
-    // updated rule accepts both — and lowers the floor since the design now
-    // intentionally ships several pure-numbers cards (Strike, Flurry Step)
-    // as the cheap baseline.
-    const withDifferentiator = tier1.filter((c) =>
+    // mechanism counts as a real differentiator beyond raw numbers.
+    const withDifferentiator = tier2.filter((c) =>
       c.effects.some((e: any) => (e.scale && e.scale.stat) || e.condition),
     );
-    expect(withDifferentiator.length / tier1.length).toBeGreaterThanOrEqual(0.5);
+    expect(withDifferentiator.length / tier2.length).toBeGreaterThanOrEqual(0.5);
   });
 
-  it("at least 60% of Tier 2 cards carry a stat-scale OR a condition gate", () => {
-    // Original §15 rule required ≥90% scale coverage. The Tier-2 redesign
+  it("at least 60% of Tier 3 cards carry a stat-scale OR a condition gate", () => {
+    // Original §15 rule required ≥90% scale coverage. The 3-element redesign
     // shifted mechanical weight from stat scaling to state-based mechanisms
     // (condition gates, multi_hit re-application of STR, consume_stack
     // threshold-and-spend, on_armor_break + on_hp_pct_below triggered auras).
-    // Either differentiator counts; the 60% floor still rules out pure
-    // stat-stick uncommons while making room for sigil-style anchors that
-    // run low base numbers because the rule is the value.
-    const withDifferentiator = tier2.filter((c) =>
+    const withDifferentiator = tier3.filter((c) =>
       c.effects.some((e: any) => (e.scale && e.scale.stat) || e.condition || e.multi_hit || e.consume_stack || e.trigger),
     );
-    expect(withDifferentiator.length / tier2.length).toBeGreaterThanOrEqual(0.6);
+    expect(withDifferentiator.length / tier3.length).toBeGreaterThanOrEqual(0.6);
   });
 
   it("every card declares a numeric cooldown >= 0", () => {

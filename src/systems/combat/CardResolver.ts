@@ -590,12 +590,12 @@ export class CardResolver {
         // play and produces exponential self-feedback (Stoneskin/Dancer's
         // Guard buffing VIT/DEX off their own current VIT/DEX).
         //
-        // Per-card per-battle cap: tier 1 -> 5, tier 2 -> 10. Higher tiers
-        // and untagged cards stay uncapped. Without this, a deck that cycles
-        // a +1 VIT card many times still snowballs across long boss fights.
+        // Per-card per-battle cap: tier 1/2 -> 5, tier 3 -> 10. Untagged
+        // cards stay uncapped. Without this, a deck that cycles a +1 VIT
+        // card many times still snowballs across long boss fights.
         let magnitude = value;
         if (card?.id) {
-          const tierCap = card.tier === 0 ? 5 : card.tier === 1 ? 5 : card.tier === 2 ? 10 : Infinity;
+          const tierCap = card.tier === 1 ? 5 : card.tier === 2 ? 5 : card.tier === 3 ? 10 : Infinity;
           const already = state.buffMagnitudePerCard[card.id] ?? 0;
           const remaining = Math.max(0, tierCap - already);
           magnitude = Math.min(magnitude, remaining);

@@ -93,10 +93,10 @@ export function isElemental(id: ElementId): boolean {
   return ELEMENTS[id].category === 'elemental';
 }
 
-/** Canonical card id format: "t{tier}-{elements joined with '-' in alphabetical order}". Tier 1 = 2 elements; Tier 2 = 3; Tier 3 = 4. */
+/** Canonical card id format: "t{tier}-{elements joined with '-' in alphabetical order}". Tier 1 = 1 element; Tier 2 = 2; Tier 3 = 3. */
 export function canonicalCardId(elements: ElementId[]): string {
   const sorted = [...elements].sort();
-  const tier = (sorted.length - 1) as CardTier;
+  const tier = sorted.length as CardTier;
   return `t${tier}-${sorted.join('-')}`;
 }
 

@@ -453,7 +453,13 @@
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
-    "behaviors": [],
+    "behaviors": [
+      {
+        "type": "enrage",
+        "hpThreshold": 0.5,
+        "attackSpeedMultiplier": 1.6
+      }
+    ],
     "goldReward": {
       "min": 50,
       "max": 80
@@ -581,7 +587,17 @@
       "pattern": "fixed"
     },
     "attackCooldown": 2400,
-    "behaviors": [],
+    "behaviors": [
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.7
+      },
+      {
+        "type": "drain",
+        "healPercent": 10
+      }
+    ],
     "goldReward": {
       "min": 100,
       "max": 150

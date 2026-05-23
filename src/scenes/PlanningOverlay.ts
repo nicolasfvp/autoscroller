@@ -225,10 +225,11 @@ export class PlanningOverlay extends Scene {
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
 
-      // Buffer tiles are part of the path but not editable — dim them so
-      // players can see they exist without thinking they can be replaced.
+      // Buffer tiles are part of the path but not editable and not shown —
+      // they still occupy a slot so the displayed loop length matches the
+      // hero's traversal, but they render invisibly.
       if (slot.type === 'buffer') {
-        tv.setAlpha(0.35);
+        tv.setVisible(false);
         continue;
       }
 

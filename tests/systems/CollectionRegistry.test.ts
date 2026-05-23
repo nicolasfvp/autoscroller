@@ -28,7 +28,7 @@ describe('CollectionRegistry', () => {
 
     it('returns cards total=164 and unlocked=164 when unlockedCards is populated', () => {
       const state = createDefaultMetaState();
-      state.unlockedCards = ['t1-attack-attack', 't1-fire-fire', 't1-defense-defense'];
+      state.unlockedCards = ['t2-attack-attack', 't2-fire-fire', 't2-defense-defense'];
       const status = getCollectionStatus(state);
       expect(status.cards.total).toBe(TOTAL_CARDS);
       // Still all unlocked — there's no gate to fail.
@@ -87,7 +87,7 @@ describe('CollectionRegistry', () => {
 
     it('returns card data with isUnlocked=true for a Tier 1 card (no gates in element system)', () => {
       const state = createDefaultMetaState();
-      const details = getItemDetails('t1-attack-attack', state);
+      const details = getItemDetails('t2-attack-attack', state);
       expect(details!.isUnlocked).toBe(true);
       expect(details!.unlockHint).toBeUndefined();
     });

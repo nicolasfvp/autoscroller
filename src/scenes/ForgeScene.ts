@@ -11,7 +11,9 @@ import {
   ELEMENTS,
   PHYSICAL_ELEMENTS,
   ELEMENTAL_ELEMENTS,
+  FORGE_TIER_UNLOCK,
   type ElementId,
+  type CardTier,
 } from '../systems/ElementSystem';
 import {
   findCardForElements,
@@ -212,7 +214,7 @@ export class ForgeScene extends Scene {
         statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
         statusColor = RED;
       } else if (!isTierUnlocked(tier, forgeLevel)) {
-        statusText = `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4}`;
+        statusText = `Tier ${tier} needs Forge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]}`;
         statusColor = RED;
       } else {
         statusText = 'Ready to forge';
@@ -227,8 +229,8 @@ export class ForgeScene extends Scene {
       const visual = createCardVisual(this, PANEL_CX, cardAreaCenterY, card.id, { scale: 0.5 });
       this.container.add(visual);
     } else {
-      const headline = this.forgeSlots.length >= 2 ? '???' : 'Pick 2-4 elements';
-      const subline = this.forgeSlots.length >= 2
+      const headline = this.forgeSlots.length >= 1 ? '???' : 'Pick 1-3 elements';
+      const subline = this.forgeSlots.length >= 1
         ? 'Tap an element above to swap, or Clear to reset.'
         : 'Tap an element above to add to the recipe.';
       this.container.add([
@@ -333,7 +335,7 @@ export class ForgeScene extends Scene {
 function forgeReason(reason: string, tier: number, forgeLevel: number): string {
   switch (reason) {
     case 'tier_locked':
-      return `Tier ${tier} needs Forge Lv ${tier === 2 ? 2 : 4} (currently ${forgeLevel}).`;
+      return `Tier ${tier} needs Forge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]} (currently ${forgeLevel}).`;
     case 'no_card':                return 'No card matches that combination.';
     case 'insufficient_elements':  return 'Not enough element units.';
     case 'insufficient_gold':      return 'Not enough gold.';

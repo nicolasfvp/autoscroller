@@ -13,11 +13,11 @@ describe('createNewRun(customStarterDeck)', () => {
 
   it('uses customStarterDeck verbatim when provided', () => {
     const customDeck = [
-      't1-earth-earth',       // Stoneskin
-      't1-counter-fire',      // Ember Riposte
-      't1-counter-defense',   // Thorn Wall
-      't1-agility-defense',   // Dancer's Guard
-      't1-attack-defense',    // Shield Slam
+      't2-earth-earth',       // Stoneskin
+      't2-counter-fire',      // Ember Riposte
+      't2-counter-defense',   // Thorn Wall
+      't2-agility-defense',   // Dancer's Guard
+      't2-attack-defense',    // Shield Slam
     ];
     const run = createNewRun(undefined, 1, 'warrior', undefined, customDeck);
     expect(run.deck.active).toEqual(customDeck);
@@ -27,8 +27,8 @@ describe('createNewRun(customStarterDeck)', () => {
     const run = createNewRun(undefined, 1, 'warrior', undefined, undefined);
     // Warrior default ids — order will be shuffled but the set must match.
     const expected = new Set([
-      't1-attack-attack', 't1-defense-defense', 't1-attack-defense',
-      't1-agility-agility', 't1-attack-fire',
+      't2-attack-attack', 't2-defense-defense', 't2-attack-defense',
+      't2-agility-agility', 't2-attack-fire',
     ]);
     expect(new Set(run.deck.active)).toEqual(expected);
   });
@@ -36,14 +36,14 @@ describe('createNewRun(customStarterDeck)', () => {
   it('falls back to class default when customStarterDeck is empty array', () => {
     const run = createNewRun(undefined, 1, 'warrior', undefined, []);
     const expected = new Set([
-      't1-attack-attack', 't1-defense-defense', 't1-attack-defense',
-      't1-agility-agility', 't1-attack-fire',
+      't2-attack-attack', 't2-defense-defense', 't2-attack-defense',
+      't2-agility-agility', 't2-attack-fire',
     ]);
     expect(new Set(run.deck.active)).toEqual(expected);
   });
 
   it('upgraded array length matches active length for custom decks', () => {
-    const customDeck = ['t1-earth-earth', 't1-counter-fire', 't1-counter-defense', 't1-agility-defense', 't1-attack-defense'];
+    const customDeck = ['t2-earth-earth', 't2-counter-fire', 't2-counter-defense', 't2-agility-defense', 't2-attack-defense'];
     const run = createNewRun(undefined, 1, 'warrior', undefined, customDeck);
     expect(run.deck.upgraded.length).toBe(customDeck.length);
     expect(run.deck.upgraded.every((u) => u === false)).toBe(true);

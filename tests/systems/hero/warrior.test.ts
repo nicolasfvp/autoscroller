@@ -33,9 +33,9 @@ describe('WarriorClass', () => {
       expect(WARRIOR_STARTER_DECK).toHaveLength(5);
     });
 
-    it('uses element-based card IDs (t1-*)', () => {
+    it('uses element-based card IDs (t2-*, 2 elements per card)', () => {
       for (const id of WARRIOR_STARTER_DECK) {
-        expect(id).toMatch(/^t1-/);
+        expect(id).toMatch(/^t2-/);
       }
     });
   });

@@ -164,6 +164,24 @@ export class Preloader extends Scene {
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
 
+    // Card token icons (audit §1.2): bracketed icon tokens like [burn], [str].
+    // IconTokens.renderTokenText prefers `icon_${token}` textures when present
+    // and falls back to colored caps text otherwise.
+    const cardTokenIds = [
+      // Stack DoTs / status
+      'burn', 'bleed', 'poison', 'slow', 'stun', 'rage',
+      // Stats
+      'str', 'vit', 'dex', 'int', 'spi',
+      // Resources / vitals
+      'stam', 'mana', 'HP', 'armor', 'exhaust',
+      // Elements
+      'attack', 'defense', 'agility', 'counter',
+      'fire', 'water', 'air', 'earth',
+    ];
+    for (const token of cardTokenIds) {
+      this.load.image(`icon_${token}`, `assets/icons/tokens/${token}.png`);
+    }
+
     // Relic Illustrations
     // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
     // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic
@@ -201,63 +219,62 @@ export class Preloader extends Scene {
     // New element-based card art (Tier 1 + Tier 2, all PNG)
     const newCardIds = [
       // T1 — pure elements
-      't1-attack-attack', 't1-defense-defense', 't1-agility-agility', 't1-counter-counter',
-      't1-fire-fire', 't1-water-water', 't1-air-air', 't1-earth-earth',
+      't2-attack-attack', 't2-defense-defense', 't2-agility-agility', 't2-counter-counter',
+      't2-fire-fire', 't2-water-water', 't2-air-air', 't2-earth-earth',
       // T1 — cross elements
-      't1-agility-attack', 't1-agility-counter', 't1-agility-defense', 't1-agility-fire',
-      't1-agility-water', 't1-agility-air', 't1-agility-earth',
-      't1-attack-counter', 't1-attack-defense', 't1-attack-fire', 't1-attack-water',
-      't1-air-attack', 't1-attack-earth', 't1-counter-defense', 't1-counter-fire',
-      't1-counter-water', 't1-air-counter', 't1-counter-earth', 't1-defense-fire',
-      't1-defense-water', 't1-air-defense', 't1-defense-earth', 't1-fire-water',
-      't1-air-fire', 't1-earth-fire', 't1-air-water', 't1-earth-water', 't1-air-earth',
+      't2-agility-attack', 't2-agility-counter', 't2-agility-defense', 't2-agility-fire',
+      't2-agility-water', 't2-agility-air', 't2-agility-earth',
+      't2-attack-counter', 't2-attack-defense', 't2-attack-fire', 't2-attack-water',
+      't2-air-attack', 't2-attack-earth', 't2-counter-defense', 't2-counter-fire',
+      't2-counter-water', 't2-air-counter', 't2-counter-earth', 't2-defense-fire',
+      't2-defense-water', 't2-air-defense', 't2-defense-earth', 't2-fire-water',
+      't2-air-fire', 't2-earth-fire', 't2-air-water', 't2-earth-water', 't2-air-earth',
       // T2 — physical pure
-      't2-attack-attack-attack', 't2-defense-defense-defense',
-      't2-agility-agility-agility', 't2-counter-counter-counter',
+      't3-attack-attack-attack', 't3-defense-defense-defense',
+      't3-agility-agility-agility', 't3-counter-counter-counter',
       // T2 — elemental pure
-      't2-fire-fire-fire', 't2-water-water-water', 't2-air-air-air', 't2-earth-earth-earth',
+      't3-fire-fire-fire', 't3-water-water-water', 't3-air-air-air', 't3-earth-earth-earth',
       // T2 — physical mixed
-      't2-attack-attack-defense', 't2-agility-attack-attack', 't2-attack-attack-counter',
-      't2-attack-defense-defense', 't2-agility-defense-defense', 't2-counter-defense-defense',
-      't2-agility-agility-attack', 't2-agility-agility-defense', 't2-agility-agility-counter',
-      't2-attack-counter-counter', 't2-counter-counter-defense', 't2-agility-counter-counter',
-      't2-agility-attack-defense', 't2-attack-counter-defense', 't2-agility-attack-counter',
-      't2-agility-counter-defense',
+      't3-attack-attack-defense', 't3-agility-attack-attack', 't3-attack-attack-counter',
+      't3-attack-defense-defense', 't3-agility-defense-defense', 't3-counter-defense-defense',
+      't3-agility-agility-attack', 't3-agility-agility-defense', 't3-agility-agility-counter',
+      't3-attack-counter-counter', 't3-counter-counter-defense', 't3-agility-counter-counter',
+      't3-agility-attack-defense', 't3-attack-counter-defense', 't3-agility-attack-counter',
+      't3-agility-counter-defense',
       // T2 — elemental mixed
-      't2-fire-fire-water', 't2-air-fire-fire', 't2-earth-fire-fire',
-      't2-fire-water-water', 't2-air-water-water', 't2-earth-water-water',
-      't2-air-air-fire', 't2-air-air-water', 't2-air-air-earth',
-      't2-earth-earth-fire', 't2-earth-earth-water', 't2-air-earth-earth',
-      't2-air-fire-water', 't2-earth-fire-water', 't2-air-earth-fire',
-      't2-air-earth-water',
+      't3-fire-fire-water', 't3-air-fire-fire', 't3-earth-fire-fire',
+      't3-fire-water-water', 't3-air-water-water', 't3-earth-water-water',
+      't3-air-air-fire', 't3-air-air-water', 't3-air-air-earth',
+      't3-earth-earth-fire', 't3-earth-earth-water', 't3-air-earth-earth',
+      't3-air-fire-water', 't3-earth-fire-water', 't3-air-earth-fire',
+      't3-air-earth-water',
       // T2 — physical × elemental
-      't2-attack-attack-fire', 't2-attack-attack-water', 't2-air-attack-attack', 't2-attack-attack-earth',
-      't2-defense-defense-fire', 't2-defense-defense-water', 't2-air-defense-defense', 't2-defense-defense-earth',
-      't2-agility-agility-fire', 't2-agility-agility-water', 't2-agility-agility-air', 't2-agility-agility-earth',
-      't2-counter-counter-fire', 't2-counter-counter-water', 't2-air-counter-counter', 't2-counter-counter-earth',
-      't2-attack-defense-fire', 't2-attack-defense-water', 't2-air-attack-defense', 't2-attack-defense-earth',
-      't2-agility-attack-fire', 't2-agility-attack-water', 't2-agility-air-attack', 't2-agility-attack-earth',
-      't2-attack-counter-fire', 't2-attack-counter-water', 't2-air-attack-counter', 't2-attack-counter-earth',
-      't2-agility-defense-fire', 't2-agility-defense-water', 't2-agility-air-defense', 't2-agility-defense-earth',
-      't2-counter-defense-fire', 't2-counter-defense-water', 't2-air-counter-defense', 't2-counter-defense-earth',
-      't2-agility-counter-fire', 't2-agility-counter-water', 't2-agility-air-counter', 't2-agility-counter-earth',
-      't2-attack-fire-fire', 't2-attack-water-water', 't2-air-air-attack', 't2-attack-earth-earth',
-      't2-attack-fire-water', 't2-air-attack-fire', 't2-attack-earth-fire', 't2-air-attack-water',
-      't2-attack-earth-water', 't2-air-attack-earth',
-      't2-defense-fire-fire', 't2-defense-water-water', 't2-air-air-defense', 't2-defense-earth-earth',
-      't2-defense-fire-water', 't2-air-defense-fire', 't2-defense-earth-fire', 't2-air-defense-water',
-      't2-defense-earth-water', 't2-air-defense-earth',
-      't2-agility-fire-fire', 't2-agility-water-water', 't2-agility-air-air', 't2-agility-earth-earth',
-      't2-agility-fire-water', 't2-agility-air-fire', 't2-agility-earth-fire', 't2-agility-air-water',
-      't2-agility-earth-water', 't2-agility-air-earth',
-      't2-counter-fire-fire', 't2-counter-water-water', 't2-air-air-counter', 't2-counter-earth-earth',
-      't2-counter-fire-water', 't2-air-counter-fire', 't2-counter-earth-fire', 't2-air-counter-water',
-      't2-counter-earth-water', 't2-air-counter-earth',
+      't3-attack-attack-fire', 't3-attack-attack-water', 't3-air-attack-attack', 't3-attack-attack-earth',
+      't3-defense-defense-fire', 't3-defense-defense-water', 't3-air-defense-defense', 't3-defense-defense-earth',
+      't3-agility-agility-fire', 't3-agility-agility-water', 't3-agility-agility-air', 't3-agility-agility-earth',
+      't3-counter-counter-fire', 't3-counter-counter-water', 't3-air-counter-counter', 't3-counter-counter-earth',
+      't3-attack-defense-fire', 't3-attack-defense-water', 't3-air-attack-defense', 't3-attack-defense-earth',
+      't3-agility-attack-fire', 't3-agility-attack-water', 't3-agility-air-attack', 't3-agility-attack-earth',
+      't3-attack-counter-fire', 't3-attack-counter-water', 't3-air-attack-counter', 't3-attack-counter-earth',
+      't3-agility-defense-fire', 't3-agility-defense-water', 't3-agility-air-defense', 't3-agility-defense-earth',
+      't3-counter-defense-fire', 't3-counter-defense-water', 't3-air-counter-defense', 't3-counter-defense-earth',
+      't3-agility-counter-fire', 't3-agility-counter-water', 't3-agility-air-counter', 't3-agility-counter-earth',
+      't3-attack-fire-fire', 't3-attack-water-water', 't3-air-air-attack', 't3-attack-earth-earth',
+      't3-attack-fire-water', 't3-air-attack-fire', 't3-attack-earth-fire', 't3-air-attack-water',
+      't3-attack-earth-water', 't3-air-attack-earth',
+      't3-defense-fire-fire', 't3-defense-water-water', 't3-air-air-defense', 't3-defense-earth-earth',
+      't3-defense-fire-water', 't3-air-defense-fire', 't3-defense-earth-fire', 't3-air-defense-water',
+      't3-defense-earth-water', 't3-air-defense-earth',
+      't3-agility-fire-fire', 't3-agility-water-water', 't3-agility-air-air', 't3-agility-earth-earth',
+      't3-agility-fire-water', 't3-agility-air-fire', 't3-agility-earth-fire', 't3-agility-air-water',
+      't3-agility-earth-water', 't3-agility-air-earth',
+      't3-counter-fire-fire', 't3-counter-water-water', 't3-air-air-counter', 't3-counter-earth-earth',
+      't3-counter-fire-water', 't3-air-counter-fire', 't3-counter-earth-fire', 't3-air-counter-water',
+      't3-counter-earth-water', 't3-air-counter-earth',
     ];
     for (const id of newCardIds) {
       this.load.image(`card_${id}`, `assets/cards/${id}.png`);
     }
-
 
 
     // Audio

@@ -23,11 +23,11 @@ export const MAGE_BASE_STATS = {
 // Class element-budget rule (mage: 0-3 physical / 7-10 elemental).
 
 export const MAGE_STARTER_DECK: string[] = [
-  't1-fire-fire',
-  't1-water-water',
-  't1-fire-water',
-  't1-air-earth',
-  't1-attack-fire',
+  't2-fire-fire',
+  't2-water-water',
+  't2-fire-water',
+  't2-air-earth',
+  't2-attack-fire',
 ];
 
 // -- Class Definition --

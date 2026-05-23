@@ -7,7 +7,7 @@ import type { CardDefinition, EnemyDefinition } from '../../../src/data/types';
 
 function makeRun(relicIds: string[] = [], deckSize = 5): RunState {
   const deck: string[] = [];
-  for (let i = 0; i < deckSize; i++) deck.push('t1-attack-attack');
+  for (let i = 0; i < deckSize; i++) deck.push('t2-attack-attack');
   return {
     version: 3, runId: 't', seed: 'c7', generation: 1, startedAt: Date.now(),
     hero: {

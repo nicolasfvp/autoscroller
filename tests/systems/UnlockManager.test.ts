@@ -18,27 +18,27 @@ describe('UnlockManager', () => {
       expect(cards.length).toBe(TOTAL_CARDS);
       const ids = cards.map(c => c.id);
       // Spot-check a representative Tier 1 spread (pure-element + mixed).
-      expect(ids).toContain('t1-attack-attack');
-      expect(ids).toContain('t1-defense-defense');
-      expect(ids).toContain('t1-fire-fire');
-      expect(ids).toContain('t1-water-water');
-      expect(ids).toContain('t1-attack-fire');
-      expect(ids).toContain('t1-agility-defense');
+      expect(ids).toContain('t2-attack-attack');
+      expect(ids).toContain('t2-defense-defense');
+      expect(ids).toContain('t2-fire-fire');
+      expect(ids).toContain('t2-water-water');
+      expect(ids).toContain('t2-attack-fire');
+      expect(ids).toContain('t2-agility-defense');
     });
 
     it('still returns all cards even when unlockedCards lists specific ids', () => {
-      const cards = getAvailableCards(['t1-attack-attack']);
+      const cards = getAvailableCards(['t2-attack-attack']);
       const ids = cards.map(c => c.id);
-      expect(ids).toContain('t1-attack-attack');
-      expect(ids).toContain('t1-fire-fire');
+      expect(ids).toContain('t2-attack-attack');
+      expect(ids).toContain('t2-fire-fire');
       // Listing an id is a no-op when no card is gated — pool is still 164.
       expect(cards.length).toBe(TOTAL_CARDS);
     });
 
     it('returns all 164 cards regardless of the gated list contents', () => {
       const someIds = [
-        't1-attack-attack', 't1-defense-defense', 't1-fire-fire',
-        't2-attack-attack-attack', 't2-fire-fire-fire',
+        't2-attack-attack', 't2-defense-defense', 't2-fire-fire',
+        't3-attack-attack-attack', 't3-fire-fire-fire',
       ];
       const cards = getAvailableCards(someIds);
       expect(cards.length).toBe(TOTAL_CARDS);

@@ -283,47 +283,58 @@ export class CombatScene extends Scene {
       if (this.textures.exists(heroIdleKey)) {
         this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(0.7);
 
-        // 2-frame idle cycle (individual images, not a spritesheet)
         const idle2Key = `${sp}_idle2`;
         const hasIdle2 = this.textures.exists(idle2Key);
         let idleFrame = 0;
-        const startIdle = () => this.time.addEvent({
+        let isAttacking = false;
+        this.time.addEvent({
           delay: 250, loop: true,
           callback: () => {
-            if (this.heroSprite && !this.heroSprite.anims.isPlaying) {
-              idleFrame = 1 - idleFrame;
-              this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
-            }
+            if (!this.heroSprite || isAttacking || !hasIdle2) return;
+            idleFrame = 1 - idleFrame;
+            this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
           },
         });
-        let idleCycle = hasIdle2 ? startIdle() : null;
 
-        if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
-          this.anims.create({
-            key: heroAttackKey,
-            frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: 7 }),
-            frameRate: 12,
-            repeat: 0,
-          });
-        }
+        const playAttackAnimation = () => {
+          if (!this.heroSprite || isAttacking) return;
+          isAttacking = true;
+          if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
+            this.anims.create({
+              key: heroAttackKey,
+              frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: 7 }),
+              frameRate: 12,
+              repeat: 0,
+            });
+          }
+          if (this.anims.exists(heroAttackKey)) {
+            this.heroSprite.play(heroAttackKey);
+            this.heroSprite.once('animationcomplete', () => {
+              isAttacking = false;
+              if (this.heroSprite) this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
+            });
+          } else {
+            isAttacking = false;
+          }
+        };
 
-        // Patch onCardPlayed to drive the attack animation and resume idle
         const origOnCardPlayed = this.onCardPlayed;
         this.onCardPlayed = (data: GameEvents['combat:card-played']) => {
           if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+          const cardDef = getCardById(data.cardId);
+          if (cardDef) {
+            const rendered = formatCardDescription({
+              effects: cardDef.effects,
+              exhaust: cardDef.exhaust,
+              spend_armor: cardDef.spend_armor,
+              cooldown_scale: cardDef.cooldown_scale,
+            });
+            const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
+            keywordIntro.handleCardPlayed(this, fullText);
+          }
+          playAttackAnimation();
           if (data.damage > 0) {
             AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
-            if (this.anims.exists(heroAttackKey)) {
-              idleCycle?.destroy(); idleCycle = null;
-              this.heroSprite.play(heroAttackKey);
-              this.heroSprite.once('animationcomplete', () => {
-                if (this.heroSprite) {
-                  idleFrame = 0;
-                  this.heroSprite.setTexture(heroIdleKey);
-                  if (hasIdle2) idleCycle = startIdle();
-                }
-              });
-            }
             if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
               this.enemySprite.setTintFill(0xffffff);

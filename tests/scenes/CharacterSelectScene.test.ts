@@ -53,9 +53,9 @@ describe('Preloader cardIds purge (element-system audit)', () => {
 
     // Sample a handful of canonical element-based card ids and verify they exist.
     const sampledCardIds = [
-      't1-attack-attack', 't1-defense-defense', 't1-agility-agility', 't1-counter-counter',
-      't1-fire-fire', 't1-water-water', 't1-air-air', 't1-earth-earth',
-      't1-attack-fire', 't1-fire-water', 't2-attack-attack-attack', 't2-fire-fire-water',
+      't2-attack-attack', 't2-defense-defense', 't2-agility-agility', 't2-counter-counter',
+      't2-fire-fire', 't2-water-water', 't2-air-air', 't2-earth-earth',
+      't2-attack-fire', 't2-fire-water', 't3-attack-attack-attack', 't3-fire-fire-water',
     ];
     const dead = sampledCardIds.filter(id => !ids.includes(id));
     expect(dead).toEqual([]);

@@ -31,7 +31,7 @@ describe('CardFilterBar / applyFilters', () => {
     card({ id: 'a2', name: 'Slash',    description: 'A basic attack.', elements: ['attack', 'attack'], tier: 1 }),
     card({ id: 'a3', name: 'Heal',     description: 'Restore HP.',     elements: ['water', 'defense'], tier: 2 }),
     card({ id: 'a4', name: 'Tempest',  description: 'Wind damage.',    elements: ['air', 'fire', 'attack'], tier: 2 }),
-    card({ id: 'a5', name: 'Locked',   description: 'Mock T3.',        elements: ['earth', 'fire', 'air', 'water'], tier: 3, locked: true }),
+    card({ id: 'a5', name: 'Maelstrom', description: 'Tier 3 card.',    elements: ['earth', 'fire', 'air'], tier: 3 }),
     card({ id: 'a6', name: 'Legacy',   description: 'Old card no tier.' }),
   ];
 

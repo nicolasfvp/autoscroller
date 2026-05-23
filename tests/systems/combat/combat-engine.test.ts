@@ -15,7 +15,7 @@ vi.mock('../../../src/core/EventBus', () => ({
   },
 }));
 
-function makeMockRun(deckActive: string[] = ['t1-attack-attack', 't1-defense-defense', 't1-fire-fire']): RunState {
+function makeMockRun(deckActive: string[] = ['t2-attack-attack', 't2-defense-defense', 't2-fire-fire']): RunState {
   return {
     version: 5,
     runId: 'test-run',
@@ -79,7 +79,7 @@ describe('CombatEngine', () => {
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
     // Pin deck order for deterministic engine tests
-    state.deckOrder = ['t1-attack-attack', 't1-defense-defense', 't1-fire-fire'];
+    state.deckOrder = ['t2-attack-attack', 't2-defense-defense', 't2-fire-fire'];
     engine = new CombatEngine(state);
   });
 
@@ -96,12 +96,12 @@ describe('CombatEngine', () => {
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
     expect(cardPlayedCalls.length).toBe(1);
-    expect(cardPlayedCalls[0][1].cardId).toBe('t1-attack-attack');
+    expect(cardPlayedCalls[0][1].cardId).toBe('t2-attack-attack');
   });
 
   it('heroCooldownTimer set to card.cooldown * 1000 after playing', async () => {
     const { getCardById } = await import('../../../src/data/DataLoader');
-    const cd = (getCardById('t1-attack-attack')!.cooldown) * 1000; // ms
+    const cd = (getCardById('t2-attack-attack')!.cooldown) * 1000; // ms
 
     engine.tick(100);
 
@@ -124,15 +124,15 @@ describe('CombatEngine', () => {
   it('skips unaffordable card and tries next', () => {
     // Pin an expensive card (3-stamina) first then a free card; with hero stamina at 0,
     // the engine must skip the expensive one and play the free one.
-    // Tier-1 redesign: Pyre (t1-fire-fire) is one of the free cards in the
+    // Tier-1 redesign: Pyre (t2-fire-fire) is one of the free cards in the
     // new set, used here instead of Bulwark Vow (now costs 1 stamina).
-    const run = makeMockRun(['t2-attack-attack-attack', 't1-fire-fire']);
+    const run = makeMockRun(['t3-attack-attack-attack', 't2-fire-fire']);
     run.hero.currentStamina = 0;
     const enemy = makeMockEnemy();
     const state = createCombatState(run, enemy);
     setRun(run);
     state.heroStamina = 0; // mirror per-combat
-    state.deckOrder = ['t2-attack-attack-attack', 't1-fire-fire'];
+    state.deckOrder = ['t3-attack-attack-attack', 't2-fire-fire'];
     const eng = new CombatEngine(state);
 
     eng.tick(100);
@@ -144,14 +144,14 @@ describe('CombatEngine', () => {
       (c: unknown[]) => c[0] === 'combat:card-played'
     );
     expect(skippedCalls.length).toBe(1);
-    expect(skippedCalls[0][1].cardId).toBe('t2-attack-attack-attack');
+    expect(skippedCalls[0][1].cardId).toBe('t3-attack-attack-attack');
     expect(playedCalls.length).toBe(1);
-    expect(playedCalls[0][1].cardId).toBe('t1-fire-fire');
+    expect(playedCalls[0][1].cardId).toBe('t2-fire-fire');
   });
 
   it('deck pointer resets to 0 when exhausted', () => {
     // Deck with 1 card -- after playing it, pointer should reset
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     const enemy = makeMockEnemy();
     enemy.baseHP = 500; // won't die quickly
     const state = createCombatState(run, enemy);
@@ -173,7 +173,7 @@ describe('CombatEngine', () => {
   });
 
   it('passive regen adds +2 stamina per 3s, +1 mana per 3s', () => {
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     run.hero.currentStamina = 40; // not full
     run.hero.currentMana = 20; // not full
     const enemy = makeMockEnemy();
@@ -191,7 +191,7 @@ describe('CombatEngine', () => {
 
   it('combat ends with "victory" when enemy HP <= 0', () => {
     // Create a weak enemy that will die from one strike
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     run.hero.strength = 100; // massive damage
     const enemy = makeMockEnemy();
     enemy.baseHP = 5;
@@ -213,7 +213,7 @@ describe('CombatEngine', () => {
 
   it('combat ends with "defeat" when hero HP <= 0', () => {
     // Create powerful enemy that kills hero in one hit
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     run.hero.currentHP = 1;
     const enemy = makeMockEnemy();
     enemy.attack.damage = 100;
@@ -246,7 +246,7 @@ describe('CombatEngine', () => {
   });
 
   it('emits "combat:end" when combat finishes', () => {
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     run.hero.strength = 200;
     const enemy = makeMockEnemy();
     enemy.baseHP = 1;
@@ -262,7 +262,7 @@ describe('CombatEngine', () => {
   });
 
   it('does not tick further after combat is finished', () => {
-    const run = makeMockRun(['t1-attack-attack']);
+    const run = makeMockRun(['t2-attack-attack']);
     run.hero.strength = 200;
     const enemy = makeMockEnemy();
     enemy.baseHP = 1;

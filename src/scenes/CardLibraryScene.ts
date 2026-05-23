@@ -155,9 +155,9 @@ export class CardLibraryScene extends Phaser.Scene {
       const y = startY + row * (THUMB_H + ROW_GAP);
 
       const visual = createCardVisual(this, x, y, card.id, { scale: THUMB_SCALE });
-      // Locked T3: dim & overlay a lock icon. Click still opens the detail
+      // Locked cards: dim & overlay a lock icon. Click still opens the detail
       // popup (informational only) per spec.
-      const isLocked = card.tier === 3 && card.locked === true;
+      const isLocked = card.locked === true;
       if (isLocked) {
         visual.setAlpha(0.4);
         const lock = this.add.text(x, y, '🔒', {

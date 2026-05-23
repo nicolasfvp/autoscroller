@@ -32,6 +32,6 @@ describe('MetaPersistence', () => {
     expect(loaded.buildings.forge.level).toBe(2);
     expect(loaded.unlockedCards).toEqual(['fury', 'iron-skin']);
     expect(loaded.totalRuns).toBe(5);
-    expect(loaded.version).toBe(9);
+    expect(loaded.version).toBe(10);
   });
 });
