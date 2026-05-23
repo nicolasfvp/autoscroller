@@ -53,6 +53,8 @@ export class Preloader extends Scene {
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
+    // Mage scrolling animation (6-frame walk, 362×724 per frame)
+    this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 362, frameHeight: 724 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
@@ -60,8 +62,9 @@ export class Preloader extends Scene {
     // Mage selection preview (7-frame idle, 386x501 per frame)
     this.load.spritesheet('mage_select', 'assets/characters/mage/selection/spritesheet.png', { frameWidth: 386, frameHeight: 501 });
 
-    // Mage hero spritesheets — not yet wired up; load deferred until
-    // CombatScene integration (textures exceed common WebGL max-size limits).
+    // Mage combat spritesheets (9-frame idle, 12-frame attack; 640×562 per frame)
+    this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
+    this.load.spritesheet('mage_attack', 'assets/characters/mage/attack/spritesheet.png', { frameWidth: 640, frameHeight: 562 });
 
     // Monster static images
     const staticMonsters = [

@@ -208,7 +208,11 @@ export class GameScene extends Scene {
     const initialTexture = this.textures.exists(idleKey) ? idleKey : '__DEFAULT';
     this.heroSprite = this.add.sprite(100, 455, initialTexture);
     this.heroSprite.setOrigin(0.5, 1.0);
-    this.heroSprite.setScale(1.5);
+    // Normalize hero to ~96px tall regardless of source frame size (warrior=64px, mage=724px)
+    const walkFrameH = this.textures.exists(walkKey) && this.textures.get(walkKey).frameTotal > 1
+      ? (this.textures.get(walkKey).get(0)?.realHeight ?? 64)
+      : 64;
+    this.heroSprite.setScale(walkFrameH > 100 ? 96 / walkFrameH : 1.5);
     this.heroSprite.setDepth(50);
 
     if (this.introPlaying) {
