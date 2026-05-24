@@ -54,6 +54,14 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
   private resizeListener: (() => void) | null = null;
   private inputListener: ((e: Event) => void) | null = null;
 
+  // Debounce timers — keystrokes and pixel-level resize events both fire much
+  // faster than the work they trigger needs to run.
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  // Last canvas bounding-rect, used to skip resize work when nothing changed.
+  private lastCanvasRectW = 0;
+  private lastCanvasRectH = 0;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -222,12 +230,36 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     this.inputEl = el;
 
     this.inputListener = () => {
+      // Capture the new value immediately so this.filters.search stays
+      // consistent with the input element, but defer emitting the filter
+      // change (which triggers an O(n) grid rebuild) until typing settles.
       this.filters.search = (el.value || '').toLowerCase();
-      this.emitChange();
+      if (this.searchDebounceTimer) clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = setTimeout(() => {
+        this.searchDebounceTimer = null;
+        this.emitChange();
+      }, 180);
     };
     el.addEventListener('input', this.inputListener);
 
-    this.resizeListener = () => this.syncInputPosition();
+    this.resizeListener = () => {
+      // Pixel-level resize fires dozens of events per drag; the layout work
+      // inside syncInputPosition (getBoundingClientRect + multiple DOM style
+      // writes) is the textbook layout-thrash hotspot. Debounce to 100 ms and
+      // skip the work entirely if the canvas rect hasn't actually changed.
+      if (this.resizeDebounceTimer) clearTimeout(this.resizeDebounceTimer);
+      this.resizeDebounceTimer = setTimeout(() => {
+        this.resizeDebounceTimer = null;
+        const canvas = this.scene.game?.canvas;
+        if (canvas) {
+          const r = canvas.getBoundingClientRect();
+          if (r.width === this.lastCanvasRectW && r.height === this.lastCanvasRectH) return;
+          this.lastCanvasRectW = r.width;
+          this.lastCanvasRectH = r.height;
+        }
+        this.syncInputPosition();
+      }, 100);
+    };
     window.addEventListener('resize', this.resizeListener);
 
     // Sync once now, and again next frame in case the canvas was just laid out.
@@ -331,6 +363,14 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
       if (this.inputEl.parentNode) this.inputEl.parentNode.removeChild(this.inputEl);
       this.inputEl = null;
       this.inputListener = null;
+    }
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
+    }
+    if (this.resizeDebounceTimer) {
+      clearTimeout(this.resizeDebounceTimer);
+      this.resizeDebounceTimer = null;
     }
   }
 

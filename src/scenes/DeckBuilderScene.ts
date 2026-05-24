@@ -120,6 +120,18 @@ export class DeckBuilderScene extends Scene {
 
   private cardCells: CardCell[] = [];
 
+  // O(1) card lookup. The pool comes from getAllCards() (~200 cards), which
+  // returns the same array each call. Map<id, card> is built once in create()
+  // and reused by every helper that previously did .find(c => c.id === …).
+  // Without this, refreshCellAffordability degenerates to O(cells × deck × pool):
+  // ~60 cells × 5 deck × 200 = 60,000 string compares per refresh.
+  private cardById: Map<string, CardDefinition> = new Map();
+
+  // Cache of the currently-rendered cardId in each deck slot. updateDeckSlots
+  // compares against this and skips destroying/recreating the CardVisual for
+  // slots whose card didn't change between refreshes.
+  private lastSlotCardIds: (string | null)[] = [];
+
   constructor() {
     super(SCENE_KEYS.DECK_BUILDER);
   }
@@ -143,11 +155,15 @@ export class DeckBuilderScene extends Scene {
     this.presetButtons = [];
     this.deckSlotContainers = [];
     this.cardCells = [];
+    this.lastSlotCardIds = [];
     this.cardFilters = {
       element: 'All',
       tiers: new Set<1 | 2 | 3>([1, 2, 3]),
       search: '',
     };
+    // Rebuild the O(1) card lookup against the current pool. Cheap (one pass
+    // over ~200 cards) and pays for itself the first time refresh() runs.
+    this.cardById = new Map(getAllCards().map((c) => [c.id, c]));
     // Old bar reference from a previous mount must be cleared — the actual
     // GameObject was destroyed by Phaser when the scene shut down, but we
     // recreate it below and don't want a stale handle.
@@ -448,7 +464,7 @@ export class DeckBuilderScene extends Scene {
   private refreshCellSynergy(): void {
     const deckCards: CardDefinition[] = [];
     for (const id of this.currentDeck) {
-      const c = getAllCards().find((cc) => cc.id === id);
+      const c = this.cardById.get(id);
       if (c) deckCards.push(c);
     }
     for (const cell of this.cardCells) {
@@ -459,31 +475,48 @@ export class DeckBuilderScene extends Scene {
   }
 
   /**
-   * Affordability check used by createCardCell click-guard and the per-cell
-   * alpha dimming pass. A card is pickable if (a) the deck has room and
-   * (b) adding its elements wouldn't exceed the 10-element starter budget.
+   * Total elements already committed by `currentDeck`. Cached once per
+   * refreshCellAffordability pass so we don't recompute the deck's element
+   * total inside every per-cell canPickCard check (was O(cells × deck)).
+   */
+  private currentDeckElementTotal(): number {
+    let total = 0;
+    for (const id of this.currentDeck) {
+      const c = this.cardById.get(id);
+      if (!c) continue;
+      total += countElementCategories((c.elements ?? []) as ElementId[]).total;
+    }
+    return total;
+  }
+
+  /**
+   * Affordability check used by createCardCell click-guard. A card is
+   * pickable if (a) the deck has room and (b) adding its elements wouldn't
+   * exceed the 10-element starter budget. Per-cell loop variant lives in
+   * refreshCellAffordability which precomputes the deck total once.
    */
   private canPickCard(card: CardDefinition): boolean {
     if (this.currentDeck.length >= STARTER_DECK_SIZE) return false;
     const cardElems = (card.elements ?? []) as ElementId[];
     const cardCount = countElementCategories(cardElems).total;
-    let currentTotal = 0;
-    for (const id of this.currentDeck) {
-      const c = getAllCards().find((cc) => cc.id === id);
-      if (!c) continue;
-      currentTotal += countElementCategories((c.elements ?? []) as ElementId[]).total;
-    }
-    return currentTotal + cardCount <= 10;
+    return this.currentDeckElementTotal() + cardCount <= 10;
   }
 
   /**
    * Dim cards the player can't currently pick (deck full OR would overflow
    * the element budget). Re-run on every refresh so dims stay in sync with
-   * the in-flight deck.
+   * the in-flight deck. Computes the deck-total once and reuses it across
+   * the per-cell pass instead of re-walking the deck per cell.
    */
   private refreshCellAffordability(): void {
+    const deckFull = this.currentDeck.length >= STARTER_DECK_SIZE;
+    const deckElementTotal = this.currentDeckElementTotal();
     for (const cell of this.cardCells) {
-      const ok = this.canPickCard(cell.card);
+      let ok = !deckFull;
+      if (ok) {
+        const cardElems = (cell.card.elements ?? []) as ElementId[];
+        ok = deckElementTotal + countElementCategories(cardElems).total <= 10;
+      }
       cell.container.setAlpha(ok ? 1.0 : 0.4);
     }
   }
@@ -555,24 +588,32 @@ export class DeckBuilderScene extends Scene {
     for (let i = 0; i < STARTER_DECK_SIZE; i++) {
       const container = this.deckSlotContainers[i];
       if (!container) continue;
+
+      const cardId = this.currentDeck[i] ?? null;
+      const prevCardId = this.lastSlotCardIds[i] ?? null;
+      // Skip slots whose card didn't change between refreshes. Each filled
+      // slot rebuild creates a full CardVisual (graphics + several text and
+      // image children); refresh() runs on every pick/remove/preset-load, so
+      // skipping unchanged slots avoids ~4 unnecessary CardVisual rebuilds
+      // per refresh in the common case.
+      if (cardId === prevCardId) continue;
+
       const bg = container.list[0] as Phaser.GameObjects.Rectangle;
       const label = container.list[1] as Phaser.GameObjects.Text;
-      // Remove any previously-mounted CardVisual or extra child from a prior
-      // render. The bg + label live at indices 0/1; everything past that is a
-      // CardVisual we created last refresh and need to tear down.
+      // Tear down the previous CardVisual (if any). The bg + label live at
+      // indices 0/1; everything past that is a CardVisual mounted last refresh.
       while (container.list.length > 2) {
         const extra = container.list[container.list.length - 1];
         container.remove(extra, true);
       }
 
-      const cardId = this.currentDeck[i];
       if (cardId) {
         // Filled slot: hide the placeholder label/bg styling and mount a full
         // CardVisual (all features — image, name, cost, description, dots).
         bg.setFillStyle(0x000000, 0).setStrokeStyle(0);
         label.setVisible(false);
 
-        const card = getAllCards().find((c) => c.id === cardId);
+        const card = this.cardById.get(cardId);
         const color = card ? this.dominantElementColor(card) : 0x3a3a55;
         bg.setStrokeStyle(1.5, color, 0.85);
 
@@ -593,6 +634,7 @@ export class DeckBuilderScene extends Scene {
         label.setColor(DIM);
         label.setVisible(true);
       }
+      this.lastSlotCardIds[i] = cardId;
     }
   }
 

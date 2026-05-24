@@ -27,15 +27,31 @@ import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 
 // Responsive scaling: the game is authored in 800×600 game-space (where every
-// hardcoded HUD/sprite/tile coordinate lives). We render into a 1600×1200
-// backing-store (2× supersample) and let Phaser FIT downscale the canvas to
-// whatever viewport the user has. Downscaling from 1600→1440 (1080p widescreen)
-// is crisp; upscaling from 800→1440 (the naive FIT) blurs. The 2× supersample
-// is applied via per-scene camera.setZoom(UI_SCALE) below — every game object
-// stays in 800×600 coordinates, the camera just renders it 2× larger.
+// hardcoded HUD/sprite/tile coordinate lives). We render into a supersampled
+// backing-store (UI_SCALE×) and let Phaser FIT downscale the canvas to whatever
+// viewport the user has. Downscaling is crisp; upscaling from 800→1440 (the
+// naive FIT) blurs.
+//
+// UI_SCALE is selected by the Graphics Quality setting (SettingsScene). High
+// gives the sharpest result; Balanced cuts pixel fill-rate by ~44%; Performance
+// renders at native 800×600 and lets the browser scale. Because Phaser locks
+// the canvas backing-store size in GameConfig before any async MetaState load
+// can complete, we read the preset from a localStorage mirror (synchronous,
+// available at module-init time). SettingsScene writes both the localStorage
+// mirror and the persisted MetaState so the next reload picks up the change.
 const GAME_W = 800;
 const GAME_H = 600;
-const UI_SCALE = 2;
+
+const QUALITY_TO_SCALE: Record<string, number> = {
+    high: 2,
+    balanced: 1.5,
+    performance: 1,
+};
+const storedQuality = (() => {
+    try { return localStorage.getItem('autoscroller:gfxQuality'); }
+    catch { return null; }
+})();
+const UI_SCALE = QUALITY_TO_SCALE[storedQuality ?? ''] ?? QUALITY_TO_SCALE.balanced;
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,

@@ -225,18 +225,21 @@ export class CityHubScene extends Scene {
     // Make frame interactive
     frame.setInteractive({ useHandCursor: true });
 
-    // Hover effects
+    // Hover effects. Kill any in-flight scale tween before starting a new
+    // one — rapid hover-in/out fires used to enqueue overlapping tweens per
+    // building (1 per pointer event × 6 buildings), which compounded each
+    // time the player ran the cursor across the village row.
     frame.on('pointerover', () => {
-      // Adding a slight glow/brightness on hover
       frame.setTint(0xffffcc);
       iconImage.setTint(0xffffcc);
+      this.tweens.killTweensOf(container);
       this.tweens.add({ targets: container, scaleX: 1.05, scaleY: 1.05, duration: 100 });
     });
 
     frame.on('pointerout', () => {
-      // Reset tint
       frame.clearTint();
       iconImage.clearTint();
+      this.tweens.killTweensOf(container);
       this.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 100 });
     });
 

@@ -2,9 +2,17 @@ import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { getAudioManager } from '../audio/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
-import { createDefaultMetaState, type MetaState } from '../state/MetaState';
+import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
 import { saveManager } from '../core/SaveManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+
+const GFX_QUALITY_ORDER: GraphicsQuality[] = ['performance', 'balanced', 'high'];
+const GFX_QUALITY_LABEL: Record<GraphicsQuality, string> = {
+  high: 'High (2.0x)',
+  balanced: 'Balanced (1.5x)',
+  performance: 'Performance (1.0x)',
+};
+const GFX_QUALITY_STORAGE_KEY = 'autoscroller:gfxQuality';
 
 /**
  * SettingsScene -- full settings overlay with volume, speed, save management.
@@ -16,6 +24,8 @@ export class SettingsScene extends Scene {
   private autoSave: boolean = true;
   private sfxVolume: number = 1;
   private sfxEnabled: boolean = true;
+  private graphicsQuality: GraphicsQuality = 'balanced';
+  private initialGraphicsQuality: GraphicsQuality = 'balanced';
 
   // UI references for dynamic updates
   private volumeThumb!: Phaser.GameObjects.Rectangle;
@@ -23,6 +33,8 @@ export class SettingsScene extends Scene {
   private muteBtn!: Phaser.GameObjects.Text;
   private speedBtn!: Phaser.GameObjects.Text;
   private autoSaveBtn!: Phaser.GameObjects.Text;
+  private graphicsQualityBtn!: Phaser.GameObjects.Text;
+  private graphicsQualityNotice!: Phaser.GameObjects.Text;
   private confirmContainer: Phaser.GameObjects.Container | null = null;
 
   constructor() {
@@ -37,6 +49,12 @@ export class SettingsScene extends Scene {
     this.sfxEnabled = this.metaState.audioPrefs.sfxEnabled;
     this.gameSpeed = this.metaState.gameSpeed;
     this.autoSave = this.metaState.autoSave;
+    // Graphics quality preference; prefer the localStorage mirror so a player
+    // who reload-applied a setting last session sees the actually-active value
+    // even if MetaState save hadn't flushed yet (idb-keyval is async).
+    const storedQ = this.readStoredGraphicsQuality();
+    this.graphicsQuality = storedQ ?? this.metaState.graphicsQuality ?? 'balanced';
+    this.initialGraphicsQuality = this.graphicsQuality;
 
     // Apply loaded audio prefs
     const audio = getAudioManager();
@@ -57,6 +75,7 @@ export class SettingsScene extends Scene {
     this.createMuteToggle();
     this.createGameSpeedToggle();
     this.createAutoSaveToggle();
+    this.createGraphicsQualityToggle();
     this.createDeleteRunButton();
     this.createResetAllButton();
     this.createBackButton();
@@ -140,6 +159,52 @@ export class SettingsScene extends Scene {
       this.autoSave = !this.autoSave;
       this.autoSaveBtn.setText(this.autoSave ? 'ON' : 'OFF');
     }, 'secondary');
+  }
+
+  // ── Graphics Quality Toggle (y: 390) ───────────────────
+  // Cycles performance → balanced → high → performance. Drives the supersample
+  // factor (UI_SCALE) used to size the Phaser canvas backing-store. Because
+  // GameConfig dimensions are locked at boot, changing the preset only takes
+  // effect after a reload — we fire that reload from saveAndClose when the
+  // value has actually been edited.
+  private createGraphicsQualityToggle(): void {
+    this.add.text(200, 382, 'Graphics Quality', {
+      ...FONTS.body,
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.family,
+    }).setOrigin(0, 0.5);
+
+    this.graphicsQualityBtn = createButton(this, 540, 390, GFX_QUALITY_LABEL[this.graphicsQuality], () => {
+      this.cycleGraphicsQuality();
+    }, 'secondary');
+
+    this.graphicsQualityNotice = this.add.text(LAYOUT.centerX, 405, 'Restart required to apply', {
+      fontSize: '10px',
+      color: '#ffcc66',
+      fontStyle: 'italic',
+      fontFamily: FONTS.family,
+    }).setOrigin(0.5).setVisible(false);
+  }
+
+  private cycleGraphicsQuality(): void {
+    const idx = GFX_QUALITY_ORDER.indexOf(this.graphicsQuality);
+    const next = GFX_QUALITY_ORDER[(idx + 1) % GFX_QUALITY_ORDER.length];
+    this.graphicsQuality = next;
+    this.graphicsQualityBtn.setText(GFX_QUALITY_LABEL[next]);
+    this.graphicsQualityNotice.setVisible(this.graphicsQuality !== this.initialGraphicsQuality);
+  }
+
+  private readStoredGraphicsQuality(): GraphicsQuality | null {
+    try {
+      const v = localStorage.getItem(GFX_QUALITY_STORAGE_KEY);
+      if (v === 'high' || v === 'balanced' || v === 'performance') return v;
+    } catch { /* localStorage unavailable (sandbox/private mode) — ignore */ }
+    return null;
+  }
+
+  private writeStoredGraphicsQuality(value: GraphicsQuality): void {
+    try { localStorage.setItem(GFX_QUALITY_STORAGE_KEY, value); }
+    catch { /* swallow — saved MetaState is still the canonical record */ }
   }
 
   // ── Delete Run Button (y: 420) ──────────────────────────
@@ -232,7 +297,21 @@ export class SettingsScene extends Scene {
     };
     this.metaState.gameSpeed = this.gameSpeed;
     this.metaState.autoSave = this.autoSave;
+    this.metaState.graphicsQuality = this.graphicsQuality;
+    // Mirror the quality preset to localStorage so main.ts can read it
+    // synchronously on next page load — Phaser's GameConfig dimensions are
+    // locked at boot before the async MetaState load completes.
+    this.writeStoredGraphicsQuality(this.graphicsQuality);
     await saveMetaState(this.metaState);
+
+    // If the player flipped graphics quality, the canvas backing-store size
+    // is already locked in this session and the only way to apply the change
+    // is a page reload. Reloading directly from Back keeps the workflow as a
+    // single click and skips a confusing "you need to restart" dialog.
+    if (this.graphicsQuality !== this.initialGraphicsQuality) {
+      window.location.reload();
+      return;
+    }
 
     this.scene.stop();
     this.scene.resume(SCENE_KEYS.PAUSE);

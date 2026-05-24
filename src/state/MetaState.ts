@@ -19,6 +19,23 @@ export interface DeckPresetEntry {
   cardIds: string[];
 }
 
+/** Renderer supersample preset selectable in SettingsScene → Graphics Quality.
+ *  - 'high'        → UI_SCALE 2.0 (canvas 1600×1200, sharpest downscale).
+ *  - 'balanced'    → UI_SCALE 1.5 (canvas 1200×900, ~44% less pixel fill).
+ *  - 'performance' → UI_SCALE 1.0 (canvas 800×600, native — fastest).
+ *
+ *  Read at game-init time via the `autoscroller:gfxQuality` localStorage
+ *  mirror (see src/main.ts) because Phaser canvas dimensions are locked in
+ *  the GameConfig before any async MetaState load can complete. Changing
+ *  the setting therefore requires a page reload to take effect. */
+export type GraphicsQuality = 'high' | 'balanced' | 'performance';
+
+export const GRAPHICS_QUALITY_TO_UI_SCALE: Record<GraphicsQuality, number> = {
+  high: 2,
+  balanced: 1.5,
+  performance: 1,
+};
+
 export interface MetaState {
   buildings: {
     forge: { level: number };
@@ -47,6 +64,9 @@ export interface MetaState {
    *  ~6% steps (-25% / -12% / 0 / +12% / +25%). Read by CardFace via
    *  getMetaStateSync(); default is 1. */
   cardScale: number;
+  /** Graphics quality preset. Drives the canvas supersample factor (UI_SCALE)
+   *  read at game init from localStorage. Default 'balanced'. */
+  graphicsQuality: GraphicsQuality;
   version: number;
   /** Discovered forge recipes (element multisets) — meta-persistent. */
   forgeRecipes: ForgeRecipeEntry[];
@@ -113,7 +133,8 @@ export function createDefaultMetaState(): MetaState {
     gameSpeed: 1,
     autoSave: true,
     cardScale: 1,
-    version: 11,
+    graphicsQuality: 'balanced',
+    version: 12,
     forgeRecipes: [],
     deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
     seenKeywords: [],
@@ -281,6 +302,19 @@ export function migrateMetaState(raw: any): MetaState {
   if (raw.version === 10) {
     if (typeof raw.cardScale !== 'number') raw.cardScale = 1;
     raw.version = 11;
+  }
+
+  // v11 -> v12 migration: graphicsQuality preset. Existing players default to
+  // 'balanced' (1.5x supersample) since 2x was previously hardcoded and is
+  // the source of the perf regression the v12 setting exists to mitigate.
+  // Anyone who wants the old crispness can opt back into 'high' from
+  // SettingsScene → Graphics Quality.
+  if (raw.version === 11) {
+    const q = raw.graphicsQuality;
+    if (q !== 'high' && q !== 'balanced' && q !== 'performance') {
+      raw.graphicsQuality = 'balanced';
+    }
+    raw.version = 12;
   }
 
   return raw as MetaState;

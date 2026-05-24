@@ -213,6 +213,19 @@ interface MoldSlots {
   artSlot: SlotBox; nameSlot: SlotBox; elemSlot: SlotBox; descSlot: SlotBox | null;
 }
 
+// Cache of RenderTexture backing-stores for our rasterized molds. Keyed by
+// the same string the Phaser TextureManager stores under so we can quickly
+// answer "did we already build this?" without re-parsing dimensions.
+//
+// Critical: each RenderTexture OWNS the canvas/WebGL surface that Phaser's
+// saveTexture(key) registers as the named texture's source. If we destroyed
+// the RT after saveTexture, the source pointer would dangle and any Image
+// rendered later with that key would draw garbage. We therefore keep the RT
+// alive for the lifetime of the page (it's off-display-list, so it doesn't
+// participate in scene rendering or update — it's just a GPU-resident
+// keep-alive).
+const moldRenderTextures = new Map<string, Phaser.GameObjects.RenderTexture>();
+
 function paintMold(
   scene: Phaser.Scene,
   parent: Phaser.GameObjects.Container,
@@ -221,11 +234,42 @@ function paintMold(
   scale: number,
   slots: MoldSlots,
 ): void {
-  const g = scene.add.graphics();
+  // The mold geometry (border, header band, slot frames, name banner, desc
+  // panel) is purely a function of (w, h, scale, descFits). For a 164-card
+  // library all cards share the same dimensions — without caching we'd
+  // re-rasterize the same shape 164×. Cache it as a RenderTexture once per
+  // distinct mold size and reuse via a cheap Image.
+  const wi = Math.max(1, Math.round(w));
+  const hi = Math.max(1, Math.round(h));
+  const key = `__cardMold_${wi}x${hi}_s${scale.toFixed(2)}_d${slots.descSlot ? '1' : '0'}`;
+
+  if (!moldRenderTextures.has(key) || !scene.textures.exists(key)) {
+    rasterizeMold(scene, w, h, scale, slots, key);
+  }
+
+  // Image.setOrigin(0.5) matches the original center-anchored draw; the
+  // texture spans wi×hi pixels which is identical to the body rect drawn
+  // from (-w/2, -h/2) to (w/2, h/2) before this caching pass.
+  const moldImg = scene.add.image(0, 0, key).setOrigin(0.5, 0.5);
+  parent.add(moldImg);
+}
+
+function rasterizeMold(
+  scene: Phaser.Scene,
+  w: number,
+  h: number,
+  scale: number,
+  slots: MoldSlots,
+  key: string,
+): void {
+  // make.graphics (not add.graphics) keeps the Graphics off the display
+  // list — we only need it as a draw source for the RenderTexture and don't
+  // want it to flash on-screen for a frame.
+  const g = scene.make.graphics({ x: 0, y: 0 }, false);
   const borderW = Math.max(1.5, 2 * scale);
   const radius = Math.max(4, 8 * scale);
 
-  // Body + outer border
+  // Body + outer border (coords match the original: -w/2..+w/2, -h/2..+h/2).
   g.fillStyle(COLOR.BODY, 1);
   g.fillRoundedRect(-w / 2, -h / 2, w, h, radius);
   g.lineStyle(borderW, COLOR.BORDER, 1);
@@ -273,7 +317,21 @@ function paintMold(
     g.strokeRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, slotRadius);
   }
 
-  parent.add(g);
+  // Snapshot the Graphics into a RenderTexture sized exactly w×h. The mold
+  // geometry was authored centered at (0, 0); shift by (w/2, h/2) so it
+  // lands inside the RT's (0, 0)..(w, h) bounds.
+  //
+  // The RT is added off-display-list (addToScene=false) and parked in a
+  // module-level Map so the GPU surface backing `saveTexture(key)` stays
+  // alive for the lifetime of the page. See moldRenderTextures comment for
+  // why we cannot destroy the RT here.
+  const wi = Math.max(1, Math.round(w));
+  const hi = Math.max(1, Math.round(h));
+  const rt = scene.make.renderTexture({ x: 0, y: 0, width: wi, height: hi }, false);
+  rt.draw(g, w / 2, h / 2);
+  rt.saveTexture(key);
+  moldRenderTextures.set(key, rt);
+  g.destroy();
 }
 
 // ── Slot drawers ─────────────────────────────────────────────────────────
@@ -580,26 +638,38 @@ function attachHover(
   container: Phaser.GameObjects.Container,
   startY: number,
 ): void {
+  // Capture base scale once. The original code multiplied by the *current*
+  // scale on every pointerover, so rapid hovers compounded (base → 1.05 →
+  // 1.1025 → …); pointerout's reciprocal divide didn't fully undo it.
+  const baseScaleX = container.scaleX;
+  const baseScaleY = container.scaleY;
+
   container.on('pointerover', () => {
+    // Kill any in-flight scale/y tween before starting a new one so we don't
+    // run conflicting interpolations on the same target (each card used to
+    // accrue multiple pending tweens under fast pointer motion).
+    scene.tweens.killTweensOf(container);
     scene.tweens.add({
       targets: container,
-      scaleX: container.scaleX * 1.05,
-      scaleY: container.scaleY * 1.05,
+      scaleX: baseScaleX * 1.05,
+      scaleY: baseScaleY * 1.05,
       y: startY - 8,
       duration: 150,
       ease: 'Sine.easeOut',
     });
   });
   container.on('pointerout', () => {
+    scene.tweens.killTweensOf(container);
     scene.tweens.add({
       targets: container,
-      scaleX: container.scaleX / 1.05,
-      scaleY: container.scaleY / 1.05,
+      scaleX: baseScaleX,
+      scaleY: baseScaleY,
       y: startY,
       duration: 150,
       ease: 'Sine.easeOut',
     });
   });
+  container.once('destroy', () => scene.tweens.killTweensOf(container));
 }
 
 function resolveUpgradeFlag(cardId: string): boolean {

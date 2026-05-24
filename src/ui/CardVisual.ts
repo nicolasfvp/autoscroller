@@ -15,6 +15,9 @@ export interface CardVisualOptions {
   enlarged?: boolean;
   /** Multiplier on top of metaState.cardScale. Default 1. */
   scale?: number;
+  /** Pre-resolved upgrade flag. When provided, skips CardFace's O(N) run-deck
+   *  scan — pass this from grid views that pre-build an upgrade Set. */
+  upgraded?: boolean;
 }
 
 /**
@@ -35,6 +38,7 @@ export function createCardVisual(
     scale,
     hover: true,
     onClick: () => showCardDetail(scene, cardId),
+    upgraded: options?.upgraded,
   };
   return createCardFace(scene, x, y, cardId, faceOpts);
 }

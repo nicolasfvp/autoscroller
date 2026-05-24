@@ -30,6 +30,26 @@ export const ELEMENT_LABEL_TO_ID: Record<string, ElementId | null> = {
   Air:      'air',
 };
 
+// Search haystacks are expensive to build (per-card formatCardDescription is
+// non-trivial) and stable for the lifetime of the card object. We memoize by
+// card-object identity so repeated filtering — every keystroke in a search box
+// — only pays the construction cost once per card per session.
+const haystackCache = new WeakMap<CardDefinition, string>();
+
+function getHaystack(card: CardDefinition): string {
+  const cached = haystackCache.get(card);
+  if (cached !== undefined) return cached;
+  const rendered = formatCardDescription({
+    effects: card.effects,
+    exhaust: card.exhaust,
+    spend_armor: card.spend_armor,
+    cooldown_scale: card.cooldown_scale,
+  });
+  const hay = `${card.name} ${card.description ?? ''} ${rendered}`.toLowerCase();
+  haystackCache.set(card, hay);
+  return hay;
+}
+
 /**
  * Pure filter — exported for tests and for callers that need to re-apply
  * filters to a card subset (e.g. DeckBuilder's available pool).
@@ -50,14 +70,7 @@ export function applyFilters(allCards: CardDefinition[], filters: CardFilters): 
     // the static text holds flavor/legacy terms, the dynamic text holds the
     // canonical rendered keywords ("Vengeance", "Shatter", "Scales STR", …).
     if (q.length > 0) {
-      const rendered = formatCardDescription({
-        effects: card.effects,
-        exhaust: card.exhaust,
-        spend_armor: card.spend_armor,
-        cooldown_scale: card.cooldown_scale,
-      });
-      const hay = `${card.name} ${card.description ?? ''} ${rendered}`.toLowerCase();
-      if (!hay.includes(q)) return false;
+      if (!getHaystack(card).includes(q)) return false;
     }
     return true;
   });
