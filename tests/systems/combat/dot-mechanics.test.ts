@@ -75,7 +75,6 @@ function makeState(over: Partial<CombatState> = {}): CombatState {
     buffMagnitudePerCard: {},
     heroAuras: [], enemyAuras: [],
     heroBurnStacks: 0, heroBleedStacks: 0,
-    subtileBleedTickBonus: 0,
     ...over,
   } as CombatState;
 }
