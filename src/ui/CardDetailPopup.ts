@@ -54,11 +54,12 @@ export function showCardDetail(
   popup.once('destroy', () => showFilterBarInputs());
   popup.add(backdrop);
 
-  // Centered on the scene. The popup base size is 400×640; the user's
-  // metaState.cardScale multiplies in via createCardFace.
+  // Centered on the scene in game-space (800×600). cam.width returns the
+  // viewport in canvas-pixel space (post-UI_SCALE), so we divide by zoom to
+  // convert back to game-space coordinates the card face expects.
   const cam = scene.cameras.main;
-  const cx = cam.width / 2;
-  const cy = cam.height / 2;
+  const cx = cam.width / cam.zoom / 2;
+  const cy = cam.height / cam.zoom / 2;
 
   const face = createCardFace(scene, cx, cy, cardId, {
     baseSize: 'popup',

@@ -245,15 +245,30 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     const searchLocalY = (BAR_HEIGHT - 26) / 2;
     const searchW = 200;
     const searchH = 26;
-    // Scale canvas-internal coords to client pixels (Phaser may letterbox).
-    const sx = rect.width / canvas.width;
-    const sy = rect.height / canvas.height;
+    // Conversion: game-space → CSS pixels has two factors:
+    //   1. Camera zoom (game-space → canvas backing-store): main camera renders
+    //      everything at cam.zoom×, so a game-space coord of N is at N*zoom on
+    //      the canvas.
+    //   2. CSS scale (canvas backing-store → on-screen CSS pixels): Phaser's
+    //      FIT mode CSS-scales the canvas, so the visible pixel count differs
+    //      from canvas.width. We get this from getBoundingClientRect.
+    const cam = this.scene.cameras?.main;
+    const zoom = cam?.zoom ?? 1;
+    const sx = (rect.width / canvas.width) * zoom;
+    const sy = (rect.height / canvas.height) * zoom;
     const left = rect.left + (this.x + searchLocalX) * sx;
     const top  = rect.top  + (this.y + searchLocalY) * sy;
     this.inputEl.style.left   = `${left}px`;
     this.inputEl.style.top    = `${top}px`;
     this.inputEl.style.width  = `${searchW * sx}px`;
     this.inputEl.style.height = `${searchH * sy}px`;
+    // Scale font/border/padding so the input looks visually proportional to
+    // the surrounding (camera-zoomed) UI rather than staying at a fixed 12px
+    // regardless of viewport.
+    this.inputEl.style.fontSize     = `${Math.round(12 * sx)}px`;
+    this.inputEl.style.padding      = `0 ${Math.round(8 * sx)}px`;
+    this.inputEl.style.borderWidth  = `${Math.max(1, Math.round(1.5 * sx))}px`;
+    this.inputEl.style.borderRadius = `${Math.round(3 * sx)}px`;
   }
 
   // ── Dropdown panel ─────────────────────────────────────

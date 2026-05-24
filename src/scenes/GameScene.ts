@@ -194,8 +194,16 @@ export class GameScene extends Scene {
     this.heroSprite.play(this.introPlaying ? idleKey : walkKey);
 
     // Camera follow (push target lower on screen via offsetY)
-    // Lerp set to 1 to avoid camera lagging behind the moving hero
-    this.cameras.main.startFollow(this.heroSprite, true, 1.0, 1.0, 0, 280);
+    // Lerp set to 1 to avoid camera lagging behind the moving hero.
+    // followOffset must include half-viewport-in-game-space because our camera
+    // uses origin (0,0) (see main.ts), so the camera's "look at" point is the
+    // top-left of the viewport, not the center. Original offset (0, 280) is
+    // preserved on top: x = 0 + halfW (center hero horizontally), y = 280 + halfH
+    // (keep hero ~97% down the viewport).
+    const cam = this.cameras.main;
+    const halfW = (cam.width / cam.zoom) / 2;
+    const halfH = (cam.height / cam.zoom) / 2;
+    cam.startFollow(this.heroSprite, true, 1.0, 1.0, halfW, 280 + halfH);
 
     // Create UI components with safety guards
     try {
