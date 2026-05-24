@@ -70,6 +70,8 @@ export class Preloader extends Scene {
     // Mage combat spritesheets (9-frame idle, 12-frame attack; 640×562 per frame)
     this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
     this.load.spritesheet('mage_attack', 'assets/characters/mage/attack/spritesheet.png', { frameWidth: 640, frameHeight: 562 });
+    this.load.image('mage_defeat_bg',    'assets/characters/mage/defeat/defeat.jpg');
+    this.load.image('warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
 
     // Monster static images
     const staticMonsters = [
