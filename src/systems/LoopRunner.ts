@@ -21,6 +21,7 @@ export interface LoopStateData {
   tiles: TileSlot[];
   positionInLoop: number;
   difficultyMultiplier: number;
+  trailblazerFiredThisLoop?: boolean;
 }
 
 export interface EconomyData {

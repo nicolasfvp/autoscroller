@@ -37,7 +37,6 @@ export class CombatScene extends Scene {
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
-  private transitioning = false;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
@@ -168,21 +167,10 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
 
-  preload(): void {
-    // Defensive: the warrior hero_test frames are normally loaded by
-    // Preloader, but reload here so an out-of-band scene launch still
-    // has the assets when create() runs.
-    if (!this.textures.exists('hero_test_idle'))  this.load.image('hero_test_idle',  'assets/hero_test/idle.png');
-    if (!this.textures.exists('hero_test_idle2')) this.load.image('hero_test_idle2', 'assets/hero_test/idle2.png');
-    for (let i = 1; i <= 11; i++) {
-      const key = `hero_test_${i}`;
-      if (!this.textures.exists(key)) this.load.image(key, `assets/hero_test/${i}.png`);
-    }
-  }
-
   init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
+
 
   /**
    * Apply pre-fight subtile effects to the freshly-built CombatState.
@@ -291,52 +279,78 @@ export class CombatScene extends Scene {
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
       const heroIdleKey = `${sp}_idle`;
       const heroAttackKey = `${sp}_attack`;
-      const heroDeathKey = `${sp}_death`;
 
-      // Warrior hero_test sprites: 2-frame idle + 11-frame attack via
-      // setTexture cycling (Phaser animations can't span separate-texture
-      // frames, so we drive the cycle from time.delayedCall instead).
-      if (this.textures.exists('hero_test_idle')) {
-        this.heroSprite = this.add.sprite(200, 330, 'hero_test_idle').setDepth(10).setScale(0.7);
+      if (this.textures.exists(heroIdleKey)) {
+        const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
+        const idleIsSpritesheet = idleFrameCount > 1;
+        this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? 0.495 : 0.7);
+        this.add.ellipse(200, 472, 110, 22, 0x000000, 0.35).setDepth(9);
 
-        const hasIdle2 = this.textures.exists('hero_test_idle2');
+        const idle2Key = `${sp}_idle2`;
+        const hasIdle2 = this.textures.exists(idle2Key);
         let idleFrame = 0;
         let isAttacking = false;
-        this.time.addEvent({
-          delay: 250, loop: true,
-          callback: () => {
-            if (!this.heroSprite || isAttacking || !hasIdle2) return;
-            idleFrame = 1 - idleFrame;
-            this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
-          },
-        });
 
-        // 11-frame attack cycle. 50ms/frame -> ~550ms total, leaving room
-        // for the 350ms delayedCall below before the queue updates.
-        const ATTACK_FRAME_DELAY_MS = 50;
+        if (idleIsSpritesheet) {
+          const idleAnimKey = `${heroIdleKey}_loop`;
+          if (!this.anims.exists(idleAnimKey)) {
+            this.anims.create({
+              key: idleAnimKey,
+              frames: this.anims.generateFrameNumbers(heroIdleKey, { start: 0, end: idleFrameCount - 1 }),
+              frameRate: 8,
+              repeat: -1,
+            });
+          }
+          this.heroSprite.play(idleAnimKey);
+        } else {
+          this.time.addEvent({
+            delay: 250, loop: true,
+            callback: () => {
+              if (!this.heroSprite || isAttacking || !hasIdle2) return;
+              idleFrame = 1 - idleFrame;
+              this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
+            },
+          });
+        }
+
         const playAttackAnimation = () => {
           if (!this.heroSprite || isAttacking) return;
           isAttacking = true;
-          let frame = 1;
-          const tick = () => {
-            if (!this.heroSprite) { isAttacking = false; return; }
-            this.heroSprite.setTexture(`hero_test_${frame}`);
-            frame++;
-            if (frame <= 11) {
-              this.time.delayedCall(ATTACK_FRAME_DELAY_MS, tick);
-            } else {
-              isAttacking = false;
-              this.heroSprite.setTexture(idleFrame === 0 ? 'hero_test_idle' : 'hero_test_idle2');
+          if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
+            const attackFrameCount = this.textures.get(heroAttackKey).frameTotal - 1;
+            if (attackFrameCount > 0) {
+              this.anims.create({
+                key: heroAttackKey,
+                frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: attackFrameCount - 1 }),
+                frameRate: 12,
+                repeat: 0,
+              });
             }
-          };
-          tick();
+          }
+          if (this.anims.exists(heroAttackKey)) {
+            if (idleIsSpritesheet) {
+              this.heroSprite.setX(this.heroSprite.x + 18);
+              this.heroSprite.setY(this.heroSprite.y + 8);
+              this.heroSprite.setScale(this.heroSprite.scaleX * (268 / 278));
+            }
+            this.heroSprite.play(heroAttackKey);
+            this.heroSprite.once('animationcomplete', () => {
+              isAttacking = false;
+              if (!this.heroSprite) return;
+              if (idleIsSpritesheet) {
+                this.heroSprite.setX(this.heroSprite.x - 18);
+                this.heroSprite.setY(this.heroSprite.y - 8);
+                this.heroSprite.setScale(0.495);
+                this.heroSprite.play(`${heroIdleKey}_loop`);
+              } else {
+                this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
+              }
+            });
+          } else {
+            isAttacking = false;
+          }
         };
 
-        // Patched onCardPlayed: every card triggers the attack animation;
-        // damage-bearing cards additionally play the slash/fireball SFX
-        // and the enemy tint flash. Keyword-intro teaching from the
-        // default handler is preserved so first-time keywords still pause
-        // the fight.
         const origOnCardPlayed = this.onCardPlayed;
         this.onCardPlayed = (data: GameEvents['combat:card-played']) => {
           if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -364,12 +378,6 @@ export class CombatScene extends Scene {
         };
         eventBus.off('combat:card-played', origOnCardPlayed);
         eventBus.on('combat:card-played', this.onCardPlayed);
-      } else if (this.textures.exists(heroIdleKey)) {
-        if (!this.anims.exists(heroIdleKey)) this.anims.create({ key: heroIdleKey, frames: this.anims.generateFrameNumbers(heroIdleKey, {}), frameRate: 4, repeat: -1 });
-        if (!this.anims.exists(heroAttackKey)) this.anims.create({ key: heroAttackKey, frames: this.anims.generateFrameNumbers(heroAttackKey, {}), frameRate: 10, repeat: 0 });
-        if (!this.anims.exists(heroDeathKey)) this.anims.create({ key: heroDeathKey, frames: this.anims.generateFrameNumbers(heroDeathKey, {}), frameRate: 8, repeat: 0 });
-        this.heroSprite = this.add.sprite(300, 340, heroIdleKey).setDepth(10).setScale(4);
-        this.heroSprite.play(heroIdleKey);
       } else {
         this.heroSprite = this.add.sprite(300, 340, 'knight_idle').setDisplaySize(250, 250).setDepth(10);
       }
@@ -381,6 +389,7 @@ export class CombatScene extends Scene {
 
       if (this.textures.exists(this.enemyTextureKey)) {
         this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
+        this.add.ellipse(600, 472, 110, 22, 0x000000, 0.35).setDepth(9);
         const key2 = `${this.enemyTextureKey}_2`;
         if (this.textures.exists(key2)) {
           let frame = 0;

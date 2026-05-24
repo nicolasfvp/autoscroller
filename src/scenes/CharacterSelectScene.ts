@@ -33,6 +33,7 @@ export class CharacterSelectScene extends Scene {
     this.transitioning = false;
     this.selectedIndex = 0;
     this.classCards = [];
+    this.cameras.main.setBackgroundColor('#1a1a2e');
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
     // Background Image
@@ -56,9 +57,13 @@ export class CharacterSelectScene extends Scene {
 
     CLASSES.forEach((cls, i) => {
       const x = startX + i * (cardWidth + gap);
-      const y = LAYOUT.centerY + 20;
-      const card = this.createClassCard(x, y, cardWidth, cardHeight, cls, i);
-      this.classCards.push(card);
+      const y = LAYOUT.centerY + 35;
+      try {
+        const card = this.createClassCard(x, y, cardWidth, cardHeight, cls, i);
+        this.classCards.push(card);
+      } catch (err) {
+        console.error('[CharacterSelect] card creation failed for', cls.id, err);
+      }
     });
 
     this.highlightSelected();
@@ -74,29 +79,11 @@ export class CharacterSelectScene extends Scene {
       this.selectedIndex = Math.min(CLASSES.length - 1, this.selectedIndex + 1);
       this.highlightSelected();
     });
-    this.input.keyboard?.on('keydown-ENTER', () => {
-      this.confirmSelection();
-    });
-    this.input.keyboard?.on('keydown-SPACE', () => {
-      this.confirmSelection();
-    });
-    this.input.keyboard?.on('keydown-ESC', () => {
-      if (this.deckBuilderOpen) return;
-      this.fadeToScene(SCENE_KEYS.MAIN_MENU);
-    });
-
     // Reset to mouse mode when the pointer actually moves — this prevents
     // a stale pointerover event from overriding keyboard navigation when
     // the cursor happens to sit over a non-active card.
     this.input.on('pointermove', () => { this.lastInputWasMouse = true; });
 
-    // Hint
-    this.add.text(LAYOUT.centerX, 570, 'Arrow keys to browse, Enter to select', {
-      fontSize: '16px',
-      color: '#ffffff',
-      fontFamily: FONTS.family,
-      resolution: 3,
-    }).setOrigin(0.5);
   }
 
   private createClassCard(
@@ -133,56 +120,96 @@ export class CharacterSelectScene extends Scene {
       this.highlightSelected();
     });
 
-    // Character sprite preview (animated).
-    if (this.textures.exists(cls.spriteKey)) {
-      const animKey = `select_${cls.id}_idle`;
-      if (!this.anims.exists(animKey)) {
-        this.anims.create({
-          key: animKey,
-          frames: this.anims.generateFrameNumbers(cls.spriteKey, {}),
-          frameRate: 4,
-          repeat: -1,
-        });
+    // ── Sprite zone (top 60% of card) ────────────────────────────
+    // Card half-height = 230. Name band occupies -230 to -202 (28px).
+    // Sprite is centered at y=-90 so it sits just below the name band.
+    const SPRITE_Y = -90;
+    if (cls.idleFrames?.every(k => this.textures.exists(k))) {
+      const img = this.add.image(0, SPRITE_Y, cls.idleFrames[0]).setScale(cls.spriteScale ?? 0.55);
+      container.add(img);
+      let frame = 0;
+      this.time.addEvent({
+        delay: 500, loop: true,
+        callback: () => { frame = 1 - frame; img.setTexture(cls.idleFrames![frame]); },
+      });
+    } else if (this.textures.exists(cls.spriteKey)) {
+      // frameTotal includes __BASE; subtract 1 to get animation frame count.
+      const animFrameCount = this.textures.get(cls.spriteKey).frameTotal - 1;
+      if (animFrameCount > 0) {
+        // Multi-frame spritesheet: use Phaser animation system.
+        const animKey = `select_${cls.id}_idle`;
+        if (!this.anims.exists(animKey)) {
+          this.anims.create({
+            key: animKey,
+            frames: this.anims.generateFrameNumbers(cls.spriteKey, { start: 0, end: animFrameCount - 1 }),
+            frameRate: cls.spriteFrameRate ?? 4,
+            repeat: -1,
+          });
+        }
+        const sprite = this.add.sprite(0, SPRITE_Y, cls.spriteKey).setScale(cls.spriteScale ?? 3);
+        if (cls.spriteTint !== undefined) sprite.setTint(cls.spriteTint);
+        sprite.play(animKey);
+        container.add(sprite);
+      } else {
+        // Single frame or parse failure: show frame 0 as a static image.
+        const img = this.add.image(0, SPRITE_Y, cls.spriteKey, 0).setScale(cls.spriteScale ?? 0.55);
+        container.add(img);
       }
-      const sprite = this.add.sprite(0, -90, cls.spriteKey).setScale(3);
-      if (cls.spriteTint !== undefined) sprite.setTint(cls.spriteTint);
-      sprite.play(animKey);
-      container.add(sprite);
     } else {
-      // Fallback colored square (per class fallbackColor)
-      const fallback = this.add.rectangle(0, -90, 64, 64, cls.fallbackColor);
+      const fallback = this.add.rectangle(0, SPRITE_Y, 64, 64, cls.fallbackColor);
       container.add(fallback);
     }
 
-    // Description
-    const desc = this.add.text(0, 20, cls.description, {
-      fontSize: '18px',
-      color: '#ffffff',
+    // Character name — rendered after sprite so it appears on top
+    const NAME_Y = -216;
+    const nameBg = this.add.rectangle(0, NAME_Y, w - 24, 28, 0x000000, 0.6);
+    container.add(nameBg);
+    const nameLabel = this.add.text(0, NAME_Y, cls.name, {
+      fontSize: '20px',
+      fontStyle: 'bold',
+      color: '#f0d080',
       stroke: '#000000',
-      strokeThickness: 3,
+      strokeThickness: 4,
+      fontFamily: FONTS.family,
+      resolution: 3,
+    }).setOrigin(0.5);
+    container.add(nameLabel);
+
+    // ── Info zone (bottom 40% of card) ───────────────────────────
+    const INFO_TOP = 30;
+    const infoPanelH = h / 2 - INFO_TOP + 10;
+    const infoPanel = this.add.rectangle(0, INFO_TOP + infoPanelH / 2, w - 24, infoPanelH, 0x2a2e3b);
+    container.add(infoPanel);
+
+    // Description
+    const desc = this.add.text(0, INFO_TOP + 18, cls.description, {
+      fontSize: '15px',
+      color: '#cccccc',
+      stroke: '#000000',
+      strokeThickness: 2,
       fontFamily: FONTS.family,
       align: 'center',
       resolution: 3,
-    }).setOrigin(0.5);
+    }).setOrigin(0.5, 0);
     container.add(desc);
 
-    // Stats bars
-    const statsY = 60;
-    this.addStatBar(container, 'HP', cls.stats.hp, 100, 0xff4444, statsY);
-    this.addStatBar(container, 'STA', cls.stats.stamina, 60, 0xffaa00, statsY + 28);
-    this.addStatBar(container, 'MP', cls.stats.mana, 60, 0x4488ff, statsY + 56);
+    // Stats bars (below description, 26px gap between rows)
+    const STATS_TOP = INFO_TOP + 72;
+    this.addStatBar(container, 'HP',  cls.stats.hp,      100, 0xff4444, STATS_TOP);
+    this.addStatBar(container, 'STA', cls.stats.stamina,  60, 0xffaa00, STATS_TOP + 26);
+    this.addStatBar(container, 'MP',  cls.stats.mana,     60, 0x4488ff, STATS_TOP + 52);
 
     // Deck hint
-    const deckLabel = this.add.text(0, 140, `Deck: ${cls.deckHint}`, {
-      fontSize: '15px',
-      color: '#ffffff',
+    const deckLabel = this.add.text(0, STATS_TOP + 80, `Deck: ${cls.deckHint}`, {
+      fontSize: '13px',
+      color: '#aaaaaa',
       stroke: '#000000',
-      strokeThickness: 3,
+      strokeThickness: 2,
       fontFamily: FONTS.family,
       align: 'center',
       wordWrap: { width: w - 30 },
       resolution: 3,
-    }).setOrigin(0.5);
+    }).setOrigin(0.5, 0);
     container.add(deckLabel);
 
     return container;
@@ -193,9 +220,9 @@ export class CharacterSelectScene extends Scene {
     label: string, value: number, max: number,
     color: number, yOffset: number,
   ): void {
-    const barWidth = 160;
-    const barHeight = 16;
-    const labelW = 36;
+    const barWidth = 116;
+    const barHeight = 14;
+    const labelW = 34;
 
     // Label
     const txt = this.add.text(-barWidth / 2 - labelW, yOffset, label, {

@@ -80,9 +80,7 @@ export class RelicViewerScene extends Scene {
     }
 
     // Close button
-    createButton(this, 400, 520, 'Close (R)', () => this.close(), 'primary');
-
-    this.input.keyboard?.on('keydown-R', () => this.close());
+    createButton(this, 400, 520, 'Close', () => this.close(), 'primary');
 
     this.events.on('shutdown', this.cleanup, this);
   }

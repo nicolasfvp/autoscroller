@@ -136,10 +136,6 @@ export class BossExitScene extends Scene {
 
     this.confirmBtn.on('pointerdown', () => this.confirmSelection());
 
-    // Keyboard path: Enter/Space confirms the current selection (no-op if none).
-    this.input.keyboard?.on('keydown-ENTER', () => this.confirmSelection());
-    this.input.keyboard?.on('keydown-SPACE', () => this.confirmSelection());
-
     this.events.on('shutdown', this.cleanup, this);
   }
 

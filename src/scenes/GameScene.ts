@@ -32,6 +32,7 @@ export class GameScene extends Scene {
   private loopRunner!: LoopRunner;
   private loopRunState!: LoopRunState;
   private heroSprite!: Phaser.GameObjects.Sprite;
+  private heroWalkTimer: Phaser.Time.TimerEvent | null = null;
   private hud!: LoopHUD;
   private celebration = new LoopCelebration();
 
@@ -114,7 +115,21 @@ export class GameScene extends Scene {
           this.introPlaying = false;
           // Resume hero animation
           const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
-          this.heroSprite?.play(`${sp}_walk`, true);
+          const walkAnim = `${sp}_walk`;
+          if (this.anims.exists(walkAnim)) {
+            this.heroSprite?.play(walkAnim, true);
+          } else if (!this.heroWalkTimer) {
+            // Warrior uses plain images — start toggle timer now
+            const idleK = `${sp}_idle`;
+            const idle2K = `${sp}_idle2`;
+            if (this.textures.exists(idle2K)) {
+              let frame = 0;
+              this.heroWalkTimer = this.time.addEvent({
+                delay: 200, loop: true,
+                callback: () => { frame ^= 1; this.heroSprite?.setTexture(frame === 0 ? idleK : idle2K); },
+              });
+            }
+          }
         }
       });
     } else {
@@ -177,21 +192,44 @@ export class GameScene extends Scene {
     const idleKey = `${sp}_idle`;
     const attackKey = `${sp}_attack`;
     const deathKey = `${sp}_death`;
-    if (!this.anims.exists(walkKey)) {
-      this.anims.create({ key: walkKey, frames: this.anims.generateFrameNumbers(walkKey, {}), frameRate: 8, repeat: -1 });
-      this.anims.create({ key: idleKey, frames: this.anims.generateFrameNumbers(idleKey, {}), frameRate: 4, repeat: -1 });
-      this.anims.create({ key: attackKey, frames: this.anims.generateFrameNumbers(attackKey, {}), frameRate: 10, repeat: 0 });
-      this.anims.create({ key: deathKey, frames: this.anims.generateFrameNumbers(deathKey, {}), frameRate: 8, repeat: 0 });
+    // Only create spritesheet animations for keys that are actually spritesheets.
+    // hero_idle / hero_idle2 are plain images; hero_walk / hero_death don't exist.
+    for (const [key, frameRate, repeat] of [
+      [walkKey,    8, -1],
+      [attackKey, 10,  0],
+      [deathKey,   8,  0],
+    ] as [string, number, number][]) {
+      if (!this.anims.exists(key) && this.textures.exists(key) && this.textures.get(key).frameTotal > 1) {
+        this.anims.create({ key, frames: this.anims.generateFrameNumbers(key, {}), frameRate, repeat });
+      }
     }
 
-    // Hero sprite
-    this.heroSprite = this.add.sprite(100, 455, idleKey);
+    // Hero sprite — use idle texture as base
+    const initialTexture = this.textures.exists(idleKey) ? idleKey : '__DEFAULT';
+    this.heroSprite = this.add.sprite(100, 455, initialTexture);
     this.heroSprite.setOrigin(0.5, 1.0);
-    this.heroSprite.setScale(1.5);
+    // Normalize hero to ~96px tall regardless of source frame size (warrior=64px, mage=724px)
+    const walkFrameH = this.textures.exists(walkKey) && this.textures.get(walkKey).frameTotal > 1
+      ? (this.textures.get(walkKey).get(0)?.realHeight ?? 64)
+      : 64;
+    this.heroSprite.setScale(walkFrameH > 100 ? 96 / walkFrameH : 1.5);
     this.heroSprite.setDepth(50);
-    
-    // Play idle during intro, walk otherwise
-    this.heroSprite.play(this.introPlaying ? idleKey : walkKey);
+
+    if (this.introPlaying) {
+      // During intro just show idle — no animation needed
+    } else if (this.anims.exists(walkKey)) {
+      this.heroSprite.play(walkKey, true);
+    } else {
+      // Fake walk by toggling between idle frames (warrior uses plain images)
+      const idle2Key = `${sp}_idle2`;
+      if (this.textures.exists(idle2Key)) {
+        let frame = 0;
+        this.heroWalkTimer = this.time.addEvent({
+          delay: 200, loop: true,
+          callback: () => { frame ^= 1; this.heroSprite?.setTexture(frame === 0 ? idleKey : idle2Key); },
+        });
+      }
+    }
 
     // Camera follow (push target lower on screen via offsetY)
     // Lerp set to 1 to avoid camera lagging behind the moving hero.
@@ -215,28 +253,6 @@ export class GameScene extends Scene {
     // Map speed slider lives in SpeedPanelScene (persistent bottom-left
     // panel). It writes run.mapSpeed directly; this scene re-reads that on
     // every update() so changes apply immediately.
-
-    // Keyboard shortcuts
-    this.input.keyboard?.on('keydown-D', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
-      }
-    });
-
-    this.input.keyboard?.on('keydown-R', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
-      }
-    });
-
-    this.input.keyboard?.on('keydown-ESC', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.PAUSE);
-      }
-    });
 
     // Resume handler (return from combat/shop/etc overlay)
     this.events.on('resume', () => this.syncStateAfterTransition());
@@ -613,6 +629,10 @@ export class GameScene extends Scene {
 
 
   private cleanup(): void {
+    if (this.heroWalkTimer) {
+      this.heroWalkTimer.destroy();
+      this.heroWalkTimer = null;
+    }
     if (this.autoSaveUnsubscribe) {
       this.autoSaveUnsubscribe();
       this.autoSaveUnsubscribe = undefined;

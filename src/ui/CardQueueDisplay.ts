@@ -1,6 +1,6 @@
 // Horizontal bottom-bar card queue for the combat scene.
-// 4 cards occupy the RIGHT half of the canvas (x ≥ 353) so they never overlap
-// the SpeedPanelScene (x=8–276, y=478–588, depth 999).
+// Active card (slot 0) sits at x=400 (screen center); the staircase cascades
+// right so cards never overlap the SpeedPanelScene (x=8–276, depth 999).
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
@@ -8,17 +8,16 @@ import { createCardVisual } from './CardVisual';
 const VISIBLE_COUNT = 5;
 
 // [centerX, centerY, scale, alpha]
-// Queue lives in the bottom-right corner. The staircase steps DOWN-RIGHT so
-// the last 3 cards descend into the corner; new cards rise up from below.
+// Active card anchored at screen-center (x=400); queue cascades down-right.
 // Alpha decays in even 0.20 steps for a smooth front-to-back gradient.
 const SLOTS: [number, number, number, number][] = [
-  [500, 490, 0.62, 1.00],   // 0 — PLAYING (front, top-left of the cluster)
-  [598, 505, 0.56, 0.80],   // 1 — NEXT
-  [665, 525, 0.42, 0.60],   // 2 — stair starts descending
-  [705, 545, 0.36, 0.40],   // 3 — stair, aglutinated
-  [735, 560, 0.32, 0.20],   // 4 — corner
+  [400, 490, 0.62, 1.00],   // 0 — PLAYING (screen center)
+  [498, 505, 0.56, 0.80],   // 1 — NEXT
+  [565, 525, 0.42, 0.60],   // 2 — stair starts descending
+  [605, 545, 0.36, 0.40],   // 3 — stair, aglutinated
+  [635, 560, 0.32, 0.20],   // 4 — corner
 ];
-const SLOT_INCOMING_X = 735; // same column as slot 4 — cards slide UP into it
+const SLOT_INCOMING_X = 635; // same column as slot 4 — cards slide UP into it
 const SLOT_INCOMING_Y = 650; // off-screen bottom
 
 export class CardQueueDisplay {
@@ -162,7 +161,7 @@ export class CardQueueDisplay {
   }
 
   onDeckReshuffled(): void {
-    const resetText = this.scene.add.text(580, 490, 'Deck Reset', {
+    const resetText = this.scene.add.text(480, 490, 'Deck Reset', {
       fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 

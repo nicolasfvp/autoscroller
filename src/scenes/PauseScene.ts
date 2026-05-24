@@ -78,12 +78,6 @@ export class PauseScene extends Scene {
       this.scene.start(SCENE_KEYS.MAIN_MENU);
     });
 
-    // ESC to resume — same delay gate as the backdrop so the ESC that opened
-    // this scene doesn't immediately dismiss it on the same frame.
-    this.time.delayedCall(100, () => {
-      this.input.keyboard?.on('keydown-ESC', () => this.resume());
-    });
-
     this.events.on('shutdown', this.cleanup, this);
   }
 
