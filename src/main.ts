@@ -66,6 +66,7 @@ const config: Phaser.Types.Core.GameConfig = {
     render: {
         antialias: true,
         roundPixels: true,
+        pixelArt: true
     },
     dom: {
         createContainer: true
