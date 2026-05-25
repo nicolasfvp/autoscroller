@@ -14,33 +14,9 @@ import {
 import {
   ensureNickname,
   setStoredNickname,
-  utcDateString,
 } from '../systems/DailySeed';
 import { NicknameModal } from '../ui/NicknameModal';
 
-// Rotating tips surfaced on the menu — one is picked at random on every
-// MainMenu mount. Phrased as short hints so a returning player learns
-// passively between runs without a dedicated tutorial pass. Lean toward
-// non-obvious mechanics (Slow ticks for damage, Burn doesn't decay) over
-// generic "play the game" advice.
-const TIPS: string[] = [
-  'Cards in the deck builder glow gold when they share a keyword with ≥2 cards already in your deck.',
-  'Tier 0 cards each teach one element. Pick them early to learn what each element does.',
-  'Tap the "?" button in any scene to revisit keywords you have already encountered.',
-  'Slow does not just slow — it also deals damage every tick. Cheap pressure on bosses.',
-  'Burn stacks do NOT decay. They stack up until a Pyre card detonates them for big damage.',
-  'Bleed doubles its tick damage if the enemy has attacked since the last tick.',
-  'Relics in the shop glow gold when they combo with your current deck.',
-  'Vengeance triggers when you have taken HP damage in the last 2 seconds — keep risky cards near it.',
-  'Armor depletes before HP and absorbs damage flatly. Stack it early before bosses.',
-  'Stun freezes enemy attacks while at least 1 stack is up. Earth and Water both apply it.',
-  'Mage cards spend mana, Warrior cards spend stamina. Mind your pool when ordering the deck.',
-  'Heavy cards hit harder but cycle slower. Front-load fast cards to keep pressure flowing.',
-];
-
-function pickRandomTip(): string {
-  return TIPS[Math.floor(Math.random() * TIPS.length)];
-}
 
 export class MainMenu extends Scene {
   private savedRun: RunState | null = null;
@@ -115,7 +91,6 @@ export class MainMenu extends Scene {
     // strip stays seamless across loops (a plain tween with repeat:-1
     // snaps both images back to their starting x simultaneously, which
     // produces a visible gap on the first loop).
-    const fogImages: Phaser.GameObjects.Image[] = [];
     for (let i = 0; i < 2; i++) {
       const startX = LAYOUT.canvasWidth / 2 + (i * LAYOUT.canvasWidth);
       const fogImg = this.add.image(startX, LAYOUT.canvasHeight - 150, 'fog');
@@ -123,7 +98,6 @@ export class MainMenu extends Scene {
       fogImg.setAlpha(0.3);
       fogImg.setBlendMode(Phaser.BlendModes.SCREEN);
       fogImg.setDepth(-5);
-      fogImages.push(fogImg);
 
       const baseY = fogImg.y;
 
@@ -149,64 +123,23 @@ export class MainMenu extends Scene {
 
 
     if (this.savedRun) {
-      // Continue Run button
-      this.createImgBtn(LAYOUT.centerX, 330, 'btn_continue_run', () => this.continueRun(), 0.6);
-      // New Run button
-      this.createImgBtn(LAYOUT.centerX, 430, 'btn_new_game', () => this.showDeleteConfirmation(), 1.1);
+      this.createImgBtn(LAYOUT.centerX, 355, 'btn_continue_run', () => this.continueRun(), 280);
+      this.createImgBtn(LAYOUT.centerX, 412, 'btn_new_game', () => this.showDeleteConfirmation(), 280);
     } else {
-      // No saved run -- show only New Run
-      this.createImgBtn(LAYOUT.centerX, 330, 'btn_new_game', () => this.startNewRun(), 1.1);
+      this.createImgBtn(LAYOUT.centerX, 375, 'btn_new_game', () => this.startNewRun(), 280);
     }
 
-    // Daily Run entry — sits below the normal-mode buttons so it never
-    // overlaps Continue / New layouts. Label adapts based on whether
-    // there's an in-progress daily save for today.
-    this.createDailyRunButton(LAYOUT.centerX, 530);
-
-    // Rotating beginner tip — one randomly-picked hint per mount. Bottom of
-    // the menu, small italic so it reads as flavor text rather than a
-    // CTA. The player picks up mechanics passively across runs.
-    this.add.text(LAYOUT.centerX, 582, `💡  ${pickRandomTip()}`, {
-      fontSize: '11px',
-      fontStyle: 'italic',
-      color: '#cccccc',
-      stroke: '#000000',
-      strokeThickness: 2,
-      fontFamily: FONTS.family,
-      wordWrap: { width: 720 },
-      align: 'center',
-    }).setOrigin(0.5).setDepth(20);
+    this.createImgBtn(LAYOUT.centerX, this.savedRun ? 468 : 432, 'btn_daily_run', () => this.onDailyButtonClicked(), 280);
 
     this.events.on('shutdown', this.cleanup, this);
   }
 
-  private createDailyRunButton(x: number, y: number): void {
-    const hasDaily = !!this.savedDailyRun;
-    const label = hasDaily ? `CONTINUE DAILY (${utcDateString()})` : `DAILY RUN (${utcDateString()})`;
 
-    const bg = this.add.rectangle(x, y, 320, 38, 0x000000, 0.55)
-      .setStrokeStyle(2, 0xffd700, 0.9)
-      .setInteractive({ useHandCursor: true });
-    const txt = this.add.text(x, y, label, {
-      fontFamily: FONTS.family,
-      fontSize: '15px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-    }).setOrigin(0.5);
+  private createImgBtn(x: number, y: number, key: string, callback: () => void, displayWidth: number = 500) {
+    const btn = this.add.image(x, y, key).setInteractive({ useHandCursor: true });
+    const scale = displayWidth / btn.width;
+    btn.setScale(scale);
 
-    bg.on('pointerover', () => { bg.setFillStyle(0x000000, 0.75); txt.setColor(COLORS.accentHover); });
-    bg.on('pointerout', () => { bg.setFillStyle(0x000000, 0.55); txt.setColor(COLORS.accent); });
-    bg.on('pointerdown', () => this.onDailyButtonClicked());
-  }
-
-  private createImgBtn(x: number, y: number, key: string, callback: () => void, scale: number = 0.5) {
-    const btn = this.add.image(x, y, key)
-      .setScale(scale)
-      .setInteractive({ useHandCursor: true });
-
-    // Stop any in-flight scale tween on the same button before starting a
-    // new one — otherwise rapid hover bounces stack tweens and race the
-    // final scale to a wrong value.
     btn.on('pointerover', () => {
       this.tweens.killTweensOf(btn);
       this.tweens.add({ targets: btn, scale: scale * 1.05, duration: 100 });

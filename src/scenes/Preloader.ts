@@ -58,8 +58,8 @@ export class Preloader extends Scene {
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
-    // Mage scrolling animation (6-frame walk, 362×724 per frame)
-    this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 362, frameHeight: 724 });
+    // Mage scrolling animation (10-frame run, 512×512 per frame)
+    this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
@@ -71,30 +71,37 @@ export class Preloader extends Scene {
     this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
     this.load.spritesheet('mage_attack', 'assets/characters/mage/attack/spritesheet.png', { frameWidth: 640, frameHeight: 562 });
     this.load.image('mage_defeat_bg',    'assets/characters/mage/defeat/defeat.jpg');
+    this.load.spritesheet('hero_chibi_mage', 'assets/characters/mage/pocket/spritesheet.png', { frameWidth: 256, frameHeight: 256 });
     this.load.image('warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
 
-    // Monster static images
+    // Monster static images — files with _1.png suffix auto-derive _2 via regex below
     const staticMonsters = [
-      { id: 'corpse_eater', folder: 'cemetery', file: 'corpse eater.png' },
-      { id: 'headless_fire_horse', folder: 'cemetery', file: 'headless fire horse.png' },
-      { id: 'pocket_cat', folder: 'cemetery', file: 'pocket cat.png' },
-      { id: 'doom_knight', folder: 'default', file: 'doom knight.png' },
-      { id: 'iron_golem', folder: 'default', file: 'iron golem.png' },
-      { id: 'lizard_king', folder: 'default', file: 'lizard king.png' },
-      { id: 'baby_dragon', folder: 'desert', file: 'baby dragon.png' },
-      { id: 'giant_beetle', folder: 'desert', file: 'giant beetle.png' },
-      { id: 'mutated_salamander', folder: 'desert', file: 'mutated salamander.png' },
-      { id: 'ancient_tree', folder: 'forest', file: 'ancient tree.png' },
-      { id: 'giant_spider_2', folder: 'forest', file: 'giant spider 2.png' },
-      { id: 'giant_spider', folder: 'forest', file: 'giant spider.png' },
-      { id: 'mush', folder: 'forest', file: 'mush.png' },
-      { id: 'forge_slime', folder: 'lava', file: 'forge slime.png' },
-      { id: 'lava_golen', folder: 'lava', file: 'lava golen.png' },
-      { id: 'mecha_warrior', folder: 'lava', file: 'mecha warrior.png' },
-      { id: 'depths_horror', folder: 'swamp', file: 'depths horror.png' },
-      { id: 'toxic_gooze', folder: 'swamp', file: 'toxic gooze.png' },
-      { id: 'venomous_kobra', folder: 'swamp', file: 'venomous kobra.png' },
-      { id: 'lost_lizard', folder: '', file: 'lost_lizard_1.png' }
+      { id: 'corpse_eater',         folder: 'cemetery', file: 'corpse eater_1.png' },
+      { id: 'headless_fire_horse',  folder: 'cemetery', file: 'headless fire horse.png' },
+      { id: 'pocket_cat',           folder: 'cemetery', file: 'pocket cat.png' },
+      { id: 'ogre',                 folder: 'cemetery', file: 'ogre.png' },
+      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
+      { id: 'doom_knight',          folder: 'default',  file: 'doom knight.png' },
+      { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
+      { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
+      { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png' },
+      { id: 'giant_beetle',         folder: 'desert',   file: 'giant beetle.png' },
+      { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated salamander_1.png' },
+      { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree.png' },
+      { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
+      { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
+      { id: 'mush',                 folder: 'forest',   file: 'mush.png' },
+      { id: 'forge_slime',          folder: 'lava',     file: 'forge slime_1.png' },
+      { id: 'lava_golen',           folder: 'lava',     file: 'lava golen.png' },
+      { id: 'mecha_warrior',        folder: 'lava',     file: 'mecha warrior.png' },
+      { id: 'depths_horror',        folder: 'swamp',    file: 'depths horror_1.png' },
+      { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png' },
+      { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous kobra_1.png' },
+      { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png' },
+      { id: 'boss_berserker',       folder: '',         file: 'boss_berserker.png' },
+      { id: 'boss_demon',           folder: '',         file: 'boss_demon.png' },
+      { id: 'boss_hydra',           folder: '',         file: 'boss_hydra.png' },
+      { id: 'boss_mage',            folder: '',         file: 'boss_mage.png' },
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
@@ -143,6 +150,7 @@ export class Preloader extends Scene {
     this.load.image('bg_base_option', 'assets/ui/panels/base-option.png');
     this.load.image('fog', 'assets/ui/panels/fog.png');
     this.load.image('tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
+    this.load.image('belt_pillar', 'assets/ui/panels/pilar.png');
     this.load.image('tile_frame', 'assets/ui/panels/tile-frame.png');
     this.load.image('deck_frame', 'assets/ui/panels/deck-frame.png');
     this.load.image('deck_status_board', 'assets/ui/panels/deck-status-board.png');
@@ -156,9 +164,18 @@ export class Preloader extends Scene {
     // UI Buttons
     this.load.image('btn_continue_run', 'assets/ui/buttons/continue-run.png');
     this.load.image('btn_new_game', 'assets/ui/buttons/new-game.png');
+    this.load.image('btn_daily_run', 'assets/ui/buttons/daily-run.png');
     this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
     this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
+    this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
+    this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");
+    this.load.image('btn_skip_1',  'assets/ui/buttons/1.png');
+    this.load.image('btn_skip_5',  'assets/ui/buttons/5.png');
+    this.load.image('btn_skip_10', 'assets/ui/buttons/10.png');
+    this.load.image('btn_skip_25', 'assets/ui/buttons/25.png');
+    this.load.image('shop_icon', 'assets/icons/shop.png');
+    this.load.image('forge_icon', 'assets/icons/forge.png');
 
     // Material Icons
     this.load.image('mat_iron', 'assets/icons/iron.png');
@@ -171,6 +188,9 @@ export class Preloader extends Scene {
     this.load.image('mat_herbs', 'assets/icons/herbs.png');
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
+    this.load.image('icon_coin', 'assets/icons/coin.png');
+    this.load.image('icon_brick', 'assets/icons/brick.png');
+    this.load.image('icon_card', 'assets/icons/card.jpg');
 
     // Card token icons (audit §1.2): bracketed icon tokens like [burn], [str].
     // IconTokens.renderTokenText prefers `icon_${token}` textures when present
