@@ -8,6 +8,8 @@ import { getRun } from '../state/RunState';
 import { FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { attachKeywordHover, scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
@@ -154,13 +156,19 @@ export class DeckCustomizationScene extends Scene {
     this.scrollMaskGfx = maskGfx;
 
     // ── Pointer handlers ──
+    // pointer.x/y are canvas-pixel coords (multiplied by the Graphics Quality
+    // supersample — see main.ts). Drag visuals + grid math live in 800×600
+    // game-space, so funnel pointer events through the camera before using
+    // them. Without this, the drag preview floats off to the right/down by
+    // the UI_SCALE factor and the hover-slot lookup targets the wrong row.
     this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
       if (!this.dragCard) return;
-      this.dragCard.x = pointer.x;
-      this.dragCard.y = pointer.y;
+      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      this.dragCard.x = wp.x;
+      this.dragCard.y = wp.y;
 
-      const gridY = pointer.y + this.scrollY;
-      const newHover = this.getSlotIndex(pointer.x, gridY);
+      const gridY = wp.y + this.scrollY;
+      const newHover = this.getSlotIndex(wp.x, gridY);
       if (newHover !== this.hoverIndex) {
         this.hoverIndex = newHover;
         this.animateSlots();
@@ -173,6 +181,9 @@ export class DeckCustomizationScene extends Scene {
     });
 
     this.events.on('shutdown', this.cleanup, this);
+
+    // Scripted tutorial overlay — 'deck-customize-reorder' step.
+    TutorialOverlay.mountIfActive(this);
   }
 
   // ── Layout helpers ──
@@ -318,8 +329,10 @@ export class DeckCustomizationScene extends Scene {
     this.dragCardId = cardId;
     this.hoverIndex = this.deckOrder.length; // default: end of deck
 
-    // Create enlarged drag visual
-    this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
+    // Create enlarged drag visual at the pointer's game-space position. Raw
+    // pointer.x/y is in supersampled canvas pixels (see pointermove handler).
+    const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    this.dragCard = this.createDragVisual(cardId, wp.x, wp.y);
     this.scheduleDragTooltip(cardId);
   }
 
@@ -331,7 +344,8 @@ export class DeckCustomizationScene extends Scene {
 
     // Hide the original slot while dragging
     if (this.cardSlots[deckIndex]) this.cardSlots[deckIndex].setVisible(false);
-    this.dragCard = this.createDragVisual(cardId, pointer.x, pointer.y);
+    const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+    this.dragCard = this.createDragVisual(cardId, wp.x, wp.y);
     this.scheduleDragTooltip(cardId);
   }
 
@@ -483,6 +497,10 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private close(): void {
+    // Tutorial: 'deck-customize-reorder' completes when the player exits.
+    // Reorder happens via drag-and-drop and isn't a single discrete event
+    // we can easily hook; closing the panel signals "I'm done in here."
+    tutorialDirector.advanceIfMatches('deck-customize-reorder');
     // Different launchers leave the parent in different states:
     //   GameScene + LoopHUD → paused → needs resume()
     //   PlanningOverlay     → slept  → needs wake()

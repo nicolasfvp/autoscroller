@@ -66,6 +66,15 @@ const config: Phaser.Types.Core.GameConfig = {
     render: {
         antialias: true,
         roundPixels: true,
+        // Generate and sample mipmaps for downscaled textures (the 1024×1024
+        // card art renders at ~90 px in the deck library and ~150 px in-hand
+        // — a >10× downscale that aliases/blurs without mipmaps). LINEAR_
+        // MIPMAP_LINEAR is trilinear filtering: smooth between mip levels,
+        // smooth within each level. Phaser auto-generates mipmaps when this
+        // is set and the source texture has power-of-2 dimensions (the card
+        // art is 1024² → POT, so all card textures benefit). No need to
+        // regenerate or pre-resize the source PNGs.
+        mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
     },
     dom: {
         createContainer: true

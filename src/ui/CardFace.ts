@@ -176,6 +176,10 @@ export function createCardFace(
   drawPrimaryCost(scene, container, card, isUpgraded, primarySlot);
   drawSecondaryCosts(scene, container, card, isUpgraded, secondarySlot);
   drawCooldown(scene, container, card, isUpgraded, cooldownSlot);
+  // Cover-fit center crop for every size. The small in-hand slot is nearly
+  // 1:1 so the square source is shown almost in full; the wider popup slot
+  // crops top/bottom to fill horizontally (action stays in view because all
+  // generated art is composed with the action dead-center).
   drawArt(scene, container, card, artSlot);
   drawName(scene, container, card, isUpgraded, nameSlot);
   drawElements(scene, container, card, elemSlot);
@@ -415,20 +419,55 @@ function drawArt(
   parent: Phaser.GameObjects.Container,
   card: CardDefinition,
   slot: SlotBox,
+  fitMode: 'cover' | 'contain' = 'cover',
 ): void {
   const key = `card_${card.id}`;
-  if (scene.textures.exists(key)) {
-    const img = scene.add.image(slot.cx, slot.cy, key);
-    img.setDisplaySize(slot.w - 4, slot.h - 4);
-    parent.add(img);
-  } else {
+  if (!scene.textures.exists(key)) {
     const fallback: Record<string, string> = { attack: '⚔️', defense: '🛡️', magic: '✨' };
     parent.add(
       scene.add.text(slot.cx, slot.cy, fallback[card.category] ?? '❓', {
         fontSize: `${Math.round(slot.h * 0.5)}px`,
       }).setOrigin(0.5).setAlpha(0.5),
     );
+    return;
   }
+
+  const img = scene.add.image(slot.cx, slot.cy, key).setOrigin(0.5);
+  const sw = img.width;
+  const sh = img.height;
+  const slotW = Math.max(1, slot.w - 4);
+  const slotH = Math.max(1, slot.h - 4);
+
+  if (fitMode === 'cover') {
+    // Pick a centered crop region of the source texture whose aspect matches
+    // the slot, then scale the cropped rect up to fill the slot. setCrop
+    // operates on source-texture pixels; scaleX/scaleY then map cropW/cropH
+    // onto slotW/slotH so the displayed result is exactly slot-sized with
+    // the action centered (action is dead-center in every generated PNG).
+    const imageAspect = sw / sh;
+    const slotAspect = slotW / slotH;
+    let cropW: number, cropH: number, cropX: number, cropY: number;
+    if (slotAspect >= imageAspect) {
+      cropW = sw;
+      cropH = sw / slotAspect;
+      cropX = 0;
+      cropY = (sh - cropH) / 2;
+    } else {
+      cropH = sh;
+      cropW = sh * slotAspect;
+      cropY = 0;
+      cropX = (sw - cropW) / 2;
+    }
+    img.setCrop(cropX, cropY, cropW, cropH);
+    img.setScale(slotW / cropW, slotH / cropH);
+  } else {
+    // Contain-fit: full image visible. Letterboxing falls onto the slot's
+    // ART_BG (already dark) so the bars read as part of the frame.
+    const scale = Math.min(slotW / sw, slotH / sh);
+    img.setScale(scale);
+  }
+
+  parent.add(img);
 }
 
 function drawName(

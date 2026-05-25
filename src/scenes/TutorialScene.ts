@@ -15,6 +15,7 @@ import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 
 interface TutorialTopic {
   id: string;
@@ -107,6 +108,13 @@ export class TutorialScene extends Scene {
     // every boot).
     if (!this.replayMode) {
       this.metaState = await loadMetaState();
+      // Scripted tutorial takes over the first-run path — skip the tabbed
+      // legacy slideshow and route into the GameScene directly. The director
+      // has already armed the appropriate scene-level overlays.
+      if (tutorialDirector.isActive()) {
+        this.scene.start(SCENE_KEYS.GAME);
+        return;
+      }
       if (this.metaState.tutorialSeen) {
         this.scene.start(SCENE_KEYS.CITY_HUB);
         return;

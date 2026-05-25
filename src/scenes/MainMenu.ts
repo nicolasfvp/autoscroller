@@ -6,6 +6,7 @@ import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS, REGISTRY_KEYS } from '../state/SceneKeys';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import {
   consumeWipeFlag,
   formatWelcomeNotice,
@@ -284,6 +285,18 @@ export class MainMenu extends Scene {
 
   private async startNewRun(): Promise<void> {
     await saveManager.clear();
+    // First-run gating: if the player has never seen the tutorial, kick off
+    // the scripted director before the next scene mounts. Every participating
+    // scene checks tutorialDirector.isActive() in create() and mounts the
+    // TutorialOverlay; completion (last step advance) flips tutorialSeen.
+    try {
+      const meta = await loadMetaState();
+      if (!meta.tutorialSeen) {
+        tutorialDirector.start();
+      }
+    } catch (err) {
+      console.warn('[MainMenu] tutorial gate read failed:', err);
+    }
     this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT);
   }
 

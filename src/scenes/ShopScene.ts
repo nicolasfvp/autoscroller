@@ -95,21 +95,30 @@ export class ShopScene extends Scene {
 
       this.scene.bringToTop();
 
-      // Background fallback dimming
-      this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
+      // Shop interior background, then a gentle dim + center panel so the
+      // pixel-art shop is still visible around the menu chrome. The previous
+      // 0.82-alpha black panel hid the bg almost entirely — now we use a
+      // wood-stained translucent center column with a subtle vignette.
       if (this.textures.exists('bg_shop_scene')) {
         this.add.image(400, 300, 'bg_shop_scene').setDisplaySize(800, 600).setDepth(-1);
+      } else {
+        this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
       }
+      // Vignette so the panel reads against busy bg art.
+      this.add.rectangle(400, 300, 800, 600, 0x000000, 0.4);
 
-      this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x130800, 0.82);
-      this.add.rectangle(PANEL_RIGHT, 300, 3, 600, 0x9a6030, 0.5);
+      // Center menu panel: warm wood tone, gold double-stroke border.
+      this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x1a0c04, 0.78);
+      this.add.rectangle(PANEL_LEFT, 300, 4, 600, 0xd4a04a, 0.85);
+      this.add.rectangle(PANEL_RIGHT, 300, 4, 600, 0xd4a04a, 0.85);
 
-      this.add.rectangle(PANEL_CX, 24, PANEL_W, 48, 0x0a0400, 0.95);
-      this.add.rectangle(PANEL_CX, 47, PANEL_W, 2, 0x9a6030, 0.7);
+      // Header bar with bottom border accent.
+      this.add.rectangle(PANEL_CX, 24, PANEL_W, 48, 0x0a0400, 0.92);
+      this.add.rectangle(PANEL_CX, 47, PANEL_W, 2, 0xd4a04a, 0.9);
 
       this.add.text(PANEL_CX, 24, 'SHOP', {
-        fontSize: '23px', fontStyle: 'bold', color: GOLD,
-        fontFamily: FF, stroke: '#000', strokeThickness: 4,
+        fontSize: '26px', fontStyle: 'bold', color: GOLD,
+        fontFamily: FF, stroke: '#000', strokeThickness: 5,
       }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
       this.add.rectangle(PANEL_RIGHT - 4, 8, 130, 18, 0x3a2008, 0.92).setOrigin(1, 0).setStrokeStyle(1, 0x9a6030);

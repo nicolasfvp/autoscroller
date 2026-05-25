@@ -85,14 +85,23 @@ export class CardLibraryScene extends Phaser.Scene {
     this.filteredCards = this.allCards.slice();
     this.buildUpgradedSet();
 
-    // Dim backdrop — full-screen, absorbs clicks so the parent scene's
-    // pointerover handlers don't fire while the library is open.
-    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.85)
-      .setInteractive();
+    // Painted "wizard's archive" backdrop (Grok-generated). The dim layer +
+    // inner panel are still drawn for readability — but with lower alpha so
+    // the art shows through around the card grid.
+    if (this.textures.exists('bg_card_library')) {
+      this.add.image(400, 300, 'bg_card_library').setDisplaySize(800, 600).setDepth(-2);
+    }
+    const backdrop = this.add.rectangle(
+      400, 300, 800, 600,
+      0x000000, this.textures.exists('bg_card_library') ? 0.5 : 0.85,
+    ).setInteractive();
     backdrop.on('pointerdown', () => { /* swallow clicks */ });
 
-    // Library panel (full-screen with a thin frame).
-    this.add.rectangle(400, 300, 780, 580, 0x130800, 0.96).setStrokeStyle(2, 0x9a6030);
+    // Library panel (full-screen with a thin frame). Slightly more
+    // translucent so the painted backdrop bleeds through behind the grid.
+    this.add.rectangle(400, 300, 780, 580, 0x130800,
+      this.textures.exists('bg_card_library') ? 0.78 : 0.96,
+    ).setStrokeStyle(2, 0xd4a04a);
 
     // Title.
     this.add.text(400, 36, '📖 Card Library', {

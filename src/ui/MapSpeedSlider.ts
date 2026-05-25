@@ -101,11 +101,17 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
       .setInteractive({ useHandCursor: true, draggable: true });
     this.add(hitZone);
 
+    // pointer.x is in canvas-pixel coords (multiplied by the Graphics Quality
+    // supersample). trackX/trackW live in 800×600 game-space, so funnel the
+    // pointer through the camera before mapping it to a speed value. Without
+    // this, the slider snaps to the wrong tick (the handle visually lands at
+    // pointer.x / UI_SCALE, well off the cursor).
+    const cam = scene.cameras.main;
     hitZone.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      this.applyPointerX(pointer.x);
+      this.applyPointerX(cam.getWorldPoint(pointer.x, pointer.y).x);
     });
     hitZone.on('drag', (pointer: Phaser.Input.Pointer) => {
-      this.applyPointerX(pointer.x);
+      this.applyPointerX(cam.getWorldPoint(pointer.x, pointer.y).x);
     });
 
     this.redraw();

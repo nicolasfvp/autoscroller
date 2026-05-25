@@ -24,6 +24,8 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -101,6 +103,12 @@ export class CombatScene extends Scene {
   };
 
   private onCombatEnd = (eventData: GameEvents['combat:end']) => {
+    // Tutorial: combat-intro auto-advances on victory so the player isn't
+    // stuck staring at a "read this" panel after winning. KeywordIntroService
+    // handles the keyword teaching itself.
+    if (tutorialDirector.isActive() && eventData.result === 'victory') {
+      tutorialDirector.advanceIfMatches('combat-intro');
+    }
     const currentRun = getRun();
     currentRun.isInCombat = false;
     const finalState = this.engine.getState();
@@ -436,6 +444,11 @@ export class CombatScene extends Scene {
         new DailyTickerPanel(this, { selfRunId: run.runId });
       }
 
+      // Scripted tutorial overlay (combat-intro / combat-keyword steps).
+      // Both are 'click' advance so they show a centered modal with Next;
+      // auto-advance fires on combat victory if the player hasn't clicked.
+      TutorialOverlay.mountIfActive(this);
+
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
       console.error('[CombatScene] Critical error in create():', err);
@@ -446,10 +459,10 @@ export class CombatScene extends Scene {
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
-      // Pause the simulation while a contextual keyword-intro overlay is
-      // up so the player can read the explanation without enemies still
-      // ticking down in the background.
-      if (keywordIntro.isPaused()) {
+      // Pause the simulation while a contextual keyword-intro overlay OR
+      // a click-advance tutorial modal is up. Same gating pattern: hold the
+      // engine so the enemy doesn't kill the player while they're reading.
+      if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT)) {
         if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
         return;
       }

@@ -5,7 +5,8 @@
 
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
-import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS } from '../ui/StyleConstants';
+import { createWoodButton, type WoodButtonHandle } from '../ui/WoodButton';
 import { getAllCards } from '../data/DataLoader';
 import {
   validateStarterDeck,
@@ -22,8 +23,11 @@ import { saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import type { CardDefinition } from '../data/types';
 import { CardFilterBar } from '../ui/CardFilterBar';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { applyFilters, type CardFilters } from '../ui/CardFilterBar.pure';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { CARD_BASE_SIZES, createCardFace } from '../ui/CardFace';
 import { scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { cardSynergizesWithDeck } from '../systems/cards/SynergyDetection';
@@ -36,17 +40,18 @@ const WHITE = '#ffffff';
 const GOLD = COLORS.accent;
 const DIM = COLORS.textSecondary;
 
-// Grid geometry — 6×N scrollable grid of CardVisuals at scale 0.55. The slot
-// panel is a narrow column at the right edge (~80 px), so the grid claims the
-// rest of the canvas width.
+// Grid geometry — 6×N scrollable grid of CardVisuals. Sized so the central
+// panel reads as the focal frame: more horizontal breathing room between cards
+// and a wider viewport that fits inside the painted gold-filigree frame
+// (panel_card_grid). The slot column stays anchored to the right edge.
 const CARD_SCALE = 0.55;
 const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 82.5
 const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 132
 const GRID_COLS = 6;
-const GRID_GAP = 8;
-const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 535
-const GRID_X = 20;
-const GRID_Y = 145;
+const GRID_GAP = 14;
+const GRID_VIEWPORT_W = GRID_COLS * CARD_W + (GRID_COLS - 1) * GRID_GAP; // 6×82.5 + 5×14 = 565
+const GRID_X = 60;
+const GRID_Y = 152;
 const GRID_VIEWPORT_H = 380;
 
 // CardFilterBar row — element dropdown / tier checkboxes / search. Spans the
@@ -67,8 +72,10 @@ const SLOT_GAP = 4;
 
 // Hover preview — pops up next to the small grid card on hover. Position is
 // computed dynamically per-hover so the preview sits beside the actual source
-// card rather than at a fixed scene location.
-const PREVIEW_SCALE = 0.9;
+// card rather than at a fixed scene location. Uses the 'popup' baseSize so
+// the description panel renders — the 'small' baseSize would drop it.
+const PREVIEW_BASE = 'popup' as const;
+const PREVIEW_SCALE = 0.55;
 const PREVIEW_DEPTH = 200;
 const PREVIEW_GAP = 14;
 // Reserve width for the keyword glossary panel (~220 px + 12 gap) so the
@@ -108,7 +115,7 @@ export class DeckBuilderScene extends Scene {
   private presetButtons: Phaser.GameObjects.Container[] = [];
   private validationText!: Phaser.GameObjects.Text;
   private elementBudgetText!: Phaser.GameObjects.Text;
-  private startBtn!: Phaser.GameObjects.Text;
+  private startBtn!: WoodButtonHandle;
 
   // Hover preview — a full-scale CardVisual that pops in when the player hovers
   // a card cell in the grid. Replaces the old text-based info tooltip; the
@@ -175,27 +182,39 @@ export class DeckBuilderScene extends Scene {
 
     this.scene.bringToTop();
 
-    // Backdrop — absorbs all clicks behind the overlay
-    const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.92);
+    // Painted "scribe's workshop" backdrop (Grok-generated). Layer order:
+    //   1. The image at depth -2 — provides the warm painterly atmosphere.
+    //   2. A translucent dim rectangle at default depth so foreground UI
+    //      (cards, deck slots, filter bar) reads against busy art.
+    //   3. The deck_frame asset at depth -1 — gold filigree corners that
+    //      match DeckCustomization's chrome.
+    // Falls back to a flat warm-navy backdrop if the painted asset is
+    // missing from the bundle.
+    if (this.textures.exists('bg_deck_builder')) {
+      this.add.image(400, 300, 'bg_deck_builder').setDisplaySize(800, 600).setDepth(-2);
+    }
+    const backdrop = this.add.rectangle(
+      400, 300, 800, 600,
+      0x1a1224, this.textures.exists('bg_deck_builder') ? 0.55 : 0.96,
+    );
     this.time.delayedCall(50, () => {
       backdrop.setInteractive();
       backdrop.on('pointerdown', () => { /* eat clicks */ });
     });
+    if (this.textures.exists('deck_frame')) {
+      this.add.image(400, 300, 'deck_frame').setDisplaySize(792, 596).setDepth(-1);
+    }
 
-    // Title
+    // Title — slightly larger, stronger stroke so it reads against the new
+    // backdrop and aligns with the gold-banner styling used in Forge/Tavern.
     this.add.text(400, 22, `Build Your Deck — ${this.className === 'mage' ? 'Mage' : 'Warrior'}`, {
-      fontSize: '22px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-      stroke: '#000', strokeThickness: 4,
-    }).setOrigin(0.5);
+      fontSize: '24px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+      stroke: '#000', strokeThickness: 5,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    // Cancel (top-right) — resumes parent
-    const cancelBtn = this.add.text(770, 22, '✕ Cancel', {
-      fontSize: '14px', fontStyle: 'bold', color: '#ff9999', fontFamily: FF,
-      stroke: '#000', strokeThickness: 2,
-    }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true });
-    cancelBtn.on('pointerover', () => cancelBtn.setColor(WHITE));
-    cancelBtn.on('pointerout', () => cancelBtn.setColor('#ff9999'));
-    cancelBtn.on('pointerdown', () => this.cancel());
+    // Cancel (top-right) — small wood button matched with the rest of the UI.
+    createWoodButton(this, 750, 22, '✕ Cancel', () => this.cancel(),
+      { width: 92, height: 28, fontSize: 13, variant: 'danger' });
 
     // Keyword glossary "?" button — left of Cancel so it stays accessible
     // while the deck builder is open. Hydrate the seen-keyword cache so the
@@ -210,12 +229,31 @@ export class DeckBuilderScene extends Scene {
     }).setOrigin(0.5);
 
     this.renderPresetTabs();
+    // The panel frame must be drawn FIRST so the filter bar (added next)
+    // and the card grid both layer on top via insertion order — otherwise
+    // the wood backing covers the filter dropdown.
+    this.renderPanelFrame();
     this.renderCardFilterBar();
     this.renderCardGrid();
     this.renderDeckPanel();
     this.renderValidationAndActions();
     this.bindScroll();
     this.refresh();
+
+    // Deck-builder step intentionally has no registered spotlight — the
+    // player needs free access to the preset row, card grid, deck slots,
+    // AND Confirm button. The overlay falls back to a passive hint panel
+    // (no input blocker) for event-advance steps without a spotlight.
+    TutorialOverlay.mountIfActive(this);
+
+    // ESC cancels the overlay — matches the ✕ Cancel button. Skip when the
+    // search input has focus so typing 'Escape' to clear field text wouldn't
+    // accidentally exit the builder.
+    this.input.keyboard?.on('keydown-ESC', () => {
+      const active = document.activeElement as HTMLElement | null;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      this.cancel();
+    });
 
     // CardFilterBar appends a native <input> to document.body. Destroy it
     // when the scene shuts down so a relaunch doesn't stack ghost inputs
@@ -265,15 +303,26 @@ export class DeckBuilderScene extends Scene {
     for (let i = 0; i < PRESETS_PER_CLASS; i++) {
       const x = startX + i * (tabW + gap);
       const container = this.add.container(x + tabW / 2, y);
-      const bg = this.add.rectangle(0, 0, tabW, tabH, 0x2a2a40, 0.85).setStrokeStyle(1, 0x4a4a60);
+      // Wooden chip: wood texture + gold trim. The Image takes index 0 so
+      // updatePresetTab can swap its tint for selected/unselected states.
+      let bg: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+      if (this.textures.exists('wood_texture')) {
+        bg = this.add.image(0, 0, 'wood_texture').setDisplaySize(tabW, tabH);
+      } else {
+        bg = this.add.rectangle(0, 0, tabW, tabH, 0x2a2a40, 0.85);
+      }
+      const trim = this.add.rectangle(0, 0, tabW, tabH, 0x000000, 0)
+        .setStrokeStyle(1, 0x4a4a60, 0.9);
       const label = this.add.text(0, 0, '', {
-        fontSize: '11px', color: DIM, fontFamily: FF,
+        fontSize: '11px', fontStyle: 'bold', color: DIM, fontFamily: FF,
+        stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5);
-      container.add([bg, label]);
-      bg.setInteractive({ useHandCursor: true });
-      bg.on('pointerdown', () => this.loadPreset(i));
-      bg.on('pointerover', () => bg.setStrokeStyle(2, 0xffffff, 1));
-      bg.on('pointerout',  () => this.updatePresetTab(i));
+      container.add([bg, trim, label]);
+      const hit = (bg as any).setInteractive ? bg : trim;
+      hit.setInteractive({ useHandCursor: true });
+      hit.on('pointerdown', () => this.loadPreset(i));
+      hit.on('pointerover', () => trim.setStrokeStyle(2, 0xffd700, 1));
+      hit.on('pointerout',  () => this.updatePresetTab(i));
       this.presetButtons.push(container);
     }
   }
@@ -281,16 +330,22 @@ export class DeckBuilderScene extends Scene {
   private updatePresetTab(i: number): void {
     const container = this.presetButtons[i];
     if (!container) return;
-    const bg = container.list[0] as Phaser.GameObjects.Rectangle;
-    const label = container.list[1] as Phaser.GameObjects.Text;
+    const bg = container.list[0] as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+    const trim = container.list[1] as Phaser.GameObjects.Rectangle;
+    const label = container.list[2] as Phaser.GameObjects.Text;
     const presets = this.getPresets();
     const p = presets[i];
     const hasCards = (p?.cardIds?.length ?? 0) > 0;
     const isSelected = i === this.selectedPresetIndex;
-    bg.setStrokeStyle(isSelected ? 2 : 1, isSelected ? 0xffd700 : 0x4a4a60);
-    bg.setFillStyle(isSelected ? 0x3a3a55 : 0x2a2a40, 0.85);
+    trim.setStrokeStyle(isSelected ? 2 : 1, isSelected ? 0xffd700 : 0x6a4a2a);
+    // Tint the wood texture warmer when selected; image-only API.
+    if ((bg as Phaser.GameObjects.Image).setTint) {
+      (bg as Phaser.GameObjects.Image).setTint(isSelected ? 0xffd680 : 0xffffff);
+    } else {
+      (bg as Phaser.GameObjects.Rectangle).setFillStyle(isSelected ? 0x3a3a55 : 0x2a2a40, 0.85);
+    }
     label.setText(p?.name ?? `Empty ${i + 1}`);
-    label.setColor(hasCards ? (isSelected ? GOLD : WHITE) : DIM);
+    label.setColor(hasCards ? (isSelected ? GOLD : WHITE) : (isSelected ? '#ffe680' : DIM));
   }
 
   private loadPreset(i: number): void {
@@ -305,17 +360,64 @@ export class DeckBuilderScene extends Scene {
   // 3xN scrollable card grid (left side)
   // ────────────────────────────────────────────────
 
-  private renderCardGrid(): void {
-    // Background panel for the grid viewport
-    this.add.rectangle(
-      GRID_X + GRID_VIEWPORT_W / 2,
-      GRID_Y + GRID_VIEWPORT_H / 2,
-      GRID_VIEWPORT_W + 16, GRID_VIEWPORT_H + 16,
-      0x141420, 0.85,
-    ).setStrokeStyle(1, 0x4a4a60);
+  // Wood panel that wraps the filter bar + card grid. Drawn before the
+  // filter bar / grid in create() so insertion order puts those on top.
+  private renderPanelFrame(): void {
+    const gridCX = GRID_X + GRID_VIEWPORT_W / 2;
+    const gridCY = GRID_Y + GRID_VIEWPORT_H / 2;
+    if (this.textures.exists('panel_card_grid_v2')) {
+      // v2 frame: clean dark wood plank with thin gold trim + corner accents.
+      // Sized & positioned to enclose BOTH the filter bar (~y=108) and the
+      // grid (y=152-532), so the filters read as part of the same framed
+      // panel instead of floating chrome that the new wood backing covered.
+      // The Grok PNG has a ~30 px solid-black border around the visible
+      // wood panel — cropping it out so only the wood + trim renders.
+      const tex = this.textures.get('panel_card_grid_v2');
+      const src = tex.getSourceImage() as HTMLImageElement;
+      const sw = (src as any).width ?? 1456;
+      const sh = (src as any).height ?? 800;
+      const mx = Math.floor(sw * 0.025);
+      const my = Math.floor(sh * 0.045);
 
-    this.gridHeaderText = this.add.text(GRID_X, GRID_Y - 18, 'Available Starter Cards', {
-      fontSize: '13px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
+      // Panel bounds: top ≈ 92 (≈16 px above the filter bar), bottom ≈ 540
+      // (≈8 px below the grid). Centered on the union of filter bar + grid,
+      // NOT on the grid alone.
+      const PANEL_TOP    = 92;
+      const PANEL_BOTTOM = 540;
+      const PANEL_CX     = gridCX;
+      const PANEL_CY     = (PANEL_TOP + PANEL_BOTTOM) / 2;
+      const PANEL_W      = GRID_VIEWPORT_W + 100;
+      const PANEL_H      = PANEL_BOTTOM - PANEL_TOP;
+
+      const frame = this.add.image(PANEL_CX, PANEL_CY, 'panel_card_grid_v2');
+      frame.setCrop(mx, my, sw - mx * 2, sh - my * 2);
+      frame.setDisplaySize(PANEL_W, PANEL_H);
+      // No setDepth — frame sits between the dim backdrop (created in
+      // create()) and the cards/filter bar (added later by their respective
+      // render methods, drawing on top via insertion order).
+    } else if (this.textures.exists('panel_card_grid')) {
+      // Legacy v1 fallback (ornate frame with candles).
+      this.add.image(gridCX, gridCY, 'panel_card_grid')
+        .setDisplaySize(GRID_VIEWPORT_W + 110, GRID_VIEWPORT_H + 100);
+      this.add.rectangle(gridCX, gridCY,
+        GRID_VIEWPORT_W + 4, GRID_VIEWPORT_H + 4,
+        0x14080a, 0.42,
+      );
+    } else {
+      // Fallback: opaque rectangle if the frame asset didn't load.
+      this.add.rectangle(gridCX, gridCY,
+        GRID_VIEWPORT_W + 16, GRID_VIEWPORT_H + 16,
+        0x141420, 0.85,
+      ).setStrokeStyle(1, 0x4a4a60);
+    }
+  }
+
+  private renderCardGrid(): void {
+    // Header text — small label inside the grid's top-left, updated by
+    // refreshGridHeader() with the filtered card count.
+    this.gridHeaderText = this.add.text(GRID_X + 6, GRID_Y + 4, 'Cards', {
+      fontSize: '11px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
     });
 
     this.gridContainer = this.add.container(0, 0);
@@ -345,7 +447,7 @@ export class DeckBuilderScene extends Scene {
     this.gridContainer.setY(0);
 
     const filtered = this.getFilteredCards();
-    this.gridHeaderText.setText(`Available Starter Cards (${filtered.length})`);
+    this.gridHeaderText.setText(`${filtered.length} cards`);
 
     filtered.forEach((card, idx) => {
       const col = idx % GRID_COLS;
@@ -361,10 +463,12 @@ export class DeckBuilderScene extends Scene {
     const totalH = totalRows * CARD_H + (totalRows - 1) * GRID_GAP;
     this.gridMaxScroll = Math.max(0, totalH - GRID_VIEWPORT_H);
 
+    // Scroll hint sits to the right of the grid header so the footer strip
+    // and action buttons own the bottom rows of the canvas without overlap.
     if (!this.gridScrollHint) {
-      this.gridScrollHint = this.add.text(GRID_X + GRID_VIEWPORT_W / 2, GRID_Y + GRID_VIEWPORT_H + 8, '↕ Mouse wheel to scroll', {
-        fontSize: '10px', color: DIM, fontFamily: FF,
-      }).setOrigin(0.5);
+      this.gridScrollHint = this.add.text(GRID_X + GRID_VIEWPORT_W - 4, GRID_Y - 16, '↕ scroll', {
+        fontSize: '10px', color: DIM, fontFamily: FF, fontStyle: 'italic',
+      }).setOrigin(1, 0.5);
     }
     this.gridScrollHint.setVisible(this.gridMaxScroll > 0);
 
@@ -523,12 +627,15 @@ export class DeckBuilderScene extends Scene {
 
   private bindScroll(): void {
     this.input.on('wheel', (_p: any, _g: any, _dx: number, dy: number) => {
-      // Only scroll when the pointer is over the grid viewport — otherwise the
-      // wheel happens for tooltip area / filter chips etc.
+      // GRID_X/GRID_Y live in 800×600 game-space, but pointer.x/y are canvas
+      // pixels (multiplied by the Graphics Quality supersample — see main.ts).
+      // Convert through the camera so the viewport check is in the same space
+      // as the constants.
       const pointer = this.input.activePointer;
+      const w = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
       const inViewport =
-        pointer.x >= GRID_X && pointer.x <= GRID_X + GRID_VIEWPORT_W &&
-        pointer.y >= GRID_Y && pointer.y <= GRID_Y + GRID_VIEWPORT_H;
+        w.x >= GRID_X && w.x <= GRID_X + GRID_VIEWPORT_W &&
+        w.y >= GRID_Y && w.y <= GRID_Y + GRID_VIEWPORT_H;
       if (!inViewport) return;
 
       this.gridScrollY = Math.max(0, Math.min(this.gridMaxScroll, this.gridScrollY + dy));
@@ -544,19 +651,25 @@ export class DeckBuilderScene extends Scene {
 
   private renderDeckPanel(): void {
     const totalH = SLOT_CARD_H * STARTER_DECK_SIZE + SLOT_GAP * (STARTER_DECK_SIZE - 1);
-    this.add.rectangle(
-      SLOT_PANEL_X,
-      SLOT_Y + totalH / 2,
-      SLOT_PANEL_W + 16,
-      totalH + 16,
-      0x141420, 0.85,
-    ).setStrokeStyle(1, 0x4a4a60);
+    // Wood-backed panel for the slot column. Pulls the same wood_texture used
+    // for the preset chips so the right side reads as one cohesive board.
+    const panelW = SLOT_PANEL_W + 16;
+    const panelH = totalH + 28;
+    const panelCY = SLOT_Y + totalH / 2;
+    if (this.textures.exists('wood_texture')) {
+      this.add.image(SLOT_PANEL_X, panelCY, 'wood_texture')
+        .setDisplaySize(panelW, panelH)
+        .setTint(0xb89060);
+    }
+    this.add.rectangle(SLOT_PANEL_X, panelCY, panelW, panelH, 0x000000, 0)
+      .setStrokeStyle(2, 0xd4a04a, 0.9);
 
     this.add.text(SLOT_PANEL_X, SLOT_Y - 24, 'Deck', {
-      fontSize: '13px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-    }).setOrigin(0.5, 1);
+      fontSize: '14px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5, 1).setShadow(1, 1, '#000', 2, true, true);
     this.add.text(SLOT_PANEL_X, SLOT_Y - 10, 'click to remove', {
-      fontSize: '9px', color: DIM, fontFamily: FF,
+      fontSize: '9px', color: DIM, fontFamily: FF, fontStyle: 'italic',
     }).setOrigin(0.5, 1);
 
     for (let i = 0; i < STARTER_DECK_SIZE; i++) {
@@ -566,10 +679,14 @@ export class DeckBuilderScene extends Scene {
       // is filled.
       const slotY = SLOT_Y + i * (SLOT_CARD_H + SLOT_GAP) + SLOT_CARD_H / 2;
       const container = this.add.container(SLOT_PANEL_X, slotY);
-      const bg = this.add.rectangle(0, 0, SLOT_CARD_W + 8, SLOT_CARD_H + 4, 0x1a1a30, 0.7)
-        .setStrokeStyle(1, 0x3a3a55);
-      const label = this.add.text(0, 0, `Slot ${i + 1}`, {
-        fontSize: '12px', color: DIM, fontFamily: FF,
+      // Recessed slot: dark inset + dotted gold stroke that reads as an
+      // "empty card holder" rather than a UI button. updateDeckSlots strokes
+      // it with the dominant element color once a card is mounted.
+      const bg = this.add.rectangle(0, 0, SLOT_CARD_W + 8, SLOT_CARD_H + 4, 0x1a0e06, 0.92)
+        .setStrokeStyle(1.5, 0x8a6030, 0.85);
+      const label = this.add.text(0, 0, i + 1 + '', {
+        fontSize: '22px', fontStyle: 'bold', color: '#6a4a2a', fontFamily: FF,
+        stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5);
       container.add([bg, label]);
 
@@ -629,9 +746,9 @@ export class DeckBuilderScene extends Scene {
         visual.disableInteractive();
         container.add(visual);
       } else {
-        bg.setFillStyle(0x1a1a30, 0.7).setStrokeStyle(1, 0x3a3a55);
-        label.setText(`Slot ${i + 1}`);
-        label.setColor(DIM);
+        bg.setFillStyle(0x1a0e06, 0.92).setStrokeStyle(1.5, 0x8a6030, 0.85);
+        label.setText(i + 1 + '');
+        label.setColor('#6a4a2a');
         label.setVisible(true);
       }
       this.lastSlotCardIds[i] = cardId;
@@ -655,8 +772,8 @@ export class DeckBuilderScene extends Scene {
     // would clip past the canvas edge. The keyword panel mirrors itself
     // independently, but we still keep a tooltip budget here so the preview
     // doesn't push the panel off-canvas when it would have otherwise fit.
-    const w = STANDARD_CARD_WIDTH * PREVIEW_SCALE;
-    const h = STANDARD_CARD_HEIGHT * PREVIEW_SCALE;
+    const w = CARD_BASE_SIZES[PREVIEW_BASE].w * PREVIEW_SCALE;
+    const h = CARD_BASE_SIZES[PREVIEW_BASE].h * PREVIEW_SCALE;
 
     let previewX = sourceCenterX + CARD_W / 2 + PREVIEW_GAP + w / 2;
     const rightEdgeWithTooltip = previewX + w / 2 + PREVIEW_TOOLTIP_BUDGET;
@@ -670,13 +787,15 @@ export class DeckBuilderScene extends Scene {
       Math.min(LAYOUT.canvasHeight - h / 2 - 4, sourceCenterY),
     );
 
-    const visual = createCardVisual(this, previewX, previewY, card.id, { scale: PREVIEW_SCALE });
-    // The preview is a passive overlay: it must not absorb pointer events
-    // (would block the grid cell's pointerout), open the detail popup, or
-    // schedule its own competing keyword tooltip.
-    visual.removeAllListeners('pointerdown');
-    visual.removeAllListeners('pointerover');
-    visual.removeAllListeners('pointerout');
+    // Use createCardFace directly so we can pass baseSize: 'popup' — that
+    // unlocks the description panel (the 'small' baseSize used by
+    // createCardVisual drops it). hover:false skips the bobbing tween, and
+    // omitting onClick keeps the preview as a passive overlay.
+    const visual = createCardFace(this, previewX, previewY, card.id, {
+      baseSize: PREVIEW_BASE,
+      scale: PREVIEW_SCALE,
+      hover: false,
+    });
     visual.disableInteractive();
     visual.setDepth(PREVIEW_DEPTH);
     this.hoverPreview = visual;
@@ -706,17 +825,35 @@ export class DeckBuilderScene extends Scene {
   // ────────────────────────────────────────────────
 
   private renderValidationAndActions(): void {
-    this.elementBudgetText = this.add.text(400, 540, '', {
+    // Footer bar: a thin wood-trimmed strip above the action row so the
+    // element budget + validation lines never overlap the buttons. The grid
+    // ends at y=532 (GRID_Y + GRID_VIEWPORT_H); we claim the strip below it
+    // for the readouts and place buttons further down at y=585.
+    this.add.rectangle(GRID_X, 540, GRID_VIEWPORT_W, 36, 0x14080a, 0.78)
+      .setOrigin(0, 0)
+      .setStrokeStyle(1, 0xd4a04a, 0.7);
+
+    this.elementBudgetText = this.add.text(GRID_X + GRID_VIEWPORT_W / 2, 552, '', {
       fontSize: '12px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5);
-    this.validationText = this.add.text(400, 558, '', {
-      fontSize: '11px', color: '#ff9999', fontFamily: FF, align: 'center',
-      wordWrap: { width: 750 },
+    this.validationText = this.add.text(GRID_X + GRID_VIEWPORT_W / 2, 567, '', {
+      fontSize: '10px', color: '#ff9999', fontFamily: FF, align: 'center',
+      wordWrap: { width: GRID_VIEWPORT_W - 20 },
+      stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5);
 
-    createButton(this, 100, 580, 'Clear', () => { this.currentDeck = []; this.refresh(); }, 'secondary');
-    createButton(this, 300, 580, 'Save Preset', () => this.savePreset(), 'secondary');
-    this.startBtn = createButton(this, 600, 580, '▶ Start Run', () => this.confirmDeck(), 'primary');
+    // Action row: wooden buttons in the bottom strip. Cluster left so the
+    // Start Run CTA gets visual priority on the right.
+    createWoodButton(this, 80, 585, 'Clear',
+      () => { this.currentDeck = []; this.refresh(); },
+      { width: 110, height: 32, fontSize: 14, variant: 'danger' });
+    createWoodButton(this, 220, 585, 'Save Preset',
+      () => this.savePreset(),
+      { width: 150, height: 32, fontSize: 14 });
+    this.startBtn = createWoodButton(this, 400, 585, '▶ Start Run',
+      () => this.confirmDeck(),
+      { width: 220, height: 38, fontSize: 18, variant: 'primary' });
   }
 
   private async savePreset(): Promise<void> {
@@ -743,6 +880,10 @@ export class DeckBuilderScene extends Scene {
   private confirmDeck(): void {
     const v = validateStarterDeck(this.currentDeck, this.className);
     if (!v.valid) return;
+    // Tutorial advance: 'deck-builder' step completes when the player
+    // confirms a valid deck (any valid deck — the preset is suggested but
+    // not enforced so the player still feels in control).
+    tutorialDirector.advanceIfMatches('deck-builder');
     const cb = this.onConfirm;
     this.onConfirm = null; // guard double-fire
     if (cb) cb([...this.currentDeck]);
@@ -772,13 +913,11 @@ export class DeckBuilderScene extends Scene {
     if (v.valid) {
       this.validationText.setText('Deck is valid! Click ▶ Start Run.');
       this.validationText.setColor('#99ff99');
-      this.startBtn.setColor(GOLD);
-      this.startBtn.setAlpha(1);
+      this.startBtn.setEnabled(true);
     } else {
       this.validationText.setText(v.errors.join(' · '));
       this.validationText.setColor('#ff9999');
-      this.startBtn.setColor(DIM);
-      this.startBtn.setAlpha(0.5);
+      this.startBtn.setEnabled(false);
     }
   }
 

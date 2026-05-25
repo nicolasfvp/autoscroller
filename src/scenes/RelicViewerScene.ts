@@ -20,17 +20,30 @@ export class RelicViewerScene extends Scene {
     const run = getRun();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
-    // Opaque backdrop covering the full canvas — RelicViewerScene runs as
-    // an overlay with the parent scene paused but still visible underneath.
-    this.add.rectangle(400, 300, 800, 600, 0x0a0a14, 0.96).setInteractive();
+    // Painted "reliquary vault" backdrop (Grok-generated). Stacked with the
+    // deck_frame corners + a translucent dim layer so the relic icons and
+    // text still read clearly against the busy art.
+    if (this.textures.exists('bg_relic_vault')) {
+      this.add.image(400, 300, 'bg_relic_vault').setDisplaySize(800, 600).setDepth(-2);
+    }
+    this.add.rectangle(
+      400, 300, 800, 600,
+      0x14101e, this.textures.exists('bg_relic_vault') ? 0.55 : 0.96,
+    ).setInteractive();
+    if (this.textures.exists('deck_frame')) {
+      this.add.image(400, 300, 'deck_frame').setDisplaySize(792, 596).setDepth(-1);
+    }
 
-    // Title
-    this.add.text(400, 60, 'Your Relics', {
-      fontSize: '32px',
+    // Title with the gold-banner treatment used by Forge/Shop.
+    this.add.text(400, 50, 'Your Relics', {
+      fontSize: '30px',
       fontStyle: 'bold',
       color: COLORS.accent,
       fontFamily: FONTS.family,
-    }).setOrigin(0.5);
+      stroke: '#000',
+      strokeThickness: 5,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+    this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
 
     if (run.relics.length === 0) {
       this.add.text(400, 300, 'No relics yet.\n\nFind them in treasure chests and events!', {
@@ -38,6 +51,8 @@ export class RelicViewerScene extends Scene {
         color: COLORS.textSecondary,
         fontFamily: FONTS.family,
         align: 'center',
+        stroke: '#000',
+        strokeThickness: 2,
       }).setOrigin(0.5);
     } else {
       const COLS = 5;
