@@ -322,7 +322,10 @@ export class ForgeScene extends Scene {
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
 
     const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
-    const tier = (this.forgeSlots.length - 1) as 1 | 2 | 3;
+    // Tier maps 1:1 to element count — see ForgeSystem.validateForge (1 elem = T1,
+    // 2 = T2, 3 = T3). Previously this was `length - 1`, which displayed the T2
+    // cost for a T3 recipe and let users hit `insufficient_gold` mid-attempt.
+    const tier = this.forgeSlots.length as 1 | 2 | 3;
     const cost = this.forgeSlots.length >= 2 ? getForgeGoldCost(tier, forgeLevel) : 0;
     const deckSize = run.deck.active.length;
     const validation = this.forgeSlots.length >= 2
