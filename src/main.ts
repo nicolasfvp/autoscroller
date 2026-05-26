@@ -54,7 +54,9 @@ const storedQuality = (() => {
 const UI_SCALE = QUALITY_TO_SCALE[storedQuality ?? ''] ?? QUALITY_TO_SCALE.balanced;
 
 const config: Phaser.Types.Core.GameConfig = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
+    disableContextMenu: true,
+    banner: false,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -64,19 +66,12 @@ const config: Phaser.Types.Core.GameConfig = {
         autoRound: true,
     },
     render: {
-        antialias: true,
-        roundPixels: true,
-        pixelArt: true
+        pixelArt: true,
+        powerPreference: 'high-performance',
+        batchSize: 4096,
     },
     dom: {
         createContainer: true
-    },
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { x: 0, y: 0 },
-            debug: false
-        }
     },
     // Use requestAnimationFrame (the Phaser default). The previous
     // forceSetTimeOut:true setting hurt frame pacing on every platform and
@@ -85,7 +80,7 @@ const config: Phaser.Types.Core.GameConfig = {
     // goal of "keep ticking when hidden". CombatScene/GameScene already
     // force 1x speed under document.hidden, so rAF throttling is harmless.
     fps: {
-        target: 60
+        target: 30
     },
     scene: [
         Boot,
