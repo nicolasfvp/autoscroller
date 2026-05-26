@@ -16,6 +16,7 @@ import {
   setStoredNickname,
 } from '../systems/DailySeed';
 import { NicknameModal } from '../ui/NicknameModal';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 
 
 export class MainMenu extends Scene {
@@ -75,6 +76,17 @@ export class MainMenu extends Scene {
     if (g.__runStateClearedOnBoot) {
       g.__runStateClearedOnBoot = false;
       this.time.delayedCall(50, () => this.showSaveIncompatibleNotice());
+    }
+
+    // First-run gating: if the player has never seen the tutorial, kick off
+    // the scripted director before the next scene mounts.
+    try {
+      const meta = await loadMetaState();
+      if (!meta.tutorialSeen) {
+        tutorialDirector.start();
+      }
+    } catch (err) {
+      console.warn('[MainMenu] tutorial gate read failed:', err);
     }
 
     // Theme Song

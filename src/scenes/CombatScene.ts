@@ -24,6 +24,8 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -110,6 +112,10 @@ export class CombatScene extends Scene {
 
     const sp = getSpritePrefix(currentRun.hero.className ?? 'warrior');
     const heroDeathKey = `${sp}_death`;
+
+    if (tutorialDirector.isActive() && eventData.result === 'victory') {
+      tutorialDirector.advanceIfMatches('combat-intro');
+    }
 
     if (eventData.result === 'victory') {
       if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
@@ -436,6 +442,8 @@ export class CombatScene extends Scene {
         new DailyTickerPanel(this, { selfRunId: run.runId });
       }
 
+      TutorialOverlay.mountIfActive(this);
+
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
       console.error('[CombatScene] Critical error in create():', err);
@@ -449,7 +457,7 @@ export class CombatScene extends Scene {
       // Pause the simulation while a contextual keyword-intro overlay is
       // up so the player can read the explanation without enemies still
       // ticking down in the background.
-      if (keywordIntro.isPaused()) {
+      if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT)) {
         if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
         return;
       }

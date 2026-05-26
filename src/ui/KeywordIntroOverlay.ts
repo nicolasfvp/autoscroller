@@ -46,9 +46,18 @@ export function openKeywordIntroOverlay(
   ).setOrigin(0, 0).setInteractive();
   overlay.add(backdrop);
 
-  const panelBg = scene.add.rectangle(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 0x1a1a2e, 0.98)
-    .setOrigin(0, 0)
-    .setStrokeStyle(2, 0x9a6030);
+  // Wood + parchment banner asset (Grok-generated). Replaces the flat dark
+  // blue panel that read as AI-mock chrome.
+  let panelBg: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  if (scene.textures.exists('panel_modifier_banner')) {
+    // Asset has its own dark header strip + tassels; size to PANEL_W/H.
+    panelBg = scene.add.image(PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, 'panel_modifier_banner')
+      .setDisplaySize(PANEL_W + 60, PANEL_H + 40);
+  } else {
+    panelBg = scene.add.rectangle(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 0x1a1a2e, 0.98)
+      .setOrigin(0, 0)
+      .setStrokeStyle(2, 0x9a6030);
+  }
   panelBg.setInteractive();
   overlay.add(panelBg);
 

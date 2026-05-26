@@ -27,6 +27,7 @@ import type { ElementInventory } from '../systems/ShardSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { createCardVisual } from '../ui/CardVisual';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 const FF    = FONTS.family;
 const GOLD  = '#ffd700';
@@ -64,11 +65,16 @@ export class ForgeScene extends Scene {
     try {
       this.scene.bringToTop();
 
-      // Dim backdrop + side rails (matches ShopScene's panel chrome).
+      // Backdrop: painted forge table if available, otherwise flat chrome.
       this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
-      this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x130800, 0.92);
-      this.add.rectangle(PANEL_LEFT, 300, 3, 600, 0x9a6030, 0.5);
-      this.add.rectangle(PANEL_RIGHT, 300, 3, 600, 0x9a6030, 0.5);
+      if (this.textures.exists('forge_table')) {
+        this.add.image(PANEL_CX, 300, 'forge_table')
+          .setDisplaySize(PANEL_W, 600).setDepth(-1);
+      } else {
+        this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x130800, 0.92);
+        this.add.rectangle(PANEL_LEFT, 300, 3, 600, 0x9a6030, 0.5);
+        this.add.rectangle(PANEL_RIGHT, 300, 3, 600, 0x9a6030, 0.5);
+      }
 
       // Header
       this.add.rectangle(PANEL_CX, 24, PANEL_W, 48, 0x0a0400, 0.95);
@@ -97,6 +103,8 @@ export class ForgeScene extends Scene {
       leave.on('pointerover', () => leave.setColor(WHITE));
       leave.on('pointerout',  () => leave.setColor(GOLD));
       leave.on('pointerdown', () => this.close());
+
+      TutorialOverlay.mountIfActive(this);
 
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {

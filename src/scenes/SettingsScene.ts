@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { createWoodButton } from '../ui/WoodButton';
 import { getAudioManager } from '../audio/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
@@ -61,15 +62,28 @@ export class SettingsScene extends Scene {
     audio.setSFXVolume(this.sfxVolume);
     audio.setEnabled(this.sfxEnabled);
 
-    // Overlay panel
-    this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 600, 500, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
+    // Painted scribe-study backdrop — falls back to flat panel if missing.
+    if (this.textures.exists('bg_settings_scribe')) {
+      this.add.image(LAYOUT.centerX, LAYOUT.centerY, 'bg_settings_scribe')
+        .setDisplaySize(LAYOUT.canvasWidth, LAYOUT.canvasHeight)
+        .setDepth(-2);
+    }
+    this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 800, 600, 0x000000,
+      this.textures.exists('bg_settings_scribe') ? 0.55 : 0,
+    ).setDepth(-1);
+    this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 600, 500,
+      0x1a0e06, this.textures.exists('bg_settings_scribe') ? 0.82 : LAYOUT.panelAlpha,
+    ).setStrokeStyle(2, 0xd4a04a, 0.85).setInteractive();
 
     // Title
     this.add.text(LAYOUT.centerX, 120, 'Settings', {
       ...FONTS.title,
-      color: COLORS.textPrimary,
+      color: COLORS.accent,
       fontFamily: FONTS.family,
-    }).setOrigin(0.5);
+      stroke: '#000',
+      strokeThickness: 5,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+    this.add.rectangle(LAYOUT.centerX, 145, 360, 2, 0xd4a04a, 0.7);
 
     this.createVolumeSlider();
     this.createMuteToggle();
@@ -258,7 +272,8 @@ export class SettingsScene extends Scene {
 
   // ── Back Button (y: 540) ───────────────────────────────
   private createBackButton(): void {
-    createButton(this, LAYOUT.centerX, 540, 'Back', () => this.saveAndClose(), 'primary');
+    createWoodButton(this, LAYOUT.centerX, 540, 'Back', () => this.saveAndClose(),
+      { width: 200, height: 48, fontSize: 22, variant: 'primary' });
   }
 
   // ── Confirmation overlay ───────────────────────────────

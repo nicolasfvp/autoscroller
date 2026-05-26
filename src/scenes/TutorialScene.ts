@@ -15,6 +15,7 @@ import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 
 interface TutorialTopic {
   id: string;
@@ -107,6 +108,12 @@ export class TutorialScene extends Scene {
       this.metaState = await loadMetaState();
       if (this.metaState.tutorialSeen) {
         this.scene.start(SCENE_KEYS.CITY_HUB);
+        return;
+      }
+      // If the scripted TutorialDirector is active it teaches contextually
+      // in-game — skip the static slideshow and go straight to the game.
+      if (tutorialDirector.isActive()) {
+        this.scene.start(SCENE_KEYS.GAME);
         return;
       }
     } else {

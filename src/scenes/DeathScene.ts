@@ -7,6 +7,7 @@ import { bankRunRewards } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
+import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 export class DeathScene extends Scene {
@@ -67,33 +68,16 @@ export class DeathScene extends Scene {
     const buttonLabel = isDaily ? 'Return to Menu' : 'Return to City';
     const nextScene = isDaily ? SCENE_KEYS.MAIN_MENU : SCENE_KEYS.CITY_HUB;
 
-    const BTN_W = 220, BTN_H = 36, BTN_CX = 400, BTN_CY = 566;
-    const btx = BTN_CX - BTN_W / 2;
-    const bty = BTN_CY - BTN_H / 2;
-
-    const btnBg = this.add.graphics().setDepth(2);
-    const drawBtn = (hover: boolean) => {
-      btnBg.clear();
-      btnBg.fillStyle(hover ? 0x2a2a2a : 0x111111, 1);
-      btnBg.fillRect(btx, bty, BTN_W, BTN_H);
-      btnBg.lineStyle(1, hover ? 0xdddddd : 0x666666, 1);
-      btnBg.strokeRect(btx, bty, BTN_W, BTN_H);
-    };
-    drawBtn(false);
-
-    const btnText = this.add.text(BTN_CX, BTN_CY, buttonLabel, {
-      fontFamily: FONTS.family, fontSize: '16px', fontStyle: 'bold', color: '#cccccc',
-    }).setOrigin(0.5).setDepth(2).setInteractive({ useHandCursor: true });
-
-    btnText.on('pointerover',  () => { drawBtn(true);  btnText.setColor('#ffffff'); });
-    btnText.on('pointerout',   () => { drawBtn(false); btnText.setColor('#cccccc'); });
-    btnText.on('pointerdown', async () => {
+    // Wood-themed CTA. The dim bottom strip already darkens the area for
+    // readability, so we just center the button on top of it.
+    const cta = createWoodButton(this, 400, 566, buttonLabel, async () => {
       if (this.transitioning) return;
       stopAllRunScenes(this, SCENE_KEYS.DEATH);
       await saveManager.clearByMode(run.mode);
       clearRun();
       this.fadeToScene(nextScene);
-    });
+    }, { width: 240, height: 42, fontSize: 17, variant: 'primary' });
+    cta.container.setDepth(2);
 
     // ── Bank rewards (silent) ────────────────────────────────────
     const metaState = await loadMetaState();
