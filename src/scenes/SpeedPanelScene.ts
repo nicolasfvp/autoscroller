@@ -8,14 +8,14 @@ import { MapSpeedSlider } from '../ui/MapSpeedSlider';
 
 const SCALE = 0.5;
 const PANEL_X = 8;
-const PANEL_Y = 510;
-const PANEL_W = Math.round(268 * SCALE); // 134
-const PANEL_H = Math.round(116 * SCALE); // 58
+const PANEL_Y = 483;
+const PANEL_W = 168;
+const PANEL_H = 99;
 
 const BTN_X = 8;
-const BTN_Y = 572;
+const BTN_Y = 584;
 const BTN_W = 36;
-const BTN_H = 22;
+const BTN_H = 16;
 
 const VISIBLE_OVER = new Set<string>([
   SCENE_KEYS.GAME,
@@ -41,26 +41,38 @@ export class SpeedPanelScene extends Scene {
     // ── Panel group (expanded content) ──────────────────────────────────────
     this.panelGroup = this.add.container(0, 0).setScrollFactor(0).setDepth(999);
 
-    const bg = this.add.graphics().setScrollFactor(0).setDepth(999);
-    bg.fillStyle(0x0a0400, 0.85);
-    bg.fillRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
-    bg.lineStyle(1.5, 0x9a6030, 0.85);
-    bg.strokeRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
-    this.panelGroup.add(bg);
+    const panelCX = PANEL_X + PANEL_W / 2;
+    const panelCY = PANEL_Y + PANEL_H / 2;
+    if (this.textures.exists('ui_panel')) {
+      const bg = this.add.image(panelCX, panelCY, 'ui_panel')
+        .setDisplaySize(PANEL_W, PANEL_H)
+        .setScrollFactor(0).setDepth(999);
+      this.panelGroup.add(bg);
+    } else {
+      const bg = this.add.graphics().setScrollFactor(0).setDepth(999);
+      bg.fillStyle(0x0a0400, 0.85);
+      bg.fillRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
+      bg.lineStyle(1.5, 0x9a6030, 0.85);
+      bg.strokeRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
+      this.panelGroup.add(bg);
+    }
 
-    const sliderCenterX = PANEL_X + Math.round(8 * SCALE) + Math.round(90 * SCALE);
+    // Center the sliders in the panel; fixed offsets from PANEL_Y give consistent
+    // padding on all sides and prevent the map-slider handle from overlapping
+    // the combat-slider title (was too close with the old SCALE-derived positions).
+    const sliderCenterX = PANEL_X + PANEL_W / 2 - 10;
     const initialMap = hasActiveRun() ? (getRun().mapSpeed ?? 1) : 1;
     const initialCombat = hasActiveRun() ? (getRun().combatSpeed ?? 1) : 1;
 
     this.mapSlider = new MapSpeedSlider(
-      this, sliderCenterX, PANEL_Y + Math.round(34 * SCALE),
+      this, sliderCenterX, PANEL_Y + 38,
       initialMap, (s) => { if (hasActiveRun()) getRun().mapSpeed = s; },
       'Map Speed', SCALE,
     );
     this.panelGroup.add(this.mapSlider);
 
     this.combatSlider = new MapSpeedSlider(
-      this, sliderCenterX, PANEL_Y + Math.round(84 * SCALE),
+      this, sliderCenterX, PANEL_Y + 74,
       initialCombat, (s) => { if (hasActiveRun()) getRun().combatSpeed = s; },
       'Combat Speed', SCALE,
     );
