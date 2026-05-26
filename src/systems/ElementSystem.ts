@@ -53,8 +53,8 @@ export const CLASS_BIAS: Record<string, { physical: number; elemental: number }>
 
 export const FORGE_BASE_COST: Record<CardTier, number> = {
   1: 0,
-  2: 100,
-  3: 350,
+  2: 50,
+  3: 200,
 };
 
 export const FORGE_DISCOUNT_BY_LEVEL: Record<number, number> = {
