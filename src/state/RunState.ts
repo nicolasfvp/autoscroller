@@ -330,10 +330,10 @@ export function createNewRun(
       statDeltas: {},
     },
     deck: (() => {
-      // Custom decks built in the DeckBuilder preserve order (the player picked
-      // a specific 5-card sequence). Class-default starters still get a
-      // deterministic shuffle keyed off (runSeed, runId) so each run feels
-      // slightly different even without customization.
+      // Custom decks (deck-template picks) preserve order so the player's
+      // chosen sequence holds. Class-default starters still get a deterministic
+      // shuffle keyed off (runSeed, runId) so each run feels slightly
+      // different even without a template choice.
       const usedCustom = !!(customStarterDeck && customStarterDeck.length > 0);
       const active = usedCustom
         ? [...starterDeck]

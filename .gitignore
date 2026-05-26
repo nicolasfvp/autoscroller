@@ -5,6 +5,7 @@ dist/
 .planning/
 .mcp.json
 *.log
+vite-out.log*
 data/generated/
 
 # Scratch outputs from local generator/verify scripts. Production copies of

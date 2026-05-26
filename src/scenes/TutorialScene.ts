@@ -40,15 +40,13 @@ const TOPICS: TutorialTopic[] = [
   {
     id: 'deck',
     label: '📜 Deck',
-    title: 'Deck Building',
+    title: 'Your Deck',
     body:
-      'Before each run, pick 5 starter cards from the Tier 0 / Tier 1 pool.\n' +
-      'Tier 0 cards each teach one element (Attack, Fire, Slow, Heal, …).\n' +
-      'Tier 1 cards combine elements for more interesting effects.\n\n' +
-      'A gold GLOW around a card means it synergizes with what is already\n' +
-      'in your deck — at least two deck cards share a keyword with it.\n\n' +
-      'Mid-run you can reorder dropped cards and slot them into the deck\n' +
-      'from the Deck panel in the loop overlay.',
+      'Before each run, pick a deck TEMPLATE — a 5-card starter tuned for\n' +
+      'a particular playstyle (Iron Wall, Berserker, Pyromancer, …).\n\n' +
+      'Cards play themselves in combat, top to bottom, on cooldown.\n' +
+      'The Deck panel (mid-run, from the loop overlay) lets you REORDER\n' +
+      'cards and slot any new ones you have looted into the play order.',
   },
   {
     id: 'relics',

@@ -31,7 +31,7 @@ export const SCENE_KEYS = {
   RUN_TRANSITION: 'RunTransitionScene',
   GLOBAL_SOUND: 'GlobalSound',
   SPEED_PANEL: 'SpeedPanelScene',
-  DECK_BUILDER: 'DeckBuilderScene',
+  STARTING_DECK: 'StartingDeckScene',
   LIBRARY: 'CardLibraryScene',
 } as const;
 

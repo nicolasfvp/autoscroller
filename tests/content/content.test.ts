@@ -183,7 +183,6 @@ describe('MetaState', () => {
     expect(state).toHaveProperty('version');
     // Phase 10 new fields (element/forge system):
     expect(state).toHaveProperty('forgeRecipes');
-    expect(state).toHaveProperty('deckPresets');
   });
 
   it('default state has correct initial values', () => {
@@ -205,9 +204,6 @@ describe('MetaState', () => {
     expect(state.buildings.shrine.level).toBe(0);
     // Phase 10 element/forge system fields:
     expect(state.forgeRecipes).toEqual([]);
-    expect(state.deckPresets).toBeDefined();
-    expect(Array.isArray(state.deckPresets.warrior)).toBe(true);
-    expect(Array.isArray(state.deckPresets.mage)).toBe(true);
   });
 });
 

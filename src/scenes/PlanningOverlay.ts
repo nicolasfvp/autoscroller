@@ -4,6 +4,8 @@ import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/T
 import { TileVisual } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 /**
  * PlanningOverlay -- planning phase UI with miniature loop grid and tile inventory panel.
@@ -191,6 +193,62 @@ export class PlanningOverlay extends Scene {
     // Shop/Forge sub-scene closes). Without this, gold spent in the shop is
     // refunded next time Start Loop syncs LoopRunState → RunState.
     this.events.on('wake', () => this.syncFromRunStateOnWake());
+
+    // Tutorial top-up: the first planning phase only awards a few TP. After
+    // the player spends 3 TP on a combat tile, they don't have enough for
+    // the 2 TP subtile the next step asks them to place. Grant a one-time
+    // bump + one free ambush subtile so the scripted run can complete.
+    // Guarded by a flag on the run so it only fires once.
+    if (tutorialDirector.isActive() && tutorialDirector.getCurrentStep()?.id !== 'complete') {
+      const run = getRun();
+      const flag = (run as { _tutorialPlanningBootstrapped?: boolean });
+      if (!flag._tutorialPlanningBootstrapped) {
+        flag._tutorialPlanningBootstrapped = true;
+        // Enough for one combat tile (3 TP) + one subtile (2 TP) with margin.
+        this.loopRunState.economy.tilePoints = Math.max(this.loopRunState.economy.tilePoints, 6);
+        // Stake a free subtile in inventory so 'place-subtile' is reachable
+        // even if TP runs low on edge-case difficulty changes.
+        const inv = this.loopRunState.tileInventory;
+        if (!inv.some(t => t.tileType === 'subtile_ambush')) {
+          inv.push({ tileType: 'subtile_ambush', count: 1 });
+        }
+        run.economy.tilePoints = this.loopRunState.economy.tilePoints;
+        run.economy.tileInventory = {
+          ...(run.economy.tileInventory ?? {}),
+          subtile_ambush: ((run.economy.tileInventory ?? {}).subtile_ambush ?? 0) + 1,
+        };
+        // Inventory panel was already drawn with stale values during create();
+        // refresh it now so the new TP balance + free subtile show up.
+        this.refreshInventory();
+      }
+    }
+
+    // Scripted tutorial overlay — covers planning-intro, place-tile,
+    // forge-intro, boss-preview steps. The overlay subscribes to director
+    // changes itself, so we don't re-mount on wake (that would stack a
+    // duplicate container on every Forge round-trip).
+    const overlay = TutorialOverlay.mountIfActive(this);
+    if (overlay) {
+      // place-tile: spotlight the path strip + main tile inventory so the
+      // player can pick a combat tile and drop it on the path. Panel uses
+      // 'top-fixed' so it sits at y=12 and doesn't cover the inventory.
+      overlay.setStepRect('place-tile', {
+        x: 20, y: 150, width: 760, height: 330,
+      });
+      // place-subtile: spotlight the path (so the player sees the cyan
+      // reserved slots that just spawned) plus the dedicated subtile row.
+      overlay.setStepRect('place-subtile', {
+        x: 20, y: 150, width: 760, height: 330,
+      });
+      // forge-intro: spotlight the Forge button at the bottom-right.
+      overlay.setStepRect('forge-intro', {
+        x: 600, y: 525, width: 130, height: 50,
+      });
+      // boss-preview: spotlight the Start Loop button. It's centered.
+      overlay.setStepRect('boss-preview', {
+        x: 320, y: 520, width: 180, height: 55,
+      });
+    }
   }
 
   private syncFromRunStateOnWake(): void {

@@ -13,12 +13,6 @@ export interface ForgeRecipeEntry {
   firstForgedAt: number;
 }
 
-/** Saveable starter-deck preset. */
-export interface DeckPresetEntry {
-  name: string;
-  cardIds: string[];
-}
-
 /** Renderer supersample preset selectable in SettingsScene → Graphics Quality.
  *  - 'high'        → UI_SCALE 2.0 (canvas 1600×1200, sharpest downscale).
  *  - 'balanced'    → UI_SCALE 1.5 (canvas 1200×900, ~44% less pixel fill).
@@ -70,8 +64,6 @@ export interface MetaState {
   version: number;
   /** Discovered forge recipes (element multisets) — meta-persistent. */
   forgeRecipes: ForgeRecipeEntry[];
-  /** Saved starter-deck presets, 5 per class. */
-  deckPresets: Record<string, DeckPresetEntry[]>;
   /** Keywords the player has encountered in-game at least once. Drives the
    *  contextual keyword-intro overlay (first-encounter pause + explanation)
    *  and gates the persistent glossary panel to learned terms only. */
@@ -81,23 +73,6 @@ export interface MetaState {
    *  (Pitfall 5: not part of the persisted shape.) */
   _wipedFromVersion?: number;
 }
-
-const DEFAULT_PRESETS: Record<string, DeckPresetEntry[]> = {
-  warrior: [
-    { name: 'Default Warrior', cardIds: ['t2-attack-attack', 't2-defense-defense', 't2-attack-defense', 't2-agility-agility', 't2-attack-fire'] },
-    { name: 'Preset 2', cardIds: [] },
-    { name: 'Preset 3', cardIds: [] },
-    { name: 'Preset 4', cardIds: [] },
-    { name: 'Preset 5', cardIds: [] },
-  ],
-  mage: [
-    { name: 'Default Mage', cardIds: ['t2-fire-fire', 't2-water-water', 't2-fire-water', 't2-air-earth', 't2-attack-fire'] },
-    { name: 'Preset 2', cardIds: [] },
-    { name: 'Preset 3', cardIds: [] },
-    { name: 'Preset 4', cardIds: [] },
-    { name: 'Preset 5', cardIds: [] },
-  ],
-};
 
 export interface RunHistoryEntry {
   seed: string;
@@ -136,7 +111,6 @@ export function createDefaultMetaState(): MetaState {
     graphicsQuality: 'balanced',
     version: 12,
     forgeRecipes: [],
-    deckPresets: JSON.parse(JSON.stringify(DEFAULT_PRESETS)),
     seenKeywords: [],
   };
 }
@@ -249,17 +223,12 @@ export function migrateMetaState(raw: any): MetaState {
     raw.version = 7;
   }
 
-  // v7 -> v8 migration: element/forge system additions.
-  // Backfill forgeRecipes (empty list) and deckPresets (defaults per class).
+  // v7 -> v8 migration: element/forge system additions. Backfill
+  // forgeRecipes (empty list). Older saves may still carry a deckPresets
+  // field — drop it; starter decks are no longer user-edited.
   if (raw.version === 7) {
     if (!Array.isArray(raw.forgeRecipes)) raw.forgeRecipes = [];
-    if (!raw.deckPresets || typeof raw.deckPresets !== 'object') {
-      raw.deckPresets = JSON.parse(JSON.stringify(DEFAULT_PRESETS));
-    } else {
-      // Ensure both classes have arrays.
-      if (!Array.isArray(raw.deckPresets.warrior)) raw.deckPresets.warrior = JSON.parse(JSON.stringify(DEFAULT_PRESETS.warrior));
-      if (!Array.isArray(raw.deckPresets.mage)) raw.deckPresets.mage = JSON.parse(JSON.stringify(DEFAULT_PRESETS.mage));
-    }
+    delete raw.deckPresets;
     raw.version = 8;
   }
 
@@ -272,29 +241,17 @@ export function migrateMetaState(raw: any): MetaState {
   }
 
   // v9 -> v10 migration: tier renumber (t0/t1/t2 -> t1/t2/t3). Shift every
-  // saved card-id reference so older saves don't pin 5 dead IDs into the
-  // deck builder (which then refuses to accept any new card because the
-  // pre-fill consumes all 5 starter slots with ghosts).
+  // saved card-id reference so older unlocks line up with the renamed pool.
   if (raw.version === 9) {
     if (Array.isArray(raw.unlockedCards)) {
       raw.unlockedCards = raw.unlockedCards.map(shiftCardIdTiers);
-    }
-    if (raw.deckPresets && typeof raw.deckPresets === 'object') {
-      for (const cls of Object.keys(raw.deckPresets)) {
-        const presets = raw.deckPresets[cls];
-        if (!Array.isArray(presets)) continue;
-        for (const p of presets) {
-          if (Array.isArray(p?.cardIds)) {
-            p.cardIds = p.cardIds.map(shiftCardIdTiers);
-          }
-        }
-      }
     }
     if (Array.isArray(raw.forgeRecipes)) {
       for (const r of raw.forgeRecipes) {
         if (r && typeof r.cardId === 'string') r.cardId = shiftCardIdTiers(r.cardId);
       }
     }
+    delete raw.deckPresets;
     raw.version = 10;
   }
 

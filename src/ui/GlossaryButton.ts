@@ -1,6 +1,6 @@
 // GlossaryButton -- small circular "?" affordance that opens the keyword
 // glossary modal. Mounted by any scene that benefits from a persistent
-// reference panel: DeckBuilder, DeckCustomization, Combat.
+// reference panel: DeckCustomization, Combat.
 //
 // Visual: 28×28 circle, dark fill + accent stroke, "?" glyph centered.
 // Hover brightens stroke + glyph; click opens the glossary.
