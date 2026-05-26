@@ -2,7 +2,7 @@
 // Hero panel (left) | Cooldown arc (center) | Enemy panel (right)
 
 import type { CombatState } from '../systems/combat/CombatState';
-import { FONTS, SHADOWBLADE_PALETTE } from './StyleConstants';
+import { FONTS } from './StyleConstants';
 import { computeHeroChips, computeEnemyChips, type EffectChip } from './EffectIcons';
 
 /**
@@ -25,7 +25,7 @@ export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility 
 const FF = FONTS.family;
 
 // Panel geometry
-const LP      = { x: 8,   y: 8, w: 260, h: 122 };  // Hero (left)
+const LP      = { x: 8,   y: 8, w: 260, h: 108 };  // Hero (left)
 const RP      = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
 const LBL_W   = 50;                                 // width for side labels
 const BAR_W   = LP.w - LBL_W - 18;                 // 192px hero bar width
@@ -61,10 +61,6 @@ export class CombatHUD {
   // Hero armor readout (below HP). Shown only when armor > 0.
   private armorIcon!:   Phaser.GameObjects.Text;
   private armorValue!: Phaser.GameObjects.Text;
-
-  // Hero attribute readouts (STR/VIT/DEX/INT/SPI). Live-update from CombatState.
-  private statTexts: { [k: string]: Phaser.GameObjects.Text } = {};
-  private displayedStats: Record<string, number> = { str: -1, vit: -1, dex: -1, int: -1, spi: -1 };
 
   // Enemy
   private enemyNameText!: Phaser.GameObjects.Text;
@@ -125,8 +121,6 @@ export class CombatHUD {
     const hpY      = LP.y + 26;
     const staY     = LP.y + 56;
     const mpY      = LP.y + 84;
-    const bottomY  = LP.y + 110;  // combined armor+stats row
-
     const makeBar = (
       y: number, label: string, lblColor: string,
       fillColor: number, h: number, valSize: string,
@@ -155,41 +149,17 @@ export class CombatHUD {
     const mp  = makeBar(mpY,  '✦ MP',  '#bb88ff', 0x9966ff, 20, '12px');
     this.manaBar = mp.fill; this.manaText = mp.val;
 
-    // Divider before bottom row
-    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 98, LP.w - 16, 1, 0x333355));
-
-    // Combined bottom row: [🛡 val] [STR val] [VIT val] [DEX val] [INT val] [SPI val]
-    // 6 equal cells across the panel width. Armor cell (index 0) hidden when armor = 0.
-    const cells: Array<{ label: string; color: string; isArmor?: boolean }> = [
-      { label: '🛡', color: '#88ccff', isArmor: true },
-      { label: 'STR', color: '#' + (0xff8844).toString(16) },
-      { label: 'VIT', color: '#' + SHADOWBLADE_PALETTE.vit.toString(16).padStart(6, '0') },
-      { label: 'DEX', color: '#' + SHADOWBLADE_PALETTE.dex.toString(16).padStart(6, '0') },
-      { label: 'INT', color: '#' + SHADOWBLADE_PALETTE.int.toString(16).padStart(6, '0') },
-      { label: 'SPI', color: '#' + SHADOWBLADE_PALETTE.spi.toString(16).padStart(6, '0') },
-    ];
-    const cellW = LP.w / cells.length;
-    const statKeys: Array<'str' | 'vit' | 'dex' | 'int' | 'spi'> = ['str', 'vit', 'dex', 'int', 'spi'];
-    cells.forEach((cell, i) => {
-      const cx = LP.x + cellW * i + cellW / 2;
-      const lbl = s.add.text(cx - 2, bottomY, cell.label, {
-        fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
-        color: cell.color, stroke: '#000000', strokeThickness: 2,
-      }).setOrigin(1, 0.5);
-      const val = s.add.text(cx + 2, bottomY, '0', {
-        fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
-        color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-      }).setOrigin(0, 0.5);
-      this.container.add([lbl, val]);
-      if (cell.isArmor) {
-        this.armorIcon  = lbl;
-        this.armorValue = val;
-        lbl.setVisible(false);
-        val.setVisible(false);
-      } else {
-        this.statTexts[statKeys[i - 1]] = val;
-      }
-    });
+    // Armor readout (hidden when armor = 0)
+    const armorY = LP.y + 98;
+    this.armorIcon = s.add.text(lblX + 8, armorY, '🛡', {
+      fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
+      color: '#88ccff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(1, 0.5).setVisible(false);
+    this.armorValue = s.add.text(lblX + 12, armorY, '0', {
+      fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0, 0.5).setVisible(false);
+    this.container.add([this.armorIcon, this.armorValue]);
   }
 
   // ── Enemy panel ────────────────────────────────────────────────
@@ -339,22 +309,6 @@ export class CombatHUD {
     this.armorIcon.setVisible(armorVisible);
     this.armorValue.setVisible(armorVisible);
     if (armorVisible) this.armorValue.setText(String(armor));
-
-    // Attribute readouts.
-    const attrValues: Record<string, number> = {
-      str: state.heroStrength ?? 0,
-      vit: state.heroVitality ?? 0,
-      dex: state.heroDexterity ?? 0,
-      int: state.heroIntellect ?? 0,
-      spi: state.heroSpirit ?? 0,
-    };
-    for (const key of Object.keys(attrValues)) {
-      const v = attrValues[key];
-      if (v !== this.displayedStats[key]) {
-        this.displayedStats[key] = v;
-        this.statTexts[key]?.setText(String(v));
-      }
-    }
 
     // Enemy
     this.enemyNameText.setText(state.enemyName);

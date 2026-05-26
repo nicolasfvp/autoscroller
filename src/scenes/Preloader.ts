@@ -167,6 +167,8 @@ export class Preloader extends Scene {
     this.load.image('btn_daily_run', 'assets/ui/buttons/daily-run.png');
     this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
     this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
+    this.load.image('ui_panel', 'assets/ui/buttons/panel.png');
+    this.load.image('panel_hover', 'assets/ui/buttons/panel_hover.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
     this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
     this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");

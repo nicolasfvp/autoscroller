@@ -838,14 +838,13 @@ export class PlanningOverlay extends Scene {
       fontSize: '12px',
       color: '#ffffff',
       fontFamily,
-      wordWrap: { width: 220 },
+      wordWrap: { width: 200 },
       align: 'center',
     }).setOrigin(0.5);
-    const pad = 8;
+    const pad = 24;
     const w = label.width + pad * 2;
     const h = label.height + pad * 2;
-    const bg = this.add.rectangle(0, 0, w, h, 0x101010, 0.92)
-      .setStrokeStyle(1, 0xffd700, 0.9);
+    const bg = this.add.image(0, 0, 'panel_hover').setDisplaySize(w, h);
     // Anchor above the frame; if it would clip the top of the screen,
     // flip below.
     let cy = anchorY - 44;

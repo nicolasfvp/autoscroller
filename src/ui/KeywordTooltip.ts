@@ -23,7 +23,7 @@ import { detectKeywords, type KeywordDef } from './KeywordDefinitions';
 import { hideFilterBarInputs, showFilterBarInputs } from './FilterBarVisibility';
 
 const PANEL_WIDTH = 220;
-const PANEL_PADDING = 12;
+const PANEL_PADDING = 24;
 const TEXT_WRAP_WIDTH = PANEL_WIDTH - PANEL_PADDING * 2;
 const TITLE_FONT_SIZE = 16;
 const KEYWORD_FONT_SIZE = 14;
@@ -272,9 +272,8 @@ function mountStandalonePanel(
     LAYOUT.canvasHeight - panelHeight - 4,
   ));
 
-  const bg = scene.add.rectangle(panelX, panelY, PANEL_WIDTH, panelHeight, 0x1a1a2e, 0.98)
-    .setOrigin(0, 0)
-    .setStrokeStyle(2, 0x444466);
+  const bg = scene.add.image(panelX + PANEL_WIDTH / 2, panelY + panelHeight / 2, 'panel_hover')
+    .setDisplaySize(PANEL_WIDTH, panelHeight);
   panel.add(bg);
 
   let cursorY = panelY + PANEL_PADDING;
