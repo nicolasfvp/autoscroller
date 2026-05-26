@@ -75,6 +75,10 @@ const config: Phaser.Types.Core.GameConfig = {
         // art is 1024² → POT, so all card textures benefit). No need to
         // regenerate or pre-resize the source PNGs.
         mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
+        // Hybrid-GPU laptops (Intel iGPU + discrete NVIDIA/AMD) default to
+        // the integrated GPU for WebGL. Asking for high-performance flips
+        // them to the discrete part — large fill-rate win on the card grid.
+        powerPreference: 'high-performance',
     },
     dom: {
         createContainer: true
@@ -93,8 +97,17 @@ const config: Phaser.Types.Core.GameConfig = {
     // goal of "keep ticking when hidden". CombatScene/GameScene already
     // force 1x speed under document.hidden, so rAF throttling is harmless.
     fps: {
-        target: 60
+        target: 60,
+        // Clamp delta to a 30fps floor so a stutter (GC pause, alt-tab back)
+        // doesn't produce a giant single-step that teleports physics/timers.
+        min: 30,
+        // Smooth deltaTime across frames — kills visible jitter when the
+        // browser's rAF cadence wobbles.
+        smoothStep: true,
     },
+    // Polish: no Phaser banner in the console, no right-click menu on the canvas.
+    banner: false,
+    disableContextMenu: true,
     scene: [
         Boot,
         Preloader,
