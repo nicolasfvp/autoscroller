@@ -5,7 +5,32 @@
 
 ---
 
+
+
 ## Template
+
+### Prom,pt para painels e assets
+
+Aqui está o prompt exato que usei para o painel:
+```
+A game UI panel or dialogue box in the Studio Ghibli art style. The panel has a rectangular shape with slightly rounded corners. The frame is made of aged, weathered stone or carved wood with subtle moss or vine details at the corners. The inner area is a soft, parchment-like texture or a dark, semi-transparent background with a hand-painted watercolor feel. The overall aesthetic is whimsical, rustic, and magical. Clean lines, soft lighting, white background outside the panel. High quality, game asset style.
+```
+Como criar outros assets com o mesmo estilo?
+Você pode usar essa mesma "fórmula" para qualquer coisa. Veja alguns exemplos de como adaptar:
+Para Botões:
+```
+A game UI button in the Studio Ghibli art style. Made of polished wood with a glowing crystal in the center. Whimsical, rustic, and magical. Clean lines, soft watercolor shading, white background. Game asset style.
+```
+Para Ícones (ex: Poção):
+
+``` 
+A game icon of a health potion in the Studio Ghibli art style. A round glass bottle with sparkling red liquid and a cork stopper. Whimsical and magical. Hand-painted watercolor feel, clean lines, white background.
+```
+Para Cenários (Backgrounds):
+
+```
+A game background of a lush green meadow with a distant wizard tower in the Studio Ghibli art style. Soft clouds, vibrant colors, hand-painted aesthetic. Whimsical and peaceful atmosphere. High detail.
+```
 
 ### Prompt para monstros
 ```
