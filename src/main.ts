@@ -85,7 +85,9 @@ const config: Phaser.Types.Core.GameConfig = {
     // goal of "keep ticking when hidden". CombatScene/GameScene already
     // force 1x speed under document.hidden, so rAF throttling is harmless.
     fps: {
-        target: 30
+        target: 60,
+        min: 30,
+        smoothStep: true,
     },
     scene: [
         Boot,
