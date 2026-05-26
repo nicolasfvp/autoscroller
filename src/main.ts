@@ -69,6 +69,11 @@ const config: Phaser.Types.Core.GameConfig = {
         pixelArt: true,
         powerPreference: 'high-performance',
         batchSize: 4096,
+        // Generate and sample mipmaps for downscaled textures (the 1024×1024
+        // card art renders at ~90 px in the deck library and ~150 px in-hand
+        // — a >10× downscale that aliases without mipmaps). Phaser auto-
+        // generates mipmaps for POT textures (1024² card art qualifies).
+        mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
     },
     dom: {
         createContainer: true

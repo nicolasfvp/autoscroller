@@ -3,6 +3,7 @@ import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { createWoodButton } from '../ui/WoodButton';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -14,15 +15,22 @@ export class PauseScene extends Scene {
   }
 
   create(): void {
-    // Read run to verify active state exists
-    getRun();
+    // PauseScene is launched on top of an already-running GameScene; bringToTop
+    // ensures the overlay is actually visible above it.
+    this.scene.bringToTop();
+
+    // Previously this called getRun() as a "verify active state" guard, but
+    // getRun() THROWS when no run exists, which aborts create() before any
+    // GameObject is added — the user sees a paused game with no overlay.
+    // The pause UI itself doesn't depend on RunState; Abandon Run consults
+    // it defensively below.
 
     // Fullscreen semi-transparent backdrop — delay interactivity so the ESC
-    // press that *opened* the pause doesn't immediately dismiss it on the same
-    // frame. Same pattern as BuildingPanelScene.
+    // press that *opened* the pause doesn't immediately dismiss it.
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75);
     this.time.delayedCall(100, () => {
       backdrop.setInteractive();
+      this.input.keyboard?.on('keydown-ESC', () => this.resume());
     });
 
     // Overlay panel (wood texture with rounded corners)
@@ -45,38 +53,32 @@ export class PauseScene extends Scene {
       shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
     }).setOrigin(0.5);
 
-    // Buttons — stride 60px to fit 5 chunky buttons inside the panel.
-    this.createChunkyButton(400, 180, 260, 50, 'Resume', 0xffa000, '#111111', () => this.resume());
+    createWoodButton(this, 400, 180, 'Resume', () => this.resume(),
+      { width: 260, height: 52, fontSize: 22, variant: 'primary' });
 
-    this.createChunkyButton(400, 240, 260, 50, 'View Deck', 0xdab988, '#111111', () => {
+    createWoodButton(this, 400, 240, 'View Deck', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
-    });
+    }, { width: 260, height: 52, fontSize: 22 });
 
-    // Tutorial — replay the topic-tab tutorial. Routes back to the pause
-    // overlay on close via the replay/parentScene flags.
-    this.createChunkyButton(400, 300, 260, 50, 'Tutorial', 0xdab988, '#111111', () => {
+    createWoodButton(this, 400, 300, 'Tutorial', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
-    });
+    }, { width: 260, height: 52, fontSize: 22 });
 
-    this.createChunkyButton(400, 360, 260, 50, 'Settings', 0xdab988, '#111111', () => {
+    createWoodButton(this, 400, 360, 'Settings', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.SETTINGS);
-    });
+    }, { width: 260, height: 52, fontSize: 22 });
 
-    this.createChunkyButton(400, 420, 260, 50, 'Abandon Run', 0xcc0000, '#ffffff', async () => {
-      // Tear down the active run AND wipe the persisted save before
-      // returning to the menu — otherwise MainMenu will offer "Continue"
-      // pointing at the abandoned run. Use clearByMode so abandoning a
-      // daily run doesn't wipe the player's separate normal save.
+    createWoodButton(this, 400, 420, 'Abandon Run', async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
       await saveManager.clearByMode(mode);
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
-    });
+    }, { width: 260, height: 52, fontSize: 22, variant: 'danger' });
 
     this.events.on('shutdown', this.cleanup, this);
   }
@@ -84,56 +86,6 @@ export class PauseScene extends Scene {
   private resume(): void {
     this.scene.stop();
     this.scene.resume(SCENE_KEYS.GAME);
-  }
-
-  private createChunkyButton(x: number, y: number, w: number, h: number, text: string, bgColor: number, textColor: string, onClick: () => void): void {
-    const container = this.add.container(x, y);
-    
-    // Background with thick stroke
-    const bg = this.add.rectangle(0, 0, w, h, bgColor).setStrokeStyle(4, 0x111111).setInteractive({ useHandCursor: true });
-    
-    // Drop shadow effect for text (or thin stroke depending on color)
-    const txt = this.add.text(0, 0, text, {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: textColor,
-      stroke: textColor === '#ffffff' ? '#000000' : undefined,
-      strokeThickness: textColor === '#ffffff' ? 4 : 0,
-      fontFamily: FONTS.family,
-    }).setOrigin(0.5);
-
-    container.add([bg, txt]);
-
-    let pressed = false;
-
-    bg.on('pointerover', () => {
-      container.setScale(1.05);
-      // Lighten the background slightly
-      const colorObj = Phaser.Display.Color.IntegerToColor(bgColor);
-      colorObj.lighten(10);
-      bg.setFillStyle(colorObj.color);
-    });
-
-    bg.on('pointerout', () => {
-      container.setScale(1.0);
-      bg.setFillStyle(bgColor);
-      // Pointer left the button while pressed → cancel the click.
-      pressed = false;
-    });
-
-    bg.on('pointerdown', () => {
-      pressed = true;
-      container.setScale(0.95);
-    });
-
-    bg.on('pointerup', () => {
-      container.setScale(1.05);
-      // Only fire if the corresponding pointerdown happened on this button
-      // and the pointer didn't leave the bounds in between.
-      if (!pressed) return;
-      pressed = false;
-      onClick();
-    });
   }
 
   private cleanup(): void {

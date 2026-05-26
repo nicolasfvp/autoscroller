@@ -169,6 +169,18 @@ export class Preloader extends Scene {
     this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
     this.load.image('ui_panel', 'assets/ui/buttons/panel.png');
     this.load.image('panel_hover', 'assets/ui/buttons/panel_hover.png');
+
+    // Painted backdrops and themed panels (visual upgrade pass).
+    this.load.image('bg_deck_builder',        'assets/ui/backgrounds/bg_deck_builder.png');
+    this.load.image('bg_relic_vault',         'assets/ui/backgrounds/bg_relic_vault.png');
+    this.load.image('bg_card_library',        'assets/ui/backgrounds/bg_card_library.png');
+    this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
+    this.load.image('panel_wood_button',      'assets/ui/backgrounds/panel_wood_button.png');
+    this.load.image('panel_parchment_scroll', 'assets/ui/backgrounds/panel_parchment_scroll.png');
+    this.load.image('panel_hero_plaque',      'assets/ui/backgrounds/panel_hero_plaque.png');
+    this.load.image('panel_modifier_banner',  'assets/ui/backgrounds/panel_modifier_banner.png');
+    this.load.image('panel_card_grid',        'assets/ui/backgrounds/panel_card_grid.png');
+    this.load.image('panel_card_grid_v2',     'assets/ui/backgrounds/panel_card_grid_v2.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
     this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
     this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");
@@ -246,12 +258,15 @@ export class Preloader extends Scene {
       this.load.image(`card_${id}`, `assets/cards/${id}${ext}`);
     }
 
-    // New element-based card art (Tier 1 + Tier 2, all PNG)
+    // New element-based card art (Tier 1 + Tier 2 + Tier 3, all PNG)
     const newCardIds = [
-      // T1 — pure elements
+      // T1 — single elements
+      't1-attack', 't1-defense', 't1-agility', 't1-counter',
+      't1-fire', 't1-water', 't1-air', 't1-earth',
+      // T2 — pure pairs
       't2-attack-attack', 't2-defense-defense', 't2-agility-agility', 't2-counter-counter',
       't2-fire-fire', 't2-water-water', 't2-air-air', 't2-earth-earth',
-      // T1 — cross elements
+      // T2 — cross pairs
       't2-agility-attack', 't2-agility-counter', 't2-agility-defense', 't2-agility-fire',
       't2-agility-water', 't2-agility-air', 't2-agility-earth',
       't2-attack-counter', 't2-attack-defense', 't2-attack-fire', 't2-attack-water',

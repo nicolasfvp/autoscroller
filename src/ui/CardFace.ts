@@ -417,18 +417,41 @@ function drawArt(
   slot: SlotBox,
 ): void {
   const key = `card_${card.id}`;
-  if (scene.textures.exists(key)) {
-    const img = scene.add.image(slot.cx, slot.cy, key);
-    img.setDisplaySize(slot.w - 4, slot.h - 4);
-    parent.add(img);
-  } else {
+  if (!scene.textures.exists(key)) {
     const fallback: Record<string, string> = { attack: '⚔️', defense: '🛡️', magic: '✨' };
     parent.add(
       scene.add.text(slot.cx, slot.cy, fallback[card.category] ?? '❓', {
         fontSize: `${Math.round(slot.h * 0.5)}px`,
       }).setOrigin(0.5).setAlpha(0.5),
     );
+    return;
   }
+
+  const img = scene.add.image(slot.cx, slot.cy, key).setOrigin(0.5);
+  const sw = img.width;
+  const sh = img.height;
+  const slotW = Math.max(1, slot.w - 4);
+  const slotH = Math.max(1, slot.h - 4);
+
+  // Cover-fit: crop the source so its aspect matches the slot, then scale up
+  // to fill. Action is always dead-center in generated art so centering is safe.
+  const imageAspect = sw / sh;
+  const slotAspect  = slotW / slotH;
+  let cropW: number, cropH: number, cropX: number, cropY: number;
+  if (slotAspect >= imageAspect) {
+    cropW = sw;
+    cropH = sw / slotAspect;
+    cropX = 0;
+    cropY = (sh - cropH) / 2;
+  } else {
+    cropH = sh;
+    cropW = sh * slotAspect;
+    cropY = 0;
+    cropX = (sw - cropW) / 2;
+  }
+  img.setCrop(cropX, cropY, cropW, cropH);
+  img.setScale(slotW / cropW, slotH / cropH);
+  parent.add(img);
 }
 
 function drawName(

@@ -1,18 +1,38 @@
+// WoodButton — themed button using wood_texture + gold trim.
+// Falls back to a stroked rectangle when the asset is missing so a missing
+// bundle file doesn't soft-brick the UI.
+
 import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
 
-interface WoodButtonOptions {
-  width?: number;
-  height?: number;
+export type WoodButtonVariant = 'normal' | 'primary' | 'danger';
+
+const VARIANT_TINT: Record<WoodButtonVariant, number> = {
+  normal:  0xffffff,
+  primary: 0xffd680,   // warm gold tint for primary CTA
+  danger:  0xff8866,   // ember/red tint for destructive actions
+};
+
+const VARIANT_TEXT: Record<WoodButtonVariant, string> = {
+  normal:  '#f0d080',
+  primary: '#ffe66d',
+  danger:  '#ffd0c0',
+};
+
+export interface WoodButtonOpts {
+  width?:   number;
+  height?:  number;
   fontSize?: number;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: WoodButtonVariant;
 }
 
-const VARIANT_COLORS: Record<string, { bg: number; hover: number; text: string }> = {
-  primary:   { bg: 0x4a3520, hover: 0x6a5030, text: '#ffd700' },
-  secondary: { bg: 0x2a2a2a, hover: 0x3a3a3a, text: '#cccccc' },
-  danger:    { bg: 0x5a1a1a, hover: 0x7a2a2a, text: '#ff6666' },
-};
+export interface WoodButtonHandle {
+  container: Phaser.GameObjects.Container;
+  setText(text: string): void;
+  setVariant(variant: WoodButtonVariant): void;
+  setEnabled(enabled: boolean): void;
+  destroy(): void;
+}
 
 export function createWoodButton(
   scene: Phaser.Scene,
@@ -20,31 +40,84 @@ export function createWoodButton(
   y: number,
   label: string,
   onClick: () => void,
-  opts: WoodButtonOptions = {},
-): Phaser.GameObjects.Container {
-  const { width = 160, height = 36, fontSize = 14, variant = 'primary' } = opts;
-  const colors = VARIANT_COLORS[variant] ?? VARIANT_COLORS.primary;
+  opts: WoodButtonOpts = {},
+): WoodButtonHandle {
+  const width    = opts.width    ?? 240;
+  const height   = opts.height   ?? 56;
+  const fontSize = opts.fontSize ?? 22;
+  let variant: WoodButtonVariant = opts.variant ?? 'normal';
+  let enabled = true;
 
   const container = scene.add.container(x, y);
 
-  const bg = scene.add.rectangle(0, 0, width, height, colors.bg)
-    .setStrokeStyle(2, 0x8b6914)
-    .setOrigin(0.5);
+  // Invisible hit rectangle — avoids picking up transparent edge pixels of the asset.
+  const hit = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
+    .setInteractive({ useHandCursor: true });
+
+  const hasWood = scene.textures.exists('wood_texture');
+  let bgImage: Phaser.GameObjects.Image | null = null;
+  let bgRect:  Phaser.GameObjects.Rectangle | null = null;
+  if (hasWood) {
+    bgImage = scene.add.image(0, 0, 'wood_texture').setDisplaySize(width, height);
+    bgImage.setTint(VARIANT_TINT[variant]);
+  } else {
+    bgRect = scene.add.rectangle(0, 0, width, height, 0x2a1a0a);
+  }
+  // Gold trim — always drawn so the button looks framed even without the texture.
+  const trim = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
+    .setStrokeStyle(2, 0xd4a04a, 0.95);
+  const bg = (bgImage ?? bgRect) as Phaser.GameObjects.GameObject;
 
   const text = scene.add.text(0, 0, label, {
-    fontSize: `${fontSize}px`,
-    color: colors.text,
-    fontFamily: FONTS.family,
-    fontStyle: 'bold',
-  }).setOrigin(0.5);
+    fontSize:        `${fontSize}px`,
+    fontStyle:       'bold',
+    color:           VARIANT_TEXT[variant],
+    fontFamily:      FONTS.family,
+    stroke:          '#000000',
+    strokeThickness: 4,
+  }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-  container.add([bg, text]);
-  container.setSize(width, height);
-  container.setInteractive({ useHandCursor: true });
+  container.add([bg, trim, hit, text]);
 
-  container.on('pointerover', () => bg.setFillStyle(colors.hover));
-  container.on('pointerout',  () => bg.setFillStyle(colors.bg));
-  container.on('pointerdown', () => onClick());
+  let pressed = false;
 
-  return container;
+  hit.on('pointerover', () => {
+    if (!enabled) return;
+    container.setScale(1.04);
+    if (bgImage) {
+      bgImage.setTint(Phaser.Display.Color.IntegerToColor(VARIANT_TINT[variant]).brighten(15).color);
+    }
+  });
+  hit.on('pointerout', () => {
+    container.setScale(1);
+    if (bgImage) bgImage.setTint(VARIANT_TINT[variant]);
+    pressed = false;
+  });
+  hit.on('pointerdown', () => {
+    if (!enabled) return;
+    pressed = true;
+    container.setScale(0.96);
+  });
+  hit.on('pointerup', () => {
+    if (!enabled) return;
+    container.setScale(1.04);
+    if (!pressed) return;
+    pressed = false;
+    onClick();
+  });
+
+  return {
+    container,
+    setText:    (s: string) => text.setText(s),
+    setVariant: (v: WoodButtonVariant) => {
+      variant = v;
+      if (bgImage) bgImage.setTint(VARIANT_TINT[v]);
+      text.setColor(VARIANT_TEXT[v]);
+    },
+    setEnabled: (e: boolean) => {
+      enabled = e;
+      container.setAlpha(e ? 1 : 0.5);
+    },
+    destroy: () => container.destroy(true),
+  };
 }
