@@ -1,9 +1,9 @@
 // TutorialDirector — scripted first-run tutorial orchestrator.
 //
 // Owns the step manifest and the player's progress through it. Each scene
-// that participates in the tutorial (DeckBuilder, Game, Combat, Planning,
-// Forge, DeckCustomization, CharacterSelect) checks isActive() in create()
-// and mounts a TutorialOverlay tied to the current step.
+// that participates in the tutorial (CharacterSelect, DeckCustomization,
+// Game, Combat, Planning, Forge) checks isActive() in create() and mounts
+// a TutorialOverlay tied to the current step.
 //
 // State is in-memory only — the run that the tutorial drives is just a real
 // run with a fixed seed/class/deck. Completion flips MetaState.tutorialSeen
@@ -69,21 +69,21 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
       "Click the Warrior card to confirm.",
     advance: 'event',
   },
-  // 3. Deck builder — explain element budget + synergy + presets. Panel
-  //    pinned to the bottom of the canvas so the preset row at the top
-  //    stays unobstructed (that's the row the body tells the player to
-  //    click).
+  // 3. Deck review — opens automatically after the class is locked in.
+  //    Teaches that the deck plays itself top-to-bottom and that the
+  //    player can reorder cards. Closes via the Back button (the same
+  //    event hook that the in-run deck panel uses).
   {
-    id: 'deck-builder',
-    scene: SCENE_KEYS.DECK_BUILDER,
-    title: 'Build your starter deck.',
+    id: 'deck-review',
+    scene: SCENE_KEYS.DECK_CUSTOMIZATION,
+    title: 'Meet your deck.',
     body:
-      "Pick 5 cards. The slots on the right show your current deck.\n\n" +
-      "• Each card carries elements (Attack, Defense, Fire, Water, …).\n" +
-      "• Cards GLOW gold when they share a keyword with cards already in your deck — that's synergy.\n" +
-      "• For now, click 'Default Warrior' under PRESETS (top-left), then 'Start Run'.",
+      "These are your 5 starter cards. In combat they play themselves on cooldown, TOP to BOTTOM.\n\n" +
+      "• Hover any card to read what it does.\n" +
+      "• DRAG a card onto another slot to swap their order — front-load fast attacks, back-load big finishers.\n\n" +
+      "When you're ready, click BACK to start the run.",
     advance: 'event',
-    panelAnchor: 'bottom',
+    panelAnchor: 'top-fixed',
   },
   // 4. Map + autoscroll explanation. Lives on GameScene.
   {
@@ -170,27 +170,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     advance: 'event',
     panelAnchor: 'top-fixed',
   },
-  // 10. Deck customization — open deck panel, demonstrate reorder + slot.
-  {
-    id: 'deck-customize-open',
-    scene: SCENE_KEYS.PLANNING,
-    title: 'Mid-run deck control.',
-    body:
-      "Click the DECK icon (top center, between the relic icon).\n\n" +
-      "You can REORDER the cards (they play top to bottom) and slot new cards you've earned in combat.",
-    advance: 'event',
-  },
-  {
-    id: 'deck-customize-reorder',
-    scene: SCENE_KEYS.DECK_CUSTOMIZATION,
-    title: 'Drag to reorder.',
-    body:
-      "Drag any card and drop it on a different slot to swap positions.\n\n" +
-      "Card order matters — your first card plays first. Front-load fast attacks; back-load big finishers.\n\n" +
-      "When you're done, close the panel.",
-    advance: 'event',
-  },
-  // 11. Boss tile preview.
+  // 10. Boss tile preview.
   {
     id: 'boss-preview',
     scene: SCENE_KEYS.PLANNING,
@@ -208,7 +188,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     scene: SCENE_KEYS.GAME,
     title: "That's it.",
     body:
-      "You've seen everything you need: deck building, the loop, combat keywords, planning, the forge, and deck control.\n\n" +
+      "You've seen everything you need: your deck, the loop, combat keywords, planning, and the forge.\n\n" +
       "Good luck out there.",
     advance: 'click',
     panelAnchor: 'center',

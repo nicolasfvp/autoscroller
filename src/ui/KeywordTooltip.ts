@@ -60,9 +60,8 @@ interface AnchorBounds {
  * the pending timer AND destroys any mounted panel.
  *
  * `target` is any interactive GameObject — typically a Container holding
- * the card, but DeckBuilderScene attaches to its overlay hit-box Rectangle
- * because the underlying CardVisual is `disableInteractive()`-d in that
- * scene.
+ * the card, but some scenes attach to a separate hit-box Rectangle when
+ * the underlying CardVisual is `disableInteractive()`-d.
  *
  * `anchorBounds` may be a static rectangle or a getter resolved at panel-
  * mount time — the deck editor uses the getter form so the panel tracks

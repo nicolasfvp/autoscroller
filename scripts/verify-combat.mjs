@@ -129,13 +129,13 @@ async function main() {
   await new Promise(r => setTimeout(r, 1500));
   await shot(ws, idRef, 'combat_step3_after_tutorial.png');
 
-  // Click "Start Run" button in DeckBuilder. Find it via text search and dispatch click.
+  // Click "Start Run" button in StartingDeckScene. Find it via text search and dispatch click.
   await rpc(ws, ++idRef.id, 'Runtime.evaluate', {
     expression: `
       (() => {
         const g = globalThis.__game;
-        const db = g.scene.getScene('DeckBuilderScene');
-        if (!db) return 'no DeckBuilderScene';
+        const db = g.scene.getScene('StartingDeckScene');
+        if (!db) return 'no StartingDeckScene';
         const search = (list) => {
           for (const obj of list) {
             if (obj.text && obj.text.includes('Start Run') && obj.input) return obj;

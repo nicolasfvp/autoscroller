@@ -3,7 +3,7 @@
 // Historically this module owned its own layout. The 2026-05-23 refactor
 // collapsed small- and full-card layouts into a single mold (see
 // CardFace.ts), so CardVisual now exists only to preserve the public API
-// that existing scenes (DeckBuilder, Shop, Library, Forge, etc.) import.
+// that existing scenes (Shop, Library, Forge, etc.) import.
 
 import { createCardFace, type CardFaceOptions } from './CardFace';
 import { showCardDetail } from './CardDetailPopup';

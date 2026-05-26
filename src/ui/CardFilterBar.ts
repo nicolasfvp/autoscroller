@@ -5,7 +5,7 @@
 // native caret + IME working and dodges the Phaser DOM container's pointer
 // hit-testing quirks.
 //
-// API is shaped for parallel agents (DeckBuilder/Collection/Library) to drop
+// API is shaped for parallel agents (Collection/Library) to drop
 // the same bar in without coupling — the pure `applyFilters` function is
 // exported separately so callers can also re-run filtering on a deck slice.
 

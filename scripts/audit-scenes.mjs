@@ -118,20 +118,19 @@ async function main() {
   await new Promise(r => setTimeout(r, 1800));
   await shot(ws, idRef, '02_character_select.png');
 
-  // 3. DeckBuilderScene (via confirmSelection)
+  // 3. StartingDeckScene (template picker, via confirmSelection)
   await evalJs(ws, idRef, `
     const cs = globalThis.__game.scene.getScene('CharacterSelectScene');
     cs.selectedIndex = 0;
     await cs.confirmSelection();
   `);
   await new Promise(r => setTimeout(r, 2200));
-  await shot(ws, idRef, '03_deck_builder.png');
+  await shot(ws, idRef, '03_starting_deck.png');
 
-  // 4. GameScene — DeckBuilder.confirmDeck would route through CityHub (when
-  // tutorialSeen=true). Force a direct start so we capture the run scene.
+  // 4. GameScene — confirm the picked template and start the run.
   await evalJs(ws, idRef, `
-    const db = globalThis.__game.scene.getScene('DeckBuilderScene');
-    db.confirmDeck();
+    const db = globalThis.__game.scene.getScene('StartingDeckScene');
+    db.confirm();
   `);
   await new Promise(r => setTimeout(r, 1500));
   // Force-start GameScene if we ended up on CityHub.

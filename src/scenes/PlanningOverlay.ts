@@ -96,7 +96,6 @@ export class PlanningOverlay extends Scene {
       deckIcon.clearTint();
     });
     deckIcon.on('pointerdown', () => {
-      tutorialDirector.advanceIfMatches('deck-customize-open');
       this.scene.sleep();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PLANNING });
     });
@@ -206,9 +205,9 @@ export class PlanningOverlay extends Scene {
     }
 
     // Scripted tutorial overlay — covers planning-intro, place-tile,
-    // forge-intro, deck-customize-open, boss-preview steps. The overlay
-    // subscribes to director changes itself, so we don't re-mount on wake
-    // (that would stack a duplicate container on every Forge round-trip).
+    // forge-intro, boss-preview steps. The overlay subscribes to director
+    // changes itself, so we don't re-mount on wake (that would stack a
+    // duplicate container on every Forge round-trip).
     const overlay = TutorialOverlay.mountIfActive(this);
     if (overlay) {
       // place-tile: spotlight the path strip + main tile inventory so the
@@ -225,10 +224,6 @@ export class PlanningOverlay extends Scene {
       // forge-intro: spotlight the Forge button at the bottom-right.
       overlay.setStepRect('forge-intro', {
         x: 600, y: 525, width: 130, height: 50,
-      });
-      // deck-customize-open: spotlight the Deck icon at the top.
-      overlay.setStepRect('deck-customize-open', {
-        x: 325, y: 20, width: 90, height: 80,
       });
       // boss-preview: spotlight the Start Loop button. It's centered.
       overlay.setStepRect('boss-preview', {

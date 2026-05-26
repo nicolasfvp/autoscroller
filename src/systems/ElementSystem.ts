@@ -67,18 +67,6 @@ export const FORGE_TIER_UNLOCK: Record<CardTier, number> = {
   3: 4,
 };
 
-export const DECK_MIN = 5;
-export const DECK_MAX = 15;
-export const STARTER_DECK_SIZE = 5;
-export const STARTER_ELEMENT_BUDGET = 10;
-
-export const CLASS_DECK_RATIO: Record<string, { physicalMin: number; physicalMax: number; elementalMin: number; elementalMax: number }> = {
-  warrior: { physicalMin: 7, physicalMax: 10, elementalMin: 0, elementalMax: 3 },
-  mage:    { physicalMin: 0, physicalMax: 3,  elementalMin: 7, elementalMax: 10 },
-};
-
-export const PRESETS_PER_CLASS = 5;
-
 // ── Helpers ─────────────────────────────────────────────────
 
 export function elementCategory(id: ElementId): ElementCategory {

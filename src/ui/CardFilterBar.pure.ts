@@ -52,7 +52,7 @@ function getHaystack(card: CardDefinition): string {
 
 /**
  * Pure filter — exported for tests and for callers that need to re-apply
- * filters to a card subset (e.g. DeckBuilder's available pool).
+ * filters to a card subset (e.g. a deck-browsing pool).
  */
 export function applyFilters(allCards: CardDefinition[], filters: CardFilters): CardDefinition[] {
   const elemId = ELEMENT_LABEL_TO_ID[filters.element] ?? null;

@@ -157,7 +157,8 @@ async function main() {
   await new Promise(r => setTimeout(r, 600));
   await shot(ws, idRef, '02_pick_warrior.png');
 
-  // Pick warrior → advances pick-warrior → launches DeckBuilder.
+  // Pick warrior → tutorial path skips the template picker and launches
+  // the DeckCustomization scene as the deck-review step.
   await evalJs(ws, idRef, `
     const cs = globalThis.__game.scene.getScene('CharacterSelectScene');
     cs.selectedIndex = 0;
@@ -165,12 +166,13 @@ async function main() {
     return 'confirmed';
   `);
   await new Promise(r => setTimeout(r, 2500));
-  await shot(ws, idRef, '03_deck_builder.png');
+  await shot(ws, idRef, '03_deck_review.png');
 
-  // Confirm deck.
+  // Close the deck panel — advances 'deck-review' and starts GameScene.
   await evalJs(ws, idRef, `
-    globalThis.__game.scene.getScene('DeckBuilderScene').confirmDeck();
-    return 'confirmed';
+    const dc = globalThis.__game.scene.getScene('DeckCustomizationScene');
+    dc.close();
+    return 'closed deck';
   `);
   await new Promise(r => setTimeout(r, 2500));
   await shot(ws, idRef, '04_game_map_intro.png');
@@ -264,31 +266,7 @@ async function main() {
     return 'left forge';
   `);
   await new Promise(r => setTimeout(r, 1500));
-  await shot(ws, idRef, '13_deck_customize_open.png');
-
-  // Click Deck icon — find the interactive deck_icon image and fire
-  // pointerdown so PlanningOverlay's real handler runs (advances director
-  // through its statically-imported singleton, sleeps PO, launches DC).
-  await evalJs(ws, idRef, `
-    const po = globalThis.__game.scene.getScene('PlanningOverlay');
-    const deckIcon = po.children.list.find(c =>
-      c.type === 'Image' && c.texture?.key === 'deck_icon'
-    );
-    if (!deckIcon) return 'no deck icon';
-    deckIcon.emit('pointerdown');
-    return 'clicked deck icon';
-  `);
-  await new Promise(r => setTimeout(r, 1500));
-  await shot(ws, idRef, '14_deck_customize_reorder.png');
-
-  // Close deck panel.
-  await evalJs(ws, idRef, `
-    const dc = globalThis.__game.scene.getScene('DeckCustomizationScene');
-    dc.close();
-    return 'closed deck';
-  `);
-  await new Promise(r => setTimeout(r, 1500));
-  await shot(ws, idRef, '15_boss_preview.png');
+  await shot(ws, idRef, '13_boss_preview.png');
 
   // Click Start Loop — find the text button and fire pointerdown so the
   // real startLoop closure runs (which calls director.advanceIfMatches
@@ -303,7 +281,7 @@ async function main() {
     return 'clicked Start Loop';
   `);
   await new Promise(r => setTimeout(r, 2000));
-  await shot(ws, idRef, '16_complete.png');
+  await shot(ws, idRef, '14_complete.png');
 
   ws.close();
   console.log('\n✓ Done. Shots in', SHOTS_DIR);

@@ -1,5 +1,5 @@
 // SynergyDetection -- detects whether a candidate card or relic synergizes
-// with the player's current deck. Used by DeckBuilder and Shop UIs to apply
+// with the player's current deck. Used by the Shop UI to apply
 // a "glow" highlight on items that combo with what the player already runs.
 //
 // Rule (per beginner-mode spec):

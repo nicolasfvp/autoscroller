@@ -11,6 +11,7 @@ import {
 } from './CharacterSelectScene.helpers';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { getTemplatesForClass, TUTORIAL_TEMPLATE_ID } from '../data/DeckTemplates';
 
 export class CharacterSelectScene extends Scene {
   private selectedIndex = 0;
@@ -327,17 +328,39 @@ export class CharacterSelectScene extends Scene {
     });
   }
 
-  private deckBuilderOpen = false;
+  private templatePickerOpen = false;
 
   private async confirmSelection(): Promise<void> {
-    if (this.transitioning || this.deckBuilderOpen) return;
-    // Tutorial gate: only warrior is accepted, and we advance the director
-    // off the 'pick-warrior' step before launching the deck builder.
+    if (this.transitioning || this.templatePickerOpen) return;
+    // Tutorial gate: only warrior is accepted; skip the template picker,
+    // build the run with the fixed tutorial deck, then launch the deck
+    // panel so the player can review/reorder their starter cards before
+    // the run begins.
     if (tutorialDirector.isActive()) {
       const sel = CLASSES[this.selectedIndex];
       if (sel?.id !== 'warrior') return;
       tutorialDirector.advanceIfMatches('pick-warrior');
+      let meta;
+      try {
+        meta = await loadMetaState();
+      } catch (err) {
+        console.error('[CharacterSelect] loadMetaState failed', err);
+        return;
+      }
+      const tutorialDeck = (getTemplatesForClass('warrior')
+        .find(t => t.id === TUTORIAL_TEMPLATE_ID)?.cardIds) ?? [];
+      try {
+        setRun(createNewRun(meta, 1, 'warrior', undefined, tutorialDeck));
+        await saveManager.save(getRun());
+      } catch (err) {
+        console.error('[CharacterSelect] tutorial startRun failed', err);
+        return;
+      }
+      this.transitioning = true;
+      this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { tutorialOrigin: true });
+      return;
     }
+
     const selected = CLASSES[this.selectedIndex];
     let meta;
     try {
@@ -347,23 +370,21 @@ export class CharacterSelectScene extends Scene {
       return;
     }
 
-    // Launch DeckBuilder as an overlay. We do NOT pause this scene — instead
-    // we set deckBuilderOpen as a re-entry guard so a stray ENTER/click can't
-    // launch a second instance. The overlay covers the canvas with an opaque
-    // backdrop, so visual interference is negligible.
-    this.deckBuilderOpen = true;
+    // Launch the starting-deck picker as an overlay. We don't pause this
+    // scene — a re-entry guard (templatePickerOpen) prevents stray ENTER /
+    // double-click from stacking instances.
+    this.templatePickerOpen = true;
 
-    this.scene.launch(SCENE_KEYS.DECK_BUILDER, {
+    this.scene.launch(SCENE_KEYS.STARTING_DECK, {
       className: selected.id,
-      metaState: meta,
       onConfirm: (deck: string[]) => {
-        this.deckBuilderOpen = false;
-        // Use a microtask to give the DeckBuilder a tick to call scene.stop
-        // before we mutate the active-scene state with createNewRun().
+        this.templatePickerOpen = false;
+        // Microtask hand-off so the picker can scene.stop() before we mutate
+        // active-scene state.
         Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
       },
       onCancel: () => {
-        this.deckBuilderOpen = false;
+        this.templatePickerOpen = false;
       },
     });
   }
@@ -379,12 +400,11 @@ export class CharacterSelectScene extends Scene {
       await saveManager.save(getRun());
     } catch (err) {
       console.error('[CharacterSelect] startRun failed', err);
-      this.deckBuilderOpen = false;
+      this.templatePickerOpen = false;
       return;
     }
-    // Ensure the DeckBuilder overlay is stopped before we fade out.
-    if (this.scene.isActive(SCENE_KEYS.DECK_BUILDER)) {
-      this.scene.stop(SCENE_KEYS.DECK_BUILDER);
+    if (this.scene.isActive(SCENE_KEYS.STARTING_DECK)) {
+      this.scene.stop(SCENE_KEYS.STARTING_DECK);
     }
     this.fadeToScene(SCENE_KEYS.TUTORIAL);
   }

@@ -57,6 +57,12 @@ export class DeckCustomizationScene extends Scene {
   private scrollY = 0;
   private maxScroll = 0;
   private parentScene: string = SCENE_KEYS.GAME;
+  /**
+   * True when this panel was opened by the scripted tutorial as the
+   * "review your deck before the run starts" step. On close, the scene
+   * advances directly into GameScene instead of resuming the parent.
+   */
+  private tutorialOrigin = false;
 
   // Off-display-list Graphics backing the scroll mask. Phaser does not auto-
   // destroy `this.make.graphics()` objects because they are not in the
@@ -67,7 +73,7 @@ export class DeckCustomizationScene extends Scene {
     super(SCENE_KEYS.DECK_CUSTOMIZATION);
   }
 
-  create(data?: { parentScene?: string }): void {
+  create(data?: { parentScene?: string; tutorialOrigin?: boolean }): void {
     this.scene.bringToTop();
     const run = getRun();
     this.deckOrder = [...run.deck.active];
@@ -78,6 +84,7 @@ export class DeckCustomizationScene extends Scene {
     // bag-drop branch in dropCard().
     this.resetDragState();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
+    this.tutorialOrigin = !!data?.tutorialOrigin;
 
     this.cameras.main.setBackgroundColor(0x1a1a2e);
     if (this.textures.exists('deck_frame')) {
@@ -182,7 +189,7 @@ export class DeckCustomizationScene extends Scene {
 
     this.events.on('shutdown', this.cleanup, this);
 
-    // Scripted tutorial overlay — 'deck-customize-reorder' step.
+    // Scripted tutorial overlay — 'deck-review' step (pre-run reorder).
     TutorialOverlay.mountIfActive(this);
   }
 
@@ -497,10 +504,19 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private close(): void {
-    // Tutorial: 'deck-customize-reorder' completes when the player exits.
+    // Tutorial: the deck-review step completes when the player exits.
     // Reorder happens via drag-and-drop and isn't a single discrete event
     // we can easily hook; closing the panel signals "I'm done in here."
-    tutorialDirector.advanceIfMatches('deck-customize-reorder');
+    tutorialDirector.advanceIfMatches('deck-review');
+    if (this.tutorialOrigin) {
+      // Tutorial start path: CharacterSelect launched this panel as the
+      // first hands-on step. Skip the standard parent resume/wake and
+      // head straight into GameScene to begin the run.
+      this.scene.stop(SCENE_KEYS.CHARACTER_SELECT);
+      this.scene.stop();
+      this.scene.start(SCENE_KEYS.GAME);
+      return;
+    }
     // Different launchers leave the parent in different states:
     //   GameScene + LoopHUD → paused → needs resume()
     //   PlanningOverlay     → slept  → needs wake()

@@ -32,21 +32,6 @@ describe('MetaState v9 defaults', () => {
     expect(state.forgeRecipes.length).toBe(0);
   });
 
-  it('createDefaultMetaState has deckPresets with warrior and mage arrays of length 5', () => {
-    const state = createDefaultMetaState();
-    expect(state.deckPresets).toBeDefined();
-    expect(typeof state.deckPresets).toBe('object');
-    expect(Array.isArray(state.deckPresets.warrior)).toBe(true);
-    expect(Array.isArray(state.deckPresets.mage)).toBe(true);
-    expect(state.deckPresets.warrior.length).toBe(5);
-    expect(state.deckPresets.mage.length).toBe(5);
-  });
-
-  it('createDefaultMetaState populates the first preset cardIds for each class', () => {
-    const state = createDefaultMetaState();
-    expect(state.deckPresets.warrior[0].cardIds.length).toBeGreaterThan(0);
-    expect(state.deckPresets.mage[0].cardIds.length).toBeGreaterThan(0);
-  });
 });
 
 describe('MetaState v5 migration paths', () => {
@@ -340,7 +325,7 @@ describe('v6 -> v7 (Shadowblade removal)', () => {
 });
 
 describe('v7 -> v8 migration (element/forge additions)', () => {
-  it('v7 save backfills forgeRecipes and deckPresets', () => {
+  it('v7 save backfills forgeRecipes', () => {
     const v7: any = {
       buildings: {
         forge: { level: 0 }, library: { level: 0 }, tavern: { level: 0 },
@@ -361,22 +346,14 @@ describe('v7 -> v8 migration (element/forge additions)', () => {
       version: 7,
     };
 
-    const result = migrateMetaState(v7);
+    const result = migrateMetaState(v7) as any;
     expect(result.version).toBe(12);
     expect(Array.isArray(result.forgeRecipes)).toBe(true);
     expect(result.forgeRecipes.length).toBe(0);
-    expect(result.deckPresets).toBeDefined();
-    expect(typeof result.deckPresets).toBe('object');
-    expect(Array.isArray(result.deckPresets.warrior)).toBe(true);
-    expect(Array.isArray(result.deckPresets.mage)).toBe(true);
-    expect(result.deckPresets.warrior.length).toBe(5);
-    expect(result.deckPresets.mage.length).toBe(5);
-    // First preset (default starter) has populated cardIds.
-    expect(result.deckPresets.warrior[0].cardIds.length).toBeGreaterThan(0);
-    expect(result.deckPresets.mage[0].cardIds.length).toBeGreaterThan(0);
+    expect(result.deckPresets).toBeUndefined();
   });
 
-  it('v7 save preserves existing forgeRecipes if present', () => {
+  it('v7 save preserves existing forgeRecipes and strips deckPresets', () => {
     const existingRecipes = [
       { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't2-fire-fire', firstForgedAt: 12345 },
     ];
@@ -385,50 +362,36 @@ describe('v7 -> v8 migration (element/forge additions)', () => {
       forgeRecipes: existingRecipes,
       version: 7,
     };
-    // Drop deckPresets to ensure migration backfills them.
-    delete v7.deckPresets;
+    (v7 as any).deckPresets = { warrior: [{ name: 'old', cardIds: [] }] };
 
-    const result = migrateMetaState(v7);
+    const result = migrateMetaState(v7) as any;
     expect(result.version).toBe(12);
     expect(result.forgeRecipes).toEqual(existingRecipes);
-    expect(result.deckPresets.warrior.length).toBe(5);
+    expect(result.deckPresets).toBeUndefined();
   });
 });
 
 describe('v9 -> v10 migration (tier renumber)', () => {
-  it('shifts saved card-id tier prefixes t0/t1/t2 -> t1/t2/t3 across unlockedCards, deckPresets, and forgeRecipes', () => {
+  it('shifts saved card-id tier prefixes t0/t1/t2 -> t1/t2/t3 across unlockedCards and forgeRecipes, strips deckPresets', () => {
     const v9: any = {
       ...createDefaultMetaState(),
       version: 9,
       unlockedCards: ['t0-attack', 't1-attack-attack', 't2-fire-water-air'],
-      deckPresets: {
-        warrior: [
-          {
-            name: 'Old Warrior',
-            cardIds: ['t1-attack-attack', 't1-defense-defense', 't1-attack-defense', 't1-agility-agility', 't1-attack-fire'],
-          },
-        ],
-        mage: [
-          {
-            name: 'Old Mage',
-            cardIds: ['t1-fire-fire', 't1-water-water', 't1-fire-water', 't1-air-earth', 't1-attack-fire'],
-          },
-        ],
-      },
       forgeRecipes: [
         { key: 'fire+fire', elements: ['fire', 'fire'], cardId: 't1-fire-fire', firstForgedAt: 1 },
       ],
+    };
+    (v9 as any).deckPresets = {
+      warrior: [{ name: 'Old', cardIds: ['t1-attack-attack'] }],
     };
     const result = migrateMetaState(v9) as any;
     expect(result.version).toBe(12);
     // Single-element basics promoted to t1-, two-element to t2-, three-element to t3-.
     expect(result.unlockedCards).toEqual(['t1-attack', 't2-attack-attack', 't3-fire-water-air']);
-    // The 5 warrior preset cards (all formerly t1-) become t2- cards.
-    for (const id of result.deckPresets.warrior[0].cardIds) {
-      expect(id.startsWith('t2-')).toBe(true);
-    }
     // Forge recipes also shift.
     expect(result.forgeRecipes[0].cardId).toBe('t2-fire-fire');
+    // deckPresets field is dropped entirely.
+    expect(result.deckPresets).toBeUndefined();
   });
 
   it('leaves modern (already-v10) card ids untouched', () => {

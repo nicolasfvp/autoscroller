@@ -108,9 +108,9 @@ export class TavernPanelScene extends Scene {
       const rng = new SeededRNG(seedValue);
 
       // Preserve the chosen class AND deck from an existing run. The
-      // common path here is the first-run flow: the player just built
-      // their starter deck via CharacterSelect → DeckBuilder, which
-      // created a run with run.deck.active = customStarterDeck. Tavern
+      // common path here is the first-run flow: the player just picked a
+      // deck template via CharacterSelect → StartingDeck, which created a
+      // run with run.deck.active = customStarterDeck. Tavern
       // then bridges that run into the loop. Without forwarding the deck
       // through createNewRun's customStarterDeck arg, the deck silently
       // resets to class defaults (shuffled). After Death/BossExit, the

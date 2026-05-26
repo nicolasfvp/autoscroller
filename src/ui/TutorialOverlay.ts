@@ -260,8 +260,8 @@ export class TutorialOverlay {
     if (anchor === 'top-fixed') {
       panelTopY = 12;
     } else if (!spot && anchor === 'bottom') {
-      // 'bottom' on a spotlightless step → pin to canvas bottom. Used by
-      // deck-builder so the preset row at the top stays unobstructed.
+      // 'bottom' on a spotlightless step → pin to canvas bottom so the
+      // top of the screen stays unobstructed.
       panelTopY = LAYOUT.canvasHeight - 12 - panelH;
     } else if (anchor === 'center' || !spot) {
       panelTopY = (LAYOUT.canvasHeight - panelH) / 2;

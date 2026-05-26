@@ -207,17 +207,17 @@ async function main() {
   await go(ws, idRef, 'DeckCustomizationScene', { seedRun: true, launchData: { parentScene: 'MainMenu' } });
   await shot(ws, idRef, '18_deck_customization.png');
 
-  // 19. Deck Builder
+  // 19. Starting Deck (template picker)
   await evalJs(ws, idRef, `
     const g = globalThis.__game;
     for (const sc of g.scene.getScenes(true)) {
       if (!['GlobalSound','SpeedPanelScene'].includes(sc.scene.key)) g.scene.stop(sc.scene.key);
     }
     ${SEED_RUN}
-    g.scene.start('DeckBuilderScene', { className: 'warrior', onConfirm: () => {}, onCancel: () => {} });
+    g.scene.start('StartingDeckScene', { className: 'warrior', onConfirm: () => {}, onCancel: () => {} });
   `);
   await new Promise(r => setTimeout(r, 1500));
-  await shot(ws, idRef, '19_deck_builder.png');
+  await shot(ws, idRef, '19_starting_deck.png');
 
   ws.close();
   console.log('\n✓ Done. Shots in', SHOTS_DIR);

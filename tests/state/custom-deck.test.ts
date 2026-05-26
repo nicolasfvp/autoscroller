@@ -1,6 +1,7 @@
-// Reproduces the user-reported bug: a custom starter deck selected in
-// DeckBuilder ends up shuffled / replaced by the class default when the run
-// starts. Pin-down test for the customStarterDeck flow in createNewRun.
+// Pin-down test for the customStarterDeck flow in createNewRun: a deck
+// chosen via the StartingDeck template picker must reach the run intact
+// (no shuffle, no fallback to the class default) and the upgraded array
+// must mirror its length.
 
 import { describe, it, expect, beforeAll } from 'vitest';
 import { createNewRun } from '../../src/state/RunState';
