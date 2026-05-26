@@ -58,8 +58,8 @@ export class Preloader extends Scene {
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
-    // Mage scrolling animation (6-frame walk, 362×724 per frame)
-    this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 362, frameHeight: 724 });
+    // Mage scrolling animation (10-frame run, 512×512 per frame)
+    this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
@@ -71,36 +71,64 @@ export class Preloader extends Scene {
     this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
     this.load.spritesheet('mage_attack', 'assets/characters/mage/attack/spritesheet.png', { frameWidth: 640, frameHeight: 562 });
     this.load.image('mage_defeat_bg',    'assets/characters/mage/defeat/defeat.jpg');
+    this.load.spritesheet('hero_chibi_mage', 'assets/characters/mage/pocket/spritesheet.png', { frameWidth: 256, frameHeight: 256 });
     this.load.image('warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
 
-    // Monster static images
-    const staticMonsters = [
-      { id: 'corpse_eater', folder: 'cemetery', file: 'corpse eater.png' },
-      { id: 'headless_fire_horse', folder: 'cemetery', file: 'headless fire horse.png' },
-      { id: 'pocket_cat', folder: 'cemetery', file: 'pocket cat.png' },
-      { id: 'doom_knight', folder: 'default', file: 'doom knight.png' },
-      { id: 'iron_golem', folder: 'default', file: 'iron golem.png' },
-      { id: 'lizard_king', folder: 'default', file: 'lizard king.png' },
-      { id: 'baby_dragon', folder: 'desert', file: 'baby dragon.png' },
-      { id: 'giant_beetle', folder: 'desert', file: 'giant beetle.png' },
-      { id: 'mutated_salamander', folder: 'desert', file: 'mutated salamander.png' },
-      { id: 'ancient_tree', folder: 'forest', file: 'ancient tree.png' },
-      { id: 'giant_spider_2', folder: 'forest', file: 'giant spider 2.png' },
-      { id: 'giant_spider', folder: 'forest', file: 'giant spider.png' },
-      { id: 'mush', folder: 'forest', file: 'mush.png' },
-      { id: 'forge_slime', folder: 'lava', file: 'forge slime.png' },
-      { id: 'lava_golen', folder: 'lava', file: 'lava golen.png' },
-      { id: 'mecha_warrior', folder: 'lava', file: 'mecha warrior.png' },
-      { id: 'depths_horror', folder: 'swamp', file: 'depths horror.png' },
-      { id: 'toxic_gooze', folder: 'swamp', file: 'toxic gooze.png' },
-      { id: 'venomous_kobra', folder: 'swamp', file: 'venomous kobra.png' },
-      { id: 'lost_lizard', folder: '', file: 'lost_lizard_1.png' }
+    // Monster static images — `hasFrame2` flags entries that ship a second
+    // animation frame on disk. The `_1.png` suffix in `file` auto-derives the
+    // `_2.png` path via the regex below. Entries without a `_2` variant (most
+    // single-frame portraits) skip the second load to keep the console clean.
+    const staticMonsters: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean }> = [
+      // Cemetery
+      { id: 'corpse_eater',         folder: 'cemetery', file: 'corpse eater_1.png',         hasFrame2: true },
+      { id: 'pocket_cat',           folder: 'cemetery', file: 'pocket cat.png' },
+      { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
+      { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
+      { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
+      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
+      // Default-terrain enemies (single-frame portraits)
+      { id: 'doom_knight',          folder: 'default',  file: 'doom knight.png' },
+      { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
+      { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
+      // Desert
+      { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png',          hasFrame2: true },
+      { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated salamander_1.png',   hasFrame2: true },
+      { id: 'scorpion',             folder: 'desert',   file: 'scorpion_1.png',             hasFrame2: true },
+      // Forest
+      { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree_1.png',         hasFrame2: true },
+      { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
+      { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
+      { id: 'mush',                 folder: 'forest',   file: 'mush.png' },
+      { id: 'ogre',                 folder: 'forest',   file: 'ogre.png' },
+      // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
+      // spellings used in enemies.json; the disk files now use underscored
+      // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.
+      { id: 'forge_slime',          folder: 'lava',     file: 'forge_slime_1.png',          hasFrame2: true },
+      { id: 'lava_golen',           folder: 'lava',     file: 'lava_golem_1.png',           hasFrame2: true },
+      { id: 'fire_elemental',       folder: 'lava',     file: 'fire_elemental_1.png',       hasFrame2: true },
+      // Swamp
+      { id: 'depths_horror',        folder: 'swamp',    file: 'depths horror_1.png',        hasFrame2: true },
+      { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png',          hasFrame2: true },
+      { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous kobra_1.png',       hasFrame2: true },
+      // Root
+      { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
+      // New bosses (PR #12) — live in `monsters/boss/`. Each ships multiple
+      // frames on disk (bog_witch _1–_4, desert_golem _1–_3, infernal_dragon
+      // _1–_5, iron_golem _1–_2); we expose just the _1/_2 pair to match the
+      // rest of the roster. `boss_iron_golem` is namespaced to avoid clashing
+      // with the regular `iron_golem` enemy at default/.
+      { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true },
+      { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true },
+      { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true },
+      { id: 'boss_iron_golem',      folder: 'boss',     file: 'iron_golem_1.png',           hasFrame2: true },
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
       this.load.image(`monster_${m.id}`, path);
-      const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
-      this.load.image(`monster_${m.id}_2`, path2);
+      if (m.hasFrame2) {
+        const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
+        this.load.image(`monster_${m.id}_2`, path2);
+      }
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
@@ -126,6 +154,15 @@ export class Preloader extends Scene {
     this.load.image('library_table', 'assets/buildings/backgrounds/library-table.png');
     this.load.image('workshop_table', 'assets/buildings/backgrounds/workshop-table.png');
     this.load.image('forge_table', 'assets/buildings/backgrounds/forge-table.png');
+    this.load.image('forge_backdrop_v2', 'assets/buildings/backgrounds/forge-backdrop-v2.jpeg');
+    this.load.image('forge_rune_socket', 'assets/buildings/backgrounds/forge-rune-socket.jpeg');
+    this.load.image('forge_card_altar', 'assets/buildings/backgrounds/forge-card-altar.jpeg');
+    this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');
+    // Forge-specific ornate element sigils (separate from the small `icon_<id>`
+    // tokens used inside card faces).
+    for (const id of ['attack','defense','agility','counter','fire','water','air','earth']) {
+      this.load.image(`forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.jpeg`);
+    }
     this.load.image('tavern_table', 'assets/buildings/backgrounds/tavern.png');
     this.load.image('shrine_table', 'assets/buildings/backgrounds/shrine.png');
     this.load.image('vault_table', 'assets/buildings/backgrounds/vault.png');
@@ -143,14 +180,24 @@ export class Preloader extends Scene {
     this.load.image('bg_base_option', 'assets/ui/panels/base-option.png');
     this.load.image('fog', 'assets/ui/panels/fog.png');
     this.load.image('tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
+    this.load.image('belt_pillar', 'assets/ui/panels/pilar.png');
     this.load.image('tile_frame', 'assets/ui/panels/tile-frame.png');
     this.load.image('deck_frame', 'assets/ui/panels/deck-frame.png');
     this.load.image('deck_status_board', 'assets/ui/panels/deck-status-board.png');
     this.load.image('bg_tile_selection', 'assets/ui/panels/background-tile-selection.png');
     this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
+    // v2 (2026-05-26) Grok-generated alchemist-merchant interior. ShopScene
+    // prefers this when present and falls back to bg_shop_scene.
+    this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
+    // Shop-specific ornate chrome (Grok-generated 2026-05-26).
+    this.load.image('shop_title_banner', 'assets/ui/backgrounds/shop_title_banner.png');
+    this.load.image('shop_item_frame',   'assets/ui/backgrounds/shop_item_frame.png');
+    this.load.image('shop_remove_seal',  'assets/ui/backgrounds/shop_remove_seal.png');
+    this.load.image('banish_confirm_panel', 'assets/ui/backgrounds/banish_confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
     this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
+    this.load.image('bg_deck_editor_v2', 'assets/ui/backgrounds/deck-editor-v2.png');
     this.load.image('bg_relic_vault',  'assets/ui/backgrounds/bg_relic_vault.png');
     this.load.image('bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
     // Visual-upgrade pass (audit2): wooden buttons, parchment chrome,
@@ -170,9 +217,18 @@ export class Preloader extends Scene {
     // UI Buttons
     this.load.image('btn_continue_run', 'assets/ui/buttons/continue-run.png');
     this.load.image('btn_new_game', 'assets/ui/buttons/new-game.png');
+    this.load.image('btn_daily_run', 'assets/ui/buttons/daily-run.png');
     this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
     this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
+    this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
+    this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");
+    this.load.image('btn_skip_1',  'assets/ui/buttons/1.png');
+    this.load.image('btn_skip_5',  'assets/ui/buttons/5.png');
+    this.load.image('btn_skip_10', 'assets/ui/buttons/10.png');
+    this.load.image('btn_skip_25', 'assets/ui/buttons/25.png');
+    this.load.image('shop_icon', 'assets/icons/shop.png');
+    this.load.image('forge_icon', 'assets/icons/forge.png');
 
     // Material Icons
     this.load.image('mat_iron', 'assets/icons/iron.png');
@@ -185,6 +241,9 @@ export class Preloader extends Scene {
     this.load.image('mat_herbs', 'assets/icons/herbs.png');
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');
     this.load.image('relic_icon', 'assets/icons/relic-icon.png');
+    this.load.image('icon_coin', 'assets/icons/coin.png');
+    this.load.image('icon_brick', 'assets/icons/brick.png');
+    this.load.image('icon_card', 'assets/icons/card.jpg');
 
     // Card token icons (audit §1.2): bracketed icon tokens like [burn], [str].
     // IconTokens.renderTokenText prefers `icon_${token}` textures when present
@@ -204,15 +263,46 @@ export class Preloader extends Scene {
       this.load.image(`icon_${token}`, `assets/icons/tokens/${token}.png`);
     }
 
-    // Relic Illustrations
-    // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
-    // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic
-    // IDs removed; iron_will retained as a neutral rare"). All remaining
-    // IDs verified to exist in v2 relics.json on 2026-05-11.
+    // Painterly v2 element icons (oil-paint style, generated via Grok) for the
+    // shop's element frames. Only the 4 physical + 4 elemental ids exist in v2.
+    const elementV2Ids = [
+      'attack', 'defense', 'agility', 'counter',
+      'fire', 'water', 'air', 'earth',
+    ];
+    for (const token of elementV2Ids) {
+      this.load.image(`icon_v2_${token}`, `assets/icons/tokens/elements-v2/${token}.png`);
+    }
+
+    // Relic Illustrations — one PNG per relic id in src/data/json/relics.json.
     const relicIds = [
-      'arcane_crystal', 'berserker_ring', 'blood_pact', 'bronze_scale', 'demon_heart',
-      'energy_potion', 'first_strike_amulet', 'iron_will', 'mana_stone', 'phoenix_feather',
-      'swift_boots', 'thin_deck_charm', 'vitality_ring'
+      // Warrior
+      'whetstone_shard', 'bronze_pauldron', 'stamina_flask', 'battered_vambrace',
+      'iron_cestus', 'banded_greaves', 'stamina_reservoir',
+      'wargods_mantle', 'bloodgorged_heart', 'the_last_banner',
+      // Mage
+      'aether_lens', 'burnt_tome', 'frostbite_charm', 'ember_wick',
+      'stormglass_lens', 'cinder_circlet', 'mana_veil',
+      'tempest_resonator', 'tideheart_amulet', 'archon_codex',
+      // Neutral commons (stat/utility)
+      'bronze_scale', 'energy_tonic', 'arcane_crystal', 'whetting_stone',
+      'iron_brace', 'quick_boots', 'scholars_quill', 'soul_locket', 'vitality_ring',
+      'hearty_meal', 'lucky_coin', 'travel_boots', 'beacon_lantern',
+      // Neutral commons (combat)
+      'smoldering_torch', 'iron_tooth', 'vanguard_cuffs', 'charm_of_tides',
+      'steady_compass', 'linen_wrap', 'tarnished_mirror', 'echoing_chime',
+      'brass_bell', 'trailblazers_brand', 'veterans_stripe',
+      // Neutral uncommons
+      'swift_boots', 'thin_deck_charm', 'heavy_tome', 'iron_will',
+      'first_strike_amulet', 'gravediggers_tag', 'huntmasters_eye',
+      'librarians_seal', 'apothecarys_vial', 'harmonics_charm', 'glasswork_lens',
+      'executioners_brand', 'counterweight_sigil', 'burnished_sigil', 'vampiric_fang',
+      'smoking_censer', 'roaring_hourglass', 'lodestone_pendant', 'cracked_crystal',
+      'whisperwind_sash', 'ash_eater',
+      // Neutral rares
+      'sanguine_pact', 'berserker_ring', 'phoenix_feather', 'demon_heart',
+      'stoneheart_sigil', 'pandoras_embers', 'cinderkeep', 'crimson_stiletto',
+      'stormcallers_rod', 'echo_chamber', 'catalyst_core', 'soulforge_chalice',
+      'glass_cannon', 'hemlock_vial', 'constellation_sigil'
     ];
 
     for (const id of relicIds) {
@@ -312,19 +402,6 @@ export class Preloader extends Scene {
     this.load.audio('sfx_hurt', 'assets/audio/hurt.m4a');
     this.load.audio('sfx_cashing', 'assets/audio/cashing.m4a');
     this.load.audio('ambience_wind', 'assets/audio/wind.wav');
-
-    // ── Meme assets (optional) ─────────────────────────────────────
-    // OIIAOIIA spinning cat — ultra-rare event outcome. Loaded best-effort:
-    // if the file isn't on disk, Phaser logs a 404 once and the game falls
-    // back to a cat-emoji placeholder. Drop your assets at the paths below
-    // to enable the full version.
-    this.load.image('meme_oiiaoiia', 'assets/meme/oiiaoiia.png');
-    this.load.audio('sfx_oiiaoiia', 'assets/audio/oiiaoiia.mp3');
-    this.load.on('loaderror', (file: { key: string }) => {
-      if (file.key === 'meme_oiiaoiia' || file.key === 'sfx_oiiaoiia') {
-        // Expected when the meme assets aren't authored yet; swallow.
-      }
-    });
   }
 
   async create(): Promise<void> {

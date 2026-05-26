@@ -8,6 +8,10 @@ import { getRelicData } from './combat/RelicSystem';
 
 const pricing = (difficultyConfig as any).pricing;
 
+/** Minimum number of cards the deck must retain after any removal. The shop's
+ *  Remove Card service refuses to thin the deck below this floor. */
+export const MIN_DECK_SIZE = 5;
+
 export interface ShopCard {
   cardId: string;
   name: string;
@@ -78,7 +82,7 @@ export class ShopSystem {
   }
 
   static removeCard(runState: RunState, cardIndex: number, removalCount: number = 0): boolean {
-    if (runState.deck.active.length <= 3) return false;
+    if (runState.deck.active.length <= MIN_DECK_SIZE) return false;
     const cost = ShopSystem.getRemovalPrice(removalCount);
     if (runState.economy.gold < cost) return false;
     runState.economy.gold -= cost;

@@ -1,73 +1,112 @@
-// DeckCustomizationScene -- deck viewer with drag-and-drop for dropped cards.
-// Active deck cards are displayed but NOT draggable.
-// Dropped (loot) cards appear in a separate strip and CAN be dragged into the deck.
-// Uses the same drag-and-drop pattern as ShopDeckEditor.
+// DeckCustomizationScene -- the in-run deck editor.
+//
+// Layout (800×600 canvas):
+//   [00-50]    Header strip — back · title · glossary
+//   [60-490]   Active deck grid — 5 cols × up to 3 rows (max 15 cards)
+//              · Cards centered both axes; rows expand as deck grows
+//              · Order number floats ABOVE each card
+//              · Hover any card to see a large preview beside it
+//   [500-585]  Loot bag strip — drag up into the deck
+//   [590-600]  Contextual hint line
+//
+// Drag-and-drop preserves the click offset on the card: wherever the player
+// grabs the card, that point stays under the cursor for the whole drag.
 
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { FONTS, LAYOUT, COLORS } from '../ui/StyleConstants';
+import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { disableCardFaceInput, createCardFace } from '../ui/CardFace';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
-import { attachKeywordHover, scheduleKeywordPanel, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
-import { getCardById } from '../data/DataLoader';
 
-const COLS = 6;
-// Active-deck grid uses CardVisual at scale 0.5 → 75×120. Cell footprint
-// reserves the same dimensions so grid math stays simple.
-const CARD_SCALE = 0.5;
-const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;   // 75
-const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;  // 120
-const GAP = 10;
+// ── Layout zones ─────────────────────────────────────────────────────────
+const HEADER_BOTTOM = 44;
+const DECK_TOP = 56;
+const DECK_BOTTOM = 490;
+const BAG_TOP = 498;
+const BAG_BOTTOM = 585;
+const HINT_Y = 593;
 
-// ── Dropped cards strip constants ──
-const STRIP_TOP = 160;
-// Dropped strip uses a smaller scale so 6+ cards fit horizontally.
-const STRIP_SCALE = 0.4;
-const STRIP_CARD_W = STANDARD_CARD_WIDTH * STRIP_SCALE;   // 60
-const STRIP_CARD_H = STANDARD_CARD_HEIGHT * STRIP_SCALE;  // 96
-const STRIP_GAP = 8;
-const STRIP_HEIGHT = STRIP_CARD_H + 20;
+// Active-deck grid — 5 cols × up to 3 rows (max 15). The visual size of
+// the cards is RESPONSIVE to deck length: a small deck spreads luxuriously,
+// a full 15-card deck packs tight. The breakpoints are chosen so the
+// rendered grid (with row gaps + badges above the first row) clears the
+// header and the bag in every configuration.
+const COLS = 5;
+const MAX_DECK = 15;
+const COL_GAP = 16;
+const TIER_BREAKPOINTS = [
+  // up to N cards, card scale (× small base 150×240), row gap
+  { upTo: 5,  scale: 0.85, rowGap: 18 },   // 1 row,  127.5 × 204
+  { upTo: 10, scale: 0.65, rowGap: 20 },   // 2 rows, 97.5  × 156
+  { upTo: 15, scale: 0.52, rowGap: 22 },   // 3 rows, 78    × 124.8
+] as const;
+
+// Order badge — small parchment chip floating above each card.
+const BADGE_OFFSET = 8;
+
+// Hover preview — the FULL popup-layout card (with description panel) shown
+// next to the hovered card. The small in-hand layout drops the description
+// for compactness; using baseSize 'popup' here gives the player the full read.
+// Base popup is 340×540; we scale to ~0.7 → 238×378, which fits beside the
+// small grid card and clears the canvas edges.
+const HOVER_DELAY_MS = 220;
+const HOVER_SCALE = 0.7;
+const HOVER_W = 340 * HOVER_SCALE;   // 238
+const HOVER_H = 540 * HOVER_SCALE;   // 378
+
+// Bag (loot) strip
+const BAG_SCALE = 0.4;
+const BAG_CARD_W = STANDARD_CARD_WIDTH * BAG_SCALE;   // 60
+const BAG_CARD_H = STANDARD_CARD_HEIGHT * BAG_SCALE;  // 96
+const BAG_GAP = 10;
+
+// Chrome palette
+const CHROME = {
+  bgTint: 0x0e0c0a,
+  panelStroke: 0x6b5a3a,
+  bagFill: 0x2a1d10,
+  bagStroke: 0x6b4a1f,
+  bagHotStroke: 0xffd700,
+  ghost: 0xffd700,
+} as const;
+
+interface DragOffset { x: number; y: number }
 
 export class DeckCustomizationScene extends Scene {
-  // Active deck state (working copy)
+  // Active deck working copy
   private deckOrder: string[] = [];
-  /** Parallel to deckOrder: upgrade flag per deck position. */
   private upgradedOrder: boolean[] = [];
   private cardSlots: Phaser.GameObjects.Container[] = [];
+  private orderBadges: Phaser.GameObjects.Container[] = [];
   private gridContainer!: Phaser.GameObjects.Container;
+  private bagContainer!: Phaser.GameObjects.Container;
+  private ghostSlot: Phaser.GameObjects.Graphics | null = null;
 
-  // Dropped cards strip
-  private droppedStrip!: Phaser.GameObjects.Container;
+  // Hint
+  private hintText!: Phaser.GameObjects.Text;
+
+  // Hover preview state
+  private hoverPreview: Phaser.GameObjects.Container | null = null;
+  private hoverTimer: Phaser.Time.TimerEvent | null = null;
 
   // Drag state
   private dragCard: Phaser.GameObjects.Container | null = null;
-  private dragFromDropped = false;
+  private dragOffset: DragOffset = { x: 0, y: 0 };
+  private dragFromBag = false;
   private dragFromDeck = false;
-  private dragDroppedIndex = -1;
+  private dragBagIndex = -1;
   private dragDeckIndex = -1;
   private dragCardId = '';
   private hoverIndex = -1;
-  /** Pending keyword tooltip for the active drag (fires after 2s). */
-  private dragTooltip: KeywordTooltipHandle | null = null;
 
-  private scrollY = 0;
-  private maxScroll = 0;
   private parentScene: string = SCENE_KEYS.GAME;
-  /**
-   * True when this panel was opened by the scripted tutorial as the
-   * "review your deck before the run starts" step. On close, the scene
-   * advances directly into GameScene instead of resuming the parent.
-   */
   private tutorialOrigin = false;
-
-  // Off-display-list Graphics backing the scroll mask. Phaser does not auto-
-  // destroy `this.make.graphics()` objects because they are not in the
-  // display list; store a ref so cleanup() can destroy it.
-  private scrollMaskGfx: Phaser.GameObjects.Graphics | null = null;
 
   constructor() {
     super(SCENE_KEYS.DECK_CUSTOMIZATION);
@@ -78,246 +117,226 @@ export class DeckCustomizationScene extends Scene {
     const run = getRun();
     this.deckOrder = [...run.deck.active];
     this.upgradedOrder = [...run.deck.upgraded];
-    this.scrollY = 0;
-    // Scene instances are reused on re-entry; clear any stale drag flags
-    // before binding handlers so the first click doesn't trip a leftover
-    // bag-drop branch in dropCard().
     this.resetDragState();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
     this.tutorialOrigin = !!data?.tutorialOrigin;
 
-    this.cameras.main.setBackgroundColor(0x1a1a2e);
-    if (this.textures.exists('deck_frame')) {
-        const board = this.add.image(LAYOUT.centerX, LAYOUT.centerY - 10, 'deck_frame');
-        board.setDisplaySize(760, 540); // Slightly wider but controlled
-        board.setDepth(-1);
-    }
+    this.buildBackground();
+    this.buildHeader();
+    this.buildDeckGrid();
+    this.buildBag();
+    this.buildHint();
 
-    const fontFamily = FONTS.family;
-
-    const hasDropped = run.deck.droppedCards.length > 0;
-
-    // Stats board - Reduced size for a more compact look, moved down slightly
-    if (this.textures.exists('deck_status_board')) {
-      this.add.image(LAYOUT.centerX, 75, 'deck_status_board').setDisplaySize(450, 34);
-    }
-
-    const deckIds = run.deck.active;
-    // Using symbols to mimic the icons in the mockup
-    const statsText = `${deckIds.length} Cards  |  ⚔️ Atk: ${run.hero.strength}  |  🛡️ Def: ${run.hero.defenseMultiplier}  |  ✨ Mag: ${run.hero.maxMana}`;
-    
-    this.add.text(LAYOUT.centerX, 75, statsText, {
-      fontSize: '15px',
-      color: '#ffffff',
-      fontFamily,
-      stroke: '#000000',
-      strokeThickness: 1,
-    }).setOrigin(0.5);
-
-    // Keyword glossary "?" — top-right corner, above the deck frame.
-    // Hydrate seen-keywords so the glossary filters correctly on first open.
     void keywordIntro.init();
-    addGlossaryButton(this, 770, 30);
-
-    createButton(this, 30, 30, 'Back', () => this.close(), 'secondary');
-
-    // ── Dropped cards strip ──
-    this.droppedStrip = this.add.container(0, 0);
-    if (hasDropped) {
-      this.buildDroppedStrip(run.deck.droppedCards);
-    }
-
-    // ── Active deck grid ──
-    this.gridContainer = this.add.container(0, 0);
-
-    // Create a mask to keep cards within the ornate frame interior
-    const maskGraphics = this.add.graphics();
-    maskGraphics.fillStyle(0xffffff);
-    // Adjusted for 760 width
-    maskGraphics.fillRect(LAYOUT.centerX - 360, 160, 720, 400);
-    maskGraphics.setVisible(false);
-    const mask = new Phaser.Display.Masks.GeometryMask(this, maskGraphics);
-    this.gridContainer.setMask(mask);
-
-    this.rebuildGrid();
-
-    // Scroll
-    const gridTop = this.getGridTop();
-    const totalRows = Math.ceil(this.deckOrder.length / COLS);
-    const visibleH = LAYOUT.canvasHeight - gridTop - 50;
-    this.maxScroll = Math.max(0, totalRows * (CARD_H + GAP) - visibleH);
-
-    if (this.maxScroll > 0) {
-      this.input.on('wheel', (_p: any, _go: any, _dx: number, dy: number) => {
-        if (this.dragCard) return;
-        this.scrollY = Math.max(0, Math.min(this.maxScroll, this.scrollY + dy * 0.5));
-        this.gridContainer.y = -this.scrollY;
-      });
-    }
-
-    // Mask for grid area
-    const maskGfx = this.make.graphics({ x: 0, y: 0 });
-    maskGfx.fillStyle(0xffffff);
-    maskGfx.fillRect(0, gridTop - 10, LAYOUT.canvasWidth, visibleH + 10);
-    this.gridContainer.setMask(maskGfx.createGeometryMask());
-    this.scrollMaskGfx = maskGfx;
-
-    // ── Pointer handlers ──
-    // pointer.x/y are canvas-pixel coords (multiplied by the Graphics Quality
-    // supersample — see main.ts). Drag visuals + grid math live in 800×600
-    // game-space, so funnel pointer events through the camera before using
-    // them. Without this, the drag preview floats off to the right/down by
-    // the UI_SCALE factor and the hover-slot lookup targets the wrong row.
-    this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (!this.dragCard) return;
-      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-      this.dragCard.x = wp.x;
-      this.dragCard.y = wp.y;
-
-      const gridY = wp.y + this.scrollY;
-      const newHover = this.getSlotIndex(wp.x, gridY);
-      if (newHover !== this.hoverIndex) {
-        this.hoverIndex = newHover;
-        this.animateSlots();
-      }
-    });
-
-    this.input.on('pointerup', () => {
-      if (!this.dragCard) return;
-      this.dropCard();
-    });
-
+    this.attachPointerHandlers();
     this.events.on('shutdown', this.cleanup, this);
 
-    // Scripted tutorial overlay — 'deck-review' step (pre-run reorder).
     TutorialOverlay.mountIfActive(this);
   }
 
-  // ── Layout helpers ──
+  // ── Chrome ───────────────────────────────────────────────────────────────
 
-  private getGridTop(): number {
-    const hasDropped = getRun().deck.droppedCards.length > 0;
-    return hasDropped ? 280 : 180;
-  }
-
-  private getGridLeft(): number {
-    return LAYOUT.centerX - ((COLS * (CARD_W + GAP) - GAP) / 2);
-  }
-
-  private getSlotPos(index: number): { x: number; y: number } {
-    const col = index % COLS;
-    const row = Math.floor(index / COLS);
-    const gridTop = this.getGridTop();
-    return {
-      x: this.getGridLeft() + col * (CARD_W + GAP) + CARD_W / 2,
-      y: gridTop + row * (CARD_H + GAP) + CARD_H / 2,
-    };
-  }
-
-  private getSlotIndex(px: number, gridY: number): number {
-    const gridLeft = this.getGridLeft();
-    const gridTop = this.getGridTop();
-    const col = Math.floor((px - gridLeft) / (CARD_W + GAP));
-    const row = Math.floor((gridY - gridTop) / (CARD_H + GAP));
-    const clampCol = Math.max(0, Math.min(COLS - 1, col));
-    const clampRow = Math.max(0, row);
-    const idx = clampRow * COLS + clampCol;
-    return Math.max(0, Math.min(this.deckOrder.length, idx));
-  }
-
-  // ── Dropped cards strip ──
-
-  private buildDroppedStrip(droppedIds: string[]): void {
-    this.droppedStrip.removeAll(true);
-
-    const totalW = droppedIds.length * (STRIP_CARD_W + STRIP_GAP) - STRIP_GAP;
-    const startX = Math.max(16, LAYOUT.centerX - totalW / 2) + STRIP_CARD_W / 2;
-
-    // Background
-    const bgW = Math.min(totalW + 24, LAYOUT.canvasWidth - 16);
-    this.droppedStrip.add(
-      this.add.rectangle(LAYOUT.centerX, STRIP_TOP + STRIP_CARD_H / 2, bgW, STRIP_HEIGHT, 0x332200, 0.5)
-        .setStrokeStyle(1, 0x665500)
-    );
-
-    for (let i = 0; i < droppedIds.length; i++) {
-      const x = startX + i * (STRIP_CARD_W + STRIP_GAP);
-      const y = STRIP_TOP + STRIP_CARD_H / 2;
-      const slot = this.createMiniCard(droppedIds[i], x, y, -1, true, STRIP_SCALE);
-      slot.setData('droppedIndex', i);
-      this.droppedStrip.add(slot);
+  private buildBackground(): void {
+    this.cameras.main.setBackgroundColor(CHROME.bgTint);
+    const bgKey = this.textures.exists('bg_deck_editor_v2')
+      ? 'bg_deck_editor_v2'
+      : (this.textures.exists('bg_deck_builder') ? 'bg_deck_builder' : null);
+    if (bgKey) {
+      const bg = this.add.image(LAYOUT.centerX, LAYOUT.centerY, bgKey);
+      bg.setDisplaySize(LAYOUT.canvasWidth, LAYOUT.canvasHeight);
+      bg.setAlpha(0.78);
+      bg.setDepth(-10);
     }
+    this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.34)
+      .setDepth(-9);
   }
 
-  // ── Active deck grid ──
+  private buildHeader(): void {
+    this.add.rectangle(LAYOUT.centerX, HEADER_BOTTOM / 2, LAYOUT.canvasWidth, HEADER_BOTTOM, 0x14100c, 0.86)
+      .setStrokeStyle(1, CHROME.panelStroke);
+
+    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, 'DECK EDITOR', {
+      fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
+      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+
+    createWoodButton(this, 60, HEADER_BOTTOM / 2, '← Back', () => this.close(),
+      { width: 96, height: 32, fontSize: 13, variant: 'normal' });
+
+    addGlossaryButton(this, 770, HEADER_BOTTOM / 2);
+  }
+
+  // ── Deck grid (5×3, centered both axes, no scroll) ──────────────────────
+
+  // Cached per-rebuild — recomputed from current deck size so cards smoothly
+  // resize as the deck grows / shrinks.
+  private cardScale: number = TIER_BREAKPOINTS[0].scale;
+  private cardW: number = STANDARD_CARD_WIDTH * TIER_BREAKPOINTS[0].scale;
+  private cardH: number = STANDARD_CARD_HEIGHT * TIER_BREAKPOINTS[0].scale;
+  private rowGap: number = TIER_BREAKPOINTS[0].rowGap;
+
+  private buildDeckGrid(): void {
+    this.gridContainer = this.add.container(0, 0);
+
+    this.ghostSlot = this.add.graphics();
+    this.ghostSlot.setVisible(false);
+    this.ghostSlot.setDepth(5);
+    this.gridContainer.add(this.ghostSlot);
+
+    this.rebuildGrid();
+  }
+
+  /**
+   * Pick the tier (scale + row gap) for the given deck size and cache it on
+   * the instance. Called once per rebuildGrid so all helpers below see the
+   * same dimensions for a given pass.
+   */
+  private resolveTier(total: number): void {
+    const tier = TIER_BREAKPOINTS.find(t => total <= t.upTo) ?? TIER_BREAKPOINTS[TIER_BREAKPOINTS.length - 1];
+    this.cardScale = tier.scale;
+    this.cardW = STANDARD_CARD_WIDTH * tier.scale;
+    this.cardH = STANDARD_CARD_HEIGHT * tier.scale;
+    this.rowGap = tier.rowGap;
+  }
+
+  private rowCount(total = this.deckOrder.length): number {
+    return Math.max(1, Math.ceil(total / COLS));
+  }
+
+  /**
+   * Top-edge Y of the grid block — chosen so the visible rows are vertically
+   * centered inside the deck band. As cards are added and another row opens,
+   * existing cards smoothly slide up to keep the whole block centered.
+   */
+  private getGridTop(total = this.deckOrder.length): number {
+    const rows = this.rowCount(total);
+    const totalH = rows * this.cardH + (rows - 1) * this.rowGap;
+    const bandH = DECK_BOTTOM - DECK_TOP;
+    return DECK_TOP + (bandH - totalH) / 2;
+  }
+
+  /**
+   * Cards in row r of a deck with N cards. The last row is partial when
+   * N % COLS !== 0; earlier rows are always full.
+   */
+  private cardsInRow(r: number, total: number): number {
+    const lastRow = Math.max(0, Math.ceil(total / COLS) - 1);
+    if (total === 0) return 0;
+    if (r < lastRow) return COLS;
+    const tail = total - r * COLS;
+    return Math.max(0, Math.min(COLS, tail));
+  }
+
+  /**
+   * Position the i-th card occupies in a deck of `total` cards. Each row
+   * is centered horizontally for its own card count — so a 3-card deck
+   * sits centered on the canvas, and a 6-card deck has a full 5-card row
+   * on top with a single-card row centered below.
+   */
+  private getSlotPos(i: number, total = this.deckOrder.length): { x: number; y: number } {
+    const r = Math.floor(i / COLS);
+    const c = i % COLS;
+    const rowN = Math.max(1, this.cardsInRow(r, total));
+    const rowW = rowN * this.cardW + (rowN - 1) * COL_GAP;
+    const rowLeft = (LAYOUT.canvasWidth - rowW) / 2;
+    const x = rowLeft + c * (this.cardW + COL_GAP) + this.cardW / 2;
+    const y = this.getGridTop(total) + r * (this.cardH + this.rowGap) + this.cardH / 2;
+    return { x, y };
+  }
+
+  /**
+   * Map a world point to an insert position 0..N. Finds the closest card,
+   * then chooses "before" or "after" by the cursor's relation to that card's
+   * center X. Pointer above the grid → 0; below the last row → N.
+   */
+  private getInsertIndex(worldX: number, worldY: number): number {
+    const N = this.deckOrder.length;
+    if (N === 0) return 0;
+    const gridTop = this.getGridTop();
+    if (worldY < gridTop) return 0;
+    if (worldY > gridTop + this.rowCount() * (this.cardH + this.rowGap)) return N;
+
+    let nearest = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < N; i++) {
+      const p = this.getSlotPos(i);
+      const dx = p.x - worldX;
+      const dy = p.y - worldY;
+      const d = dx * dx + dy * dy;
+      if (d < bestDist) { bestDist = d; nearest = i; }
+    }
+    const np = this.getSlotPos(nearest);
+    return worldX < np.x ? nearest : nearest + 1;
+  }
+
+  private isOverGrid(worldY: number): boolean {
+    return worldY >= DECK_TOP - 4 && worldY <= DECK_BOTTOM + 4;
+  }
 
   private rebuildGrid(): void {
     for (const slot of this.cardSlots) slot.destroy(true);
+    for (const badge of this.orderBadges) badge.destroy(true);
     this.cardSlots = [];
+    this.orderBadges = [];
+
+    // Pick scale/gap for the current deck size, then place every slot using
+    // those tier dimensions. This is what makes the layout "breathe" as the
+    // deck grows: 1-row decks get large cards, 3-row decks pack tighter.
+    this.resolveTier(this.deckOrder.length);
 
     for (let i = 0; i < this.deckOrder.length; i++) {
       const pos = this.getSlotPos(i);
       const slot = this.createMiniCard(this.deckOrder[i], pos.x, pos.y, i, false);
       this.gridContainer.add(slot);
       this.cardSlots.push(slot);
+
+      const badge = this.createOrderBadge(i, pos.x, pos.y);
+      this.gridContainer.add(badge);
+      this.orderBadges.push(badge);
     }
   }
 
+  /**
+   * Order chip — sits ABOVE the card top edge so it never overlaps mana cost
+   * or other header glyphs.
+   */
+  private createOrderBadge(index: number, cardCenterX: number, cardCenterY: number): Phaser.GameObjects.Container {
+    const c = this.add.container(cardCenterX, cardCenterY - this.cardH / 2 - BADGE_OFFSET);
+    c.add(this.add.rectangle(0, 0, 22, 16, 0x14100c, 0.95).setStrokeStyle(1, CHROME.panelStroke));
+    c.add(this.add.text(0, 0, `${index + 1}`, {
+      fontSize: '11px', fontStyle: 'bold', color: '#ffe28a',
+      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5));
+    c.setDepth(10);
+    return c;
+  }
+
   private createMiniCard(
-    cardId: string, x: number, y: number,
-    deckIndex: number, isDraggable: boolean,
-    scale: number = CARD_SCALE,
+    cardId: string,
+    x: number,
+    y: number,
+    deckIndex: number,
+    isDraggable: boolean,
+    scale: number = this.cardScale,
   ): Phaser.GameObjects.Container {
-    // Unified card visual — replaces the custom deck_frame + bespoke text
-    // layout. CardVisual already shows category strip, rarity outline, name,
-    // cost, cooldown, and either the pixel-art image (when loaded) or the
-    // procedural look (when missing).
     const visual = createCardVisual(this, x, y, cardId, { scale });
-    // Override CardVisual's built-in pointerdown (which opens the card detail
-    // popup). The Customization scene uses pointerdown to start a drag, not to
-    // open a popup. We also strip pointerover/pointerout so the CardVisual
-    // hover-scale tween + its (now-stale-anchor) keyword tooltip don't
-    // double-fire alongside our re-attached, scroll-aware tooltip below.
     visual.removeAllListeners('pointerdown');
     visual.removeAllListeners('pointerover');
     visual.removeAllListeners('pointerout');
 
-    // Re-attach the 2-second keyword tooltip with a lazy anchor that
-    // resolves to scene-space via getWorldTransformMatrix(), so the panel
-    // mounts beside the card regardless of parent-container translation
-    // (gridContainer scroll, droppedStrip offset, etc.).
-    const card = getCardById(cardId);
-    if (card) {
-      const w = STANDARD_CARD_WIDTH * scale;
-      const h = STANDARD_CARD_HEIGHT * scale;
-      attachKeywordHover(this, visual, card.description, () => {
-        const m = visual.getWorldTransformMatrix();
-        return { x: m.tx, y: m.ty, w, h };
-      });
-    }
-
-    // Order number badge (top-left) for active-deck cards — kept because the
-    // numbered position is meaningful to the player.
-    if (deckIndex >= 0) {
-      const halfW = (STANDARD_CARD_WIDTH * scale) / 2;
-      const halfH = (STANDARD_CARD_HEIGHT * scale) / 2;
-      const badge = this.add.text(x - halfW + 4, y - halfH + 2, `${deckIndex + 1}`, {
-        fontSize: '11px', fontStyle: 'bold', color: '#ffffff',
-        fontFamily: FONTS.family, stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0, 0).setDepth(1);
-      // Attach the badge as a sibling that follows the container — we add
-      // it to the same parent (the caller's container) but here we approximate
-      // by storing it on the visual's data so callers can manage lifecycle.
-      visual.setData('_orderBadge', badge);
-      // The badge isn't a child of the container, so make sure it's destroyed
-      // alongside it.
-      visual.once('destroy', () => badge.destroy());
-    }
+    // Hover preview — fires after a short hold to avoid flashing during pans.
+    visual.on('pointerover', () => {
+      if (this.dragCard) return;
+      this.scheduleHoverPreview(cardId, x, y);
+    });
+    visual.on('pointerout', () => {
+      this.cancelHoverPreview();
+    });
 
     if (isDraggable) {
       visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-        const droppedIdx = visual.getData('droppedIndex') as number;
-        this.startDragFromDropped(droppedIdx, cardId, pointer);
+        const bagIdx = visual.getData('bagIndex') as number;
+        this.startDragFromBag(bagIdx, cardId, pointer);
       });
     } else {
       visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
@@ -328,142 +347,246 @@ export class DeckCustomizationScene extends Scene {
     return visual;
   }
 
-  // ── Drag from dropped strip ──
+  // ── Hover preview (magnified card face) ─────────────────────────────────
 
-  private startDragFromDropped(droppedIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
-    this.dragFromDropped = true;
-    this.dragDroppedIndex = droppedIndex;
+  private scheduleHoverPreview(cardId: string, cardX: number, cardY: number): void {
+    this.cancelHoverPreview();
+    this.hoverTimer = this.time.delayedCall(HOVER_DELAY_MS, () => {
+      if (this.dragCard) return;
+      this.showHoverPreview(cardId, cardX, cardY);
+    });
+  }
+
+  private showHoverPreview(cardId: string, cardX: number, cardY: number): void {
+    this.cancelHoverPreview(true);
+
+    // Anchor logic: prefer right of the card. If the preview would clip the
+    // right edge, flip to the left. If both sides clip (extreme zoom), center.
+    const marginX = 14;
+    const marginY = 14;
+    let px = cardX + this.cardW / 2 + marginX + HOVER_W / 2;
+    if (px + HOVER_W / 2 > LAYOUT.canvasWidth - 8) {
+      px = cardX - this.cardW / 2 - marginX - HOVER_W / 2;
+    }
+    if (px - HOVER_W / 2 < 8) {
+      px = LAYOUT.centerX;
+    }
+    let py = cardY;
+    py = Math.max(HOVER_H / 2 + marginY, Math.min(LAYOUT.canvasHeight - HOVER_H / 2 - marginY, py));
+
+    const upgraded = (() => {
+      const idx = this.deckOrder.indexOf(cardId);
+      return idx >= 0 ? this.upgradedOrder[idx] : false;
+    })();
+
+    // baseSize: 'popup' renders the full card layout — header, art, name,
+    // elements AND the description panel. 'small' would only give the
+    // compact in-hand layout (art swallows the bottom; no description).
+    const card = createCardFace(this, px, py, cardId, {
+      baseSize: 'popup',
+      scale: HOVER_SCALE,
+      hover: false,
+      upgraded,
+    });
+    disableCardFaceInput(card);
+    card.setDepth(900);
+    card.setAlpha(0);
+    this.tweens.add({ targets: card, alpha: 1, duration: 90, ease: 'Sine.easeOut' });
+
+    this.hoverPreview = card;
+  }
+
+  private cancelHoverPreview(keepTimerForReplace: boolean = false): void {
+    if (!keepTimerForReplace && this.hoverTimer) {
+      this.hoverTimer.remove(false);
+      this.hoverTimer = null;
+    }
+    if (this.hoverPreview) {
+      this.hoverPreview.destroy(true);
+      this.hoverPreview = null;
+    }
+  }
+
+  // ── Drag start ───────────────────────────────────────────────────────────
+
+  private startDragFromBag(bagIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
+    if (this.deckOrder.length >= MAX_DECK) {
+      this.setHint(`Deck is at the ${MAX_DECK}-card maximum — remove a card first.`);
+      return;
+    }
+    this.cancelHoverPreview();
+    this.dragFromBag = true;
+    this.dragBagIndex = bagIndex;
     this.dragCardId = cardId;
-    this.hoverIndex = this.deckOrder.length; // default: end of deck
+    this.hoverIndex = this.deckOrder.length;
 
-    // Create enlarged drag visual at the pointer's game-space position. Raw
-    // pointer.x/y is in supersampled canvas pixels (see pointermove handler).
     const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-    this.dragCard = this.createDragVisual(cardId, wp.x, wp.y);
-    this.scheduleDragTooltip(cardId);
+    const card = this.bagContainer.list.find(o => (o as any).getData?.('bagIndex') === bagIndex) as Phaser.GameObjects.Container | undefined;
+    const cw = card?.getWorldTransformMatrix();
+    const centerX = cw?.tx ?? wp.x;
+    const centerY = cw?.ty ?? wp.y;
+    this.dragOffset = { x: wp.x - centerX, y: wp.y - centerY };
+    this.dragCard = this.createDragVisual(cardId, centerX, centerY);
+    this.renderBag();
+
+    this.setHint('Drop on the deck grid to add • Release outside to cancel');
   }
 
   private startDragFromDeck(deckIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
+    this.cancelHoverPreview();
     this.dragFromDeck = true;
     this.dragDeckIndex = deckIndex;
     this.dragCardId = cardId;
     this.hoverIndex = deckIndex;
 
-    // Hide the original slot while dragging
-    if (this.cardSlots[deckIndex]) this.cardSlots[deckIndex].setVisible(false);
+    const slot = this.cardSlots[deckIndex];
+    const badge = this.orderBadges[deckIndex];
+    if (slot) slot.setVisible(false);
+    if (badge) badge.setVisible(false);
+
     const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-    this.dragCard = this.createDragVisual(cardId, wp.x, wp.y);
-    this.scheduleDragTooltip(cardId);
-  }
+    const cw = slot?.getWorldTransformMatrix();
+    const centerX = cw?.tx ?? wp.x;
+    const centerY = cw?.ty ?? wp.y;
+    this.dragOffset = { x: wp.x - centerX, y: wp.y - centerY };
+    this.dragCard = this.createDragVisual(cardId, centerX, centerY);
+    this.showGhost(deckIndex);
 
-  /**
-   * Schedule the keyword glossary panel to appear after the standard 2-second
-   * hold while a card is being dragged. The anchor is read lazily at fire
-   * time so the panel mounts next to wherever the drag visual currently is.
-   * Auto-cancelled in cancelDragTooltip() when the drag ends or the scene
-   * shuts down.
-   */
-  private scheduleDragTooltip(cardId: string): void {
-    this.cancelDragTooltip();
-    const card = getCardById(cardId);
-    if (!card) return;
-    // The drag visual renders CardVisual at scale 0.9; mirror that here so
-    // the anchor box matches the on-screen drag preview.
-    const DRAG_SCALE = 0.9;
-    const w = STANDARD_CARD_WIDTH * DRAG_SCALE;
-    const h = STANDARD_CARD_HEIGHT * DRAG_SCALE;
-    this.dragTooltip = scheduleKeywordPanel(this, card.description, () => ({
-      x: this.dragCard?.x ?? 0,
-      y: this.dragCard?.y ?? 0,
-      w, h,
-    }));
-  }
-
-  private cancelDragTooltip(): void {
-    if (this.dragTooltip) {
-      this.dragTooltip.cancel();
-      this.dragTooltip = null;
-    }
+    this.setHint('Drop on any slot to reorder');
   }
 
   private createDragVisual(cardId: string, x: number, y: number): Phaser.GameObjects.Container {
-    // Enlarged CardVisual for the floating drag preview — uses the same
-    // procedural / png-backed look as the rest of the deck UI, just larger.
-    const visual = createCardVisual(this, x, y, cardId, { scale: 0.9 });
-    visual.removeAllListeners('pointerdown');
-    visual.removeAllListeners('pointerover');
-    visual.removeAllListeners('pointerout');
-    visual.disableInteractive();
+    const visual = createCardVisual(this, x, y, cardId, { scale: this.cardScale * 1.15 });
+    disableCardFaceInput(visual);
     visual.setDepth(1000);
-    // Tiny scale-up confirmation tween — matches the prior pickup feel.
-    this.tweens.add({ targets: visual, scaleX: 1.0, scaleY: 1.0, duration: 80 });
+    this.tweens.add({ targets: visual, scaleX: 1.0, scaleY: 1.0, duration: 80, ease: 'Sine.easeOut' });
     return visual;
   }
 
-  // ── Animate deck slots to open gap at hoverIndex ──
+  // ── Pointer move / up ────────────────────────────────────────────────────
+
+  private attachPointerHandlers(): void {
+    this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+      if (!this.dragCard) return;
+      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      this.dragCard.x = wp.x - this.dragOffset.x;
+      this.dragCard.y = wp.y - this.dragOffset.y;
+
+      if (this.isOverGrid(wp.y)) {
+        const newHover = this.getInsertIndex(wp.x, wp.y);
+        if (newHover !== this.hoverIndex) {
+          this.hoverIndex = newHover;
+          this.animateSlots();
+          this.showGhost(this.hoverIndex);
+        }
+      } else if (this.ghostSlot) {
+        this.ghostSlot.setVisible(false);
+      }
+    });
+
+    this.input.on('pointerup', () => {
+      if (!this.dragCard) return;
+      this.dropCard();
+    });
+  }
+
+  // ── Animation: open a gap at hoverIndex ─────────────────────────────────
 
   private animateSlots(): void {
-    const gapAt = Math.min(this.hoverIndex, this.deckOrder.length);
+    // Re-position visible cards so a gap opens at hoverIndex.
+    //
+    // - DECK reorder: total stays at N; dragged card is hidden, others shift
+    //   to leave slot `hoverIndex` empty (ghost). Same tier throughout, so
+    //   the animation is smooth.
+    // - BAG insert: total is conceptually N+1 during drag. If the insert
+    //   would cross a tier boundary (5 → 6, 10 → 11), shifting existing
+    //   cards into the new layout while their visuals are still at the old
+    //   scale produces overlap. In that case we leave the cards in place
+    //   and rely on the post-drop scene restart to introduce the new tier.
+    const N = this.deckOrder.length;
+    const draggedFromDeck = this.dragFromDeck;
+    let virtualN = N;
+    if (this.dragFromBag) virtualN = N + 1;
+
+    if (this.dragFromBag && this.crossesTierTo(virtualN)) return;
+
+    const gapAt = Math.min(this.hoverIndex, virtualN);
     let visualCounter = 0;
 
-    for (let i = 0; i < this.deckOrder.length; i++) {
+    for (let i = 0; i < N; i++) {
       const slot = this.cardSlots[i];
+      const badge = this.orderBadges[i];
       if (!slot) continue;
+      if (draggedFromDeck && i === this.dragDeckIndex) continue;
 
-      // Skip the card being dragged from the deck (it's hidden)
-      if (this.dragFromDeck && i === this.dragDeckIndex) continue;
-
-      // Open a gap at hover position
       if (visualCounter === gapAt) visualCounter++;
 
-      const targetPos = this.getSlotPos(visualCounter);
+      const target = this.getSlotPos(visualCounter, virtualN);
       this.tweens.add({
         targets: slot,
-        x: targetPos.x,
-        y: targetPos.y,
-        duration: 150,
-        ease: 'Sine.easeOut',
-        overwrite: true,
+        x: target.x, y: target.y,
+        duration: 140, ease: 'Sine.easeOut', overwrite: true,
       });
+      if (badge) {
+        this.tweens.add({
+          targets: badge,
+          x: target.x, y: target.y - this.cardH / 2 - BADGE_OFFSET,
+          duration: 140, ease: 'Sine.easeOut', overwrite: true,
+        });
+      }
       visualCounter++;
     }
   }
 
-  // ── Drop card into deck ──
+  private currentTierIndex(total: number): number {
+    return TIER_BREAKPOINTS.findIndex(t => total <= t.upTo);
+  }
+
+  private crossesTierTo(virtualN: number): boolean {
+    return this.currentTierIndex(this.deckOrder.length) !== this.currentTierIndex(virtualN);
+  }
+
+  private showGhost(index: number): void {
+    if (!this.ghostSlot) return;
+    // For deck reorder the deck count is unchanged; for bag insert we draw
+    // the ghost in a virtual N+1 layout (unless that would cross a tier —
+    // then we draw within the current N layout to avoid jarring layouts).
+    let virtualN = this.deckOrder.length;
+    if (this.dragFromBag && !this.crossesTierTo(virtualN + 1)) virtualN += 1;
+    const idx = Math.min(index, virtualN);
+    const pos = this.getSlotPos(idx, virtualN);
+    const w = this.cardW + 4;
+    const h = this.cardH + 4;
+    this.ghostSlot.clear();
+    this.ghostSlot.lineStyle(2, CHROME.ghost, 0.9);
+    this.ghostSlot.strokeRoundedRect(pos.x - w / 2, pos.y - h / 2, w, h, 6);
+    this.ghostSlot.setVisible(true);
+  }
+
+  // ── Drop ─────────────────────────────────────────────────────────────────
 
   private dropCard(): void {
     if (!this.dragCard) return;
+    if (this.ghostSlot) this.ghostSlot.setVisible(false);
 
-    // Tear down any keyword tooltip that was scheduled or already mounted
-    // for the drag — must run regardless of which drop branch we hit below.
-    this.cancelDragTooltip();
-
-    // Capture release position before destroying the drag visual — used to
-    // gate bag→deck inserts so releasing outside the deck grid cancels.
     const releaseY = this.dragCard.y;
+    const overGrid = this.isOverGrid(releaseY);
+
     this.dragCard.destroy(true);
     this.dragCard = null;
 
-    if (this.dragFromDropped && this.dragDroppedIndex >= 0) {
-      // Bag drag released above the deck grid (over the strip / header) —
-      // treat as cancel: the card stays in the bag.
-      if (releaseY < this.getGridTop()) {
-        // animateSlots() had opened a gap at hoverIndex; reset and re-run so
-        // the slots smoothly slide back to their natural positions before
-        // we clear drag state.
+    if (this.dragFromBag && this.dragBagIndex >= 0) {
+      if (!overGrid) {
         this.resetDragState();
         this.animateSlots();
+        this.renderBag();
+        this.setHint(this.getDefaultHint());
         return;
       }
       const run = getRun();
-
-      // Remove from droppedCards
-      if (this.dragDroppedIndex < run.deck.droppedCards.length) {
-        run.deck.droppedCards.splice(this.dragDroppedIndex, 1);
+      if (this.dragBagIndex < run.deck.droppedCards.length) {
+        run.deck.droppedCards.splice(this.dragBagIndex, 1);
       }
-
-      // Insert into active deck at hover position. Loot/dropped cards
-      // arrive un-upgraded — push `false` into the parallel flag array.
       const insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
       this.deckOrder.splice(insertAt, 0, this.dragCardId);
       this.upgradedOrder.splice(insertAt, 0, false);
@@ -471,23 +594,15 @@ export class DeckCustomizationScene extends Scene {
       run.deck.upgraded = [...this.upgradedOrder];
 
       this.resetDragState();
-
-      // Full scene restart so layout recalculates (strip may disappear).
-      // Pass parentScene via data so the restarted scene preserves the
-      // close target (don't rely on closure capture of the previous run).
-      this.scene.restart({ parentScene: this.parentScene });
+      this.scene.restart({ parentScene: this.parentScene, tutorialOrigin: this.tutorialOrigin });
       return;
     }
 
     if (this.dragFromDeck && this.dragDeckIndex >= 0) {
       const run = getRun();
-
-      // Remove from original position and insert at hover. Move the
-      // upgrade flag in lockstep so the upgrade follows its card.
       const [moved] = this.deckOrder.splice(this.dragDeckIndex, 1);
       const [movedFlag] = this.upgradedOrder.splice(this.dragDeckIndex, 1);
       let insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
-      // Adjust for the removed element
       if (this.hoverIndex > this.dragDeckIndex) insertAt = Math.max(0, insertAt - 1);
       this.deckOrder.splice(insertAt, 0, moved);
       this.upgradedOrder.splice(insertAt, 0, movedFlag);
@@ -496,6 +611,7 @@ export class DeckCustomizationScene extends Scene {
 
       this.resetDragState();
       this.rebuildGrid();
+      this.setHint(this.getDefaultHint());
       return;
     }
 
@@ -503,25 +619,88 @@ export class DeckCustomizationScene extends Scene {
     this.rebuildGrid();
   }
 
+  // ── Bag ──────────────────────────────────────────────────────────────────
+
+  private buildBag(): void {
+    this.bagContainer = this.add.container(0, 0);
+    this.renderBag();
+  }
+
+  private renderBag(): void {
+    this.bagContainer.removeAll(true);
+
+    const run = getRun();
+    const ids = run.deck.droppedCards;
+
+    const cx = LAYOUT.centerX;
+    const cy = (BAG_TOP + BAG_BOTTOM) / 2;
+    const w = LAYOUT.canvasWidth - 24;
+    const h = BAG_BOTTOM - BAG_TOP;
+
+    const stroke = this.dragFromBag ? CHROME.bagHotStroke : CHROME.bagStroke;
+    this.bagContainer.add(
+      this.add.rectangle(cx, cy, w, h, CHROME.bagFill, 0.78).setStrokeStyle(2, stroke, 1),
+    );
+
+    this.bagContainer.add(this.add.text(cx - w / 2 + 14, BAG_TOP + 8, `📦 LOOT BAG — ${ids.length}`, {
+      fontSize: '13px', fontStyle: 'bold', color: '#f0d68a',
+      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0, 0));
+
+    if (ids.length === 0) {
+      this.bagContainer.add(this.add.text(cx, cy + 4,
+        'Cards earned from combat, shops, and forges appear here.\nDrag them into the deck above.', {
+        fontSize: '11px', color: '#8a7860', fontFamily: FONTS.family,
+        align: 'center', lineSpacing: 4,
+      }).setOrigin(0.5));
+      return;
+    }
+
+    const cardY = BAG_TOP + 32 + BAG_CARD_H / 2;
+    const innerW = w - 28;
+    const desiredW = ids.length * (BAG_CARD_W + BAG_GAP) - BAG_GAP;
+    const fits = desiredW <= innerW;
+    const step = fits ? BAG_CARD_W + BAG_GAP : (innerW - BAG_CARD_W) / Math.max(1, ids.length - 1);
+    const startX = cx - (fits ? desiredW / 2 : innerW / 2) + BAG_CARD_W / 2;
+
+    for (let i = 0; i < ids.length; i++) {
+      const x = startX + i * step;
+      const slot = this.createMiniCard(ids[i], x, cardY, -1, true, BAG_SCALE);
+      slot.setData('bagIndex', i);
+      this.bagContainer.add(slot);
+    }
+  }
+
+  // ── Hint ─────────────────────────────────────────────────────────────────
+
+  private buildHint(): void {
+    this.hintText = this.add.text(LAYOUT.centerX, HINT_Y, this.getDefaultHint(), {
+      fontSize: '12px', color: '#a89878', fontFamily: FONTS.family,
+      stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5);
+  }
+
+  private getDefaultHint(): string {
+    const hasBag = getRun().deck.droppedCards.length > 0;
+    if (this.deckOrder.length >= MAX_DECK) return `Deck is full (${MAX_DECK} cards) — remove a card to add new ones.`;
+    if (hasBag) return 'Drag bag cards into the deck • Drag deck cards to reorder • Hover for details';
+    return 'Drag deck cards to reorder • Hover any card for the full version';
+  }
+
+  private setHint(msg: string): void {
+    if (this.hintText) this.hintText.setText(msg);
+  }
+
+  // ── Close / cleanup ──────────────────────────────────────────────────────
+
   private close(): void {
-    // Tutorial: the deck-review step completes when the player exits.
-    // Reorder happens via drag-and-drop and isn't a single discrete event
-    // we can easily hook; closing the panel signals "I'm done in here."
     tutorialDirector.advanceIfMatches('deck-review');
     if (this.tutorialOrigin) {
-      // Tutorial start path: CharacterSelect launched this panel as the
-      // first hands-on step. Skip the standard parent resume/wake and
-      // head straight into GameScene to begin the run.
       this.scene.stop(SCENE_KEYS.CHARACTER_SELECT);
       this.scene.stop();
       this.scene.start(SCENE_KEYS.GAME);
       return;
     }
-    // Different launchers leave the parent in different states:
-    //   GameScene + LoopHUD → paused → needs resume()
-    //   PlanningOverlay     → slept  → needs wake()
-    // resume() and wake() each only act on their target state, so dispatch
-    // on the live SceneManager status to avoid leaving the parent stuck.
     if (this.scene.isSleeping(this.parentScene)) {
       this.scene.wake(this.parentScene);
     } else {
@@ -531,33 +710,21 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private resetDragState(): void {
-    this.dragFromDropped = false;
+    this.dragFromBag = false;
     this.dragFromDeck = false;
-    this.dragDroppedIndex = -1;
+    this.dragBagIndex = -1;
     this.dragDeckIndex = -1;
     this.dragCardId = '';
     this.hoverIndex = -1;
+    this.dragOffset = { x: 0, y: 0 };
   }
 
   private cleanup(): void {
-    if (this.dragCard) {
-      this.dragCard.destroy(true);
-      this.dragCard = null;
-    }
-    // Cancel any pending/mounted drag tooltip so its timer doesn't fire on
-    // a destroyed scene (and so a mounted panel doesn't leak across exits).
-    this.cancelDragTooltip();
-    // Phaser reuses scene instances on stop/launch, so stale drag flags from
-    // an interrupted drag (ESC/D mid-drag) would otherwise leak into the next
-    // entry and corrupt the next dropCard() call.
+    if (this.dragCard) { this.dragCard.destroy(true); this.dragCard = null; }
+    this.cancelHoverPreview();
     this.resetDragState();
     this.cardSlots = [];
-
-    // Destroy the off-display-list mask Graphics so re-entering the scene
-    // doesn't leak a Graphics + its underlying mask render texture.
-    if (this.scrollMaskGfx) {
-      this.scrollMaskGfx.destroy();
-      this.scrollMaskGfx = null;
-    }
+    this.orderBadges = [];
+    if (this.ghostSlot) { this.ghostSlot.destroy(); this.ghostSlot = null; }
   }
 }

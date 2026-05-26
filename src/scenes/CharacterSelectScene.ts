@@ -370,23 +370,25 @@ export class CharacterSelectScene extends Scene {
       return;
     }
 
-    // Launch the starting-deck picker as an overlay. We don't pause this
-    // scene — a re-entry guard (templatePickerOpen) prevents stray ENTER /
-    // double-click from stacking instances.
-    this.templatePickerOpen = true;
-
-    this.scene.launch(SCENE_KEYS.STARTING_DECK, {
-      className: selected.id,
-      onConfirm: (deck: string[]) => {
-        this.templatePickerOpen = false;
-        // Microtask hand-off so the picker can scene.stop() before we mutate
-        // active-scene state.
-        Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
-      },
-      onCancel: () => {
-        this.templatePickerOpen = false;
-      },
-    });
+    // Deck-template picker is disabled — outside the tutorial run, the
+    // starter deck is a random template for the chosen class.
+    // Original flow (commented out for now):
+    //
+    //   this.templatePickerOpen = true;
+    //   this.scene.launch(SCENE_KEYS.STARTING_DECK, {
+    //     className: selected.id,
+    //     onConfirm: (deck: string[]) => {
+    //       this.templatePickerOpen = false;
+    //       Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
+    //     },
+    //     onCancel: () => {
+    //       this.templatePickerOpen = false;
+    //     },
+    //   });
+    const templates = getTemplatesForClass(selected.id);
+    const randomTpl = templates[Math.floor(Math.random() * templates.length)];
+    const randomDeck = randomTpl ? [...randomTpl.cardIds] : undefined;
+    this.startRun(meta, selected.id, randomDeck);
   }
 
   private async startRun(

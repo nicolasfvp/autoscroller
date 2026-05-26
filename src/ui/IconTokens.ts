@@ -22,6 +22,7 @@
 // automatically without further changes here.
 
 import Phaser from 'phaser';
+import { resolveIconKey } from '../systems/ElementSystem';
 
 export interface TokenStyle {
   /** Display label when no sprite is present (uppercase, e.g. "BURN"). */
@@ -197,13 +198,12 @@ export function renderTokenText(
         units.push({ text: p, color: baseColor, isToken: false });
       }
     } else {
-      const spriteKey = `icon_${seg.token}`;
-      const useSprite = scene.textures && scene.textures.exists(spriteKey);
+      const spriteKey = scene.textures ? resolveIconKey(scene.textures, seg.token) : null;
       units.push({
         text: seg.style.label,
         color: seg.style.color,
         isToken: true,
-        spriteKey: useSprite ? spriteKey : undefined,
+        spriteKey: spriteKey ?? undefined,
       });
     }
   }

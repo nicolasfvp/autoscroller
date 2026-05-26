@@ -6,6 +6,7 @@ import { MainMenu } from './scenes/MainMenu'
 import { TutorialScene } from './scenes/TutorialScene'
 import { CombatScene } from './scenes/CombatScene'
 import { ShopScene } from './scenes/ShopScene'
+import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
 import { SettingsScene } from './scenes/SettingsScene'
@@ -22,7 +23,10 @@ import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
 import { GlobalSound } from './scenes/GlobalSound'
 import { RunTransitionScene } from './scenes/RunTransitionScene'
-import { StartingDeckScene } from './scenes/StartingDeckScene'
+// Deck-template picker disabled — non-tutorial runs use a random template
+// for the chosen class. Re-enable by uncommenting this import and the
+// matching entry in the scene array below.
+// import { StartingDeckScene } from './scenes/StartingDeckScene'
 import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 
@@ -66,6 +70,7 @@ const config: Phaser.Types.Core.GameConfig = {
     render: {
         antialias: true,
         roundPixels: true,
+        pixelArt: true,
         // Generate and sample mipmaps for downscaled textures (the 1024×1024
         // card art renders at ~90 px in the deck library and ~150 px in-hand
         // — a >10× downscale that aliases/blurs without mipmaps). LINEAR_
@@ -116,6 +121,7 @@ const config: Phaser.Types.Core.GameConfig = {
         GameScene,
         CombatScene,
         ShopScene,
+        ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
         SettingsScene,
@@ -131,7 +137,7 @@ const config: Phaser.Types.Core.GameConfig = {
         CollectionScene,
         GlobalSound,
         RunTransitionScene,
-        StartingDeckScene,
+        // StartingDeckScene,
         CardLibraryScene,
         SpeedPanelScene
     ]

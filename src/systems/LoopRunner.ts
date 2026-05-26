@@ -350,7 +350,7 @@ export class LoopRunner {
           break;
         }
         case 'boss': {
-          const BOSS_ROTATION = ['doom_knight', 'boss_demon', 'iron_golem', 'boss_berserker', 'boss_mage', 'lizard_king', 'boss_hydra'];
+          const BOSS_ROTATION = ['doom_knight', 'iron_golem', 'lizard_king', 'bog_witch', 'desert_golem', 'infernal_dragon', 'boss_iron_golem'];
           tile.enemyId = BOSS_ROTATION[this.bossKillCount % BOSS_ROTATION.length];
           break;
         }

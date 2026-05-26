@@ -22,16 +22,22 @@ export class PlanningOverlay extends Scene {
   private selectedCardIndex: number = -1;
   /** Wave 5: when true, slot clicks remove placed tiles instead of placing. */
   private removeMode: boolean = false;
-  private tpBalanceText!: Phaser.GameObjects.Text;
   private scrollOffset: number = 0;
   private gridContainer!: Phaser.GameObjects.Container;
   private gridGeometry!: { cellW: number; period: number; centerX: number };
+  private gridMask: Phaser.GameObjects.Graphics | null = null;
   /** Reserved-slot decoration overlays, parallel to tileVisuals. Recreated by buildLoopGrid. */
   private reservedDecorations: Phaser.GameObjects.GameObject[] = [];
   /** Pending tooltip show; cancelled on pointerout. */
   private tooltipTimer?: Phaser.Time.TimerEvent;
   /** The currently displayed tooltip container (text + bg). Destroyed on hide. */
   private tooltipObj?: Phaser.GameObjects.Container;
+
+  // Inventory drag-and-drop state
+  private dragGhost: Phaser.GameObjects.Container | null = null;
+  private draggingTileKey: string | null = null;
+  private onDragMove?: (pointer: Phaser.Input.Pointer) => void;
+  private onDragUp?: (pointer: Phaser.Input.Pointer) => void;
 
   // Drag-scroll input handlers — stored so cleanup() can remove them. The
   // overlay's `scene.events` listeners use `this` as the context, but the
@@ -74,47 +80,63 @@ export class PlanningOverlay extends Scene {
     this.gridContainer = this.add.container(0, 0);
     this.buildLoopGrid();
 
+    // Belt window pillars — straddle the mask edges (x=50, x=750) so they
+    // visually cap the scrolling strip. Aspect ratio: 96×281 → 40×117px.
+    if (this.textures.exists('belt_pillar')) {
+      const PW = 40;
+      const PH = Math.round(PW * 281 / 96);
+      this.add.image(50,  170, 'belt_pillar').setDisplaySize(PW, PH).setDepth(10);
+      this.add.image(750, 170, 'belt_pillar').setDisplaySize(PW, PH).setDepth(10);
+    }
+
     // Tile inventory panel at y=300
     this.buildInventoryPanel(fontFamily);
 
-    // Deck / Relic icons at top center with table background
-    const tableY = 65;
-    const iconY = 55;
+    // Left-side info panels
+    this.buildEconomyPanel(fontFamily);
+    this.buildCharacterPanel(fontFamily);
+
+    // All 4 action icons in one extended box — top-left, away from the edge
+    // Layout: [Deck] [Relic] [Shop] [Forge] with 58px spacing, box starts at x=20
+    const ICON_SIZE = 37;
+    const ICON_Y = 55;
+    const LABEL_Y = 79;
+    const serifFont = 'Georgia, "Times New Roman", serif';
+    const [dX, rX, sX, fX] = [56, 107, 159, 210];
+
     if (this.textures.exists('deck_relic_table')) {
-      this.add.image(400, tableY, 'deck_relic_table').setDisplaySize(220, 100);
+      this.add.image(133, 58, 'deck_relic_table').setDisplaySize(247, 84);
     }
 
-    const deckIcon = this.add.image(360, iconY, 'deck_icon').setDisplaySize(60, 60).setInteractive({ useHandCursor: true });
-    this.add.text(360, iconY + 35, '[D]', { fontSize: '12px', color: '#ffffff', fontFamily }).setOrigin(0.5);
-    
-    deckIcon.on('pointerover', () => {
-      deckIcon.setScale(deckIcon.scale * 1.1);
-      deckIcon.setTint(0xdddddd);
-    });
-    deckIcon.on('pointerout', () => {
-      deckIcon.setScale(deckIcon.scale / 1.1);
-      deckIcon.clearTint();
-    });
+    const deckIcon = this.add.image(dX, ICON_Y, 'deck_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
+    this.add.text(dX, LABEL_Y, 'Deck', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    deckIcon.on('pointerover', () => deckIcon.setTint(0xffdd88));
+    deckIcon.on('pointerout',  () => deckIcon.clearTint());
     deckIcon.on('pointerdown', () => {
       this.scene.sleep();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PLANNING });
     });
 
-    const relicIcon = this.add.image(440, iconY, 'relic_icon').setDisplaySize(60, 60).setInteractive({ useHandCursor: true });
-    this.add.text(440, iconY + 35, '[R]', { fontSize: '12px', color: '#ffffff', fontFamily }).setOrigin(0.5);
-    
-    relicIcon.on('pointerover', () => {
-      relicIcon.setScale(relicIcon.scale * 1.1);
-      relicIcon.setTint(0xdddddd);
-    });
-    relicIcon.on('pointerout', () => {
-      relicIcon.setScale(relicIcon.scale / 1.1);
-      relicIcon.clearTint();
-    });
+    const relicIcon = this.add.image(rX, ICON_Y, 'relic_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
+    this.add.text(rX, LABEL_Y, 'Relic', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    relicIcon.on('pointerover', () => relicIcon.setTint(0xffdd88));
+    relicIcon.on('pointerout',  () => relicIcon.clearTint());
     relicIcon.on('pointerdown', () => {
       this.scene.sleep();
       this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.PLANNING });
     });
+
+    const shopIcon = this.add.image(sX, ICON_Y, 'shop_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
+    this.add.text(sX, LABEL_Y, 'Shop', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    shopIcon.on('pointerover', () => shopIcon.setTint(0xffdd88));
+    shopIcon.on('pointerout',  () => shopIcon.clearTint());
+    shopIcon.on('pointerdown', () => this.openSubScene(SCENE_KEYS.SHOP));
+
+    const forgeIcon = this.add.image(fX, ICON_Y, 'forge_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
+    this.add.text(fX, LABEL_Y, 'Forge', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    forgeIcon.on('pointerover', () => forgeIcon.setTint(0xffdd88));
+    forgeIcon.on('pointerout',  () => forgeIcon.clearTint());
+    forgeIcon.on('pointerdown', () => this.openSubScene(SCENE_KEYS.FORGE));
 
     // "Don't stop here for: 1 / 5 / 10 / 25" — auto-skips the next N planning
     // phases. Boss-loop planning (1 loop before the boss tile spawns) always
@@ -122,15 +144,13 @@ export class PlanningOverlay extends Scene {
     // GameScene's loop-completed handler.
     this.buildSkipLoopsRow(fontFamily);
 
-    // Bottom row: Shop | Start Loop | Forge
-    const startBtn = this.add.text(400, 545, 'Start Loop', {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#ffd700',
-      fontFamily,
-      stroke: '#000000',
-      strokeThickness: 4,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
+    // Bottom center: Start Loop image button
+    const startBtn = this.add.image(400, 548, 'btn_start_loop_scene')
+      .setInteractive({ useHandCursor: true });
+    const startScale = 220 / startBtn.width;
+    startBtn.setScale(startScale);
+    startBtn.on('pointerover', () => startBtn.setTint(0xffdd88));
+    startBtn.on('pointerout',  () => startBtn.clearTint());
 
     const startLoop = () => {
       // Tutorial: 'boss-preview' is the last planning-phase step — Start
@@ -155,7 +175,9 @@ export class PlanningOverlay extends Scene {
     };
 
     startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button !== 0) return; // Left click only
+      if (pointer.button !== 0) return;
+      this.tweens.killTweensOf(startBtn);
+      this.tweens.add({ targets: startBtn, scale: startScale * 0.95, duration: 50, yoyo: true });
       startLoop();
     });
 
@@ -221,11 +243,12 @@ export class PlanningOverlay extends Scene {
       overlay.setStepRect('place-subtile', {
         x: 20, y: 150, width: 760, height: 330,
       });
-      // forge-intro: spotlight the Forge button at the bottom-right.
+      // forge-intro: spotlight the Forge button — now in the top-left
+      // 4-icon row (Deck/Relic/Shop/Forge), not the bottom edge.
       overlay.setStepRect('forge-intro', {
-        x: 600, y: 525, width: 130, height: 50,
+        x: 192, y: 38, width: 36, height: 56,
       });
-      // boss-preview: spotlight the Start Loop button. It's centered.
+      // boss-preview: spotlight the Start Loop image button at the bottom.
       overlay.setStepRect('boss-preview', {
         x: 320, y: 520, width: 180, height: 55,
       });
@@ -247,9 +270,9 @@ export class PlanningOverlay extends Scene {
 
   private buildLoopGrid(): void {
     const tiles = this.loopRunState.loop.tiles;
-    const scale = 0.7;
+    const scale = 0.49;
     const tileSize = Math.round(TILE_SIZE * scale);
-    const gap = 8;
+    const gap = 6;
     const cellW = tileSize + gap;
     // Show every slot — buffers included — so the displayed loop matches
     // the actual loop length the hero will traverse. Buffers stay
@@ -314,6 +337,15 @@ export class PlanningOverlay extends Scene {
         tv.onClick(() => this.onSlotClicked(i));
       }
     }
+
+    // Clip belt to a horizontal window so tiles fade at the edges rather
+    // than wrapping at the full canvas boundary. The wrap math still runs
+    // at the original leftBound/rightBound; the mask just hides it.
+    if (this.gridMask) { this.gridMask.destroy(); this.gridMask = null; }
+    this.gridMask = this.make.graphics();
+    this.gridMask.fillStyle(0xffffff);
+    this.gridMask.fillRect(50, y - tileSize - 24, 700, tileSize + 60);
+    this.gridContainer.setMask(this.gridMask.createGeometryMask());
 
     this.updateTilePositions();
   }
@@ -408,11 +440,10 @@ export class PlanningOverlay extends Scene {
         this.selectedCardIndex = -1;
       }
     } else {
-      // Differentiate the failure reason — enemy-locked vs boss/buffer vs occupied —
-      // so players don't think "already has a tile" when the real reason is
-      // "this combat tile is locked because an enemy is already pre-assigned".
       const slot = this.loopRunState.loop.tiles[slotIndex];
-      if (!slot) {
+      if (this.loopRunner.getState() !== 'planning') {
+        this.showToast('Cannot place tiles right now.');
+      } else if (!slot) {
         this.showToast('Invalid slot.');
       } else if (slot.type === 'boss') {
         this.showToast('Boss tiles cannot be replaced.');
@@ -420,27 +451,20 @@ export class PlanningOverlay extends Scene {
         this.showToast('Buffer tiles cannot be replaced.');
       } else if (slot.enemyId) {
         this.showToast('This tile already has an enemy — fight it first.');
+      } else if (slot.type === 'basic' && slot.reserved) {
+        this.showToast('Reserved slot — place a subtile here.');
       } else {
         this.showToast('This slot already has a tile.');
       }
     }
   }
 
-  private buildInventoryPanel(fontFamily: string): void {
+  private buildInventoryPanel(_fontFamily: string): void {
     // Panel background — shifted up to make room for the subtile row beneath
     // the main tile row while keeping the "don't stop here for" + Remove Mode
     // toolbar at y=505 untouched.
-    const board = this.add.image(400, 350, 'tile_selection_board');
-    board.setDisplaySize(720, 190);
-
-
-    // Tile point balance - repositioned and styled
-    this.tpBalanceText = this.add.text(720, 290, `${this.loopRunState.economy.tilePoints} TP`, {
-      fontSize: '22px', color: '#00e5ff', fontFamily,
-      fontStyle: 'bold',
-      stroke: '#000000',
-      strokeThickness: 2,
-    }).setOrigin(1, 0.5);
+    const board = this.add.image(400, 364, 'tile_selection_board');
+    board.setDisplaySize(650, 252);
 
     this.refreshInventory();
   }
@@ -459,9 +483,6 @@ export class PlanningOverlay extends Scene {
     }
     this.subtileInventoryCards = [];
 
-    // Update TP balance
-    this.tpBalanceText.setText(`${this.loopRunState.economy.tilePoints} TP`);
-
     // Wave 5: split placeable tiles into the two pickers. Subtiles render
     // in a dedicated row below the main inventory and dim out when there
     // is no reserved slot to receive them.
@@ -469,59 +490,20 @@ export class PlanningOverlay extends Scene {
     const placeableTiles = allPlaceable.filter(t => t.type !== 'subtile');
     const subtileTiles = allPlaceable.filter(t => t.type === 'subtile');
 
-    // ── Responsive sizing: shrink tiles to always fit within the panel ──
-    const MAX_W       = 720;                       // usable horizontal space
-    const MIN_FRAME   = 62;                        // smallest frame we'll go
-    const IDEAL_FRAME = 80;
-    const IDEAL_GAP   = 12;
-
-    // How many tiles fit in one row at the ideal size?
-    const idealTotalW = placeableTiles.length * IDEAL_FRAME + (placeableTiles.length - 1) * IDEAL_GAP;
-    let frameWidth: number;
-    let gap: number;
-    let cols: number;
-    let rows: number;
-
-    if (idealTotalW <= MAX_W) {
-      // All tiles fit in 1 row at ideal size
-      frameWidth = IDEAL_FRAME;
-      gap        = IDEAL_GAP;
-      cols       = placeableTiles.length;
-      rows       = 1;
-    } else {
-      // Try shrinking down to MIN_FRAME first
-      const shrunkGap   = 8;
-      const shrunkTotal = placeableTiles.length * MIN_FRAME + (placeableTiles.length - 1) * shrunkGap;
-      if (shrunkTotal <= MAX_W) {
-        // Fits in 1 row when shrunk
-        frameWidth = Math.floor((MAX_W - (placeableTiles.length - 1) * shrunkGap) / placeableTiles.length);
-        frameWidth = Math.max(MIN_FRAME, Math.min(IDEAL_FRAME, frameWidth));
-        gap        = shrunkGap;
-        cols       = placeableTiles.length;
-        rows       = 1;
-      } else {
-        // Wrap to 2 rows
-        cols       = Math.ceil(placeableTiles.length / 2);
-        rows       = 2;
-        gap        = 8;
-        frameWidth = Math.floor((MAX_W - (cols - 1) * gap) / cols);
-        frameWidth = Math.max(MIN_FRAME, Math.min(IDEAL_FRAME, frameWidth));
-      }
-    }
-
-    const frameHeight = frameWidth;
-    const rowSpacing  = frameHeight + 52; // frame + name + cost text below
-
-    const totalRowW = cols * frameWidth + (cols - 1) * gap;
-    const startX    = 400 - totalRowW / 2 + frameWidth / 2;
-    // Centre vertically in the board area
-    const rowStartY = rows === 2 ? 330 : 350;
+    // Fixed uniform tile size for all tiles across both rows
+    const frameWidth  = 58;
+    const frameHeight = 58;
+    const gap         = 12;
+    const cols        = Math.min(placeableTiles.length, 8);
+    const totalRowW   = cols * frameWidth + (cols - 1) * gap;
+    const startX      = 400 - totalRowW / 2 + frameWidth / 2;
+    const rowStartY   = 318;
 
     placeableTiles.forEach((tileConfig, idx) => {
       const col = idx % cols;
       const row = Math.floor(idx / cols);
       const x   = startX + col * (frameWidth + gap);
-      const y   = rowStartY + row * rowSpacing;
+      const y   = rowStartY + row * (frameHeight + 52);
       const container = this.add.container(x, y);
 
       // Card background
@@ -545,16 +527,13 @@ export class PlanningOverlay extends Scene {
       }
       container.add(preview);
 
-      // Name - below frame
-      const fontSize = frameWidth >= 74 ? '14px' : '11px';
-      const nameText = this.add.text(0, frameHeight / 2 + 8, tileConfig.name, {
-        fontSize, color: '#ffdca0', fontFamily,
+      const nameText = this.add.text(0, frameHeight / 2 + 7, tileConfig.name, {
+        fontSize: '11px', color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      // Cost - below name
-      const costText = this.add.text(0, frameHeight / 2 + 24, `${tileConfig.tilePointCost} TP`, {
-        fontSize, color: '#ff4444', fontFamily, fontStyle: 'bold'
+      const costText = this.add.text(0, frameHeight / 2 + 20, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '11px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
 
@@ -594,7 +573,14 @@ export class PlanningOverlay extends Scene {
         container.setAlpha(0.5);
         if (!canAfford) costText.setColor('#880000');
       } else {
-        frame.on('pointerdown', () => this.selectInventoryTile(idx, tileConfig.key));
+        frame.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+          this.selectInventoryTile(idx, tileConfig.key);
+          this.startInventoryDrag(pointer, tileConfig.key, {
+            type: tileConfig.type,
+            terrain: tileConfig.terrain,
+            defeatedThisLoop: false,
+          });
+        });
       }
 
       this.inventoryCards.push(container);
@@ -615,11 +601,11 @@ export class PlanningOverlay extends Scene {
   ): void {
     if (subtileTiles.length === 0) return;
 
-    const FRAME = 44;
-    const GAP = 22;
+    const FRAME = 58;
+    const GAP = 12;
     const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
     const startX = 400 - total / 2 + FRAME / 2;
-    const rowY = 445;
+    const rowY = 412;
 
     const subtileSlotsExist = this.hasOpenReservedSlot();
 
@@ -642,23 +628,22 @@ export class PlanningOverlay extends Scene {
       const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
       container.add(preview);
 
-      // Name label below the frame, cost label below the name.
-      const nameText = this.add.text(0, FRAME / 2 + 6, tileConfig.name, {
-        fontSize: '9px', color: '#ffdca0', fontFamily,
+      const nameText = this.add.text(0, FRAME / 2 + 7, tileConfig.name, {
+        fontSize: '11px', color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      const costText = this.add.text(0, FRAME / 2 + 18, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '10px', color: '#ff4444', fontFamily, fontStyle: 'bold',
+      const costText = this.add.text(0, FRAME / 2 + 20, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '11px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
 
       const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileConfig.key);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const badge = this.add.text(FRAME / 2 - 4, -FRAME / 2 + 4, `x${freeCount}`, {
-          fontSize: '10px', color: '#ffffff', fontFamily, fontStyle: 'bold',
-          backgroundColor: '#333333', padding: { x: 2, y: 1 },
+        const badge = this.add.text(FRAME / 2 - 6, -FRAME / 2 + 6, `x${freeCount}`, {
+          fontSize: '13px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 3, y: 2 },
         }).setOrigin(1, 0);
         container.add(badge);
       }
@@ -676,10 +661,16 @@ export class PlanningOverlay extends Scene {
         container.setAlpha(0.5);
         if (!canAfford) costText.setColor('#880000');
       } else {
-        // Subtile selection shares the same selectedTileKey + selectedCardIndex
-        // pipeline, but tracks its container in subtileInventoryCards so
-        // selectInventoryTile's deselection lookup can find the right ref.
-        frame.on('pointerdown', () => this.selectSubtile(idx, tileConfig.key));
+        frame.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+          this.selectSubtile(idx, tileConfig.key);
+          this.startInventoryDrag(pointer, tileConfig.key, {
+            type: tileConfig.type,
+            terrain: tileConfig.terrain,
+            kind: tileConfig.key,
+            subtileEffect: tileConfig.effect,
+            defeatedThisLoop: false,
+          });
+        });
       }
 
       this.subtileInventoryCards.push(container);
@@ -737,21 +728,15 @@ export class PlanningOverlay extends Scene {
   private setupDragScroll(): void {
     let dragging = false;
     let dragMoved = false;
-    let startWorldX = 0;
+    let startPointerX = 0;
     let startOffset = 0;
-    const DRAG_THRESHOLD = 4; // pixels (game-space) — below this, treat as a click
+    const DRAG_THRESHOLD = 4; // pixels — below this, treat as a click
 
-    // pointer.x/y are canvas-pixel coords (multiplied by the Graphics Quality
-    // supersample — see main.ts). The y-range gate and dx delta live in
-    // 800×600 game-space, so funnel through the camera first; otherwise the
-    // active drag band moves to canvas-pixel y ∈ [130,230] (≈ y ∈ [87,153]
-    // in game-space at 1.5x) and the scroll speed runs at 1.5–2× the cursor.
     this.onPointerDown = (pointer: Phaser.Input.Pointer) => {
-      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-      if (wp.y > 130 && wp.y < 230) {
+      if (pointer.worldY > 130 && pointer.worldY < 230) {
         dragging = true;
         dragMoved = false;
-        startWorldX = wp.x;
+        startPointerX = pointer.worldX;
         startOffset = this.scrollOffset;
       }
     };
@@ -759,8 +744,7 @@ export class PlanningOverlay extends Scene {
 
     this.onPointerMove = (pointer: Phaser.Input.Pointer) => {
       if (!dragging) return;
-      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-      const dx = wp.x - startWorldX;
+      const dx = pointer.worldX - startPointerX;
       if (Math.abs(dx) > DRAG_THRESHOLD) dragMoved = true;
       // No clamp — the belt wraps via updateTilePositions().
       this.scrollOffset = startOffset + dx;
@@ -786,8 +770,7 @@ export class PlanningOverlay extends Scene {
       _dx: number,
       dy: number,
     ) => {
-      const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-      if (wp.y < 130 || wp.y > 230) return;
+      if (pointer.worldY < 130 || pointer.worldY > 230) return;
       this.scrollOffset -= dy;
       this.updateTilePositions();
     };
@@ -799,44 +782,52 @@ export class PlanningOverlay extends Scene {
    * Sets `run.skipLoopsRemaining = N`, which GameScene consumes in its
    * loop-completed handler. Boss-loop planning ignores the counter.
    */
-  private buildSkipLoopsRow(fontFamily: string): void {
+  private buildSkipLoopsRow(_fontFamily: string): void {
     const run = getRun();
-    const labelText = this.add.text(280, 505, "Don't stop here for:", {
-      fontSize: '13px', color: '#ffdca0', fontFamily,
-      stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(1, 0.5);
+    const ROW_Y = 548;
+    const GAP = 8;
 
-    const optionValues = [1, 5, 10, 25];
-    const optionTexts: Phaser.GameObjects.Text[] = [];
+    // "Don't stop" label: 494×90 source → display at 120×22px
+    const labelImg = this.add.image(0, ROW_Y, 'btn_dont_stop');
+    const labelScale = 120 / 494;
+    labelImg.setScale(labelScale);
+    // Position after knowing display width
+    const labelDisplayW = 494 * labelScale; // 120
+    labelImg.setX(14 + labelDisplayW / 2);
+
+    // Number buttons: 500×466 source → display at 34×32px
+    const numScale = (17 * 1.2) / 500;
+    const numDisplayW = 500 * numScale; // 17px wide
+
+    const optionValues = [1, 5, 10, 25] as const;
+    const keys = ['btn_skip_1', 'btn_skip_5', 'btn_skip_10', 'btn_skip_25'] as const;
+    const btnImgs: Phaser.GameObjects.Image[] = [];
 
     const refresh = () => {
       const current = run.skipLoopsRemaining ?? 0;
-      optionTexts.forEach((t, i) => {
-        const isActive = optionValues[i] === current;
-        t.setColor(isActive ? '#ffd700' : '#aaddff');
-        t.setStyle({ fontStyle: isActive ? 'bold' : 'normal' });
+      btnImgs.forEach((img, i) => {
+        img.clearTint();
+        if (optionValues[i] === current) img.setTint(0xffd700);
       });
     };
 
     optionValues.forEach((value, idx) => {
-      const x = 295 + idx * 50;
-      const btn = this.add.text(x, 505, `${value}`, {
-        fontSize: '16px', fontStyle: 'bold', color: '#aaddff', fontFamily,
-        stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-      btn.on('pointerover', () => btn.setScale(1.15));
-      btn.on('pointerout', () => btn.setScale(1));
-      btn.on('pointerdown', () => {
+      const x = 14 + labelDisplayW + GAP + idx * (numDisplayW + GAP) + numDisplayW / 2;
+      const img = this.add.image(x, ROW_Y, keys[idx])
+        .setScale(numScale)
+        .setInteractive({ useHandCursor: true });
+
+      img.on('pointerover', () => { if ((run.skipLoopsRemaining ?? 0) !== value) img.setTint(0xdddddd); });
+      img.on('pointerout',  () => refresh());
+      img.on('pointerdown', () => {
         const current = run.skipLoopsRemaining ?? 0;
-        // Click the active option to clear it (toggle off).
         run.skipLoopsRemaining = current === value ? 0 : value;
         refresh();
       });
-      optionTexts.push(btn);
+      btnImgs.push(img);
     });
 
-    // Discard parameter — text only exists to be visible.
-    void labelText;
+
     refresh();
   }
 
@@ -944,24 +935,231 @@ export class PlanningOverlay extends Scene {
     }
   }
 
-  /** "Shop" and "Forge" buttons on the planning overlay. Forge is its own scene now. */
-  private buildShopForgeButtons(fontFamily: string): void {
-    const shopBtn = this.add.text(150, 545, '🛒 Shop', {
-      fontSize: '22px', fontStyle: 'bold', color: '#aaddff', fontFamily,
-      stroke: '#000000', strokeThickness: 4,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
-    shopBtn.on('pointerover', () => shopBtn.setColor('#ffffff'));
-    shopBtn.on('pointerout',  () => shopBtn.setColor('#aaddff'));
-    shopBtn.on('pointerdown', () => this.openSubScene(SCENE_KEYS.SHOP));
+  private buildEconomyPanel(fontFamily: string): void {
+    const run = getRun();
+    const cx = 403;
+    const cy = 58;
+    const panelW = 216;
+    const panelH = 70;
+    const top = cy - panelH / 2;
 
-    const forgeBtn = this.add.text(650, 545, '⚒ Forge', {
-      fontSize: '22px', fontStyle: 'bold', color: '#aaddff', fontFamily,
-      stroke: '#000000', strokeThickness: 4,
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000000', 2, true, true);
-    forgeBtn.on('pointerover', () => forgeBtn.setColor('#ffffff'));
-    forgeBtn.on('pointerout',  () => forgeBtn.setColor('#aaddff'));
-    forgeBtn.on('pointerdown', () => this.openSubScene(SCENE_KEYS.FORGE));
+    if (this.textures.exists('deck_relic_table')) {
+      this.add.image(cx, cy, 'deck_relic_table').setDisplaySize(Math.round(panelW * 1.2), Math.round(panelH * 1.2));
+    } else {
+      this.add.rectangle(cx, cy, Math.round(panelW * 1.2), Math.round(panelH * 1.2), 0x0a0a1a, 0.88).setStrokeStyle(1, 0x334455, 1);
+    }
+
+    this.add.text(cx, top + 9, `LOOP  #${this.loopRunState.loop.count}`, {
+      fontSize: '11px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+      stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0.5);
+
+    this.add.rectangle(cx, top + 17, panelW - 14, 1, 0x334455, 0.8);
+
+    // Three icon + value + label groups — uniform font matches the rest of the app
+    const serifFont = 'Georgia, "Times New Roman", serif';
+    const ICON_H    = 21;
+    const GAP       = 4;  // gap between icon and value text
+    // Natural aspect ratio per icon (source W / source H)
+    const iconAspect: Record<string, number> = {
+      'icon_coin':  210 / 209,   // ~square
+      'icon_brick': 258 / 223,   // slightly wide
+      'icon_card':  223 / 327,   // portrait → narrower
+    };
+    const iconY  = top + 37;
+    const labelY = top + 57;
+    const items: [string, string, string, string][] = [
+      ['icon_coin',  `${run.economy.gold}`,                      '#f0c040', 'Gold' ],
+      ['icon_brick', `${this.loopRunState.economy.tilePoints}`,  '#00e5ff', 'TP'   ],
+      ['icon_card',  `${run.deck.active.length}`,                '#ffffff', 'Cards'],
+    ];
+
+    const cellW = panelW / items.length;
+    items.forEach(([iconKey, value, color, label], i) => {
+      const cellCx = cx - panelW / 2 + cellW * i + cellW / 2;
+      const iw = Math.round(ICON_H * (iconAspect[iconKey] ?? 1));
+
+      // Render value text first to measure its width, then center the whole group
+      const valText = this.add.text(0, iconY, value, {
+        fontSize: '11px', fontStyle: 'bold', color,
+        fontFamily: serifFont,
+        stroke: '#000000', strokeThickness: 2,
+      }).setOrigin(0, 0.5);
+
+      const groupW   = iw + GAP + valText.width;
+      const groupLeft = cellCx - groupW / 2;
+
+      if (this.textures.exists(iconKey)) {
+        this.add.image(groupLeft + iw / 2, iconY, iconKey).setDisplaySize(iw, ICON_H);
+      }
+      valText.setX(groupLeft + iw + GAP);
+
+      this.add.text(cellCx, labelY, label, {
+        fontSize: '10px', color: '#ffffff',
+        fontFamily: serifFont,
+      }).setOrigin(0.5, 0.5);
+    });
   }
+
+  private buildCharacterPanel(fontFamily: string): void {
+    const run = getRun();
+    const hero = run.hero;
+    // To the right of the economy panel (which ends at ~x=540), same y level
+    const cx = 670;
+    const cy = 58;
+    const panelW = 200;
+    const panelH = 70;
+    const top = cy - panelH / 2;
+
+    if (this.textures.exists('deck_relic_table')) {
+      this.add.image(cx, cy, 'deck_relic_table').setDisplaySize(Math.round(panelW * 1.2), Math.round(panelH * 1.2));
+    } else {
+      this.add.rectangle(cx, cy, Math.round(panelW * 1.2), Math.round(panelH * 1.2), 0x0a0a1a, 0.88).setStrokeStyle(1, 0x334455, 1);
+    }
+
+    const className = hero.className ?? 'warrior';
+    this.add.text(cx, top + 9, className.toUpperCase(), {
+      fontSize: '10px', fontStyle: 'bold', color: '#ffd700', fontFamily,
+      stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0.5);
+
+    this.add.rectangle(cx, top + 17, panelW - 14, 1, 0x334455, 0.8);
+
+    // Chibi sprite — animated if the pocket spritesheet exists for this class
+    const spriteKey  = `hero_chibi_${className}`;
+    const spriteX    = cx - panelW / 2 + 21;
+    const spriteSize = 42;
+    const barsStartX = spriteX + spriteSize / 2 + 6;
+    const barW       = cx + panelW / 2 - 58 - barsStartX;
+
+    if (this.textures.exists(spriteKey)) {
+      const chibi = this.add.sprite(spriteX, cy + 6, spriteKey);
+      chibi.setDisplaySize(spriteSize, spriteSize);
+      const animKey = `${spriteKey}_idle`;
+      if (this.anims.exists(animKey)) this.anims.remove(animKey);
+      this.anims.create({
+        key: animKey,
+        frames: this.anims.generateFrameNumbers(spriteKey, { start: 0, end: 14 }),
+        frameRate: 8,
+        repeat: -1,
+      });
+      chibi.play(animKey);
+    } else {
+      this.add.rectangle(spriteX, cy + 6, spriteSize, spriteSize, 0x223344, 0.7)
+        .setStrokeStyle(1, 0x446688, 0.6);
+      this.add.text(spriteX, cy + 8, '?', {
+        fontSize: '14px', color: '#446688', fontFamily,
+      }).setOrigin(0.5);
+    }
+
+    const valX = cx + panelW / 2 - 8;
+    const barH = 9;
+
+    const bars: [string, number, number, string][] = [
+      ['HP',  hero.currentHP,       hero.maxHP,       '#cc3333'],
+      ['STA', hero.currentStamina,  hero.maxStamina,  '#cc8833'],
+      ['MP',  hero.currentMana,     hero.maxMana,     '#3355cc'],
+    ];
+
+    bars.forEach(([label, cur, max, color], i) => {
+      const by = top + 28 + i * 16;
+      this.add.text(barsStartX, by, label, {
+        fontSize: '9px', color: '#aaaaaa', fontFamily,
+      }).setOrigin(0, 0.5);
+      const trackX = barsStartX + 22;
+      const trackW = barW;
+      this.add.rectangle(trackX + trackW / 2, by, trackW, barH, 0x222222, 1)
+        .setStrokeStyle(1, 0x444444, 0.6);
+      const frac = max > 0 ? Math.max(0, Math.min(1, cur / max)) : 0;
+      if (frac > 0) {
+        const fillW = trackW * frac;
+        this.add.rectangle(trackX + fillW / 2, by, fillW, barH, parseInt(color.slice(1), 16), 1);
+      }
+      this.add.text(valX, by, `${cur}/${max}`, {
+        fontSize: '9px', color: '#ffffff', fontFamily, stroke: '#000000', strokeThickness: 2,
+      }).setOrigin(1, 0.5);
+    });
+  }
+
+  private startInventoryDrag(
+    pointer: Phaser.Input.Pointer,
+    tileKey: string,
+    pseudoSlot: TileSlot,
+  ): void {
+    this.endInventoryDrag(); // cancel any prior drag
+    this.draggingTileKey = tileKey;
+
+    // Build sprite key the same way TileVisual does: tile_<terrain|kind|type>
+    const terrainKey = pseudoSlot.terrain ?? pseudoSlot.kind ?? pseudoSlot.type;
+    const spriteKey  = `tile_${terrainKey}`;
+    const GHOST_SIZE = 52;
+
+    // Use this.add.image / this.add.rectangle — these are on the display list
+    // from the moment they're created, so dragGhost.add() can properly reparent
+    // them (TileVisual children aren't, causing the off-screen rendering bug).
+    // pointer.worldX/worldY convert from backing-store pixels to 800×600 world
+    // space, accounting for the UI_SCALE camera zoom. Using pointer.x/y would
+    // place the ghost UI_SCALE times too far from the origin (bottom-right drift).
+    this.dragGhost = this.add.container(pointer.worldX, pointer.worldY);
+    if (this.textures.exists(spriteKey)) {
+      const img = this.add.image(0, 0, spriteKey).setDisplaySize(GHOST_SIZE, GHOST_SIZE);
+      this.dragGhost.add(img);
+    } else {
+      const cfg  = getTileConfig(tileKey);
+      const rect = this.add.rectangle(0, 0, GHOST_SIZE, GHOST_SIZE, cfg.color);
+      this.dragGhost.add(rect);
+    }
+    this.dragGhost.setDepth(600).setAlpha(0.82);
+
+    this.onDragMove = (p: Phaser.Input.Pointer) => {
+      this.dragGhost?.setPosition(p.worldX, p.worldY);
+    };
+
+    this.onDragUp = (p: Phaser.Input.Pointer) => {
+      if (this.draggingTileKey) {
+        const slotIndex = this.findGridSlotAt(p.worldX, p.worldY);
+        if (slotIndex !== -1) {
+          this.selectedTileKey = this.draggingTileKey;
+          this.onSlotClicked(slotIndex);
+        }
+      }
+      this.endInventoryDrag();
+    };
+
+    this.input.on('pointermove', this.onDragMove);
+    this.input.on('pointerup', this.onDragUp);
+  }
+
+  private endInventoryDrag(): void {
+    if (this.onDragMove) { this.input.off('pointermove', this.onDragMove); this.onDragMove = undefined; }
+    if (this.onDragUp)   { this.input.off('pointerup',   this.onDragUp);   this.onDragUp   = undefined; }
+    if (this.dragGhost)  { this.dragGhost.destroy(true); this.dragGhost = null; }
+    this.draggingTileKey = null;
+  }
+
+  private findGridSlotAt(x: number, y: number): number {
+    const SNAP_RADIUS = 50;
+    let bestSlot = -1;
+    let bestDist = SNAP_RADIUS;
+
+    for (const tv of this.tileVisuals) {
+      const slotIdx = tv.getData('beltSlot') as number;
+      const slot = this.loopRunState.loop.tiles[slotIdx];
+      if (!slot || slot.type === 'buffer') continue;
+
+      // gridContainer is at (0,0), so tv.x/tv.y are world coords
+      const dist = Math.hypot(tv.x - x, tv.y - y);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestSlot = slotIdx;
+      }
+    }
+
+    return bestSlot;
+  }
+
+  /** Shop/Forge are now rendered inline in create() alongside Deck/Relic. */
+  private buildShopForgeButtons(_fontFamily: string): void { /* no-op */ }
 
   private openSubScene(sceneKey: string): void {
     // Tutorial: opening the Forge from planning completes 'forge-intro'.
@@ -992,6 +1190,8 @@ export class PlanningOverlay extends Scene {
   }
 
   private cleanup(): void {
+    this.endInventoryDrag();
+
     // Cancel pending tooltip + drop any visible tooltip so the timer
     // doesn't fire into a destroyed scene.
     this.tooltipTimer?.remove();
@@ -1014,6 +1214,7 @@ export class PlanningOverlay extends Scene {
     }
     this.subtileInventoryCards = [];
     this.reservedDecorations = [];
+    if (this.gridMask) { this.gridMask.destroy(); this.gridMask = null; }
 
     if (this.gridContainer) {
       this.gridContainer.destroy(true);
