@@ -21,8 +21,14 @@
       "5": [
         "corpse_eater"
       ],
+      "7": [
+        "vampire"
+      ],
       "10": [
-        "headless_fire_horse"
+        "skeleton"
+      ],
+      "15": [
+        "werewolf"
       ]
     }
   },
@@ -48,13 +54,13 @@
         "lava_golen"
       ],
       "10": [
-        "mecha_warrior"
+        "fire_elemental"
       ]
     }
   },
   "desert": {
     "base": [
-      "giant_beetle"
+      "scorpion"
     ],
     "addAtLoop": {
       "5": [

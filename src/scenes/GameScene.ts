@@ -278,6 +278,54 @@ export class GameScene extends Scene {
       new DailyTickerPanel(this, { selfRunId: run.runId });
     }
 
+    // Keyboard shortcuts: ESC opens Pause, D opens Deck, R opens Relics.
+    // Guard each with !isPaused() so a held key doesn't stack overlays while
+    // the previous one is mounting.
+    this.input.keyboard?.on('keydown-ESC', () => {
+      if (!this.scene.isPaused()) {
+        this.scene.pause();
+        this.scene.launch(SCENE_KEYS.PAUSE);
+      }
+    });
+    this.input.keyboard?.on('keydown-D', () => {
+      if (!this.scene.isPaused()) {
+        this.scene.pause();
+        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
+      }
+    });
+    this.input.keyboard?.on('keydown-R', () => {
+      if (!this.scene.isPaused()) {
+        this.scene.pause();
+        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
+      }
+    });
+
+    // Scripted tutorial overlay — only mounts if the director has a step
+    // targeting GameScene. Also persists tutorialSeen=true when the
+    // director hits the end of the script.
+    TutorialOverlay.mountIfActive(this);
+    if (tutorialDirector.isActive()) {
+      const unsub = tutorialDirector.subscribe(() => {
+        if (!tutorialDirector.isActive()) {
+          // Tutorial just finished — persist the seen flag so future boots
+          // skip the scripted flow. Fire-and-forget; failure isn't fatal.
+          (async () => {
+            try {
+              const meta = await loadMetaState();
+              if (!meta.tutorialSeen) {
+                meta.tutorialSeen = true;
+                await saveMetaState(meta);
+              }
+            } catch (err) {
+              console.warn('[GameScene] tutorialSeen persist failed:', err);
+            }
+          })();
+          unsub();
+        }
+      });
+      this.events.once('shutdown', unsub);
+    }
+
     // Initial visual setup: ensure tiles and HUD are populated immediately
     this.updateTilePool();
     
@@ -451,41 +499,6 @@ export class GameScene extends Scene {
     this.loopRunState.economy.tilePoints = run.economy.tilePoints;
   }
 
-  /**
-   * Render the OIIAOIIA spinning cat meme overlay center-screen. Cosmetic
-   * only — triggered by the ultra-rare meme event outcome. Falls back to a
-   * pure-text label if `meme_oiiaoiia` sprite isn't preloaded; falls back
-   * silently on audio if `sfx_oiiaoiia` isn't preloaded.
-   */
-  private playMemeOverlay(key: string): void {
-    if (key !== 'oiiaoiia') return;
-    const cx = 400, cy = 300;
-    const display: Phaser.GameObjects.GameObject = this.textures.exists('meme_oiiaoiia')
-      ? this.add.image(cx, cy, 'meme_oiiaoiia').setDisplaySize(220, 220).setDepth(10000)
-      : this.add.text(cx, cy, '🐱', { fontSize: '180px' }).setOrigin(0.5).setDepth(10000);
-    (display as Phaser.GameObjects.Image | Phaser.GameObjects.Text).setAlpha(0);
-    this.tweens.add({ targets: display, alpha: 1, duration: 200 });
-    // Continuous spin — mimics the 3D cat's vertical rotation.
-    this.tweens.add({
-      targets: display,
-      angle: 360,
-      duration: 600,
-      repeat: 4,
-      ease: 'Linear',
-    });
-    if (this.cache.audio.exists('sfx_oiiaoiia')) {
-      this.sound.play('sfx_oiiaoiia', { volume: 0.6 });
-    }
-    this.time.delayedCall(3200, () => {
-      this.tweens.add({
-        targets: display,
-        alpha: 0,
-        duration: 250,
-        onComplete: () => display.destroy(),
-      });
-    });
-  }
-
   /** Drain pending loot and show floating notifications above hero */
   private showPendingNotifications(): void {
     if (hasPendingLoot()) {
@@ -497,6 +510,9 @@ export class GameScene extends Scene {
   private handleLoopEvent(event: string, data: any): void {
     switch (event) {
       case 'combat-start': {
+        // Tutorial: auto-clear 'map-intro' the moment combat begins so the
+        // overlay isn't fighting the scene swap for input focus.
+        tutorialDirector.advanceIfMatches('map-intro');
         this.scene.pause(SCENE_KEYS.GAME);
         this.scene.launch(SCENE_KEYS.COMBAT, {
           enemyId: data.enemyId,
@@ -520,11 +536,6 @@ export class GameScene extends Scene {
           const result = resolveInlineEvent(run);
           this.syncEconomyToLoopState(run);
           this.showPendingNotifications();
-          // Meme overlay (e.g. OIIAOIIA spinning cat). Cosmetic only — fires
-          // alongside the standard pathways below.
-          if (result.memeKey) {
-            this.playMemeOverlay(result.memeKey);
-          }
           // If the event triggers combat, launch it
           if (result.combatEnemyId) {
             this.scene.pause(SCENE_KEYS.GAME);

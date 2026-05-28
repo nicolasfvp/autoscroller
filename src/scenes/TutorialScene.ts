@@ -106,14 +106,15 @@ export class TutorialScene extends Scene {
     // every boot).
     if (!this.replayMode) {
       this.metaState = await loadMetaState();
-      if (this.metaState.tutorialSeen) {
-        this.scene.start(SCENE_KEYS.CITY_HUB);
-        return;
-      }
-      // If the scripted TutorialDirector is active it teaches contextually
-      // in-game — skip the static slideshow and go straight to the game.
+      // Scripted tutorial takes over the first-run path — skip the tabbed
+      // legacy slideshow and route into the GameScene directly. The director
+      // has already armed the appropriate scene-level overlays.
       if (tutorialDirector.isActive()) {
         this.scene.start(SCENE_KEYS.GAME);
+        return;
+      }
+      if (this.metaState.tutorialSeen) {
+        this.scene.start(SCENE_KEYS.CITY_HUB);
         return;
       }
     } else {

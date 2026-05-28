@@ -4,7 +4,7 @@ import { ShopSystem } from '../../src/systems/ShopSystem';
 function makeRunState(overrides: any = {}): any {
   return {
     hero: { currentHP: 100, maxHP: 100, currentStamina: 50, maxStamina: 50, currentMana: 30, maxMana: 30, runXP: 0, totalXP: 0, currentDefense: 0, strength: 1, defenseMultiplier: 1, moveSpeed: 2 },
-    deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {}, upgraded: [false, false, false, false, false], droppedCards: [] },
+    deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball', 'fireball'], inventory: {}, upgraded: [false, false, false, false, false, false], droppedCards: [] },
     loop: { count: 1, tiles: [], difficulty: 1, tileLength: 15, positionInLoop: 0, difficultyMultiplier: 1.0 },
     economy: { gold: 200, tilePoints: 10, tileInventory: { forest: 2, treasure: 1 }, materials: {} },
     relics: [],
@@ -116,12 +116,12 @@ describe('ShopSystem', () => {
     const result = ShopSystem.removeCard(run, 0, 0);
     expect(result).toBe(true);
     expect(run.economy.gold).toBe(150); // 200 - 50
-    expect(run.deck.active).toHaveLength(4);
+    expect(run.deck.active).toHaveLength(5);
   });
 
-  it('removeCard returns false when deck size <= 3', () => {
+  it('removeCard returns false when deck is at minimum size (5)', () => {
     const run = makeRunState({
-      deck: { active: ['strike', 'defend', 'fireball'], inventory: {}, upgraded: [false, false, false], droppedCards: [] },
+      deck: { active: ['strike', 'strike', 'defend', 'defend', 'fireball'], inventory: {}, upgraded: [false, false, false, false, false], droppedCards: [] },
     });
     const result = ShopSystem.removeCard(run, 0, 0);
     expect(result).toBe(false);

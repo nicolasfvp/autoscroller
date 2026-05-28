@@ -74,40 +74,61 @@ export class Preloader extends Scene {
     this.load.spritesheet('hero_chibi_mage', 'assets/characters/mage/pocket/spritesheet.png', { frameWidth: 256, frameHeight: 256 });
     this.load.image('warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
 
-    // Monster static images — files with _1.png suffix auto-derive _2 via regex below
-    const staticMonsters = [
-      { id: 'corpse_eater',         folder: 'cemetery', file: 'corpse eater_1.png' },
-      { id: 'headless_fire_horse',  folder: 'cemetery', file: 'headless fire horse.png' },
+    // Monster static images — `hasFrame2` flags entries that ship a second
+    // animation frame on disk. The `_1.png` suffix in `file` auto-derives the
+    // `_2.png` path via the regex below. Entries without a `_2` variant (most
+    // single-frame portraits) skip the second load to keep the console clean.
+    const staticMonsters: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean }> = [
+      // Cemetery
+      { id: 'corpse_eater',         folder: 'cemetery', file: 'corpse eater_1.png',         hasFrame2: true },
       { id: 'pocket_cat',           folder: 'cemetery', file: 'pocket cat.png' },
-      { id: 'ogre',                 folder: 'cemetery', file: 'ogre.png' },
+      { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
+      { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
+      { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
       { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
+      // Default-terrain enemies (single-frame portraits)
       { id: 'doom_knight',          folder: 'default',  file: 'doom knight.png' },
       { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
       { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
-      { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png' },
-      { id: 'giant_beetle',         folder: 'desert',   file: 'giant beetle.png' },
-      { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated salamander_1.png' },
-      { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree.png' },
+      // Desert
+      { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png',          hasFrame2: true },
+      { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated salamander_1.png',   hasFrame2: true },
+      { id: 'scorpion',             folder: 'desert',   file: 'scorpion_1.png',             hasFrame2: true },
+      // Forest
+      { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree_1.png',         hasFrame2: true },
       { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
       { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
       { id: 'mush',                 folder: 'forest',   file: 'mush.png' },
-      { id: 'forge_slime',          folder: 'lava',     file: 'forge slime_1.png' },
-      { id: 'lava_golen',           folder: 'lava',     file: 'lava golen.png' },
-      { id: 'mecha_warrior',        folder: 'lava',     file: 'mecha warrior.png' },
-      { id: 'depths_horror',        folder: 'swamp',    file: 'depths horror_1.png' },
-      { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png' },
-      { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous kobra_1.png' },
-      { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png' },
-      { id: 'boss_berserker',       folder: '',         file: 'boss_berserker.png' },
-      { id: 'boss_demon',           folder: '',         file: 'boss_demon.png' },
-      { id: 'boss_hydra',           folder: '',         file: 'boss_hydra.png' },
-      { id: 'boss_mage',            folder: '',         file: 'boss_mage.png' },
+      { id: 'ogre',                 folder: 'forest',   file: 'ogre.png' },
+      // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
+      // spellings used in enemies.json; the disk files now use underscored
+      // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.
+      { id: 'forge_slime',          folder: 'lava',     file: 'forge_slime_1.png',          hasFrame2: true },
+      { id: 'lava_golen',           folder: 'lava',     file: 'lava_golem_1.png',           hasFrame2: true },
+      { id: 'fire_elemental',       folder: 'lava',     file: 'fire_elemental_1.png',       hasFrame2: true },
+      // Swamp
+      { id: 'depths_horror',        folder: 'swamp',    file: 'depths horror_1.png',        hasFrame2: true },
+      { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png',          hasFrame2: true },
+      { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous kobra_1.png',       hasFrame2: true },
+      // Root
+      { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
+      // New bosses (PR #12) — live in `monsters/boss/`. Each ships multiple
+      // frames on disk (bog_witch _1–_4, desert_golem _1–_3, infernal_dragon
+      // _1–_5, iron_golem _1–_2); we expose just the _1/_2 pair to match the
+      // rest of the roster. `boss_iron_golem` is namespaced to avoid clashing
+      // with the regular `iron_golem` enemy at default/.
+      { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true },
+      { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true },
+      { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true },
+      { id: 'boss_iron_golem',      folder: 'boss',     file: 'iron_golem_1.png',           hasFrame2: true },
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
       this.load.image(`monster_${m.id}`, path);
-      const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
-      this.load.image(`monster_${m.id}_2`, path2);
+      if (m.hasFrame2) {
+        const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
+        this.load.image(`monster_${m.id}_2`, path2);
+      }
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
@@ -133,6 +154,15 @@ export class Preloader extends Scene {
     this.load.image('library_table', 'assets/buildings/backgrounds/library-table.png');
     this.load.image('workshop_table', 'assets/buildings/backgrounds/workshop-table.png');
     this.load.image('forge_table', 'assets/buildings/backgrounds/forge-table.png');
+    this.load.image('forge_backdrop_v2', 'assets/buildings/backgrounds/forge-backdrop-v2.jpeg');
+    this.load.image('forge_rune_socket', 'assets/buildings/backgrounds/forge-rune-socket.jpeg');
+    this.load.image('forge_card_altar', 'assets/buildings/backgrounds/forge-card-altar.jpeg');
+    this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');
+    // Forge-specific ornate element sigils (separate from the small `icon_<id>`
+    // tokens used inside card faces).
+    for (const id of ['attack','defense','agility','counter','fire','water','air','earth']) {
+      this.load.image(`forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.jpeg`);
+    }
     this.load.image('tavern_table', 'assets/buildings/backgrounds/tavern.png');
     this.load.image('shrine_table', 'assets/buildings/backgrounds/shrine.png');
     this.load.image('vault_table', 'assets/buildings/backgrounds/vault.png');
@@ -156,6 +186,29 @@ export class Preloader extends Scene {
     this.load.image('deck_status_board', 'assets/ui/panels/deck-status-board.png');
     this.load.image('bg_tile_selection', 'assets/ui/panels/background-tile-selection.png');
     this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
+    // v2 (2026-05-26) Grok-generated alchemist-merchant interior. ShopScene
+    // prefers this when present and falls back to bg_shop_scene.
+    this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
+    // Shop-specific ornate chrome (Grok-generated 2026-05-26).
+    this.load.image('shop_title_banner', 'assets/ui/backgrounds/shop_title_banner.png');
+    this.load.image('shop_item_frame',   'assets/ui/backgrounds/shop_item_frame.png');
+    this.load.image('shop_remove_seal',  'assets/ui/backgrounds/shop_remove_seal.png');
+    this.load.image('banish_confirm_panel', 'assets/ui/backgrounds/banish_confirm_panel.png');
+    // Grok-generated painted backdrops for previously-bare scenes. See
+    // docs/UI_AUDIT.md for the prompts and re-generation recipe.
+    this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
+    this.load.image('bg_deck_editor_v2', 'assets/ui/backgrounds/deck-editor-v2.png');
+    this.load.image('bg_relic_vault',  'assets/ui/backgrounds/bg_relic_vault.png');
+    this.load.image('bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
+    // Visual-upgrade pass (audit2): wooden buttons, parchment chrome,
+    // hero-card plaques, painted Settings backdrop, modifier-popup banner.
+    this.load.image('panel_wood_button',      'assets/ui/backgrounds/panel_wood_button.png');
+    this.load.image('panel_parchment_scroll', 'assets/ui/backgrounds/panel_parchment_scroll.png');
+    this.load.image('panel_hero_plaque',      'assets/ui/backgrounds/panel_hero_plaque.png');
+    this.load.image('panel_modifier_banner',  'assets/ui/backgrounds/panel_modifier_banner.png');
+    this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
+    this.load.image('panel_card_grid',        'assets/ui/backgrounds/panel_card_grid.png');
+    this.load.image('panel_card_grid_v2',     'assets/ui/backgrounds/panel_card_grid_v2.png');
     this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
@@ -167,20 +220,6 @@ export class Preloader extends Scene {
     this.load.image('btn_daily_run', 'assets/ui/buttons/daily-run.png');
     this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
     this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
-    this.load.image('ui_panel', 'assets/ui/buttons/panel.png');
-    this.load.image('panel_hover', 'assets/ui/buttons/panel_hover.png');
-
-    // Painted backdrops and themed panels (visual upgrade pass).
-    this.load.image('bg_deck_builder',        'assets/ui/backgrounds/bg_deck_builder.png');
-    this.load.image('bg_relic_vault',         'assets/ui/backgrounds/bg_relic_vault.png');
-    this.load.image('bg_card_library',        'assets/ui/backgrounds/bg_card_library.png');
-    this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
-    this.load.image('panel_wood_button',      'assets/ui/backgrounds/panel_wood_button.png');
-    this.load.image('panel_parchment_scroll', 'assets/ui/backgrounds/panel_parchment_scroll.png');
-    this.load.image('panel_hero_plaque',      'assets/ui/backgrounds/panel_hero_plaque.png');
-    this.load.image('panel_modifier_banner',  'assets/ui/backgrounds/panel_modifier_banner.png');
-    this.load.image('panel_card_grid',        'assets/ui/backgrounds/panel_card_grid.png');
-    this.load.image('panel_card_grid_v2',     'assets/ui/backgrounds/panel_card_grid_v2.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
     this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
     this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");
@@ -224,15 +263,46 @@ export class Preloader extends Scene {
       this.load.image(`icon_${token}`, `assets/icons/tokens/${token}.png`);
     }
 
-    // Relic Illustrations
-    // Phase 9 (Design v2) purge: removed `spell_focus` and `warrior_spirit`
-    // -- both dropped by the v2 wholesale rewrite (09-02-SUMMARY: "5 v1 relic
-    // IDs removed; iron_will retained as a neutral rare"). All remaining
-    // IDs verified to exist in v2 relics.json on 2026-05-11.
+    // Painterly v2 element icons (oil-paint style, generated via Grok) for the
+    // shop's element frames. Only the 4 physical + 4 elemental ids exist in v2.
+    const elementV2Ids = [
+      'attack', 'defense', 'agility', 'counter',
+      'fire', 'water', 'air', 'earth',
+    ];
+    for (const token of elementV2Ids) {
+      this.load.image(`icon_v2_${token}`, `assets/icons/tokens/elements-v2/${token}.png`);
+    }
+
+    // Relic Illustrations — one PNG per relic id in src/data/json/relics.json.
     const relicIds = [
-      'arcane_crystal', 'berserker_ring', 'blood_pact', 'bronze_scale', 'demon_heart',
-      'energy_potion', 'first_strike_amulet', 'iron_will', 'mana_stone', 'phoenix_feather',
-      'swift_boots', 'thin_deck_charm', 'vitality_ring'
+      // Warrior
+      'whetstone_shard', 'bronze_pauldron', 'stamina_flask', 'battered_vambrace',
+      'iron_cestus', 'banded_greaves', 'stamina_reservoir',
+      'wargods_mantle', 'bloodgorged_heart', 'the_last_banner',
+      // Mage
+      'aether_lens', 'burnt_tome', 'frostbite_charm', 'ember_wick',
+      'stormglass_lens', 'cinder_circlet', 'mana_veil',
+      'tempest_resonator', 'tideheart_amulet', 'archon_codex',
+      // Neutral commons (stat/utility)
+      'bronze_scale', 'energy_tonic', 'arcane_crystal', 'whetting_stone',
+      'iron_brace', 'quick_boots', 'scholars_quill', 'soul_locket', 'vitality_ring',
+      'hearty_meal', 'lucky_coin', 'travel_boots', 'beacon_lantern',
+      // Neutral commons (combat)
+      'smoldering_torch', 'iron_tooth', 'vanguard_cuffs', 'charm_of_tides',
+      'steady_compass', 'linen_wrap', 'tarnished_mirror', 'echoing_chime',
+      'brass_bell', 'trailblazers_brand', 'veterans_stripe',
+      // Neutral uncommons
+      'swift_boots', 'thin_deck_charm', 'heavy_tome', 'iron_will',
+      'first_strike_amulet', 'gravediggers_tag', 'huntmasters_eye',
+      'librarians_seal', 'apothecarys_vial', 'harmonics_charm', 'glasswork_lens',
+      'executioners_brand', 'counterweight_sigil', 'burnished_sigil', 'vampiric_fang',
+      'smoking_censer', 'roaring_hourglass', 'lodestone_pendant', 'cracked_crystal',
+      'whisperwind_sash', 'ash_eater',
+      // Neutral rares
+      'sanguine_pact', 'berserker_ring', 'phoenix_feather', 'demon_heart',
+      'stoneheart_sigil', 'pandoras_embers', 'cinderkeep', 'crimson_stiletto',
+      'stormcallers_rod', 'echo_chamber', 'catalyst_core', 'soulforge_chalice',
+      'glass_cannon', 'hemlock_vial', 'constellation_sigil'
     ];
 
     for (const id of relicIds) {
@@ -258,9 +328,9 @@ export class Preloader extends Scene {
       this.load.image(`card_${id}`, `assets/cards/${id}${ext}`);
     }
 
-    // New element-based card art (Tier 1 + Tier 2 + Tier 3, all PNG)
+    // New element-based card art (Tier 1 + Tier 2, all PNG)
     const newCardIds = [
-      // T1 — single elements
+      // T1 — single elements (the 8 base cards in cards.json)
       't1-attack', 't1-defense', 't1-agility', 't1-counter',
       't1-fire', 't1-water', 't1-air', 't1-earth',
       // T2 — pure pairs
@@ -332,19 +402,6 @@ export class Preloader extends Scene {
     this.load.audio('sfx_hurt', 'assets/audio/hurt.m4a');
     this.load.audio('sfx_cashing', 'assets/audio/cashing.m4a');
     this.load.audio('ambience_wind', 'assets/audio/wind.wav');
-
-    // ── Meme assets (optional) ─────────────────────────────────────
-    // OIIAOIIA spinning cat — ultra-rare event outcome. Loaded best-effort:
-    // if the file isn't on disk, Phaser logs a 404 once and the game falls
-    // back to a cat-emoji placeholder. Drop your assets at the paths below
-    // to enable the full version.
-    this.load.image('meme_oiiaoiia', 'assets/meme/oiiaoiia.png');
-    this.load.audio('sfx_oiiaoiia', 'assets/audio/oiiaoiia.mp3');
-    this.load.on('loaderror', (file: { key: string }) => {
-      if (file.key === 'meme_oiiaoiia' || file.key === 'sfx_oiiaoiia') {
-        // Expected when the meme assets aren't authored yet; swallow.
-      }
-    });
   }
 
   async create(): Promise<void> {

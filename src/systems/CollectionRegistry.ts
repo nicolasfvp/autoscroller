@@ -57,15 +57,38 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
       isUnlocked: true,
     }));
 
+  // Tile catalog mirrors what the Preloader actually ships (public/assets/map/tiles).
+  // — Base region tiles: always available.
+  // — Special tiles: event/treasure/boss are seeded into runs from the start.
+  // — Unlockable region tiles: gated behind the Workshop.
+  // — Subtiles: special encounters (camps, totems, altars, etc.). They're seeded
+  //   into runs by world generation rather than the player picking them, so we
+  //   list them as always-unlocked for collection display purposes.
   const baseTiles = ['basic', 'forest', 'event', 'treasure', 'boss'];
   const unlockableTiles = ['graveyard', 'swamp', 'desert', 'lava'];
-  const allTiles = [...baseTiles, ...unlockableTiles];
-  const tiles = allTiles.map(id => ({
-    id,
-    name: id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    isUnlocked: baseTiles.includes(id) || metaState.unlockedTiles.includes(id),
-    unlockHint: unlockableTiles.includes(id) ? 'Unlock via Workshop' : undefined,
-  }));
+  const subtileNames: Record<string, string> = {
+    subtile_ambush: 'Ambush',
+    subtile_bleedtotem: 'Bleed Totem',
+    subtile_burnaltar: 'Burn Altar',
+    subtile_camp: 'Camp',
+    subtile_magma: 'Magma Vent',
+    subtile_manawell: 'Mana Well',
+    subtile_resonance: 'Resonance',
+    subtile_warhorn: 'War Horn',
+  };
+  const subtileIds = Object.keys(subtileNames);
+  const allTiles = [...baseTiles, ...unlockableTiles, ...subtileIds];
+  const tiles = allTiles.map(id => {
+    const isSubtile = subtileNames[id] !== undefined;
+    return {
+      id,
+      name: isSubtile
+        ? subtileNames[id]
+        : id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      isUnlocked: isSubtile || baseTiles.includes(id) || metaState.unlockedTiles.includes(id),
+      unlockHint: unlockableTiles.includes(id) ? 'Unlock via Workshop' : undefined,
+    };
+  });
 
   return {
     cards: { total: cards.length, unlocked: cards.filter(c => c.isUnlocked).length, items: cards },
@@ -104,6 +127,22 @@ export function getItemDetails(
       isUnlocked: isUnlocked(relic, metaState.unlockedRelics),
       unlockHint: unlockHint(relic),
       data: relic,
+    };
+  }
+  const enemy = (enemiesData as any[]).find((e: any) => e.id === itemId);
+  if (enemy) {
+    return {
+      id: enemy.id,
+      name: enemy.name,
+      isUnlocked: true,
+      // Synthesize a description from enemy stats since enemies.json doesn't
+      // carry one — keeps the detail popup useful for the Bosses tab.
+      data: {
+        description: `${enemy.type === 'boss' ? 'Boss' : 'Enemy'} — ${enemy.baseHP} HP, ${enemy.attack?.damage ?? 0} ATK`,
+        effect: Array.isArray(enemy.behaviors) && enemy.behaviors.length > 0
+          ? enemy.behaviors.map((b: any) => b.type).join(', ')
+          : undefined,
+      },
     };
   }
   return undefined;

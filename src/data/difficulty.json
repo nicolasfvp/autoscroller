@@ -5,7 +5,7 @@
   "basicTileCombatChance": 0.18,
   "baseSpeed": 240,
   "speedScalePerLoop": 1.02,
-  "bossEveryNLoops": 25,
+  "bossEveryNLoops": 10,
   "baseLoopLength": 15,
   "loopGrowth": {
     "schedule": [3, 2, 2, 1, 1],

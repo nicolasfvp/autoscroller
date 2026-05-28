@@ -10,6 +10,7 @@ import {
   type ClassOption,
 } from './CharacterSelectScene.helpers';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { getTemplatesForClass, TUTORIAL_TEMPLATE_ID } from '../data/DeckTemplates';
 
 export class CharacterSelectScene extends Scene {
@@ -68,7 +69,30 @@ export class CharacterSelectScene extends Scene {
       }
     });
 
+    // Scripted tutorial — force-select warrior (index 0) and lock the choice.
+    if (tutorialDirector.isActive()) {
+      const warriorIdx = CLASSES.findIndex(c => c.id === 'warrior');
+      this.selectedIndex = warriorIdx >= 0 ? warriorIdx : 0;
+    }
+
     this.highlightSelected();
+    const overlay = TutorialOverlay.mountIfActive(this);
+    if (overlay && tutorialDirector.isActive()) {
+      // Register the warrior-card rect for the pick-warrior step. We only
+      // spotlight the upper half of the card so the explanation panel can
+      // sit below the spotlight without occluding the card's click target.
+      // The card's interactive `bg` covers the whole card — a click anywhere
+      // inside the spotlight still resolves to the card itself.
+      const warriorCard = this.classCards[this.selectedIndex];
+      if (warriorCard) {
+        overlay.setStepRect('pick-warrior', {
+          x: warriorCard.x - cardWidth / 2,
+          y: warriorCard.y - cardHeight / 2,
+          width: cardWidth,
+          height: cardHeight / 2,
+        });
+      }
+    }
 
     // Keyboard navigation
     this.input.keyboard?.on('keydown-LEFT', () => {
@@ -94,13 +118,24 @@ export class CharacterSelectScene extends Scene {
   ): Phaser.GameObjects.Container {
     const container = this.add.container(x, y);
 
-    // Frame (outer thick border)
-    const frame = this.add.rectangle(0, 0, w, h, 0x5a5e6b);
-    frame.setStrokeStyle(6, 0x8a8e9b);
+    // Ornate wooden plaque frame (Grok-generated). The asset has carved gold
+    // filigree edges + corner medallions and a dark oak inner panel — replaces
+    // the flat grey rectangles that read as AI-mock chrome. The "frame" slot
+    // (container.list[0]) is the plaque itself; the "inner" slot
+    // (container.list[1]) is a soft selection tint we toggle on selection.
+    let frame: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+    if (this.textures.exists('panel_hero_plaque')) {
+      frame = this.add.image(0, 0, 'panel_hero_plaque').setDisplaySize(w, h);
+    } else {
+      // Fallback for missing asset.
+      frame = this.add.rectangle(0, 0, w, h, 0x3a2418).setStrokeStyle(6, 0xd4a04a);
+    }
     container.add(frame);
 
-    // Inner panel
-    const bg = this.add.rectangle(0, 0, w - 24, h - 24, 0x4a4e5b);
+    // Selection-tint overlay — invisible by default, a warm gold wash when
+    // selected. Sized to the inner panel of the plaque so the gold filigree
+    // edges stay un-tinted. Also doubles as the click target.
+    const bg = this.add.rectangle(0, 8, w - 60, h - 70, 0xffe680, 0);
     bg.setInteractive({ useHandCursor: true });
     container.add(bg);
 
@@ -267,16 +302,28 @@ export class CharacterSelectScene extends Scene {
 
   private highlightSelected(): void {
     this.classCards.forEach((card, i) => {
-      const frame = card.list[0] as Phaser.GameObjects.Rectangle;
+      const frame = card.list[0] as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
       const inner = card.list[1] as Phaser.GameObjects.Rectangle;
+      const isImage = (frame as Phaser.GameObjects.Image).setTint !== undefined &&
+                      this.textures.exists('panel_hero_plaque');
       if (i === this.selectedIndex) {
-        frame.setFillStyle(0x3388ff);
-        frame.setStrokeStyle(6, 0x00ccff);
-        inner.setFillStyle(0x2a446b);
+        if (isImage) {
+          (frame as Phaser.GameObjects.Image).setTint(0xfff0c0);
+          card.setScale(1.04);
+        } else {
+          (frame as Phaser.GameObjects.Rectangle).setFillStyle(0x3388ff);
+          (frame as Phaser.GameObjects.Rectangle).setStrokeStyle(6, 0x00ccff);
+        }
+        inner.setFillStyle(0xffe680, 0.18);
       } else {
-        frame.setFillStyle(0x5a5e6b);
-        frame.setStrokeStyle(6, 0x8a8e9b);
-        inner.setFillStyle(0x4a4e5b);
+        if (isImage) {
+          (frame as Phaser.GameObjects.Image).clearTint();
+          card.setScale(1.0);
+        } else {
+          (frame as Phaser.GameObjects.Rectangle).setFillStyle(0x5a5e6b);
+          (frame as Phaser.GameObjects.Rectangle).setStrokeStyle(6, 0x8a8e9b);
+        }
+        inner.setFillStyle(0xffe680, 0);
       }
     });
   }
@@ -323,23 +370,25 @@ export class CharacterSelectScene extends Scene {
       return;
     }
 
-    // Launch the starting-deck picker as an overlay. We don't pause this
-    // scene — a re-entry guard (templatePickerOpen) prevents stray ENTER /
-    // double-click from stacking instances.
-    this.templatePickerOpen = true;
-
-    this.scene.launch(SCENE_KEYS.STARTING_DECK, {
-      className: selected.id,
-      onConfirm: (deck: string[]) => {
-        this.templatePickerOpen = false;
-        // Microtask hand-off so the picker can scene.stop() before we mutate
-        // active-scene state.
-        Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
-      },
-      onCancel: () => {
-        this.templatePickerOpen = false;
-      },
-    });
+    // Deck-template picker is disabled — outside the tutorial run, the
+    // starter deck is a random template for the chosen class.
+    // Original flow (commented out for now):
+    //
+    //   this.templatePickerOpen = true;
+    //   this.scene.launch(SCENE_KEYS.STARTING_DECK, {
+    //     className: selected.id,
+    //     onConfirm: (deck: string[]) => {
+    //       this.templatePickerOpen = false;
+    //       Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
+    //     },
+    //     onCancel: () => {
+    //       this.templatePickerOpen = false;
+    //     },
+    //   });
+    const templates = getTemplatesForClass(selected.id);
+    const randomTpl = templates[Math.floor(Math.random() * templates.length)];
+    const randomDeck = randomTpl ? [...randomTpl.cardIds] : undefined;
+    this.startRun(meta, selected.id, randomDeck);
   }
 
   private async startRun(

@@ -53,8 +53,8 @@ export const CLASS_BIAS: Record<string, { physical: number; elemental: number }>
 
 export const FORGE_BASE_COST: Record<CardTier, number> = {
   1: 0,
-  2: 100,
-  3: 350,
+  2: 50,
+  3: 200,
 };
 
 export const FORGE_DISCOUNT_BY_LEVEL: Record<number, number> = {
@@ -79,6 +79,25 @@ export function isPhysical(id: ElementId): boolean {
 
 export function isElemental(id: ElementId): boolean {
   return ELEMENTS[id].category === 'elemental';
+}
+
+/**
+ * Best Phaser texture key for a given icon token (element id or stat/keyword
+ * token like 'str', 'burn'). Prefers the painterly v2 element art when
+ * present (registered as `icon_v2_<token>` in Preloader), falls back to the
+ * legacy pixel-art token (`icon_<token>`), or returns `null` if neither
+ * texture has been loaded. Centralised so all UI surfaces — cards, forge,
+ * shop, description tokens — agree on what to render.
+ */
+export function resolveIconKey(
+  textures: Phaser.Textures.TextureManager,
+  token: string,
+): string | null {
+  const v2 = `icon_v2_${token}`;
+  if (textures.exists(v2)) return v2;
+  const legacy = `icon_${token}`;
+  if (textures.exists(legacy)) return legacy;
+  return null;
 }
 
 /** Canonical card id format: "t{tier}-{elements joined with '-' in alphabetical order}". Tier 1 = 1 element; Tier 2 = 2; Tier 3 = 3. */

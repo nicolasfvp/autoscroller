@@ -132,10 +132,10 @@ describe('LoopRunner', () => {
     expect(runState.loop.tiles.filter(t => t.type === 'buffer').every(t => t.defeatedThisLoop === true)).toBe(true);
   });
 
-  it('boss tile injected at last position on loop 25', () => {
+  it('boss tile injected at last position on loop 10', () => {
     runner.startRun(runState);
-    // Simulate completing loops 1-24 to reach loop 25 (bossEveryNLoops=25).
-    for (let loop = 0; loop < 24; loop++) {
+    // Simulate completing loops 1-9 to reach loop 10 (bossEveryNLoops=10).
+    for (let loop = 0; loop < 9; loop++) {
       for (const t of runState.loop.tiles) {
         t.defeatedThisLoop = true;
       }
@@ -147,7 +147,7 @@ describe('LoopRunner', () => {
         runner.confirmPlanning();
       }
     }
-    expect(runState.loop.count).toBe(25);
+    expect(runState.loop.count).toBe(10);
     expect(runState.loop.tiles[runState.loop.length - 1].type).toBe('boss');
   });
 

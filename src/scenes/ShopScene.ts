@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { ShopSystem } from '../systems/ShopSystem';
+import { ShopSystem, MIN_DECK_SIZE, type ShopRelic } from '../systems/ShopSystem';
 import { getRelicById, getCardById } from '../data/DataLoader';
 import { relicSynergizesWithDeck } from '../systems/cards/SynergyDetection';
 import type { CardDefinition } from '../data/types';
@@ -10,75 +10,51 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import {
   ELEMENTS,
   ALL_ELEMENT_IDS,
+  resolveIconKey,
   type ElementId,
 } from '../systems/ElementSystem';
-import { createCardVisual } from '../ui/CardVisual';
 
 const ELEMENT_SELL_PRICE = 25;
 const ELEMENT_BUY_PRICE = 50;
 
-// ── Design tokens ────────────────────────────────────────────
 const FF    = FONTS.family;
 const GOLD  = '#ffd700';
 const WHITE = '#ffffff';
 const DIM   = '#998877';
-const CYAN  = '#66ddff';
 const RED   = '#ff6655';
 
-// ── Panel geometry (centered on 800px canvas) ─────────────────
-const PANEL_W     = 470;
-const PANEL_CX    = 400;
-const PANEL_LEFT  = PANEL_CX - PANEL_W / 2;
-const PANEL_RIGHT = PANEL_CX + PANEL_W / 2;
-const PAD         = 16;
+const CANVAS_W = 800;
 
-type ShopCategory = 'remove' | 'relics' | 'elements';
-
-const CATEGORIES: { key: ShopCategory; icon: string; label: string; desc: string }[] = [
-  { key: 'elements',  icon: '🔮', label: 'Trade Elements', desc: `Sell elements for ${ELEMENT_SELL_PRICE}g, buy for ${ELEMENT_BUY_PRICE}g` },
-  { key: 'remove',    icon: '🗑',  label: 'Remove Cards',   desc: 'Thin your deck for consistency' },
-  { key: 'relics',    icon: '💎', label: 'Buy Relics',     desc: 'Passive artifacts with powerful effects' },
-];
-
-function colX(col: number, cols: number, itemW: number, gapW: number): number {
-  const total = cols * itemW + (cols - 1) * gapW;
-  const left  = PANEL_LEFT + (PANEL_W - total) / 2;
-  return left + col * (itemW + gapW) + itemW / 2;
-}
-
-function cardSlot(
-  scene: Scene, x: number, y: number, w: number, h: number,
-  canAfford: boolean, onBuy: () => void,
-): Phaser.GameObjects.Rectangle {
-  const fill   = canAfford ? 0x3d2010 : 0x1e1008;
-  const border = canAfford ? 0x9a6030 : 0x4a3020;
-  const alpha  = canAfford ? 0.92 : 0.5;
-  const bg = scene.add.rectangle(x, y, w, h, fill, alpha).setStrokeStyle(1.5, border);
-  if (canAfford) {
-    bg.setInteractive({ useHandCursor: true });
-    bg.on('pointerover', () => bg.setFillStyle(0x5a3018, 0.98));
-    bg.on('pointerout',  () => bg.setFillStyle(fill, alpha));
-    bg.on('pointerdown', onBuy);
-  }
-  return bg;
-}
+// Vertical regions on the 800×600 canvas. Top banner stays, relics under it,
+// elements in the middle band, and the bottom bar holds the compact
+// Remove-Card seal (left) plus the gold + Leave Shop badges (right).
+const BANNER_Y = 50;
+const BANNER_W = 640;
+const BANNER_H = 140;
+const RELIC_TOP = 132;
+const ELEMENT_TOP = 295;
+// Bottom-left remove-card service tile.
+const SERVICE_CX = 175;
+const SERVICE_CY = 555;
+const SERVICE_W = 300;
+const SERVICE_H = 90;
+// Bottom-right gold + Leave badges.
+const BOTTOM_BAR_Y = 570;
+const GOLD_CX = 600;
+const LEAVE_CX = 728;
 
 export class ShopScene extends Scene {
-  private goldText!: Phaser.GameObjects.Text;
-  private tpText!: Phaser.GameObjects.Text;
-  private menuContainer!: Phaser.GameObjects.Container;
-  private modalContainer!: Phaser.GameObjects.Container;
-  /** Scene to wake/resume when the shop closes. Defaults to GameScene. */
   private parentSceneKey: string = SCENE_KEYS.GAME;
-  /** C7 — Relics roll cached for the duration of this shop visit, so opening
-   *  the relic modal multiple times shows the same picks until the player
-   *  leaves and re-enters the shop. */
-  private cachedRelicRoll?: import('../systems/ShopSystem').ShopRelic[];
+  private goldText!: Phaser.GameObjects.Text;
+  private mainLayer!: Phaser.GameObjects.Container;
+  private tooltipLayer!: Phaser.GameObjects.Container;
+  private cachedRelicRoll?: ShopRelic[];
 
   constructor() { super(SCENE_KEYS.SHOP); }
 
   init(data?: { parentScene?: string }): void {
     this.parentSceneKey = data?.parentScene ?? SCENE_KEYS.GAME;
+    this.cachedRelicRoll = undefined;
   }
 
   create(): void {
@@ -86,65 +62,524 @@ export class ShopScene extends Scene {
       const run = getRun();
       run.economy.removalsThisShop = 0;
       run.economy.reordersThisShop = 0;
-
-      // Wave 3: rest tiles removed. The auto-heal that used to live on the
-      // rest tile now fires on shop entry (one shop visit per loop). Hearty
-      // Meal multiplies the heal and tops up stamina; Lodestone Pendant
-      // already fires in LoopRunner.onLoopCompleted independently.
       this.applyLoopEndAutoHeal(run);
+      ShopSystem.notifyShopVisited();
 
       this.scene.bringToTop();
 
-      // Shop interior background, then a gentle dim + center panel so the
-      // pixel-art shop is still visible around the menu chrome. The previous
-      // 0.82-alpha black panel hid the bg almost entirely — now we use a
-      // wood-stained translucent center column with a subtle vignette.
-      if (this.textures.exists('bg_shop_scene')) {
-        this.add.image(400, 300, 'bg_shop_scene').setDisplaySize(800, 600).setDepth(-1);
-      } else {
-        this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
-      }
-      // Vignette so the panel reads against busy bg art.
-      this.add.rectangle(400, 300, 800, 600, 0x000000, 0.4);
+      this.drawBackdrop();
+      this.mainLayer = this.add.container(0, 0);
+      this.tooltipLayer = this.add.container(0, 0).setDepth(900);
 
-      // Center menu panel: warm wood tone, gold double-stroke border.
-      this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x1a0c04, 0.78);
-      this.add.rectangle(PANEL_LEFT, 300, 4, 600, 0xd4a04a, 0.85);
-      this.add.rectangle(PANEL_RIGHT, 300, 4, 600, 0xd4a04a, 0.85);
-
-      // Header bar with bottom border accent.
-      this.add.rectangle(PANEL_CX, 24, PANEL_W, 48, 0x0a0400, 0.92);
-      this.add.rectangle(PANEL_CX, 47, PANEL_W, 2, 0xd4a04a, 0.9);
-
-      this.add.text(PANEL_CX, 24, 'SHOP', {
-        fontSize: '26px', fontStyle: 'bold', color: GOLD,
-        fontFamily: FF, stroke: '#000', strokeThickness: 5,
-      }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
-
-      this.add.rectangle(PANEL_RIGHT - 4, 8, 130, 18, 0x3a2008, 0.92).setOrigin(1, 0).setStrokeStyle(1, 0x9a6030);
-      this.goldText = this.add.text(PANEL_RIGHT - 8, 9, `♦ ${run.economy.gold} Gold`, {
-        fontSize: '12px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(1, 0);
-
-      this.add.rectangle(PANEL_RIGHT - 4, 27, 80, 16, 0x3a2008, 0.92).setOrigin(1, 0).setStrokeStyle(1, 0x9a6030);
-      this.tpText = this.add.text(PANEL_RIGHT - 8, 28, `${run.economy.tilePoints} TP`, {
-        fontSize: '12px', color: CYAN, fontFamily: FF, stroke: '#000', strokeThickness: 2,
-      }).setOrigin(1, 0);
-
-      this.buildMenu();
-
-      const leave = this.add.text(PANEL_CX, 592, 'Leave Shop', {
-        fontSize: '21px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 4,
-      }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true }).setShadow(2, 2, '#000', 2, true, true);
-      leave.on('pointerover', () => leave.setColor(WHITE));
-      leave.on('pointerout',  () => leave.setColor(GOLD));
-      leave.on('pointerdown', () => this.close());
+      this.buildHeader();
+      this.buildRelics();
+      this.buildElements();
+      this.buildServices();
+      this.buildLeaveButton();
 
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
       console.error('[ShopScene] Critical error in create():', err);
       this.close();
     }
+  }
+
+  // ── Backdrop ──────────────────────────────────────────────
+  private drawBackdrop(): void {
+    const bgKey = this.textures.exists('bg_shop_v2')
+      ? 'bg_shop_v2'
+      : (this.textures.exists('bg_shop_scene') ? 'bg_shop_scene' : null);
+    if (bgKey) {
+      this.add.image(400, 300, bgKey).setDisplaySize(800, 600).setDepth(-3);
+    } else {
+      this.add.rectangle(400, 300, 800, 600, 0x1a0c04, 1).setDepth(-3);
+    }
+    // Soft atmospheric overlay — dims the bg so foreground items pop.
+    this.add.rectangle(400, 300, 800, 600, 0x080400, 0.42).setDepth(-2);
+  }
+
+  // ── Header (banner on top, gold badge in bottom-right) ────
+  private buildHeader(): void {
+    const run = getRun();
+
+    if (this.textures.exists('shop_title_banner')) {
+      this.add.image(400, BANNER_Y, 'shop_title_banner')
+        .setDisplaySize(BANNER_W, BANNER_H);
+    }
+    this.add.text(400, BANNER_Y - 4, 'THE MERCHANT', {
+      fontSize: '28px', fontStyle: 'bold', color: GOLD,
+      fontFamily: FF, stroke: '#1a0500', strokeThickness: 5,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 4, true, true);
+    this.add.text(400, BANNER_Y + 22, 'Wares from beyond the loop', {
+      fontSize: '12px', fontStyle: 'italic', color: '#e8c98c',
+      fontFamily: FF, stroke: '#1a0500', strokeThickness: 3,
+    }).setOrigin(0.5);
+
+    // Gold badge floats in the bottom-right next to the Leave Shop button.
+    this.goldText = this.makeCurrencyBadge(GOLD_CX, BOTTOM_BAR_Y, '♦', `${run.economy.gold}g`, GOLD, 0x4a2810);
+  }
+
+  /** Small image-backed currency pill. Uses panel_wood_button as a stretched
+   *  wooden plaque (no plain css chrome). Returns the value text so callers
+   *  can update it later. */
+  private makeCurrencyBadge(
+    cx: number, cy: number,
+    icon: string, value: string, color: string, tint: number,
+  ): Phaser.GameObjects.Text {
+    const w = 132, h = 34;
+    if (this.textures.exists('panel_wood_button')) {
+      this.add.image(cx, cy, 'panel_wood_button')
+        .setDisplaySize(w * 1.3, h * 1.8)
+        .setTint(tint);
+    }
+    this.add.text(cx - w / 2 + 14, cy, icon, {
+      fontSize: '18px', fontStyle: 'bold', color,
+      fontFamily: FF, stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0, 0.5);
+    return this.add.text(cx + 12, cy, value, {
+      fontSize: '15px', fontStyle: 'bold', color,
+      fontFamily: FF, stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0, 0.5);
+  }
+
+  // ── Relics ────────────────────────────────────────────────
+  private buildRelics(): void {
+    const run = getRun();
+    if (!this.cachedRelicRoll) {
+      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
+    }
+    const relics = this.cachedRelicRoll;
+
+    // Section sub-title (rendered as scrolled gold text, not a flat bar).
+    this.mainLayer.add(this.add.text(400, RELIC_TOP - 4, '✦  Relics for Sale  ✦', {
+      fontSize: '15px', fontStyle: 'bold', color: '#ffe55a',
+      fontFamily: FF, stroke: '#1a0500', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true));
+
+    if (relics.length === 0) {
+      this.mainLayer.add(this.add.text(400, (RELIC_TOP + ELEMENT_TOP) / 2, 'Sold out.', {
+        fontSize: '15px', fontStyle: 'italic', color: DIM, fontFamily: FF,
+      }).setOrigin(0.5));
+      return;
+    }
+
+    // Resolve deck cards once for synergy check.
+    const deckCards: CardDefinition[] = [];
+    for (const id of run.deck.active) {
+      const c = getCardById(id);
+      if (c) deckCards.push(c);
+    }
+
+    // Frame sizing scales with count so 5–7 relics all fit nicely.
+    const count = relics.length;
+    const maxW = 720;
+    const gap = 12;
+    const frameW = Math.min(125, Math.floor((maxW - gap * (count - 1)) / count));
+    const frameH = Math.round(frameW * 1.30);
+    const totalW = count * frameW + (count - 1) * gap;
+    const left = (CANVAS_W - totalW) / 2 + frameW / 2;
+    const cy = RELIC_TOP + 18 + frameH / 2;
+
+    relics.forEach((r, i) => {
+      const x = left + i * (frameW + gap);
+      const d = getRelicById(r.relicId);
+      const ok = run.economy.gold >= r.price;
+      const synergizes = ok && !!d?.description && relicSynergizesWithDeck(d.description, deckCards);
+      this.buildRelicFrame(x, cy, frameW, frameH, r, d, ok, synergizes);
+    });
+  }
+
+  private buildRelicFrame(
+    x: number, y: number, w: number, h: number,
+    r: ShopRelic, d: ReturnType<typeof getRelicById>,
+    ok: boolean, synergizes: boolean,
+  ): void {
+    const group = this.add.container(x, y);
+
+    // Frame is displayed at a modest scale-up of the slot. Source has 25%
+    // black mat around the visible wood frame; the inner wood inset (where
+    // the relic illustration lives) is ~36% × 27% of the displayed image,
+    // centered. Only the relic art renders inside the inset — name lives
+    // above the frame and price lives below, both anchored by percent of
+    // dispH so they reflow when the slot resizes.
+    const dispW = w * 1.20;
+    const dispH = h * 1.20;
+
+    if (this.textures.exists('shop_item_frame')) {
+      const frame = this.add.image(0, 0, 'shop_item_frame')
+        .setDisplaySize(dispW, dispH);
+      if (!ok) frame.setTint(0x555555);
+      group.add(frame);
+    }
+
+    // Relic illustration — centered inside the wood inset.
+    const imgSize = Math.round(dispH * 0.26);
+    const imgKey = `relic_${r.relicId}`;
+    if (this.textures.exists(imgKey)) {
+      const im = this.add.image(0, 0, imgKey).setDisplaySize(imgSize, imgSize);
+      if (!ok) im.setTint(0x444444);
+      group.add(im);
+    } else {
+      group.add(this.add.text(0, 0, '◆', {
+        fontSize: `${imgSize}px`, color: ok ? GOLD : DIM, fontFamily: FF,
+      }).setOrigin(0.5));
+    }
+
+    // Name hugging the top edge of the visible wood inset (outside it).
+    const name = this.add.text(0, -dispH * 0.24, d?.name ?? r.name, {
+      fontSize: '11px', fontStyle: 'bold',
+      color: ok ? GOLD : DIM, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
+      wordWrap: { width: dispW * 0.95 }, align: 'center',
+    }).setOrigin(0.5);
+    group.add(name);
+
+    // Gold price hugging the bottom edge of the visible wood inset.
+    const priceText = this.add.text(0, dispH * 0.26, `${r.price} g`, {
+      fontSize: '13px', fontStyle: 'bold',
+      color: ok ? '#ffe55a' : RED, fontFamily: FF,
+      stroke: '#000', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(1, 1, '#000', 2, true, true);
+    group.add(priceText);
+
+    // Synergy badge — small glowing star pinned to top-right of visible frame.
+    if (synergizes) {
+      const star = this.add.text(dispW * 0.22, -dispH * 0.18, '★', {
+        fontSize: '18px', fontStyle: 'bold', color: '#ffd700',
+        fontFamily: FF, stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5);
+      this.tweens.add({
+        targets: star, scale: { from: 0.85, to: 1.15 },
+        yoyo: true, repeat: -1, duration: 800, ease: 'Sine.easeInOut',
+      });
+      group.add(star);
+    }
+
+    // Hit area = the full vertical extent so name + frame + price are clickable.
+    const hit = new Phaser.Geom.Rectangle(-dispW * 0.45, -dispH * 0.42, dispW * 0.90, dispH * 0.84);
+    group.setInteractive(hit, Phaser.Geom.Rectangle.Contains);
+    if (ok) (group as any).input.cursor = 'pointer';
+
+    const baseScale = 1;
+    group.on('pointerover', () => {
+      this.showRelicTooltip(x, y - dispH * 0.25, r, d, ok);
+      if (ok) {
+        this.tweens.add({ targets: group, scale: 1.06, duration: 140, ease: 'Cubic.easeOut' });
+      }
+    });
+    group.on('pointerout', () => {
+      this.hideTooltip();
+      this.tweens.add({ targets: group, scale: baseScale, duration: 140, ease: 'Cubic.easeOut' });
+    });
+    if (ok) {
+      group.on('pointerdown', () => {
+        const run = getRun();
+        if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
+          this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
+          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+          this.refreshAll();
+        }
+      });
+    }
+
+    this.mainLayer.add(group);
+  }
+
+  // ── Elements ──────────────────────────────────────────────
+  private buildElements(): void {
+    const run = getRun();
+    const inv = (run.economy.elements ?? (run.economy.elements = {})) as Record<ElementId, number>;
+
+    this.mainLayer.add(this.add.text(400, ELEMENT_TOP - 2, `✦  Elemental Essences  ✦  (sell ${ELEMENT_SELL_PRICE}g · buy ${ELEMENT_BUY_PRICE}g)`, {
+      fontSize: '14px', fontStyle: 'bold', color: '#ffe55a',
+      fontFamily: FF, stroke: '#1a0500', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true));
+
+    const count = ALL_ELEMENT_IDS.length;
+    const maxW = 770;
+    const gap = 4;
+    const frameW = Math.floor((maxW - gap * (count - 1)) / count);
+    // Taller, more substantial element tiles now that the header is gone.
+    const frameH = Math.round(frameW * 1.55);
+    const totalW = count * frameW + (count - 1) * gap;
+    const left = (CANVAS_W - totalW) / 2 + frameW / 2;
+    const cy = ELEMENT_TOP + 18 + frameH / 2;
+
+    ALL_ELEMENT_IDS.forEach((id, i) => {
+      const x = left + i * (frameW + gap);
+      this.buildElementFrame(x, cy, frameW, frameH, id, inv);
+    });
+  }
+
+  private buildElementFrame(
+    x: number, y: number, w: number, h: number,
+    id: ElementId, inv: Record<ElementId, number>,
+  ): void {
+    const run = getRun();
+    const elem = ELEMENTS[id];
+    const owned = inv[id] ?? 0;
+
+    const group = this.add.container(x, y);
+    const dispW = w * 1.20;
+    const dispH = h * 1.20;
+
+    if (this.textures.exists('shop_item_frame')) {
+      const frame = this.add.image(0, 0, 'shop_item_frame')
+        .setDisplaySize(dispW, dispH);
+      group.add(frame);
+    }
+
+    // Element name hugging the top edge of the visible wood inset.
+    group.add(this.add.text(0, -dispH * 0.26, elem.name, {
+      fontSize: '12px', fontStyle: 'bold', color: WHITE,
+      fontFamily: FF, stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5));
+
+    // Icon — prefer the painterly v2 token if loaded; fall back to legacy.
+    const iconKey = resolveIconKey(this.textures, id);
+    const iconSize = Math.round(Math.min(dispW, dispH) * 0.42);
+    if (iconKey) {
+      group.add(this.add.image(0, 0, iconKey).setDisplaySize(iconSize, iconSize));
+    } else {
+      group.add(this.add.text(0, 0, '◆', {
+        fontSize: `${iconSize}px`, color: elem.color, fontFamily: FF,
+      }).setOrigin(0.5));
+    }
+
+    // Stepper layout below the frame: [sell] ×count [buy] on a single row.
+    // The owned count lives between the two action buttons; each button shows
+    // just its gold delta. Sell on the left (decrements count, +gold), Buy on
+    // the right (increments count, −gold). No vertical stacking → no overlap.
+    const canSell = owned > 0;
+    const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE;
+    const stepperY = dispH * 0.32;
+    const btnW = 30;
+    const btnH = 18;
+    const btnOffset = Math.min(w / 2 - 2, 32);
+
+    const sellBtn = this.makeMiniButton(-btnOffset, stepperY, btnW, btnH, `+${ELEMENT_SELL_PRICE}g`, canSell, '#aaffaa', 0x2e5a18);
+    const buyBtn  = this.makeMiniButton( btnOffset, stepperY, btnW, btnH, `−${ELEMENT_BUY_PRICE}g`,  canBuy,  GOLD,       0x6c3e1a);
+    group.add([sellBtn.container, buyBtn.container]);
+
+    // Owned count in the middle of the stepper row.
+    group.add(this.add.text(0, stepperY, `×${owned}`, {
+      fontSize: '13px', fontStyle: 'bold',
+      color: owned > 0 ? GOLD : DIM, fontFamily: FF,
+      stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5));
+
+    if (canSell) {
+      sellBtn.hit.on('pointerdown', () => {
+        inv[id] = (inv[id] ?? 0) - 1;
+        run.economy.gold += ELEMENT_SELL_PRICE;
+        AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+        this.refreshAll();
+      });
+    }
+    if (canBuy) {
+      buyBtn.hit.on('pointerdown', () => {
+        run.economy.gold -= ELEMENT_BUY_PRICE;
+        inv[id] = (inv[id] ?? 0) + 1;
+        AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+        this.refreshAll();
+      });
+    }
+
+    this.mainLayer.add(group);
+  }
+
+  /** Small image-textured mini button. Uses bar_wood (or wood_texture) as the
+   *  plank surface so we never fall back to plain rects. */
+  private makeMiniButton(
+    x: number, y: number, w: number, h: number,
+    label: string, enabled: boolean, color: string, hoverTint: number,
+  ): { container: Phaser.GameObjects.Container; hit: Phaser.GameObjects.Image } {
+    const c = this.add.container(x, y);
+    const tex = this.textures.exists('bar_wood')
+      ? 'bar_wood'
+      : (this.textures.exists('wood_texture') ? 'wood_texture' : null);
+    // bar_wood has carved gold corners and a slim wood plank in the middle.
+    // Display the image slightly larger than the hit footprint so the carved
+    // detail reads at small button sizes — small multipliers here so two
+    // mini buttons sitting on the same row (the element stepper) don't
+    // visually overlap each other or bleed into the count text between them.
+    const bgW = w * 1.20;
+    const bgH = h * 1.50;
+    let bg: Phaser.GameObjects.Image;
+    if (tex) {
+      bg = this.add.image(0, 0, tex).setDisplaySize(bgW, bgH);
+      bg.setTint(enabled ? 0xffffff : 0x666666);
+    } else {
+      bg = this.add.image(0, 0, '__WHITE').setDisplaySize(bgW, bgH);
+      bg.setTint(enabled ? 0x6b3a18 : 0x2a1a10);
+    }
+    c.add(bg);
+    c.add(this.add.text(0, 0, label, {
+      fontSize: '10px', fontStyle: 'bold',
+      color: enabled ? color : '#666',
+      fontFamily: FF, stroke: '#000', strokeThickness: 3,
+    }).setOrigin(0.5));
+    if (enabled) {
+      bg.setInteractive({ useHandCursor: true });
+      bg.on('pointerover', () => bg.setTint(hoverTint));
+      bg.on('pointerout', () => bg.setTint(0xffffff));
+    }
+    return { container: c, hit: bg };
+  }
+
+  // ── Services (Remove Card) ────────────────────────────────
+  private buildServices(): void {
+    const run = getRun();
+    const cost = ShopSystem.getRemoveCardCost(run.economy.removalsThisShop ?? 0);
+    const canAfford = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE;
+
+    const cx = SERVICE_CX;
+    const cy = SERVICE_CY;
+    const w = SERVICE_W, h = SERVICE_H;
+
+    const sealGroup = this.add.container(cx, cy);
+    if (this.textures.exists('shop_remove_seal')) {
+      const seal = this.add.image(0, 0, 'shop_remove_seal')
+        .setDisplaySize(w * 1.05, h * 1.25);
+      if (!canAfford) seal.setTint(0x666666);
+      sealGroup.add(seal);
+    }
+
+    sealGroup.add(this.add.text(0, -8, 'REMOVE CARD', {
+      fontSize: '15px', fontStyle: 'bold',
+      color: canAfford ? GOLD : DIM, fontFamily: FF,
+      stroke: '#1a0500', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 2, true, true));
+
+    sealGroup.add(this.add.text(0, 10, canAfford
+        ? `${cost} g`
+        : (run.deck.active.length <= MIN_DECK_SIZE ? 'Min deck size' : `Need ${cost} g`),
+      {
+        fontSize: '11px', fontStyle: 'italic',
+        color: canAfford ? '#e8c98c' : RED, fontFamily: FF,
+        stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5));
+
+    const hit = new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h);
+    sealGroup.setInteractive(hit, Phaser.Geom.Rectangle.Contains);
+    if (canAfford) (sealGroup as any).input.cursor = 'pointer';
+
+    sealGroup.on('pointerover', () => {
+      if (canAfford) this.tweens.add({ targets: sealGroup, scale: 1.04, duration: 150 });
+    });
+    sealGroup.on('pointerout', () => {
+      this.tweens.add({ targets: sealGroup, scale: 1, duration: 150 });
+    });
+    if (canAfford) {
+      sealGroup.on('pointerdown', () => this.launchRemoveScene());
+    }
+
+    this.mainLayer.add(sealGroup);
+  }
+
+  // ── Remove flow — launches a dedicated full-screen scene ──
+  private launchRemoveScene(): void {
+    this.scene.pause();
+    this.scene.launch(SCENE_KEYS.SHOP_REMOVE_CARD, { parentScene: SCENE_KEYS.SHOP });
+    // When the player returns (Cancel or after a successful Banish), refresh
+    // gold, deck-dependent relic synergy hints, and the seal's affordability.
+    this.events.once('resume', () => this.refreshAll());
+  }
+
+  // ── Tooltip (relic hover) ─────────────────────────────────
+  private showRelicTooltip(
+    x: number, y: number,
+    r: ShopRelic, d: ReturnType<typeof getRelicById>,
+    ok: boolean,
+  ): void {
+    this.hideTooltip();
+    const w = 220;
+    const padX = 14, padY = 12;
+    const desc = d?.description ?? '...';
+
+    // Build text objects first so we can size the background to fit.
+    const nameText = this.add.text(0, 0, d?.name ?? r.name, {
+      fontSize: '13px', fontStyle: 'bold', color: '#ffe188', fontFamily: FF,
+    }).setOrigin(0.5, 0);
+    const descText = this.add.text(0, 0, desc, {
+      fontSize: '11px', color: '#e8dbc4', fontFamily: FF,
+      wordWrap: { width: w - padX * 2 }, align: 'center',
+    }).setOrigin(0.5, 0);
+    const denyText = !ok ? this.add.text(0, 0, 'Cannot afford', {
+      fontSize: '10px', fontStyle: 'italic', color: '#ff8a8a', fontFamily: FF,
+    }).setOrigin(0.5, 0) : null;
+
+    const gap = 4;
+    const contentH = nameText.height + gap + descText.height + (denyText ? gap + denyText.height : 0);
+    const h = contentH + padY * 2;
+
+    // Anchor above the frame; flip below if it would clip top.
+    let ty = y - h / 2 - 6;
+    if (ty - h / 2 < 4) ty = y + h / 2 + 6;
+
+    // Clean translucent dark panel — no border, no decoration. Drawn via
+    // Graphics so we get rounded corners at exact size.
+    const bg = this.add.graphics();
+    bg.fillStyle(0x0a0a14, 0.86);
+    bg.fillRoundedRect(x - w / 2, ty - h / 2, w, h, 8);
+    this.tooltipLayer.add(bg);
+
+    // Stack name → desc → (deny) inside the panel.
+    let ty0 = ty - h / 2 + padY;
+    nameText.setPosition(x, ty0);
+    this.tooltipLayer.add(nameText);
+    ty0 += nameText.height + gap;
+    descText.setPosition(x, ty0);
+    this.tooltipLayer.add(descText);
+    if (denyText) {
+      ty0 += descText.height + gap;
+      denyText.setPosition(x, ty0);
+      this.tooltipLayer.add(denyText);
+    }
+  }
+
+  private hideTooltip(): void {
+    if (this.tooltipLayer) this.tooltipLayer.removeAll(true);
+  }
+
+  // ── Leave button ──────────────────────────────────────────
+  private buildLeaveButton(): void {
+    // Bottom-right, next to the gold badge.
+    const cx = LEAVE_CX, cy = BOTTOM_BAR_Y;
+    const w = 130, h = 32;
+    const btn = this.add.container(cx, cy);
+    if (this.textures.exists('panel_wood_button')) {
+      btn.add(this.add.image(0, 0, 'panel_wood_button')
+        .setDisplaySize(w * 1.3, h * 1.8));
+    }
+    const label = this.add.text(0, 0, '← Leave Shop', {
+      fontSize: '15px', fontStyle: 'bold', color: GOLD,
+      fontFamily: FF, stroke: '#000', strokeThickness: 4,
+    }).setOrigin(0.5).setShadow(2, 2, '#000', 2, true, true);
+    btn.add(label);
+    const hit = new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h);
+    btn.setInteractive(hit, Phaser.Geom.Rectangle.Contains);
+    (btn as any).input.cursor = 'pointer';
+    btn.on('pointerover', () => label.setColor(WHITE));
+    btn.on('pointerout', () => label.setColor(GOLD));
+    btn.on('pointerdown', () => this.close());
+    this.mainLayer.add(btn);
+  }
+
+  // ── Refresh ───────────────────────────────────────────────
+  private refreshAll(): void {
+    const run = getRun();
+    this.goldText.setText(`${run.economy.gold}g`);
+    this.mainLayer.destroy(true);
+    this.mainLayer = this.add.container(0, 0);
+    // buildHeader builds the bottom-right gold badge directly on the scene
+    // root (not mainLayer), so it survives the mainLayer destroy and only the
+    // goldText value needs refreshing. The leave button likewise lives at the
+    // bottom-right of mainLayer and gets rebuilt here.
+    this.buildRelics();
+    this.buildElements();
+    this.buildServices();
+    this.buildLeaveButton();
   }
 
   /**
@@ -165,251 +600,7 @@ export class ShopScene extends Scene {
     }
   }
 
-  private buildMenu(): void {
-    try {
-      if (this.menuContainer) this.menuContainer.removeAll(true);
-      else this.menuContainer = this.add.container(0, 0);
-
-      const BTN_H  = 74;
-      const BTN_W  = PANEL_W - 30;
-      const BTN_X  = PANEL_CX;
-      const START_Y = 110;
-      const GAP    = 8;
-
-      CATEGORIES.forEach((cat, i) => {
-        const y = START_Y + i * (BTN_H + GAP) + BTN_H / 2;
-        const bg = this.add.rectangle(BTN_X, y, BTN_W, BTN_H, 0x2a1408, 0.88).setStrokeStyle(1.5, 0x7a4820).setInteractive({ useHandCursor: true });
-        bg.on('pointerover', () => { bg.setFillStyle(0x4a2810, 0.95); bg.setStrokeStyle(2, 0xffd700); });
-        bg.on('pointerout', () => { bg.setFillStyle(0x2a1408, 0.88); bg.setStrokeStyle(1.5, 0x7a4820); });
-        bg.on('pointerdown', () => this.openModal(cat.key));
-
-        const icon = this.add.text(PANEL_LEFT + PAD + 14, y, cat.icon, { fontSize: '26px', fontFamily: FF }).setOrigin(0.5);
-        const label = this.add.text(PANEL_LEFT + PAD + 36, y - 12, cat.label, { fontSize: '17px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 3 });
-        const desc = this.add.text(PANEL_LEFT + PAD + 36, y + 10, cat.desc, { fontSize: '12px', color: DIM, fontFamily: FF });
-        const arrow = this.add.text(PANEL_RIGHT - PAD - 6, y, '▶', { fontSize: '16px', color: '#7a4820', fontFamily: FF }).setOrigin(1, 0.5);
-        this.menuContainer.add([bg, icon, label, desc, arrow]);
-      });
-
-      this.menuContainer.setVisible(true);
-
-      const baseY = START_Y + CATEGORIES.length * (BTN_H + GAP) + 20;
-      const deckBtn = this.add.text(PANEL_CX, baseY, 'Open Deck Editor', { fontSize: '13px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF, stroke: '#000', strokeThickness: 2 }).setOrigin(0.5, 0).setInteractive({ useHandCursor: true });
-      deckBtn.on('pointerover', () => deckBtn.setColor(WHITE));
-      deckBtn.on('pointerout',  () => deckBtn.setColor('#aaddff'));
-      deckBtn.on('pointerdown', () => {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.SHOP });
-        this.events.once('resume', () => this.buildMenu());
-      });
-
-      const relicBtn = this.add.text(PANEL_CX, baseY + 25, 'Open Relics', { fontSize: '13px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF, stroke: '#000', strokeThickness: 2 }).setOrigin(0.5, 0).setInteractive({ useHandCursor: true });
-      relicBtn.on('pointerover', () => relicBtn.setColor(WHITE));
-      relicBtn.on('pointerout',  () => relicBtn.setColor('#aaddff'));
-      relicBtn.on('pointerdown', () => {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.RELIC_VIEWER, { parentScene: SCENE_KEYS.SHOP });
-        this.events.once('resume', () => this.buildMenu());
-      });
-      this.menuContainer.add([deckBtn, relicBtn]);
-    } catch (err) { console.error('[ShopScene] buildMenu failed:', err); }
-  }
-
-  private openModal(category: ShopCategory): void {
-    this.menuContainer.setVisible(false);
-    if (this.modalContainer) this.modalContainer.destroy(true);
-    this.modalContainer = this.add.container(0, 0);
-    this.modalContainer.add(this.add.rectangle(PANEL_CX, 300, PANEL_W, 600, 0x0a0400, 0.96).setStrokeStyle(2, 0x9a6030));
-
-    switch (category) {
-      case 'elements': this.modalElements(); break;
-      case 'remove': this.modalRemove(); break;
-      case 'relics': this.modalRelics(); break;
-    }
-
-    const back = this.add.text(PANEL_CX, 574, '← Back to Shop', { fontSize: '16px', fontStyle: 'bold', color: '#aaddff', fontFamily: FF, stroke: '#000', strokeThickness: 3 }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    back.on('pointerover', () => back.setColor(WHITE));
-    back.on('pointerout',  () => back.setColor('#aaddff'));
-    back.on('pointerdown', () => this.closeModal());
-    this.modalContainer.add(back);
-  }
-
-  private closeModal(): void {
-    if (this.modalContainer) { this.modalContainer.destroy(true); this.modalContainer = null as any; }
-    this.menuContainer.setVisible(true);
-    this.refreshBalances();
-    this.buildMenu();
-  }
-
-  private createShopModal<T>(opts: {
-    title: string; emptyMessage?: string; items: T[]; cols: number; cellW: number; cellH: number; gap?: number; startY?: number; maxRows?: number;
-    canAfford: (item: T, i: number) => boolean; onSelect: (item: T, i: number) => boolean; reopenKey: ShopCategory;
-    renderCell: (item: T, i: number, x: number, cy: number, ok: boolean, bg: Phaser.GameObjects.Rectangle) => void;
-  }): void {
-    const { title, emptyMessage, items, cols, cellW, cellH } = opts;
-    const gap = opts.gap ?? 6; const startY = opts.startY ?? 105; const maxRows = opts.maxRows ?? Infinity;
-    this.modalTitle(title);
-    if (items.length === 0 && emptyMessage) { this.modalEmpty(emptyMessage); return; }
-    items.forEach((item, i) => {
-      const row = Math.floor(i / cols); if (row >= maxRows) return;
-      const x = colX(i % cols, cols, cellW, gap); const cy = startY + row * (cellH + gap) + cellH / 2;
-      const ok = opts.canAfford(item, i);
-      const bg = cardSlot(this, x, cy, cellW, cellH, ok, () => {
-        if (opts.onSelect(item, i)) { AudioManager.playSFX(this, 'sfx_cashing', 0.6); this.closeModal(); this.openModal(opts.reopenKey); }
-      });
-      this.modalContainer.add(bg); opts.renderCell(item, i, x, cy, ok, bg);
-    });
-  }
-
-  /**
-   * Trade Elements modal — flat per-element rate (no inventory limits, no
-   * loop scaling). Sell 1 element for ELEMENT_SELL_PRICE gold, buy 1 element
-   * for ELEMENT_BUY_PRICE gold. Eight elements rendered as 4×2 cells.
-   */
-  private modalElements(): void {
-    this.modalTitle(`🔮 Trade Elements (sell ${ELEMENT_SELL_PRICE}g · buy ${ELEMENT_BUY_PRICE}g)`);
-
-    const run = getRun();
-    const elementInv = (run.economy.elements ?? (run.economy.elements = {})) as Record<ElementId, number>;
-
-    const startY = 110;
-    const cellW = 210;
-    const cellH = 84;
-    const colGap = 8;
-    const rowGap = 8;
-    const cols = 2;
-
-    ALL_ELEMENT_IDS.forEach((id, idx) => {
-      const col = idx % cols;
-      const row = Math.floor(idx / cols);
-      const x = colX(col, cols, cellW, colGap);
-      const y = startY + row * (cellH + rowGap) + cellH / 2;
-      const elem = ELEMENTS[id];
-      const elemColor = parseInt(elem.color.replace('#', ''), 16);
-
-      this.modalContainer.add(
-        this.add.rectangle(x, y, cellW, cellH, elemColor, 0.18)
-          .setStrokeStyle(1.5, elemColor, 0.85),
-      );
-
-      this.modalContainer.add(this.add.text(x - cellW / 2 + 10, y - cellH / 2 + 8, elem.name, {
-        fontSize: '15px', fontStyle: 'bold', color: WHITE, fontFamily: FF,
-      }));
-
-      const owned = elementInv[id] ?? 0;
-      const ownedText = this.add.text(x + cellW / 2 - 10, y - cellH / 2 + 8, `x${owned}`, {
-        fontSize: '15px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-      }).setOrigin(1, 0);
-      this.modalContainer.add(ownedText);
-
-      const canSell = owned > 0;
-      const sellBtn = this.add.rectangle(x - cellW / 4, y + 14, cellW / 2 - 14, 30, canSell ? 0x3a5028 : 0x1f1f1f, 0.92)
-        .setStrokeStyle(1.5, canSell ? 0x88dd66 : 0x444444);
-      const sellLabel = this.add.text(x - cellW / 4, y + 14, `Sell  +${ELEMENT_SELL_PRICE}g`, {
-        fontSize: '13px', fontStyle: 'bold', color: canSell ? '#aaffaa' : DIM, fontFamily: FF,
-      }).setOrigin(0.5);
-      if (canSell) {
-        sellBtn.setInteractive({ useHandCursor: true });
-        sellBtn.on('pointerover', () => sellBtn.setFillStyle(0x4c6a32, 0.98));
-        sellBtn.on('pointerout',  () => sellBtn.setFillStyle(0x3a5028, 0.92));
-        sellBtn.on('pointerdown', () => {
-          elementInv[id] = (elementInv[id] ?? 0) - 1;
-          run.economy.gold += ELEMENT_SELL_PRICE;
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('elements');
-        });
-      }
-      this.modalContainer.add([sellBtn, sellLabel]);
-
-      const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE;
-      const buyBtn = this.add.rectangle(x + cellW / 4, y + 14, cellW / 2 - 14, 30, canBuy ? 0x4a2810 : 0x1f1f1f, 0.92)
-        .setStrokeStyle(1.5, canBuy ? 0xffaa44 : 0x444444);
-      const buyLabel = this.add.text(x + cellW / 4, y + 14, `Buy  −${ELEMENT_BUY_PRICE}g`, {
-        fontSize: '13px', fontStyle: 'bold', color: canBuy ? GOLD : DIM, fontFamily: FF,
-      }).setOrigin(0.5);
-      if (canBuy) {
-        buyBtn.setInteractive({ useHandCursor: true });
-        buyBtn.on('pointerover', () => buyBtn.setFillStyle(0x6c3e1a, 0.98));
-        buyBtn.on('pointerout',  () => buyBtn.setFillStyle(0x4a2810, 0.92));
-        buyBtn.on('pointerdown', () => {
-          run.economy.gold -= ELEMENT_BUY_PRICE;
-          elementInv[id] = (elementInv[id] ?? 0) + 1;
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          this.closeModal(); this.openModal('elements');
-        });
-      }
-      this.modalContainer.add([buyBtn, buyLabel]);
-    });
-  }
-
-  private modalRemove(): void {
-    const run = getRun(); const count = run.economy.removalsThisShop ?? 0; const cost = ShopSystem.getRemoveCardCost(count);
-    this.createShopModal({
-      title: `🗑 Remove Cards (${cost} Gold)`, items: run.deck.active, cols: 4, cellW: 95, cellH: 140, maxRows: 4, reopenKey: 'remove',
-      canAfford: () => run.economy.gold >= cost && run.deck.active.length > 3,
-      onSelect: (_, i) => { if (ShopSystem.removeCard(run, i, count)) { run.economy.removalsThisShop = count + 1; return true; } return false; },
-      renderCell: (id, _i, x, cy, ok, bg) => {
-        if (ok) bg.setStrokeStyle(2, 0xaa3322);
-        const v = createCardVisual(this, x, cy - 8, id, { scale: 0.45 });
-        v.disableInteractive();
-        if (!ok) v.setAlpha(0.5);
-        this.modalContainer.add(v);
-      }
-    });
-  }
-
-  private modalRelics(): void {
-    const run = getRun();
-    if (!this.cachedRelicRoll) {
-      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
-    }
-    const relics = this.cachedRelicRoll;
-    // Resolve the active deck once so the per-relic synergy check doesn't
-    // re-hydrate cards inside the renderCell loop.
-    const deckCards: CardDefinition[] = [];
-    for (const id of run.deck.active) {
-      const c = getCardById(id);
-      if (c) deckCards.push(c);
-    }
-    this.createShopModal({
-      title: '💎 Buy Relics', emptyMessage: 'Out of stock.', items: relics, cols: 2, cellW: 202, cellH: 76, reopenKey: 'relics',
-      canAfford: (r) => run.economy.gold >= r.price, onSelect: (r) => ShopSystem.buyRelic(run, r.relicId, r.price),
-      renderCell: (r, _i, x, cy, ok, bg) => {
-        const d = getRelicById(r.relicId);
-        const synergizes = ok && !!d?.description && relicSynergizesWithDeck(d.description, deckCards);
-        if (synergizes) {
-          bg.setStrokeStyle(2, 0xffd700, 0.85);
-        } else {
-          bg.setStrokeStyle(1.5, ok ? 0xbb8800 : 0x4a3020);
-        }
-        const img = this.add.image(x - 65, cy, `relic_${r.relicId}`).setDisplaySize(48, 48); if (!ok) img.setTint(0x555555);
-        const n = this.add.text(x + 15, cy - 20, d?.name ?? r.name, { fontSize: '14px', fontStyle: 'bold', color: ok ? GOLD : DIM, fontFamily: FF, stroke: '#000', strokeThickness: 2 }).setOrigin(0.5);
-        const ds = this.add.text(x + 15, cy + 2, d?.description ?? '...', { fontSize: '10px', color: ok ? CYAN : DIM, fontFamily: FF, wordWrap: { width: 126 }, align: 'center' }).setOrigin(0.5);
-        const p = this.add.text(x + 15, cy + 24, `${r.price} Gold`, { fontSize: '13px', fontStyle: 'bold', color: ok ? GOLD : RED, fontFamily: FF }).setOrigin(0.5);
-        this.modalContainer.add([img, n, ds, p]);
-      }
-    });
-  }
-
-  private modalTitle(text: string): void {
-    const bar = this.add.rectangle(PANEL_CX, 60, PANEL_W - 12, 38, 0x3a2008, 0.9).setStrokeStyle(1.5, 0x9a6030);
-    const t = this.add.text(PANEL_CX, 60, text, { fontSize: '18px', fontStyle: 'bold', color: GOLD, fontFamily: FF, stroke: '#000', strokeThickness: 3 }).setOrigin(0.5).setShadow(1, 1, '#000', 2, true, true);
-    const div = this.add.rectangle(PANEL_CX, 82, PANEL_W - 12, 1, 0x9a6030, 0.5);
-    this.modalContainer.add([bar, t, div]);
-  }
-
-  private modalEmpty(msg: string): void {
-    const t = this.add.text(PANEL_CX, 280, msg, { fontSize: '15px', color: DIM, fontFamily: FF, align: 'center' }).setOrigin(0.5);
-    this.modalContainer.add(t);
-  }
-
-  private refreshBalances(): void {
-    const run = getRun(); this.goldText.setText(`♦ ${run.economy.gold} Gold`); this.tpText.setText(`${run.economy.tilePoints} TP`);
-  }
-
   private close(): void {
-    // Wake/resume whichever scene launched us. PlanningOverlay sleeps before
-    // launching the shop; GameScene pauses. Use isSleeping vs. isPaused to
-    // pick the right method.
     const parent = this.parentSceneKey;
     const isSleeping = this.scene.isSleeping(parent);
     this.scene.stop();
@@ -417,14 +608,7 @@ export class ShopScene extends Scene {
   }
 
   private cleanup(): void {
-    if (this.menuContainer) {
-      this.menuContainer.destroy(true);
-      this.menuContainer = null as any;
-    }
-    if (this.modalContainer) {
-      this.modalContainer.destroy(true);
-      this.modalContainer = null as any;
-    }
+    if (this.tooltipLayer) { this.tooltipLayer.destroy(true); this.tooltipLayer = null as any; }
+    if (this.mainLayer)    { this.mainLayer.destroy(true);    this.mainLayer = null as any; }
   }
 }
-

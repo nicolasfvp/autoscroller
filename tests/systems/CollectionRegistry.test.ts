@@ -46,16 +46,19 @@ describe('CollectionRegistry', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
       // enemies.json bosses: doom_knight, iron_golem, lizard_king,
-      // boss_demon, boss_berserker, boss_mage, boss_hydra
+      // bog_witch, desert_golem, infernal_dragon, boss_iron_golem
       expect(status.bosses.total).toBe(7);
     });
 
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      // 5 base (basic/forest/event/treasure/boss) + 4 unlockable (graveyard/swamp/desert/lava)
-      expect(status.tiles.total).toBe(9);
-      expect(status.tiles.unlocked).toBe(5); // only base tiles
+      // 5 base (basic/forest/event/treasure/boss) + 4 unlockable
+      // (graveyard/swamp/desert/lava) + 8 subtiles (ambush/bleedtotem/...)
+      expect(status.tiles.total).toBe(17);
+      // Subtiles are always-unlocked (world-gen seeds them, not the player),
+      // so the unlocked count is 5 base + 8 subtiles = 13.
+      expect(status.tiles.unlocked).toBe(13);
     });
   });
 

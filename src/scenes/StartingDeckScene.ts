@@ -11,6 +11,7 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
 import { createCardVisual, STANDARD_CARD_WIDTH } from '../ui/CardVisual';
+import { disableCardFaceInput } from '../ui/CardFace';
 import { getTemplatesForClass, type DeckTemplate } from '../data/DeckTemplates';
 
 const FF = FONTS.family;
@@ -132,10 +133,7 @@ export class StartingDeckScene extends Scene {
         const cx = miniStartX + idx * (MINI_W + MINI_GAP) + MINI_W / 2;
         const cy = ROW_H / 2;
         const visual = createCardVisual(this, cx, cy, cardId, { scale: MINI_SCALE });
-        visual.removeAllListeners('pointerdown');
-        visual.removeAllListeners('pointerover');
-        visual.removeAllListeners('pointerout');
-        visual.disableInteractive();
+        disableCardFaceInput(visual);
         container.add(visual);
       });
 

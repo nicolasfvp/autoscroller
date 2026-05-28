@@ -153,6 +153,9 @@ export class PlanningOverlay extends Scene {
     startBtn.on('pointerout',  () => startBtn.clearTint());
 
     const startLoop = () => {
+      // Tutorial: 'boss-preview' is the last planning-phase step — Start
+      // Loop completes it and hands control to GameScene for the wrap-up.
+      tutorialDirector.advanceIfMatches('boss-preview');
       // Sync spent TP/gold back to RunState before resuming GameScene, so
       // the resume handler doesn't refund the just-spent points by copying
       // a stale RunState.economy back into loopRunState.
@@ -240,11 +243,12 @@ export class PlanningOverlay extends Scene {
       overlay.setStepRect('place-subtile', {
         x: 20, y: 150, width: 760, height: 330,
       });
-      // forge-intro: spotlight the Forge button at the bottom-right.
+      // forge-intro: spotlight the Forge button — now in the top-left
+      // 4-icon row (Deck/Relic/Shop/Forge), not the bottom edge.
       overlay.setStepRect('forge-intro', {
-        x: 600, y: 525, width: 130, height: 50,
+        x: 192, y: 38, width: 36, height: 56,
       });
-      // boss-preview: spotlight the Start Loop button. It's centered.
+      // boss-preview: spotlight the Start Loop image button at the bottom.
       overlay.setStepRect('boss-preview', {
         x: 320, y: 520, width: 180, height: 55,
       });
@@ -403,11 +407,22 @@ export class PlanningOverlay extends Scene {
 
     if (!this.selectedTileKey) return;
 
-    const success = this.loopRunner.placeTile(slotIndex, this.selectedTileKey);
+    const placedKey = this.selectedTileKey;
+    const success = this.loopRunner.placeTile(slotIndex, placedKey);
     if (success) {
+      const placedConfig = getTileConfig(placedKey);
+      // Tutorial advances are type-gated so the player can't shortcut the
+      // sequence by, say, placing a treasure tile when we asked for combat:
+      //   - 'place-tile'    → only fires on a combat tile (type='terrain')
+      //   - 'place-subtile' → only fires on a subtile
+      if (placedConfig.type === 'terrain') {
+        tutorialDirector.advanceIfMatches('place-tile');
+      } else if (placedConfig.type === 'subtile') {
+        tutorialDirector.advanceIfMatches('place-subtile');
+      }
       // Deduct tile points if purchasing (not from inventory)
-      const config = getTileConfig(this.selectedTileKey);
-      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === this.selectedTileKey);
+      const config = placedConfig;
+      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === placedKey);
       if (invEntry && invEntry.count > 0) {
         invEntry.count--;
       } else {
@@ -896,13 +911,14 @@ export class PlanningOverlay extends Scene {
       fontSize: '12px',
       color: '#ffffff',
       fontFamily,
-      wordWrap: { width: 200 },
+      wordWrap: { width: 220 },
       align: 'center',
     }).setOrigin(0.5);
-    const pad = 24;
+    const pad = 8;
     const w = label.width + pad * 2;
     const h = label.height + pad * 2;
-    const bg = this.add.image(0, 0, 'panel_hover').setDisplaySize(w, h);
+    const bg = this.add.rectangle(0, 0, w, h, 0x101010, 0.92)
+      .setStrokeStyle(1, 0xffd700, 0.9);
     // Anchor above the frame; if it would clip the top of the screen,
     // flip below.
     let cy = anchorY - 44;
@@ -1146,6 +1162,10 @@ export class PlanningOverlay extends Scene {
   private buildShopForgeButtons(_fontFamily: string): void { /* no-op */ }
 
   private openSubScene(sceneKey: string): void {
+    // Tutorial: opening the Forge from planning completes 'forge-intro'.
+    if (sceneKey === SCENE_KEYS.FORGE) {
+      tutorialDirector.advanceIfMatches('forge-intro');
+    }
     // Sync TP/gold back to RunState so the sub-scene sees the up-to-date
     // economy (planning may have spent TP placing tiles).
     const run = getRun();

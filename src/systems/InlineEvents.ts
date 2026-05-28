@@ -14,8 +14,6 @@ interface EventResult {
   combatEnemyId?: string;
   /** Temporary speed debuff duration in ms (applied by GameScene) */
   slowDurationMs?: number;
-  /** Marks a "meme" / cosmetic-only outcome — GameScene plays the gag overlay. */
-  memeKey?: string;
 }
 
 interface EventOption {
@@ -153,16 +151,6 @@ const EVENT_TABLE: EventOption[] = [
       run.hero.currentHP = run.hero.maxHP;
       return {
         notifications: [{ label: `Wandering Healer! +${heal} HP (full restore)`, color: '#aaffaa' }],
-      };
-    },
-  },
-  // ── Meme: OIIAOIIA spinning cat (ultra rare, cosmetic only)
-  {
-    weight: 1,
-    apply() {
-      return {
-        notifications: [{ label: 'oiiaoiiaoiiaoiiaoiia', color: '#ff66ff' }],
-        memeKey: 'oiiaoiia',
       };
     },
   },

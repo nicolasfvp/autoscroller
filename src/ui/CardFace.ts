@@ -11,7 +11,7 @@
 
 import { getCardById } from '../data/DataLoader';
 import { getMetaStateSync } from '../systems/MetaPersistence';
-import { ELEMENTS, type ElementId } from '../systems/ElementSystem';
+import { ELEMENTS, resolveIconKey, type ElementId } from '../systems/ElementSystem';
 import { formatCardDescription } from '../systems/cards/CardText';
 import { getTokenStyle, renderTokenText } from './IconTokens';
 import { getRun } from '../state/RunState';
@@ -91,6 +91,19 @@ export interface CardFaceOptions {
 }
 
 interface SlotBox { x: number; y: number; w: number; h: number; cx: number; cy: number }
+
+/**
+ * Disable click/hover input on a card visual produced by createCardFace.
+ * Clears pointer listeners (popup, hover) and removes interactivity.
+ */
+export function disableCardFaceInput(visual: Phaser.GameObjects.Container): void {
+  visual.removeAllListeners('pointerdown');
+  visual.removeAllListeners('pointerup');
+  visual.removeAllListeners('pointerover');
+  visual.removeAllListeners('pointerout');
+  visual.removeAllListeners('pointermove');
+  if (visual.input) visual.disableInteractive();
+}
 
 /**
  * Render a card face as a Phaser Container at the given world position.
@@ -176,20 +189,30 @@ export function createCardFace(
   drawPrimaryCost(scene, container, card, isUpgraded, primarySlot);
   drawSecondaryCosts(scene, container, card, isUpgraded, secondarySlot);
   drawCooldown(scene, container, card, isUpgraded, cooldownSlot);
+  // Cover-fit center crop for every size. The small in-hand slot is nearly
+  // 1:1 so the square source is shown almost in full; the wider popup slot
+  // crops top/bottom to fill horizontally (action stays in view because all
+  // generated art is composed with the action dead-center).
   drawArt(scene, container, card, artSlot);
   drawName(scene, container, card, isUpgraded, nameSlot);
   drawElements(scene, container, card, elemSlot);
   if (descSlot) drawDescription(scene, container, card, isUpgraded, descSlot, finalScale);
 
   // ─── 3. Interactivity ────────────────────────────────────────────────────
-  // Container children are centered on (0, 0), so the hit area must be too.
-  // The default `setInteractive()` on a sized Container builds a Rectangle at
-  // (0, 0, w, h) — that only covers the bottom-right quadrant of the card and
-  // leaves the top-left 75% unresponsive.
+  // Container is sized w × h with hard-coded originX/Y = 0.5 (see Phaser's
+  // Container source). At hit-test time Phaser computes the pointer's
+  // container-local position via the inverse transform and then NORMALIZES
+  // it by adding (displayOriginX, displayOriginY) = (w/2, h/2). So a pointer
+  // sitting on the visible center of the card maps to (w/2, h/2) in the
+  // coordinate space the hit area is tested in — not (0, 0).
+  //
+  // The hit area Rectangle must therefore be (0, 0, w, h), NOT centered.
+  // The previous (-w/2, -h/2, w, h) form caught only the top-left quadrant
+  // because after the origin-shift its valid range was (0, 0) ↔ (w/2, h/2).
   container.setSize(w, h);
   if (options.onClick !== undefined || options.hover !== false) {
     container.setInteractive({
-      hitArea: new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h),
+      hitArea: new Phaser.Geom.Rectangle(0, 0, w, h),
       hitAreaCallback: Phaser.Geom.Rectangle.Contains,
       cursor: 'pointer',
     });
@@ -415,6 +438,7 @@ function drawArt(
   parent: Phaser.GameObjects.Container,
   card: CardDefinition,
   slot: SlotBox,
+  fitMode: 'cover' | 'contain' = 'cover',
 ): void {
   const key = `card_${card.id}`;
   if (!scene.textures.exists(key)) {
@@ -433,24 +457,35 @@ function drawArt(
   const slotW = Math.max(1, slot.w - 4);
   const slotH = Math.max(1, slot.h - 4);
 
-  // Cover-fit: crop the source so its aspect matches the slot, then scale up
-  // to fill. Action is always dead-center in generated art so centering is safe.
-  const imageAspect = sw / sh;
-  const slotAspect  = slotW / slotH;
-  let cropW: number, cropH: number, cropX: number, cropY: number;
-  if (slotAspect >= imageAspect) {
-    cropW = sw;
-    cropH = sw / slotAspect;
-    cropX = 0;
-    cropY = (sh - cropH) / 2;
+  if (fitMode === 'cover') {
+    // Pick a centered crop region of the source texture whose aspect matches
+    // the slot, then scale the cropped rect up to fill the slot. setCrop
+    // operates on source-texture pixels; scaleX/scaleY then map cropW/cropH
+    // onto slotW/slotH so the displayed result is exactly slot-sized with
+    // the action centered (action is dead-center in every generated PNG).
+    const imageAspect = sw / sh;
+    const slotAspect = slotW / slotH;
+    let cropW: number, cropH: number, cropX: number, cropY: number;
+    if (slotAspect >= imageAspect) {
+      cropW = sw;
+      cropH = sw / slotAspect;
+      cropX = 0;
+      cropY = (sh - cropH) / 2;
+    } else {
+      cropH = sh;
+      cropW = sh * slotAspect;
+      cropY = 0;
+      cropX = (sw - cropW) / 2;
+    }
+    img.setCrop(cropX, cropY, cropW, cropH);
+    img.setScale(slotW / cropW, slotH / cropH);
   } else {
-    cropH = sh;
-    cropW = sh * slotAspect;
-    cropY = 0;
-    cropX = (sw - cropW) / 2;
+    // Contain-fit: full image visible. Letterboxing falls onto the slot's
+    // ART_BG (already dark) so the bars read as part of the frame.
+    const scale = Math.min(slotW / sw, slotH / sh);
+    img.setScale(scale);
   }
-  img.setCrop(cropX, cropY, cropW, cropH);
-  img.setScale(slotW / cropW, slotH / cropH);
+
   parent.add(img);
 }
 
@@ -490,11 +525,8 @@ function drawElements(
   const totalW = elems.length * elemSize + (elems.length - 1) * gap;
   let cx = slot.cx - totalW / 2 + elemSize / 2;
   for (const e of elems) {
-    const spriteKey = scene.textures.exists(`icon_${e}`)
-      ? `icon_${e}`
-      : scene.textures.exists(`elem_${e}`)
-        ? `elem_${e}`
-        : null;
+    const spriteKey = resolveIconKey(scene.textures, e)
+      ?? (scene.textures.exists(`elem_${e}`) ? `elem_${e}` : null);
     if (spriteKey) {
       const img = scene.add.image(cx, slot.cy, spriteKey);
       img.setDisplaySize(elemSize, elemSize);
@@ -578,8 +610,8 @@ function drawCostCell(
   const color = style?.color ?? '#ffffff';
   const fallbackLabel = style?.label ?? token.toUpperCase();
 
-  const spriteKey = `icon_${token}`;
-  if (scene.textures.exists(spriteKey)) {
+  const spriteKey = resolveIconKey(scene.textures, token);
+  if (spriteKey) {
     const img = scene.add.image(slot.cx, slot.cy, spriteKey);
     img.setDisplaySize(iconSize, iconSize);
     parent.add(img);
