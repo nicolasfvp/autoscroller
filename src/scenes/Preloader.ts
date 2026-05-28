@@ -85,21 +85,18 @@ export class Preloader extends Scene {
       { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
       { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
       { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
-      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
-      // Default-terrain enemies (single-frame portraits)
-      { id: 'doom_knight',          folder: 'default',  file: 'doom knight.png' },
-      { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
-      { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
+      { id: 'zombie',               folder: 'a melhorar', file: 'zombie.png' },
       // Desert
       { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png',          hasFrame2: true },
       { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated salamander_1.png',   hasFrame2: true },
       { id: 'scorpion',             folder: 'desert',   file: 'scorpion_1.png',             hasFrame2: true },
-      // Forest
+      // Forest — giant_spider / giant_spider_2 / mush / ogre removed: files no
+      // longer exist at forest/; surviving art moved to 'a melhorar/' pending
+      // sprite regeneration. doom_knight / iron_golem / lizard_king removed:
+      // default/ folder deleted in PR #12; enemies removed from enemies.json.
       { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree_1.png',         hasFrame2: true },
-      { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
-      { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
-      { id: 'mush',                 folder: 'forest',   file: 'mush.png' },
-      { id: 'ogre',                 folder: 'forest',   file: 'ogre.png' },
+      { id: 'mush',                 folder: 'a melhorar', file: 'mush.png' },
+      { id: 'ogre',                 folder: 'a melhorar', file: 'ogre.png' },
       // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
       // spellings used in enemies.json; the disk files now use underscored
       // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.

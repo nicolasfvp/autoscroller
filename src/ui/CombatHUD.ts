@@ -112,8 +112,8 @@ export class CombatHUD {
     panelBg.setStrokeStyle(1.5, 0x2a2a4a);
     this.container.add(panelBg);
 
-    // Blue accent strip at top
-    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 3, LP.w - 4, 4, 0x4488ff, 0.9));
+    // Amber accent strip at top — matches wood/gold palette used across the game
+    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 3, LP.w - 4, 4, 0xd4a04a, 0.9));
 
     const lblX     = LP.x + 10;
     const barX     = LP.x + 10 + LBL_W;

@@ -91,6 +91,7 @@ export class SettingsScene extends Scene {
     this.createAutoSaveToggle();
     this.createGraphicsQualityToggle();
     this.createDeleteRunButton();
+    this.createDangerZoneSeparator();
     this.createResetAllButton();
     this.createBackButton();
 
@@ -239,6 +240,14 @@ export class SettingsScene extends Scene {
       );
     }, 'secondary');
     btn.setColor(COLORS.danger);
+  }
+
+  // ── Danger Zone separator ─────────────────────────────
+  private createDangerZoneSeparator(): void {
+    this.add.rectangle(LAYOUT.centerX, 448, 360, 1, 0x4a3020, 0.6);
+    this.add.text(LAYOUT.centerX, 453, '⚠ Danger Zone', {
+      fontSize: '9px', color: '#664444', fontFamily: FONTS.family,
+    }).setOrigin(0.5, 0);
   }
 
   // ── Reset All Progress Button (y: 470) ─────────────────

@@ -14,6 +14,7 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { FONTS } from '../ui/StyleConstants';
+import { createWoodButton } from '../ui/WoodButton';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import {
@@ -129,15 +130,9 @@ export class ForgeScene extends Scene {
         this.drawBeams();
       });
 
-      // Leave Forge — top-left corner.
-      const leave = this.add.text(20, 30, '← Leave Forge', {
-        fontSize: '14px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-        stroke: '#000', strokeThickness: 3,
-      }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
-        .setShadow(1, 1, '#000', 3, true, true);
-      leave.on('pointerover', () => leave.setColor(WHITE));
-      leave.on('pointerout',  () => leave.setColor(GOLD));
-      leave.on('pointerdown', () => this.close());
+      // Leave Forge — top-left corner, WoodButton for consistency with other scenes.
+      createWoodButton(this, 85, 30, '← Leave', () => this.close(),
+        { width: 130, height: 36, fontSize: 14 });
 
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);

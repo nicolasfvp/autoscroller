@@ -47,6 +47,7 @@ export class CardLibraryScene extends Phaser.Scene {
   private upgradedIds: Set<string> = new Set();
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private wheelHandler: ((p: Phaser.Input.Pointer, go: unknown, dx: number, dy: number) => void) | null = null;
+  private detailContainer: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super(SCENE_KEYS.LIBRARY);
@@ -99,7 +100,19 @@ export class CardLibraryScene extends Phaser.Scene {
 
   // ── Lifecycle ─────────────────────────────────────────────
 
+  private showCardDetail(cardId: string): void {
+    if (this.detailContainer) this.detailContainer.destroy(true);
+    this.detailContainer = this.add.container(0, 0).setDepth(200);
+    const dim = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.80).setInteractive();
+    const card = createCardVisual(this, 400, 285, cardId, { scale: 1.2 });
+    const close = () => { this.detailContainer?.destroy(true); this.detailContainer = null; };
+    dim.on('pointerdown', close);
+    this.input.keyboard?.once('keydown-ESC', close);
+    this.detailContainer.add([dim, card]);
+  }
+
   private teardown(): void {
+    if (this.detailContainer) { this.detailContainer.destroy(true); this.detailContainer = null; }
     if (this.filterBar) {
       this.filterBar.destroy();
       this.filterBar = null;
@@ -201,6 +214,9 @@ export class CardLibraryScene extends Phaser.Scene {
           fontSize: '22px', fontFamily: FF, color: '#ffffff',
         }).setOrigin(0.5);
         container.add(lock);
+      } else {
+        visual.setInteractive({ useHandCursor: true });
+        visual.on('pointerdown', () => this.showCardDetail(card.id));
       }
     });
   }

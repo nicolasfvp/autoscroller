@@ -46,14 +46,16 @@ export class RelicViewerScene extends Scene {
     this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
 
     if (run.relics.length === 0) {
-      this.add.text(400, 300, 'No relics yet.\n\nFind them in treasure chests and events!', {
-        fontSize: '16px',
-        color: COLORS.textSecondary,
+      this.add.text(400, 280, 'No relics yet.\n\nFind them in the Shop and treasure events!', {
+        fontSize: '20px',
+        color: '#ffffff',
         fontFamily: FONTS.family,
         align: 'center',
-        stroke: '#000',
-        strokeThickness: 2,
+        stroke: '#000000',
+        strokeThickness: 3,
+        wordWrap: { width: 500 },
       }).setOrigin(0.5);
+      createButton(this, 400, 370, '→ Visit the Shop', () => this.close(), 'primary');
     } else {
       const COLS = 5;
       const START_X = 200;

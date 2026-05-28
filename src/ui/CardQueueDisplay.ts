@@ -4,6 +4,7 @@
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
+import { FONTS } from './StyleConstants';
 
 const VISIBLE_COUNT = 5;
 
@@ -30,6 +31,7 @@ export class CardQueueDisplay {
   private animatingPlay = false;
   private pendingState: { deck: string[]; pointer: number } | null = null;
   private readonly playTweens: Set<Phaser.Tweens.Tween> = new Set();
+  private playingLabel: Phaser.GameObjects.Text | null = null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -55,6 +57,7 @@ export class CardQueueDisplay {
     for (const c of this.cardContainers) c.destroy();
     this.cardContainers = [];
     if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
+    if (this.playingLabel) { this.playingLabel.destroy(); this.playingLabel = null; }
 
     const deck = this.currentDeckOrder;
     if (deck.length === 0) return;
@@ -62,10 +65,6 @@ export class CardQueueDisplay {
     for (let i = 0; i < VISIBLE_COUNT && i < deck.length; i++) {
       const cardId = deck[(this.currentPointer + i) % deck.length];
       const scale = this.getSlotScale(i);
-      // Build the card at unit scale (intrinsic size) and apply the slot
-      // scale via transform — this is what lets the slide tween animate
-      // scaleX/scaleY between slots. Building at a baked size leaves
-      // container.scaleX at 1.0, and the tween then shrinks it again.
       const cardVis = createCardVisual(this.scene, this.getSlotX(i), this.getSlotY(i), cardId);
       cardVis.setScale(scale);
       cardVis.setAlpha(this.getSlotAlpha(i));
@@ -78,6 +77,11 @@ export class CardQueueDisplay {
           scaleX: scale * 1.05, scaleY: scale * 1.05,
           duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
         });
+        this.playingLabel = this.scene.add.text(
+          SLOTS[0][0], SLOTS[0][1] - 52, '▶ PLAYING',
+          { fontSize: '11px', fontStyle: 'bold', color: '#ffd700',
+            stroke: '#000000', strokeThickness: 2, fontFamily: FONTS.family },
+        ).setOrigin(0.5).setDepth(55);
       }
     }
   }
@@ -175,6 +179,7 @@ export class CardQueueDisplay {
 
   destroy(): void {
     if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
+    if (this.playingLabel) { this.playingLabel.destroy(); this.playingLabel = null; }
     for (const tw of this.playTweens) tw.stop();
     this.playTweens.clear();
     for (const c of this.cardContainers) c.destroy();
