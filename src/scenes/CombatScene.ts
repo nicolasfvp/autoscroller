@@ -131,16 +131,46 @@ export class CombatScene extends Scene {
 
     // VICTORY uses the hand-crafted image asset; DEFEAT uses Phaser text until
     // a defeat_asset.png is created (see TEXT_ASSETS.md).
+    let shineGraphics: Phaser.GameObjects.Graphics | null = null;
+    let shineTween: Phaser.Tweens.Tween | null = null;
     const displayText: Phaser.GameObjects.GameObject = eventData.result === 'victory'
-      ? this.add.image(400, 300, 'text_victory').setScale(0.6).setDepth(600)
+      ? (() => {
+          const W = 580, H = 190;
+          const img = this.add.image(400, 290, 'text_victory').setDisplaySize(W, H).setDepth(600);
+
+          // Shine sweep: a semi-transparent white strip that slides left→right,
+          // clipped to the image bounds via a geometry mask.
+          const maskShape = this.make.graphics();
+          maskShape.fillStyle(0xffffff);
+          maskShape.fillRect(400 - W / 2, 290 - H / 2, W, H);
+
+          shineGraphics = this.add.graphics().setDepth(601).setBlendMode(Phaser.BlendModes.ADD);
+          shineGraphics.fillStyle(0xffffff, 0.35);
+          shineGraphics.fillRect(0, 290 - H / 2, 70, H);
+          shineGraphics.setMask(maskShape.createGeometryMask());
+          shineGraphics.x = -70;
+
+          shineTween = this.tweens.add({
+            targets: shineGraphics,
+            x: W + 70,
+            duration: 900,
+            ease: 'Sine.easeIn',
+            repeat: -1,
+            repeatDelay: 1200,
+          });
+
+          return img;
+        })()
       : this.add.text(400, 300, 'DEFEAT', {
           fontSize: '56px', fontFamily: FONTS.family, fontStyle: 'bold',
           color: COLORS.danger, stroke: '#000000', strokeThickness: 6,
           shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true },
         }).setOrigin(0.5).setDepth(600);
 
-    this.time.delayedCall(1000, () => {
+    this.time.delayedCall(2500, () => {
       if (displayText) displayText.destroy();
+      if (shineTween) { shineTween.stop(); shineTween = null; }
+      if (shineGraphics) { shineGraphics.destroy(); shineGraphics = null; }
       const enemyDef = getEnemyById(this.initData.enemyId);
       if (!enemyDef) return;
 
