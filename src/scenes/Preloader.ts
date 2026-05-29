@@ -226,6 +226,8 @@ export class Preloader extends Scene {
     this.load.image('btn_skip_25', 'assets/ui/buttons/25.png');
     this.load.image('shop_icon', 'assets/icons/shop.png');
     this.load.image('forge_icon', 'assets/icons/forge.png');
+    // Text assets — hand-crafted image replacements for Phaser text
+    this.load.image('text_victory', 'assets/ui/text/victory_asset.png');
 
     // Material Icons
     this.load.image('mat_iron', 'assets/icons/iron.png');

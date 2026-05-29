@@ -16,7 +16,7 @@ import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
 import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
-import { COLORS, LAYOUT } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { AudioManager } from '../systems/AudioManager';
@@ -129,12 +129,15 @@ export class CombatScene extends Scene {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
     }
 
-    const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
-    const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
-    const displayText = this.add.text(400, 300, resultText, {
-      fontSize: '56px', fontFamily: '"Impact", "Arial Black", sans-serif', fontStyle: 'bold',
-      color: resultColor, stroke: '#000000', strokeThickness: 6, shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true }
-    }).setOrigin(0.5).setDepth(600);
+    // VICTORY uses the hand-crafted image asset; DEFEAT uses Phaser text until
+    // a defeat_asset.png is created (see TEXT_ASSETS.md).
+    const displayText: Phaser.GameObjects.GameObject = eventData.result === 'victory'
+      ? this.add.image(400, 300, 'text_victory').setScale(0.6).setDepth(600)
+      : this.add.text(400, 300, 'DEFEAT', {
+          fontSize: '56px', fontFamily: FONTS.family, fontStyle: 'bold',
+          color: COLORS.danger, stroke: '#000000', strokeThickness: 6,
+          shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true },
+        }).setOrigin(0.5).setDepth(600);
 
     this.time.delayedCall(1000, () => {
       if (displayText) displayText.destroy();

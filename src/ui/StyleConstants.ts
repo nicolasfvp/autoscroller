@@ -14,7 +14,7 @@ export const COLORS = {
 } as const;
 
 export const FONTS = {
-  family: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+  family: '"Cinzel Decorative", "Cinzel", serif',
   title: { fontSize: '32px', fontStyle: 'bold' },
   heading: { fontSize: '24px', fontStyle: 'bold' },
   body: { fontSize: '16px' },
