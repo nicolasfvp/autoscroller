@@ -157,10 +157,10 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     scene: SCENE_KEYS.PLANNING,
     title: 'Forge a card.',
     body:
-      "Click the FORGE button (bottom right of the planning screen).\n\n" +
+      "Click the FORGE button (top-left icon row of the planning screen).\n\n" +
       "The forge turns elements you earn from combat into new cards. Two elements = a tier-2 card. Three = tier-3.",
     advance: 'event',
-    panelAnchor: 'top-fixed',
+    panelAnchor: 'bottom',
   },
   {
     id: 'forge-craft',
