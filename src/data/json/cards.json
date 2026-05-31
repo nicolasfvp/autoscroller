@@ -65,7 +65,7 @@
     {
       "id": "t1-agility",
       "name": "Quickstep",
-      "description": "Deal 4 twice.",
+      "description": "Deal 4. Deal 4.",
       "category": "attack",
       "tier": 1,
       "elements": [
@@ -147,7 +147,7 @@
     {
       "id": "t1-water",
       "name": "Mend",
-      "description": "Heal 6.",
+      "description": "Heal 9.",
       "category": "magic",
       "tier": 1,
       "elements": [
@@ -260,7 +260,7 @@
     {
       "id": "t2-defense-defense",
       "name": "Bulwark Vow",
-      "description": "Gain 7[armor]([vit]). Brace: gain 3[rage].",
+      "description": "Gain 7[armor]([vit]). Brace: Gain 3[rage].",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -336,7 +336,7 @@
     {
       "id": "t2-counter-counter",
       "name": "Razor Stance",
-      "description": "For 10 seconds: every time you hit an enemy, apply 1[bleed]([dex]). Vengeance — for 4 more seconds, that bleed becomes 2.",
+      "description": "For 10 seconds: every time you hit an enemy, apply 1[bleed]([dex]). Vengeance: For 4 seconds: every time you hit an enemy, apply 1[bleed]([dex]).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -394,7 +394,7 @@
     {
       "id": "t2-fire-fire",
       "name": "Pyre",
-      "description": "Deal 4([str]). Deal 3 per [burn] consumed. Apply 3[burn].",
+      "description": "Deal 4([str]). Deal 3 damage per [burn] on enemy. Apply 3[burn].",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -533,7 +533,7 @@
     {
       "id": "t2-earth-earth",
       "name": "Tremor Lock",
-      "description": "If enemy is [stun]: deal 5([int]). Then apply 1[stun]([int]) and 4[slow]([int]).",
+      "description": "If enemy is [stun]: deal 5([int]) more. Apply 1[stun]([int]). Apply 4[slow]([int]).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -616,7 +616,7 @@
     {
       "id": "t2-agility-counter",
       "name": "Sidestep & Slash",
-      "description": "Deal 5([dex]). Apply 2[bleed]. Gain 1[stam]. Vengeance: deal 3 more.",
+      "description": "Deal 5([dex]). Vengeance: deal 3 more. Apply 2[bleed]. Gain 1[stam].",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -664,7 +664,7 @@
     {
       "id": "t2-agility-defense",
       "name": "Parrying Stance",
-      "description": "Gain 5[armor]([dex]). Gain 1[stam]. Brace: deal 4.",
+      "description": "Gain 5[armor]([dex]). Gain 1[stam]. Brace: Deal 4.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -707,7 +707,7 @@
     {
       "id": "t2-agility-fire",
       "name": "Flame Dart",
-      "description": "Deal 5([dex]) to a random enemy. Apply 2[burn].",
+      "description": "Deal 5([dex]). Apply 2[burn].",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -742,7 +742,7 @@
     {
       "id": "t2-agility-water",
       "name": "Mist Step",
-      "description": "Heal 3([spi]). Gain 1[stam]. For 6 seconds: +1[dex]. Apply 1[slow].",
+      "description": "Heal 3([spi]). Gain 1[stam]. For 6 seconds: +1 [dex]. Apply 1[slow].",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -872,7 +872,7 @@
     {
       "id": "t2-attack-counter",
       "name": "Bloodprice Strike",
-      "description": "Lose 4[HP] (Pierce). Deal 12([str]). Gain 2[rage]([str]). Gain 1[stam].",
+      "description": "Lose 4[HP] (Pierce). Deal 12([str]). Gain 2([str])[rage]. Gain 1[stam].",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -953,7 +953,7 @@
     {
       "id": "t2-attack-fire",
       "name": "Kindle Strike",
-      "description": "Apply 3[burn]([int]). If enemy has [bleed], apply again.",
+      "description": "Apply 3[burn]([int]). If enemy has [bleed]: Apply 3[burn]([int]).",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -997,7 +997,7 @@
     {
       "id": "t2-attack-water",
       "name": "Crimson Tithe",
-      "description": "Lose 5[HP]. Gain 1[stam] and 1[mana]([spi]). For 6 seconds: every time you lose [HP], gain 1[rage].",
+      "description": "Lose 5[HP] (Pierce). Gain 1[stam]([spi]). Gain 1[mana]([spi]). For 6 seconds: every time you lose [HP], gain 1[rage].",
       "category": "attack",
       "tier": 2,
       "elements": [
@@ -1174,7 +1174,7 @@
     {
       "id": "t2-counter-fire",
       "name": "Cinderscar",
-      "description": "Apply 2[burn]([int]). Vengeance: apply 1[bleed] for each [burn] on enemy.",
+      "description": "Apply 2[burn]([int]). Vengeance: Apply 1[bleed] for each [burn] on enemy.",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -1257,7 +1257,7 @@
     {
       "id": "t2-air-counter",
       "name": "Hollow Echo",
-      "description": "Deal 5([str]). Haste 15% for 4 seconds. Vengeance: deal 3 more.",
+      "description": "Deal 5([str]). Vengeance: deal 3 more. Haste 15% for 4 seconds.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1301,7 +1301,7 @@
     {
       "id": "t2-counter-earth",
       "name": "Thornwall",
-      "description": "Gain 8[armor]([vit]). Deal 5. Brace: deal 6.",
+      "description": "Gain 8[armor]([vit]). Deal 5. Brace: Deal 6.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1396,7 +1396,7 @@
     {
       "id": "t2-defense-water",
       "name": "Vow of the Tide",
-      "description": "Gain 5[armor]([vit]). Heal 3. Gain 1[stam]. For 6 seconds: +1[spi].",
+      "description": "Gain 5[armor]([vit]). Heal 3. Gain 1[stam]. For 6 seconds: +1 [spi].",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1481,7 +1481,7 @@
     {
       "id": "t2-defense-earth",
       "name": "Bramble Bulwark",
-      "description": "Gain 8[armor]([vit]). If [armor] is at least 10: deal 6 Pierce.",
+      "description": "Gain 8[armor]([vit]). If [armor] is at least 10: deal 6 more Pierce.",
       "category": "defense",
       "tier": 2,
       "elements": [
@@ -1566,7 +1566,7 @@
     {
       "id": "t2-air-fire",
       "name": "Firestorm",
-      "description": "For 4 seconds: if you play 3 or more cards, apply 10([int])[burn].",
+      "description": "For 4 seconds: if you play 3 or more cards, apply 10[burn]([int]).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -1606,7 +1606,7 @@
     {
       "id": "t2-earth-fire",
       "name": "Magma Vein",
-      "description": "Gain 7[armor]. Deal 8([str]). Apply 2[burn].",
+      "description": "Gain 7[armor]. Deal 6([str]). Apply 2[burn].",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -1646,7 +1646,7 @@
     {
       "id": "t2-air-water",
       "name": "Misting Veil",
-      "description": "Heal 3([spi]). Haste 15% for 5 seconds. For 6 seconds: +1[int]. Gain 1[mana].",
+      "description": "Heal 3([spi]). Haste 15% for 5 seconds. For 6 seconds: +1 [int]. Gain 1[mana].",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -1760,7 +1760,7 @@
     {
       "id": "t2-air-earth",
       "name": "Bedrock Snare",
-      "description": "If enemy is [stun]: deal 4([str]). If enemy has at least 4[slow]: apply 1[stun]([int]). Apply 2[slow]([int]).",
+      "description": "If enemy is [stun]: deal 4([str]) more. If enemy has at least 4[slow]: apply 1 more [stun]([int]). Apply 2[slow]([int]).",
       "category": "magic",
       "tier": 2,
       "elements": [
@@ -1857,7 +1857,7 @@
     {
       "id": "t3-defense-defense-defense",
       "name": "Aegis of Returning Wrath",
-      "description": "Gain 22[armor]([vit]). Brace: deal 18 Pierce.",
+      "description": "Gain 22[armor]([vit]). Brace: Deal 18 Pierce.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -1941,7 +1941,7 @@
     {
       "id": "t3-counter-counter-counter",
       "name": "Crimson Spiral",
-      "description": "Deal 2([str]) Pierce per [rage] consumed. Apply 1[bleed]([dex]) per [rage] consumed.",
+      "description": "Deal 2 Pierce per [rage] consumed. Apply 1[bleed]([dex]) for each [rage] on yourself.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -1990,7 +1990,7 @@
     {
       "id": "t3-attack-attack-defense",
       "name": "Bulwark Salvo",
-      "description": "Deal 6 twice, +1 damage per 2[armor] you have. Armor is not consumed.",
+      "description": "Deal 6 twice, +1([str]) damage per 2[armor] you have.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2053,7 +2053,7 @@
     {
       "id": "t3-attack-attack-counter",
       "name": "Bloodlash Salvo",
-      "description": "Exhaust. Apply 2([str])[stun] to yourself. Gain 4[str] this combat.",
+      "description": "Exhaust. Apply 2[stun]([str]) to yourself. Gain 4[str] this combat (max 4 per combat).",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2092,7 +2092,7 @@
     {
       "id": "t3-attack-defense-defense",
       "name": "Body Slam Vow",
-      "description": "Deal 2 Pierce + 1 Pierce per [armor] you have. Gain 6[armor].",
+      "description": "Deal 2 Pierce, +1([vit]) damage per 1[armor] you have. Gain 6[armor]([vit]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -2134,7 +2134,7 @@
     {
       "id": "t3-agility-defense-defense",
       "name": "Phalanx Drift",
-      "description": "Gain 22[armor]([vit]). Haste 10% for 8 seconds. Brace: deal 10.",
+      "description": "Gain 22[armor]([vit]). Haste 10% for 8 seconds. Brace: Deal 10.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -2351,7 +2351,7 @@
     {
       "id": "t3-attack-counter-counter",
       "name": "Cleaver's Tax",
-      "description": "Deal 12([str]) Pierce. If you have at least 5[rage]: consume 5[rage], deal 20([str]) more Pierce, and this card delays 4 more seconds next time.",
+      "description": "Deal 12([str]) Pierce. If you have at least 5[rage]: deal 20([str]) more Pierce and this card delays 4 more seconds next time.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2458,7 +2458,7 @@
     {
       "id": "t3-agility-counter-counter",
       "name": "Razor Cadence",
-      "description": "Deal 5([dex]) three times; each hit applies 1[bleed]([dex]). Vengeance: deal 5([dex]) a fourth time and apply 1[bleed]([dex]).",
+      "description": "Deal 5([dex]) three times. Each hit applies 1[bleed]([dex]). Vengeance: deal 5([dex]) more and apply 1 more [bleed]([dex]).",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2573,7 +2573,7 @@
     {
       "id": "t3-attack-counter-defense",
       "name": "Last Stand Bulwark",
-      "description": "Gain 10[armor]([vit]). If you have less than 50%[HP]: gain 10 more [armor]([vit]) and deal 12([str]) Pierce.",
+      "description": "Gain 10[armor]([vit]). If you have less than 50%[HP]: gain 10 more [armor]([vit]) and deal 12([str]) more Pierce.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2630,7 +2630,7 @@
     {
       "id": "t3-agility-attack-counter",
       "name": "Vein Splitter",
-      "description": "Deal 4([dex]) three times; each hit applies 1[bleed]([dex]). Once enemy has [bleed], each hit applies 1 more [bleed]([dex]).",
+      "description": "Deal 4([dex]) three times. Each hit applies 1[bleed]([dex]). If enemy has [bleed]: each hit applies 1[bleed]([dex]).",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2688,7 +2688,7 @@
     {
       "id": "t3-agility-counter-defense",
       "name": "Bramble Step",
-      "description": "Gain 10[armor]([dex]). Brace: apply 3[bleed].",
+      "description": "Gain 10[armor]([dex]). Brace: Apply 3[bleed].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -2772,7 +2772,7 @@
     {
       "id": "t3-water-water-water",
       "name": "Tidesong Aura",
-      "description": "Heal 12([spi]). Gain 2[spi] this combat (max 4 per combat). Gain 3[mana].",
+      "description": "Heal 18([spi]). Gain 2[spi] this combat (max 4 per combat). Gain 3[mana].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -2854,7 +2854,7 @@
     {
       "id": "t3-earth-earth-earth",
       "name": "Mountain's Answer",
-      "description": "Gain 26[armor]([vit]). If [armor] is at least 32: deal 22 Pierce to all enemies.",
+      "description": "Gain 26[armor]([vit]). If [armor] is at least 32: deal 22 more Pierce to all enemies.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -2893,7 +2893,7 @@
     {
       "id": "t3-fire-fire-water",
       "name": "Quench Lance",
-      "description": "Apply 2([int])[burn]. For 6 seconds: if you consume 10+ [burn], gain 2[int] this combat (max 4 per combat).",
+      "description": "Apply 2[burn]([int]). For 6 seconds: if you consume 10+ [burn], gain 2[int] this combat (max 4 per combat).",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -2946,7 +2946,7 @@
     {
       "id": "t3-air-fire-fire",
       "name": "Pyre Surge",
-      "description": "Double the [burn] on the enemy. For 8 seconds: double [fire] damage on enemy.",
+      "description": "Double the [burn] on enemy. For 8 seconds: enemy takes +100% [fire] damage.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3024,7 +3024,7 @@
     {
       "id": "t3-fire-water-water",
       "name": "Phoenix Aura",
-      "description": "Heal 10([spi]). Apply 3[burn]([int]). For 12 seconds: if you have less than 50%[HP], gain 18[armor].",
+      "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds: if you have less than 50%[HP], gain 18[armor].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3078,7 +3078,7 @@
     {
       "id": "t3-air-water-water",
       "name": "Misted Cadence",
-      "description": "Heal 9([spi]). Haste 25% for 8 seconds. Gain 3[mana].",
+      "description": "Heal 14([spi]). Haste 25% for 8 seconds. Gain 3[mana].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -3123,7 +3123,7 @@
     {
       "id": "t3-earth-water-water",
       "name": "Brine Bedrock",
-      "description": "Heal 10([spi]). Vengeance: apply 3[poison].",
+      "description": "Heal 15([spi]). Vengeance: apply 3 more [poison].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3162,7 +3162,7 @@
     {
       "id": "t3-air-air-fire",
       "name": "Cinder Squall",
-      "description": "Apply 3[slow]([int]) to all enemies. Every enemy with at least 5[slow] is stunned for 1[stun]([int]). Deal 2([int]) damage per [slow] on enemy.",
+      "description": "Apply 3[slow]([int]) to all enemies. If enemy has at least 5[slow]: apply 1 more [stun]([int]) to all enemies. Deal 2([int]) damage per [slow] on enemy to all enemies.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3225,7 +3225,7 @@
     {
       "id": "t3-air-air-water",
       "name": "Squall Aura",
-      "description": "Heal 6([spi]). Haste 25% for 8 seconds. Gain 4[mana].",
+      "description": "Heal 9([spi]). Haste 25% for 8 seconds. Gain 4[mana].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3270,7 +3270,7 @@
     {
       "id": "t3-air-air-earth",
       "name": "Dust Plague",
-      "description": "Gain 8[armor]([vit]). For 12 seconds: every 2.5 seconds apply 1[slow]([int]) to all enemies; when an enemy has at least 5[slow], apply 1[stun]([int]).",
+      "description": "Gain 8[armor]([vit]). For 12 seconds: every 2.5 seconds, apply 1[slow]([int]) to all enemies. When enemy has at least 5[slow]: apply 1[stun]([int]).",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3339,7 +3339,7 @@
     {
       "id": "t3-earth-earth-fire",
       "name": "Magma Vow",
-      "description": "Gain 14[armor]([vit]). Vengeance: deal 14 Pierce.",
+      "description": "Gain 14[armor]([vit]). Vengeance: deal 14 more Pierce.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3378,7 +3378,7 @@
     {
       "id": "t3-earth-earth-water",
       "name": "Bog Catalyst",
-      "description": "Apply 2[poison]([int]). Then double the [poison] on enemy.",
+      "description": "Apply 2[poison]([int]). Double the [poison] on enemy.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3417,7 +3417,7 @@
     {
       "id": "t3-air-earth-earth",
       "name": "Standing Stone",
-      "description": "Gain 16[armor]([vit]). Brace: heal 8. Haste 10% for 8 seconds.",
+      "description": "Gain 16[armor]([vit]). Brace: Heal 8. Haste 10% for 8 seconds.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3469,7 +3469,7 @@
     {
       "id": "t3-air-fire-water",
       "name": "Steaming Plague",
-      "description": "Apply 3[poison]([int]) to all enemies. If an enemy already has [poison]: apply 2 more ([int]).",
+      "description": "Apply 3[poison]([int]) to all enemies. If enemy has [poison]: Apply 2[poison]([int]) to all enemies.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3554,7 +3554,7 @@
     {
       "id": "t3-air-earth-fire",
       "name": "Sandfury",
-      "description": "Deal 8([str]) twice to all enemies. Deal 2 Pierce per [slow] on enemy.",
+      "description": "Deal 8([str]) twice. Deal 2 Pierce per [slow] on enemy.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3595,7 +3595,7 @@
     {
       "id": "t3-air-earth-water",
       "name": "Marsh Squall",
-      "description": "Exhaust. Apply 2[poison]([int]). 50% of enemy's [poison] spreads to up to 4 enemies. Then deal 4 Pierce per [poison] consumed to all enemies.",
+      "description": "Exhaust. Apply 2[poison]([int]). 50% of enemy's [poison] spreads to up to 4 other enemies. Deal 4 Pierce per [poison] consumed to all enemies.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3690,7 +3690,7 @@
     {
       "id": "t3-attack-attack-water",
       "name": "Soaking Blade",
-      "description": "Deal 12([str]). Apply 2[poison]. Then deal 7 more.",
+      "description": "Deal 12([str]). Apply 2[poison]. Deal 7.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3731,7 +3731,7 @@
     {
       "id": "t3-air-attack-attack",
       "name": "Galekick",
-      "description": "Deal 7([str]) twice to all enemies. Apply 2[slow].",
+      "description": "Deal 7([str]) twice. Apply 2[slow].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3768,7 +3768,7 @@
     {
       "id": "t3-attack-attack-earth",
       "name": "Concussive Smash",
-      "description": "Deal 14([str]). Apply 2[stun]([int]) and 3[slow].",
+      "description": "Deal 14([str]). Apply 2[stun]([int]). Apply 3[slow].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -3865,7 +3865,7 @@
     {
       "id": "t3-defense-defense-water",
       "name": "Stagnant Bulwark",
-      "description": "Gain 10[armor]([vit]). For 12 seconds: every 2 seconds apply 1[poison]([int]).",
+      "description": "Gain 10[armor]([vit]). For 12 seconds: every 2 seconds, apply 1[poison]([int]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -3954,7 +3954,7 @@
     {
       "id": "t3-defense-defense-earth",
       "name": "Stoneward Reprisal",
-      "description": "Gain 8[armor]([vit]). Brace: apply 2[stun].",
+      "description": "Gain 8[armor]([vit]). Brace: Apply 2[stun].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -3997,7 +3997,7 @@
     {
       "id": "t3-agility-agility-fire",
       "name": "Twinflame Flicker",
-      "description": "Apply 4[burn]. For 8 seconds: if you apply [burn] 4 times, gain 2[int] this combat (max 4 per combat).",
+      "description": "Apply 4[burn]. For 8 seconds: if you apply [burn] 4+ times, gain 2[int] this combat (max 4 per combat).",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4090,7 +4090,7 @@
     {
       "id": "t3-agility-agility-air",
       "name": "Zephyr Cascade",
-      "description": "Apply 3[slow]([int]) to all enemies and 2[burn].",
+      "description": "Apply 3[slow]([int]). Apply 2[burn].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4167,7 +4167,7 @@
     {
       "id": "t3-counter-counter-fire",
       "name": "Vengeful Pyre",
-      "description": "Exhaust. Gain 3[rage]. Exhaust the next card in order. Double all [rage] gained this combat.",
+      "description": "Exhaust. Gain 3[rage]. Exhaust the next card in order. For the rest of combat: double all [rage] gained.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -4270,7 +4270,7 @@
     {
       "id": "t3-air-counter-counter",
       "name": "Wrath Squall",
-      "description": "Exhaust. For 8 seconds: each time you lose HP, gain 1[str] (max 5 per combat) and 3([vit])[rage].",
+      "description": "Exhaust. For 8 seconds: each time you lose [HP], gain 1[str] this combat (max 5 per combat). For 8 seconds: each time you lose [HP], gain 3([vit])[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -4683,7 +4683,7 @@
     {
       "id": "t3-attack-counter-fire",
       "name": "Wrath Brand",
-      "description": "If you have [rage]: deal 12([str]) twice and apply 2[burn]. Consume 3[rage].",
+      "description": "If you have [rage]: deal 12([str]) twice more and apply 2[burn].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4736,7 +4736,7 @@
     {
       "id": "t3-attack-counter-water",
       "name": "Necrotic Festering",
-      "description": "Apply 3[bleed]([dex]) to yourself. Apply 1[poison]([int]) per [bleed] on yourself. Then deal 4([str]) Pierce per [bleed] consumed.",
+      "description": "Apply 3[bleed]([dex]) to yourself. Apply 1[poison]([int]) for each [bleed] on yourself. Deal 4([str]) Pierce per [bleed] consumed.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4801,7 +4801,7 @@
     {
       "id": "t3-air-attack-counter",
       "name": "Thunderstrike Catalyst",
-      "description": "Deal 6([str]). Deal 6([int]) Pierce per [slow] consumed.",
+      "description": "Deal 6([str]). If enemy has [slow]: Deal 6([int]) Pierce per [slow] consumed.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4853,7 +4853,7 @@
     {
       "id": "t3-attack-counter-earth",
       "name": "Granitewrath",
-      "description": "Deal 14([str]). Vengeance: deal 10 Pierce.",
+      "description": "Deal 14([str]). Vengeance: deal 10 more Pierce.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -4892,7 +4892,7 @@
     {
       "id": "t3-agility-defense-fire",
       "name": "Ember Vault",
-      "description": "Gain 10[armor]([vit]). Brace: apply 2[burn].",
+      "description": "Gain 10[armor]([vit]). Brace: Apply 2[burn].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5027,7 +5027,7 @@
     {
       "id": "t3-agility-defense-earth",
       "name": "Quickstone",
-      "description": "Gain 14[armor]([vit]). For 15 seconds: if you have less than 60%[HP], gain Haste 30% for 6 seconds.",
+      "description": "Gain 14[armor]([vit]). For 15 seconds: if you have less than 60%[HP], haste 30% for 6 seconds.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5076,7 +5076,7 @@
     {
       "id": "t3-counter-defense-fire",
       "name": "Ashen Bulwark",
-      "description": "Gain 12[armor]([vit]). Brace: deal 12 and apply 2[burn].",
+      "description": "Gain 12[armor]([vit]). Brace: Deal 12. Brace: Apply 2[burn].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5131,7 +5131,7 @@
     {
       "id": "t3-counter-defense-water",
       "name": "Crimson Regen Mantle",
-      "description": "Gain 8[armor]([vit]). For 12 seconds: while you have less than 50%[HP], heal 3([spi]) every second. Take 20% less damage.",
+      "description": "Gain 8[armor]([vit]). For 12 seconds: every 1 second, if you have less than 50%[HP]: heal 3([spi]) more. For 12 seconds: take 20% less damage.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5192,7 +5192,7 @@
     {
       "id": "t3-air-counter-defense",
       "name": "Glacial Pact",
-      "description": "Apply 4[slow]([int]). Gain 8[armor]([vit]). Vengeance: apply 3 more [slow] and Haste 20% for 5 seconds.",
+      "description": "Apply 4[slow]([int]). Gain 8[armor]([vit]). Vengeance: apply 3 more [slow] and haste 20% for 5 seconds.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5256,7 +5256,7 @@
     {
       "id": "t3-counter-defense-earth",
       "name": "Tombplate",
-      "description": "Gain 18[armor]([vit]). For 15 seconds: if you have less than 40%[HP], gain 10[armor] and 4[rage].",
+      "description": "Gain 18[armor]([vit]). For 15 seconds: if you have less than 40%[HP], gain 10[armor]. For 15 seconds: if you have less than 40%[HP], gain 4[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5313,7 +5313,7 @@
     {
       "id": "t3-agility-counter-fire",
       "name": "Searing Razor",
-      "description": "Apply 3[burn]([dex]). For 8 seconds: if you lose HP 4+ times, gain 2[dex] this combat (max 4 per combat).",
+      "description": "Apply 3[burn]([dex]). For 8 seconds: if you lose [HP] 4+ times, gain 2[dex] this combat (max 4 per combat).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5362,7 +5362,7 @@
     {
       "id": "t3-agility-counter-water",
       "name": "Venom Dance",
-      "description": "Apply 3[poison]([int]); for each 2[poison] applied, apply 1[poison] to up to 2 other enemies. Vengeance — consume 5[bleed] on yourself and apply 5[poison].",
+      "description": "Apply 3[poison]([int]). 50% of enemy's [poison] spreads to up to 2 other enemies. Vengeance: Apply 5[poison] (from consumed [bleed]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5456,7 +5456,7 @@
     {
       "id": "t3-agility-counter-earth",
       "name": "Quickearth Rite",
-      "description": "Gain 8[armor]([vit]). For 6 seconds: if you take HP damage 2+ times, gain 2[vit] this combat (max 4 per combat).",
+      "description": "Gain 8[armor]([vit]). For 6 seconds: if you lose [HP] 2+ times, gain 2[vit] this combat (max 4 per combat).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5504,7 +5504,7 @@
     {
       "id": "t3-attack-fire-fire",
       "name": "Cinderlance",
-      "description": "Deal 8([str]) twice to all enemies. Deal 3 Pierce per [burn] consumed.",
+      "description": "Deal 8([str]) twice. Deal 3 Pierce per [burn] on enemy.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -5553,7 +5553,7 @@
     {
       "id": "t3-attack-water-water",
       "name": "Drowning Lance",
-      "description": "Deal 4 Pierce + 3 Pierce per [poison] consumed.",
+      "description": "Deal 4 Pierce. Deal 3 Pierce per [poison] consumed.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -5594,7 +5594,7 @@
     {
       "id": "t3-air-air-attack",
       "name": "Tempest Pike",
-      "description": "Deal 6([str]) twice to all enemies. Apply 2[slow].",
+      "description": "Deal 6([str]) twice. Apply 2[slow].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -5670,7 +5670,7 @@
     {
       "id": "t3-attack-fire-water",
       "name": "Tremor Detonate",
-      "description": "Exhaust. Deal 6([str]) Pierce. Then deal 3([str]) Pierce per [poison], [bleed], and [burn] consumed.",
+      "description": "Exhaust. Deal 6([str]) Pierce. Deal 3([str]) Pierce per [poison] consumed. Deal 3([str]) Pierce per [bleed] consumed. Deal 3([str]) Pierce per [burn] consumed.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -5759,7 +5759,7 @@
     {
       "id": "t3-air-attack-fire",
       "name": "Galebrand",
-      "description": "Deal 8([str]) to all enemies. Apply 3[slow] and 2[burn].",
+      "description": "Deal 8([str]). Apply 3[slow]. Apply 2[burn].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -5802,7 +5802,7 @@
     {
       "id": "t3-attack-earth-fire",
       "name": "Slag Maul",
-      "description": "Deal 14([str]). Brace: deal 12 more and apply 2[burn].",
+      "description": "Deal 14([str]). Brace: Deal 12. Brace: Apply 2[burn].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -5857,7 +5857,7 @@
     {
       "id": "t3-air-attack-water",
       "name": "Galetide",
-      "description": "Deal 10([str]) Pierce. Apply 2[poison] and 2[slow].",
+      "description": "Deal 10([str]) Pierce. Apply 2[poison]. Apply 2[slow].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -5941,7 +5941,7 @@
     {
       "id": "t3-air-attack-earth",
       "name": "Cliffwind Maul",
-      "description": "Deal 12([str]) to all enemies. If [armor] is at least 12: deal 10 more Pierce.",
+      "description": "Deal 12([str]). If [armor] is at least 12: deal 10 more Pierce.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -5980,7 +5980,7 @@
     {
       "id": "t3-defense-fire-fire",
       "name": "Citadel Inferno",
-      "description": "Exhaust. Requires at least 10[armor]. Deal 2([str]) Pierce per [armor] consumed to all enemies.",
+      "description": "Exhaust. If [armor] is at least 10: Deal 2([str]) Pierce per [armor] consumed to all enemies.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6018,7 +6018,7 @@
     {
       "id": "t3-defense-water-water",
       "name": "Brineward",
-      "description": "Gain 14[armor]([vit]). Heal 8([spi]). Apply 2[poison]([int]).",
+      "description": "Gain 14[armor]([vit]). Heal 12([spi]). Apply 2[poison]([int]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6110,7 +6110,7 @@
     {
       "id": "t3-defense-earth-earth",
       "name": "Bedrock Bulwark",
-      "description": "Gain 16[armor]([vit]). Brace: gain 6[armor]([vit]).",
+      "description": "Gain 16[armor]([vit]). Brace: Gain 6[armor]([vit]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6157,7 +6157,7 @@
     {
       "id": "t3-defense-fire-water",
       "name": "Steam Bulwark",
-      "description": "Gain 14[armor]([vit]). Brace: apply 3[poison] and 2[burn].",
+      "description": "Gain 14[armor]([vit]). Brace: Apply 3[poison]. Brace: Apply 2[burn].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6257,7 +6257,7 @@
     {
       "id": "t3-defense-earth-fire",
       "name": "Magmaplate",
-      "description": "Gain 16[armor]([vit]). Brace: deal 14 and apply 2[burn].",
+      "description": "Gain 16[armor]([vit]). Brace: Deal 14. Brace: Apply 2[burn].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6312,7 +6312,7 @@
     {
       "id": "t3-air-defense-water",
       "name": "Mistplate",
-      "description": "Gain 12[armor]([vit]). Apply 2[poison] and 2[slow].",
+      "description": "Gain 12[armor]([vit]). Apply 2[poison]. Apply 2[slow].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6354,7 +6354,7 @@
     {
       "id": "t3-defense-earth-water",
       "name": "Bogplate",
-      "description": "Gain 14[armor]([vit]). Vengeance: apply 3[poison].",
+      "description": "Gain 14[armor]([vit]). Vengeance: apply 3 more [poison].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6394,7 +6394,7 @@
     {
       "id": "t3-air-defense-earth",
       "name": "Dustward",
-      "description": "Gain 16[armor]([vit]). Haste 10% for 12 seconds. Brace: apply 4[slow].",
+      "description": "Gain 16[armor]([vit]). Haste 10% for 12 seconds. Brace: Apply 4[slow].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6448,7 +6448,7 @@
     {
       "id": "t3-agility-fire-fire",
       "name": "Cinder Sprint",
-      "description": "Apply 3[burn] to all enemies. Deal 4([dex]) damage per [burn] consumed.",
+      "description": "Apply 3[burn]. Deal 4([dex]) damage per [burn] on enemy.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -6554,7 +6554,7 @@
     {
       "id": "t3-agility-air-air",
       "name": "Gale Echo",
-      "description": "For 12 seconds: every time you apply [slow], apply 1 more [slow]([int]). Haste 15% for 6 seconds.",
+      "description": "For 12 seconds: every time you apply [slow], apply 1[slow]([int]). Haste 15% for 6 seconds.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -6603,7 +6603,7 @@
     {
       "id": "t3-agility-earth-earth",
       "name": "Stonepacer",
-      "description": "Exhaust. Gain 3[vit] this combat. Haste 30% for 12 seconds.",
+      "description": "Exhaust. Gain 3[vit] this combat (max 3 per combat). Haste 30% for 12 seconds.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6641,7 +6641,7 @@
     {
       "id": "t3-agility-fire-water",
       "name": "Boilstep",
-      "description": "Deal 6([dex]) Pierce. Apply 2[burn] and 2[poison].",
+      "description": "Deal 6([dex]) Pierce. Apply 2[burn]. Apply 2[poison].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -6684,7 +6684,7 @@
     {
       "id": "t3-agility-air-fire",
       "name": "Galecinder",
-      "description": "Deal 5([dex]) twice to all enemies. Apply 2[burn] and 2[slow].",
+      "description": "Deal 5([dex]) twice. Apply 2[burn]. Apply 2[slow].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -6728,7 +6728,7 @@
     {
       "id": "t3-agility-earth-fire",
       "name": "Cinderquake",
-      "description": "Deal 10([dex]). If [armor] is at least 10: deal 4 more Pierce and apply 2[burn].",
+      "description": "Deal 10([dex]). If [armor] is at least 10: deal 4 more Pierce and apply 2 more [burn].",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -6776,7 +6776,7 @@
     {
       "id": "t3-agility-air-water",
       "name": "Stormsplash",
-      "description": "Apply 2[poison]([int]), 3[slow], and 2[burn].",
+      "description": "Apply 2[poison]([int]). Apply 3[slow]. Apply 2[burn].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -6865,7 +6865,7 @@
     {
       "id": "t3-agility-air-earth",
       "name": "Stormstone Tempo",
-      "description": "Deal 6 3([dex]) times. Apply 1[slow] per hit. If enemy is [stun]: each hit deals 4([str]) more Pierce.",
+      "description": "Deal 6([dex]) three times. Each hit applies 1[slow]. If enemy is [stun]: each hit deals 4([str]) more Pierce.",
       "category": "attack",
       "tier": 3,
       "elements": [
@@ -6918,7 +6918,7 @@
     {
       "id": "t3-counter-fire-fire",
       "name": "Brine Crucible",
-      "description": "Apply 2[bleed]([dex]) per [burn] consumed. Apply 2 more [bleed]([dex]). Next card delays 3 more seconds.",
+      "description": "Apply 2([dex])[bleed] per [burn] consumed. Apply 2[bleed]([dex]). Next card delays 3 more seconds.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6968,7 +6968,7 @@
     {
       "id": "t3-counter-water-water",
       "name": "Tidefoot Bloom",
-      "description": "Exhaust. For this combat: each time you heal, apply 1([int])[poison].",
+      "description": "Exhaust. For the rest of combat: each time you heal, apply 1[poison]([int]).",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -7012,7 +7012,7 @@
     {
       "id": "t3-air-air-counter",
       "name": "Stormrage",
-      "description": "If you have [rage]: apply 8[slow]([int]). Consume 4[rage].",
+      "description": "If you have [rage]: Apply 8[slow]([int]).",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -7054,7 +7054,7 @@
     {
       "id": "t3-counter-earth-earth",
       "name": "Tombrage",
-      "description": "Gain 12[armor]([vit]). For 15 seconds: when your [HP] drops below 40%, gain 8[rage].",
+      "description": "Gain 12[armor]([vit]). For 15 seconds: if you have less than 40%[HP], gain 8[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -7098,7 +7098,7 @@
     {
       "id": "t3-counter-fire-water",
       "name": "Venom Detonation",
-      "description": "Apply 2[burn] and 3[poison]. Deal 2([str]) damage per [burn] consumed.",
+      "description": "Apply 2[burn]. Apply 3[poison]. Deal 2([str]) damage per [burn] on enemy.",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -7152,7 +7152,7 @@
     {
       "id": "t3-air-counter-fire",
       "name": "Static Bleed",
-      "description": "Apply 2[bleed]([dex]) to yourself. Brace: apply 4[slow].",
+      "description": "Apply 2[bleed]([dex]) to yourself. Brace: Apply 4[slow].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -7197,7 +7197,7 @@
     {
       "id": "t3-counter-earth-fire",
       "name": "Magmavow",
-      "description": "Gain 10[armor]([vit]). Brace: deal 16 Pierce and apply 2[burn].",
+      "description": "Gain 10[armor]([vit]). Brace: Deal 16 Pierce. Brace: Apply 2[burn].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -7253,7 +7253,7 @@
     {
       "id": "t3-air-counter-water",
       "name": "Tempestbleed",
-      "description": "Apply 2[bleed]([dex]) to yourself. Brace: deal 6 and apply 2[slow].",
+      "description": "Apply 2[bleed]([dex]) to yourself. Brace: Deal 6. Brace: Apply 2[slow].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -7310,7 +7310,7 @@
     {
       "id": "t3-counter-earth-water",
       "name": "Bogwrath",
-      "description": "Gain 10[armor]([vit]). Brace: apply 4[poison] and gain 3[rage].",
+      "description": "Gain 10[armor]([vit]). Brace: Apply 4[poison]. Brace: Gain 3[rage].",
       "category": "magic",
       "tier": 3,
       "elements": [
