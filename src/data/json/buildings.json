@@ -149,7 +149,7 @@
   },
   "workshop": {
     "name": "Workshop",
-    "description": "Unlock new tile types for the loop",
+    "description": "Unlock terrain tiles and combat sub-tile amplifiers for the loop",
     "maxLevel": 3,
     "tiers": [
       {
@@ -160,10 +160,12 @@
         },
         "unlocks": {
           "tiles": [
-            "graveyard"
+            "graveyard",
+            "subtile_warhorn",
+            "subtile_ambush"
           ]
         },
-        "description": "Unlock Graveyard tiles"
+        "description": "Unlock Graveyard + War Horn / Ambush sub-tiles"
       },
       {
         "level": 2,
@@ -174,10 +176,12 @@
         },
         "unlocks": {
           "tiles": [
-            "swamp"
+            "swamp",
+            "subtile_magma",
+            "subtile_bleedtotem"
           ]
         },
-        "description": "Unlock Swamp tiles"
+        "description": "Unlock Swamp + Magma / Bleed Totem sub-tiles"
       },
       {
         "level": 3,
@@ -190,10 +194,12 @@
         "unlocks": {
           "tiles": [
             "desert",
-            "lava"
+            "lava",
+            "subtile_burnaltar",
+            "subtile_resonance"
           ]
         },
-        "description": "Unlock Desert and Lava Fields tiles"
+        "description": "Unlock Desert, Lava Fields + Burn Altar / Resonance sub-tiles"
       }
     ]
   },

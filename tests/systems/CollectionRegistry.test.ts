@@ -57,9 +57,9 @@ describe('CollectionRegistry', () => {
       // 5 base (basic/forest/event/treasure/boss) + 4 unlockable
       // (graveyard/swamp/desert/lava) + 8 subtiles (ambush/bleedtotem/...)
       expect(status.tiles.total).toBe(17);
-      // Subtiles are always-unlocked (world-gen seeds them, not the player),
-      // so the unlocked count is 5 base + 8 subtiles = 13.
-      expect(status.tiles.unlocked).toBe(13);
+      // Region tiles + most sub-tiles are gated behind the Workshop. A default
+      // state has the 5 base tiles + 2 default sub-tiles (camp, mana well) = 7.
+      expect(status.tiles.unlocked).toBe(7);
     });
   });
 

@@ -60,7 +60,9 @@ describe('MetaProgressionSystem', () => {
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.workshop.level).toBe(1);
       expect(result.updatedState!.unlockedTiles).toContain('graveyard');
-      expect(result.newUnlocks!.tiles).toEqual(['graveyard']);
+      // Workshop L1 also unlocks a batch of gated combat sub-tiles (camp +
+      // mana well ship unlocked by default, so they are not in this set).
+      expect(result.newUnlocks!.tiles).toEqual(['graveyard', 'subtile_warhorn', 'subtile_ambush']);
     });
   });
 

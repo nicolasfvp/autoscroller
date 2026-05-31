@@ -76,17 +76,21 @@ describe('UnlockManager', () => {
       expect(ids).toContain('event');
       expect(ids).toContain('treasure');
       expect(ids).toContain('boss');
+      // Two utility sub-tiles ship unlocked by default.
+      expect(ids).toContain('subtile_camp');
+      expect(ids).toContain('subtile_manawell');
       expect(ids).not.toContain('rest');
       expect(ids).not.toContain('shop');
       expect(ids).not.toContain('graveyard');
-      expect(tiles.length).toBe(5);
+      expect(ids).not.toContain('subtile_ambush'); // gated behind Workshop
+      expect(tiles.length).toBe(7);
     });
 
     it('returns base tiles plus graveyard when unlocked', () => {
       const tiles = getAvailableTiles(['graveyard']);
       const ids = tiles.map(t => t.id);
       expect(ids).toContain('graveyard');
-      expect(tiles.length).toBe(6);
+      expect(tiles.length).toBe(8); // 5 base + 2 default sub-tiles + graveyard
     });
   });
 });
