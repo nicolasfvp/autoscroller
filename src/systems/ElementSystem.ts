@@ -58,7 +58,7 @@ export const FORGE_BASE_COST: Record<CardTier, number> = {
 };
 
 export const FORGE_DISCOUNT_BY_LEVEL: Record<number, number> = {
-  0: 0, 1: 0, 2: 0.10, 3: 0.15, 4: 0.20, 5: 0.25, 6: 0.30,
+  0: 0, 1: 0.05, 2: 0.10, 3: 0.15, 4: 0.20, 5: 0.25, 6: 0.30,
 };
 
 export const FORGE_TIER_UNLOCK: Record<CardTier, number> = {

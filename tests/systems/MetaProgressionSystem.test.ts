@@ -10,7 +10,7 @@ import {
 
 describe('MetaProgressionSystem', () => {
   describe('upgradeBuilding', () => {
-    it('upgrades forge from 0 to 1 when enough materials, deducting cost and unlocking cards', () => {
+    it('upgrades forge from 0 to 1, deducting cost (Forge gates crafting tiers, not loot)', () => {
       const state = createDefaultMetaState();
       state.materials = { iron: 50, crystal: 50 };
       const result = upgradeBuilding('forge', state);
@@ -19,11 +19,10 @@ describe('MetaProgressionSystem', () => {
       expect(result.updatedState!.materials.iron).toBe(42);
       expect(result.updatedState!.materials.crystal).toBe(47);
       expect(result.updatedState!.buildings.forge.level).toBe(1);
-      expect(result.updatedState!.unlockedCards).toContain('counter-strike');
-      expect(result.updatedState!.unlockedCards).toContain('shield-wall');
-      expect(result.updatedState!.unlockedCards).toContain('heal');
-      expect(result.updatedState!.unlockedCards).toContain('parry');
-      expect(result.newUnlocks!.cards).toEqual(['counter-strike', 'shield-wall', 'heal', 'parry']);
+      // Forge no longer unlocks loot cards — it gates in-loop crafting tiers +
+      // gold discount (ForgeSystem / FORGE_TIER_UNLOCK / FORGE_DISCOUNT_BY_LEVEL).
+      expect(result.updatedState!.unlockedCards).toEqual([]);
+      expect(result.newUnlocks!.cards).toBeUndefined();
     });
 
     it('returns insufficient_materials when materials < cost', () => {
@@ -49,9 +48,9 @@ describe('MetaProgressionSystem', () => {
       const result = upgradeBuilding('shrine', state);
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.shrine.level).toBe(1);
-      expect(result.updatedState!.unlockedRelics).toContain('warrior_spirit');
-      expect(result.updatedState!.unlockedRelics).toContain('iron_will');
-      expect(result.newUnlocks!.relics).toEqual(['warrior_spirit', 'iron_will']);
+      const expected = ['iron_will', 'first_strike_amulet', 'thin_deck_charm', 'swift_boots', 'heavy_tome'];
+      for (const id of expected) expect(result.updatedState!.unlockedRelics).toContain(id);
+      expect(result.newUnlocks!.relics).toEqual(expected);
     });
 
     it('upgrades workshop from 0 to 1 and adds tiles to unlockedTiles', () => {
@@ -61,7 +60,9 @@ describe('MetaProgressionSystem', () => {
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.workshop.level).toBe(1);
       expect(result.updatedState!.unlockedTiles).toContain('graveyard');
-      expect(result.newUnlocks!.tiles).toEqual(['graveyard']);
+      // Workshop L1 also unlocks a batch of gated combat sub-tiles (camp +
+      // mana well ship unlocked by default, so they are not in this set).
+      expect(result.newUnlocks!.tiles).toEqual(['graveyard', 'subtile_warhorn', 'subtile_ambush']);
     });
   });
 
@@ -184,7 +185,8 @@ describe('MetaProgressionSystem', () => {
       expect(data.tiers).toHaveLength(6);
       expect(data.tiers[0].level).toBe(1);
       expect(data.tiers[0].cost).toEqual({ iron: 8, crystal: 3 });
-      expect(data.tiers[0].unlocks.cards).toEqual(['counter-strike', 'shield-wall', 'heal', 'parry']);
+      // Forge tiers no longer carry card-unlock IDs (effect-driven crafting gate).
+      expect(data.tiers[0].unlocks).toEqual({});
     });
   });
 });

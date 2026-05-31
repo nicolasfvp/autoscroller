@@ -47,6 +47,8 @@ const MOD_META: Record<AuraModifierKind, { icon: string; color: string; name: st
   ignore_immunity: { icon: '☠', color: '#c490ff', name: 'Pierce Imm.' },
   // Audit §11.I-13 (Pyre Surge): element-filtered damage taken modifier.
   fire_damage_taken_pct: { icon: '🔥', color: '#ff5a3d', name: 'Vuln Fire' },
+  // Rebalance phase: stack-gain multiplier (e.g. Vengeful Pyre ×2 rage gain).
+  stack_gain_mult: { icon: '🩸', color: '#ff4d4d', name: 'Stack ×' },
 };
 
 interface AggregatedMod {

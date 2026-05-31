@@ -11,9 +11,10 @@ import type { TileSlot } from '../systems/TileRegistry';
 import type { StatId } from '../data/types';
 import { eventBus } from '../core/EventBus';
 import { clearPendingLoot } from '../systems/PendingLoot';
-import { getStorehouseEffects } from '../systems/MetaProgressionSystem';
+import { getStorehouseEffects, getTavernEffects } from '../systems/MetaProgressionSystem';
 import { resetRNG } from '../systems/LootGenerator';
 import { dailySeedString, deriveDailyRunConfig } from '../systems/DailySeed';
+import { resolveHeroStats } from '../systems/hero/HeroStatsResolver';
 
 // ── State Interfaces ────────────────────────────────────────
 
@@ -328,6 +329,10 @@ export function createNewRun(
       intellect: stats.intellect,
       spirit: stats.spirit,
       statDeltas: {},
+      // Seed lifetime XP from banked class XP so XP-threshold passives persist
+      // across runs (the meta-progression loop). Without this, passives reset
+      // every run because totalXP started undefined.
+      totalXP: meta.classXP?.[stats.className as 'warrior' | 'mage'] ?? 0,
     },
     deck: (() => {
       // Custom decks (deck-template picks) preserve order so the player's
@@ -353,7 +358,8 @@ export function createNewRun(
       bossesDefeated: 0,
     },
     economy: {
-      gold: 50,
+      // Base 50 + Tavern starting-gold bonus (now actually read from meta).
+      gold: 50 + getTavernEffects(meta.buildings.tavern.level).startingGoldBonus,
       tilePoints: 2,
       tileInventory: {},
       materials: {},
@@ -437,4 +443,24 @@ export function applyStatDelta(
   const d = run.hero.statDeltas ?? (run.hero.statDeltas = {});
   d[stat] = (d[stat] ?? 0) + delta;
   eventBus.emit('combat:stat-changed', { stat, delta });
+}
+
+/**
+ * Acquire a relic mid-run. Pushes it into run.relics and bumps the hero's
+ * current pools by the maxima delta — relic stat_bonus, VIT-derived maxHP, and
+ * heavy_tome maxHP all funnel through resolveHeroStats so this single diff
+ * captures every path. The LoopHUD already reads max from resolveHeroStats;
+ * this keeps *current* HP/Stamina/Mana in sync so the gain shows immediately.
+ */
+export function addRelicToRun(run: RunState, relicId: string): void {
+  const before = resolveHeroStats(run);
+  run.relics.push(relicId);
+  const after = resolveHeroStats(run);
+  const dHP = after.maxHP - before.maxHP;
+  const dStam = after.maxStamina - before.maxStamina;
+  const dMana = after.maxMana - before.maxMana;
+  if (dHP > 0) run.hero.currentHP = Math.min(run.hero.currentHP + dHP, after.maxHP);
+  if (dStam > 0) run.hero.currentStamina = Math.min(run.hero.currentStamina + dStam, after.maxStamina);
+  if (dMana > 0) run.hero.currentMana = Math.min(run.hero.currentMana + dMana, after.maxMana);
+  eventBus.emit('combat:stat-changed', { stat: 'relic', delta: 0 });
 }

@@ -53,6 +53,8 @@ export interface TileSlot {
   defeatedThisLoop: boolean;
   /** Pre-assigned enemy ID for combat tiles (visible on the world map) */
   enemyId?: string;
+  /** Elite combat: spawned enemy gets an HP/damage premium + elite XP. */
+  isElite?: boolean;
 }
 
 export interface TileInventoryEntry {

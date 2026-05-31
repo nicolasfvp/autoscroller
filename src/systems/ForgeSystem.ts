@@ -7,6 +7,7 @@ import {
   canonicalCardId,
   multisetKey,
   FORGE_BASE_COST,
+  FORGE_DISCOUNT_BY_LEVEL,
 } from './ElementSystem';
 import { hasElementsForRecipe, spendElements, type ElementInventory } from './ShardSystem';
 import { getAllCards, getCardById } from '../data/DataLoader';
@@ -20,14 +21,13 @@ export interface ForgeRecipe {
   firstForgedAt: number;
 }
 
-// TEMPORARY: forge restrictions disabled — all tiers always unlocked, and the
-// per-level discount is bypassed so FORGE_BASE_COST values are charged exactly.
-// To re-enable progression, revert getForgeDiscount and isTierUnlocked to use
-// FORGE_DISCOUNT_BY_LEVEL / FORGE_TIER_UNLOCK.
+// Forge meta-building grants a gold discount on crafting. All card tiers are
+// craftable from the start (no tier gating); the building's value is the
+// per-level discount: 0/0/10/15/20/25/30% (FORGE_DISCOUNT_BY_LEVEL).
 
 /** Discount multiplier (0 - 1) given forge meta-building level. */
-export function getForgeDiscount(_forgeLevel: number): number {
-  return 0;
+export function getForgeDiscount(forgeLevel: number): number {
+  return FORGE_DISCOUNT_BY_LEVEL[forgeLevel] ?? 0;
 }
 
 /** Final gold cost after discount, rounded down. */
@@ -37,7 +37,7 @@ export function getForgeGoldCost(tier: CardTier, forgeLevel: number): number {
   return Math.floor(base * (1 - discount));
 }
 
-/** Is this tier unlocked at this forge level? */
+/** Tier gating is disabled — every tier is craftable regardless of forge level. */
 export function isTierUnlocked(_tier: CardTier, _forgeLevel: number): boolean {
   return true;
 }

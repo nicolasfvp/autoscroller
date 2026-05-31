@@ -1,12 +1,65 @@
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
+// Module-level master volume / mute. These multiply into every volume this
+// manager passes to Phaser's WebAudio mixer, so the SettingsScene slider/toggle
+// actually control the audio the game plays (SFX + BGM + ambience). They live
+// at module scope (not on a scene) so they survive scene transitions and apply
+// to the next play() even before we have a scene reference.
+let masterVolume = 1;
+let muted = false;
+
+function effectiveVolume(base: number): number {
+  return muted ? 0 : base * masterVolume;
+}
+
 /**
  * AudioManager handles cross-fading between soundtracks.
  */
 export class AudioManager {
   private static currentKey: string | null = null;
   private static currentSound: Phaser.Sound.BaseSound | null = null;
+  /** Remembered so a later setMasterVolume can re-apply to a live music track. */
+  private static currentBgmVolume = 0.4;
+  private static ambienceVolume = 0.2;
+
+  /**
+   * Set the global master volume (0..1). Applied to every subsequent play,
+   * and re-applied immediately to any music/ambience already playing.
+   */
+  static setMasterVolume(v: number): void {
+    masterVolume = Math.max(0, Math.min(1, v));
+    this.reapplyLiveVolumes();
+  }
+
+  /** Get the current master volume multiplier (0..1). */
+  static getMasterVolume(): number {
+    return masterVolume;
+  }
+
+  /** Mute / unmute all audio routed through this manager. */
+  static setMuted(m: boolean): void {
+    muted = m;
+    this.reapplyLiveVolumes();
+  }
+
+  static isMuted(): boolean {
+    return muted;
+  }
+
+  /** Re-apply the current master/mute multiplier to any live BGM + ambience. */
+  private static reapplyLiveVolumes(): void {
+    const bgm = this.currentSound as
+      | Phaser.Sound.WebAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | null;
+    if (bgm && bgm.isPlaying) bgm.setVolume(effectiveVolume(this.currentBgmVolume));
+    const amb = this.ambienceSound as
+      | Phaser.Sound.WebAudioSound
+      | Phaser.Sound.HTML5AudioSound
+      | null;
+    if (amb && amb.isPlaying) amb.setVolume(effectiveVolume(this.ambienceVolume));
+  }
 
   /**
    * Transitions to a new background music track with a crossfade effect.
@@ -44,15 +97,16 @@ export class AudioManager {
       });
     }
 
-    // 3. Start new sound at volume 0 and fade in
+    // 3. Start new sound at volume 0 and fade in to the master-adjusted target.
     this.currentKey = key;
+    this.currentBgmVolume = volume;
     const newSound = audioScene.sound.add(key, { loop, volume: 0 });
     this.currentSound = newSound;
     newSound.play();
 
     audioScene.tweens.add({
       targets: newSound,
-      volume: volume,
+      volume: effectiveVolume(volume),
       duration: duration
     });
 
@@ -64,7 +118,9 @@ export class AudioManager {
    * Plays a one-off sound effect.
    */
   static playSFX(scene: Scene, key: string, volume: number = 0.5): void {
-    scene.sound.play(key, { volume });
+    const v = effectiveVolume(volume);
+    if (v <= 0) return;
+    scene.sound.play(key, { volume: v });
   }
 
   private static ambienceSound: Phaser.Sound.BaseSound | null = null;
@@ -79,12 +135,13 @@ export class AudioManager {
     config: { volume?: number; duration?: number } = {}
   ): void {
     const { volume = 0.2, duration = 1000 } = config;
+    this.ambienceVolume = volume;
 
     // Use GlobalSound scene for persistent audio tweens if available
     const audioScene = scene.scene.get(SCENE_KEYS.GLOBAL_SOUND) || scene;
 
     if (this.ambienceKey === key && this.ambienceSound?.isPlaying) {
-      (this.ambienceSound as Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound).setVolume(volume);
+      (this.ambienceSound as Phaser.Sound.WebAudioSound | Phaser.Sound.HTML5AudioSound).setVolume(effectiveVolume(volume));
       return;
     }
 
@@ -105,7 +162,7 @@ export class AudioManager {
 
     audioScene.tweens.add({
       targets: sound,
-      volume: volume,
+      volume: effectiveVolume(volume),
       duration
     });
   }

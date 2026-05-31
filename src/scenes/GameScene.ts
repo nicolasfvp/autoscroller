@@ -200,7 +200,8 @@ export class GameScene extends Scene {
     const attackKey = `${sp}_attack`;
     const deathKey = `${sp}_death`;
     // Only create spritesheet animations for keys that are actually spritesheets.
-    // hero_idle / hero_idle2 are plain images; hero_walk / hero_death don't exist.
+    // hero_idle / hero_idle2 are plain images; hero_walk is a 6-frame sheet.
+    // hero_death doesn't exist (the create() guard below skips absent keys).
     for (const [key, frameRate, repeat] of [
       [walkKey,    8, -1],
       [attackKey, 10,  0],
@@ -513,6 +514,7 @@ export class GameScene extends Scene {
         this.scene.launch(SCENE_KEYS.COMBAT, {
           enemyId: data.enemyId,
           isBoss: data.isBoss,
+          isElite: data.isElite,
           terrain: data.terrain ?? 'basic',
           // Wave 4 wiring: forward the resolved subtile effect list for this
           // combat target. Wave 6 consumes the bag in CombatScene.init to
@@ -528,7 +530,7 @@ export class GameScene extends Scene {
         // to fire here now runs in ShopScene.applyLoopEndAutoHeal on shop entry.
 
         // ── Event: inline random effect ──
-        if (data.scene === 'EventScene') {
+        if (data.kind === 'event') {
           const result = resolveInlineEvent(run);
           this.syncEconomyToLoopState(run);
           this.showPendingNotifications();
@@ -547,17 +549,13 @@ export class GameScene extends Scene {
         }
 
         // ── Treasure: inline loot ──
-        if (data.scene === 'TreasureScene') {
+        if (data.kind === 'treasure') {
           generateTreasureLoot(run);
           this.syncEconomyToLoopState(run);
           this.showPendingNotifications();
           this.loopRunner.resumeTraversal();
           break;
         }
-
-        // Default: open scene (any future scenes)
-        this.scene.launch(data.scene);
-        this.scene.pause();
         break;
       }
       case 'loop-completed': {

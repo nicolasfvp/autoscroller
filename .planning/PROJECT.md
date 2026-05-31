@@ -161,5 +161,18 @@ A experiência central é o deckbuilding estratégico: o jogador nunca toca no c
 | Pontos de tile + drops raros | Duas fontes de tiles com economia própria (acumular vs usar agora) | — Pending |
 | GDD em português brasileiro | Documentação do game design acompanha os docs de planejamento | — Pending |
 
+## Implementation status reconciliation (2026-05-30 overhaul)
+
+The shipped game has evolved past several bullets above. Current reality:
+
+- **Card system is element-based, not category-based.** The "ataques/defesas/magias" model became a tier (T1/T2/T3) + element (fire/water/air/earth/agility/attack/defense/counter) + stack-status (burn/bleed/poison/stun/slow/rage/armor) + stat-scaling (STR/DEX/INT/VIT/SPI) system. ~164 cards, acquired in-loop by **forging** element combos (ForgeScene) plus loot/shop. Category (attack/defense/magic) still exists as a secondary tag.
+- **Two classes shipped:** Warrior + Mage (the "apenas Warrior" constraint is superseded).
+- **Rest tile removed** — its heal folded into shop entry (`ShopScene.applyLoopEndAutoHeal`). The "Descanso (recupera HP)" special tile is no longer a standalone tile.
+- **Elites implemented** — non-boss combat tiles can roll an Elite (premium HP/damage + elite XP) via `difficulty.json eliteChance`.
+- **Meta-progression Village is functional:** Tavern (starting gold + seed/history gates), Library (class-XP multiplier; passives persist across runs), Workshop (terrain unlocks), Shrine (relic unlocks), Forge (gold discount on crafting), Storehouse/Vault (gathering + death retention).
+- **In-run leveling:** XP earned within a run grants per-level stat gains (deck/relics are no longer the only in-run power source).
+- **Async Daily-Run ghost ticker shipped** as an interim social layer (one-way MQTT spectator feed via `DailyRunBroadcaster`/`DailyTickerPanel`). True simultaneous **co-op multiplayer remains deferred** (futuro) — a Daily-Run leaderboard UI is the likely next social increment.
+- **Difficulty model:** enemy stats step on boss kills (+10% per kill, boss every 10 loops); per-loop smooth scaling is intentionally not used.
+
 ---
-*Last updated: 2026-03-28 — Phase 7 (Polish & Release) complete — all v1 phases done*
+*Last updated: 2026-05-30 — Balance/UX/meta overhaul (combat correctness, 27-card rebalance, difficulty + elites, functional Village buildings, glossary/audio UX, dead-code & asset cleanup). Previous: 2026-03-28 Phase 7.*

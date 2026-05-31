@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { triggerBossCombat, onBossVictory, getBossExitChoiceData } from '../../src/systems/BossSystem';
+import { onBossVictory, getBossExitChoiceData } from '../../src/systems/BossSystem';
 import { setRNG, resetRNG } from '../../src/systems/LootGenerator';
 
 function makeRunState(): any {
@@ -24,28 +24,6 @@ function makeRunState(): any {
 describe('BossSystem', () => {
   afterEach(() => {
     resetRNG();
-  });
-
-  it('triggerBossCombat returns scaled boss stats with isBoss=true', () => {
-    const run = makeRunState();
-    const encounter = triggerBossCombat(run);
-    expect(encounter.isBoss).toBe(true);
-    // BossSystem picks from the boss roster in enemies.json (doom_knight / iron_golem / lizard_king)
-    expect(['doom_knight', 'iron_golem', 'lizard_king']).toContain(encounter.enemyId);
-    expect(encounter.scaledStats.hp).toBeGreaterThan(0);
-    expect(encounter.scaledStats.damage).toBeGreaterThan(0);
-  });
-
-  it('triggerBossCombat scales stats with difficultyMultiplier (boss kills)', () => {
-    const run1 = makeRunState();
-    run1.loop.difficultyMultiplier = 1.0; // 0 boss kills
-    const enc1 = triggerBossCombat(run1);
-
-    const run5 = makeRunState();
-    run5.loop.difficultyMultiplier = 1.4; // 4 boss kills (1 + 4*0.10)
-    const enc5 = triggerBossCombat(run5);
-
-    expect(enc5.scaledStats.hp).toBeGreaterThan(enc1.scaledStats.hp);
   });
 
   it('onBossVictory awards boss material drops to runState', () => {

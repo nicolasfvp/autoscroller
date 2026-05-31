@@ -96,14 +96,10 @@ export function rollMaterialDrops(
         }
         break;
       }
-      const legacy = materialsConfig.enemyBonusDrops[sourceKey as keyof typeof materialsConfig.enemyBonusDrops];
-      if (!legacy) return drops;
-      if (rng.next() < legacy.chance) {
-        const range = legacy.amount.max - legacy.amount.min + 1;
-        const amount = legacy.amount.min + Math.floor(rng.next() * range);
-        drops[legacy.material] = amount;
-      }
-      break;
+      // No legacy fallback: every live enemy defines its own materialReward in
+      // enemies.json (the block above). The old materialsConfig.enemyBonusDrops
+      // table referenced retired enemy ids and is now empty.
+      return drops;
     }
     case 'boss': {
       // Generic boss drops (essence + crystal) apply to every boss kill.

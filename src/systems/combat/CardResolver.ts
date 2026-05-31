@@ -5,7 +5,7 @@ import type { CardDefinition, CardEffect, SynergyDefinition, StatId, StackId, Sc
 import type { CombatState } from './CombatState';
 import { readStat } from '../hero/HeroStatsResolver';
 import { applyHeroDamage } from './EnemyAI';
-import { createAura, sumModifier, sumModifierStackScaled, fireRecurringTrigger, applyTriggeredPayload } from './StatusEffects';
+import { createAura, sumModifier, sumModifierStackScaled, fireRecurringTrigger, applyTriggeredPayload, sumStackGainMult, bumpEventCounters } from './StatusEffects';
 
 export interface ResolveResult {
   totalDamage: number;
@@ -13,8 +13,6 @@ export interface ResolveResult {
   armorGained: number;
   /** v3: Overload — extra seconds to add to this card's next cooldown. */
   cooldownDebtSec?: number;
-  /** v3: Tectonic Reckoning — request the engine to force-trigger all cards. */
-  forceTriggerAll?: boolean;
 }
 
 /** v3: stack pool snapshot taken at the start of every card resolution. Used
@@ -255,18 +253,29 @@ export class CardResolver {
     // pre-cast snapshot of the named stack. This lets a single effect express
     // "deal N per <stack> consumed" for detonators (Supernova, Drowning Lance,
     // Crimson Spiral, Tremor Detonate, Thunderstrike Catalyst, ...).
+    //
+    // Deep audit fix: apply `scale` to the base value BEFORE the stack
+    // multiplier, then suppress the secondary scale pass in applyEffect.
+    // Pre-fix order (multiply, then add scale) leaked flat damage when the
+    // multiplier was 0 (e.g. Supernova int_10 dealt 3 with no burn present).
+    // Post-fix: scale contributes to the per-stack base; zero stacks → zero.
+    let suppressScale = false;
     if (effect.consume_stack_value && preConsume) {
+      if (effect.scale && effect.scale.per > 0 && effect.scale.value !== 0) {
+        const src = effect.scale.source;
+        const statValue = src === 'armor'
+          ? state.heroDefense
+          : readStat(state, effect.scale.stat);
+        effectiveValue = effect.value + Math.floor(statValue / effect.scale.per) * effect.scale.value;
+        suppressScale = true;
+      }
       const snap = preConsume[effect.consume_stack_value] ?? 0;
       effectiveValue *= snap;
-      if (effectiveValue === 0) {
-        // Nothing to do — but allow the dispatcher to still handle 0-value
-        // armor/stamina/mana effects below (they'd be no-ops anyway).
-      }
     }
 
     this.applyEffect(
       effect.type, effectiveValue, effect.target, state, result,
-      damageMultiplier, effect.scale, effect.stack, card,
+      damageMultiplier, suppressScale ? undefined : effect.scale, effect.stack, card,
       effect.pierce_armor, effect,
     );
 
@@ -351,9 +360,11 @@ export class CardResolver {
           // Self-damage cards bypass strength scaling and enemy defense —
           // value is the literal HP loss the hero takes. Routed through
           // applyHeroDamage so the player's current armor still absorbs it
-          // (all damage paths now respect armor).
+          // (all damage paths now respect armor). `pierce_armor:true` on a
+          // self-damage effect (Bloodprice Strike, Crimson Tithe) skips armor
+          // so the HP cost is paid in full.
           const selfDamage = Math.max(0, Math.floor(resolvedValue));
-          applyHeroDamage(selfDamage, state, /*skipRelics=*/true);
+          applyHeroDamage(selfDamage, state, /*skipRelics=*/true, pierceArmor, /*selfInflicted=*/true);
           break;
         }
 
@@ -371,14 +382,6 @@ export class CardResolver {
         // stack named in the aura's modifier.stack field (Iron Reckoning =
         // +value × Rage). Applied to the pre-multiplier value so STR scales it.
         const hitBonus = sumModifierStackScaled(state.heroAuras, 'hero_hit_bonus', state, 'self');
-        // v3: Channel — payload scales with the card's base cooldown.
-        // Longer-cooldown casts pay out a higher multiplier, capped by max_bonus.
-        let channelMult = 1;
-        if (rawEffect?.channel && card?.cooldown) {
-          const cd = card.cooldown;
-          const bonus = Math.min(rawEffect.channel.max_bonus, rawEffect.channel.ramp_per_sec * cd);
-          channelMult = 1 + Math.max(0, bonus);
-        }
         // v3: damage_dealt_pct — outgoing damage multiplier from hero auras
         // (Empower-style buffs). Combined multiplicatively with buffMult.
         const dealtPct = sumModifier(state.heroAuras, 'damage_dealt_pct');
@@ -395,7 +398,7 @@ export class CardResolver {
         // Wave 8: Resonance Crystal multiplies magic-category damage. Falls
         // back to 1× for non-magic cards so other categories are unaffected.
         const resonanceMult = (card?.category === 'magic') ? state.subtileSpellDamageMult : 1;
-        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * channelMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult;
+        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult;
         // Enemy defense is the base value plus any timed 'def' aura modifiers
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
@@ -410,30 +413,23 @@ export class CardResolver {
         const totalRaw = perHit * totalHits;
         state.enemyHP -= totalRaw;
         result.totalDamage += totalRaw;
-        // v3: Siphon — heal a fraction of dealt damage. Capped at 50% of
-        // current max HP per hit to prevent unlimited regen loops.
-        if (rawEffect?.siphon && totalRaw > 0) {
-          const lifesteal = Math.min(
-            Math.floor(state.heroMaxHP * 0.5),
-            Math.floor(totalRaw * rawEffect.siphon),
-          );
-          if (lifesteal > 0) {
-            const before = state.heroHP;
-            state.heroHP = Math.min(state.heroMaxHP, state.heroHP + lifesteal);
-            result.healed += state.heroHP - before;
-          }
-        }
         break;
       }
       case 'heal': {
-        // Phase 9: SPI scales healing received (+10% per point per design/00
-        // §3). Multiplier applied on top of resolvedValue (which already
-        // includes any explicit scale clause).
-        const spiBonus = Math.floor(resolvedValue * (state.heroSpirit * 0.10));
+        // SPI scales healing received (+15% per point — raised from 10% in the
+        // heal-archetype buff pass). Multiplier applied on top of resolvedValue
+        // (which already includes any explicit scale clause).
+        const spiBonus = Math.floor(resolvedValue * (state.heroSpirit * 0.15));
         const totalHeal = resolvedValue + spiBonus;
         const before = state.heroHP;
         state.heroHP = Math.min(state.heroMaxHP, state.heroHP + totalHeal);
-        result.healed += state.heroHP - before;
+        const healed = state.heroHP - before;
+        result.healed += healed;
+        // Rebalance phase: emit heal_received for event_counter auras (Tidefoot Bloom).
+        if (healed > 0) {
+          const payloads = bumpEventCounters(state, 'heal_received', { amount: healed });
+          for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+        }
         break;
       }
       case 'armor': {
@@ -452,6 +448,11 @@ export class CardResolver {
         }
         state.heroDefense += armorAmt;
         result.armorGained += armorAmt;
+        // Rebalance phase: emit armor_gained for event_counter auras (Forge Spike Ward).
+        if (armorAmt > 0) {
+          const payloads = bumpEventCounters(state, 'armor_gained', { amount: armorAmt });
+          for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+        }
         break;
       }
       case 'stamina': {
@@ -472,13 +473,24 @@ export class CardResolver {
       case 'dot': {
         // Discriminate by effect.stack (default: poison).
         const which: StackId = stack ?? 'poison';
+        // Rebalance phase: stack_gain_mult — combat-long multiplier on stack
+        // gains of a named stack (Vengeful Pyre: ×2 rage). Applied to the
+        // resolved value before any target-side modifiers.
+        const sgm = sumStackGainMult(state.heroAuras, which);
+        let resolvedWithMult = sgm !== 0 ? Math.floor(resolvedValue * (1 + sgm)) : resolvedValue;
         // target='self_dot' routes the stack onto the hero as an HP-over-time
         // cost (Tide-Tempered Blade / Bloodtide Mend). Only burn and bleed
         // are wired to hero pools; other stacks fall through as a no-op when
         // self-targeted because they'd require new hero pools.
         if (target === 'self_dot') {
-          if (which === 'burn') state.heroBurnStacks += resolvedValue;
-          else if (which === 'bleed') state.heroBleedStacks += resolvedValue;
+          if (which === 'burn') state.heroBurnStacks += resolvedWithMult;
+          else if (which === 'bleed') state.heroBleedStacks += resolvedWithMult;
+          else if (which === 'stun') state.heroStunStacks = (state.heroStunStacks ?? 0) + Math.max(0, resolvedWithMult);
+          // Rebalance phase: emit stack_applied (self-target).
+          if (resolvedWithMult > 0) {
+            const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount: resolvedWithMult });
+            for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+          }
           break;
         }
         // v3: burn_taken — adds N to every burn application landed on the
@@ -487,8 +499,8 @@ export class CardResolver {
         // Wave 8: subtile Burn Altar bonus is added on top, only when the
         // base application is non-zero (so a no-op card doesn't suddenly
         // start applying burn just because an altar is in range).
-        let appliedValue = resolvedValue;
-        if (which === 'burn' && target === 'enemy' && resolvedValue > 0) {
+        let appliedValue = resolvedWithMult;
+        if (which === 'burn' && target === 'enemy' && resolvedWithMult > 0) {
           if (state.enemyAuras && state.enemyAuras.length > 0) {
             appliedValue += sumModifier(state.enemyAuras, 'burn_taken');
           }
@@ -501,6 +513,12 @@ export class CardResolver {
           case 'stun': state.stunStacks += appliedValue; break;
           case 'slow': state.slowStacks += appliedValue; break;
           case 'rage': state.rageStacks += appliedValue; break;
+        }
+        // Rebalance phase: emit stack_applied event for hero auras counting
+        // stack-application events (Twinflame Flicker, Quicksilver Bleed).
+        if (appliedValue > 0) {
+          const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount: appliedValue });
+          for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
         }
         // v3: on_slow_applied — Gale Echo's per-apply +1 slow extra.
         if (which === 'slow' && resolvedValue > 0 && state.heroAuras && state.heroAuras.length > 0) {
@@ -531,7 +549,15 @@ export class CardResolver {
         const which: StackId = stack ?? 'rage';
         if (rawEffect?.consume_stack && resolvedValue < 0) {
           const wantConsume = -resolvedValue;
-          const consumeFrom = (cur: number) => Math.max(0, cur - Math.min(cur, wantConsume));
+          // Track actual consumed amount (clamped to current pool) so the
+          // `stack_consumed` event reports a truthful magnitude to any
+          // event_counter aura listening (e.g. Quench Lance min_amount:10).
+          let consumed = 0;
+          const consumeFrom = (cur: number) => {
+            const take = Math.min(cur, wantConsume);
+            consumed = Math.max(consumed, take);
+            return Math.max(0, cur - take);
+          };
           if (target === 'enemy') {
             switch (which) {
               case 'poison': state.poisonStacks = consumeFrom(state.poisonStacks); break;
@@ -550,15 +576,29 @@ export class CardResolver {
               default: break;
             }
           }
+          // Rebalance phase: emit stack_consumed for event_counter auras.
+          if (consumed > 0) {
+            const payloads = bumpEventCounters(state, 'stack_consumed', { stack: which, amount: consumed });
+            for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+          }
           break;
         }
+        // Rebalance phase: stack_gain_mult — combat-long multiplier on stack
+        // gains (Vengeful Pyre doubles rage). Applied to positive adds only.
+        const sgm = sumStackGainMult(state.heroAuras, which);
+        const v = resolvedValue > 0 && sgm !== 0 ? Math.floor(resolvedValue * (1 + sgm)) : resolvedValue;
         switch (which) {
-          case 'rage': state.rageStacks += resolvedValue; break;
-          case 'poison': state.poisonStacks += resolvedValue; break;
-          case 'bleed': state.bleedStacks += resolvedValue; break;
-          case 'burn': state.burnStacks += resolvedValue; break;
-          case 'stun': state.stunStacks += resolvedValue; break;
-          case 'slow': state.slowStacks += resolvedValue; break;
+          case 'rage': state.rageStacks += v; break;
+          case 'poison': state.poisonStacks += v; break;
+          case 'bleed': state.bleedStacks += v; break;
+          case 'burn': state.burnStacks += v; break;
+          case 'stun': state.stunStacks += v; break;
+          case 'slow': state.slowStacks += v; break;
+        }
+        // Rebalance phase: emit stack_applied event for event_counter auras.
+        if (v > 0) {
+          const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount: v });
+          for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
         }
         // C5 — Frostbite Charm: on Slow application (any positive), 2 enemy damage.
         if (which === 'slow' && resolvedValue > 0 && target === 'enemy'
@@ -617,7 +657,10 @@ export class CardResolver {
         // axis or `cd_reduction` while alive; triggered auras (e.g.
         // on_armor_break) sit armed and fire their `then` effect once.
         if (!rawEffect) break;
-        const aura = createAura(rawEffect);
+        // Rebalance phase: thread the source card id so event_counter auras
+        // can attribute their stat_gain payload back to the originating card
+        // for cap tracking across repeated plays / copies.
+        const aura = createAura(rawEffect, card?.id);
         if (target === 'enemy') state.enemyAuras.push(aura);
         else state.heroAuras.push(aura);
         break;
@@ -670,11 +713,25 @@ export class CardResolver {
         // consume
         addStack(state, fromStack, side, -consumed);
         if (toStack) {
-          let produced = consumed * (rawEffect?.factor ?? 1);
+          // Deep audit fix: honor `scale` on the conversion factor when set
+          // (Brine Crucible: factor 2 base + 1 per 4 DEX). Without this, the
+          // `([dex])` in the description does nothing.
+          let factor = rawEffect?.factor ?? 1;
+          if (rawEffect?.scale && rawEffect.scale.per > 0 && rawEffect.scale.value !== 0) {
+            const sv = readStat(state, rawEffect.scale.stat);
+            factor += Math.floor(sv / rawEffect.scale.per) * rawEffect.scale.value;
+          }
+          let produced = consumed * factor;
           if (rawEffect?.cap !== undefined) produced = Math.min(produced, rawEffect.cap);
           if ((toStack as string) === 'armor') {
             state.heroDefense += produced;
             result.armorGained += produced;
+            // Emit armor_gained so converted armor also feeds event_counter
+            // auras (Forge Spike Ward), consistent with the `armor` case.
+            if (produced > 0) {
+              const ap = bumpEventCounters(state, 'armor_gained', { amount: produced });
+              for (const p of ap) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+            }
           } else {
             addStack(state, toStack as StackId, side, produced);
           }
@@ -687,18 +744,6 @@ export class CardResolver {
         break;
       }
 
-      case 'echo': {
-        // v3: Echo — next N card resolutions repeat. `echoExpiresAt` is treated
-        // as a countdown timer (ms remaining) by CombatEngine.tick(), so any
-        // unused charges decay with the window.
-        const charges = Math.max(0, Math.floor(resolvedValue));
-        if (charges <= 0) break;
-        state.echoCharges += charges;
-        const ttl = rawEffect?.ttl_ms;
-        const finiteTtl = ttl == null || ttl === undefined ? 8000 : (ttl as number);
-        state.echoExpiresAt = Math.max(state.echoExpiresAt, finiteTtl);
-        break;
-      }
       case 'cd_debt': {
         // v3: Overload — push extra seconds onto this card's next cooldown.
         // Surfaced through ResolveResult and consumed by CombatEngine.
@@ -736,10 +781,22 @@ export class CardResolver {
         (result as ResolveResult & { _devourSucceeded?: boolean })._devourSucceeded = chosenCount > 0;
         break;
       }
-      case 'force_trigger_all_cards': {
-        // v3: Tectonic Reckoning — request CombatEngine to force-resolve every
-        // non-self, non-exhausted deck slot once. Bubbles up via ResolveResult.
-        result.forceTriggerAll = true;
+      case 'stat_gain': {
+        // Rebalance phase: permanent per-combat stat boost with per-card cap.
+        // The aggregate boost is added to readStat() so all subsequent stat
+        // reads (HUD + scaling) see the elevated value. The per-card counter
+        // gates further grants from the *same* card id (independent across
+        // distinct cards but shared across repeated plays / copies).
+        const targetStat: StatId = rawEffect?.stat ?? scale?.stat ?? 'str';
+        const cap = rawEffect?.max_per_combat ?? Number.POSITIVE_INFINITY;
+        const cid = card?.id ?? '__anon';
+        const cur = state.cardStatGainCounters[cid]?.[targetStat] ?? 0;
+        const granted = Math.max(0, Math.min(Math.floor(resolvedValue), cap - cur));
+        if (granted > 0) {
+          state.statBoostsThisCombat[targetStat] = (state.statBoostsThisCombat[targetStat] ?? 0) + granted;
+          if (!state.cardStatGainCounters[cid]) state.cardStatGainCounters[cid] = {};
+          state.cardStatGainCounters[cid][targetStat] = cur + granted;
+        }
         break;
       }
     }
@@ -785,21 +842,36 @@ function checkEnemyStackThreshold(state: CombatState, which: StackId): void {
 /** Add (or subtract via negative `amount`) stacks of a given name on a side. */
 function addStack(state: CombatState, which: StackId, side: 'enemy' | 'self', amount: number): void {
   if (amount === 0) return;
+  let mutated = false;
   if (side === 'self') {
     switch (which) {
-      case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); return;
-      case 'burn': state.heroBurnStacks = Math.max(0, state.heroBurnStacks + amount); return;
-      case 'bleed': state.heroBleedStacks = Math.max(0, state.heroBleedStacks + amount); return;
+      case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); mutated = true; break;
+      case 'burn': state.heroBurnStacks = Math.max(0, state.heroBurnStacks + amount); mutated = true; break;
+      case 'bleed': state.heroBleedStacks = Math.max(0, state.heroBleedStacks + amount); mutated = true; break;
+      default: return;
+    }
+  } else {
+    switch (which) {
+      case 'poison': state.poisonStacks = Math.max(0, state.poisonStacks + amount); mutated = true; break;
+      case 'bleed': state.bleedStacks = Math.max(0, state.bleedStacks + amount); mutated = true; break;
+      case 'burn': state.burnStacks = Math.max(0, state.burnStacks + amount); mutated = true; break;
+      case 'stun': state.stunStacks = Math.max(0, state.stunStacks + amount); mutated = true; break;
+      case 'slow': state.slowStacks = Math.max(0, state.slowStacks + amount); mutated = true; break;
+      case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); mutated = true; break;
       default: return;
     }
   }
-  switch (which) {
-    case 'poison': state.poisonStacks = Math.max(0, state.poisonStacks + amount); return;
-    case 'bleed': state.bleedStacks = Math.max(0, state.bleedStacks + amount); return;
-    case 'burn': state.burnStacks = Math.max(0, state.burnStacks + amount); return;
-    case 'stun': state.stunStacks = Math.max(0, state.stunStacks + amount); return;
-    case 'slow': state.slowStacks = Math.max(0, state.slowStacks + amount); return;
-    case 'rage': state.rageStacks = Math.max(0, state.rageStacks + amount); return;
+  // Rebalance fix: stack-PRODUCTION paths (multiply_stack / stack_boost /
+  // convert_stack all route through addStack) must feed event-counter auras
+  // and stack-threshold follow-ups exactly like the dot/stack cases do, so a
+  // Catalyst/Pyre-Surge/conversion can advance Twinflame Flicker, Quicksilver
+  // Bleed, Cinder Squall, etc. Only positive productions emit (consumption is
+  // negative). dot/stack cases do NOT call addStack, so this never double-fires.
+  if (mutated && amount > 0) {
+    const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount });
+    for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+    if (side === 'enemy') checkEnemyStackThreshold(state, which);
+    else checkSelfStackThreshold(state, which);
   }
 }
 

@@ -57,33 +57,6 @@
       }
     ]
   },
-  "Headless Fire Horse": {
-    "cardDrops": {
-      "enemyType": "Headless Fire Horse",
-      "cardPool": [
-        "t2-fire-fire",
-        "t2-attack-fire",
-        "t2-fire-water",
-        "t2-air-fire",
-        "t2-earth-fire",
-        "t2-agility-fire",
-        "t2-attack-attack",
-        "t3-fire-fire-fire",
-        "t3-attack-fire-fire"
-      ],
-      "minDrops": 1,
-      "maxDrops": 1,
-      "choicesShown": 3
-    },
-    "tileDrops": [
-      {
-        "tileType": "event",
-        "dropChance": 0.5,
-        "minQuantity": 1,
-        "maxQuantity": 2
-      }
-    ]
-  },
   "Doom Knight": {
     "cardDrops": {
       "enemyType": "Doom Knight",
@@ -241,32 +214,6 @@
         "t2-attack-attack",
         "t3-fire-fire-fire",
         "t3-attack-fire-fire"
-      ],
-      "minDrops": 1,
-      "maxDrops": 1,
-      "choicesShown": 3
-    },
-    "tileDrops": [
-      {
-        "tileType": "combat",
-        "dropChance": 0.3,
-        "minQuantity": 1,
-        "maxQuantity": 1
-      }
-    ]
-  },
-  "Giant Beetle": {
-    "cardDrops": {
-      "enemyType": "Giant Beetle",
-      "cardPool": [
-        "t2-defense-defense",
-        "t2-attack-defense",
-        "t2-defense-earth",
-        "t2-defense-water",
-        "t2-counter-defense",
-        "t2-attack-attack",
-        "t3-defense-defense-defense",
-        "t3-attack-defense-defense"
       ],
       "minDrops": 1,
       "maxDrops": 1,
@@ -456,33 +403,6 @@
         "t2-attack-attack",
         "t3-fire-fire-fire",
         "t3-earth-fire-fire"
-      ],
-      "minDrops": 1,
-      "maxDrops": 1,
-      "choicesShown": 3
-    },
-    "tileDrops": [
-      {
-        "tileType": "combat",
-        "dropChance": 0.3,
-        "minQuantity": 1,
-        "maxQuantity": 1
-      }
-    ]
-  },
-  "Mecha Warrior": {
-    "cardDrops": {
-      "enemyType": "Mecha Warrior",
-      "cardPool": [
-        "t2-defense-defense",
-        "t2-attack-defense",
-        "t2-defense-earth",
-        "t2-defense-fire",
-        "t2-defense-water",
-        "t2-counter-defense",
-        "t2-attack-attack",
-        "t3-defense-defense-defense",
-        "t3-attack-defense-defense"
       ],
       "minDrops": 1,
       "maxDrops": 1,

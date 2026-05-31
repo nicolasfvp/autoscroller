@@ -3,6 +3,10 @@ import { type RunState } from '../state/RunState';
 import { FONTS } from './StyleConstants';
 // Re-export Phase 9 helpers from a Phaser-free module so tests can import
 // without booting Phaser. The runtime path here still uses them.
+
+import { extractStatusRowData } from './LoopHUD.helpers';
+import { resolveHeroStats } from '../systems/hero/HeroStatsResolver';
+
 export { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
 export type { StatusRowData } from './LoopHUD.helpers';
 
@@ -30,6 +34,12 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   private pendingBadge!: Phaser.GameObjects.Text;
   private pendingBg!: Phaser.GameObjects.Graphics;
+
+
+  // Phase 9 (Design v2): STR/VIT/DEX/INT/SPI status row
+  private statTexts: { str?: Phaser.GameObjects.Text; vit?: Phaser.GameObjects.Text; dex?: Phaser.GameObjects.Text; int?: Phaser.GameObjects.Text; spi?: Phaser.GameObjects.Text } = {};
+
+
 
   // Loop progress bar (between panels)
   private loopProgressFill!: Phaser.GameObjects.Rectangle;
@@ -212,6 +222,56 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   }
 
 
+
+  /**
+   * Phase 9 (Design v2): VIT/DEX/INT/SPI single-row status display.
+   *
+   * Positioned BELOW the left panel (y=124+ region) so it doesn't overlap
+   * gold/loop/HP bar geometry. Universal — renders for all classes.
+   * UI-SPEC §Spacing + §Typography + §Color.
+   */
+  /**
+   * Phase 9 (Design v2): Tween a single status-stat number to a new value.
+   *
+   * 280ms counter tween + 1.1× scale pulse on the changed digit
+   * per UI-SPEC §Interaction Contract.
+   */
+  private applyStatTween(key: 'str' | 'vit' | 'dex' | 'int' | 'spi', newValue: number): void {
+    const txt = this.statTexts[key];
+    if (!txt) return;
+    const currentValue = parseInt(txt.text, 10);
+    // Always write the final value first so the HUD is correct even if the
+    // tween onUpdate is throttled or the scene ticks slower than expected.
+    txt.setText(String(newValue));
+    if (!Number.isFinite(currentValue) || currentValue === newValue) return;
+    // Animate from the previous value purely for visual polish — the text
+    // above is already correct, so a stalled tween won't leave stale numbers.
+    const counter = this.scene.tweens.addCounter({
+      from: currentValue, to: newValue, duration: 280,
+      onUpdate: (tw) => {
+        const v = tw.getValue();
+        txt.setText(String(Math.round(v ?? newValue)));
+      },
+      onComplete: () => {
+        txt.setText(String(newValue));
+        this.pendingTweens.delete(counter);
+      },
+      onStop: () => {
+        txt.setText(String(newValue));
+        this.pendingTweens.delete(counter);
+      },
+    });
+    this.pendingTweens.add(counter);
+
+    const pulse = this.scene.tweens.add({
+      targets: txt, scale: 1.1, duration: 140, yoyo: true,
+      onComplete: () => { this.pendingTweens.delete(pulse); },
+      onStop: () => { this.pendingTweens.delete(pulse); },
+    });
+    this.pendingTweens.add(pulse);
+  }
+
+
   private buildLoopProgressBar(scene: Phaser.Scene): void {
     const P = LoopHUD;
     const cx = P.PROG_X + P.PROG_W / 2;
@@ -268,9 +328,12 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     // bar. The text label still shows the raw `currentHP/maxHP` so the
     // underlying corruption is surfaced to the user, but the bar geometry
     // stays sane.
-    const maxHPForBar = Math.max(1, runState.hero.maxHP);
+    // Use resolved maxHP so passive stat_bonus relics (bronze_scale, vitality_ring)
+    // immediately reshape the bar denominator out of combat.
+    const resolvedMaxHP = resolveHeroStats(runState).maxHP;
+    const maxHPForBar = Math.max(1, resolvedMaxHP);
     this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / maxHPForBar);
-    this.hpText.setText(`${runState.hero.currentHP}/${runState.hero.maxHP}`);
+    this.hpText.setText(`${runState.hero.currentHP}/${resolvedMaxHP}`);
     this.tpText.setText(`${runState.economy.tilePoints} TP`);
     const MAT: Record<string, string> = { wood: '🪵', stone: '🪨', iron: '⚙', crystal: '💎', bone: '🦴', herbs: '🌿', essence: '✨' };
     const mats = Object.entries(runState.economy.materials ?? {}).filter(([, v]) => v > 0);
@@ -279,7 +342,16 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const pending = runState.deck.droppedCards?.length ?? 0;
     this.pendingBadge.setText(pending > 0 ? `📦 ${pending} new cards` : '').setVisible(pending > 0);
 
-    // Phase 9 (Design v2): refresh VIT/DEX/INT/SPI status row from resolveHeroStats.
+
+    // Phase 9 (Design v2): refresh STR/VIT/DEX/INT/SPI status row from resolveHeroStats.
+    const status = extractStatusRowData(runState);
+    this.applyStatTween('str', status.str);
+    this.applyStatTween('vit', status.vit);
+    this.applyStatTween('dex', status.dex);
+    this.applyStatTween('int', status.int);
+    this.applyStatTween('spi', status.spi);
+
+
   }
 
   private updateShopToggle(enabled: boolean): void {

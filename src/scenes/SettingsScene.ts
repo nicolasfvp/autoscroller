@@ -1,7 +1,7 @@
 ﻿import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
-import { getAudioManager } from '../audio/AudioManager';
+import { AudioManager } from '../systems/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
 import { saveManager } from '../core/SaveManager';
@@ -57,10 +57,9 @@ export class SettingsScene extends Scene {
     this.graphicsQuality = storedQ ?? this.metaState.graphicsQuality ?? 'balanced';
     this.initialGraphicsQuality = this.graphicsQuality;
 
-    // Apply loaded audio prefs
-    const audio = getAudioManager();
-    audio.setSFXVolume(this.sfxVolume);
-    audio.setEnabled(this.sfxEnabled);
+    // Apply loaded audio prefs to the REAL audio path (the static
+    // systems/AudioManager that every in-game SFX/BGM routes through).
+    this.applyAudioPrefs();
 
     // Painted scribe-study backdrop — falls back to flat panel if missing.
     if (this.textures.exists('bg_settings_scribe')) {
@@ -132,7 +131,7 @@ export class SettingsScene extends Scene {
       this.volumeThumb.x = clampedX;
       this.sfxVolume = (clampedX - 400) / 300;
       this.volumeLabel.setText(`${Math.round(this.sfxVolume * 100)}%`);
-      getAudioManager().setSFXVolume(this.sfxVolume);
+      AudioManager.setMasterVolume(this.sfxVolume);
     });
   }
 
@@ -141,9 +140,17 @@ export class SettingsScene extends Scene {
     const label = this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
     this.muteBtn = createButton(this, LAYOUT.centerX, 245, label, () => {
       this.sfxEnabled = !this.sfxEnabled;
-      getAudioManager().setEnabled(this.sfxEnabled);
+      AudioManager.setMuted(!this.sfxEnabled);
+      this.game.sound.mute = !this.sfxEnabled;
       this.muteBtn.setText(this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF');
     }, 'secondary');
+  }
+
+  /** Push the loaded sfxVolume / sfxEnabled prefs into the real audio path. */
+  private applyAudioPrefs(): void {
+    AudioManager.setMasterVolume(this.sfxVolume);
+    AudioManager.setMuted(!this.sfxEnabled);
+    this.game.sound.mute = !this.sfxEnabled;
   }
 
   // ── Game Speed Toggle (y: 300) ──────────────────────────

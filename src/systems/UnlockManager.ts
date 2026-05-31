@@ -19,8 +19,12 @@ export function getAvailableRelics(metaUnlockedRelics: string[]): RelicDef[] {
   );
 }
 
+// Two gentle utility sub-tiles ship unlocked by default; the rest are gated
+// behind the Workshop building. Keep this list in sync with CollectionRegistry.
+export const DEFAULT_SUBTILES = ['subtile_camp', 'subtile_manawell'];
+
 export function getAvailableTiles(metaUnlockedTiles: string[]): TileDef[] {
-  const baseTileIds = ['basic', 'forest', 'event', 'treasure', 'boss'];
+  const baseTileIds = ['basic', 'forest', 'event', 'treasure', 'boss', ...DEFAULT_SUBTILES];
   const allTileIds = [...baseTileIds, ...metaUnlockedTiles.filter(id => !baseTileIds.includes(id))];
   return allTileIds.map(id => ({ id })) as TileDef[];
 }

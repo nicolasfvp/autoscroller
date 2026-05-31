@@ -12,6 +12,8 @@ import { CombatEngine } from '../systems/combat/CombatEngine';
 import type { SubtileEffect } from '../systems/SubtileResolver';
 import { CombatHUD } from '../ui/CombatHUD';
 import { CardQueueDisplay } from '../ui/CardQueueDisplay';
+import { setLiveStats, clearLiveStats } from '../ui/CardDynamic';
+import { readStat } from '../systems/hero/HeroStatsResolver';
 import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
@@ -41,7 +43,7 @@ export class CombatScene extends Scene {
 
   private gameSpeed: number = 1;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
-  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
+  private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -57,7 +59,6 @@ export class CombatScene extends Scene {
         effects: cardDef.effects,
         exhaust: cardDef.exhaust,
         spend_armor: cardDef.spend_armor,
-        cooldown_scale: cardDef.cooldown_scale,
       });
       const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
       keywordIntro.handleCardPlayed(this, fullText);
@@ -194,7 +195,7 @@ export class CombatScene extends Scene {
           enemyDef.type === 'boss',
           currentRun.loop.difficultyMultiplier,
         );
-        const xpEarned = getXPForEnemy(enemyDef.type);
+        const xpEarned = getXPForEnemy(this.initData?.isElite && enemyDef.type !== 'boss' ? 'elite' : enemyDef.type);
         earnXP(currentRun, xpEarned);
         if (enemyDef.type === 'boss') {
           currentRun.loop.lastBossDefeated = true;
@@ -220,7 +221,7 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
 
-  init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
+  init(data: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
 
@@ -317,17 +318,25 @@ export class CombatScene extends Scene {
         enemyDef.type === 'boss',
         run.loop.difficultyMultiplier,
       );
+      // Elite premium: tougher, hits harder, renamed + retyped so it grants
+      // elite XP and reads as "Elite <name>" in the HUD.
+      const elite = !!data.isElite && enemyDef.type !== 'boss';
       const scaledEnemy = {
         ...enemyDef,
-        baseHP: scaled.hp,
+        type: elite ? 'elite' : enemyDef.type,
+        name: elite ? `Elite ${enemyDef.name}` : enemyDef.name,
+        baseHP: elite ? Math.round(scaled.hp * 1.6) : scaled.hp,
         baseDefense: scaled.defense,
-        attack: { ...enemyDef.attack, damage: scaled.damage },
+        attack: { ...enemyDef.attack, damage: elite ? Math.round(scaled.damage * 1.3) : scaled.damage },
       };
 
       const combatState = createCombatState(run, scaledEnemy);
       // Wave 6: apply pre-fight subtile effects before the engine takes over.
       this.applySubtileEffects(combatState, data.subtileEffects ?? []);
       this.engine = new CombatEngine(combatState);
+      // Seed card headline numbers with the fight's starting stats so the
+      // initial queue renders correct values before the first tick.
+      this.pushLiveStats();
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
       const heroIdleKey = `${sp}_idle`;
@@ -413,7 +422,6 @@ export class CombatScene extends Scene {
               effects: cardDef.effects,
               exhaust: cardDef.exhaust,
               spend_armor: cardDef.spend_armor,
-              cooldown_scale: cardDef.cooldown_scale,
             });
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText);
@@ -521,7 +529,25 @@ export class CombatScene extends Scene {
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
       if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      // Feed live effective stats so card headline numbers track status changes
+      // (buffs, auras, stat_gain) in real time.
+      this.pushLiveStats();
     }
+  }
+
+  /** Push the hero's current effective stats to CardDynamic so every visible
+   *  card face refreshes its headline number. Reads the same stat values the
+   *  resolver scales with (base + auras + per-combat stat gains). */
+  private pushLiveStats(): void {
+    if (!this.engine) return;
+    const s = this.engine.getState();
+    setLiveStats({
+      str: readStat(s, 'str'),
+      vit: readStat(s, 'vit'),
+      dex: readStat(s, 'dex'),
+      int: readStat(s, 'int'),
+      spi: readStat(s, 'spi'),
+    });
   }
 
   private cleanup(): void {
@@ -534,6 +560,8 @@ export class CombatScene extends Scene {
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
+    // Out of combat, card headline numbers fall back to the run's resolved stats.
+    clearLiveStats();
     try { const run = getRun(); run.isInCombat = false; } catch {}
   }
 }

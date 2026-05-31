@@ -46,6 +46,125 @@ export const KEYWORD_DEFINITIONS: KeywordDef[] = [
   },
 ];
 
+// ── Token glossary (stacks + stats) ────────────────────────────────────
+//
+// Separate from KEYWORD_DEFINITIONS on purpose: the four modifier keywords
+// are *detected inside card text* (and feed synergy detection via
+// detectKeywords), while the entries below are the colored TOKENS the engine
+// renders as combat chips (🔥 Burn, 😡 Rage, STR/VIT/…). They never need to be
+// detected in prose, so they live in their own always-visible reference list
+// surfaced by the glossary panel.
+//
+// Definitions mirror the live engine so a player can spot-check them:
+//   - Stacks: src/systems/combat/CombatEngine.ts (tickActiveDoTs) +
+//     src/systems/combat/StatusEffects.ts + EnemyAI cooldown handling.
+//   - Stats: src/systems/hero/HeroStatsResolver.ts + CardResolver damage/heal.
+export const TOKEN_GLOSSARY: KeywordDef[] = [
+  // Stacks --------------------------------------------------------------
+  {
+    keyword: 'Burn',
+    category: 'stack',
+    definition: 'Fire damage-over-time on the enemy. Each combat tick deals damage equal to the stack count (capped around 8/tick). Burn does NOT decay on its own — it stays until a Pyre/detonator card consumes it. INT-scaled cards apply more Burn.',
+  },
+  {
+    keyword: 'Bleed',
+    category: 'stack',
+    definition: 'Physical damage-over-time on the enemy. Each tick deals 1 per stack — or 2 per stack if the enemy attacked since the last tick — then loses 1 stack. Rewards aggressive, fast-swinging fights. DEX-scaled cards apply more Bleed.',
+  },
+  {
+    keyword: 'Poison',
+    category: 'stack',
+    definition: 'Lingering damage-over-time on the enemy. Each tick deals damage equal to the stack count and the stack decays slowly (about 1 every other tick), so it out-lasts Bleed. INT-scaled cards apply more Poison.',
+  },
+  {
+    keyword: 'Stun',
+    category: 'stack',
+    definition: 'Crowd control on the enemy. While any Stun stacks remain, the enemy’s attack cooldown is frozen so it cannot act. Deals no damage; loses 1 stack each tick. INT-scaled cards apply more Stun.',
+  },
+  {
+    keyword: 'Slow',
+    category: 'stack',
+    definition: 'Soft crowd control on the enemy. Slows the enemy’s attack cooldown (about 8% per stack, capped near 50%) and deals a small tick of damage equal to the stack count; loses 1 stack each tick.',
+  },
+  {
+    keyword: 'Rage',
+    category: 'stack',
+    definition: 'A self stack on the hero. Does no damage by itself — instead it powers Berserk effects and detonators that scale with or spend your current Rage. Persists across the fight until a card consumes it.',
+  },
+  {
+    keyword: 'Armor',
+    category: 'stack',
+    definition: 'Temporary defense on the hero. Absorbs incoming damage before it reaches HP. Spent down as you take hits; some cards spend or convert it. Brace effects fire when your Armor breaks (drops from above 0 to 0). VIT boosts armor gained.',
+  },
+  // Stats ---------------------------------------------------------------
+  {
+    keyword: 'Strength',
+    category: 'stat',
+    definition: 'STR. A global damage multiplier: card damage is multiplied by ~1 + (STR−1) × 0.25 (STR 1 = baseline, 4 = +75%, 10 = +225%). Lifts every attack you play.',
+  },
+  {
+    keyword: 'Dexterity',
+    category: 'stat',
+    definition: 'DEX. Governs the Agility line and Bleed scaling — DEX-tagged cards apply more Bleed and convert/scale more efficiently the higher your DEX.',
+  },
+  {
+    keyword: 'Intellect',
+    category: 'stat',
+    definition: 'INT. Powers the magic line — INT-tagged cards apply more Burn, Poison and Stun, and several spells add flat damage per point of INT.',
+  },
+  {
+    keyword: 'Vitality',
+    category: 'stat',
+    definition: 'VIT. Boosts your survivability: raises Max HP (about +5 HP per point) and increases the Armor your defense cards grant.',
+  },
+  {
+    keyword: 'Spirit',
+    category: 'stat',
+    definition: 'SPI. Amplifies healing received — every heal is increased by 15% per point of SPI.',
+  },
+];
+
+/** Bracketed-token / abbreviation aliases -> canonical TOKEN_GLOSSARY keyword. */
+const TOKEN_ALIASES: Record<string, string> = {
+  // stat abbreviations
+  str: 'Strength',
+  dex: 'Dexterity',
+  int: 'Intellect',
+  vit: 'Vitality',
+  spi: 'Spirit',
+  strength: 'Strength',
+  dexterity: 'Dexterity',
+  intellect: 'Intellect',
+  vitality: 'Vitality',
+  spirit: 'Spirit',
+  // stacks (full names; HP/armor synonyms)
+  burn: 'Burn',
+  bleed: 'Bleed',
+  poison: 'Poison',
+  stun: 'Stun',
+  slow: 'Slow',
+  rage: 'Rage',
+  armor: 'Armor',
+};
+
+const TOKEN_INDEX: Map<string, KeywordDef> = new Map(
+  TOKEN_GLOSSARY.map((d) => [d.keyword.toLowerCase(), d]),
+);
+
+/**
+ * Resolve a token name to its TOKEN_GLOSSARY definition. Accepts bracketed
+ * forms (`[burn]`), abbreviations (`str`, `STR`), and full names
+ * (`Strength`); case-insensitive. Returns undefined for unknown tokens.
+ */
+export function lookupToken(token: string): KeywordDef | undefined {
+  if (!token) return undefined;
+  const cleaned = token.trim().replace(/^\[+/, '').replace(/\]+$/, '').trim().toLowerCase();
+  if (!cleaned) return undefined;
+  const canonical = TOKEN_ALIASES[cleaned];
+  if (canonical) return TOKEN_INDEX.get(canonical.toLowerCase());
+  return TOKEN_INDEX.get(cleaned);
+}
+
 const CATEGORY_ORDER: Record<KeywordCategory, number> = {
   stack: 0,
   modifier: 1,

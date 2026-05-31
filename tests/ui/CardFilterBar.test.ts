@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { applyFilters, FILTER_ELEMENT_OPTIONS, type CardFilters } from '../../src/ui/CardFilterBar.pure';
+import {
+  applyFilters, sortCards, FILTER_ELEMENT_OPTIONS, CARD_SORT_MODES,
+  type CardFilters,
+} from '../../src/ui/CardFilterBar.pure';
 import type { CardDefinition } from '../../src/data/types';
 
 // Minimal CardDefinition factory — only fields applyFilters reads matter.
@@ -106,5 +109,54 @@ describe('CardFilterBar / applyFilters', () => {
   it('search with no matches returns empty array', () => {
     const result = applyFilters(pool, makeFilters({ search: 'zzznotacard' }));
     expect(result).toHaveLength(0);
+  });
+});
+
+describe('CardFilterBar / sortCards', () => {
+  const pool: CardDefinition[] = [
+    card({ id: 's1', name: 'Cinder',  tier: 3, cooldown: 2, cost: { stamina: 3 } as any }),
+    card({ id: 's2', name: 'Aegis',   tier: 1, cooldown: 5, cost: { mana: 1 } as any }),
+    card({ id: 's3', name: 'Bolt',    tier: 2, cooldown: 1, cost: { stamina: 1, mana: 1 } as any }),
+    card({ id: 's4', name: 'Drift',   tier: 1, cooldown: 3 }),
+  ];
+
+  it('exposes the four sort modes in order', () => {
+    expect(CARD_SORT_MODES).toEqual(['tier', 'cost', 'cooldown', 'name']);
+  });
+
+  it('does not mutate the input array', () => {
+    const before = pool.map((c) => c.id);
+    sortCards(pool, 'name');
+    expect(pool.map((c) => c.id)).toEqual(before);
+  });
+
+  it('sorts by tier ascending (name tie-break)', () => {
+    const ids = sortCards(pool, 'tier').map((c) => c.id);
+    // T1: Aegis(s2), Drift(s4); T2: Bolt(s3); T3: Cinder(s1)
+    expect(ids).toEqual(['s2', 's4', 's3', 's1']);
+  });
+
+  it('sorts by total cost ascending', () => {
+    const ids = sortCards(pool, 'cost').map((c) => c.id);
+    // costs: s4=0, s2=1, s3=2, s1=3
+    expect(ids).toEqual(['s4', 's2', 's3', 's1']);
+  });
+
+  it('sorts by cooldown ascending', () => {
+    const ids = sortCards(pool, 'cooldown').map((c) => c.id);
+    // cd: s3=1, s1=2, s4=3, s2=5
+    expect(ids).toEqual(['s3', 's1', 's4', 's2']);
+  });
+
+  it('sorts by name alphabetically', () => {
+    const ids = sortCards(pool, 'name').map((c) => c.id);
+    // Aegis, Bolt, Cinder, Drift
+    expect(ids).toEqual(['s2', 's3', 's1', 's4']);
+  });
+
+  it('treats missing tier as T1', () => {
+    const legacy = [card({ id: 'L', name: 'Zzz' }), card({ id: 'T2', name: 'Aaa', tier: 2 })];
+    const ids = sortCards(legacy, 'tier').map((c) => c.id);
+    expect(ids).toEqual(['L', 'T2']);
   });
 });

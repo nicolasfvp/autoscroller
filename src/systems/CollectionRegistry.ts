@@ -2,6 +2,7 @@ import cardsJson from '../data/json/cards.json';
 import relicsData from '../data/json/relics.json';
 import enemiesData from '../data/json/enemies.json';
 import { MetaState } from '../state/MetaState';
+import { DEFAULT_SUBTILES } from './UnlockManager';
 
 const cardsData: any[] = (cardsJson as any).cards;
 
@@ -61,9 +62,9 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
   // — Base region tiles: always available.
   // — Special tiles: event/treasure/boss are seeded into runs from the start.
   // — Unlockable region tiles: gated behind the Workshop.
-  // — Subtiles: special encounters (camps, totems, altars, etc.). They're seeded
-  //   into runs by world generation rather than the player picking them, so we
-  //   list them as always-unlocked for collection display purposes.
+  // — Subtiles: combat amplifier tiles (camps, totems, altars, etc.). Gated
+  //   behind the Workshop alongside the region tiles — the player unlocks them
+  //   via meta.unlockedTiles before they can be placed.
   const baseTiles = ['basic', 'forest', 'event', 'treasure', 'boss'];
   const unlockableTiles = ['graveyard', 'swamp', 'desert', 'lava'];
   const subtileNames: Record<string, string> = {
@@ -85,8 +86,8 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
       name: isSubtile
         ? subtileNames[id]
         : id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      isUnlocked: isSubtile || baseTiles.includes(id) || metaState.unlockedTiles.includes(id),
-      unlockHint: unlockableTiles.includes(id) ? 'Unlock via Workshop' : undefined,
+      isUnlocked: baseTiles.includes(id) || DEFAULT_SUBTILES.includes(id) || metaState.unlockedTiles.includes(id),
+      unlockHint: ((unlockableTiles.includes(id) || isSubtile) && !DEFAULT_SUBTILES.includes(id)) ? 'Unlock via Workshop' : undefined,
     };
   });
 

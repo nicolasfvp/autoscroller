@@ -44,7 +44,13 @@ interface ChipDisplay {
   bg: Phaser.GameObjects.Rectangle;
   icon: Phaser.GameObjects.Text;
   label: Phaser.GameObjects.Text;
+  /** Current tooltip string for this slot (updated each layout pass). */
+  tooltip: string;
 }
+
+// Shared hover tooltip geometry.
+const TOOLTIP_DEPTH = 200;       // above the HUD container (depth 100)
+const TOOLTIP_MAX_W = 220;
 
 export class CombatHUD {
   private scene: Phaser.Scene;
@@ -75,6 +81,10 @@ export class CombatHUD {
   private heroChipPool: ChipDisplay[] = [];
   private enemyChipPool: ChipDisplay[] = [];
 
+  // Shared hover tooltip for status chips (lazy-shown on pointerover).
+  private chipTooltipBg!: Phaser.GameObjects.Rectangle;
+  private chipTooltipText!: Phaser.GameObjects.Text;
+
   // Display values (for tween delta checks)
   private displayedHeroHp  = 0;
   private targetHeroHp     = 0;
@@ -99,7 +109,52 @@ export class CombatHUD {
     this.buildHeroPanel();
     this.buildEnemyPanel();
     this.buildCooldownArc();
+    this.buildChipTooltip();
     this.buildChipPools();
+  }
+
+  // ── Chip hover tooltip ─────────────────────────────────────────
+  // A single shared bg+text pair, hidden by default. Reused by every chip so
+  // we don't allocate per-chip tooltip objects. Lives at a depth above the
+  // HUD container; positioned just under the hovered chip on pointerover.
+  private buildChipTooltip(): void {
+    const s = this.scene;
+    this.chipTooltipBg = s.add.rectangle(0, 0, 10, 10, 0x05050f, 0.95)
+      .setOrigin(0, 0)
+      .setStrokeStyle(1, 0x4a9eff, 0.7)
+      .setDepth(TOOLTIP_DEPTH)
+      .setScrollFactor(0)
+      .setVisible(false);
+    this.chipTooltipText = s.add.text(0, 0, '', {
+      fontFamily: FF, fontSize: '11px',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+      wordWrap: { width: TOOLTIP_MAX_W - 12 },
+    })
+      .setOrigin(0, 0)
+      .setDepth(TOOLTIP_DEPTH + 1)
+      .setScrollFactor(0)
+      .setVisible(false);
+  }
+
+  private showChipTooltip(text: string, chipX: number, chipY: number): void {
+    if (!text) return;
+    this.chipTooltipText.setText(text);
+    const padX = 6;
+    const padY = 4;
+    const w = Math.min(TOOLTIP_MAX_W, this.chipTooltipText.width + padX * 2);
+    const h = this.chipTooltipText.height + padY * 2;
+    // Position below the chip; clamp to the canvas so edge chips stay on-screen.
+    let tx = chipX;
+    let ty = chipY + CHIP_HEIGHT;
+    const maxX = (this.scene.scale?.width ?? 800) - w - 2;
+    if (tx > maxX) tx = Math.max(2, maxX);
+    this.chipTooltipBg.setPosition(tx, ty).setSize(w, h).setVisible(true);
+    this.chipTooltipText.setPosition(tx + padX, ty + padY).setVisible(true);
+  }
+
+  private hideChipTooltip(): void {
+    this.chipTooltipBg.setVisible(false);
+    this.chipTooltipText.setVisible(false);
   }
 
   // ── Hero panel ─────────────────────────────────────────────────
@@ -228,7 +283,21 @@ export class CombatHUD {
     }).setOrigin(0, 0.5);
     c.add([bg, icon, label]);
     this.container.add(c);
-    return { container: c, bg, icon, label };
+
+    const slot: ChipDisplay = { container: c, bg, icon, label, tooltip: '' };
+
+    // Hover affordance: show the chip's tooltip string (e.g. "Burn: …") near
+    // the chip. The bg's hit area is updated each layout pass when its width
+    // changes (setSize keeps Phaser's input hit-rect in sync).
+    bg.setInteractive({ useHandCursor: false });
+    bg.on('pointerover', () => {
+      // Chip container is at the chip's top-left x; bg origin y is centered, so
+      // the chip's visual top is container.y - CHIP_HEIGHT/2.
+      this.showChipTooltip(slot.tooltip, c.x, c.y - CHIP_HEIGHT / 2);
+    });
+    bg.on('pointerout', () => this.hideChipTooltip());
+
+    return slot;
   }
 
   private layoutChips(
@@ -245,13 +314,19 @@ export class CombatHUD {
       const chip = chips[i];
       if (!chip) {
         slot.container.setVisible(false);
+        slot.tooltip = '';
         continue;
       }
       slot.icon.setText(chip.icon);
       slot.label.setText(chip.label);
       slot.label.setColor(chip.color);
+      slot.tooltip = chip.tooltip;
       const w = Math.max(36, 22 + slot.label.width + 6);
-      slot.bg.width = w;
+      // setSize (not just .width) so the Rectangle geometry updates, then keep
+      // the input hit-area Rectangle in sync with the new width.
+      slot.bg.setSize(w, CHIP_HEIGHT);
+      const hit = slot.bg.input?.hitArea as Phaser.Geom.Rectangle | undefined;
+      if (hit) { hit.width = w; hit.height = CHIP_HEIGHT; }
       if (x > 0 && x + w > maxWidth) {
         x = 0;
         row += 1;
@@ -407,6 +482,11 @@ export class CombatHUD {
     this.staminaTween = undefined;
     this.manaTween = undefined;
     this.enemyHpTween = undefined;
+
+    // Tooltip objects live on the scene (not the HUD container) so they render
+    // above it — destroy them explicitly.
+    this.chipTooltipBg?.destroy();
+    this.chipTooltipText?.destroy();
 
     this.container.destroy(true);
   }

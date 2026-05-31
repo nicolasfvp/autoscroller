@@ -14,6 +14,8 @@ data/generated/
 verify-shots/
 verify-screenshots/
 
+audit-shots/
+
 # ComfyUI MCP generated asset outputs (staging area — copy to public/ when approved)
 comfy/
 
@@ -32,4 +34,3 @@ comfy-mcp/*.json
 !comfy-mcp/ui_button.json
 !comfy-mcp/rmv-background.json
 comfyui/**/*.json
-

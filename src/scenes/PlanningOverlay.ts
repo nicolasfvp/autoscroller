@@ -522,8 +522,14 @@ export class PlanningOverlay extends Scene {
     // in a dedicated row below the main inventory and dim out when there
     // is no reserved slot to receive them.
     const allPlaceable = getAllPlaceableTiles();
-    const placeableTiles = allPlaceable.filter(t => t.type !== 'subtile');
-    const subtileTiles = allPlaceable.filter(t => t.type === 'subtile');
+    // Workshop gating: terrain tiles (graveyard/swamp/desert/lava) AND combat
+    // sub-tile amplifiers are only placeable once unlocked via the Workshop
+    // building (run.pool.tiles is seeded from meta.unlockedTiles at run start).
+    // forest + event + treasure are in the base pool.
+    const unlockedTileKeys = new Set(getRun().pool?.tiles ?? []);
+    const inPool = (key: string) => unlockedTileKeys.size === 0 || unlockedTileKeys.has(key);
+    const placeableTiles = allPlaceable.filter(t => t.type !== 'subtile' && inPool(t.key));
+    const subtileTiles = allPlaceable.filter(t => t.type === 'subtile' && inPool(t.key));
 
     // Fixed uniform tile size for all tiles across both rows
     const frameWidth  = 55;

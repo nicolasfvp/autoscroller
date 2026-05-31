@@ -1,5 +1,5 @@
 import { rollTreasureLoot, type LootResult, type UnlockState } from './LootGenerator';
-import type { RunState } from '../state/RunState';
+import { type RunState, addRelicToRun } from '../state/RunState';
 
 export interface TreasureItem {
   type: string;
@@ -35,7 +35,7 @@ export function openTreasure(runState: RunState, loopCount: number, unlockState?
       case 'relic': {
         const relicId = item.id ?? 'mysterious_amulet';
         const resolvedId = relicId === 'random' ? 'mysterious_amulet' : relicId;
-        runState.relics.push(resolvedId);
+        addRelicToRun(runState, resolvedId);
         treasureItems.push({ type: 'relic', name: resolvedId, id: resolvedId });
         break;
       }

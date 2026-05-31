@@ -93,10 +93,13 @@ describe('relics.json', () => {
     }
   });
 
-  it('v2 invariant: no relic carries unlockSource (all available from shop/treasure)', () => {
-    for (const relic of relics) {
-      expect(relic, `relic ${relic.id} should not carry unlockSource in v2`).not.toHaveProperty('unlockSource');
+  it('26 strong/rare relics are gated behind the Shrine (unlockSource=shrine); 54 base', () => {
+    const gated = relics.filter((r: any) => r.unlockSource);
+    expect(gated.length).toBe(26);
+    for (const r of gated) {
+      expect(r.unlockSource, `relic ${r.id} unlockSource`).toBe('shrine');
     }
+    expect(relics.length - gated.length).toBe(54);
   });
 });
 
@@ -243,6 +246,8 @@ describe('Phase 10 (element system) content totals + coverage', () => {
       // v3 archetype redesigns:
       'echo', 'cd_debt', 'convert_stack', 'multiply_stack', 'stack_boost',
       'devour', 'force_trigger_all_cards',
+      // Rebalance phase: per-combat permanent stat boost with per-card cap.
+      'stat_gain',
     ]);
     for (const card of cards as any[]) {
       for (const eff of card.effects) {
