@@ -1,9 +1,8 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { FONTS } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { createWoodButton } from '../ui/WoodButton';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -15,23 +14,22 @@ export class PauseScene extends Scene {
   }
 
   create(): void {
-    // PauseScene is launched on top of an already-running GameScene; Phaser's
-    // scene render order doesn't automatically put a launched-on-top scene on
-    // top, so bringToTop is required for the overlay to actually be visible.
+    // PauseScene is launched on top of an already-running GameScene; bringToTop
+    // ensures the overlay is actually visible above it.
     this.scene.bringToTop();
 
     // Previously this called getRun() as a "verify active state" guard, but
     // getRun() THROWS when no run exists, which aborts create() before any
-    // GameObject is added — the user sees a paused game with no overlay. The
-    // pause UI itself doesn't depend on RunState; Abandon Run consults it
-    // defensively below.
+    // GameObject is added — the user sees a paused game with no overlay.
+    // The pause UI itself doesn't depend on RunState; Abandon Run consults
+    // it defensively below.
 
     // Fullscreen semi-transparent backdrop — delay interactivity so the ESC
-    // press that *opened* the pause doesn't immediately dismiss it on the same
-    // frame. Same pattern as BuildingPanelScene.
+    // press that *opened* the pause doesn't immediately dismiss it.
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75);
     this.time.delayedCall(100, () => {
       backdrop.setInteractive();
+      this.input.keyboard?.on('keydown-ESC', () => this.resume());
     });
 
     // Overlay panel (wood texture with rounded corners)
@@ -44,17 +42,8 @@ export class PauseScene extends Scene {
     panel.setMask(shape.createGeometryMask());
 
     // Title
-    this.add.text(400, 105, 'PAUSED', {
-      fontSize: '48px',
-      fontStyle: 'bold',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 8,
-      fontFamily: FONTS.family,
-      shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
-    }).setOrigin(0.5);
+    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 48).setOrigin(0.5);
 
-    // Buttons — stride 60px to fit 5 wood-themed buttons inside the panel.
     createWoodButton(this, 400, 180, 'Resume', () => this.resume(),
       { width: 260, height: 52, fontSize: 22, variant: 'primary' });
 
@@ -63,8 +52,6 @@ export class PauseScene extends Scene {
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
     }, { width: 260, height: 52, fontSize: 22 });
 
-    // Tutorial — replay the topic-tab tutorial. Routes back to the pause
-    // overlay on close via the replay/parentScene flags.
     createWoodButton(this, 400, 300, 'Tutorial', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
@@ -76,10 +63,6 @@ export class PauseScene extends Scene {
     }, { width: 260, height: 52, fontSize: 22 });
 
     createWoodButton(this, 400, 420, 'Abandon Run', async () => {
-      // Tear down the active run AND wipe the persisted save before
-      // returning to the menu — otherwise MainMenu will offer "Continue"
-      // pointing at the abandoned run. Use clearByMode so abandoning a
-      // daily run doesn't wipe the player's separate normal save.
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
@@ -87,12 +70,6 @@ export class PauseScene extends Scene {
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
     }, { width: 260, height: 52, fontSize: 22, variant: 'danger' });
-
-    // ESC also resumes — delayed by the same 100ms as the backdrop so the
-    // ESC press that *opened* this pause doesn't immediately dismiss it.
-    this.time.delayedCall(100, () => {
-      this.input.keyboard?.on('keydown-ESC', () => this.resume());
-    });
 
     this.events.on('shutdown', this.cleanup, this);
   }

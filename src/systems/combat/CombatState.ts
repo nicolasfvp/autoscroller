@@ -47,6 +47,12 @@ export interface CombatState {
   /** Flag set by EnemyAI stun effect -- skips next hero card */
   heroStunned: boolean;
   /**
+   * Scaled self-stun pool (e.g. Bloodlash Salvo's STR-scaled self-stun). Each
+   * stack skips one hero card. Distinct from `heroStunned` (the enemy-inflicted
+   * single-card skip) so a card can self-stun for N>1 cards. Optional for
+   * back-compat with test fixtures that build CombatState literals. */
+  heroStunStacks?: number;
+  /**
    * Per-deck-position upgrade flags for this combat. Length matches
    * `deckOrder`. Index `i` corresponds to `deckOrder[i]`.
    */
@@ -187,6 +193,19 @@ export interface CombatState {
    * Consulted by CombatEngine when advancing the deck pointer.
    */
   devouredSlots: Set<number>;
+
+  /**
+   * Rebalance phase: aggregate per-combat permanent stat boost. Added by
+   * readStat() to the base stat axis. Reset at combat start. Granted by
+   * the `stat_gain` effect type with a per-card cap.
+   */
+  statBoostsThisCombat: Partial<Record<import('../../data/types').StatId, number>>;
+  /**
+   * Rebalance phase: per-card accumulated grant tracker — keyed by card ID
+   * then stat. Enforces each card's `max_per_combat` independently across
+   * repeated plays / copies of the same card.
+   */
+  cardStatGainCounters: Record<string, Partial<Record<import('../../data/types').StatId, number>>>;
 }
 
 /**
@@ -195,15 +214,25 @@ export interface CombatState {
  * Passive relics and class passives are applied immediately.
  */
 export function createCombatState(run: RunState, enemy: EnemyDefinition): CombatState {
+  // Resolved stats fold in statDeltas + passive relic stat_bonus so all per-run
+  // bonuses (relics, event grants) propagate into combat from one source. The
+  // LoopHUD reads the same resolveHeroStats, keeping in/out-of-combat in sync.
+  const resolved = resolveHeroStats(run);
   const state: CombatState = {
-    heroHP: run.hero.currentHP,
-    heroMaxHP: run.hero.maxHP,
-    heroStamina: run.hero.currentStamina + Math.floor((run.hero.maxStamina - run.hero.currentStamina) * 0.5),
-    heroMaxStamina: run.hero.maxStamina,
-    heroMana: run.hero.currentMana + Math.floor((run.hero.maxMana - run.hero.currentMana) * 0.5),
-    heroMaxMana: run.hero.maxMana,
+    heroHP: Math.min(run.hero.currentHP, resolved.maxHP),
+    heroMaxHP: resolved.maxHP,
+    heroStamina: Math.min(
+      resolved.maxStamina,
+      run.hero.currentStamina + Math.floor((resolved.maxStamina - run.hero.currentStamina) * 0.5),
+    ),
+    heroMaxStamina: resolved.maxStamina,
+    heroMana: Math.min(
+      resolved.maxMana,
+      run.hero.currentMana + Math.floor((resolved.maxMana - run.hero.currentMana) * 0.5),
+    ),
+    heroMaxMana: resolved.maxMana,
     heroDefense: 0,
-    heroStrength: run.hero.strength,
+    heroStrength: resolved.str,
     heroDefenseMultiplier: run.hero.defenseMultiplier,
     heroClass: run.hero.className ?? 'warrior',
 
@@ -225,6 +254,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     activeRelicIds: [...(run.relics ?? [])],
     activePassives: [],
     heroStunned: false,
+    heroStunStacks: 0,
     upgraded: [...run.deck.upgraded],
     behaviors: (enemy as any).behaviors ?? [],
 
@@ -279,28 +309,20 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     echoExpiresAt: 0,
     freeEchoCharges: 0,
     devouredSlots: new Set<number>(),
+
+    // -- Rebalance phase: per-combat stat-gain tracking --
+    statBoostsThisCombat: {},
+    cardStatGainCounters: {},
   };
 
   // -- Phase 9: seed per-combat stat axes from resolved per-run stats --
-  const resolved = resolveHeroStats(run);
+  // VIT*5 maxHP, constellation_sigil, heavy_tome, and class passive
+  // stat_modifiers are now folded into resolveHeroStats so the LoopHUD shows
+  // the same numbers out of combat — don't re-apply them here.
   state.heroVitality = resolved.vit;
   state.heroDexterity = resolved.dex;
   state.heroIntellect = resolved.int;
   state.heroSpirit = resolved.spi;
-
-  // -- Phase 9: VIT scales combat-start maxHP (+5 per point per design/00 §3).
-  // Applied here so heroMaxHP is the post-VIT value before relic passives
-  // (which may further raise it via stat_bonus.maxHP). currentHP is NOT
-  // re-floored — entering combat with full HP is a separate concern (run-end
-  // healing) that already runs in RunEndResolver / GameScene.
-  if (state.heroVitality > 0) {
-    const vitBonus = state.heroVitality * 5;
-    state.heroMaxHP += vitBonus;
-    // Bump currentHP so the hero benefits from VIT on the FIRST combat after
-    // the stat was gained (otherwise the buff appears only after a heal). We
-    // only top up the bonus amount, not to full, so HP attrition still bites.
-    state.heroHP = Math.min(state.heroMaxHP, state.heroHP + vitBonus);
-  }
 
   // Apply passive (stat) relics immediately
   applyPassiveRelics(run.relics ?? [], state);

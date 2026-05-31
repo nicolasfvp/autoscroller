@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
@@ -44,19 +44,14 @@ export class RunTransitionScene extends Scene {
       });
     }
 
-    const text = this.add.text(400, 280, 'EMBARKING ON EXPEDITION', {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      fontFamily: FONTS.family,
-      letterSpacing: 6,
-    }).setOrigin(0.5).setDepth(20);
+    const text = this.add.bitmapText(400, 280, 'game_font_gold', 'EMBARKING ON EXPEDITION', 32)
+      .setOrigin(0.5).setLetterSpacing(6).setDepth(20);
 
     const subtext = this.add.text(400, 330, 'The world is shifting...', {
       fontSize: '18px',
       fontStyle: 'italic',
       color: '#998877',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setDepth(20);
 
     text.setAlpha(0);
@@ -82,7 +77,7 @@ export class RunTransitionScene extends Scene {
     this.add.text(400, 560, `World Seed: ${data.seed}`, {
       fontSize: '11px',
       color: '#2a1a10',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setDepth(20);
 
     // Transition to the GameScene after a short delay

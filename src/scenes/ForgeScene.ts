@@ -14,6 +14,7 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { FONTS } from '../ui/StyleConstants';
+import { createWoodButton } from '../ui/WoodButton';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import {
@@ -129,15 +130,9 @@ export class ForgeScene extends Scene {
         this.drawBeams();
       });
 
-      // Leave Forge — top-left corner.
-      const leave = this.add.text(20, 30, '← Leave Forge', {
-        fontSize: '14px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-        stroke: '#000', strokeThickness: 3,
-      }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true })
-        .setShadow(1, 1, '#000', 3, true, true);
-      leave.on('pointerover', () => leave.setColor(WHITE));
-      leave.on('pointerout',  () => leave.setColor(GOLD));
-      leave.on('pointerdown', () => this.close());
+      // Leave Forge — top-left corner, WoodButton for consistency with other scenes.
+      createWoodButton(this, 85, 30, '← Leave', () => this.close(),
+        { width: 130, height: 36, fontSize: 14 });
 
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);
@@ -152,12 +147,24 @@ export class ForgeScene extends Scene {
     // Solid black base.
     this.add.rectangle(CANVAS_W / 2, CANVAS_H / 2, CANVAS_W, CANVAS_H, 0x000000, 1);
 
-    // Forge backdrop — covers the canvas.
-    if (this.textures.exists('forge_backdrop_v2')) {
+    // Forge backdrop — animated spritesheet preferred, static fallback.
+    if (this.textures.exists('forge_background')) {
+      if (!this.anims.exists('forge_fire')) {
+        this.anims.create({
+          key: 'forge_fire',
+          frames: this.anims.generateFrameNumbers('forge_background', { start: 0, end: 7 }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      }
+      const bg = this.add.sprite(CANVAS_W / 2, CANVAS_H / 2, 'forge_background');
+      const scale = Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height);
+      bg.setScale(scale).setAlpha(0.92);
+      bg.play('forge_fire');
+    } else if (this.textures.exists('forge_backdrop_v2')) {
       const bg = this.add.image(CANVAS_W / 2, CANVAS_H / 2, 'forge_backdrop_v2');
       const scale = Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height);
-      bg.setScale(scale);
-      bg.setAlpha(0.88);
+      bg.setScale(scale).setAlpha(0.88);
     }
 
     // Atmospheric vignette.
@@ -170,11 +177,8 @@ export class ForgeScene extends Scene {
     vign.fillRect(CANVAS_W - 30, 60, 30, CANVAS_H - 100);
 
     // Title.
-    const title = this.add.text(CANVAS_W / 2, 30, 'THE FORGE', {
-      fontSize: '26px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-      stroke: '#3a1a04', strokeThickness: 5,
-    }).setOrigin(0.5).setShadow(0, 2, '#ff6a1a', 12, true, true);
-    title.setLetterSpacing(6);
+    this.add.bitmapText(CANVAS_W / 2, 30, 'game_font_gold', 'THE FORGE', 26)
+      .setOrigin(0.5).setLetterSpacing(6);
 
     // Gold readout — top-right.
     this.add.rectangle(CANVAS_W - 16, 30, 150, 28, 0x1a0a04, 0.88)
@@ -210,7 +214,7 @@ export class ForgeScene extends Scene {
   private renderForge(): void {
     this.dynLayer.removeAll(true);
 
-    const forgeLevel = 0; // TEMPORARY: forge restrictions disabled.
+    const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
 
     const run = getRun();
     this.goldText.setText(`♦ ${run.economy.gold} Gold`);
@@ -597,7 +601,7 @@ export class ForgeScene extends Scene {
 
   private executeForgeAction(): void {
     const run = getRun();
-    const forgeLevel = 6; // TEMPORARY: forge restrictions disabled.
+    const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const deckSize = run.deck.active.length;
     const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);

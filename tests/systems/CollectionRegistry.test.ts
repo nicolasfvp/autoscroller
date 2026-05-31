@@ -10,10 +10,11 @@ import {
 //   - 164 implemented cards (8 Tier 0 + 36 Tier 1 + 120 Tier 2)
 //   - 0 cards with unlockSource (all cards are universally available; the Forge
 //     gate is enforced via tier unlock at the Forge, not unlockSource)
-// Relics v2: 80 relics, none gated — every relic is always-available.
+// Relics: 80 total. 26 strong/rare relics are gated behind the Shrine building
+// (unlockSource:'shrine'); 54 are always-available in the base pool.
 const TOTAL_CARDS = 164;
 const TOTAL_RELICS = 80;
-const ALWAYS_AVAILABLE_RELICS = 80;
+const BASE_RELICS = 54; // unlocked from a default meta state (no unlockSource)
 
 describe('CollectionRegistry', () => {
   describe('getCollectionStatus', () => {
@@ -35,11 +36,11 @@ describe('CollectionRegistry', () => {
       expect(status.cards.unlocked).toBe(TOTAL_CARDS);
     });
 
-    it('returns relics total=80 and all unlocked for default state (v2: no gating)', () => {
+    it('returns relics total=80 with only the 54 base relics unlocked by default', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
       expect(status.relics.total).toBe(TOTAL_RELICS);
-      expect(status.relics.unlocked).toBe(ALWAYS_AVAILABLE_RELICS);
+      expect(status.relics.unlocked).toBe(BASE_RELICS);
     });
 
     it('returns bosses total matching boss-type enemies in data', () => {
@@ -56,9 +57,9 @@ describe('CollectionRegistry', () => {
       // 5 base (basic/forest/event/treasure/boss) + 4 unlockable
       // (graveyard/swamp/desert/lava) + 8 subtiles (ambush/bleedtotem/...)
       expect(status.tiles.total).toBe(17);
-      // Subtiles are always-unlocked (world-gen seeds them, not the player),
-      // so the unlocked count is 5 base + 8 subtiles = 13.
-      expect(status.tiles.unlocked).toBe(13);
+      // Region tiles + most sub-tiles are gated behind the Workshop. A default
+      // state has the 5 base tiles + 2 default sub-tiles (camp, mana well) = 7.
+      expect(status.tiles.unlocked).toBe(7);
     });
   });
 
@@ -82,12 +83,15 @@ describe('CollectionRegistry', () => {
   });
 
   describe('getItemDetails', () => {
-    it('returns relic data with isUnlocked=true for any relic (v2: no gating)', () => {
+    it('shows a base relic unlocked but a shrine-gated relic locked by default', () => {
       const state = createDefaultMetaState();
-      const details = getItemDetails('phoenix_feather', state);
-      expect(details).toBeDefined();
-      expect(details!.id).toBe('phoenix_feather');
-      expect(details!.isUnlocked).toBe(true);
+      const base = getItemDetails('bronze_scale', state);
+      expect(base).toBeDefined();
+      expect(base!.isUnlocked).toBe(true);
+      const gated = getItemDetails('phoenix_feather', state);
+      expect(gated).toBeDefined();
+      expect(gated!.id).toBe('phoenix_feather');
+      expect(gated!.isUnlocked).toBe(false);
     });
 
     it('returns card data with isUnlocked=true for a Tier 1 card (no gates in element system)', () => {
@@ -104,11 +108,13 @@ describe('CollectionRegistry', () => {
     });
   });
 
-  // v2 invariant: no relic carries unlockSource.
-  it('no relic in v2 carries unlockSource', async () => {
+  // 26 strong/rare relics are gated behind the Shrine; the rest are base.
+  it('exactly 26 relics carry unlockSource=shrine', async () => {
     const relicsData = (await import('../../src/data/json/relics.json')).default as any[];
-    for (const relic of relicsData) {
-      expect(relic.unlockSource, `relic ${relic.id} should not be gated in v2`).toBeUndefined();
+    const gated = relicsData.filter((r) => r.unlockSource);
+    expect(gated.length).toBe(26);
+    for (const r of gated) {
+      expect(r.unlockSource, `relic ${r.id} unlockSource`).toBe('shrine');
     }
   });
 });

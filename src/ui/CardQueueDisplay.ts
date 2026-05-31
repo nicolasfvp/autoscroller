@@ -5,19 +5,17 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
-const VISIBLE_COUNT = 5;
+
+const VISIBLE_COUNT = 3;
 
 // [centerX, centerY, scale, alpha]
 // Active card anchored at screen-center (x=400); queue cascades down-right.
-// Alpha decays in even 0.20 steps for a smooth front-to-back gradient.
 const SLOTS: [number, number, number, number][] = [
   [400, 490, 0.62, 1.00],   // 0 — PLAYING (screen center)
-  [498, 505, 0.56, 0.80],   // 1 — NEXT
-  [565, 525, 0.42, 0.60],   // 2 — stair starts descending
-  [605, 545, 0.36, 0.40],   // 3 — stair, aglutinated
-  [635, 560, 0.32, 0.20],   // 4 — corner
+  [520, 510, 0.50, 0.70],   // 1 — NEXT
+  [600, 530, 0.38, 0.35],   // 2 — hint of next
 ];
-const SLOT_INCOMING_X = 635; // same column as slot 4 — cards slide UP into it
+const SLOT_INCOMING_X = 600; // same column as slot 2 — cards slide UP into it
 const SLOT_INCOMING_Y = 650; // off-screen bottom
 
 export class CardQueueDisplay {
@@ -30,6 +28,7 @@ export class CardQueueDisplay {
   private animatingPlay = false;
   private pendingState: { deck: string[]; pointer: number } | null = null;
   private readonly playTweens: Set<Phaser.Tweens.Tween> = new Set();
+  private playingLabel: Phaser.GameObjects.Text | null = null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -55,6 +54,7 @@ export class CardQueueDisplay {
     for (const c of this.cardContainers) c.destroy();
     this.cardContainers = [];
     if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
+    if (this.playingLabel) { this.playingLabel.destroy(); this.playingLabel = null; }
 
     const deck = this.currentDeckOrder;
     if (deck.length === 0) return;
@@ -62,10 +62,6 @@ export class CardQueueDisplay {
     for (let i = 0; i < VISIBLE_COUNT && i < deck.length; i++) {
       const cardId = deck[(this.currentPointer + i) % deck.length];
       const scale = this.getSlotScale(i);
-      // Build the card at unit scale (intrinsic size) and apply the slot
-      // scale via transform — this is what lets the slide tween animate
-      // scaleX/scaleY between slots. Building at a baked size leaves
-      // container.scaleX at 1.0, and the tween then shrinks it again.
       const cardVis = createCardVisual(this.scene, this.getSlotX(i), this.getSlotY(i), cardId);
       cardVis.setScale(scale);
       cardVis.setAlpha(this.getSlotAlpha(i));
@@ -78,6 +74,7 @@ export class CardQueueDisplay {
           scaleX: scale * 1.05, scaleY: scale * 1.05,
           duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
         });
+        this.playingLabel = null;
       }
     }
   }
@@ -175,6 +172,7 @@ export class CardQueueDisplay {
 
   destroy(): void {
     if (this.pulseTween) { this.pulseTween.destroy(); this.pulseTween = null; }
+    if (this.playingLabel) { this.playingLabel.destroy(); this.playingLabel = null; }
     for (const tw of this.playTweens) tw.stop();
     this.playTweens.clear();
     for (const c of this.cardContainers) c.destroy();

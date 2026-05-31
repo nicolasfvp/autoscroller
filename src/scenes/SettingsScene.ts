@@ -1,7 +1,7 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
-import { getAudioManager } from '../audio/AudioManager';
+import { AudioManager } from '../systems/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
 import { saveManager } from '../core/SaveManager';
@@ -57,35 +57,28 @@ export class SettingsScene extends Scene {
     this.graphicsQuality = storedQ ?? this.metaState.graphicsQuality ?? 'balanced';
     this.initialGraphicsQuality = this.graphicsQuality;
 
-    // Apply loaded audio prefs
-    const audio = getAudioManager();
-    audio.setSFXVolume(this.sfxVolume);
-    audio.setEnabled(this.sfxEnabled);
+    // Apply loaded audio prefs to the REAL audio path (the static
+    // systems/AudioManager that every in-game SFX/BGM routes through).
+    this.applyAudioPrefs();
 
-    // Painted scribe-study backdrop — replaces the flat dark void that used
-    // to read as AI-mock chrome. Falls back to the flat panel if missing.
+    // Painted scribe-study backdrop — falls back to flat panel if missing.
     if (this.textures.exists('bg_settings_scribe')) {
       this.add.image(LAYOUT.centerX, LAYOUT.centerY, 'bg_settings_scribe')
         .setDisplaySize(LAYOUT.canvasWidth, LAYOUT.canvasHeight)
         .setDepth(-2);
     }
-    // Dim layer for foreground readability against the busy art.
     this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 800, 600, 0x000000,
       this.textures.exists('bg_settings_scribe') ? 0.55 : 0,
     ).setDepth(-1);
-
-    // Overlay panel — wood-tinted translucent so the painted backdrop shows
-    // through the edges while the settings labels stay readable.
     this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 600, 500,
       0x1a0e06, this.textures.exists('bg_settings_scribe') ? 0.82 : LAYOUT.panelAlpha,
     ).setStrokeStyle(2, 0xd4a04a, 0.85).setInteractive();
 
-    // Title — gold banner with stroke + shadow to match the Forge/Shop/Relic
-    // banner treatment.
+    // Title
     this.add.text(LAYOUT.centerX, 120, 'Settings', {
       ...FONTS.title,
       color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       stroke: '#000',
       strokeThickness: 5,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
@@ -97,6 +90,7 @@ export class SettingsScene extends Scene {
     this.createAutoSaveToggle();
     this.createGraphicsQualityToggle();
     this.createDeleteRunButton();
+    this.createDangerZoneSeparator();
     this.createResetAllButton();
     this.createBackButton();
 
@@ -107,9 +101,9 @@ export class SettingsScene extends Scene {
   private createVolumeSlider(): void {
     // Label
     this.add.text(200, 192, 'SFX Volume', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     // Track
@@ -126,9 +120,9 @@ export class SettingsScene extends Scene {
 
     // Volume percentage label
     this.volumeLabel = this.add.text(710, 192, `${Math.round(this.sfxVolume * 100)}%`, {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     this.input.on('drag', (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number) => {
@@ -137,7 +131,7 @@ export class SettingsScene extends Scene {
       this.volumeThumb.x = clampedX;
       this.sfxVolume = (clampedX - 400) / 300;
       this.volumeLabel.setText(`${Math.round(this.sfxVolume * 100)}%`);
-      getAudioManager().setSFXVolume(this.sfxVolume);
+      AudioManager.setMasterVolume(this.sfxVolume);
     });
   }
 
@@ -146,17 +140,25 @@ export class SettingsScene extends Scene {
     const label = this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
     this.muteBtn = createButton(this, LAYOUT.centerX, 245, label, () => {
       this.sfxEnabled = !this.sfxEnabled;
-      getAudioManager().setEnabled(this.sfxEnabled);
+      AudioManager.setMuted(!this.sfxEnabled);
+      this.game.sound.mute = !this.sfxEnabled;
       this.muteBtn.setText(this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF');
     }, 'secondary');
+  }
+
+  /** Push the loaded sfxVolume / sfxEnabled prefs into the real audio path. */
+  private applyAudioPrefs(): void {
+    AudioManager.setMasterVolume(this.sfxVolume);
+    AudioManager.setMuted(!this.sfxEnabled);
+    this.game.sound.mute = !this.sfxEnabled;
   }
 
   // ── Game Speed Toggle (y: 300) ──────────────────────────
   private createGameSpeedToggle(): void {
     this.add.text(200, 292, 'Game Speed', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     const label = this.gameSpeed === 1 ? '1x' : '2x';
@@ -169,9 +171,9 @@ export class SettingsScene extends Scene {
   // ── Auto-Save Toggle (y: 350) ──────────────────────────
   private createAutoSaveToggle(): void {
     this.add.text(200, 342, 'Auto-Save', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     const label = this.autoSave ? 'ON' : 'OFF';
@@ -189,9 +191,9 @@ export class SettingsScene extends Scene {
   // value has actually been edited.
   private createGraphicsQualityToggle(): void {
     this.add.text(200, 382, 'Graphics Quality', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     this.graphicsQualityBtn = createButton(this, 540, 390, GFX_QUALITY_LABEL[this.graphicsQuality], () => {
@@ -202,7 +204,7 @@ export class SettingsScene extends Scene {
       fontSize: '10px',
       color: '#ffcc66',
       fontStyle: 'italic',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setVisible(false);
   }
 
@@ -238,13 +240,21 @@ export class SettingsScene extends Scene {
           this.hideConfirmation();
           // Show brief feedback
           const feedback = this.add.text(LAYOUT.centerX, 420, 'Run Deleted', {
-            ...FONTS.body, color: COLORS.accent, fontFamily: FONTS.family,
+            color: COLORS.accent, fontFamily: FONTS.body,
           }).setOrigin(0.5);
           this.time.delayedCall(1500, () => feedback.destroy());
         },
       );
     }, 'secondary');
     btn.setColor(COLORS.danger);
+  }
+
+  // ── Danger Zone separator ─────────────────────────────
+  private createDangerZoneSeparator(): void {
+    this.add.rectangle(LAYOUT.centerX, 448, 360, 1, 0x4a3020, 0.6);
+    this.add.text(LAYOUT.centerX, 453, '⚠ Danger Zone', {
+      fontSize: '9px', color: '#664444', fontFamily: FONTS.body,
+    }).setOrigin(0.5, 0);
   }
 
   // ── Reset All Progress Button (y: 470) ─────────────────
@@ -265,7 +275,7 @@ export class SettingsScene extends Scene {
               this.metaState = createDefaultMetaState();
               this.hideConfirmation();
               const feedback = this.add.text(LAYOUT.centerX, 470, 'All Progress Reset', {
-                ...FONTS.body, color: COLORS.accent, fontFamily: FONTS.family,
+                color: COLORS.accent, fontFamily: FONTS.body,
               }).setOrigin(0.5);
               this.time.delayedCall(1500, () => feedback.destroy());
             },
@@ -291,7 +301,7 @@ export class SettingsScene extends Scene {
     this.confirmContainer.add(bg);
 
     const msg = this.add.text(LAYOUT.centerX, LAYOUT.centerY - 30, message, {
-      ...FONTS.body, color: COLORS.textPrimary, fontFamily: FONTS.family,
+      color: COLORS.textPrimary, fontFamily: FONTS.body,
       align: 'center', wordWrap: { width: 440 },
     }).setOrigin(0.5);
     this.confirmContainer.add(msg);

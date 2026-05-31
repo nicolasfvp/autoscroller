@@ -1,6 +1,7 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { COLORS, FONTS, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS } from '../ui/StyleConstants';
+import { createImageButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { getRelicById } from '../data/DataLoader';
 
@@ -35,25 +36,20 @@ export class RelicViewerScene extends Scene {
     }
 
     // Title with the gold-banner treatment used by Forge/Shop.
-    this.add.text(400, 50, 'Your Relics', {
-      fontSize: '30px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-      stroke: '#000',
-      strokeThickness: 5,
-    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+    this.add.bitmapText(400, 50, 'game_font_gold', 'Your Relics', 30).setOrigin(0.5);
     this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
 
     if (run.relics.length === 0) {
-      this.add.text(400, 300, 'No relics yet.\n\nFind them in treasure chests and events!', {
-        fontSize: '16px',
-        color: COLORS.textSecondary,
-        fontFamily: FONTS.family,
+      this.add.text(400, 280, 'No relics yet.\n\nFind them in the Shop and treasure events!', {
+        fontSize: '20px',
+        color: '#ffffff',
+        fontFamily: FONTS.body,
         align: 'center',
-        stroke: '#000',
-        strokeThickness: 2,
+        stroke: '#000000',
+        strokeThickness: 3,
+        wordWrap: { width: 500 },
       }).setOrigin(0.5);
+      createImageButton(this, 400, 370, '→ Visit the Shop', () => this.close(), 240, 56);
     } else {
       const COLS = 5;
       const START_X = 200;
@@ -77,7 +73,7 @@ export class RelicViewerScene extends Scene {
           fontSize: '13px',
           fontStyle: 'bold',
           color: COLORS.textPrimary,
-          fontFamily: FONTS.family,
+          fontFamily: FONTS.body,
           align: 'center',
           wordWrap: { width: 90 }
         }).setOrigin(0.5, 0);
@@ -86,7 +82,7 @@ export class RelicViewerScene extends Scene {
           this.add.text(x, y + 58, relDef.description, {
             fontSize: '10px',
             color: '#998877',
-            fontFamily: FONTS.family,
+            fontFamily: FONTS.body,
             align: 'center',
             wordWrap: { width: 95 }
           }).setOrigin(0.5, 0);
@@ -95,7 +91,7 @@ export class RelicViewerScene extends Scene {
     }
 
     // Close button
-    createButton(this, 400, 520, 'Close', () => this.close(), 'primary');
+    createImageButton(this, 400, 520, 'Close', () => this.close(), 200, 52);
 
     this.events.on('shutdown', this.cleanup, this);
   }

@@ -106,10 +106,7 @@ export class ShopScene extends Scene {
       this.add.image(400, BANNER_Y, 'shop_title_banner')
         .setDisplaySize(BANNER_W, BANNER_H);
     }
-    this.add.text(400, BANNER_Y - 4, 'THE MERCHANT', {
-      fontSize: '28px', fontStyle: 'bold', color: GOLD,
-      fontFamily: FF, stroke: '#1a0500', strokeThickness: 5,
-    }).setOrigin(0.5).setShadow(2, 2, '#000', 4, true, true);
+    this.add.bitmapText(400, BANNER_Y - 4, 'game_font_gold', 'THE MERCHANT', 28).setOrigin(0.5);
     this.add.text(400, BANNER_Y + 22, 'Wares from beyond the loop', {
       fontSize: '12px', fontStyle: 'italic', color: '#e8c98c',
       fontFamily: FF, stroke: '#1a0500', strokeThickness: 3,

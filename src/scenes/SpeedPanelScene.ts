@@ -1,20 +1,22 @@
-// SpeedPanelScene — persistent bottom-left panel showing Map and Combat speed
-// sliders. Stays alive across GameScene ↔ CombatScene transitions; sliders
-// read/write run.mapSpeed and run.combatSpeed directly so values survive scene
-// switches without per-scene wiring.
+// SpeedPanelScene — persistent bottom-left hamburger panel with Map and Combat
+// speed sliders. Collapsed by default; click ☰ to expand, × to collapse.
 
 import { Scene } from 'phaser';
 import { hasActiveRun, getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { MapSpeedSlider } from '../ui/MapSpeedSlider';
 
+const SCALE = 0.5;
 const PANEL_X = 8;
-const PANEL_Y = 478;
-const PANEL_W = 268;
-const PANEL_H = 110;
+const PANEL_Y = 483;
+const PANEL_W = 168;
+const PANEL_H = 99;
 
-// Scene keys we want the panel to be visible over. Map + Combat only;
-// PlanningOverlay, menus, city hub, etc. all hide the panel.
+const BTN_X = 8;
+const BTN_Y = 584;
+const BTN_W = 36;
+const BTN_H = 16;
+
 const VISIBLE_OVER = new Set<string>([
   SCENE_KEYS.GAME,
   SCENE_KEYS.COMBAT,
@@ -24,7 +26,10 @@ export class SpeedPanelScene extends Scene {
   private mapSlider!: MapSpeedSlider;
   private combatSlider!: MapSpeedSlider;
   private container!: Phaser.GameObjects.Container;
+  private panelGroup!: Phaser.GameObjects.Container;
+  private btnLabel!: Phaser.GameObjects.Text;
   private wasVisible: boolean = false;
+  private expanded: boolean = false;
 
   constructor() {
     super({ key: SCENE_KEYS.SPEED_PANEL });
@@ -33,52 +38,102 @@ export class SpeedPanelScene extends Scene {
   create(): void {
     this.container = this.add.container(0, 0).setDepth(1000).setScrollFactor(0);
 
-    // Panel chrome
-    const bg = this.add.graphics().setScrollFactor(0).setDepth(999);
-    bg.fillStyle(0x0a0400, 0.78);
-    bg.fillRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 8);
-    bg.lineStyle(2, 0x9a6030, 0.85);
-    bg.strokeRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 8);
-    this.container.add(bg);
+    // ── Panel group (expanded content) ──────────────────────────────────────
+    this.panelGroup = this.add.container(0, 0).setScrollFactor(0).setDepth(999);
 
-    // Sliders — each MapSpeedSlider is its own container with the track,
-    // handle, title, and value label baked in.
-    const sliderCenterX = PANEL_X + 16 + 90; // 90 = half of 180px track width
+    const panelCX = PANEL_X + PANEL_W / 2;
+    const panelCY = PANEL_Y + PANEL_H / 2;
+    if (this.textures.exists('ui_panel')) {
+      const bg = this.add.image(panelCX, panelCY, 'ui_panel')
+        .setDisplaySize(PANEL_W, PANEL_H)
+        .setScrollFactor(0).setDepth(999);
+      this.panelGroup.add(bg);
+    } else {
+      const bg = this.add.graphics().setScrollFactor(0).setDepth(999);
+      bg.fillStyle(0x0a0400, 0.85);
+      bg.fillRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
+      bg.lineStyle(1.5, 0x9a6030, 0.85);
+      bg.strokeRoundedRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 6);
+      this.panelGroup.add(bg);
+    }
+
+    // Center the sliders in the panel; fixed offsets from PANEL_Y give consistent
+    // padding on all sides and prevent the map-slider handle from overlapping
+    // the combat-slider title (was too close with the old SCALE-derived positions).
+    const sliderCenterX = PANEL_X + PANEL_W / 2 - 10;
     const initialMap = hasActiveRun() ? (getRun().mapSpeed ?? 1) : 1;
     const initialCombat = hasActiveRun() ? (getRun().combatSpeed ?? 1) : 1;
 
-    this.mapSlider = new MapSpeedSlider(this, sliderCenterX, PANEL_Y + 30, initialMap, (s) => {
-      if (hasActiveRun()) getRun().mapSpeed = s;
-    }, 'Map Speed');
-    this.container.add(this.mapSlider);
+    this.mapSlider = new MapSpeedSlider(
+      this, sliderCenterX, PANEL_Y + 38,
+      initialMap, (s) => { if (hasActiveRun()) getRun().mapSpeed = s; },
+      'Map Speed', SCALE,
+    );
+    this.panelGroup.add(this.mapSlider);
 
-    this.combatSlider = new MapSpeedSlider(this, sliderCenterX, PANEL_Y + 80, initialCombat, (s) => {
-      if (hasActiveRun()) getRun().combatSpeed = s;
-    }, 'Combat Speed');
-    this.container.add(this.combatSlider);
+    this.combatSlider = new MapSpeedSlider(
+      this, sliderCenterX, PANEL_Y + 74,
+      initialCombat, (s) => { if (hasActiveRun()) getRun().combatSpeed = s; },
+      'Combat Speed', SCALE,
+    );
+    this.panelGroup.add(this.combatSlider);
+
+    this.panelGroup.setVisible(false);
+    this.container.add(this.panelGroup);
+
+    // ── Hamburger button ─────────────────────────────────────────────────────
+    const btnBg = this.add.graphics().setScrollFactor(0).setDepth(1001);
+    const drawBtn = (hover: boolean) => {
+      btnBg.clear();
+      btnBg.fillStyle(hover ? 0x2a1a0a : 0x0a0400, 0.92);
+      btnBg.fillRoundedRect(BTN_X, BTN_Y, BTN_W, BTN_H, 5);
+      btnBg.lineStyle(1.5, 0x9a6030, 0.9);
+      btnBg.strokeRoundedRect(BTN_X, BTN_Y, BTN_W, BTN_H, 5);
+    };
+    drawBtn(false);
+    this.container.add(btnBg);
+
+    this.btnLabel = this.add.text(BTN_X + BTN_W / 2, BTN_Y + BTN_H / 2, '☰', {
+      fontFamily: 'Inter, system-ui, sans-serif',
+      fontSize: '12px',
+      color: '#ccaa88',
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(1002);
+    this.container.add(this.btnLabel);
+
+    const hitZone = this.add.zone(BTN_X + BTN_W / 2, BTN_Y + BTN_H / 2, BTN_W, BTN_H)
+      .setOrigin(0.5).setScrollFactor(0).setDepth(1003)
+      .setInteractive({ useHandCursor: true });
+    this.container.add(hitZone);
+
+    hitZone.on('pointerover',  () => drawBtn(true));
+    hitZone.on('pointerout',   () => drawBtn(false));
+    hitZone.on('pointerdown',  () => this.toggle());
 
     this.setVisible(false);
   }
 
+  private toggle(): void {
+    this.expanded = !this.expanded;
+    this.panelGroup.setVisible(this.expanded);
+    this.btnLabel.setText(this.expanded ? '×' : '☰');
+  }
+
   update(): void {
-    // Show the panel only when sitting on top of GameScene / CombatScene /
-    // PlanningOverlay. Other scenes (menu, city hub, etc.) hide it.
     const shouldShow = hasActiveRun() && this.anyVisibleSceneActive();
     if (shouldShow !== this.wasVisible) {
       this.setVisible(shouldShow);
       this.wasVisible = shouldShow;
+      if (!shouldShow && this.expanded) {
+        this.expanded = false;
+        this.panelGroup.setVisible(false);
+        this.btnLabel.setText('☰');
+      }
     }
 
     if (shouldShow) {
-      // Keep sliders in sync if RunState was mutated outside the slider (e.g.
-      // save/load, settings reset). Cheap no-op when values match.
       const run = getRun();
       this.mapSlider.setSpeed(run.mapSpeed ?? 1);
       this.combatSlider.setSpeed(run.combatSpeed ?? 1);
-
-      // Stay above whatever scene was launched last. bringToTop on the scene
-      // manager is cheap and idempotent; doing it every frame keeps the panel
-      // visible even after CombatScene calls bringToTop() on itself.
       this.scene.bringToTop();
     }
   }
@@ -87,12 +142,7 @@ export class SpeedPanelScene extends Scene {
     const mgr = this.scene.manager;
     for (const key of VISIBLE_OVER) {
       const s = mgr.getScene(key);
-      if (s && (s.scene.isActive() || s.scene.isPaused() || s.scene.isSleeping())) {
-        // Only show when at least one of the target scenes is *running*
-        // (active) — paused/sleeping means a modal sits on top, so the panel
-        // would just clutter the screen.
-        if (s.scene.isActive()) return true;
-      }
+      if (s?.scene.isActive()) return true;
     }
     return false;
   }

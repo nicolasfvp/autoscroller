@@ -1,4 +1,4 @@
-// CombatScene -- thin wrapper that creates CombatEngine, subscribes to events,
+﻿// CombatScene -- thin wrapper that creates CombatEngine, subscribes to events,
 // renders via CardQueueDisplay, CombatHUD, and SynergyFlash components.
 
 import { Scene } from 'phaser';
@@ -12,13 +12,16 @@ import { CombatEngine } from '../systems/combat/CombatEngine';
 import type { SubtileEffect } from '../systems/SubtileResolver';
 import { CombatHUD } from '../ui/CombatHUD';
 import { CardQueueDisplay } from '../ui/CardQueueDisplay';
+import { setLiveStats, clearLiveStats } from '../ui/CardDynamic';
+import { readStat } from '../systems/hero/HeroStatsResolver';
 import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
 import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
-import { COLORS, LAYOUT } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
+import { addPendingKill } from '../systems/PendingLoot';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
@@ -40,7 +43,7 @@ export class CombatScene extends Scene {
 
   private gameSpeed: number = 1;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
-  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
+  private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -56,25 +59,29 @@ export class CombatScene extends Scene {
         effects: cardDef.effects,
         exhaust: cardDef.exhaust,
         spend_armor: cardDef.spend_armor,
-        cooldown_scale: cardDef.cooldown_scale,
       });
       const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
       keywordIntro.handleCardPlayed(this, fullText);
     }
     if (data.damage > 0) {
-      AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+      const isFireball = data.cardId.toLowerCase().includes('fireball');
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
       const heroAttackKey = `${sp}_attack`;
       const heroIdleKey = `${sp}_idle`;
       if (this.anims.exists(heroAttackKey)) {
-        this.heroSprite.play(heroAttackKey);
+        this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
         this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
       }
-      if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
-      if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
-        this.enemySprite.setTintFill(0xffffff);
-        this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
-      }
+      // Impact delay: frame 3 of 8-frame attack at 12fps ≈ 250ms, scaled by combat speed
+      const impactDelay = isFireball ? 0 : Math.round(250 / this.gameSpeed);
+      this.time.delayedCall(impactDelay, () => {
+        AudioManager.playSFX(this, isFireball ? 'sfx_fireball' : 'sfx_slash', 0.4);
+        if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
+        if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
+          this.enemySprite.setTintFill(0xffffff);
+          this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
+        }
+      });
     }
     this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
   };
@@ -103,12 +110,6 @@ export class CombatScene extends Scene {
   };
 
   private onCombatEnd = (eventData: GameEvents['combat:end']) => {
-    // Tutorial: combat-intro auto-advances on victory so the player isn't
-    // stuck staring at a "read this" panel after winning. KeywordIntroService
-    // handles the keyword teaching itself.
-    if (tutorialDirector.isActive() && eventData.result === 'victory') {
-      tutorialDirector.advanceIfMatches('combat-intro');
-    }
     const currentRun = getRun();
     currentRun.isInCombat = false;
     const finalState = this.engine.getState();
@@ -118,6 +119,10 @@ export class CombatScene extends Scene {
 
     const sp = getSpritePrefix(currentRun.hero.className ?? 'warrior');
     const heroDeathKey = `${sp}_death`;
+
+    if (tutorialDirector.isActive() && eventData.result === 'victory') {
+      tutorialDirector.advanceIfMatches('combat-intro');
+    }
 
     if (eventData.result === 'victory') {
       if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
@@ -131,15 +136,55 @@ export class CombatScene extends Scene {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
     }
 
-    const resultText = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
-    const resultColor = eventData.result === 'victory' ? COLORS.accent : COLORS.danger;
-    const displayText = this.add.text(400, 300, resultText, {
-      fontSize: '56px', fontFamily: '"Impact", "Arial Black", sans-serif', fontStyle: 'bold',
-      color: resultColor, stroke: '#000000', strokeThickness: 6, shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true }
-    }).setOrigin(0.5).setDepth(600);
+    // VICTORY uses the hand-crafted image asset; DEFEAT uses Phaser text until
+    // a defeat_asset.png is created (see TEXT_ASSETS.md).
+    let shineGraphics: Phaser.GameObjects.Graphics | null = null;
+    let shineTween: Phaser.Tweens.Tween | null = null;
+    const displayText: Phaser.GameObjects.GameObject = eventData.result === 'victory'
+      ? (() => {
+          const img = this.add.image(400, 290, 'text_victory').setDepth(600);
+          const W = 580;
+          const H = Math.round(img.height * (W / img.width));
+          img.setDisplaySize(W, H);
 
-    this.time.delayedCall(1000, () => {
+          // Shine sweep: a semi-transparent white strip that slides left→right,
+          // clipped to the image bounds via a geometry mask.
+          const imgLeft = 400 - W / 2;
+          const imgTop  = 290 - H / 2;
+          const maskShape = this.make.graphics();
+          maskShape.fillStyle(0xffffff);
+          maskShape.fillRect(imgLeft, imgTop, W, H);
+
+          // Draw strip at local (0,0) and position the graphics object at the
+          // image's top-left — no ADD blend mode so the geometry mask clips reliably.
+          shineGraphics = this.add.graphics().setDepth(601);
+          shineGraphics.fillStyle(0xffffff, 0.45);
+          shineGraphics.fillRect(0, 0, 60, H);
+          shineGraphics.setMask(maskShape.createGeometryMask());
+          shineGraphics.x = imgLeft - 60;
+          shineGraphics.y = imgTop;
+
+          shineTween = this.tweens.add({
+            targets: shineGraphics,
+            x: imgLeft + W,
+            duration: 900,
+            ease: 'Sine.easeIn',
+            repeat: -1,
+            repeatDelay: 1200,
+          });
+
+          return img;
+        })()
+      : this.add.text(400, 300, 'DEFEAT', {
+          fontSize: '56px', fontFamily: FONTS.body, fontStyle: 'bold',
+          color: COLORS.danger, stroke: '#000000', strokeThickness: 6,
+          shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true },
+        }).setOrigin(0.5).setDepth(600);
+
+    this.time.delayedCall(2500, () => {
       if (displayText) displayText.destroy();
+      if (shineTween) { shineTween.stop(); shineTween = null; }
+      if (shineGraphics) { shineGraphics.destroy(); shineGraphics = null; }
       const enemyDef = getEnemyById(this.initData.enemyId);
       if (!enemyDef) return;
 
@@ -150,7 +195,7 @@ export class CombatScene extends Scene {
           enemyDef.type === 'boss',
           currentRun.loop.difficultyMultiplier,
         );
-        const xpEarned = getXPForEnemy(enemyDef.type);
+        const xpEarned = getXPForEnemy(this.initData?.isElite && enemyDef.type !== 'boss' ? 'elite' : enemyDef.type);
         earnXP(currentRun, xpEarned);
         if (enemyDef.type === 'boss') {
           currentRun.loop.lastBossDefeated = true;
@@ -160,6 +205,7 @@ export class CombatScene extends Scene {
         // the base reward so it flows through normal loot processing (which
         // also pipes the right notification).
         const goldBonus = finalState.pendingGoldBonus ?? 0;
+        addPendingKill(enemyDef.name);
         generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward + goldBonus, xpEarned);
         this.scene.stop();
         this.scene.resume(SCENE_KEYS.GAME);
@@ -175,7 +221,7 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
 
-  init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
+  init(data: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
 
@@ -272,17 +318,25 @@ export class CombatScene extends Scene {
         enemyDef.type === 'boss',
         run.loop.difficultyMultiplier,
       );
+      // Elite premium: tougher, hits harder, renamed + retyped so it grants
+      // elite XP and reads as "Elite <name>" in the HUD.
+      const elite = !!data.isElite && enemyDef.type !== 'boss';
       const scaledEnemy = {
         ...enemyDef,
-        baseHP: scaled.hp,
+        type: elite ? 'elite' : enemyDef.type,
+        name: elite ? `Elite ${enemyDef.name}` : enemyDef.name,
+        baseHP: elite ? Math.round(scaled.hp * 1.6) : scaled.hp,
         baseDefense: scaled.defense,
-        attack: { ...enemyDef.attack, damage: scaled.damage },
+        attack: { ...enemyDef.attack, damage: elite ? Math.round(scaled.damage * 1.3) : scaled.damage },
       };
 
       const combatState = createCombatState(run, scaledEnemy);
       // Wave 6: apply pre-fight subtile effects before the engine takes over.
       this.applySubtileEffects(combatState, data.subtileEffects ?? []);
       this.engine = new CombatEngine(combatState);
+      // Seed card headline numbers with the fight's starting stats so the
+      // initial queue renders correct values before the first tick.
+      this.pushLiveStats();
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
       const heroIdleKey = `${sp}_idle`;
@@ -341,7 +395,7 @@ export class CombatScene extends Scene {
               this.heroSprite.setY(this.heroSprite.y + 8);
               this.heroSprite.setScale(this.heroSprite.scaleX * (268 / 278));
             }
-            this.heroSprite.play(heroAttackKey);
+            this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
             this.heroSprite.once('animationcomplete', () => {
               isAttacking = false;
               if (!this.heroSprite) return;
@@ -368,14 +422,17 @@ export class CombatScene extends Scene {
               effects: cardDef.effects,
               exhaust: cardDef.exhaust,
               spend_armor: cardDef.spend_armor,
-              cooldown_scale: cardDef.cooldown_scale,
             });
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText);
           }
           playAttackAnimation();
           if (data.damage > 0) {
-            AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+            const isFireballInline = data.cardId.toLowerCase().includes('fireball');
+            const inlineDelay = isFireballInline ? 0 : Math.round(250 / this.gameSpeed);
+            this.time.delayedCall(inlineDelay, () => {
+              AudioManager.playSFX(this, isFireballInline ? 'sfx_fireball' : 'sfx_slash', 0.4);
+            });
             if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
               this.enemySprite.setTintFill(0xffffff);
@@ -444,9 +501,6 @@ export class CombatScene extends Scene {
         new DailyTickerPanel(this, { selfRunId: run.runId });
       }
 
-      // Scripted tutorial overlay (combat-intro / combat-keyword steps).
-      // Both are 'click' advance so they show a centered modal with Next;
-      // auto-advance fires on combat victory if the player hasn't clicked.
       TutorialOverlay.mountIfActive(this);
 
       this.events.on('shutdown', this.cleanup, this);
@@ -459,9 +513,9 @@ export class CombatScene extends Scene {
 
   update(_time: number, delta: number): void {
     if (this.engine && !this.engine.isComplete()) {
-      // Pause the simulation while a contextual keyword-intro overlay OR
-      // a click-advance tutorial modal is up. Same gating pattern: hold the
-      // engine so the enemy doesn't kill the player while they're reading.
+      // Pause the simulation while a contextual keyword-intro overlay is
+      // up so the player can read the explanation without enemies still
+      // ticking down in the background.
       if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT)) {
         if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
         return;
@@ -475,7 +529,25 @@ export class CombatScene extends Scene {
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
       if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      // Feed live effective stats so card headline numbers track status changes
+      // (buffs, auras, stat_gain) in real time.
+      this.pushLiveStats();
     }
+  }
+
+  /** Push the hero's current effective stats to CardDynamic so every visible
+   *  card face refreshes its headline number. Reads the same stat values the
+   *  resolver scales with (base + auras + per-combat stat gains). */
+  private pushLiveStats(): void {
+    if (!this.engine) return;
+    const s = this.engine.getState();
+    setLiveStats({
+      str: readStat(s, 'str'),
+      vit: readStat(s, 'vit'),
+      dex: readStat(s, 'dex'),
+      int: readStat(s, 'int'),
+      spi: readStat(s, 'spi'),
+    });
   }
 
   private cleanup(): void {
@@ -488,6 +560,8 @@ export class CombatScene extends Scene {
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
+    // Out of combat, card headline numbers fall back to the run's resolved stats.
+    clearLiveStats();
     try { const run = getRun(); run.isInCombat = false; } catch {}
   }
 }

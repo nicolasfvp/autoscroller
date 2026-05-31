@@ -1,4 +1,4 @@
-// GlossaryButton -- small circular "?" affordance that opens the keyword
+﻿// GlossaryButton -- small circular "?" affordance that opens the keyword
 // glossary modal. Mounted by any scene that benefits from a persistent
 // reference panel: DeckCustomization, Combat.
 //
@@ -36,7 +36,7 @@ export function addGlossaryButton(
     fontSize: '18px',
     fontStyle: 'bold',
     color: COLORS.accent,
-    fontFamily: FONTS.family,
+    fontFamily: FONTS.body,
   }).setOrigin(0.5);
   container.add(glyph);
 

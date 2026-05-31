@@ -21,7 +21,6 @@ interface KeywordSource {
   effects?: CardDefinition['effects'];
   exhaust?: boolean;
   spend_armor?: CardDefinition['spend_armor'];
-  cooldown_scale?: CardDefinition['cooldown_scale'];
 }
 
 /**
@@ -36,7 +35,6 @@ function extractText(source: KeywordSource): string {
         effects: source.effects,
         exhaust: source.exhaust,
         spend_armor: source.spend_armor,
-        cooldown_scale: source.cooldown_scale,
       })
     : '';
   return `${source.description ?? ''} ${dyn}`.trim();

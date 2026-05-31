@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+﻿import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
 
 const SNAP_VALUES = [0.5, 1, 1.5, 2, 3] as const;
@@ -32,6 +32,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     initialSpeed: number,
     onChange: (speed: number) => void,
     title: string = 'Map Speed',
+    scale: number = 1,
   ) {
     super(scene, 0, 0);
     scene.add.existing(this);
@@ -40,21 +41,25 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     this.currentSpeed = clampSnap(initialSpeed);
     this.onChange = onChange;
 
-    const trackW = 180;
-    const trackH = 6;
+    const trackW = Math.round(180 * scale);
+    const trackH = Math.max(2, Math.round(6 * scale));
+    const tickH  = Math.round(12 * scale);
+    const handleR = Math.max(3, Math.round(8 * scale));
     this.trackW = trackW;
     this.trackX = centerX - trackW / 2;
     this.trackY = centerY;
 
-    // Title label
-    this.titleText = scene.add.text(centerX, centerY - 20, title, {
-      fontFamily: FONTS.family,
+    // Title label — font kept at full size; only geometry is scaled.
+    // Fixed 14px offset above track regardless of scale so the title never
+    // bleeds into the adjacent slider's handle (scale-derived 10px was too close).
+    this.titleText = scene.add.text(this.trackX, centerY - 10, title, {
+      fontFamily: FONTS.body,
       fontSize: '11px',
       fontStyle: 'bold',
       color: '#cccccc',
       stroke: '#000',
-      strokeThickness: 3,
-    }).setOrigin(0.5, 1).setScrollFactor(0).setDepth(150);
+      strokeThickness: 2,
+    }).setOrigin(0, 1).setScrollFactor(0).setDepth(150);
     this.add(this.titleText);
 
     // Track background (rounded dark bar)
@@ -70,7 +75,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     this.tickGraphics.fillStyle(0xaaaaaa, 0.7);
     for (const v of SNAP_VALUES) {
       const tx = this.speedToX(v);
-      this.tickGraphics.fillRect(tx - 1, this.trackY - 6, 2, 12);
+      this.tickGraphics.fillRect(tx - 1, this.trackY - tickH / 2, 2, tickH);
     }
     this.add(this.tickGraphics);
 
@@ -78,23 +83,25 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     this.trackFill = scene.add.graphics().setScrollFactor(0).setDepth(150);
     this.add(this.trackFill);
 
-    // Handle (draggable knob)
+    // Handle (draggable knob) — stored size for redraw
     this.handle = scene.add.graphics().setScrollFactor(0).setDepth(151);
+    (this.handle as any).__handleR = handleR;
+    (this.handle as any).__trackH  = trackH;
     this.add(this.handle);
 
-    // Speed value label (right of slider)
-    this.label = scene.add.text(this.trackX + trackW + 12, this.trackY, formatSpeed(this.currentSpeed), {
-      fontFamily: FONTS.family,
-      fontSize: '14px',
+    // Speed value label (right of slider) — font at full size
+    this.label = scene.add.text(this.trackX + trackW + Math.round(8 * scale), this.trackY, formatSpeed(this.currentSpeed), {
+      fontFamily: FONTS.body,
+      fontSize: '12px',
       fontStyle: 'bold',
       color: '#00e5ff',
       stroke: '#000',
-      strokeThickness: 3,
+      strokeThickness: 2,
     }).setOrigin(0, 0.5).setScrollFactor(0).setDepth(150);
     this.add(this.label);
 
     // Hit zone covers the full track + handle area for click-to-jump and drag
-    const hitZone = scene.add.zone(centerX, centerY, trackW + 24, 28)
+    const hitZone = scene.add.zone(centerX, centerY, trackW + Math.round(24 * scale), Math.round(28 * scale))
       .setOrigin(0.5)
       .setScrollFactor(0)
       .setDepth(152)
@@ -134,7 +141,8 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
 
   private redraw(): void {
     const handleX = this.speedToX(this.currentSpeed);
-    const trackH = 6;
+    const trackH  = (this.handle as any).__trackH  ?? 6;
+    const handleR = (this.handle as any).__handleR ?? 8;
 
     // Fill
     this.trackFill.clear();
@@ -150,9 +158,9 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     // Handle
     this.handle.clear();
     this.handle.fillStyle(0x00e5ff, 1);
-    this.handle.fillCircle(handleX, this.trackY, 8);
+    this.handle.fillCircle(handleX, this.trackY, handleR);
     this.handle.lineStyle(2, 0x003344, 1);
-    this.handle.strokeCircle(handleX, this.trackY, 8);
+    this.handle.strokeCircle(handleX, this.trackY, handleR);
 
     // Label
     this.label.setText(formatSpeed(this.currentSpeed));

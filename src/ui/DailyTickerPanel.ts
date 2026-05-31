@@ -1,4 +1,4 @@
-// DailyTickerPanel — right-side overlay that lists live Daily Run progress
+﻿// DailyTickerPanel — right-side overlay that lists live Daily Run progress
 // from other players. Pure Phaser display module; all data comes from
 // DailyRunTicker. Toggle visibility with the 'T' key.
 
@@ -68,7 +68,7 @@ export class DailyTickerPanel {
     this.container.add(this.bg);
 
     this.headerTxt = scene.add.text(8, 6, `DAILY ${utcDateString()}`, {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '12px',
       fontStyle: 'bold',
       color: COLORS.accent,
@@ -76,7 +76,7 @@ export class DailyTickerPanel {
     this.container.add(this.headerTxt);
 
     this.statusTxt = scene.add.text(8, 22, '', {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '10px',
       color: STATUS_COLOR[mqttClient.getStatus()],
     });
@@ -87,7 +87,7 @@ export class DailyTickerPanel {
     // garbage on every ticker update.
     for (let i = 0; i < MAX_ROWS; i++) {
       const row = scene.add.text(8, HEADER_HEIGHT + i * ROW_HEIGHT, '', {
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
         fontSize: '11px',
         color: COLORS.textPrimary,
       });
@@ -96,7 +96,7 @@ export class DailyTickerPanel {
     }
 
     this.emptyTxt = scene.add.text(PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 'waiting for racers…', {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '11px',
       color: COLORS.textSecondary,
       align: 'center',

@@ -6,7 +6,6 @@ import { MainMenu } from './scenes/MainMenu'
 import { TutorialScene } from './scenes/TutorialScene'
 import { CombatScene } from './scenes/CombatScene'
 import { ShopScene } from './scenes/ShopScene'
-import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
 import { SettingsScene } from './scenes/SettingsScene'
@@ -23,10 +22,8 @@ import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
 import { GlobalSound } from './scenes/GlobalSound'
 import { RunTransitionScene } from './scenes/RunTransitionScene'
-// Deck-template picker disabled — non-tutorial runs use a random template
-// for the chosen class. Re-enable by uncommenting this import and the
-// matching entry in the scene array below.
-// import { StartingDeckScene } from './scenes/StartingDeckScene'
+import { LoopSummaryScene } from './scenes/LoopSummaryScene'
+import { StartingDeckScene } from './scenes/StartingDeckScene'
 import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 
@@ -58,7 +55,9 @@ const storedQuality = (() => {
 const UI_SCALE = QUALITY_TO_SCALE[storedQuality ?? ''] ?? QUALITY_TO_SCALE.balanced;
 
 const config: Phaser.Types.Core.GameConfig = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
+    disableContextMenu: true,
+    banner: false,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -68,32 +67,17 @@ const config: Phaser.Types.Core.GameConfig = {
         autoRound: true,
     },
     render: {
-        antialias: true,
-        roundPixels: true,
         pixelArt: true,
+        powerPreference: 'high-performance',
+        batchSize: 4096,
         // Generate and sample mipmaps for downscaled textures (the 1024×1024
         // card art renders at ~90 px in the deck library and ~150 px in-hand
-        // — a >10× downscale that aliases/blurs without mipmaps). LINEAR_
-        // MIPMAP_LINEAR is trilinear filtering: smooth between mip levels,
-        // smooth within each level. Phaser auto-generates mipmaps when this
-        // is set and the source texture has power-of-2 dimensions (the card
-        // art is 1024² → POT, so all card textures benefit). No need to
-        // regenerate or pre-resize the source PNGs.
+        // — a >10× downscale that aliases without mipmaps). Phaser auto-
+        // generates mipmaps for POT textures (1024² card art qualifies).
         mipmapFilter: 'LINEAR_MIPMAP_LINEAR',
-        // Hybrid-GPU laptops (Intel iGPU + discrete NVIDIA/AMD) default to
-        // the integrated GPU for WebGL. Asking for high-performance flips
-        // them to the discrete part — large fill-rate win on the card grid.
-        powerPreference: 'high-performance',
     },
     dom: {
         createContainer: true
-    },
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { x: 0, y: 0 },
-            debug: false
-        }
     },
     // Use requestAnimationFrame (the Phaser default). The previous
     // forceSetTimeOut:true setting hurt frame pacing on every platform and
@@ -103,16 +87,9 @@ const config: Phaser.Types.Core.GameConfig = {
     // force 1x speed under document.hidden, so rAF throttling is harmless.
     fps: {
         target: 60,
-        // Clamp delta to a 30fps floor so a stutter (GC pause, alt-tab back)
-        // doesn't produce a giant single-step that teleports physics/timers.
         min: 30,
-        // Smooth deltaTime across frames — kills visible jitter when the
-        // browser's rAF cadence wobbles.
         smoothStep: true,
     },
-    // Polish: no Phaser banner in the console, no right-click menu on the canvas.
-    banner: false,
-    disableContextMenu: true,
     scene: [
         Boot,
         Preloader,
@@ -121,7 +98,6 @@ const config: Phaser.Types.Core.GameConfig = {
         GameScene,
         CombatScene,
         ShopScene,
-        ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
         SettingsScene,
@@ -137,7 +113,8 @@ const config: Phaser.Types.Core.GameConfig = {
         CollectionScene,
         GlobalSound,
         RunTransitionScene,
-        // StartingDeckScene,
+        LoopSummaryScene,
+        StartingDeckScene,
         CardLibraryScene,
         SpeedPanelScene
     ]

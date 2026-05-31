@@ -2,7 +2,7 @@
 // Hero panel (left) | Cooldown arc (center) | Enemy panel (right)
 
 import type { CombatState } from '../systems/combat/CombatState';
-import { FONTS, SHADOWBLADE_PALETTE } from './StyleConstants';
+import { FONTS } from './StyleConstants';
 import { computeHeroChips, computeEnemyChips, type EffectChip } from './EffectIcons';
 
 /**
@@ -25,18 +25,18 @@ export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility 
 const FF = FONTS.family;
 
 // Panel geometry
-const LP      = { x: 8,   y: 8, w: 260, h: 122 };  // Hero (left)
-const RP      = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
-const LBL_W   = 50;                                 // width for side labels
-const BAR_W   = LP.w - LBL_W - 18;                 // 192px hero bar width
-const E_BAR_W = RP.w - 28;                          // 232px enemy bar width
+const LP       = { x: 8,   y: 8, w: 230, h: 131 };  // Hero (left) — sized to status_panel.png
+const RP       = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
+const ICON_COL = 53;                                  // dark-slot left offset (px analysis: 52.8)
+const BAR_W    = 172;                                 // dark-slot width  (px analysis: 172.1)
+const E_BAR_W  = RP.w - 28;                          // 232px enemy bar width
 
 // Status-chip row geometry (effect icons row under each panel)
 const CHIP_POOL_SIZE = 10;
 const CHIP_HEIGHT = 20;
 const CHIP_GAP = 4;
 const CHIP_ROW_GAP = 22;
-const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 6, maxWidth: LP.w - 8 };
+const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 22, maxWidth: LP.w - 8 };
 const ENEMY_CHIPS = { x: RP.x + 4, y: RP.y + RP.h + 6, maxWidth: RP.w - 8 };
 
 interface ChipDisplay {
@@ -44,7 +44,13 @@ interface ChipDisplay {
   bg: Phaser.GameObjects.Rectangle;
   icon: Phaser.GameObjects.Text;
   label: Phaser.GameObjects.Text;
+  /** Current tooltip string for this slot (updated each layout pass). */
+  tooltip: string;
 }
+
+// Shared hover tooltip geometry.
+const TOOLTIP_DEPTH = 200;       // above the HUD container (depth 100)
+const TOOLTIP_MAX_W = 220;
 
 export class CombatHUD {
   private scene: Phaser.Scene;
@@ -62,10 +68,6 @@ export class CombatHUD {
   private armorIcon!:   Phaser.GameObjects.Text;
   private armorValue!: Phaser.GameObjects.Text;
 
-  // Hero attribute readouts (STR/VIT/DEX/INT/SPI). Live-update from CombatState.
-  private statTexts: { [k: string]: Phaser.GameObjects.Text } = {};
-  private displayedStats: Record<string, number> = { str: -1, vit: -1, dex: -1, int: -1, spi: -1 };
-
   // Enemy
   private enemyNameText!: Phaser.GameObjects.Text;
   private enemyHpBar!:    Phaser.GameObjects.Rectangle;
@@ -78,6 +80,10 @@ export class CombatHUD {
   // Status effect chip pools (one row per side, pre-allocated)
   private heroChipPool: ChipDisplay[] = [];
   private enemyChipPool: ChipDisplay[] = [];
+
+  // Shared hover tooltip for status chips (lazy-shown on pointerover).
+  private chipTooltipBg!: Phaser.GameObjects.Rectangle;
+  private chipTooltipText!: Phaser.GameObjects.Text;
 
   // Display values (for tween delta checks)
   private displayedHeroHp  = 0;
@@ -103,7 +109,52 @@ export class CombatHUD {
     this.buildHeroPanel();
     this.buildEnemyPanel();
     this.buildCooldownArc();
+    this.buildChipTooltip();
     this.buildChipPools();
+  }
+
+  // ── Chip hover tooltip ─────────────────────────────────────────
+  // A single shared bg+text pair, hidden by default. Reused by every chip so
+  // we don't allocate per-chip tooltip objects. Lives at a depth above the
+  // HUD container; positioned just under the hovered chip on pointerover.
+  private buildChipTooltip(): void {
+    const s = this.scene;
+    this.chipTooltipBg = s.add.rectangle(0, 0, 10, 10, 0x05050f, 0.95)
+      .setOrigin(0, 0)
+      .setStrokeStyle(1, 0x4a9eff, 0.7)
+      .setDepth(TOOLTIP_DEPTH)
+      .setScrollFactor(0)
+      .setVisible(false);
+    this.chipTooltipText = s.add.text(0, 0, '', {
+      fontFamily: FF, fontSize: '11px',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+      wordWrap: { width: TOOLTIP_MAX_W - 12 },
+    })
+      .setOrigin(0, 0)
+      .setDepth(TOOLTIP_DEPTH + 1)
+      .setScrollFactor(0)
+      .setVisible(false);
+  }
+
+  private showChipTooltip(text: string, chipX: number, chipY: number): void {
+    if (!text) return;
+    this.chipTooltipText.setText(text);
+    const padX = 6;
+    const padY = 4;
+    const w = Math.min(TOOLTIP_MAX_W, this.chipTooltipText.width + padX * 2);
+    const h = this.chipTooltipText.height + padY * 2;
+    // Position below the chip; clamp to the canvas so edge chips stay on-screen.
+    let tx = chipX;
+    let ty = chipY + CHIP_HEIGHT;
+    const maxX = (this.scene.scale?.width ?? 800) - w - 2;
+    if (tx > maxX) tx = Math.max(2, maxX);
+    this.chipTooltipBg.setPosition(tx, ty).setSize(w, h).setVisible(true);
+    this.chipTooltipText.setPosition(tx + padX, ty + padY).setVisible(true);
+  }
+
+  private hideChipTooltip(): void {
+    this.chipTooltipBg.setVisible(false);
+    this.chipTooltipText.setVisible(false);
   }
 
   // ── Hero panel ─────────────────────────────────────────────────
@@ -111,85 +162,49 @@ export class CombatHUD {
   private buildHeroPanel(): void {
     const s = this.scene;
 
-    // Dark panel background
-    const panelBg = s.add.rectangle(LP.x + LP.w / 2, LP.y + LP.h / 2, LP.w, LP.h, 0x080810, 0.88);
-    panelBg.setStrokeStyle(1.5, 0x2a2a4a);
-    this.container.add(panelBg);
+    // status_panel.png provides the background with baked-in icons per row
+    const panelImg = s.textures.exists('status_panel')
+      ? s.add.image(LP.x + LP.w / 2, LP.y + LP.h / 2, 'status_panel').setDisplaySize(LP.w, LP.h)
+      : s.add.rectangle(LP.x + LP.w / 2, LP.y + LP.h / 2, LP.w, LP.h, 0x080810, 0.88) as unknown as Phaser.GameObjects.Image;
+    this.container.add(panelImg);
 
-    // Blue accent strip at top
-    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 3, LP.w - 4, 4, 0x4488ff, 0.9));
+    // Bar slot geometry derived from the image's icon-cell width (ICON_COL)
+    const barX = LP.x + ICON_COL;
+    const padX = 0;
+    const hpY  = LP.y + 22;   // row 1 centre
+    const staY = LP.y + 60;   // row 2 centre
+    const mpY  = LP.y + 103;  // row 3 centre
 
-    const lblX     = LP.x + 10;
-    const barX     = LP.x + 10 + LBL_W;
-    const padX     = 5;
-    const hpY      = LP.y + 26;
-    const staY     = LP.y + 56;
-    const mpY      = LP.y + 84;
-    const bottomY  = LP.y + 110;  // combined armor+stats row
-
-    const makeBar = (
-      y: number, label: string, lblColor: string,
-      fillColor: number, h: number, valSize: string,
-    ) => {
-      const lbl = s.add.text(lblX, y, label, {
-        fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
-        color: lblColor, stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0, 0.5);
-      const trough = s.add.rectangle(barX + BAR_W / 2, y, BAR_W, h, 0x111122, 1)
-        .setStrokeStyle(1, 0x333355);
-      const fill = s.add.rectangle(barX + padX, y, 0, h - padX, fillColor).setOrigin(0, 0.5);
-      const val = s.add.text(barX + BAR_W / 2, y, '', {
+    const makeBar = (y: number, fillColor: number, h: number, valSize: string) => {
+      const fill = s.add.rectangle(barX + padX, y, 0, h - 4, fillColor).setOrigin(0, 0.5);
+      const val  = s.add.text(barX + BAR_W / 2, y, '', {
         fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
         color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5, 0.5);
-      this.container.add([lbl, trough, fill, val]);
+      this.container.add([fill, val]);
       return { fill, val };
     };
 
-    const hp  = makeBar(hpY,  '♥ HP',  '#55ee77', 0x22cc44, 26, '14px');
+    const hp  = makeBar(hpY,  0x22cc44, 24, '13px');
     this.hpBar = hp.fill; this.hpText = hp.val;
 
-    const sta = makeBar(staY, '⚡ STA', '#ffb84a', 0xf0a020, 20, '12px');
+    const sta = makeBar(staY, 0xf0a020, 20, '12px');
     this.staminaBar = sta.fill; this.staminaText = sta.val;
 
-    const mp  = makeBar(mpY,  '✦ MP',  '#bb88ff', 0x9966ff, 20, '12px');
+    const mp  = makeBar(mpY,  0x9966ff, 20, '12px');
     this.manaBar = mp.fill; this.manaText = mp.val;
 
-    // Divider before bottom row
-    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 98, LP.w - 16, 1, 0x333355));
-
-    // Combined bottom row: [🛡 val] [STR val] [VIT val] [DEX val] [INT val] [SPI val]
-    // 6 equal cells across the panel width. Armor cell (index 0) hidden when armor = 0.
-    const cells: Array<{ label: string; color: string; isArmor?: boolean }> = [
-      { label: '🛡', color: '#88ccff', isArmor: true },
-      { label: 'STR', color: '#' + (0xff8844).toString(16) },
-      { label: 'VIT', color: '#' + SHADOWBLADE_PALETTE.vit.toString(16).padStart(6, '0') },
-      { label: 'DEX', color: '#' + SHADOWBLADE_PALETTE.dex.toString(16).padStart(6, '0') },
-      { label: 'INT', color: '#' + SHADOWBLADE_PALETTE.int.toString(16).padStart(6, '0') },
-      { label: 'SPI', color: '#' + SHADOWBLADE_PALETTE.spi.toString(16).padStart(6, '0') },
-    ];
-    const cellW = LP.w / cells.length;
-    const statKeys: Array<'str' | 'vit' | 'dex' | 'int' | 'spi'> = ['str', 'vit', 'dex', 'int', 'spi'];
-    cells.forEach((cell, i) => {
-      const cx = LP.x + cellW * i + cellW / 2;
-      const lbl = s.add.text(cx - 2, bottomY, cell.label, {
-        fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
-        color: cell.color, stroke: '#000000', strokeThickness: 2,
-      }).setOrigin(1, 0.5);
-      const val = s.add.text(cx + 2, bottomY, '0', {
-        fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
-        color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-      }).setOrigin(0, 0.5);
-      this.container.add([lbl, val]);
-      if (cell.isArmor) {
-        this.armorIcon  = lbl;
-        this.armorValue = val;
-        lbl.setVisible(false);
-        val.setVisible(false);
-      } else {
-        this.statTexts[statKeys[i - 1]] = val;
-      }
-    });
+    // Armor readout placed just below the panel (hidden when armor = 0)
+    const armorY = LP.y + LP.h + 6;
+    this.armorIcon = s.add.text(LP.x + 10, armorY, '🛡', {
+      fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
+      color: '#88ccff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0, 0.5).setVisible(false);
+    this.armorValue = s.add.text(LP.x + 22, armorY, '0', {
+      fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
+    }).setOrigin(0, 0.5).setVisible(false);
+    this.container.add([this.armorIcon, this.armorValue]);
   }
 
   // ── Enemy panel ────────────────────────────────────────────────
@@ -268,7 +283,21 @@ export class CombatHUD {
     }).setOrigin(0, 0.5);
     c.add([bg, icon, label]);
     this.container.add(c);
-    return { container: c, bg, icon, label };
+
+    const slot: ChipDisplay = { container: c, bg, icon, label, tooltip: '' };
+
+    // Hover affordance: show the chip's tooltip string (e.g. "Burn: …") near
+    // the chip. The bg's hit area is updated each layout pass when its width
+    // changes (setSize keeps Phaser's input hit-rect in sync).
+    bg.setInteractive({ useHandCursor: false });
+    bg.on('pointerover', () => {
+      // Chip container is at the chip's top-left x; bg origin y is centered, so
+      // the chip's visual top is container.y - CHIP_HEIGHT/2.
+      this.showChipTooltip(slot.tooltip, c.x, c.y - CHIP_HEIGHT / 2);
+    });
+    bg.on('pointerout', () => this.hideChipTooltip());
+
+    return slot;
   }
 
   private layoutChips(
@@ -285,13 +314,19 @@ export class CombatHUD {
       const chip = chips[i];
       if (!chip) {
         slot.container.setVisible(false);
+        slot.tooltip = '';
         continue;
       }
       slot.icon.setText(chip.icon);
       slot.label.setText(chip.label);
       slot.label.setColor(chip.color);
+      slot.tooltip = chip.tooltip;
       const w = Math.max(36, 22 + slot.label.width + 6);
-      slot.bg.width = w;
+      // setSize (not just .width) so the Rectangle geometry updates, then keep
+      // the input hit-area Rectangle in sync with the new width.
+      slot.bg.setSize(w, CHIP_HEIGHT);
+      const hit = slot.bg.input?.hitArea as Phaser.Geom.Rectangle | undefined;
+      if (hit) { hit.width = w; hit.height = CHIP_HEIGHT; }
       if (x > 0 && x + w > maxWidth) {
         x = 0;
         row += 1;
@@ -339,22 +374,6 @@ export class CombatHUD {
     this.armorIcon.setVisible(armorVisible);
     this.armorValue.setVisible(armorVisible);
     if (armorVisible) this.armorValue.setText(String(armor));
-
-    // Attribute readouts.
-    const attrValues: Record<string, number> = {
-      str: state.heroStrength ?? 0,
-      vit: state.heroVitality ?? 0,
-      dex: state.heroDexterity ?? 0,
-      int: state.heroIntellect ?? 0,
-      spi: state.heroSpirit ?? 0,
-    };
-    for (const key of Object.keys(attrValues)) {
-      const v = attrValues[key];
-      if (v !== this.displayedStats[key]) {
-        this.displayedStats[key] = v;
-        this.statTexts[key]?.setText(String(v));
-      }
-    }
 
     // Enemy
     this.enemyNameText.setText(state.enemyName);
@@ -463,6 +482,11 @@ export class CombatHUD {
     this.staminaTween = undefined;
     this.manaTween = undefined;
     this.enemyHpTween = undefined;
+
+    // Tooltip objects live on the scene (not the HUD container) so they render
+    // above it — destroy them explicitly.
+    this.chipTooltipBg?.destroy();
+    this.chipTooltipText?.destroy();
 
     this.container.destroy(true);
   }

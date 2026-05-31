@@ -14,10 +14,11 @@ export const COLORS = {
 } as const;
 
 export const FONTS = {
-  family: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+  display: '"Cinzel Decorative", "Cinzel", serif',
+  family: '"Cinzel", serif',
+  body: 'Georgia, "Times New Roman", serif',
   title: { fontSize: '32px', fontStyle: 'bold' },
   heading: { fontSize: '24px', fontStyle: 'bold' },
-  body: { fontSize: '16px' },
   small: { fontSize: '14px' },
 } as const;
 

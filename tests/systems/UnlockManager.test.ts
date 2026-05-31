@@ -5,10 +5,10 @@ import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../../
 // teaching cards + 36 Tier 1 + 120 Tier 2), none of which carry an
 // unlockSource — so every card is universally available regardless of
 // metaUnlockedCards.
-// Relics v2: 80 total, none gated — every relic is always-available.
+// Relics: 80 total. 26 strong/rare relics are gated behind the Shrine building
+// (unlockSource:'shrine'); the remaining 54 are always-available in the base pool.
 const TOTAL_CARDS = 164;
-const TOTAL_RELICS = 80;
-const ALWAYS_AVAILABLE_RELICS = 80;
+const BASE_RELICS = 54; // ungated (no unlockSource); 26 more gated behind the Shrine
 
 describe('UnlockManager', () => {
   describe('getAvailableCards', () => {
@@ -46,23 +46,24 @@ describe('UnlockManager', () => {
   });
 
   describe('getAvailableRelics', () => {
-    it('returns all relics when unlockedRelics is empty (v2: no gating)', () => {
+    it('returns only the base (ungated) relics when unlockedRelics is empty', () => {
       const relics = getAvailableRelics([]);
-      expect(relics.length).toBe(ALWAYS_AVAILABLE_RELICS);
+      expect(relics.length).toBe(BASE_RELICS);
       const ids = relics.map(r => r.id);
-      // Spot-check a representative spread across class + rarity.
+      // Base-pool relics are always available.
       expect(ids).toContain('bronze_scale');
       expect(ids).toContain('energy_tonic');
       expect(ids).toContain('arcane_crystal');
       expect(ids).toContain('vitality_ring');
-      // v2: rare relics are now in the default pool too.
-      expect(ids).toContain('phoenix_feather');
-      expect(ids).toContain('demon_heart');
+      // Shrine-gated relics are NOT in the base pool.
+      expect(ids).not.toContain('phoenix_feather');
+      expect(ids).not.toContain('demon_heart');
     });
 
-    it('extra entries in unlockedRelics is a no-op when nothing is gated', () => {
+    it('unlocking a shrine-gated relic adds it to the available pool', () => {
       const relics = getAvailableRelics(['phoenix_feather']);
-      expect(relics.length).toBe(TOTAL_RELICS);
+      expect(relics.length).toBe(BASE_RELICS + 1);
+      expect(relics.map(r => r.id)).toContain('phoenix_feather');
     });
   });
 
@@ -75,17 +76,21 @@ describe('UnlockManager', () => {
       expect(ids).toContain('event');
       expect(ids).toContain('treasure');
       expect(ids).toContain('boss');
+      // Two utility sub-tiles ship unlocked by default.
+      expect(ids).toContain('subtile_camp');
+      expect(ids).toContain('subtile_manawell');
       expect(ids).not.toContain('rest');
       expect(ids).not.toContain('shop');
       expect(ids).not.toContain('graveyard');
-      expect(tiles.length).toBe(5);
+      expect(ids).not.toContain('subtile_ambush'); // gated behind Workshop
+      expect(tiles.length).toBe(7);
     });
 
     it('returns base tiles plus graveyard when unlocked', () => {
       const tiles = getAvailableTiles(['graveyard']);
       const ids = tiles.map(t => t.id);
       expect(ids).toContain('graveyard');
-      expect(tiles.length).toBe(6);
+      expect(tiles.length).toBe(8); // 5 base + 2 default sub-tiles + graveyard
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
@@ -43,14 +43,7 @@ export class CharacterSelectScene extends Scene {
     this.add.image(400, 300, 'bg_character_selection').setDisplaySize(800, 600);
 
     // Title
-    this.add.text(LAYOUT.centerX, 50, 'Choose Your Hero', {
-      fontSize: '40px',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 6,
-      fontFamily: FONTS.family,
-      resolution: 3,
-    }).setOrigin(0.5);
+    this.add.bitmapText(LAYOUT.centerX, 50, 'game_font_white', 'Choose Your Hero', 40).setOrigin(0.5);
 
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
     const cardWidth = layout.cardW;
@@ -207,7 +200,7 @@ export class CharacterSelectScene extends Scene {
       color: '#f0d080',
       stroke: '#000000',
       strokeThickness: 4,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       resolution: 3,
     }).setOrigin(0.5);
     container.add(nameLabel);
@@ -224,7 +217,7 @@ export class CharacterSelectScene extends Scene {
       color: '#cccccc',
       stroke: '#000000',
       strokeThickness: 2,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       align: 'center',
       resolution: 3,
     }).setOrigin(0.5, 0);
@@ -242,7 +235,7 @@ export class CharacterSelectScene extends Scene {
       color: '#aaaaaa',
       stroke: '#000000',
       strokeThickness: 2,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       align: 'center',
       wordWrap: { width: w - 30 },
       resolution: 3,
@@ -267,7 +260,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(txt);
@@ -294,7 +287,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(valTxt);

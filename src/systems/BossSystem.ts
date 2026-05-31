@@ -1,35 +1,6 @@
-import { scaleEnemyForLoop, type ScaledEnemyStats } from './DifficultyScaler';
 import { rollMaterialDrops } from './LootGenerator';
 import { resolveRunEnd, type RunEndResult } from './RunEndResolver';
 import type { RunState } from '../state/RunState';
-
-export interface BossEncounterData {
-  enemyId: string;
-  scaledStats: ScaledEnemyStats;
-  isBoss: true;
-}
-
-// Base stats for the boss enemy
-const BOSS_BASE_STATS = {
-  baseHP: 150,
-  attack: { damage: 15 },
-  baseDefense: 10,
-  goldReward: { min: 50, max: 80 },
-};
-
-export function triggerBossCombat(runState: RunState): BossEncounterData {
-  const scaledStats = scaleEnemyForLoop(
-    BOSS_BASE_STATS,
-    runState.loop.count,
-    true,
-    runState.loop.difficultyMultiplier,
-  );
-  return {
-    enemyId: 'doom_knight',
-    scaledStats,
-    isBoss: true,
-  };
-}
 
 export function onBossVictory(runState: RunState): { materialsAwarded: Record<string, number> } {
   // gatheringBoost is layered at banking time (MetaProgressionSystem.bankRunRewards),

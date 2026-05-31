@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
 import { setRun, createNewDailyRun, getRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
@@ -76,6 +76,17 @@ export class MainMenu extends Scene {
     if (g.__runStateClearedOnBoot) {
       g.__runStateClearedOnBoot = false;
       this.time.delayedCall(50, () => this.showSaveIncompatibleNotice());
+    }
+
+    // First-run gating: if the player has never seen the tutorial, kick off
+    // the scripted director before the next scene mounts.
+    try {
+      const meta = await loadMetaState();
+      if (!meta.tutorialSeen) {
+        tutorialDirector.start();
+      }
+    } catch (err) {
+      console.warn('[MainMenu] tutorial gate read failed:', err);
     }
 
     // Theme Song
@@ -180,33 +191,47 @@ export class MainMenu extends Scene {
 
     // Dim background
     const dimBg = this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.7);
-    dimBg.setInteractive(); // block click-through
+    dimBg.setInteractive();
     this.confirmOverlay.add(dimBg);
 
-    // Confirmation panel
-    const panel = this.add.image(LAYOUT.centerX, LAYOUT.centerY + 40, 'bg_base_option').setScale(1.45);
-    this.confirmOverlay.add(panel);
+    // Message panel (panel.png scaled to ~480×140)
+    const msgPanel = this.add.image(LAYOUT.centerX, 250, 'ui_panel').setDisplaySize(480, 140);
+    this.confirmOverlay.add(msgPanel);
 
-    const msg = this.add.text(LAYOUT.centerX, LAYOUT.centerY + 40, 'This will permanently erase your current run. Continue?', {
-      ...FONTS.body,
-      fontSize: '24px', // slightly smaller text
-      color: '#e6c88a', // dull yellow/gold
-      stroke: '#2e1b0f', // soft dark brown stroke
-      strokeThickness: 2,
+    const msg = this.add.text(LAYOUT.centerX, 250, 'This will permanently erase your\ncurrent run. Continue?', {
+      fontSize: '22px',
       fontStyle: 'bold',
-      fontFamily: FONTS.family,
+      color: '#e6c88a',
+      stroke: '#2e1b0f',
+      strokeThickness: 2,
+      fontFamily: FONTS.body,
       align: 'center',
-      wordWrap: { width: 450 }, // adjusted width for 24px
-    }).setOrigin(0.5).setShadow(1, 1, '#1a0d06', 2, true, true);
+    }).setOrigin(0.5);
     this.confirmOverlay.add(msg);
 
-    // Yes, Delete button (floating below the panel)
-    const yesBtn = this.createImgBtn(260, 480, 'btn_yes_delete', () => this.startNewRun(), 0.55);
-    this.confirmOverlay.add(yesBtn);
+    // Yes button (panel.png + label)
+    const yesBg = this.add.image(270, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
+    const yesLabel = this.add.text(270, 370, 'Yes, Delete', {
+      fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
+      stroke: '#1a0000', strokeThickness: 2,
+    }).setOrigin(0.5);
+    yesBg.on('pointerover', () => { yesBg.setTint(0xdddddd); yesLabel.setScale(1.05); });
+    yesBg.on('pointerout',  () => { yesBg.clearTint(); yesLabel.setScale(1); });
+    yesBg.on('pointerdown', () => { void this.startNewRun(); });
+    this.confirmOverlay.add(yesBg);
+    this.confirmOverlay.add(yesLabel);
 
-    // Keep My Run button (floating below the panel)
-    const noBtn = this.createImgBtn(540, 480, 'btn_keep_my_run', () => this.hideConfirmation(), 0.55);
-    this.confirmOverlay.add(noBtn);
+    // Keep button (panel.png + label)
+    const noBg = this.add.image(530, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
+    const noLabel = this.add.text(530, 370, 'Keep My Run', {
+      fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
+      stroke: '#2e1b0f', strokeThickness: 2,
+    }).setOrigin(0.5);
+    noBg.on('pointerover', () => { noBg.setTint(0xdddddd); noLabel.setScale(1.05); });
+    noBg.on('pointerout',  () => { noBg.clearTint(); noLabel.setScale(1); });
+    noBg.on('pointerdown', () => this.hideConfirmation());
+    this.confirmOverlay.add(noBg);
+    this.confirmOverlay.add(noLabel);
   }
 
   private hideConfirmation(): void {
@@ -283,7 +308,7 @@ export class MainMenu extends Scene {
     const text = this.add.text(LAYOUT.centerX, 100, msg, {
       fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       wordWrap: { width: 600 }, align: 'center',
     }).setOrigin(0.5).setDepth(50);
     text.setAlpha(0);
@@ -312,14 +337,14 @@ export class MainMenu extends Scene {
     const title = this.add.text(LAYOUT.centerX, 120, SAVE_INCOMPATIBLE_COPY.title, {
       fontSize: '18px', fontStyle: 'bold', color: '#ffaa44',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5);
     container.add(title);
 
     const body = this.add.text(LAYOUT.centerX, 150, SAVE_INCOMPATIBLE_COPY.body, {
       fontSize: '13px', color: '#ffffff',
       stroke: '#000000', strokeThickness: 2,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       wordWrap: { width: 480 }, align: 'center',
     }).setOrigin(0.5);
     container.add(body);
@@ -327,7 +352,7 @@ export class MainMenu extends Scene {
     const cta = this.add.text(LAYOUT.centerX, 185, SAVE_INCOMPATIBLE_COPY.cta, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.accent,
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     cta.on('pointerover', () => cta.setColor(COLORS.accentHover));
     cta.on('pointerout', () => cta.setColor(COLORS.accent));

@@ -318,5 +318,27 @@ describe('CardResolver', () => {
       // base cost 5 > mana 4, but upgraded cost 3 <= mana 4
       expect(resolver.canAfford(card, state, true)).toBe(true);
     });
+
+    it('self-stun (target self_dot) adds to heroStunStacks, not the boolean', () => {
+      const state = makeState();
+      const card = makeCard({
+        id: 'self-stun',
+        effects: [{ type: 'dot', stack: 'stun', value: 2, target: 'self_dot' }],
+      });
+      resolver.resolve(card, state, null);
+      expect(state.heroStunStacks ?? 0).toBe(2);
+      expect(state.heroStunned).toBe(false); // boolean reserved for enemy-inflicted stun
+    });
+
+    it('self-stun scales with STR (Bloodlash Salvo intent)', () => {
+      const state = makeState({ heroStrength: 9 });
+      const card = makeCard({
+        id: 'bloodlash-salvo',
+        effects: [{ type: 'dot', stack: 'stun', value: 2, target: 'self_dot', scale: { stat: 'str', per: 3, value: 1 } }],
+      });
+      resolver.resolve(card, state, null);
+      // 2 base + floor(9/3)*1 = 2 + 3 = 5 cards skipped
+      expect(state.heroStunStacks ?? 0).toBe(5);
+    });
   });
 });

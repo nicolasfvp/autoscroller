@@ -1,4 +1,4 @@
-// ShopRemoveCardScene -- full-screen deck card removal flow.
+﻿// ShopRemoveCardScene -- full-screen deck card removal flow.
 //
 // Layout mirrors DeckCustomizationScene so the player sees the same view of
 // their deck they're used to (5×N grid, responsive scale). Click any card
@@ -91,7 +91,7 @@ export class ShopRemoveCardScene extends Scene {
 
     this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, 'REMOVE A CARD', {
       fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
-      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 4,
+      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
     createWoodButton(this, 70, HEADER_BOTTOM / 2, '← Cancel', () => this.close(),
@@ -99,7 +99,7 @@ export class ShopRemoveCardScene extends Scene {
 
     this.add.text(740, HEADER_BOTTOM / 2, `Cost: ${this.cost}g`, {
       fontSize: '15px', fontStyle: 'bold', color: '#ffe28a',
-      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 3,
+      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 3,
     }).setOrigin(1, 0.5);
   }
 
@@ -148,7 +148,7 @@ export class ShopRemoveCardScene extends Scene {
 
     if (total === 0) {
       this.add.text(LAYOUT.centerX, LAYOUT.centerY, 'Deck is empty.', {
-        fontSize: '20px', color: '#998877', fontFamily: FONTS.family,
+        fontSize: '20px', color: '#998877', fontFamily: FONTS.body,
         fontStyle: 'italic',
       }).setOrigin(0.5);
       return;
@@ -198,7 +198,7 @@ export class ShopRemoveCardScene extends Scene {
       msg = `Click a card to choose it, then confirm to banish it for ${this.cost}g.`;
     }
     this.add.text(LAYOUT.centerX, HINT_Y, msg, {
-      fontSize: '12px', color: '#bba98a', fontFamily: FONTS.family,
+      fontSize: '12px', color: '#bba98a', fontFamily: FONTS.body,
       fontStyle: 'italic',
     }).setOrigin(0.5);
   }
@@ -227,7 +227,7 @@ export class ShopRemoveCardScene extends Scene {
 
     overlay.add(this.add.text(LAYOUT.centerX, 100, 'BANISH THIS CARD?', {
       fontSize: '24px', fontStyle: 'bold', color: '#ffd0c0',
-      fontFamily: FONTS.family, stroke: '#1a0500', strokeThickness: 5,
+      fontFamily: FONTS.body, stroke: '#1a0500', strokeThickness: 5,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 4, true, true));
 
     const preview = createCardVisual(this, LAYOUT.centerX, 280, cardId, { scale: 1.0 });
@@ -236,7 +236,7 @@ export class ShopRemoveCardScene extends Scene {
 
     overlay.add(this.add.text(LAYOUT.centerX, 420, `−${this.cost} gold`, {
       fontSize: '20px', fontStyle: 'bold', color: '#ff8866',
-      fontFamily: FONTS.family, stroke: '#1a0500', strokeThickness: 4,
+      fontFamily: FONTS.body, stroke: '#1a0500', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(1, 1, '#000', 3, true, true));
 
     const banish = createWoodButton(this, LAYOUT.centerX - 80, 490, 'Banish', () => {

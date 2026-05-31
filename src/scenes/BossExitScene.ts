@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { getBossExitChoiceData } from '../systems/BossSystem';
 import { LoopRunner, type LoopRunState } from '../systems/LoopRunner';
@@ -41,15 +41,13 @@ export class BossExitScene extends Scene {
     this.loopRunner = data.loopRunner;
     this.selectedChoice = null;
 
-    const fontFamily = FONTS.family;
+    const fontFamily = FONTS.body;
 
     // Overlay panel
     this.add.rectangle(400, 300, 600, 400, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
 
     // Title
-    this.add.text(400, 125, 'Boss Defeated!', {
-      fontSize: '32px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
-    }).setOrigin(0.5);
+    this.add.bitmapText(400, 125, 'game_font_gold', 'Boss Defeated!', 32).setOrigin(0.5);
 
     // Get choice data
     const run = getRun();

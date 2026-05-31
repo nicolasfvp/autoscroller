@@ -76,5 +76,18 @@
       "lost_lizard"
     ],
     "addAtLoop": {}
+  },
+  "green_field": {
+    "base": [
+      "slime"
+    ],
+    "addAtLoop": {
+      "5": [
+        "red_slime"
+      ],
+      "10": [
+        "earth_dragon"
+      ]
+    }
   }
 }

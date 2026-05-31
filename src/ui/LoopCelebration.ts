@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+﻿import Phaser from 'phaser';
 
 const sceneActive = (scene: Phaser.Scene): boolean =>
   !!scene.scene && scene.scene.isActive(scene.scene.key);
@@ -23,7 +23,7 @@ export class LoopCelebration {
     }
     this.inFlight = true;
 
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = 'Georgia, "Times New Roman", serif';
     const finish = () => {
       this.inFlight = false;
       if (sceneActive(scene)) onComplete();

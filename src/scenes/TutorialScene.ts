@@ -1,4 +1,4 @@
-// TutorialScene -- topic-tabbed tutorial. Replaces the 6-slide slideshow
+﻿// TutorialScene -- topic-tabbed tutorial. Replaces the 6-slide slideshow
 // per the beginner-mode redesign so the player can jump to whichever
 // system they need help with instead of paging linearly.
 //
@@ -11,7 +11,8 @@
 // close button back to PauseScene instead of CityHub.
 
 import { Scene } from 'phaser';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { createImageButton } from '../ui/WoodButton';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -33,10 +34,15 @@ const TOPICS: TutorialTopic[] = [
       'Your hero plays cards on cooldown — you do not click to attack.\n' +
       'Cards in the hand fire one at a time from top to bottom.\n' +
       'Light cards (low cooldown) cycle fast; heavy cards hit harder but recharge slow.\n\n' +
-      'KEYWORDS appear inside card descriptions (Burn, Slow, Vengeance, …).\n' +
-      'When you play a card that introduces a NEW keyword, the game pauses\n' +
-      'and explains what it does. Use the "?" button at any time to revisit\n' +
-      'the keywords you have learned.',
+      'KEYWORDS (Brace, Vengeance, Haste, Exhaust) change HOW a card resolves.\n' +
+      'The first time you play a card with a new keyword, the game pauses and\n' +
+      'explains it.\n\n' +
+      'STACKS are the colored tokens an attack piles on a target — Burn, Bleed\n' +
+      'and Poison deal damage every tick; Stun and Slow hold the enemy back;\n' +
+      'Rage powers your own payoffs. STAT-SCALING means a card grows with your\n' +
+      'attributes (STR/DEX/INT/VIT/SPI) — e.g. more STR = more damage.\n' +
+      'These tokens are NOT pop-up taught: open the "?" Glossary any time for\n' +
+      'a full reference of every stack and stat.',
   },
   {
     id: 'deck',
@@ -127,13 +133,13 @@ export class TutorialScene extends Scene {
     this.add.text(LAYOUT.centerX, 50, 'Tutorial', {
       ...FONTS.title,
       color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5);
 
-    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. Combat teaching is also contextual: the game pauses on each new keyword you encounter.', {
+    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. The game also pauses to teach each new keyword (Brace, Vengeance, Haste, Exhaust); stacks & stats live in the "?" Glossary.', {
       fontSize: '12px',
       color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       align: 'center',
       wordWrap: { width: 680 },
     }).setOrigin(0.5);
@@ -154,20 +160,20 @@ export class TutorialScene extends Scene {
       fontSize: '22px',
       fontStyle: 'bold',
       color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0);
 
     this.bodyText = this.add.text(panelX + 24, panelY + 58, '', {
       fontSize: '14px',
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       wordWrap: { width: panelW - 48 },
       lineSpacing: 5,
     }).setOrigin(0, 0);
 
     // Done / close button
     const closeLabel = this.replayMode ? 'Close' : 'Start Game';
-    createButton(this, LAYOUT.centerX, 540, closeLabel, () => this.completeTutorial(), 'primary');
+    createImageButton(this, LAYOUT.centerX, 540, closeLabel, () => this.completeTutorial(), 240, 56);
 
 
     // Tab-key cycling between topics for keyboard-driven readers.
@@ -192,7 +198,7 @@ export class TutorialScene extends Scene {
         fontSize: '16px',
         fontStyle: 'bold',
         color: COLORS.textSecondary,
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
         padding: { left: 14, right: 14, top: 8, bottom: 8 },
         backgroundColor: '#2a1a3e',
       }).setOrigin(0.5).setInteractive({ useHandCursor: true });

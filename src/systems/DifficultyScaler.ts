@@ -8,19 +8,17 @@ export interface ScaledEnemyStats {
 }
 
 interface DifficultyConfig {
-  percentPerLoop: number;
   percentPerBossKill: number;
   bossMultiplier: number;
   basicTileCombatChance: number;
+  /** Chance a spawned non-boss combat enemy is upgraded to an Elite. */
+  eliteChance: number;
   baseSpeed: number;
-  speedScalePerLoop: number;
   bossEveryNLoops: number;
   baseLoopLength: number;
   baseTilePointsPerLoop: number;
   tilePointScalePerLoop: number;
-  deathMaterialPercent: number;
   deathXpPercent: number;
-  resourceResetPercent: number;
   loopGrowth: {
     schedule: number[];
     maxTileLength: number;
@@ -77,7 +75,7 @@ export function scaleEnemyForLoop(
 }
 
 // Map speed is now player-controlled via RunState.mapSpeed (feedback #28)
-export function getLoopSpeed(_loopCount: number): number {
+export function getLoopSpeed(): number {
   return config.baseSpeed;
 }
 

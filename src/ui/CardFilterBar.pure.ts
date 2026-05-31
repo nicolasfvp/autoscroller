@@ -11,6 +11,55 @@ export interface CardFilters {
   search: string;          // lowercased
 }
 
+// ── Sort ────────────────────────────────────────────────────
+// Deckbuilder/browsing sort modes. 'tier' is the default browse order.
+export type CardSortMode = 'tier' | 'cost' | 'cooldown' | 'name';
+
+export const CARD_SORT_MODES: CardSortMode[] = ['tier', 'cost', 'cooldown', 'name'];
+
+export const CARD_SORT_LABEL: Record<CardSortMode, string> = {
+  tier: 'Tier',
+  cost: 'Cost',
+  cooldown: 'Cooldown',
+  name: 'Name',
+};
+
+/** Total numeric cost of a card (stamina + mana + defense). Missing -> 0. */
+function totalCost(card: CardDefinition): number {
+  const c = card.cost;
+  if (!c) return 0;
+  return (c.stamina ?? 0) + (c.mana ?? 0) + (c.defense ?? 0);
+}
+
+/**
+ * Pure, stable card sort. Returns a NEW array (does not mutate input). Each
+ * mode falls back to name (then id) as a deterministic tie-breaker so the
+ * order is stable across calls regardless of the engine's Array.sort.
+ *   - 'tier'     : ascending tier (no-tier cards treated as T1).
+ *   - 'cost'     : ascending total resource cost.
+ *   - 'cooldown' : ascending base cooldown.
+ *   - 'name'     : alphabetical by display name.
+ */
+export function sortCards(cards: CardDefinition[], mode: CardSortMode): CardDefinition[] {
+  const byName = (a: CardDefinition, b: CardDefinition): number => {
+    const n = (a.name ?? '').localeCompare(b.name ?? '');
+    if (n !== 0) return n;
+    return (a.id ?? '').localeCompare(b.id ?? '');
+  };
+  const out = cards.slice();
+  out.sort((a, b) => {
+    let primary = 0;
+    switch (mode) {
+      case 'tier':     primary = (a.tier ?? 1) - (b.tier ?? 1); break;
+      case 'cost':     primary = totalCost(a) - totalCost(b); break;
+      case 'cooldown': primary = (a.cooldown ?? 0) - (b.cooldown ?? 0); break;
+      case 'name':     return byName(a, b);
+    }
+    return primary !== 0 ? primary : byName(a, b);
+  });
+  return out;
+}
+
 // Dropdown options in spec order: All -> physical -> elemental.
 export const FILTER_ELEMENT_OPTIONS: string[] = [
   'All',
@@ -43,7 +92,6 @@ function getHaystack(card: CardDefinition): string {
     effects: card.effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
   });
   const hay = `${card.name} ${card.description ?? ''} ${rendered}`.toLowerCase();
   haystackCache.set(card, hay);
@@ -65,10 +113,11 @@ export function applyFilters(allCards: CardDefinition[], filters: CardFilters): 
     if (elemId) {
       if (!card.elements || !card.elements.includes(elemId)) return false;
     }
-    // Search gate (name OR description, case-insensitive substring). v4: hay
-    // includes BOTH the static description AND the dynamic formatter output —
-    // the static text holds flavor/legacy terms, the dynamic text holds the
-    // canonical rendered keywords ("Vengeance", "Shatter", "Scales STR", …).
+    // Search gate (name OR description, case-insensitive substring). The
+    // haystack includes BOTH the static description AND the dynamic formatter
+    // output — the static text holds flavor, the dynamic text holds the
+    // canonical rendered vocabulary (modifier keywords like "Vengeance" and
+    // stack/stat tokens like "Burn", "Bleed", "STR", …).
     if (q.length > 0) {
       if (!getHaystack(card).includes(q)) return false;
     }

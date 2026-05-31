@@ -15,6 +15,7 @@ import { ELEMENTS, resolveIconKey, type ElementId } from '../systems/ElementSyst
 import { formatCardDescription } from '../systems/cards/CardText';
 import { getTokenStyle, renderTokenText } from './IconTokens';
 import { getRun } from '../state/RunState';
+import { getEffectiveStats, isShiftHeld, subscribeCardDynamic } from './CardDynamic';
 import type { CardCost, CardDefinition, CardEffect } from '../data/types';
 
 // ── Color palette (STS-inspired warm dark leather) ───────────────────────
@@ -551,7 +552,6 @@ function hasDescription(card: CardDefinition, isUpgraded: boolean): boolean {
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
   });
   return !!desc;
 }
@@ -565,35 +565,49 @@ function drawDescription(
   scale: number,
 ): void {
   const effects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
-  const desc = formatCardDescription({
-    effects,
-    exhaust: card.exhaust,
-    spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
-  });
-  if (!desc) return;
-
   // Font sized to fill the panel comfortably — larger at popup scale,
   // still readable on the small in-hand card.
   const fontSize = Math.max(9, Math.round(slot.h * 0.17 + scale * 1.5));
   const colorHex = `#${COLOR.DESC_TEXT.toString(16).padStart(6, '0')}`;
   const inset = Math.max(4, slot.w * 0.04);
 
-  const text = renderTokenText(scene, slot.x + inset, slot.y + inset, desc, {
-    fontSize: `${fontSize}px`,
-    color: colorHex,
-    fontFamily: 'monospace',
-    wrapWidth: slot.w - inset * 2,
-    align: 'center',
-    lineSpacing: 2,
-  });
-  // Vertically center the rendered text inside the slot.
-  const textHeight = (text.getData('tokenTextHeight') as number | undefined) ?? 0;
-  if (textHeight > 0 && textHeight < slot.h) {
-    text.y = slot.cy - textHeight / 2;
+  let block: Phaser.GameObjects.Container | null = null;
+  const build = (): void => {
+    if (block) { block.destroy(); block = null; }
+    // Dynamic mode: each scaled number shows RESOLVED (bigger + colored, as a
+    // [[v:N:stat]] token) by default; while SHIFT is held it becomes the
+    // "(base + N per [stat])" equation in place. Stats come from CardDynamic
+    // (live combat stats, else the run's resolved stats).
+    const desc = formatCardDescription(
+      { effects, exhaust: card.exhaust, spend_armor: card.spend_armor },
+      { dynamic: { stats: getEffectiveStats(), shift: isShiftHeld() } },
+    );
+    if (!desc) return;
+
+    const text = renderTokenText(scene, slot.x + inset, slot.y + inset, desc, {
+      fontSize: `${fontSize}px`,
+      color: colorHex,
+      fontFamily: 'monospace',
+      wrapWidth: slot.w - inset * 2,
+      align: 'center',
+      lineSpacing: 2,
+    });
+    // Vertically center the rendered text inside the slot.
+    const textHeight = (text.getData('tokenTextHeight') as number | undefined) ?? 0;
+    if (textHeight > 0 && textHeight < slot.h) {
+      text.y = slot.cy - textHeight / 2;
+    } else {
+      text.y = slot.y + inset;
+    }
     text.x = slot.cx - (slot.w - inset * 2) / 2;
-  }
-  parent.add(text);
+    parent.add(text);
+    block = text;
+  };
+
+  build();
+  // Rebuild when SHIFT toggles (number <-> equation) or live stats change.
+  const unsub = subscribeCardDynamic(build);
+  parent.once('destroy', unsub);
 }
 
 // ── Cost cell ────────────────────────────────────────────────────────────
@@ -691,40 +705,18 @@ function buildSecondaryCostRows(card: CardDefinition, isUpgraded: boolean): Seco
 function attachHover(
   scene: Phaser.Scene,
   container: Phaser.GameObjects.Container,
-  startY: number,
+  _startY: number,
 ): void {
-  // Capture base scale once. The original code multiplied by the *current*
-  // scale on every pointerover, so rapid hovers compounded (base → 1.05 →
-  // 1.1025 → …); pointerout's reciprocal divide didn't fully undo it.
-  const baseScaleX = container.scaleX;
-  const baseScaleY = container.scaleY;
+  const w = CARD_BASE_SIZES.small.w * container.scaleX;
+  const h = CARD_BASE_SIZES.small.h * container.scaleY;
+  const border = scene.add.rectangle(0, 0, w, h, 0x000000, 0)
+    .setStrokeStyle(3, 0xffd700, 1)
+    .setVisible(false);
+  container.add(border);
 
-  container.on('pointerover', () => {
-    // Kill any in-flight scale/y tween before starting a new one so we don't
-    // run conflicting interpolations on the same target (each card used to
-    // accrue multiple pending tweens under fast pointer motion).
-    scene.tweens.killTweensOf(container);
-    scene.tweens.add({
-      targets: container,
-      scaleX: baseScaleX * 1.05,
-      scaleY: baseScaleY * 1.05,
-      y: startY - 8,
-      duration: 150,
-      ease: 'Sine.easeOut',
-    });
-  });
-  container.on('pointerout', () => {
-    scene.tweens.killTweensOf(container);
-    scene.tweens.add({
-      targets: container,
-      scaleX: baseScaleX,
-      scaleY: baseScaleY,
-      y: startY,
-      duration: 150,
-      ease: 'Sine.easeOut',
-    });
-  });
-  container.once('destroy', () => scene.tweens.killTweensOf(container));
+  container.on('pointerover', () => { border.setVisible(true); });
+  container.on('pointerout',  () => { border.setVisible(false); });
+  container.once('destroy', () => border.destroy());
 }
 
 function resolveUpgradeFlag(cardId: string): boolean {

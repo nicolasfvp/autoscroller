@@ -1,0 +1,33 @@
+{
+  "1": {
+    "inputs": {
+      "image": "text exemplo.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": { "title": "Load Image (Style Reference)" }
+  },
+  "2": {
+    "inputs": {
+      "prompt": "A dark fantasy RPG UI button.",
+      "model": "gpt-image-2",
+      "model.size": "auto",
+      "model.custom_width": 1024,
+      "model.custom_height": 1024,
+      "model.background": "opaque",
+      "model.quality": "low",
+      "n": 1,
+      "seed": 0,
+      "model.images.image_1": ["1", 0]
+    },
+    "class_type": "OpenAIGPTImageNodeV2",
+    "_meta": { "title": "OpenAI GPT Image 2" }
+  },
+  "3": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": ["2", 0]
+    },
+    "class_type": "SaveImage",
+    "_meta": { "title": "Save Image" }
+  }
+}

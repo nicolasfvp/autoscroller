@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { MetaState } from '../state/MetaState';
 import { upgradeBuilding, getBuildingTierData } from '../systems/MetaProgressionSystem';
 import { saveMetaState } from '../systems/MetaPersistence';
@@ -42,7 +42,7 @@ export class BuildingPanelScene extends Scene {
     // Clear previous content
     this.children.removeAll(true);
 
-    const fontFamily = FONTS.family;
+    const fontFamily = FONTS.body;
 
     // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.75);
@@ -82,15 +82,7 @@ export class BuildingPanelScene extends Scene {
     // Title (Medieval Style)
     const hasBakedTitle = ['library', 'workshop', 'forge', 'shrine', 'storehouse'].includes(this.buildingKey);
     if (!hasBakedTitle) {
-      this.add.text(400, 75, tierData.name, {
-        fontSize: '48px',
-        fontStyle: 'bold',
-        color: '#fdf6e3', // cream
-        stroke: '#3e2723',
-        strokeThickness: 6,
-        fontFamily: '"Impact", "Arial Black", sans-serif',
-        shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
-      }).setOrigin(0.5);
+      this.add.bitmapText(400, 75, 'game_font_white', tierData.name, 48).setOrigin(0.5);
     }
 
     let descY = 120;

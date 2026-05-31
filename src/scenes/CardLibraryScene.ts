@@ -12,7 +12,7 @@
 
 import Phaser from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
-import { FONTS } from '../ui/StyleConstants';
+import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getAllCards } from '../data/DataLoader';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
@@ -20,8 +20,11 @@ import { getRun } from '../state/RunState';
 import {
   CardFilterBar,
   applyFilters,
+  sortCards,
   type CardFilters,
+  type CardSortMode,
 } from '../ui/CardFilterBar';
+import { addGlossaryButton } from '../ui/GlossaryButton';
 import type { CardDefinition } from '../data/types';
 import { BookLayout, type BookRenderContext, type BookPageBounds } from '../ui/BookLayout';
 
@@ -44,9 +47,12 @@ export class CardLibraryScene extends Phaser.Scene {
   private filterBar: CardFilterBar | null = null;
   private allCards: CardDefinition[] = [];
   private filteredCards: CardDefinition[] = [];
+  private currentFilters: CardFilters | null = null;
+  private sortMode: CardSortMode = 'tier';
   private upgradedIds: Set<string> = new Set();
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private wheelHandler: ((p: Phaser.Input.Pointer, go: unknown, dx: number, dy: number) => void) | null = null;
+  private detailContainer: Phaser.GameObjects.Container | null = null;
 
   constructor() {
     super(SCENE_KEYS.LIBRARY);
@@ -61,7 +67,7 @@ export class CardLibraryScene extends Phaser.Scene {
     this.scene.bringToTop();
 
     this.allCards = getAllCards();
-    this.filteredCards = this.allCards.slice();
+    this.filteredCards = sortCards(this.allCards, this.sortMode);
     this.buildUpgradedSet();
 
     this.book = new BookLayout(this, {
@@ -72,7 +78,15 @@ export class CardLibraryScene extends Phaser.Scene {
 
     // Filter bar sits in the empty gap above the book's chrome (no tabs in
     // the Library overlay, so this region is free). 720 wide × 44 tall.
-    this.filterBar = new CardFilterBar(this, 40, 78, 720, (f) => this.onFiltersChanged(f));
+    this.filterBar = new CardFilterBar(
+      this, 40, 78, 720,
+      (f) => this.onFiltersChanged(f),
+      (mode) => this.onSortChanged(mode),
+    );
+
+    // "?" glossary button so players can look up stack/stat tokens while
+    // browsing the library. Top-right, clear of the filter bar and book.
+    addGlossaryButton(this, LAYOUT.canvasWidth - 30, 30, 6000);
 
     this.updateBookContent();
     this.installInputBindings();
@@ -99,7 +113,19 @@ export class CardLibraryScene extends Phaser.Scene {
 
   // ── Lifecycle ─────────────────────────────────────────────
 
+  private showCardDetail(cardId: string): void {
+    if (this.detailContainer) this.detailContainer.destroy(true);
+    this.detailContainer = this.add.container(0, 0).setDepth(200);
+    const dim = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.80).setInteractive();
+    const card = createCardVisual(this, 400, 285, cardId, { scale: 1.2 });
+    const close = () => { this.detailContainer?.destroy(true); this.detailContainer = null; };
+    dim.on('pointerdown', close);
+    this.input.keyboard?.once('keydown-ESC', close);
+    this.detailContainer.add([dim, card]);
+  }
+
   private teardown(): void {
+    if (this.detailContainer) { this.detailContainer.destroy(true); this.detailContainer = null; }
     if (this.filterBar) {
       this.filterBar.destroy();
       this.filterBar = null;
@@ -129,7 +155,21 @@ export class CardLibraryScene extends Phaser.Scene {
   // ── Filter / content ──────────────────────────────────────
 
   private onFiltersChanged(filters: CardFilters): void {
-    this.filteredCards = applyFilters(this.allCards, filters);
+    this.currentFilters = filters;
+    this.recomputeCards();
+  }
+
+  private onSortChanged(mode: CardSortMode): void {
+    this.sortMode = mode;
+    this.recomputeCards();
+  }
+
+  /** Re-apply the active filters then sort, and repaint the book. */
+  private recomputeCards(): void {
+    const filtered = this.currentFilters
+      ? applyFilters(this.allCards, this.currentFilters)
+      : this.allCards;
+    this.filteredCards = sortCards(filtered, this.sortMode);
     this.updateBookContent();
   }
 
@@ -201,6 +241,9 @@ export class CardLibraryScene extends Phaser.Scene {
           fontSize: '22px', fontFamily: FF, color: '#ffffff',
         }).setOrigin(0.5);
         container.add(lock);
+      } else {
+        visual.setInteractive({ useHandCursor: true });
+        visual.on('pointerdown', () => this.showCardDetail(card.id));
       }
     });
   }

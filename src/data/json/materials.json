@@ -13,15 +13,11 @@
     "graveyard": { "primary": "bone", "secondary": "essence", "baseAmount": { "min": 2, "max": 5 }, "secondaryChance": 0.15 },
     "swamp": { "primary": "herbs", "secondary": "bone", "baseAmount": { "min": 2, "max": 5 }, "secondaryChance": 0.25 },
     "basic": { "primary": "stone", "baseAmount": { "min": 1, "max": 3 }, "secondaryChance": 0 },
-    "volcano": { "primary": "crystal", "secondary": "iron", "baseAmount": { "min": 1, "max": 3 }, "secondaryChance": 0.25 }
+    "desert": { "primary": "iron", "secondary": "crystal", "baseAmount": { "min": 2, "max": 4 }, "secondaryChance": 0.25 },
+    "lava": { "primary": "crystal", "secondary": "iron", "baseAmount": { "min": 2, "max": 4 }, "secondaryChance": 0.3 }
   },
-  "enemyBonusDrops": {
-    "slime": { "material": "herbs", "amount": { "min": 1, "max": 3 }, "chance": 0.4 },
-    "goblin": { "material": "iron", "amount": { "min": 1, "max": 2 }, "chance": 0.35 },
-    "orc": { "material": "iron", "amount": { "min": 1, "max": 3 }, "chance": 0.45 },
-    "mage": { "material": "crystal", "amount": { "min": 1, "max": 2 }, "chance": 0.4 },
-    "elite_knight": { "material": "essence", "amount": { "min": 1, "max": 2 }, "chance": 0.5 }
-  },
+  "_comment_enemyBonusDrops": "Legacy per-enemy bonus drops are superseded by each enemy's materialReward block in enemies.json (all live normals define one). Kept empty as the documented fallback for any future enemy id without a reward block.",
+  "enemyBonusDrops": {},
   "bossDrops": {
     "materials": {
       "essence": { "min": 3, "max": 6 },

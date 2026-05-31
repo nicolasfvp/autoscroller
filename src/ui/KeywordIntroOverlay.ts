@@ -1,4 +1,4 @@
-// KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
+﻿// KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
 //
 // Shown by KeywordIntroService when the player resolves a card that
 // references a keyword they haven't learned yet. While the overlay is
@@ -46,73 +46,76 @@ export function openKeywordIntroOverlay(
   ).setOrigin(0, 0).setInteractive();
   overlay.add(backdrop);
 
-  // Wood + parchment banner asset (Grok-generated). Replaces the flat dark
-  // blue panel that read as AI-mock chrome.
-  let panelBg: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-  if (scene.textures.exists('panel_modifier_banner')) {
-    // Asset has its own dark header strip + tassels; size to PANEL_W/H.
-    panelBg = scene.add.image(PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, 'panel_modifier_banner')
-      .setDisplaySize(PANEL_W + 60, PANEL_H + 40);
-  } else {
-    panelBg = scene.add.rectangle(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 0x1a1a2e, 0.98)
-      .setOrigin(0, 0)
-      .setStrokeStyle(2, 0x9a6030);
-  }
-  panelBg.setInteractive();
+  // Dark/gold panel frame — matches the game's unified UI style.
+  const frameKey = scene.textures.exists('panel_keyword_frame') ? 'panel_keyword_frame' : '__DEFAULT';
+  const panelBg = scene.add.image(PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, frameKey)
+    .setDisplaySize(PANEL_W, PANEL_H)
+    .setInteractive();
   overlay.add(panelBg);
 
+  // "New [Category]" badge — small, muted
   const badge = scene.add.text(
-    PANEL_X + 20,
-    PANEL_Y + 18,
+    PANEL_X + 18,
+    PANEL_Y + 16,
     `New ${CATEGORY_LABEL[keyword.category]}`,
     {
-      fontSize: '12px',
+      fontSize: '11px',
       fontStyle: 'bold',
-      color: COLORS.textSecondary,
-      fontFamily: FONTS.family,
+      color: '#aaaaaa',
+      fontFamily: FONTS.body,
+      stroke: '#000000',
+      strokeThickness: 2,
     },
   ).setOrigin(0, 0);
   overlay.add(badge);
 
+  // Keyword name — category-colored, prominent
   const name = scene.add.text(
-    PANEL_X + 20,
-    PANEL_Y + 38,
+    PANEL_X + 18,
+    PANEL_Y + 34,
     keyword.keyword,
     {
-      fontSize: '28px',
+      fontSize: '26px',
       fontStyle: 'bold',
       color: CATEGORY_COLOR[keyword.category],
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
+      stroke: '#000000',
+      strokeThickness: 3,
     },
   ).setOrigin(0, 0);
   overlay.add(name);
 
+  // Divider line
+  const divider = scene.add.rectangle(PANEL_X + PANEL_W / 2, PANEL_Y + 78, PANEL_W - 36, 1, 0xffd700, 0.4);
+  overlay.add(divider);
+
+  // Definition — warm amber to match the tutorial text box style
   const definition = scene.add.text(
-    PANEL_X + 20,
-    PANEL_Y + 80,
+    PANEL_X + 18,
+    PANEL_Y + 88,
     keyword.definition,
     {
       fontSize: '13px',
-      color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
-      wordWrap: { width: PANEL_W - 40 },
-      lineSpacing: 3,
+      color: '#e6c88a',
+      fontFamily: FONTS.body,
+      wordWrap: { width: PANEL_W - 36 },
+      lineSpacing: 4,
     },
   ).setOrigin(0, 0);
   overlay.add(definition);
 
-  // "Got it!" button — centered horizontally near the panel bottom.
-  const btnY = PANEL_Y + PANEL_H - 32;
+  // "Got it!" button — centered near panel bottom
+  const btnY = PANEL_Y + PANEL_H - 30;
   const btn = scene.add.text(
     PANEL_X + PANEL_W / 2,
     btnY,
     'Got it!  (Enter)',
     {
-      fontSize: '16px',
+      fontSize: '15px',
       fontStyle: 'bold',
       color: COLORS.accent,
-      fontFamily: FONTS.family,
-      backgroundColor: '#3a2008',
+      fontFamily: FONTS.body,
+      backgroundColor: '#2a1a00',
       padding: { left: 18, right: 18, top: 6, bottom: 6 },
     },
   ).setOrigin(0.5).setInteractive({ useHandCursor: true });

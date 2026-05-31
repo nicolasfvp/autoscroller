@@ -1,4 +1,4 @@
-// NicknameModal — inline overlay for capturing/editing the Daily Run nickname.
+﻿// NicknameModal — inline overlay for capturing/editing the Daily Run nickname.
 // Used on MainMenu before starting a daily run. Pure UI; persistence is
 // handled by the caller via DailySeed.setStoredNickname().
 
@@ -41,7 +41,7 @@ export class NicknameModal {
     this.container.add(panel);
 
     const title = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 70, opts.title ?? 'Choose your daily nickname', {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '18px',
       fontStyle: 'bold',
       color: COLORS.accent,
@@ -49,7 +49,7 @@ export class NicknameModal {
     this.container.add(title);
 
     const hint = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 42, `Up to ${MAX_LEN} characters. A–Z, 0–9, _ -`, {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '11px',
       color: COLORS.textSecondary,
     }).setOrigin(0.5);
@@ -61,14 +61,14 @@ export class NicknameModal {
     this.container.add(inputBg);
 
     this.inputText = scene.add.text(LAYOUT.centerX - 150, LAYOUT.centerY, this.value, {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '18px',
       color: COLORS.textPrimary,
     }).setOrigin(0, 0.5);
     this.container.add(this.inputText);
 
     this.caretText = scene.add.text(0, LAYOUT.centerY, '|', {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '18px',
       color: COLORS.textPrimary,
     }).setOrigin(0, 0.5);
@@ -176,7 +176,7 @@ function makeBtn(scene: Phaser.Scene, x: number, y: number, label: string, onCli
   bg.setInteractive({ useHandCursor: true });
   c.add(bg);
   const text = scene.add.text(0, 0, label, {
-    fontFamily: FONTS.family,
+    fontFamily: FONTS.body,
     fontSize: '16px',
     fontStyle: 'bold',
     color: COLORS.accent,

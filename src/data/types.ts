@@ -34,7 +34,10 @@ export type AuraModifierKind =
   // Audit §11.I-13: element-filtered damage taken modifier (Pyre Surge doubles
   // incoming fire damage on enemy for 8s). Value is the multiplicative fraction
   // (1.0 = +100%). When set, only damage tagged with the named element is scaled.
-  | "fire_damage_taken_pct";
+  | "fire_damage_taken_pct"
+  // Rebalance phase: combat-long multiplier on stack gains of a named stack.
+  // Vengeful Pyre uses `stack: rage, value: 1` to double rage gains.
+  | "stack_gain_mult";
 
 export type AuraTriggerKind =
   // v1 (already runtime-supported)
@@ -105,13 +108,12 @@ export interface CardEffect {
     // NEW (Tier-1 redesign): time-decaying status effect on hero or enemy.
     | "aura"
     // v3 archetype redesigns:
-    | "echo"                  // queue N re-triggers of next cards
     | "cd_debt"               // add N seconds to this card's next cooldown (Overload)
     | "convert_stack"         // gasta from-stacks, gera to-stacks (cross-stack converter)
     | "multiply_stack"        // multiplica stacks atuais do alvo (Catalyst)
     | "stack_boost"           // soma valor a cada stack já presente (Pyre Surge)
     | "devour"                // consome uma carta do deck pra ganhar buff
-    | "force_trigger_all_cards"; // dispara todas as cartas do herói imediatamente
+    | "stat_gain";            // permanent per-combat stat boost with per-card cap
   value: number;
   target: "enemy" | "self" | "self_dot" | "aoe" | "enemy_nearest" | "self_deck";
   /**
@@ -133,6 +135,8 @@ export interface CardEffect {
   };
   /** Disambiguates which stack to apply for type="dot" or type="stack". */
   stack?: StackId;
+  /** Rebalance phase: names which stat axis a `stat_gain` effect boosts. */
+  stat?: StatId;
   /** Damage variant: skip enemy defense subtraction. */
   pierce_armor?: boolean;
   /**
@@ -152,10 +156,6 @@ export interface CardEffect {
   /** v3: name a stack whose pre-consume count this effect's `value` should be
    *  scaled by (multiplicative detonator like Hemotoxin Burst, Crimson Spiral). */
   consume_stack_value?: StackId;
-  /** v3: lifesteal — heal % of damage dealt by this damage effect. */
-  siphon?: number;
-  /** v3: Channel — payload scales with seconds the slot waited past readiness. */
-  channel?: { max_bonus: number; ramp_per_sec: number };
   /** v3: Overload — after this effect resolves, the card slot adds N ms to its
    *  next cooldown (independent of normal cooldown). */
   overload_lockout_ms?: number;
@@ -197,6 +197,24 @@ export interface CardEffect {
   threshold?: number;
   /** Aura: effect to apply once when `trigger` fires. v3: may be array. */
   then?: CardEffect | CardEffect[];
+  /** Rebalance phase: per-card cap on a `stat_gain` effect. Applies to the
+   *  (cardId, stat) pair globally — repeated plays / copies share the cap. */
+  max_per_combat?: number;
+  /** Rebalance phase: aura that counts a named event inside its TTL window
+   *  and fires `then` when the threshold is reached. `repeat:false` (default)
+   *  self-prunes after one fire; `repeat:true` keeps counting and re-firing. */
+  event_counter?: {
+    event:
+      | "stack_applied"
+      | "stack_consumed"
+      | "hp_lost"
+      | "card_played"
+      | "armor_gained"
+      | "heal_received";
+    filter?: { stack?: StackId; min_amount?: number };
+    threshold: number;
+    repeat?: boolean;
+  };
 }
 
 export interface CardUpgrade {
@@ -241,13 +259,6 @@ export interface CardDefinition {
   locked?: boolean;
   /** v3: Exhaust — card fires once per combat and is then disabled until next combat. */
   exhaust?: boolean;
-  /** v3: cooldown scaled by a runtime variable (e.g. hero rage stacks). */
-  cooldown_scale?: {
-    stat: "rage" | "missing_hp_pct";
-    per: number;
-    reduce_pct: number;   // 0.10 = 10% per `per` units
-    min_pct: number;      // 0.40 = cap floor at 40% of base
-  };
   /** v3: when set true, this card consumes all hero armor as part of resolution
    *  (used by Citadel Inferno detonator). The armor read happens before reset. */
   spend_armor?: "all" | number;
@@ -264,7 +275,7 @@ export interface EnemyAttack {
   specialEffect?: "double" | "stun" | "debuff" | "lifesteal";
 }
 
-export type BossBehaviorType = "enrage" | "shield" | "multi_hit" | "drain" | "summon";
+export type BossBehaviorType = "enrage" | "shield" | "multi_hit" | "drain";
 
 export interface BossBehavior {
   type: BossBehaviorType;
@@ -275,7 +286,6 @@ export interface BossBehavior {
   hitCount?: number;
   damageMultiplier?: number;
   healPercent?: number;
-  summonId?: string;
 }
 
 export interface EnemyDefinition {
