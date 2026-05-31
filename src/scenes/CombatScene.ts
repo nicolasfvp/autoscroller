@@ -19,6 +19,7 @@ import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
+import { addPendingKill } from '../systems/PendingLoot';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
@@ -203,6 +204,7 @@ export class CombatScene extends Scene {
         // the base reward so it flows through normal loot processing (which
         // also pipes the right notification).
         const goldBonus = finalState.pendingGoldBonus ?? 0;
+        addPendingKill(enemyDef.name);
         generateAndApplyCombatLoot(currentRun, enemyDef.name, enemyDef.id, enemyDef.type, this.initData.terrain ?? 'basic', scaled.goldReward + goldBonus, xpEarned);
         this.scene.stop();
         this.scene.resume(SCENE_KEYS.GAME);

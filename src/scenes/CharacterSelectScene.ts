@@ -43,14 +43,7 @@ export class CharacterSelectScene extends Scene {
     this.add.image(400, 300, 'bg_character_selection').setDisplaySize(800, 600);
 
     // Title
-    this.add.text(LAYOUT.centerX, 50, 'Choose Your Hero', {
-      fontSize: '40px',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 6,
-      fontFamily: FONTS.body,
-      resolution: 3,
-    }).setOrigin(0.5);
+    this.add.bitmapText(LAYOUT.centerX, 50, 'game_font_white', 'Choose Your Hero', 40).setOrigin(0.5);
 
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
     const cardWidth = layout.cardW;

@@ -102,10 +102,11 @@ Basta substituir os placeholders `[TIPO_DE_TERRENO_PRINCIPAL]`, `[ELEMENTOS_CHAV
 
 Esta estrutura vai te ajudar a manter a coesão visual e a funcionalidade de tiling para todos os elementos do seu mapa.
 
-### Giant Toad 🆕 NEW
-
-`forest/giant_toad_1.png` · `forest/giant_toad_2.png`
-
-A stylized giant toad character for a 2D RPG game, in high-quality pixel art. It has heroic/monster proportions, similar to a classic sprite, balancing between chibi and realistic styles. The giant toad is a massive bulbous amphibian with warty poison-slick skin in deep green and yellow, enormous bulging eyes, and a long prehensile tongue, wearing a crude vine-woven harness studded with stolen trinkets. The art style features: bold colors, clean pixel clusters, high-contrast cel-shading with bright highlights, a thick black outer outline, and a solid black background. Professional game asset, stylized and readable.
-
 ---
+
+O prompt que utilizei para gerar o background do campo verde (seamless e sem céu) foi o seguinte:
+Prompt:
+
+```
+A high-quality 2D pixel art background of a lush green field. The scene features rolling green hills, soft grass, and occasional small bushes or rocks. IMPORTANT: The background must have NO SKY (the top area should be empty or a solid dark color to be replaced by a separate sky asset). The image must be perfectly seamless horizontally, so the left edge matches the right edge exactly for infinite scrolling. Professional indie game background art, consistent with the mockup style. Polished pixel art, high readability. No characters or UI.
+```

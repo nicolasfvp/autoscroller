@@ -49,10 +49,8 @@ export class DeathScene extends Scene {
       .fillRect(0, 0, 800, 110);
 
     // ── Title ────────────────────────────────────────────────────
-    this.add.text(400, 30, 'RUN OVER', {
-      fontFamily: FONTS.body, fontSize: '46px', fontStyle: 'bold',
-      color: '#ff2222', stroke: '#000000', strokeThickness: 8,
-    }).setOrigin(0.5).setDepth(2);
+    this.add.bitmapText(400, 30, 'game_font_white', 'RUN OVER', 46)
+      .setOrigin(0.5).setTint(0xff2222).setDepth(2);
 
     this.add.text(400, 80, `Defeated by ${enemyName}`, {
       fontFamily: FONTS.body, fontSize: '15px',

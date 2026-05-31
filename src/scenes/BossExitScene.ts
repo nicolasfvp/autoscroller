@@ -47,9 +47,7 @@ export class BossExitScene extends Scene {
     this.add.rectangle(400, 300, 600, 400, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
 
     // Title
-    this.add.text(400, 125, 'Boss Defeated!', {
-      fontSize: '32px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
-    }).setOrigin(0.5);
+    this.add.bitmapText(400, 125, 'game_font_gold', 'Boss Defeated!', 32).setOrigin(0.5);
 
     // Get choice data
     const run = getRun();

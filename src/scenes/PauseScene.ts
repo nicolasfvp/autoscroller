@@ -1,7 +1,6 @@
 ﻿import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
-import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 import { createWoodButton } from '../ui/WoodButton';
 
@@ -43,15 +42,7 @@ export class PauseScene extends Scene {
     panel.setMask(shape.createGeometryMask());
 
     // Title
-    this.add.text(400, 105, 'PAUSED', {
-      fontSize: '48px',
-      fontStyle: 'bold',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 8,
-      fontFamily: FONTS.body,
-      shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
-    }).setOrigin(0.5);
+    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 48).setOrigin(0.5);
 
     createWoodButton(this, 400, 180, 'Resume', () => this.resume(),
       { width: 260, height: 52, fontSize: 22, variant: 'primary' });

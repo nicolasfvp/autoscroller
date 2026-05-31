@@ -44,13 +44,8 @@ export class RunTransitionScene extends Scene {
       });
     }
 
-    const text = this.add.text(400, 280, 'EMBARKING ON EXPEDITION', {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      fontFamily: FONTS.body,
-      letterSpacing: 6,
-    }).setOrigin(0.5).setDepth(20);
+    const text = this.add.bitmapText(400, 280, 'game_font_gold', 'EMBARKING ON EXPEDITION', 32)
+      .setOrigin(0.5).setLetterSpacing(6).setDepth(20);
 
     const subtext = this.add.text(400, 330, 'The world is shifting...', {
       fontSize: '18px',

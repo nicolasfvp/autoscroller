@@ -23,6 +23,7 @@ comfy/
 # ComfyUI setup screenshots and scratch files
 comfyui-*.png
 hud-crop.txt
+COMMIT.md
 
 # ComfyUI MCP workflow/session JSON outputs
 comfy-mcp/*.json

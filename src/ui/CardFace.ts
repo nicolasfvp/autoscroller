@@ -691,40 +691,18 @@ function buildSecondaryCostRows(card: CardDefinition, isUpgraded: boolean): Seco
 function attachHover(
   scene: Phaser.Scene,
   container: Phaser.GameObjects.Container,
-  startY: number,
+  _startY: number,
 ): void {
-  // Capture base scale once. The original code multiplied by the *current*
-  // scale on every pointerover, so rapid hovers compounded (base → 1.05 →
-  // 1.1025 → …); pointerout's reciprocal divide didn't fully undo it.
-  const baseScaleX = container.scaleX;
-  const baseScaleY = container.scaleY;
+  const w = CARD_BASE_SIZES.small.w * container.scaleX;
+  const h = CARD_BASE_SIZES.small.h * container.scaleY;
+  const border = scene.add.rectangle(0, 0, w, h, 0x000000, 0)
+    .setStrokeStyle(3, 0xffd700, 1)
+    .setVisible(false);
+  container.add(border);
 
-  container.on('pointerover', () => {
-    // Kill any in-flight scale/y tween before starting a new one so we don't
-    // run conflicting interpolations on the same target (each card used to
-    // accrue multiple pending tweens under fast pointer motion).
-    scene.tweens.killTweensOf(container);
-    scene.tweens.add({
-      targets: container,
-      scaleX: baseScaleX * 1.05,
-      scaleY: baseScaleY * 1.05,
-      y: startY - 8,
-      duration: 150,
-      ease: 'Sine.easeOut',
-    });
-  });
-  container.on('pointerout', () => {
-    scene.tweens.killTweensOf(container);
-    scene.tweens.add({
-      targets: container,
-      scaleX: baseScaleX,
-      scaleY: baseScaleY,
-      y: startY,
-      duration: 150,
-      ease: 'Sine.easeOut',
-    });
-  });
-  container.once('destroy', () => scene.tweens.killTweensOf(container));
+  container.on('pointerover', () => { border.setVisible(true); });
+  container.on('pointerout',  () => { border.setVisible(false); });
+  container.once('destroy', () => border.destroy());
 }
 
 function resolveUpgradeFlag(cardId: string): boolean {

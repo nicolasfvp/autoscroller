@@ -82,15 +82,7 @@ export class BuildingPanelScene extends Scene {
     // Title (Medieval Style)
     const hasBakedTitle = ['library', 'workshop', 'forge', 'shrine', 'storehouse'].includes(this.buildingKey);
     if (!hasBakedTitle) {
-      this.add.text(400, 75, tierData.name, {
-        fontSize: '48px',
-        fontStyle: 'bold',
-        color: '#fdf6e3', // cream
-        stroke: '#3e2723',
-        strokeThickness: 6,
-        fontFamily: '"Impact", "Arial Black", sans-serif',
-        shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
-      }).setOrigin(0.5);
+      this.add.bitmapText(400, 75, 'game_font_white', tierData.name, 48).setOrigin(0.5);
     }
 
     let descY = 120;

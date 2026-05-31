@@ -108,6 +108,10 @@ export class Preloader extends Scene {
       { id: 'depths_horror',        folder: 'swamp',    file: 'depths horror_1.png',        hasFrame2: true },
       { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png',          hasFrame2: true },
       { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous kobra_1.png',       hasFrame2: true },
+      // Green Field
+      { id: 'slime',               folder: 'green_field', file: 'slime_1.png',              hasFrame2: true },
+      { id: 'red_slime',           folder: 'green_field', file: 'red_slime_1.png',          hasFrame2: true },
+      { id: 'earth_dragon',        folder: 'green_field', file: 'earth_dragon_1.png',       hasFrame2: true },
       // Root
       { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
       // New bosses (PR #12) — live in `monsters/boss/`. Each ships multiple
@@ -155,6 +159,9 @@ export class Preloader extends Scene {
     this.load.image('workshop_table', 'assets/buildings/backgrounds/workshop-table.png');
     this.load.image('forge_table', 'assets/buildings/backgrounds/forge-table.png');
     this.load.image('forge_backdrop_v2', 'assets/buildings/backgrounds/forge-backdrop-v2.jpeg');
+    this.load.spritesheet('forge_background', 'assets/buildings/backgrounds/forge_background.png', {
+      frameWidth: 1168, frameHeight: 880,
+    });
     this.load.image('forge_rune_socket', 'assets/buildings/backgrounds/forge-rune-socket.jpeg');
     this.load.image('forge_card_altar', 'assets/buildings/backgrounds/forge-card-altar.jpeg');
     this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');
@@ -228,7 +235,20 @@ export class Preloader extends Scene {
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
     this.load.image('card_mold', 'assets/ui/frames/card_mold.png');
-    this.load.image('ui_panel',    'assets/ui/panels/panel.png');
+    // Bitmap fonts (custom game alphabet)
+    this.load.bitmapFont('game_font_gold',  'assets/fonts/game_font_gold.png',  'assets/fonts/game_font.fnt');
+    this.load.bitmapFont('game_font_blue',  'assets/fonts/game_font_blue.png',  'assets/fonts/game_font.fnt');
+    this.load.bitmapFont('game_font_white', 'assets/fonts/game_font_white.png', 'assets/fonts/game_font.fnt');
+
+    this.load.image('ui_panel',         'assets/ui/panels/panel.png');
+    this.load.image('loop_summary_panel', 'assets/ui/panels/loop_summary_panel.png');
+
+    // Tile tooltip panels (styled dark/gold panels with baked title + description)
+    const tileTooltips = ['forest','graveyard','swamp','desert','lava','event','treasure',
+      'ambush','magma','manawell','camp','burnaltar','bleedtotem','resonance','warhorn'];
+    for (const t of tileTooltips) {
+      this.load.image(`tile_tooltip_${t}`, `assets/ui/text/tiles/tile_tooltip_${t}.png`);
+    }
     this.load.image('panel_hover', 'assets/ui/panels/panel_hover.png');
 
     // UI Buttons — pre-rendered dark/gold style
@@ -276,7 +296,7 @@ export class Preloader extends Scene {
     this.load.image('mat_scroll', 'assets/icons/scroll.png');
     this.load.image('mat_wood', 'assets/icons/wood.png');
     this.load.image('mat_stone', 'assets/icons/stone.png');
-    this.load.image('mat_bone', 'assets/icons/stone.png');
+    this.load.image('mat_bone', 'assets/icons/bone.png');
     this.load.image('mat_essence', 'assets/icons/essence.png');
     this.load.image('mat_herbs', 'assets/icons/herbs.png');
     this.load.image('deck_icon', 'assets/icons/deck-icon.png');

@@ -9,7 +9,7 @@ import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
-import { drainPendingLoot } from '../systems/PendingLoot';
+import { drainPendingLoot, drainPendingKills } from '../systems/PendingLoot';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
 import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
@@ -597,10 +597,12 @@ export class GameScene extends Scene {
           } else {
             run.skipLoopsRemaining = 0;
             const lootItems = drainPendingLoot();
+            const monstersDefeated = drainPendingKills();
             this.scene.launch(SCENE_KEYS.LOOP_SUMMARY, {
               loopRunner: this.loopRunner,
               loopRunState: this.loopRunState,
               lootItems,
+              monstersDefeated,
               tpEarned,
               loopCount: data.loopCount,
             });

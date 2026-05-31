@@ -594,7 +594,7 @@ export class PlanningOverlay extends Scene {
       // unaffordable) so the player can read the blurb without committing
       // to a pick. Only the click handler is gated by `enabled`.
       frame.setInteractive({ useHandCursor: enabled });
-      this.attachTooltip(frame, x, y - frameHeight / 2, tileConfig.description);
+      this.attachTooltip(frame, x, y - frameHeight / 2, tileConfig.description, tileConfig.key);
       frame.on('pointerover', () => {
         const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
         container.setScale(hoverScale);
@@ -690,7 +690,7 @@ export class PlanningOverlay extends Scene {
       // Tooltip + hover effect on every card so the player can read the
       // description regardless of affordability/context. Click is gated.
       frame.setInteractive({ useHandCursor: enabled });
-      this.attachTooltip(frame, x, rowY - FRAME / 2, tileConfig.description);
+      this.attachTooltip(frame, x, rowY - FRAME / 2, tileConfig.description, tileConfig.key);
       frame.on('pointerover', () => { container.setScale(1.1); frame.setTint(0xdddddd); });
       frame.on('pointerout',  () => { container.setScale(1);   frame.clearTint(); });
       if (!enabled) {
@@ -929,11 +929,30 @@ export class PlanningOverlay extends Scene {
    * Attach 800ms-hover tooltip showing `description` to a frame. Cancels
    * on pointerout. Only fires when the tile config carries a description.
    */
+  private static readonly TILE_TOOLTIP_KEYS: Record<string, string> = {
+    'forest':            'tile_tooltip_forest',
+    'graveyard':         'tile_tooltip_graveyard',
+    'swamp':             'tile_tooltip_swamp',
+    'desert':            'tile_tooltip_desert',
+    'lava':              'tile_tooltip_lava',
+    'event':             'tile_tooltip_event',
+    'treasure':          'tile_tooltip_treasure',
+    'subtile_ambush':    'tile_tooltip_ambush',
+    'subtile_magma':     'tile_tooltip_magma',
+    'subtile_manawell':  'tile_tooltip_manawell',
+    'subtile_camp':      'tile_tooltip_camp',
+    'subtile_burnaltar': 'tile_tooltip_burnaltar',
+    'subtile_bleedtotem':'tile_tooltip_bleedtotem',
+    'subtile_resonance': 'tile_tooltip_resonance',
+    'subtile_warhorn':   'tile_tooltip_warhorn',
+  };
+
   private attachTooltip(
     frame: Phaser.GameObjects.GameObject,
     worldX: number,
     worldY: number,
     description: string | undefined,
+    tileKey?: string,
   ): void {
     if (!description) return;
     const interactive = frame as Phaser.GameObjects.GameObject & {
@@ -942,7 +961,7 @@ export class PlanningOverlay extends Scene {
     interactive.on('pointerover', () => {
       this.tooltipTimer?.remove();
       this.tooltipTimer = this.time.delayedCall(800, () => {
-        this.showTooltip(worldX, worldY, description);
+        this.showTooltip(worldX, worldY, description, tileKey);
       });
     });
     interactive.on('pointerout', () => {
@@ -952,24 +971,34 @@ export class PlanningOverlay extends Scene {
     });
   }
 
-  private showTooltip(anchorX: number, anchorY: number, text: string): void {
+  private showTooltip(anchorX: number, anchorY: number, text: string, tileKey?: string): void {
     this.hideTooltip();
+
+    // Use styled image asset when available
+    const imgKey = tileKey ? PlanningOverlay.TILE_TOOLTIP_KEYS[tileKey] : undefined;
+    if (imgKey && this.textures.exists(imgKey)) {
+      const img = this.add.image(0, 0, imgKey);
+      const scale = 196 / img.width;
+      img.setScale(scale);
+      let cy = anchorY - img.displayHeight / 2 - 10;
+      if (cy - img.displayHeight / 2 < 8) cy = anchorY + img.displayHeight / 2 + 10;
+      const container = this.add.container(anchorX, cy, [img]);
+      container.setDepth(2000);
+      this.tooltipObj = container;
+      return;
+    }
+
+    // Fallback: programmatic text tooltip
     const fontFamily = 'Georgia, "Times New Roman", serif';
-    // Build text first to measure size, then size the bg to fit.
     const label = this.add.text(0, 0, text, {
-      fontSize: '12px',
-      color: '#ffffff',
-      fontFamily,
-      wordWrap: { width: 220 },
-      align: 'center',
+      fontSize: '12px', color: '#ffffff', fontFamily,
+      wordWrap: { width: 220 }, align: 'center',
     }).setOrigin(0.5);
     const pad = 8;
     const w = label.width + pad * 2;
     const h = label.height + pad * 2;
     const bg = this.add.rectangle(0, 0, w, h, 0x101010, 0.92)
       .setStrokeStyle(1, 0xffd700, 0.9);
-    // Anchor above the frame; if it would clip the top of the screen,
-    // flip below.
     let cy = anchorY - 44;
     if (cy - h / 2 < 8) cy = anchorY + 44;
     const container = this.add.container(anchorX, cy, [bg, label]);

@@ -6,19 +6,16 @@ import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
 
 
-const VISIBLE_COUNT = 5;
+const VISIBLE_COUNT = 3;
 
 // [centerX, centerY, scale, alpha]
 // Active card anchored at screen-center (x=400); queue cascades down-right.
-// Alpha decays in even 0.20 steps for a smooth front-to-back gradient.
 const SLOTS: [number, number, number, number][] = [
   [400, 490, 0.62, 1.00],   // 0 — PLAYING (screen center)
-  [498, 505, 0.56, 0.80],   // 1 — NEXT
-  [565, 525, 0.42, 0.60],   // 2 — stair starts descending
-  [605, 545, 0.36, 0.40],   // 3 — stair, aglutinated
-  [635, 560, 0.32, 0.20],   // 4 — corner
+  [520, 510, 0.50, 0.70],   // 1 — NEXT
+  [600, 530, 0.38, 0.35],   // 2 — hint of next
 ];
-const SLOT_INCOMING_X = 635; // same column as slot 4 — cards slide UP into it
+const SLOT_INCOMING_X = 600; // same column as slot 2 — cards slide UP into it
 const SLOT_INCOMING_Y = 650; // off-screen bottom
 
 export class CardQueueDisplay {

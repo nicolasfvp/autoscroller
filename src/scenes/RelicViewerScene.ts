@@ -36,14 +36,7 @@ export class RelicViewerScene extends Scene {
     }
 
     // Title with the gold-banner treatment used by Forge/Shop.
-    this.add.text(400, 50, 'Your Relics', {
-      fontSize: '30px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-      fontFamily: FONTS.body,
-      stroke: '#000',
-      strokeThickness: 5,
-    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+    this.add.bitmapText(400, 50, 'game_font_gold', 'Your Relics', 30).setOrigin(0.5);
     this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
 
     if (run.relics.length === 0) {
