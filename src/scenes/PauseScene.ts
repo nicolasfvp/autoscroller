@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { FONTS } from '../ui/StyleConstants';
@@ -49,7 +49,7 @@ export class PauseScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 8,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       shadow: { offsetX: 2, offsetY: 2, color: '#000000', fill: true }
     }).setOrigin(0.5);
 

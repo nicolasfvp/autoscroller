@@ -1,4 +1,5 @@
 node_modules/
+comfy-mcp/keys.json
 dist/
 .vs/
 .claude/
@@ -12,4 +13,22 @@ data/generated/
 # tile sprites live under public/assets/map/tiles/.
 verify-shots/
 verify-screenshots/
+
+# ComfyUI MCP generated asset outputs (staging area — copy to public/ when approved)
+comfy/
+
+# Playwright MCP session snapshots
+.playwright-mcp/
+
+# ComfyUI setup screenshots and scratch files
+comfyui-*.png
+hud-crop.txt
+
+# ComfyUI MCP workflow/session JSON outputs
+comfy-mcp/*.json
+!comfy-mcp/package.json
+!comfy-mcp/package-lock.json
+!comfy-mcp/ui_button.json
+!comfy-mcp/rmv-background.json
+comfyui/**/*.json
 

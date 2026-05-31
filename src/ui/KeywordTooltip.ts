@@ -1,4 +1,4 @@
-// KeywordTooltip -- lateral glossary panel that mounts beside a card after
+﻿// KeywordTooltip -- lateral glossary panel that mounts beside a card after
 // 800ms of continuous hover. Informational only: the panel has no
 // interactive elements and self-destroys when hover ends or the parent
 // scene shuts down.
@@ -207,7 +207,7 @@ function mountStandalonePanel(
   anchor: AnchorBounds,
 ): Phaser.GameObjects.Container {
   const panel = scene.add.container(0, 0).setDepth(TOOLTIP_DEPTH);
-  const fontFamily = FONTS.family;
+  const fontFamily = FONTS.body;
 
   const title = scene.add.text(0, 0, 'Keywords', {
     fontSize: `${TITLE_FONT_SIZE}px`,
@@ -271,7 +271,8 @@ function mountStandalonePanel(
     LAYOUT.canvasHeight - panelHeight - 4,
   ));
 
-  const bg = scene.add.image(panelX + PANEL_WIDTH / 2, panelY + panelHeight / 2, 'panel_hover')
+  const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame' : 'panel_hover';
+  const bg = scene.add.image(panelX + PANEL_WIDTH / 2, panelY + panelHeight / 2, tooltipKey)
     .setDisplaySize(PANEL_WIDTH, panelHeight);
   panel.add(bg);
 

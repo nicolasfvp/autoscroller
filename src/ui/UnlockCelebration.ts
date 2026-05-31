@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+﻿import Phaser from 'phaser';
 
 const inFlightScenes = new WeakSet<Phaser.Scene>();
 const sceneActive = (scene: Phaser.Scene): boolean =>
@@ -16,7 +16,7 @@ export function playUnlockCelebration(
   if (inFlightScenes.has(scene)) return;
   inFlightScenes.add(scene);
 
-  const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+  const fontFamily = 'Georgia, "Times New Roman", serif';
   const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
 
   const release = () => { inFlightScenes.delete(scene); };

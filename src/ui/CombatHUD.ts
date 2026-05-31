@@ -25,18 +25,18 @@ export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility 
 const FF = FONTS.family;
 
 // Panel geometry
-const LP      = { x: 8,   y: 8, w: 260, h: 108 };  // Hero (left)
-const RP      = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
-const LBL_W   = 50;                                 // width for side labels
-const BAR_W   = LP.w - LBL_W - 18;                 // 192px hero bar width
-const E_BAR_W = RP.w - 28;                          // 232px enemy bar width
+const LP       = { x: 8,   y: 8, w: 230, h: 131 };  // Hero (left) — sized to status_panel.png
+const RP       = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
+const ICON_COL = 53;                                  // dark-slot left offset (px analysis: 52.8)
+const BAR_W    = 172;                                 // dark-slot width  (px analysis: 172.1)
+const E_BAR_W  = RP.w - 28;                          // 232px enemy bar width
 
 // Status-chip row geometry (effect icons row under each panel)
 const CHIP_POOL_SIZE = 10;
 const CHIP_HEIGHT = 20;
 const CHIP_GAP = 4;
 const CHIP_ROW_GAP = 22;
-const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 6, maxWidth: LP.w - 8 };
+const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 22, maxWidth: LP.w - 8 };
 const ENEMY_CHIPS = { x: RP.x + 4, y: RP.y + RP.h + 6, maxWidth: RP.w - 8 };
 
 interface ChipDisplay {
@@ -107,55 +107,45 @@ export class CombatHUD {
   private buildHeroPanel(): void {
     const s = this.scene;
 
-    // Dark panel background
-    const panelBg = s.add.rectangle(LP.x + LP.w / 2, LP.y + LP.h / 2, LP.w, LP.h, 0x080810, 0.88);
-    panelBg.setStrokeStyle(1.5, 0x2a2a4a);
-    this.container.add(panelBg);
+    // status_panel.png provides the background with baked-in icons per row
+    const panelImg = s.textures.exists('status_panel')
+      ? s.add.image(LP.x + LP.w / 2, LP.y + LP.h / 2, 'status_panel').setDisplaySize(LP.w, LP.h)
+      : s.add.rectangle(LP.x + LP.w / 2, LP.y + LP.h / 2, LP.w, LP.h, 0x080810, 0.88) as unknown as Phaser.GameObjects.Image;
+    this.container.add(panelImg);
 
-    // Amber accent strip at top — matches wood/gold palette used across the game
-    this.container.add(s.add.rectangle(LP.x + LP.w / 2, LP.y + 3, LP.w - 4, 4, 0xd4a04a, 0.9));
+    // Bar slot geometry derived from the image's icon-cell width (ICON_COL)
+    const barX = LP.x + ICON_COL;
+    const padX = 0;
+    const hpY  = LP.y + 22;   // row 1 centre
+    const staY = LP.y + 60;   // row 2 centre
+    const mpY  = LP.y + 103;  // row 3 centre
 
-    const lblX     = LP.x + 10;
-    const barX     = LP.x + 10 + LBL_W;
-    const padX     = 5;
-    const hpY      = LP.y + 26;
-    const staY     = LP.y + 56;
-    const mpY      = LP.y + 84;
-    const makeBar = (
-      y: number, label: string, lblColor: string,
-      fillColor: number, h: number, valSize: string,
-    ) => {
-      const lbl = s.add.text(lblX, y, label, {
-        fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
-        color: lblColor, stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0, 0.5);
-      const trough = s.add.rectangle(barX + BAR_W / 2, y, BAR_W, h, 0x111122, 1)
-        .setStrokeStyle(1, 0x333355);
-      const fill = s.add.rectangle(barX + padX, y, 0, h - padX, fillColor).setOrigin(0, 0.5);
-      const val = s.add.text(barX + BAR_W / 2, y, '', {
+    const makeBar = (y: number, fillColor: number, h: number, valSize: string) => {
+      const fill = s.add.rectangle(barX + padX, y, 0, h - 4, fillColor).setOrigin(0, 0.5);
+      const val  = s.add.text(barX + BAR_W / 2, y, '', {
         fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
         color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5, 0.5);
-      this.container.add([lbl, trough, fill, val]);
+      this.container.add([fill, val]);
       return { fill, val };
     };
 
-    const hp  = makeBar(hpY,  '♥ HP',  '#55ee77', 0x22cc44, 26, '14px');
+    const hp  = makeBar(hpY,  0x22cc44, 24, '13px');
     this.hpBar = hp.fill; this.hpText = hp.val;
 
-    const sta = makeBar(staY, '⚡ STA', '#ffb84a', 0xf0a020, 20, '12px');
+    const sta = makeBar(staY, 0xf0a020, 20, '12px');
     this.staminaBar = sta.fill; this.staminaText = sta.val;
 
-    const mp  = makeBar(mpY,  '✦ MP',  '#bb88ff', 0x9966ff, 20, '12px');
+    const mp  = makeBar(mpY,  0x9966ff, 20, '12px');
     this.manaBar = mp.fill; this.manaText = mp.val;
 
-    // Armor readout (hidden when armor = 0)
-    const armorY = LP.y + 98;
-    this.armorIcon = s.add.text(lblX + 8, armorY, '🛡', {
+    // Armor readout placed just below the panel (hidden when armor = 0)
+    const armorY = LP.y + LP.h + 6;
+    this.armorIcon = s.add.text(LP.x + 10, armorY, '🛡', {
       fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
       color: '#88ccff', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(1, 0.5).setVisible(false);
-    this.armorValue = s.add.text(lblX + 12, armorY, '0', {
+    }).setOrigin(0, 0.5).setVisible(false);
+    this.armorValue = s.add.text(LP.x + 22, armorY, '0', {
       fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setVisible(false);

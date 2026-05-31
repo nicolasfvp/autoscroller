@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 
@@ -48,7 +48,7 @@ export class RunTransitionScene extends Scene {
       fontSize: '32px',
       fontStyle: 'bold',
       color: '#e6c88a',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       letterSpacing: 6,
     }).setOrigin(0.5).setDepth(20);
 
@@ -56,7 +56,7 @@ export class RunTransitionScene extends Scene {
       fontSize: '18px',
       fontStyle: 'italic',
       color: '#998877',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setDepth(20);
 
     text.setAlpha(0);
@@ -82,7 +82,7 @@ export class RunTransitionScene extends Scene {
     this.add.text(400, 560, `World Seed: ${data.seed}`, {
       fontSize: '11px',
       color: '#2a1a10',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setDepth(20);
 
     // Transition to the GameScene after a short delay

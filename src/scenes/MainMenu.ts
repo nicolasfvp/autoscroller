@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { saveManager } from '../core/SaveManager';
 import { setRun, createNewDailyRun, getRun } from '../state/RunState';
 import type { RunState } from '../state/RunState';
@@ -204,7 +204,7 @@ export class MainMenu extends Scene {
       color: '#e6c88a',
       stroke: '#2e1b0f',
       strokeThickness: 2,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       align: 'center',
     }).setOrigin(0.5);
     this.confirmOverlay.add(msg);
@@ -212,7 +212,7 @@ export class MainMenu extends Scene {
     // Yes button (panel.png + label)
     const yesBg = this.add.image(270, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
     const yesLabel = this.add.text(270, 370, 'Yes, Delete', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.family,
+      fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
       stroke: '#1a0000', strokeThickness: 2,
     }).setOrigin(0.5);
     yesBg.on('pointerover', () => { yesBg.setTint(0xdddddd); yesLabel.setScale(1.05); });
@@ -224,7 +224,7 @@ export class MainMenu extends Scene {
     // Keep button (panel.png + label)
     const noBg = this.add.image(530, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
     const noLabel = this.add.text(530, 370, 'Keep My Run', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.family,
+      fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
       stroke: '#2e1b0f', strokeThickness: 2,
     }).setOrigin(0.5);
     noBg.on('pointerover', () => { noBg.setTint(0xdddddd); noLabel.setScale(1.05); });
@@ -308,7 +308,7 @@ export class MainMenu extends Scene {
     const text = this.add.text(LAYOUT.centerX, 100, msg, {
       fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       wordWrap: { width: 600 }, align: 'center',
     }).setOrigin(0.5).setDepth(50);
     text.setAlpha(0);
@@ -337,14 +337,14 @@ export class MainMenu extends Scene {
     const title = this.add.text(LAYOUT.centerX, 120, SAVE_INCOMPATIBLE_COPY.title, {
       fontSize: '18px', fontStyle: 'bold', color: '#ffaa44',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5);
     container.add(title);
 
     const body = this.add.text(LAYOUT.centerX, 150, SAVE_INCOMPATIBLE_COPY.body, {
       fontSize: '13px', color: '#ffffff',
       stroke: '#000000', strokeThickness: 2,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       wordWrap: { width: 480 }, align: 'center',
     }).setOrigin(0.5);
     container.add(body);
@@ -352,7 +352,7 @@ export class MainMenu extends Scene {
     const cta = this.add.text(LAYOUT.centerX, 185, SAVE_INCOMPATIBLE_COPY.cta, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.accent,
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     cta.on('pointerover', () => cta.setColor(COLORS.accentHover));
     cta.on('pointerout', () => cta.setColor(COLORS.accent));

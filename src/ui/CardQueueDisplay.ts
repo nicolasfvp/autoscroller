@@ -4,7 +4,7 @@
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
-import { FONTS } from './StyleConstants';
+
 
 const VISIBLE_COUNT = 5;
 
@@ -77,11 +77,7 @@ export class CardQueueDisplay {
           scaleX: scale * 1.05, scaleY: scale * 1.05,
           duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut',
         });
-        this.playingLabel = this.scene.add.text(
-          SLOTS[0][0], SLOTS[0][1] - 52, '▶ PLAYING',
-          { fontSize: '11px', fontStyle: 'bold', color: '#ffd700',
-            stroke: '#000000', strokeThickness: 2, fontFamily: FONTS.family },
-        ).setOrigin(0.5).setDepth(55);
+        this.playingLabel = null;
       }
     }
   }

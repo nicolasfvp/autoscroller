@@ -57,7 +57,8 @@ export class Preloader extends Scene {
     // Hero warrior assets
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
-    this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/hero_walk.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Mage scrolling animation (10-frame run, 512×512 per frame)
     this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
@@ -138,7 +139,9 @@ export class Preloader extends Scene {
     this.load.image('bg_battle_swamp', 'assets/backgrounds/bg_battle_swamp.png');
     this.load.image('homepage', 'assets/backgrounds/homepage.jpg');
 
-    // Desert Parallax backgrounds
+    // Parallax backgrounds
+    this.load.image('bg_green_field', 'assets/backgrounds/green_field_background.png');
+    this.load.image('bg_sky',         'assets/backgrounds/sky-background.jpg');
     this.load.image('bg_desert', 'assets/backgrounds/desert.png');
     this.load.image('bg_desert_sky', 'assets/backgrounds/desert-background.jpg');
 
@@ -165,32 +168,45 @@ export class Preloader extends Scene {
     this.load.image('vault_table', 'assets/buildings/backgrounds/vault.png');
 
     // UI Panels & textures
+    this.load.image('status_panel', 'assets/ui/panels/status_panel.png');
     this.load.image('bar_wood', 'assets/ui/panels/bar-wood.png');
     this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
     this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
-    this.load.image('bg_character_selection', 'assets/ui/panels/background-character-selection.jpg');
+    this.load.image('bg_character_selection', 'assets/ui/backgrounds/background-character-selection.jpg');
     this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
     this.load.image('wood_board_collection', 'assets/ui/panels/wood-board-collection.png');
     this.load.image('icons_up_table', 'assets/ui/panels/icons-up-table.png');
     this.load.image('base_icon_place', 'assets/ui/panels/base-icon-place.png');
     this.load.image('collection_headline', 'assets/ui/panels/collection-headline.png');
     this.load.image('bg_base_option', 'assets/ui/panels/base-option.png');
-    this.load.image('fog', 'assets/ui/panels/fog.png');
+    this.load.image('fog', 'assets/ui/effects/fog.png');
+
+    // Tutorial step text-box images (pre-rendered via ComfyUI)
+    const tutorialSteps = [
+      'welcome', 'pick_warrior', 'deck_review', 'map_intro',
+      'combat_intro', 'planning_intro', 'place_tile', 'place_subtile',
+      'forge_intro', 'forge_craft', 'boss_preview', 'complete',
+    ];
+    for (const s of tutorialSteps) {
+      this.load.image(`tutorial_text_${s}`, `assets/ui/text/tutorial_${s}.png`);
+    }
     this.load.image('tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
-    this.load.image('belt_pillar', 'assets/ui/panels/pilar.png');
-    this.load.image('tile_frame', 'assets/ui/panels/tile-frame.png');
-    this.load.image('deck_frame', 'assets/ui/panels/deck-frame.png');
+    this.load.spritesheet('belt_pillar', 'assets/ui/panels/pilar/spritesheet.png', {
+      frameWidth: 512, frameHeight: 512,
+    });
+    this.load.image('tile_frame', 'assets/ui/frames/tile-frame.png');
+    this.load.image('deck_frame', 'assets/ui/frames/deck-frame.png');
     this.load.image('deck_status_board', 'assets/ui/panels/deck-status-board.png');
-    this.load.image('bg_tile_selection', 'assets/ui/panels/background-tile-selection.png');
+    this.load.image('bg_tile_selection', 'assets/ui/backgrounds/background-tile-selection.png');
     this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
     // v2 (2026-05-26) Grok-generated alchemist-merchant interior. ShopScene
     // prefers this when present and falls back to bg_shop_scene.
     this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
     // Shop-specific ornate chrome (Grok-generated 2026-05-26).
-    this.load.image('shop_title_banner', 'assets/ui/backgrounds/shop_title_banner.png');
-    this.load.image('shop_item_frame',   'assets/ui/backgrounds/shop_item_frame.png');
-    this.load.image('shop_remove_seal',  'assets/ui/backgrounds/shop_remove_seal.png');
-    this.load.image('banish_confirm_panel', 'assets/ui/backgrounds/banish_confirm_panel.png');
+    this.load.image('shop_title_banner', 'assets/ui/text/shop_title_banner.png');
+    this.load.image('shop_item_frame',   'assets/ui/frames/shop_item_frame.png');
+    this.load.image('shop_remove_seal',  'assets/ui/panels/shop_remove_seal.png');
+    this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
     this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
@@ -199,27 +215,52 @@ export class Preloader extends Scene {
     this.load.image('bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
     // Visual-upgrade pass (audit2): wooden buttons, parchment chrome,
     // hero-card plaques, painted Settings backdrop, modifier-popup banner.
-    this.load.image('panel_wood_button',      'assets/ui/backgrounds/panel_wood_button.png');
-    this.load.image('panel_parchment_scroll', 'assets/ui/backgrounds/panel_parchment_scroll.png');
-    this.load.image('panel_hero_plaque',      'assets/ui/backgrounds/panel_hero_plaque.png');
-    this.load.image('panel_modifier_banner',  'assets/ui/backgrounds/panel_modifier_banner.png');
+    this.load.image('panel_wood_button',      'assets/ui/panels/panel_wood_button.png');
+    this.load.image('panel_parchment_scroll', 'assets/ui/panels/panel_parchment_scroll.png');
+    this.load.image('panel_hero_plaque',      'assets/ui/panels/panel_hero_plaque.png');
+    this.load.image('panel_modifier_banner',  'assets/ui/panels/panel_modifier_banner.png');
+    this.load.image('panel_keyword_frame',    'assets/ui/panels/panel_keyword_frame.png');
+    this.load.image('panel_hover_frame',      'assets/ui/panels/panel_hover_frame.png');
     this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
-    this.load.image('panel_card_grid',        'assets/ui/backgrounds/panel_card_grid.png');
-    this.load.image('panel_card_grid_v2',     'assets/ui/backgrounds/panel_card_grid_v2.png');
+    this.load.image('panel_card_grid',        'assets/ui/panels/panel_card_grid.png');
+    this.load.image('panel_card_grid_v2',     'assets/ui/panels/panel_card_grid_v2.png');
     this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
-    this.load.image('card_mold', 'assets/ui/panels/card_mold.png');
+    this.load.image('card_mold', 'assets/ui/frames/card_mold.png');
+    this.load.image('ui_panel',    'assets/ui/panels/panel.png');
+    this.load.image('panel_hover', 'assets/ui/panels/panel_hover.png');
 
-    // UI Buttons
-    this.load.image('btn_continue_run', 'assets/ui/buttons/continue-run.png');
-    this.load.image('btn_new_game', 'assets/ui/buttons/new-game.png');
-    this.load.image('btn_daily_run', 'assets/ui/buttons/daily-run.png');
-    this.load.image('btn_keep_my_run', 'assets/ui/buttons/keep-my-run.png');
-    this.load.image('btn_yes_delete', 'assets/ui/buttons/yes, delete.png');
+    // UI Buttons — pre-rendered dark/gold style
+    this.load.image('btn_continue_run',    'assets/ui/buttons/continue-run.png');
+    this.load.image('btn_new_game',        'assets/ui/buttons/new-game.png');
+    this.load.image('btn_daily_run',       'assets/ui/buttons/daily-run.png');
+    this.load.image('btn_keep_my_run',     'assets/ui/buttons/keep-my-run.png');
+    this.load.image('btn_yes_delete',      "assets/ui/buttons/yes, delete.png");
+    this.load.image('btn_resume',          'assets/ui/buttons/btn_resume.png');
+    this.load.image('btn_view_deck',       'assets/ui/buttons/btn_view_deck.png');
+    this.load.image('btn_settings',        'assets/ui/buttons/btn_settings.png');
+    this.load.image('btn_tutorial',        'assets/ui/buttons/btn_tutorial.png');
+    this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
+    this.load.image('btn_back',            'assets/ui/buttons/btn_back.png');
+    this.load.image('btn_leave',           'assets/ui/buttons/btn_leave.png');
+    this.load.image('btn_close',           'assets/ui/buttons/btn_close.png');
+    this.load.image('btn_cancel',          'assets/ui/buttons/btn_cancel.png');
+    this.load.image('btn_return_to_menu',  'assets/ui/buttons/btn_return_to_menu.png');
+    this.load.image('btn_change_hero',     'assets/ui/buttons/btn_change_hero.png');
+    this.load.image('btn_start_game',      'assets/ui/buttons/btn_start_game.png');
+    this.load.image('btn_visit_shop',      'assets/ui/buttons/btn_visit_shop.png');
+    this.load.image('btn_abandon_run',     'assets/ui/buttons/btn_abandon_run.png');
+    this.load.image('btn_banish',          'assets/ui/buttons/btn_banish.png');
+    this.load.image('btn_keep',            'assets/ui/buttons/btn_keep.png');
+    this.load.image('btn_delete_run',      'assets/ui/buttons/btn_delete_run.png');
+    this.load.image('btn_reset_progress',  'assets/ui/buttons/btn_reset_progress.png');
+    this.load.image('btn_next',            'assets/ui/buttons/btn_next.png');
+    this.load.image('loot_bag_empty',      'assets/ui/panels/loot_bag_empty.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
     this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
-    this.load.image('btn_dont_stop', "assets/ui/buttons/don't-stop.png");
+    this.load.image('skip_loop_panel', 'assets/ui/panels/skip-loop.png');
+    this.load.image('remove_tiles_panel', 'assets/ui/panels/remove_tiles.png');
     this.load.image('btn_skip_1',  'assets/ui/buttons/1.png');
     this.load.image('btn_skip_5',  'assets/ui/buttons/5.png');
     this.load.image('btn_skip_10', 'assets/ui/buttons/10.png');

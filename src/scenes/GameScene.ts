@@ -9,8 +9,7 @@ import { TileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
-import { drainPendingLoot, hasPendingLoot } from '../systems/PendingLoot';
-import { showLootNotifications } from '../ui/LootNotification';
+import { drainPendingLoot } from '../systems/PendingLoot';
 import { generateTreasureLoot } from '../systems/TreasureLoot';
 import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
@@ -44,7 +43,6 @@ export class GameScene extends Scene {
 
   // World position tracking
   private worldOffset: number = 0;
-  private celebrationPlaying: boolean = false;
 
   // Game speed multiplier (1x or 2x from settings)
   private gameSpeed: number = 1;
@@ -77,10 +75,17 @@ export class GameScene extends Scene {
     this.cameras.main.setBackgroundColor(COLORS.background);
     
     // Explicitly create backgrounds here to ensure they are visible under the mask
-    if (this.textures.exists('bg_desert_sky')) {
-      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_desert_sky').setScrollFactor(0).setDepth(-11);
+    if (this.textures.exists('bg_sky')) {
+      const skySrc = this.textures.get('bg_sky').source[0];
+      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_sky')
+        .setScrollFactor(0).setDepth(-11)
+        .setTileScale(800 / skySrc.width, 600 / skySrc.height);
     }
-    if (this.textures.exists('bg_desert')) {
+    if (this.textures.exists('bg_green_field')) {
+      const gfSrc = this.textures.get('bg_green_field').source[0];
+      const gfScale = 600 / gfSrc.height;
+      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_green_field').setScrollFactor(0).setDepth(-10).setTileScale(gfScale);
+    } else if (this.textures.exists('bg_desert')) {
       this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert').setScrollFactor(0).setDepth(-10);
     } else if (this.textures.exists('bg_run')) {
       this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10).setDisplaySize(800, 600);
@@ -187,7 +192,6 @@ export class GameScene extends Scene {
     }
 
     this.worldOffset = 0;
-    this.celebrationPlaying = false;
 
     // Hero animations (class-aware sprite keys)
     const sp = getSpritePrefix(run.hero.className ?? 'warrior');
@@ -396,10 +400,7 @@ export class GameScene extends Scene {
       .filter(([, count]) => count > 0)
       .map(([tileType, count]) => ({ tileType, count }));
 
-    if (hasPendingLoot() && !this.celebrationPlaying) {
-      const items = drainPendingLoot();
-      showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
-    }
+    // Loot is accumulated here and shown in LoopSummaryScene at loop end.
 
     for (const [, tv] of this.tilePool) tv.destroy();
     this.tilePool.clear();
@@ -448,7 +449,7 @@ export class GameScene extends Scene {
 
     // Parallax update
     if (this.bgSky) {
-      this.bgSky.tilePositionX = heroWorldX * 0.1; // Slower sky
+      this.bgSky.tilePositionX = heroWorldX * 0.05;
     }
     if (this.bgDesert) {
       this.bgDesert.tilePositionX = heroWorldX * 0.5; // Faster foreground
@@ -499,13 +500,8 @@ export class GameScene extends Scene {
     this.loopRunState.economy.tilePoints = run.economy.tilePoints;
   }
 
-  /** Drain pending loot and show floating notifications above hero */
-  private showPendingNotifications(): void {
-    if (hasPendingLoot()) {
-      const items = drainPendingLoot();
-      showLootNotifications(this, this.heroSprite.x, this.heroSprite.y, items);
-    }
-  }
+  /** Drain pending loot — no-op, loot is shown in LoopSummaryScene. */
+  private showPendingNotifications(): void { /* accumulated for LoopSummaryScene */ }
 
   private handleLoopEvent(event: string, data: any): void {
     switch (event) {
@@ -565,7 +561,6 @@ export class GameScene extends Scene {
         break;
       }
       case 'loop-completed': {
-        this.celebrationPlaying = true;
 
         // Snapshot the pre-mutation loop length the hero actually traversed.
         // LoopRunner has already mutated loop.length by the time this event
@@ -585,7 +580,6 @@ export class GameScene extends Scene {
         const tpEarned = diffConfig.baseTilePointsPerLoop + Math.floor(data.loopCount * diffConfig.tilePointScalePerLoop);
 
         this.celebration.play(this, data.loopCount, tpEarned, () => {
-          this.celebrationPlaying = false;
           // Accumulate world offset for seamless wrap ONLY after celebration is done.
           // Use the pre-mutation length captured above so a boss-loop transition
           // (N → N+1 tiles) advances by N, not N+1.
@@ -602,7 +596,14 @@ export class GameScene extends Scene {
             this.loopRunner.confirmPlanning();
           } else {
             run.skipLoopsRemaining = 0;
-            this.scene.launch(SCENE_KEYS.PLANNING, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+            const lootItems = drainPendingLoot();
+            this.scene.launch(SCENE_KEYS.LOOP_SUMMARY, {
+              loopRunner: this.loopRunner,
+              loopRunState: this.loopRunState,
+              lootItems,
+              tpEarned,
+              loopCount: data.loopCount,
+            });
             this.scene.sleep();
           }
 

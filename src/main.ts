@@ -22,6 +22,7 @@ import { TavernPanelScene } from './scenes/TavernPanelScene'
 import { CollectionScene } from './scenes/CollectionScene'
 import { GlobalSound } from './scenes/GlobalSound'
 import { RunTransitionScene } from './scenes/RunTransitionScene'
+import { LoopSummaryScene } from './scenes/LoopSummaryScene'
 import { StartingDeckScene } from './scenes/StartingDeckScene'
 import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
@@ -112,6 +113,7 @@ const config: Phaser.Types.Core.GameConfig = {
         CollectionScene,
         GlobalSound,
         RunTransitionScene,
+        LoopSummaryScene,
         StartingDeckScene,
         CardLibraryScene,
         SpeedPanelScene

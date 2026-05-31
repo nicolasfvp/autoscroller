@@ -1,4 +1,4 @@
-// CombatScene -- thin wrapper that creates CombatEngine, subscribes to events,
+﻿// CombatScene -- thin wrapper that creates CombatEngine, subscribes to events,
 // renders via CardQueueDisplay, CombatHUD, and SynergyFlash components.
 
 import { Scene } from 'phaser';
@@ -62,19 +62,24 @@ export class CombatScene extends Scene {
       keywordIntro.handleCardPlayed(this, fullText);
     }
     if (data.damage > 0) {
-      AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+      const isFireball = data.cardId.toLowerCase().includes('fireball');
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
       const heroAttackKey = `${sp}_attack`;
       const heroIdleKey = `${sp}_idle`;
       if (this.anims.exists(heroAttackKey)) {
-        this.heroSprite.play(heroAttackKey);
+        this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
         this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
       }
-      if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
-      if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
-        this.enemySprite.setTintFill(0xffffff);
-        this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
-      }
+      // Impact delay: frame 3 of 8-frame attack at 12fps ≈ 250ms, scaled by combat speed
+      const impactDelay = isFireball ? 0 : Math.round(250 / this.gameSpeed);
+      this.time.delayedCall(impactDelay, () => {
+        AudioManager.playSFX(this, isFireball ? 'sfx_fireball' : 'sfx_slash', 0.4);
+        if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
+        if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
+          this.enemySprite.setTintFill(0xffffff);
+          this.time.delayedCall(100, () => { if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint(); });
+        }
+      });
     }
     this.time.delayedCall(350, () => { if (this.engine && !this.engine.isComplete()) this.cardQueue?.update(this.engine.getState(), this.engine.getDeckPointer()); });
   };
@@ -135,24 +140,31 @@ export class CombatScene extends Scene {
     let shineTween: Phaser.Tweens.Tween | null = null;
     const displayText: Phaser.GameObjects.GameObject = eventData.result === 'victory'
       ? (() => {
-          const W = 580, H = 190;
-          const img = this.add.image(400, 290, 'text_victory').setDisplaySize(W, H).setDepth(600);
+          const img = this.add.image(400, 290, 'text_victory').setDepth(600);
+          const W = 580;
+          const H = Math.round(img.height * (W / img.width));
+          img.setDisplaySize(W, H);
 
           // Shine sweep: a semi-transparent white strip that slides left→right,
           // clipped to the image bounds via a geometry mask.
+          const imgLeft = 400 - W / 2;
+          const imgTop  = 290 - H / 2;
           const maskShape = this.make.graphics();
           maskShape.fillStyle(0xffffff);
-          maskShape.fillRect(400 - W / 2, 290 - H / 2, W, H);
+          maskShape.fillRect(imgLeft, imgTop, W, H);
 
-          shineGraphics = this.add.graphics().setDepth(601).setBlendMode(Phaser.BlendModes.ADD);
-          shineGraphics.fillStyle(0xffffff, 0.35);
-          shineGraphics.fillRect(0, 290 - H / 2, 70, H);
+          // Draw strip at local (0,0) and position the graphics object at the
+          // image's top-left — no ADD blend mode so the geometry mask clips reliably.
+          shineGraphics = this.add.graphics().setDepth(601);
+          shineGraphics.fillStyle(0xffffff, 0.45);
+          shineGraphics.fillRect(0, 0, 60, H);
           shineGraphics.setMask(maskShape.createGeometryMask());
-          shineGraphics.x = -70;
+          shineGraphics.x = imgLeft - 60;
+          shineGraphics.y = imgTop;
 
           shineTween = this.tweens.add({
             targets: shineGraphics,
-            x: W + 70,
+            x: imgLeft + W,
             duration: 900,
             ease: 'Sine.easeIn',
             repeat: -1,
@@ -162,7 +174,7 @@ export class CombatScene extends Scene {
           return img;
         })()
       : this.add.text(400, 300, 'DEFEAT', {
-          fontSize: '56px', fontFamily: FONTS.family, fontStyle: 'bold',
+          fontSize: '56px', fontFamily: FONTS.body, fontStyle: 'bold',
           color: COLORS.danger, stroke: '#000000', strokeThickness: 6,
           shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true },
         }).setOrigin(0.5).setDepth(600);
@@ -372,7 +384,7 @@ export class CombatScene extends Scene {
               this.heroSprite.setY(this.heroSprite.y + 8);
               this.heroSprite.setScale(this.heroSprite.scaleX * (268 / 278));
             }
-            this.heroSprite.play(heroAttackKey);
+            this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
             this.heroSprite.once('animationcomplete', () => {
               isAttacking = false;
               if (!this.heroSprite) return;
@@ -406,7 +418,11 @@ export class CombatScene extends Scene {
           }
           playAttackAnimation();
           if (data.damage > 0) {
-            AudioManager.playSFX(this, data.cardId.toLowerCase().includes('fireball') ? 'sfx_fireball' : 'sfx_slash', 0.4);
+            const isFireballInline = data.cardId.toLowerCase().includes('fireball');
+            const inlineDelay = isFireballInline ? 0 : Math.round(250 / this.gameSpeed);
+            this.time.delayedCall(inlineDelay, () => {
+              AudioManager.playSFX(this, isFireballInline ? 'sfx_fireball' : 'sfx_slash', 0.4);
+            });
             if (this.combatEffects) this.combatEffects.floatingNumber(600, 320, data.damage, '#ffffff', '-');
             if (this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image) {
               this.enemySprite.setTintFill(0xffffff);

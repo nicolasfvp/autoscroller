@@ -34,9 +34,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   // Loop progress bar (between panels)
   private loopProgressFill!: Phaser.GameObjects.Rectangle;
   private loopProgressText!: Phaser.GameObjects.Text;
-  private static readonly PROG_X  = 300;
+  private static readonly PROG_X  = 530;
   private static readonly PROG_Y  = 10;
-  private static readonly PROG_W  = 200;
+  private static readonly PROG_W  = 260;
   private static readonly PROG_H  = 104;
 
   // Active tweens spawned by applyStatTween — tracked so we can stop them on
@@ -131,7 +131,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
     // ── Right panel ────────────────────────────────────────────
     this.rightPanelContainer = scene.add.container(0, 0);
-    this.rightPanelContainer.setVisible(true);
+    this.rightPanelContainer.setVisible(false);
     this.add(this.rightPanelContainer);
 
     const rpBg = scene.add.image(LP.RP_X + LP.RP_W / 2, LP.RP_Y + LP.RP_H / 2, 'ui_panel').setDisplaySize(LP.RP_W, LP.RP_H);

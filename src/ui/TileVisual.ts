@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+﻿import Phaser from 'phaser';
 import { getTileConfig, type TileSlot } from '../systems/TileRegistry';
 import { TILE_SIZE } from '../systems/LoopRunner';
 
@@ -100,7 +100,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
     this.iconText = scene.add.text(0, 0, tileConfigForIcon?.icon ?? '', {
       fontSize: `${fontSize}px`,
       color: '#ffffff',
-      fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
+      fontFamily: 'Georgia, "Times New Roman", serif',
     }).setOrigin(0.5);
     if (this.sprite) {
       this.iconText.setVisible(false);

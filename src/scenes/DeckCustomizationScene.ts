@@ -1,4 +1,4 @@
-// DeckCustomizationScene -- the in-run deck editor.
+﻿// DeckCustomizationScene -- the in-run deck editor.
 //
 // Layout (800×600 canvas):
 //   [00-50]    Header strip — back · title · glossary
@@ -157,7 +157,7 @@ export class DeckCustomizationScene extends Scene {
 
     this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, 'DECK EDITOR', {
       fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
-      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 4,
+      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
     createWoodButton(this, 60, HEADER_BOTTOM / 2, '← Back', () => this.close(),
@@ -305,7 +305,7 @@ export class DeckCustomizationScene extends Scene {
     c.add(this.add.rectangle(0, 0, 22, 16, 0x14100c, 0.95).setStrokeStyle(1, CHROME.panelStroke));
     c.add(this.add.text(0, 0, `${index + 1}`, {
       fontSize: '11px', fontStyle: 'bold', color: '#ffe28a',
-      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 2,
+      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5));
     c.setDepth(10);
     return c;
@@ -638,19 +638,30 @@ export class DeckCustomizationScene extends Scene {
     const h = BAG_BOTTOM - BAG_TOP;
 
     const stroke = this.dragFromBag ? CHROME.bagHotStroke : CHROME.bagStroke;
+
+    // Empty state: use baked asset (already has title + description text)
+    if (ids.length === 0 && this.textures.exists('loot_bag_empty')) {
+      const bg = this.add.image(cx, cy, 'loot_bag_empty');
+      bg.setScale(w / bg.width);
+      if (this.dragFromBag) bg.setTint(0xffeeaa);
+      this.bagContainer.add(bg);
+      return;
+    }
+
+    // Non-empty (or fallback): plain rectangle + programmatic text
     this.bagContainer.add(
       this.add.rectangle(cx, cy, w, h, CHROME.bagFill, 0.78).setStrokeStyle(2, stroke, 1),
     );
 
     this.bagContainer.add(this.add.text(cx - w / 2 + 14, BAG_TOP + 8, `📦 LOOT BAG — ${ids.length}`, {
       fontSize: '13px', fontStyle: 'bold', color: '#f0d68a',
-      fontFamily: FONTS.family, stroke: '#000', strokeThickness: 3,
+      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 3,
     }).setOrigin(0, 0));
 
     if (ids.length === 0) {
       this.bagContainer.add(this.add.text(cx, cy + 4,
         'Cards earned from combat, shops, and forges appear here.\nDrag them into the deck above.', {
-        fontSize: '11px', color: '#8a7860', fontFamily: FONTS.family,
+        fontSize: '11px', color: '#8a7860', fontFamily: FONTS.body,
         align: 'center', lineSpacing: 4,
       }).setOrigin(0.5));
       return;
@@ -675,7 +686,7 @@ export class DeckCustomizationScene extends Scene {
 
   private buildHint(): void {
     this.hintText = this.add.text(LAYOUT.centerX, HINT_Y, this.getDefaultHint(), {
-      fontSize: '12px', color: '#a89878', fontFamily: FONTS.family,
+      fontSize: '12px', color: '#a89878', fontFamily: FONTS.body,
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5);
   }

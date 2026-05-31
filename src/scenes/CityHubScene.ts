@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { MetaState } from '../state/MetaState';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
@@ -62,7 +62,7 @@ export class CityHubScene extends Scene {
     // Stop Theme Song and Play Town Song with crossfade
     AudioManager.transitionTo(this, 'town_song', { volume: 0.4, duration: 1500 });
 
-    const fontFamily = FONTS.family;
+    const fontFamily = FONTS.body;
 
     // Top bar: material inventory (top-left)
     const tableImg = this.add.image(10, 10, 'icons_up_table').setOrigin(0, 0).setDepth(50);
@@ -157,16 +157,6 @@ export class CityHubScene extends Scene {
       this.createBuilding(layout, fontFamily);
     }
 
-    // Bottom bar: Collection button
-    const collectionBtn = createButton(this, 48, 560, 'Collection', () => {
-      this.fadeToScene('CollectionScene');
-    }, 'primary');
-    collectionBtn.setOrigin(0, 1)
-      .setColor('#e6c88a')
-      .setStroke('#2e1b0f', 2)
-      .setShadow(1, 1, '#1a0d06', 2, true, true)
-      .setFontStyle('bold');
-
     // Change Hero button (feedback #36)
     const changeHeroBtn = createButton(this, 752, 560, 'Change Hero', () => {
       this.fadeToScene('CharacterSelectScene');
@@ -250,6 +240,9 @@ export class CityHubScene extends Scene {
 
       if (key === 'tavern') {
         this.scene.launch('TavernPanelScene', { metaState: this.metaState });
+      } else if (key === 'library') {
+        this.input.enabled = true;
+        this.fadeToScene('CollectionScene');
       } else {
         this.scene.launch('BuildingPanelScene', {
           buildingKey: key,

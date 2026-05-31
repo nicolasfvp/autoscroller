@@ -30,6 +30,7 @@ export const SCENE_KEYS = {
   BUILDING_PANEL: 'BuildingPanelScene',
   TAVERN_PANEL: 'TavernPanelScene',
   RUN_TRANSITION: 'RunTransitionScene',
+  LOOP_SUMMARY: 'LoopSummaryScene',
   GLOBAL_SOUND: 'GlobalSound',
   SPEED_PANEL: 'SpeedPanelScene',
   STARTING_DECK: 'StartingDeckScene',
@@ -58,7 +59,8 @@ export function stopAllRunScenes(scene: Phaser.Scene, exclude?: string): void {
     SCENE_KEYS.RELIC_VIEWER,
     SCENE_KEYS.PAUSE,
     SCENE_KEYS.SETTINGS,
-    SCENE_KEYS.DEATH
+    SCENE_KEYS.DEATH,
+    SCENE_KEYS.LOOP_SUMMARY,
   ];
   runScenes.forEach(key => {
     if (key !== exclude && scene.scene.get(key)) {

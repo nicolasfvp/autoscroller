@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import type { LootEntry } from '../systems/PendingLoot';
 import { FONTS } from './StyleConstants';
 
@@ -28,7 +28,7 @@ function createNotificationPanel(scene: Scene, item: LootEntry, onDone: () => vo
   const container = scene.add.container(cx, cy).setScrollFactor(0).setDepth(1000).setAlpha(0);
 
   const text = scene.add.text(0, 0, item.label, {
-    fontFamily: FONTS.family,
+    fontFamily: FONTS.body,
     fontSize: '20px',
     fontStyle: 'bold',
     color: item.color || '#ffffff',

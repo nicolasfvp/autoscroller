@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
 import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
 import { TileVisual } from '../ui/TileVisual';
@@ -32,6 +32,9 @@ export class PlanningOverlay extends Scene {
   private tooltipTimer?: Phaser.Time.TimerEvent;
   /** The currently displayed tooltip container (text + bg). Destroyed on hide. */
   private tooltipObj?: Phaser.GameObjects.Container;
+  private bgImg1?: Phaser.GameObjects.Image;
+  private bgImg2?: Phaser.GameObjects.Image;
+  private bgDisplayW = 0;
 
   // Inventory drag-and-drop state
   private dragGhost: Phaser.GameObjects.Container | null = null;
@@ -66,13 +69,17 @@ export class PlanningOverlay extends Scene {
     this.tileVisuals = [];
     this.inventoryCards = [];
 
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = 'Georgia, "Times New Roman", serif';
 
-    // Background - Custom asset for tile selection
+    // Background - two full-res images scroll horizontally in a seamless loop.
+    // The 2560×1440 source is scaled so height=600; display width ≈ 1067px.
     if (this.textures.exists('bg_tile_selection')) {
-      this.add.image(400, 300, 'bg_tile_selection').setDisplaySize(800, 600);
+      const src = this.textures.get('bg_tile_selection').source[0];
+      const scale = 600 / src.height;
+      this.bgDisplayW = Math.ceil(src.width * scale);
+      this.bgImg1 = this.add.image(this.bgDisplayW / 2, 300, 'bg_tile_selection').setScale(scale);
+      this.bgImg2 = this.add.image(this.bgDisplayW * 1.5, 300, 'bg_tile_selection').setScale(scale);
     } else {
-      // Semi-transparent overlay fallback
       this.add.rectangle(400, 300, 800, 600, 0x000000, 0.7);
     }
 
@@ -80,13 +87,28 @@ export class PlanningOverlay extends Scene {
     this.gridContainer = this.add.container(0, 0);
     this.buildLoopGrid();
 
-    // Belt window pillars — straddle the mask edges (x=50, x=750) so they
-    // visually cap the scrolling strip. Aspect ratio: 96×281 → 40×117px.
+    // Belt window pillars — animated spritesheet (4 frames, 512×512 each).
     if (this.textures.exists('belt_pillar')) {
-      const PW = 40;
-      const PH = Math.round(PW * 281 / 96);
-      this.add.image(50,  170, 'belt_pillar').setDisplaySize(PW, PH).setDepth(10);
-      this.add.image(750, 170, 'belt_pillar').setDisplaySize(PW, PH).setDepth(10);
+      if (!this.anims.exists('pillar_flame')) {
+        this.anims.create({
+          key: 'pillar_flame',
+          frames: this.anims.generateFrameNumbers('belt_pillar', { start: 0, end: 3 }),
+          frameRate: 8,
+          repeat: -1,
+        });
+      }
+      // Frame is 512×512 but pillar content is tall and narrow.
+      // Scale so display height = 117px (original pilar.png ratio 96:281).
+      const FRAME_SIZE = 512;
+      const TARGET_H = 155;
+      const scale = TARGET_H / FRAME_SIZE;
+      const makeP = (x: number) =>
+        this.add.sprite(x, 180, 'belt_pillar')
+          .setScale(scale)
+          .setDepth(10)
+          .play('pillar_flame');
+      makeP(130);
+      makeP(670);
     }
 
     // Tile inventory panel at y=300
@@ -145,7 +167,7 @@ export class PlanningOverlay extends Scene {
     this.buildSkipLoopsRow(fontFamily);
 
     // Bottom center: Start Loop image button
-    const startBtn = this.add.image(400, 548, 'btn_start_loop_scene')
+    const startBtn = this.add.image(405, 548, 'btn_start_loop_scene')
       .setInteractive({ useHandCursor: true });
     const startScale = 220 / startBtn.width;
     startBtn.setScale(startScale);
@@ -279,7 +301,7 @@ export class PlanningOverlay extends Scene {
     // non-clickable; they're just no longer invisible.
     const period = tiles.length * cellW;
     const centerX = 400;
-    const y = 170;
+    const y = 205;
 
     this.gridGeometry = { cellW, period, centerX };
 
@@ -344,7 +366,7 @@ export class PlanningOverlay extends Scene {
     if (this.gridMask) { this.gridMask.destroy(); this.gridMask = null; }
     this.gridMask = this.make.graphics();
     this.gridMask.fillStyle(0xffffff);
-    this.gridMask.fillRect(50, y - tileSize - 24, 700, tileSize + 60);
+    this.gridMask.fillRect(130, y - tileSize - 24, 540, tileSize + 60);
     this.gridContainer.setMask(this.gridMask.createGeometryMask());
 
     this.updateTilePositions();
@@ -377,13 +399,26 @@ export class PlanningOverlay extends Scene {
       obj.x = x;
     };
 
+    // Fade tiles near the pillar edges (x=50 left, x=750 right).
+    const PILLAR_L = 130;
+    const PILLAR_R = 670;
+    const FADE_ZONE = 140; // pixels over which alpha goes 0→1
+    const pillarAlpha = (x: number): number => {
+      const fromLeft  = (x - PILLAR_L) / FADE_ZONE;
+      const fromRight = (PILLAR_R - x) / FADE_ZONE;
+      return Math.min(1, Math.max(0, Math.min(fromLeft, fromRight)));
+    };
+
     for (const tv of this.tileVisuals) {
       placeAt(tv, tv.getData('beltSlot') as number);
+      tv.setAlpha(pillarAlpha(tv.x));
     }
     // Wave 5: keep reserved-slot decorations aligned with their host tile.
     for (const deco of this.reservedDecorations) {
       const slot = deco.getData('beltSlot') as number;
       placeAt(deco as Phaser.GameObjects.GameObject & { x: number }, slot);
+      (deco as Phaser.GameObjects.GameObject & { setAlpha: (a: number) => void })
+        .setAlpha(pillarAlpha((deco as unknown as { x: number }).x));
     }
   }
 
@@ -463,14 +498,14 @@ export class PlanningOverlay extends Scene {
     // Panel background — shifted up to make room for the subtile row beneath
     // the main tile row while keeping the "don't stop here for" + Remove Mode
     // toolbar at y=505 untouched.
-    const board = this.add.image(400, 364, 'tile_selection_board');
-    board.setDisplaySize(650, 252);
+    const board = this.add.image(400, 367, 'tile_selection_board');
+    board.setScale(655 / board.width);
 
     this.refreshInventory();
   }
 
   private refreshInventory(): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = 'Georgia, "Times New Roman", serif';
 
     // Clear existing cards
     for (const card of this.inventoryCards) {
@@ -491,19 +526,20 @@ export class PlanningOverlay extends Scene {
     const subtileTiles = allPlaceable.filter(t => t.type === 'subtile');
 
     // Fixed uniform tile size for all tiles across both rows
-    const frameWidth  = 58;
-    const frameHeight = 58;
-    const gap         = 12;
+    const frameWidth  = 55;
+    const frameHeight = 55;
     const cols        = Math.min(placeableTiles.length, 8);
+    // First row has fewer tiles → larger gap to fill the panel width
+    const gap         = placeableTiles.length < 8 ? 26 : 20;
     const totalRowW   = cols * frameWidth + (cols - 1) * gap;
     const startX      = 400 - totalRowW / 2 + frameWidth / 2;
-    const rowStartY   = 318;
+    const rowStartY   = 330;
 
     placeableTiles.forEach((tileConfig, idx) => {
       const col = idx % cols;
       const row = Math.floor(idx / cols);
       const x   = startX + col * (frameWidth + gap);
-      const y   = rowStartY + row * (frameHeight + 52);
+      const y   = rowStartY + row * (frameHeight + 46);
       const container = this.add.container(x, y);
 
       // Card background
@@ -527,13 +563,13 @@ export class PlanningOverlay extends Scene {
       }
       container.add(preview);
 
-      const nameText = this.add.text(0, frameHeight / 2 + 7, tileConfig.name, {
-        fontSize: '11px', color: '#ffdca0', fontFamily,
+      const nameText = this.add.text(0, frameHeight / 2 + 5, tileConfig.name, {
+        fontSize: '9px', color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      const costText = this.add.text(0, frameHeight / 2 + 20, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '11px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
+      const costText = this.add.text(0, frameHeight / 2 + 16, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '9px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
 
@@ -541,9 +577,9 @@ export class PlanningOverlay extends Scene {
       const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileKey);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const countText = this.add.text(frameWidth / 2 - 8, -frameHeight / 2 + 8, `x${freeCount}`, {
-          fontSize: '13px', color: '#ffffff', fontFamily, fontStyle: 'bold',
-          backgroundColor: '#333333', padding: { x: 3, y: 2 }
+        const countText = this.add.text(frameWidth / 2 - 6, -frameHeight / 2 + 6, `x${freeCount}`, {
+          fontSize: '11px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 2, y: 1 }
         }).setOrigin(1, 0);
         container.add(countText);
       }
@@ -601,11 +637,11 @@ export class PlanningOverlay extends Scene {
   ): void {
     if (subtileTiles.length === 0) return;
 
-    const FRAME = 58;
-    const GAP = 12;
+    const FRAME = 55;
+    const GAP = 14;
     const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
     const startX = 400 - total / 2 + FRAME / 2;
-    const rowY = 412;
+    const rowY = 408;
 
     const subtileSlotsExist = this.hasOpenReservedSlot();
 
@@ -628,22 +664,22 @@ export class PlanningOverlay extends Scene {
       const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
       container.add(preview);
 
-      const nameText = this.add.text(0, FRAME / 2 + 7, tileConfig.name, {
-        fontSize: '11px', color: '#ffdca0', fontFamily,
+      const nameText = this.add.text(0, FRAME / 2 + 5, tileConfig.name, {
+        fontSize: '9px', color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      const costText = this.add.text(0, FRAME / 2 + 20, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '11px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
+      const costText = this.add.text(0, FRAME / 2 + 16, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '9px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
 
       const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileConfig.key);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const badge = this.add.text(FRAME / 2 - 6, -FRAME / 2 + 6, `x${freeCount}`, {
-          fontSize: '13px', color: '#ffffff', fontFamily, fontStyle: 'bold',
-          backgroundColor: '#333333', padding: { x: 3, y: 2 },
+        const badge = this.add.text(FRAME / 2 - 5, -FRAME / 2 + 5, `x${freeCount}`, {
+          fontSize: '11px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 2, y: 1 },
         }).setOrigin(1, 0);
         container.add(badge);
       }
@@ -784,24 +820,29 @@ export class PlanningOverlay extends Scene {
    */
   private buildSkipLoopsRow(_fontFamily: string): void {
     const run = getRun();
-    const ROW_Y = 548;
-    const GAP = 8;
 
-    // "Don't stop" label: 494×90 source → display at 120×22px
-    const labelImg = this.add.image(0, ROW_Y, 'btn_dont_stop');
-    const labelScale = 120 / 494;
-    labelImg.setScale(labelScale);
-    // Position after knowing display width
-    const labelDisplayW = 494 * labelScale; // 120
-    labelImg.setX(14 + labelDisplayW / 2);
+    // Panel background: 2626×1052 → display at 210×84px
+    const PANEL_W = 210;
+    const PANEL_H = Math.round(PANEL_W * 1052 / 2626);
+    const PANEL_X = PANEL_W / 2 + 40;
+    const PANEL_Y = 545;
 
-    // Number buttons: 500×466 source → display at 34×32px
+    if (this.textures.exists('skip_loop_panel')) {
+      this.add.image(PANEL_X, PANEL_Y, 'skip_loop_panel')
+        .setDisplaySize(PANEL_W, PANEL_H);
+    }
+
+    // Buttons: centered inside the lower portion of the panel
+    const GAP = 10;
     const numScale = (17 * 1.2) / 500;
-    const numDisplayW = 500 * numScale; // 17px wide
-
+    const numDisplayW = 500 * numScale;
+    const BTN_Y = PANEL_Y + PANEL_H * 0.22;
     const optionValues = [1, 5, 10, 25] as const;
     const keys = ['btn_skip_1', 'btn_skip_5', 'btn_skip_10', 'btn_skip_25'] as const;
     const btnImgs: Phaser.GameObjects.Image[] = [];
+
+    const totalBtnW = optionValues.length * numDisplayW + (optionValues.length - 1) * GAP;
+    const btnStartX = PANEL_X - totalBtnW / 2 + numDisplayW / 2;
 
     const refresh = () => {
       const current = run.skipLoopsRemaining ?? 0;
@@ -812,8 +853,8 @@ export class PlanningOverlay extends Scene {
     };
 
     optionValues.forEach((value, idx) => {
-      const x = 14 + labelDisplayW + GAP + idx * (numDisplayW + GAP) + numDisplayW / 2;
-      const img = this.add.image(x, ROW_Y, keys[idx])
+      const x = btnStartX + idx * (numDisplayW + GAP);
+      const img = this.add.image(x, BTN_Y, keys[idx])
         .setScale(numScale)
         .setInteractive({ useHandCursor: true });
 
@@ -827,28 +868,36 @@ export class PlanningOverlay extends Scene {
       btnImgs.push(img);
     });
 
-
     refresh();
   }
 
   /** Wave 5: Remove Mode toggle. When active, slot clicks remove placed tiles. */
   private buildRemoveModeButton(fontFamily: string): void {
-    const btn = this.add.text(720, 505, '🗑 Remove: OFF', {
-      fontSize: '14px', fontStyle: 'bold', color: '#aaddff', fontFamily,
+    // Panel: 275×135 source → 180×88px, anchored top-right
+    const PW = 180;
+    const PH = Math.round(PW * 135 / 275);
+    const PX = 800 - PW / 2 - 48;
+    const PY = 600 - PH / 2 - 8;
+
+    if (this.textures.exists('remove_tiles_panel')) {
+      this.add.image(PX, PY, 'remove_tiles_panel').setDisplaySize(PW, PH);
+    }
+
+    // Toggle label in the slot (lower-center of the panel)
+    const label = this.add.text(PX - 18, PY + PH * 0.22 - 3, 'OFF', {
+      fontSize: '15px', fontStyle: 'bold', color: '#aaddff', fontFamily,
       stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true });
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
     const refresh = () => {
-      btn.setText(this.removeMode ? '🗑 Remove: ON' : '🗑 Remove: OFF');
-      btn.setColor(this.removeMode ? '#ff6655' : '#aaddff');
+      label.setText(this.removeMode ? 'ON' : 'OFF');
+      label.setColor(this.removeMode ? '#ff4433' : '#aaddff');
     };
 
-    btn.on('pointerover', () => btn.setAlpha(0.85));
-    btn.on('pointerout',  () => btn.setAlpha(1));
-    btn.on('pointerdown', () => {
+    label.on('pointerover', () => label.setAlpha(0.8));
+    label.on('pointerout',  () => label.setAlpha(1));
+    label.on('pointerdown', () => {
       this.removeMode = !this.removeMode;
-      // Mutually exclusive with placement selection — entering remove mode
-      // clears the picker, exiting leaves the player free to pick again.
       if (this.removeMode) {
         this.selectedTileKey = null;
         if (this.selectedCardIndex >= 0 && this.inventoryCards[this.selectedCardIndex]) {
@@ -905,7 +954,7 @@ export class PlanningOverlay extends Scene {
 
   private showTooltip(anchorX: number, anchorY: number, text: string): void {
     this.hideTooltip();
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = 'Georgia, "Times New Roman", serif';
     // Build text first to measure size, then size the bg to fit.
     const label = this.add.text(0, 0, text, {
       fontSize: '12px',
@@ -1039,7 +1088,7 @@ export class PlanningOverlay extends Scene {
       if (this.anims.exists(animKey)) this.anims.remove(animKey);
       this.anims.create({
         key: animKey,
-        frames: this.anims.generateFrameNumbers(spriteKey, { start: 0, end: 14 }),
+        frames: this.anims.generateFrameNumbers(spriteKey, { start: 0, end: this.textures.get(spriteKey).frameTotal - 2 }),
         frameRate: 8,
         repeat: -1,
       });
@@ -1177,7 +1226,7 @@ export class PlanningOverlay extends Scene {
   }
 
   private showToast(message: string): void {
-    const fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
+    const fontFamily = 'Georgia, "Times New Roman", serif';
     const toast = this.add.text(400, 560, message, {
       fontSize: '14px', color: '#ff0000', fontFamily,
     }).setOrigin(0.5);
@@ -1187,6 +1236,16 @@ export class PlanningOverlay extends Scene {
       duration: 1500,
       onComplete: () => toast.destroy(),
     });
+  }
+
+  update(): void {
+    if (!this.bgImg1 || !this.bgImg2) return;
+    const speed = 0.12;
+    this.bgImg1.x -= speed;
+    this.bgImg2.x -= speed;
+    const halfW = this.bgDisplayW / 2;
+    if (this.bgImg1.x + halfW < 0) this.bgImg1.x = this.bgImg2.x + this.bgDisplayW;
+    if (this.bgImg2.x + halfW < 0) this.bgImg2.x = this.bgImg1.x + this.bgDisplayW;
   }
 
   private cleanup(): void {

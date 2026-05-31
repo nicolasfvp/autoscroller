@@ -1,17 +1,39 @@
-// WoodButton — themed button using the `panel_wood_button` asset (wooden plank
-// with gold filigree corners). Replaces flat colored Rectangle buttons that
-// looked like AI-mock chrome. Falls back to a stroked rectangle when the
-// asset is missing so a missing bundle file doesn't soft-brick the UI.
+// WoodButton — themed button. Uses pre-rendered dark/gold image assets when
+// available (label → btn_* texture key), falling back to wood-texture + text
+// overlay for any label without a matching asset.
 
 import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
 
 export type WoodButtonVariant = 'normal' | 'primary' | 'danger';
 
-const VARIANT_TINT: Record<WoodButtonVariant, number> = {
-  normal: 0xffffff,
-  primary: 0xffd680,   // warm gold tint for primary CTA
-  danger: 0xff8866,    // ember/red tint for destructive actions
+/** Maps button label text to the pre-rendered image texture key. */
+const LABEL_TO_KEY: Record<string, string> = {
+  'Resume':              'btn_resume',
+  'View Deck':           'btn_view_deck',
+  'Settings':            'btn_settings',
+  'Tutorial':            'btn_tutorial',
+  'Abandon Run':         'btn_abandon_run',
+  '← Back':             'btn_back',
+  '← Leave':            'btn_leave',
+  '← Cancel':           'btn_cancel',
+  'Close':               'btn_close',
+  'Keep My Run':         'btn_keep_my_run',
+  'Keep':                'btn_keep',
+  'Banish':              'btn_banish',
+  'Return to Menu':      'btn_return_to_menu',
+  'Return to City':      'btn_return_to_menu',
+  'Change Hero':         'btn_change_hero',
+  '▶ Start Run':        'btn_start_run',
+  '✕ Cancel':           'btn_cancel',
+  'Start Game':          'btn_start_game',
+  '→ Visit the Shop':   'btn_visit_shop',
+  'Delete Current Run':  'btn_delete_run',
+  'Reset All Progress':  'btn_reset_progress',
+  'Yes, Delete':         'btn_yes_delete',
+  'New Game':            'btn_new_game',
+  'Continue Run':        'btn_continue_run',
+  'Daily Run':           'btn_daily_run',
 };
 
 const VARIANT_TEXT: Record<WoodButtonVariant, string> = {
@@ -21,33 +43,63 @@ const VARIANT_TEXT: Record<WoodButtonVariant, string> = {
 };
 
 export interface WoodButtonOpts {
-  /** Button width — defaults to 240. */
   width?: number;
-  /** Button height — defaults to 56. */
   height?: number;
-  /** Font size in px — defaults to 22. */
   fontSize?: number;
-  /** Visual variant. Defaults to 'normal'. */
   variant?: WoodButtonVariant;
 }
 
 export interface WoodButtonHandle {
-  /** Root container — add to parent containers, or position via .setPosition. */
   container: Phaser.GameObjects.Container;
-  /** Update the visible label. */
   setText(text: string): void;
-  /** Update the variant (tint + label color). */
   setVariant(variant: WoodButtonVariant): void;
-  /** Enable/disable click interaction. */
   setEnabled(enabled: boolean): void;
-  /** Destroy the button and all its children. */
   destroy(): void;
 }
 
 /**
- * Create a wooden button anchored at (x, y) with the given label.
- * The image asset has gold filigree corners that look themed by default.
+ * Create an image-based button using a pre-rendered texture.
+ * Falls back to a styled text button if the texture doesn't exist.
  */
+export function createImageButton(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  label: string,
+  onClick: () => void,
+  width = 240,
+  _height = 56,
+): Phaser.GameObjects.Container {
+  const container = scene.add.container(x, y);
+  const imageKey = LABEL_TO_KEY[label];
+  const hasImage = !!imageKey && scene.textures.exists(imageKey);
+
+  if (hasImage) {
+    const img = scene.add.image(0, 0, imageKey);
+    const s = width / img.width;
+    img.setScale(s);
+    const hit = scene.add.rectangle(0, 0, img.displayWidth, img.displayHeight, 0x000000, 0)
+      .setInteractive({ useHandCursor: true });
+    container.add([img, hit]);
+    hit.on('pointerover', () => { container.setScale(1.05); img.setAlpha(0.9); });
+    hit.on('pointerout',  () => { container.setScale(1);    img.setAlpha(1);   });
+    hit.on('pointerdown', () => container.setScale(0.96));
+    hit.on('pointerup',   () => { container.setScale(1.05); onClick(); });
+  } else {
+    const btn = scene.add.text(0, 0, label, {
+      fontSize: '22px', fontStyle: 'bold',
+      color: '#f0d080', fontFamily: FONTS.body,
+      stroke: '#000000', strokeThickness: 4,
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    btn.on('pointerover', () => { btn.setColor('#ffe9a0'); container.setScale(1.05); });
+    btn.on('pointerout',  () => { btn.setColor('#f0d080'); container.setScale(1.0);  });
+    btn.on('pointerdown', () => onClick());
+    container.add(btn);
+  }
+
+  return container;
+}
+
 export function createWoodButton(
   scene: Phaser.Scene,
   x: number,
@@ -64,79 +116,85 @@ export function createWoodButton(
 
   const container = scene.add.container(x, y);
 
-  // Hit target: invisible rectangle sized to the button bounds. Using the
-  // image directly as the hit area picks up the transparent surrounding pixels
-  // of the asset, which feels off.
   const hit = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
     .setInteractive({ useHandCursor: true });
 
-  // Background composition: a wood-texture tile sized to fit + a gold stroke
-  // around it for the filigree-trim feel. The first iteration tried using the
-  // Grok-generated `panel_wood_button` PNG directly, but Grok wrote a black
-  // background instead of true transparency — every button rendered as a
-  // wooden plank surrounded by a thick black box. The existing `wood_texture`
-  // asset is small, transparent, and warm-toned; pairing it with a gold rect
-  // stroke gives the same medieval feel without the broken alpha.
-  const hasWood = scene.textures.exists('wood_texture');
+  // Use pre-rendered image if available for this label
+  const imageKey = LABEL_TO_KEY[label];
+  const usePrerendered = !!imageKey && scene.textures.exists(imageKey);
+
   let bgImage: Phaser.GameObjects.Image | null = null;
   let bgRect: Phaser.GameObjects.Rectangle | null = null;
-  if (hasWood) {
-    bgImage = scene.add.image(0, 0, 'wood_texture').setDisplaySize(width, height);
-    bgImage.setTint(VARIANT_TINT[variant]);
-  } else {
-    bgRect = scene.add.rectangle(0, 0, width, height, 0x2a1a0a);
-  }
-  // Always draw the gold trim regardless of the wood-texture path so the
-  // button looks framed even if the texture is missing.
-  const trim = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
-    .setStrokeStyle(2, 0xd4a04a, 0.95);
-  const bg: Phaser.GameObjects.GameObject = (bgImage ?? bgRect)!;
+  let trim: Phaser.GameObjects.Rectangle | null = null;
 
+  if (usePrerendered) {
+    bgImage = scene.add.image(0, 0, imageKey);
+    bgImage.setScale(width / bgImage.width);
+  } else {
+    // Fallback: wood texture + gold trim + text
+    if (scene.textures.exists('wood_texture')) {
+      bgImage = scene.add.image(0, 0, 'wood_texture').setDisplaySize(width, height);
+      if (variant === 'danger') bgImage.setTint(0xff8866);
+      else if (variant === 'primary') bgImage.setTint(0xffd680);
+    } else {
+      bgRect = scene.add.rectangle(0, 0, width, height, 0x2a1a0a);
+    }
+    trim = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
+      .setStrokeStyle(2, 0xd4a04a, 0.95);
+  }
+
+  // Text only shown when no pre-rendered image (image already has text baked in)
   const text = scene.add.text(0, 0, label, {
     fontSize: `${fontSize}px`,
     fontStyle: 'bold',
     color: VARIANT_TEXT[variant],
-    fontFamily: FONTS.family,
+    fontFamily: FONTS.body,
     stroke: '#000000',
     strokeThickness: 4,
-  }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
+  }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true)
+    .setVisible(!usePrerendered);
 
-  container.add([bg, trim, hit, text]);
-
-  let pressed = false;
+  const children: Phaser.GameObjects.GameObject[] = [
+    bgImage ?? bgRect!,
+    ...(trim ? [trim] : []),
+    hit,
+    text,
+  ];
+  container.add(children);
 
   hit.on('pointerover', () => {
     if (!enabled) return;
     container.setScale(1.04);
-    if (bgImage) {
-      bgImage.setTint(Phaser.Display.Color.IntegerToColor(VARIANT_TINT[variant]).brighten(15).color);
-    }
+    if (usePrerendered && bgImage) bgImage.setAlpha(0.9);
+    else if (bgImage) bgImage.setTint(0xffffee);
   });
   hit.on('pointerout', () => {
     container.setScale(1.0);
-    if (bgImage) bgImage.setTint(VARIANT_TINT[variant]);
-    pressed = false;
+    if (bgImage) { bgImage.setAlpha(1); if (!usePrerendered && variant !== 'danger') bgImage.clearTint(); }
   });
   hit.on('pointerdown', () => {
     if (!enabled) return;
-    pressed = true;
     container.setScale(0.96);
   });
   hit.on('pointerup', () => {
     if (!enabled) return;
     container.setScale(1.04);
-    if (!pressed) return;
-    pressed = false;
     onClick();
   });
 
   return {
     container,
-    setText: (s: string) => text.setText(s),
+    setText: (s: string) => { if (!usePrerendered) text.setText(s); },
     setVariant: (v: WoodButtonVariant) => {
       variant = v;
-      if (bgImage) bgImage.setTint(VARIANT_TINT[v]);
-      text.setColor(VARIANT_TEXT[v]);
+      if (!usePrerendered) {
+        text.setColor(VARIANT_TEXT[v]);
+        if (bgImage) {
+          if (v === 'danger') bgImage.setTint(0xff8866);
+          else if (v === 'primary') bgImage.setTint(0xffd680);
+          else bgImage.clearTint();
+        }
+      }
     },
     setEnabled: (e: boolean) => {
       enabled = e;

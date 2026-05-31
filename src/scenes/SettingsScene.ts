@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
 import { getAudioManager } from '../audio/AudioManager';
@@ -79,7 +79,7 @@ export class SettingsScene extends Scene {
     this.add.text(LAYOUT.centerX, 120, 'Settings', {
       ...FONTS.title,
       color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       stroke: '#000',
       strokeThickness: 5,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
@@ -102,9 +102,9 @@ export class SettingsScene extends Scene {
   private createVolumeSlider(): void {
     // Label
     this.add.text(200, 192, 'SFX Volume', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     // Track
@@ -121,9 +121,9 @@ export class SettingsScene extends Scene {
 
     // Volume percentage label
     this.volumeLabel = this.add.text(710, 192, `${Math.round(this.sfxVolume * 100)}%`, {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     this.input.on('drag', (_pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number) => {
@@ -149,9 +149,9 @@ export class SettingsScene extends Scene {
   // ── Game Speed Toggle (y: 300) ──────────────────────────
   private createGameSpeedToggle(): void {
     this.add.text(200, 292, 'Game Speed', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     const label = this.gameSpeed === 1 ? '1x' : '2x';
@@ -164,9 +164,9 @@ export class SettingsScene extends Scene {
   // ── Auto-Save Toggle (y: 350) ──────────────────────────
   private createAutoSaveToggle(): void {
     this.add.text(200, 342, 'Auto-Save', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     const label = this.autoSave ? 'ON' : 'OFF';
@@ -184,9 +184,9 @@ export class SettingsScene extends Scene {
   // value has actually been edited.
   private createGraphicsQualityToggle(): void {
     this.add.text(200, 382, 'Graphics Quality', {
-      ...FONTS.body,
+
       color: COLORS.textPrimary,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
     this.graphicsQualityBtn = createButton(this, 540, 390, GFX_QUALITY_LABEL[this.graphicsQuality], () => {
@@ -197,7 +197,7 @@ export class SettingsScene extends Scene {
       fontSize: '10px',
       color: '#ffcc66',
       fontStyle: 'italic',
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     }).setOrigin(0.5).setVisible(false);
   }
 
@@ -233,7 +233,7 @@ export class SettingsScene extends Scene {
           this.hideConfirmation();
           // Show brief feedback
           const feedback = this.add.text(LAYOUT.centerX, 420, 'Run Deleted', {
-            ...FONTS.body, color: COLORS.accent, fontFamily: FONTS.family,
+            color: COLORS.accent, fontFamily: FONTS.body,
           }).setOrigin(0.5);
           this.time.delayedCall(1500, () => feedback.destroy());
         },
@@ -246,7 +246,7 @@ export class SettingsScene extends Scene {
   private createDangerZoneSeparator(): void {
     this.add.rectangle(LAYOUT.centerX, 448, 360, 1, 0x4a3020, 0.6);
     this.add.text(LAYOUT.centerX, 453, '⚠ Danger Zone', {
-      fontSize: '9px', color: '#664444', fontFamily: FONTS.family,
+      fontSize: '9px', color: '#664444', fontFamily: FONTS.body,
     }).setOrigin(0.5, 0);
   }
 
@@ -268,7 +268,7 @@ export class SettingsScene extends Scene {
               this.metaState = createDefaultMetaState();
               this.hideConfirmation();
               const feedback = this.add.text(LAYOUT.centerX, 470, 'All Progress Reset', {
-                ...FONTS.body, color: COLORS.accent, fontFamily: FONTS.family,
+                color: COLORS.accent, fontFamily: FONTS.body,
               }).setOrigin(0.5);
               this.time.delayedCall(1500, () => feedback.destroy());
             },
@@ -294,7 +294,7 @@ export class SettingsScene extends Scene {
     this.confirmContainer.add(bg);
 
     const msg = this.add.text(LAYOUT.centerX, LAYOUT.centerY - 30, message, {
-      ...FONTS.body, color: COLORS.textPrimary, fontFamily: FONTS.family,
+      color: COLORS.textPrimary, fontFamily: FONTS.body,
       align: 'center', wordWrap: { width: 440 },
     }).setOrigin(0.5);
     this.confirmContainer.add(msg);

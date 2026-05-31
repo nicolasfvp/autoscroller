@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+﻿import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
 
 const SNAP_VALUES = [0.5, 1, 1.5, 2, 3] as const;
@@ -53,7 +53,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     // Fixed 14px offset above track regardless of scale so the title never
     // bleeds into the adjacent slider's handle (scale-derived 10px was too close).
     this.titleText = scene.add.text(this.trackX, centerY - 10, title, {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '11px',
       fontStyle: 'bold',
       color: '#cccccc',
@@ -91,7 +91,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
 
     // Speed value label (right of slider) — font at full size
     this.label = scene.add.text(this.trackX + trackW + Math.round(8 * scale), this.trackY, formatSpeed(this.currentSpeed), {
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
       fontSize: '12px',
       fontStyle: 'bold',
       color: '#00e5ff',

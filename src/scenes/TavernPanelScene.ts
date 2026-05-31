@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+﻿import { Scene } from 'phaser';
 import { MetaState } from '../state/MetaState';
 import { SeededRNG } from '../systems/SeededRNG';
 import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
@@ -16,7 +16,7 @@ export class TavernPanelScene extends Scene {
     this.metaState = data.metaState;
     this.seedInputValue = '';
 
-    const fontFamily = FONTS.family;
+    const fontFamily = FONTS.body;
 
     // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5);

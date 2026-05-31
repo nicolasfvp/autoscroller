@@ -1,4 +1,4 @@
-// DeathScene -- shown when the hero dies.
+﻿// DeathScene -- shown when the hero dies.
 // Defeat art fills the screen; minimal text overlay at the top.
 
 import { Scene } from 'phaser';
@@ -50,12 +50,12 @@ export class DeathScene extends Scene {
 
     // ── Title ────────────────────────────────────────────────────
     this.add.text(400, 30, 'RUN OVER', {
-      fontFamily: FONTS.family, fontSize: '46px', fontStyle: 'bold',
+      fontFamily: FONTS.body, fontSize: '46px', fontStyle: 'bold',
       color: '#ff2222', stroke: '#000000', strokeThickness: 8,
     }).setOrigin(0.5).setDepth(2);
 
     this.add.text(400, 80, `Defeated by ${enemyName}`, {
-      fontFamily: FONTS.family, fontSize: '15px',
+      fontFamily: FONTS.body, fontSize: '15px',
       color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(2);
 

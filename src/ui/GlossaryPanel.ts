@@ -1,4 +1,4 @@
-// GlossaryPanel -- persistent keyword reference modal. Surfaced via the
+﻿// GlossaryPanel -- persistent keyword reference modal. Surfaced via the
 // circular "?" GlossaryButton from any scene that shows cards or runs
 // combat. Read-only: lists every keyword in KEYWORD_DEFINITIONS, grouped
 // by category (Stack / Modifier / Stat), in a scrollable centered panel.
@@ -86,7 +86,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
     fontSize: '20px',
     fontStyle: 'bold',
     color: COLORS.accent,
-    fontFamily: FONTS.family,
+    fontFamily: FONTS.body,
   }).setOrigin(0, 0);
   overlay.add(title);
 
@@ -94,7 +94,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
     PANEL_X + PANEL_PADDING,
     PANEL_Y + 18,
     '',
-    { fontSize: '11px', color: COLORS.textSecondary, fontFamily: FONTS.family },
+    { fontSize: '11px', color: COLORS.textSecondary, fontFamily: FONTS.body },
   );
   hint.setText('Scroll for more • ESC to close');
   hint.setPosition(PANEL_X + PANEL_W - PANEL_PADDING - hint.width, PANEL_Y + 22);
@@ -108,7 +108,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
       fontSize: '24px',
       fontStyle: 'bold',
       color: COLORS.accent,
-      fontFamily: FONTS.family,
+      fontFamily: FONTS.body,
     },
   ).setOrigin(1, 0).setInteractive({ useHandCursor: true });
   closeBtn.on('pointerover', () => closeBtn.setColor(COLORS.accentHover));
@@ -152,7 +152,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
       {
         fontSize: '13px',
         color: COLORS.textSecondary,
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
         align: 'center',
         lineSpacing: 4,
       },
@@ -181,7 +181,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
         fontSize: `${SECTION_HEADER_FONT}px`,
         fontStyle: 'bold',
         color: CATEGORY_COLOR[category],
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
       },
     ).setOrigin(0, 0);
     contentContainer.add(sectionTitle);
@@ -192,7 +192,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
         fontSize: `${KEYWORD_FONT}px`,
         fontStyle: 'bold',
         color: CATEGORY_COLOR[category],
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
       }).setOrigin(0, 0);
       contentContainer.add(nameText);
       cursorY += nameText.height + KEYWORD_TO_DEF_GAP;
@@ -200,7 +200,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
       const defText = scene.add.text(CONTENT_X, cursorY, kw.definition, {
         fontSize: `${DEFINITION_FONT}px`,
         color: COLORS.textPrimary,
-        fontFamily: FONTS.family,
+        fontFamily: FONTS.body,
         wordWrap: { width: CONTENT_W },
         lineSpacing: 2,
       }).setOrigin(0, 0);
