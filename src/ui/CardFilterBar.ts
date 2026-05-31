@@ -18,11 +18,19 @@ import { FONTS } from './StyleConstants';
 // into a node-environment vitest run.
 export {
   applyFilters,
+  sortCards,
   FILTER_ELEMENT_OPTIONS,
   ELEMENT_LABEL_TO_ID,
+  CARD_SORT_MODES,
+  CARD_SORT_LABEL,
   type CardFilters,
+  type CardSortMode,
 } from './CardFilterBar.pure';
-import { ELEMENT_LABEL_TO_ID, FILTER_ELEMENT_OPTIONS, type CardFilters } from './CardFilterBar.pure';
+import {
+  ELEMENT_LABEL_TO_ID, FILTER_ELEMENT_OPTIONS,
+  CARD_SORT_MODES, CARD_SORT_LABEL,
+  type CardFilters, type CardSortMode,
+} from './CardFilterBar.pure';
 
 // ── Visual constants ───────────────────────────────────────
 const BAR_HEIGHT = 44;
@@ -42,10 +50,13 @@ type _Unused = ElementId | CardDefinition;
 export class CardFilterBar extends Phaser.GameObjects.Container {
   private filters: CardFilters;
   private onChange: (filters: CardFilters) => void;
+  private onSortChange: ((mode: CardSortMode) => void) | null;
   private barWidth: number;
+  private sortMode: CardSortMode = 'tier';
 
   // Sub-elements we need to mutate after construction.
   private dropdownLabel!: Phaser.GameObjects.Text;
+  private sortLabel: Phaser.GameObjects.Text | null = null;
   private tierLabels: Array<{ tier: 1 | 2 | 3; box: Phaser.GameObjects.Rectangle; check: Phaser.GameObjects.Text }> = [];
   private dropdownPanel: Phaser.GameObjects.Container | null = null;
   private inputEl: HTMLInputElement | null = null;
@@ -68,12 +79,14 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     y: number,
     width: number,
     onChange: (filters: CardFilters) => void,
+    onSortChange?: (mode: CardSortMode) => void,
   ) {
     super(scene, x, y);
     scene.add.existing(this);
 
     this.barWidth = width;
     this.onChange = onChange;
+    this.onSortChange = onSortChange ?? null;
     this.filters = {
       element: 'All',
       tiers: new Set<1 | 2 | 3>([1, 2, 3]),
@@ -83,6 +96,8 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     this.buildBackground();
     this.buildDropdown();
     this.buildTierCheckboxes();
+    // The sort cycle-button is only mounted when a consumer wants sorting.
+    if (this.onSortChange) this.buildSortButton();
     this.buildSearchInput();
 
     // Clean up DOM input and dropdown panel when the parent scene shuts down.
@@ -100,6 +115,11 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
       tiers: new Set(this.filters.tiers),
       search: this.filters.search,
     };
+  }
+
+  /** Current sort mode (defaults to 'tier'). */
+  getSortMode(): CardSortMode {
+    return this.sortMode;
   }
 
   destroy(fromScene?: boolean): void {
@@ -199,6 +219,57 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
   private refreshTierVisuals(): void {
     for (const entry of this.tierLabels) {
       entry.check.setVisible(this.filters.tiers.has(entry.tier));
+    }
+  }
+
+  // ── Sort cycle button ──────────────────────────────────
+  // Single button that cycles tier → cost → cooldown → name and notifies the
+  // consumer via onSortChange. Sits between the tier checkboxes and the search
+  // input. Kept narrow so it doesn't collide with the right-anchored search box.
+  private buildSortButton(): void {
+    const boxX = PADDING_X + 150 + 16 + 3 * 56 + 8;
+    const boxW = 132;
+    const boxH = 28;
+    const boxY = (BAR_HEIGHT - boxH) / 2;
+
+    const box = this.scene.add.rectangle(boxX, boxY, boxW, boxH, 0x2a1408, 0.95)
+      .setOrigin(0, 0)
+      .setStrokeStyle(1.5, 0x7a4820)
+      .setInteractive({ useHandCursor: true });
+    this.add(box);
+
+    const label = this.scene.add.text(
+      boxX + 8,
+      boxY + boxH / 2,
+      `Sort: ${CARD_SORT_LABEL[this.sortMode]}`,
+      { fontSize: '12px', fontStyle: 'bold', color: TEXT, fontFamily: FF },
+    ).setOrigin(0, 0.5);
+    this.add(label);
+    this.sortLabel = label;
+
+    const caret = this.scene.add.text(boxX + boxW - 12, boxY + boxH / 2, '⇅', {
+      fontSize: '12px', color: ACCENT, fontFamily: FF,
+    }).setOrigin(0.5);
+    this.add(caret);
+
+    box.on('pointerover', () => box.setStrokeStyle(2, 0xffd700));
+    box.on('pointerout',  () => box.setStrokeStyle(1.5, 0x7a4820));
+    box.on('pointerdown', (_p: Phaser.Input.Pointer, _lx: number, _ly: number, ev?: Phaser.Types.Input.EventData) => {
+      ev?.stopPropagation?.();
+      this.cycleSort();
+    });
+  }
+
+  private cycleSort(): void {
+    const idx = CARD_SORT_MODES.indexOf(this.sortMode);
+    this.sortMode = CARD_SORT_MODES[(idx + 1) % CARD_SORT_MODES.length];
+    this.sortLabel?.setText(`Sort: ${CARD_SORT_LABEL[this.sortMode]}`);
+    if (this.onSortChange) {
+      try {
+        this.onSortChange(this.sortMode);
+      } catch (err) {
+        console.error('[CardFilterBar] onSortChange callback threw:', err);
+      }
     }
   }
 

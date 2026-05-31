@@ -8,7 +8,7 @@ import type { BossBehavior } from '../../data/types';
 import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
-import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers, fireRecurringTrigger, sumModifier } from './StatusEffects';
+import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers, fireRecurringTrigger, sumModifier, bumpEventCounters } from './StatusEffects';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -240,11 +240,12 @@ export class EnemyAI {
  * sources (basic attacks, affinity bleed/burn, card self-damage) share one
  * code path — armor must always be considered.
  */
-export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false): number {
-  // C1 — Apothecary's Vial: a one-time Barrier absorbs the next hit fully.
-  // Triggered on any non-zero incoming hit before mitigation / armor.
+export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelics: boolean = false, pierceArmor: boolean = false, selfInflicted: boolean = false): number {
+  // C1 — Apothecary's Vial: a one-time Barrier absorbs the next ENEMY hit fully.
+  // It must NOT eat the hero's own self-damage card costs or self-DoT ticks —
+  // those (incl. pierce_armor HP costs) are meant to be paid in full.
   let damage = Math.max(0, Math.floor(rawDamage));
-  if (damage > 0 && state.barrierActive) {
+  if (damage > 0 && state.barrierActive && !selfInflicted) {
     state.barrierActive = false;
     return 0;
   }
@@ -262,6 +263,16 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
     damage = Math.floor(damage * 1.5);
   }
   if (damage === 0) return 0;
+  // pierceArmor: self-damage cards tagged `(Pierce)` skip armor absorption
+  // entirely so the HP cost is paid in full regardless of current armor.
+  if (pierceArmor) {
+    state.heroHP = Math.max(0, state.heroHP - damage);
+    if (state.lastHeroDamageMs !== undefined) state.lastHeroDamageMs = state.combatElapsedMs;
+    // Rebalance phase: emit hp_lost for event_counter auras.
+    const payloads = bumpEventCounters(state, 'hp_lost', { amount: damage });
+    for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
+    return damage;
+  }
   const multiplier = state.heroDefenseMultiplier ?? 1;
   const effectiveDefense = state.heroDefense * multiplier;
 
@@ -298,6 +309,12 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
     // synced combatElapsedMs from CombatEngine.tick. Self-DoT ticks and card
     // self-damage also route through here, so all real HP loss is captured.
     state.lastHeroDamageMs = state.combatElapsedMs;
+
+    // Rebalance phase: emit hp_lost event for event_counter auras
+    // (Searing Razor, Wrath Squall, Quickearth Rite). `amount` carries the
+    // actual HP loss after mitigation+armor so filters like min_amount work.
+    const payloads = bumpEventCounters(state, 'hp_lost', { amount: remaining });
+    for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
   }
 
   // C3: dispatch damage_taken relics on every non-zero hit (even armor-only),

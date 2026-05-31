@@ -44,21 +44,20 @@ describe('DifficultyScaler', () => {
     expect(stats.goldReward).toBe(17);
   });
 
-  it('getLoopSpeed returns base speed at loop 1', () => {
-    const speed = getLoopSpeed(1);
+  it('getLoopSpeed returns base speed', () => {
+    const speed = getLoopSpeed();
     expect(speed).toBe(240);
   });
 
   it('getLoopSpeed is now player-controlled (constant baseSpeed)', () => {
     // Per feedback #28, map speed is now player-controlled via RunState.mapSpeed
-    // and getLoopSpeed always returns the base speed regardless of loop count.
-    const speed = getLoopSpeed(10);
+    // and getLoopSpeed always returns the base speed.
+    const speed = getLoopSpeed();
     expect(speed).toBe(240);
   });
 
   it('getDifficultyConfig returns full config', () => {
     const cfg = getDifficultyConfig();
-    expect(cfg.percentPerLoop).toBe(0.04);
     expect(cfg.percentPerBossKill).toBe(0.10);
     expect(cfg.bossMultiplier).toBe(1.0);
     expect(cfg.bossEveryNLoops).toBe(10);

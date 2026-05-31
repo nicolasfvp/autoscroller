@@ -7,6 +7,7 @@ import type { RunState } from '../state/RunState';
 import { resolveHeroStats } from '../systems/hero/HeroStatsResolver';
 
 export interface StatusRowData {
+  str: number;
   vit: number;
   dex: number;
   int: number;
@@ -14,16 +15,17 @@ export interface StatusRowData {
 }
 
 /**
- * Extract VIT/DEX/INT/SPI from RunState via resolveHeroStats.
+ * Extract STR/VIT/DEX/INT/SPI from RunState via resolveHeroStats.
  * Pure: no Phaser, no scene reference.
  */
 export function extractStatusRowData(runState: RunState): StatusRowData {
   const r = resolveHeroStats(runState);
-  return { vit: r.vit, dex: r.dex, int: r.int, spi: r.spi };
+  return { str: r.str, vit: r.vit, dex: r.dex, int: r.int, spi: r.spi };
 }
 
-/** Locked colors per UI-SPEC §Color status-stat tokens. */
+/** Locked colors per UI-SPEC §Color status-stat tokens. STR matches CombatHUD. */
 export const STATUS_ROW_COLORS = {
+  str: 0xff8844,
   vit: SHADOWBLADE_PALETTE.vit,
   dex: SHADOWBLADE_PALETTE.dex,
   int: SHADOWBLADE_PALETTE.int,

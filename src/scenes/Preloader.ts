@@ -45,15 +45,6 @@ export class Preloader extends Scene {
     this.load.image('icon_shrine', 'assets/buildings/icons/icon_shrine.png');
     this.load.image('icon_storehouse', 'assets/buildings/icons/icon_storehouse.png');
 
-    // Character preview sprites (IA gerado)
-    this.load.image('archer_preview', 'assets/characters/sprites/archer_generated.png');
-    this.load.image('slime_sprite', 'assets/characters/sprites/slime_generated.png');
-    this.load.image('orc_sprite', 'assets/characters/sprites/orc_generated.png');
-    this.load.image('goblin_sprite', 'assets/characters/sprites/goblin_generated.png');
-    this.load.image('dragon_sprite', 'assets/characters/sprites/dragon_generated.png');
-    this.load.image('snake_sprite', 'assets/characters/sprites/snake_generated.png');
-    this.load.image('judge_sprite', 'assets/characters/sprites/judge_generated.png');
-
     // Hero warrior assets
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
@@ -64,8 +55,8 @@ export class Preloader extends Scene {
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
 
-    // Mage selection preview (7-frame idle, 386x501 per frame)
-    this.load.spritesheet('mage_select', 'assets/characters/mage/selection/spritesheet.png', { frameWidth: 386, frameHeight: 501 });
+    // Mage selection preview (7-frame idle, 386x514 per frame; sheet is 2702x514)
+    this.load.spritesheet('mage_select', 'assets/characters/mage/selection/spritesheet.png', { frameWidth: 386, frameHeight: 514 });
 
     // Mage combat spritesheets (9-frame idle, 12-frame attack; 640×562 per frame)
     this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
@@ -85,7 +76,6 @@ export class Preloader extends Scene {
       { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
       { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
       { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
-      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
       // Default-terrain enemies (single-frame portraits)
       { id: 'doom_knight',          folder: 'default',  file: 'doom knight.png' },
       { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
@@ -99,7 +89,6 @@ export class Preloader extends Scene {
       { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
       { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
       { id: 'mush',                 folder: 'forest',   file: 'mush.png' },
-      { id: 'ogre',                 folder: 'forest',   file: 'ogre.png' },
       // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
       // spellings used in enemies.json; the disk files now use underscored
       // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.

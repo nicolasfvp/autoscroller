@@ -551,7 +551,6 @@ function hasDescription(card: CardDefinition, isUpgraded: boolean): boolean {
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
   });
   return !!desc;
 }
@@ -569,7 +568,6 @@ function drawDescription(
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
   });
   if (!desc) return;
 

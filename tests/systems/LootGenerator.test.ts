@@ -48,17 +48,18 @@ describe('LootGenerator', () => {
       expect(drops.herbs).toBeUndefined();
     });
 
-    it('enemy slime returns herbs based on chance', () => {
+    it('enemy materialReward drops its bonus material on a successful chance roll', () => {
+      // corpse_eater: chance 0.3, bonusMaterial bone, amount 1-2.
       // roll=0.1 < 0.3 (chance) -> drops; amount roll=0 -> min=1
       const rng = createDeterministicRNG([0.1, 0]);
-      const drops = rollMaterialDrops('enemy', 'slime', 1, rng);
-      expect(drops.herbs).toBeGreaterThanOrEqual(1);
+      const drops = rollMaterialDrops('enemy', 'corpse_eater', 1, rng);
+      expect(drops.bone).toBeGreaterThanOrEqual(1);
     });
 
-    it('enemy slime returns empty when roll fails', () => {
+    it('enemy materialReward returns empty when the chance roll fails', () => {
       // roll=0.5 >= 0.3 -> no drop
       const rng = createDeterministicRNG([0.5]);
-      const drops = rollMaterialDrops('enemy', 'slime', 1, rng);
+      const drops = rollMaterialDrops('enemy', 'corpse_eater', 1, rng);
       expect(Object.keys(drops)).toHaveLength(0);
     });
 

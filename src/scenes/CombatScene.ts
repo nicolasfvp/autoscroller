@@ -40,7 +40,7 @@ export class CombatScene extends Scene {
 
   private gameSpeed: number = 1;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
-  private initData!: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
+  private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -56,7 +56,6 @@ export class CombatScene extends Scene {
         effects: cardDef.effects,
         exhaust: cardDef.exhaust,
         spend_armor: cardDef.spend_armor,
-        cooldown_scale: cardDef.cooldown_scale,
       });
       const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
       keywordIntro.handleCardPlayed(this, fullText);
@@ -150,7 +149,7 @@ export class CombatScene extends Scene {
           enemyDef.type === 'boss',
           currentRun.loop.difficultyMultiplier,
         );
-        const xpEarned = getXPForEnemy(enemyDef.type);
+        const xpEarned = getXPForEnemy(this.initData?.isElite && enemyDef.type !== 'boss' ? 'elite' : enemyDef.type);
         earnXP(currentRun, xpEarned);
         if (enemyDef.type === 'boss') {
           currentRun.loop.lastBossDefeated = true;
@@ -175,7 +174,7 @@ export class CombatScene extends Scene {
     super(SCENE_KEYS.COMBAT);
   }
 
-  init(data: { enemyId: string; isBoss?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
+  init(data: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
     this.initData = data;
   }
 
@@ -272,11 +271,16 @@ export class CombatScene extends Scene {
         enemyDef.type === 'boss',
         run.loop.difficultyMultiplier,
       );
+      // Elite premium: tougher, hits harder, renamed + retyped so it grants
+      // elite XP and reads as "Elite <name>" in the HUD.
+      const elite = !!data.isElite && enemyDef.type !== 'boss';
       const scaledEnemy = {
         ...enemyDef,
-        baseHP: scaled.hp,
+        type: elite ? 'elite' : enemyDef.type,
+        name: elite ? `Elite ${enemyDef.name}` : enemyDef.name,
+        baseHP: elite ? Math.round(scaled.hp * 1.6) : scaled.hp,
         baseDefense: scaled.defense,
-        attack: { ...enemyDef.attack, damage: scaled.damage },
+        attack: { ...enemyDef.attack, damage: elite ? Math.round(scaled.damage * 1.3) : scaled.damage },
       };
 
       const combatState = createCombatState(run, scaledEnemy);
@@ -368,7 +372,6 @@ export class CombatScene extends Scene {
               effects: cardDef.effects,
               exhaust: cardDef.exhaust,
               spend_armor: cardDef.spend_armor,
-              cooldown_scale: cardDef.cooldown_scale,
             });
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText);

@@ -415,13 +415,7 @@ function stackBoostBody(fx: CardEffect): string {
   return `Add ${fx.value}${scaler} to every ${stk} ${onWho}`;
 }
 
-// Echo / cd_debt / devour / debuff / buff / debuff_stat / force_trigger.
-function echoBody(fx: CardEffect): string {
-  const secs = fx.ttl_ms ? Math.round((fx.ttl_ms as number) / 1000) : 0;
-  const scaler = scalerSuffix(fx);
-  if (secs > 0) return `For ${secs} seconds: the next card triggers ${fx.value === 1 ? 'twice' : `${fx.value + 1} times`}${scaler}`;
-  return `The next card triggers ${fx.value === 1 ? 'twice' : `${fx.value + 1} times`}${scaler}`;
-}
+// cd_debt / devour / debuff / buff / debuff_stat.
 function cdDebtBody(fx: CardEffect): string {
   return `Next card delays ${fx.value} more seconds`;
 }
@@ -606,15 +600,11 @@ function fragmentForEffect(fx: CardEffect): Fragment {
     case 'convert_stack':body = convertBody(fx); break;
     case 'multiply_stack':body = multiplyBody(fx); break;
     case 'stack_boost':  body = stackBoostBody(fx); break;
-    case 'echo':         body = echoBody(fx); break;
     case 'cd_debt':      body = cdDebtBody(fx); break;
     case 'debuff':       body = debuffBody(fx); break;
     case 'buff':         body = buffBody(fx); break;
     case 'debuff_stat':  body = debuffStatBody(fx); break;
     case 'devour':       body = ''; break; // Handled by gate (devour_succeeded).
-    case 'force_trigger_all_cards':
-      body = 'Trigger every card you own once';
-      break;
     default:
       body = '';
   }
@@ -636,7 +626,7 @@ export function formatEffect(fx: CardEffect): string {
 
 // -- Top-level card formatter ------------------------------------------
 
-type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'spend_armor' | 'cooldown_scale'>;
+type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'spend_armor'>;
 
 /**
  * Skip emitter for stack effects that are pure consume bookkeeping. The cost

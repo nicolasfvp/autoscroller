@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { MetaState } from '../state/MetaState';
 import { SeededRNG } from '../systems/SeededRNG';
 import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
+import { getTavernEffects } from '../systems/MetaProgressionSystem';
 import { FONTS } from '../ui/StyleConstants';
 
 export class TavernPanelScene extends Scene {
@@ -17,6 +18,8 @@ export class TavernPanelScene extends Scene {
     this.seedInputValue = '';
 
     const fontFamily = FONTS.family;
+    // Tavern building gates: custom seeds (Lv 3) and run-history view (Lv 2).
+    const tav = getTavernEffects(this.metaState.buildings.tavern.level);
 
     // Semi-transparent backdrop -- delay interactivity to prevent same-frame click-through
     const backdrop = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.5);
@@ -49,37 +52,46 @@ export class TavernPanelScene extends Scene {
       shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
     }).setOrigin(0.5);
 
-    // Seed input label
-    this.add.text(400, 200, 'Seed (optional)', {
-      fontSize: '14px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontFamily,
-      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-    }).setOrigin(0.5);
+    // Seed input — gated behind Tavern Lv 3 (custom seeds). Free players get a
+    // random seed; the input simply isn't shown until unlocked.
+    if (tav.seedInputEnabled) {
+      // Seed input label
+      this.add.text(400, 200, 'Seed (optional)', {
+        fontSize: '14px',
+        fontStyle: 'bold',
+        color: '#e6c88a',
+        stroke: '#2e1b0f',
+        strokeThickness: 2,
+        fontFamily,
+        shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
+      }).setOrigin(0.5);
 
-    // Seed input using Phaser DOM element (dark brown style)
-    const inputElement = this.add.dom(400, 230).createFromHTML(
-      `<input type="text" id="seed-input" placeholder="Enter seed or leave blank"
-        style="width:300px;height:36px;background:#3e2723;color:#e6c88a;border:2px solid #2e1b0f;
-        border-radius:4px;padding:0 8px;font-size:16px;font-weight:bold;font-family:${fontFamily};text-align:center;outline:none;"
-        />`
-    );
+      // Seed input using Phaser DOM element (dark brown style)
+      const inputElement = this.add.dom(400, 230).createFromHTML(
+        `<input type="text" id="seed-input" placeholder="Enter seed or leave blank"
+          style="width:300px;height:36px;background:#3e2723;color:#e6c88a;border:2px solid #2e1b0f;
+          border-radius:4px;padding:0 8px;font-size:16px;font-weight:bold;font-family:${fontFamily};text-align:center;outline:none;"
+          />`
+      );
 
-    // Focus styling
-    const inputEl = inputElement.getChildByID('seed-input') as HTMLInputElement | null;
-    if (inputEl) {
-      inputEl.addEventListener('focus', () => {
-        inputEl.style.borderColor = '#e6c88a';
-      });
-      inputEl.addEventListener('blur', () => {
-        inputEl.style.borderColor = '#2e1b0f';
-      });
-      inputEl.addEventListener('input', () => {
-        this.seedInputValue = inputEl.value;
-      });
+      // Focus styling
+      const inputEl = inputElement.getChildByID('seed-input') as HTMLInputElement | null;
+      if (inputEl) {
+        inputEl.addEventListener('focus', () => {
+          inputEl.style.borderColor = '#e6c88a';
+        });
+        inputEl.addEventListener('blur', () => {
+          inputEl.style.borderColor = '#2e1b0f';
+        });
+        inputEl.addEventListener('input', () => {
+          this.seedInputValue = inputEl.value;
+        });
+      }
+    } else {
+      this.add.text(400, 215, '🔒 Custom seeds unlock at Tavern Lv 3', {
+        fontSize: '13px', color: '#9b8a6a', fontFamily,
+        stroke: '#2e1b0f', strokeThickness: 1,
+      }).setOrigin(0.5);
     }
 
     const startBtn = this.add.text(400, 270, 'Start Run', {
@@ -128,7 +140,8 @@ export class TavernPanelScene extends Scene {
       this.scene.start('RunTransitionScene', { seed: rng.seed, manualSeed: !!seedValue });
     });
 
-    // Run History section
+    // Run History section — gated behind Tavern Lv 2.
+    if (tav.runHistoryVisible) {
     this.add.text(400, 310, 'Run History:', {
       fontSize: '24px',
       fontStyle: 'bold',
@@ -172,6 +185,12 @@ export class TavernPanelScene extends Scene {
         }).setOrigin(0.5);
         histY += 18;
       }
+    }
+    } else {
+      this.add.text(400, 360, '🔒 Run history unlocks at Tavern Lv 2', {
+        fontSize: '14px', color: '#9b8a6a', fontFamily,
+        stroke: '#2e1b0f', strokeThickness: 1,
+      }).setOrigin(0.5);
     }
 
     // Close button

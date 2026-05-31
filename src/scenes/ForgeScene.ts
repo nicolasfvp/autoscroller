@@ -210,7 +210,7 @@ export class ForgeScene extends Scene {
   private renderForge(): void {
     this.dynLayer.removeAll(true);
 
-    const forgeLevel = 0; // TEMPORARY: forge restrictions disabled.
+    const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
 
     const run = getRun();
     this.goldText.setText(`♦ ${run.economy.gold} Gold`);
@@ -597,7 +597,7 @@ export class ForgeScene extends Scene {
 
   private executeForgeAction(): void {
     const run = getRun();
-    const forgeLevel = 6; // TEMPORARY: forge restrictions disabled.
+    const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const deckSize = run.deck.active.length;
     const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);

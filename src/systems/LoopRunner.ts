@@ -112,7 +112,7 @@ export class LoopRunner {
   tick(delta: number): void {
     if (this.state !== 'traversing') return;
 
-    const speed = getLoopSpeed(this.runState.loop.count);
+    const speed = getLoopSpeed();
     this.runState.loop.positionInLoop += speed * delta / 1000;
 
     const totalLoopPixels = this.runState.loop.length * TILE_SIZE;
@@ -157,7 +157,7 @@ export class LoopRunner {
         if (tile.enemyId) {
           tile.defeatedThisLoop = true;
           this.state = 'tile-interaction';
-          this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, subtileEffects });
+          this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, isElite: !!tile.isElite, tileIndex, subtileEffects });
         }
         break;
       }
@@ -171,7 +171,7 @@ export class LoopRunner {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const terrainKey = tile.terrain!;
-        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain: terrainKey, subtileEffects });
+        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, isElite: !!tile.isElite, tileIndex, terrain: terrainKey, subtileEffects });
         break;
       }
       case 'subtile': {
@@ -185,7 +185,7 @@ export class LoopRunner {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
         const terrain = this.getAdjacentTerrain(tileIndex);
-        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, tileIndex, terrain, subtileEffects });
+        this.emit('combat-start', { enemyId: tile.enemyId, isBoss: false, isElite: !!tile.isElite, tileIndex, terrain, subtileEffects });
         break;
       }
       case 'boss': {
@@ -198,11 +198,7 @@ export class LoopRunner {
       case 'treasure': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
-        const sceneMap: Record<string, string> = {
-          event: 'EventScene',
-          treasure: 'TreasureScene',
-        };
-        this.emit('open-scene', { scene: sceneMap[tile.type], tileIndex });
+        this.emit('open-scene', { kind: tile.type, tileIndex });
         break;
       }
     }
@@ -320,6 +316,7 @@ export class LoopRunner {
         continue;
       }
       tile.enemyId = undefined;
+      tile.isElite = false;
       if (tile.defeatedThisLoop) continue;
 
       switch (tile.type) {
@@ -327,6 +324,7 @@ export class LoopRunner {
           if (this.rng() < diffConfig.basicTileCombatChance) {
             const pool = getEnemyPoolForTerrain('basic', loop.count);
             tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+            tile.isElite = this.rng() < (diffConfig.eliteChance ?? 0);
           }
           break;
         }
@@ -335,6 +333,7 @@ export class LoopRunner {
           if (this.rng() < spawnChance) {
             const pool = getEnemyPoolForTerrain(tile.terrain!, loop.count);
             tile.enemyId = pool[Math.floor(this.rng() * pool.length)];
+            tile.isElite = this.rng() < (diffConfig.eliteChance ?? 0);
           }
           break;
         }

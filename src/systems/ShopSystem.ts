@@ -1,7 +1,7 @@
 import { getTileConfig } from './TileRegistry';
 import { getAvailableCards, getAvailableRelics } from './UnlockManager';
 import difficultyConfig from '../data/difficulty.json';
-import type { RunState } from '../state/RunState';
+import { type RunState, addRelicToRun } from '../state/RunState';
 import { rand } from './SharedRNG';
 import { eventBus } from '../core/EventBus';
 import { getRelicData } from './combat/RelicSystem';
@@ -127,7 +127,7 @@ export class ShopSystem {
   static buyRelic(runState: RunState, relicId: string, price: number): boolean {
     if (runState.economy.gold < price) return false;
     runState.economy.gold -= price;
-    runState.relics.push(relicId);
+    addRelicToRun(runState, relicId);
     return true;
   }
 

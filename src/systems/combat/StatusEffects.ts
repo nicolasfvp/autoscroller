@@ -9,7 +9,7 @@
 // cd_reduction live in `getCdReductionFactor` so callers consult one helper
 // rather than computing the curve at every cooldown read.
 
-import type { CardEffect, AuraModifierKind, AuraTriggerKind, StackId } from '../../data/types';
+import type { CardEffect, AuraModifierKind, AuraTriggerKind, StackId, StatId } from '../../data/types';
 import type { CombatState } from './CombatState';
 
 /** Legacy alias kept for callers that name the narrow v1 trigger set explicitly. */
@@ -40,11 +40,23 @@ export interface ActiveAura {
   channelMsRemaining?: number;
   /** Effect applied when `trigger` fires or `tick_ms` elapses. May be array (v3). */
   then?: CardEffect | CardEffect[];
+  /** Rebalance phase: event-counter aura — counts a named event inside its
+   *  TTL window. When `eventCount >= eventThreshold`, fires `then`. With
+   *  `eventRepeat:true`, keeps counting after each fire; otherwise self-prunes. */
+  eventKind?: string;
+  eventFilter?: { stack?: StackId; min_amount?: number };
+  eventThreshold?: number;
+  eventCount?: number;
+  eventRepeat?: boolean;
+  /** Rebalance phase: id of the card that created this aura. Threaded into
+   *  trigger payloads so `stat_gain` cap tracking attributes grants to the
+   *  right source card across repeated plays / copies. */
+  sourceCardId?: string;
 }
 
 export type AuraTarget = "self" | "enemy";
 
-export function createAura(effect: CardEffect): ActiveAura {
+export function createAura(effect: CardEffect, sourceCardId?: string): ActiveAura {
   const ttl = effect.ttl_ms ?? 5000;
   return {
     remainingMs: ttl === null ? Number.POSITIVE_INFINITY : ttl,
@@ -59,7 +71,58 @@ export function createAura(effect: CardEffect): ActiveAura {
     nextTickInMs: effect.tick_ms,
     channelMsRemaining: effect.channel_ms,
     then: effect.then,
+    eventKind: effect.event_counter?.event,
+    eventFilter: effect.event_counter?.filter,
+    eventThreshold: effect.event_counter?.threshold,
+    eventCount: effect.event_counter ? 0 : undefined,
+    eventRepeat: effect.event_counter?.repeat ?? false,
+    sourceCardId,
   };
+}
+
+/**
+ * Rebalance phase: bump every event-counter aura whose `eventKind` + `eventFilter`
+ * matches this event. Returns the `then` payloads that should fire (auras whose
+ * counter just hit threshold). `repeat:false` auras self-prune after firing once.
+ *
+ * Callers route returned payloads through CardResolver's `applyTriggeredPayload`
+ * to actually land the effect on state. Filter semantics:
+ *   - `filter.stack`: must match the stack named in `data.stack`.
+ *   - `filter.min_amount`: the event's `amount` must be >= this.
+ */
+export interface FiredEventPayload {
+  effect: CardEffect;
+  sourceCardId?: string;
+}
+
+export function bumpEventCounters(
+  state: CombatState,
+  eventKind: string,
+  data?: { stack?: StackId; amount?: number },
+): FiredEventPayload[] {
+  const fired: FiredEventPayload[] = [];
+  const auras = state.heroAuras;
+  if (!auras) return fired;
+  for (let i = auras.length - 1; i >= 0; i--) {
+    const a = auras[i];
+    if (a.eventKind !== eventKind || a.eventThreshold === undefined) continue;
+    if (a.channelMsRemaining && a.channelMsRemaining > 0) continue;
+    const f = a.eventFilter;
+    if (f) {
+      if (f.stack && data?.stack !== f.stack) continue;
+      if (f.min_amount !== undefined && (data?.amount ?? 0) < f.min_amount) continue;
+    }
+    a.eventCount = (a.eventCount ?? 0) + 1;
+    if (a.eventCount >= a.eventThreshold) {
+      for (const p of thenToArray(a.then)) fired.push({ effect: p, sourceCardId: a.sourceCardId });
+      if (a.eventRepeat) {
+        a.eventCount = 0;
+      } else {
+        auras.splice(i, 1);
+      }
+    }
+  }
+  return fired;
 }
 
 /** Normalize a `then` value (which may be a single effect or an array) to an array. */
@@ -112,6 +175,26 @@ export function sumModifier(auras: ActiveAura[] | undefined | null, kind: AuraMo
   let total = 0;
   for (const a of auras) {
     if (a.modifier?.kind === kind) total += a.modifier.value;
+  }
+  return total;
+}
+
+/**
+ * Rebalance phase: combat-long multiplier on stack gains of a named stack.
+ * Sums `value` across all auras with `modifier.kind === 'stack_gain_mult'`
+ * and `modifier.stack === stack`. Caller does `effectiveValue *= 1 + sum`.
+ * Vengeful Pyre: aura(stack:rage, value:1) → rage gains are ×2.
+ */
+export function sumStackGainMult(
+  auras: ActiveAura[] | undefined | null,
+  stack: StackId,
+): number {
+  if (!auras) return 0;
+  let total = 0;
+  for (const a of auras) {
+    if (a.modifier?.kind === 'stack_gain_mult' && a.modifier.stack === stack) {
+      total += a.modifier.value;
+    }
   }
   return total;
 }
@@ -253,7 +336,7 @@ export function collectAuraTicks(auras: ActiveAura[] | undefined | null): CardEf
  * (typically on-armor-break for Iron Reckoning) passes state.rageStacks so
  * the damage scales off rage even though rage isn't a stat axis.
  */
-export function applyTriggeredPayload(state: CombatState, effect: CardEffect): { totalDamage: number } {
+export function applyTriggeredPayload(state: CombatState, effect: CardEffect, sourceCardId?: string): { totalDamage: number } {
   const result = { totalDamage: 0 };
 
   // v3: honor condition gates on the then-payload (tick auras, recurring trigs).
@@ -322,6 +405,24 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect): {
     }
     case 'heal': {
       state.heroHP = Math.min(state.heroMaxHP, state.heroHP + value);
+      break;
+    }
+    case 'stat_gain': {
+      // Rebalance phase: per-combat permanent stat boost with per-card cap.
+      // `sourceCardId` ties the cap to the card that armed the aura, so
+      // repeated plays / copies share the cap.
+      const targetStat: StatId = (effect.stat as StatId | undefined) ?? (effect.scale?.stat as StatId | undefined) ?? 'str';
+      const cap = effect.max_per_combat ?? Number.POSITIVE_INFINITY;
+      const cid = sourceCardId ?? '__anon';
+      if (!state.cardStatGainCounters) state.cardStatGainCounters = {} as any;
+      if (!state.statBoostsThisCombat) state.statBoostsThisCombat = {} as any;
+      const cur = state.cardStatGainCounters[cid]?.[targetStat] ?? 0;
+      const granted = Math.max(0, Math.min(Math.floor(value), cap - cur));
+      if (granted > 0) {
+        state.statBoostsThisCombat[targetStat] = (state.statBoostsThisCombat[targetStat] ?? 0) + granted;
+        if (!state.cardStatGainCounters[cid]) state.cardStatGainCounters[cid] = {};
+        state.cardStatGainCounters[cid][targetStat] = cur + granted;
+      }
       break;
     }
     // Other effect types are not currently used by trigger payloads — silent no-op.

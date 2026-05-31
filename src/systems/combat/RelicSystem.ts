@@ -43,16 +43,11 @@ export function applyPassiveRelics(relicIds: string[], state: CombatState): void
 
     switch (relic.effectType) {
       case 'stat_bonus': {
-        // Single stat bonus
-        if (relic.stat && relic.value != null) {
-          applySingleStatBonus(relic.stat, relic.value, state);
-        }
-        // Multi-stat bonus
-        if (relic.stats) {
-          for (const [stat, val] of Object.entries(relic.stats)) {
-            applySingleStatBonus(stat, val, state);
-          }
-        }
+        // Per-run passive stat_bonus relics are now folded into
+        // resolveHeroStats(run) and seeded once into CombatState, so the same
+        // bonus is visible in the LoopHUD out of combat. Applying it here
+        // again would double-count, so we just register the id for tracking.
+        if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
         break;
       }
       case 'stat_multiplier': {
@@ -76,21 +71,17 @@ export function applyPassiveRelics(relicIds: string[], state: CombatState): void
         if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
         break;
       }
-      // C5 — Constellation Sigil: +1 to primary stat of each unique element in the deck.
+      // C5 — Constellation Sigil: stat bonuses now layered in resolveHeroStats.
+      // Still register so the relic counts as active for tracking/UI.
       case 'constellation_sigil': {
-        applyConstellationSigil(state);
+        if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
         break;
       }
-      // C7 — Heavy Tome (HP portion): +N Max HP per card beyond 10 in the deck.
+      // C7 — Heavy Tome: maxHP portion now layered in resolveHeroStats; the
+      // damage multiplier portion still resolves via resolveCardPlayedRelicBonus
+      // which only needs the id registered as active.
       case 'heavy_tome': {
         if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
-        const excess = Math.max(0, state.deckOrder.length - 10);
-        if (excess > 0) {
-          const perCard = relic.stats?.hpPerExcess ?? 4;
-          const bonus = excess * perCard;
-          state.heroMaxHP += bonus;
-          state.heroHP = Math.min(state.heroMaxHP, state.heroHP + bonus);
-        }
         break;
       }
       default: {
@@ -144,31 +135,6 @@ function applySingleStatBonus(stat: string, value: number, state: CombatState): 
 // C5 — Constellation Sigil: parse element multiset from card IDs (format
 // `t{tier}-{el1}-{el2}[-el3][-el4]`). For each unique element across the deck,
 // grant +1 to its primary stat per elements.json mapping.
-const ELEMENT_PRIMARY_STAT: Record<string, string> = {
-  attack: 'strength', counter: 'strength',
-  defense: 'vitality', earth: 'vitality',
-  agility: 'dexterity', air: 'dexterity',
-  fire: 'intellect',
-  water: 'spirit',
-};
-
-function parseElementsFromCardId(id: string): string[] {
-  const parts = id.split('-');
-  if (parts.length < 2) return [];
-  return parts.slice(1);
-}
-
-function applyConstellationSigil(state: CombatState): void {
-  const uniqueElements = new Set<string>();
-  for (const cardId of state.deckOrder) {
-    for (const el of parseElementsFromCardId(cardId)) uniqueElements.add(el);
-  }
-  for (const el of uniqueElements) {
-    const stat = ELEMENT_PRIMARY_STAT[el];
-    if (stat) applySingleStatBonus(stat, 1, state);
-  }
-}
-
 function applyStatMultiplier(stat: string, mult: number, state: CombatState): void {
   switch (stat) {
     case 'maxHP':

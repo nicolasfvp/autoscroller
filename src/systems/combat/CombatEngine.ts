@@ -12,7 +12,7 @@ import { EnemyAI, applyHeroDamage } from './EnemyAI';
 // Card-played relics and class passives still cover combo-style effects.
 import { resolveCardPlayedRelicBonus, dispatchTriggerRelics } from './RelicSystem';
 import { checkConditionalTrigger } from '../hero/PassiveSkillSystem';
-import { tickAuras, getCdReductionFactor, collectAuraTicks, applyTriggeredPayload } from './StatusEffects';
+import { tickAuras, getCdReductionFactor, collectAuraTicks, applyTriggeredPayload, bumpEventCounters } from './StatusEffects';
 import { getRun } from '../../state/RunState';
 import { rand } from '../SharedRNG';
 
@@ -124,8 +124,12 @@ export class CombatEngine {
     // If hero is stunned, the next card is *skipped* (not just delayed).
     // We advance the deck pointer past the current card and re-arm the
     // cooldown so the *following* card plays on its normal cadence.
-    if (this.state.heroStunned) {
+    // Two stun sources: `heroStunned` (enemy-inflicted single skip) and
+    // `heroStunStacks` (scaled self-stun, e.g. Bloodlash Salvo) — each stack
+    // skips one card, so a STR-scaled self-stun costs N cards as advertised.
+    if (this.state.heroStunned || (this.state.heroStunStacks ?? 0) > 0) {
       this.state.heroStunned = false;
+      if ((this.state.heroStunStacks ?? 0) > 0) this.state.heroStunStacks = (this.state.heroStunStacks ?? 0) - 1;
       const skippedCardId = this.state.deckOrder[this.deckPointer];
       eventBus.emit('combat:card-skipped', { cardId: skippedCardId, reason: 'stunned' });
       this.stats.cardsSkipped++;
@@ -202,6 +206,13 @@ export class CombatEngine {
     // Resolve card (with damage multiplier from relics)
     const result = this.cardResolver.resolve(card, this.state, null, relicBonus.damageMultiplier, isUpgraded);
 
+    // Rebalance phase: emit card_played for event_counter auras (Firestorm,
+    // Stonepacer). Fires once per resolution regardless of category/cost.
+    {
+      const payloads = bumpEventCounters(this.state, 'card_played');
+      for (const p of payloads) applyTriggeredPayload(this.state, p.effect, p.sourceCardId);
+    }
+
     if (manaRefund > 0) {
       this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + manaRefund);
     }
@@ -238,6 +249,12 @@ export class CombatEngine {
     globalStats.cardsPlayed++;
     globalStats.damageDealt += result.totalDamage;
 
+    // Post-kill guard: once the main resolve has dropped the enemy (or hero),
+    // the downstream bonus-damage adders / echo replay / deck-blast would just
+    // pummel a corpse and inflate run damage stats. Skip them when the fight is
+    // already decided.
+    const stillLive = this.state.enemyHP > 0 && this.state.heroHP > 0;
+
     // Track consecutive *attack* cards only — utility/heal cards reset the
     // streak so triggers like Battle Rage represent real combat aggression.
     if (result.totalDamage > 0) {
@@ -249,7 +266,7 @@ export class CombatEngine {
     // Check battle_rage passive (consecutive attacks)
     const activePassives = this.state.activePassives as any[];
     const passiveBonus = checkConditionalTrigger('consecutive_attacks_2', { consecutiveAttacks: this.consecutiveAttacks }, activePassives);
-    if (passiveBonus && passiveBonus.type === 'damage_bonus_percent') {
+    if (stillLive && passiveBonus && passiveBonus.type === 'damage_bonus_percent') {
       // Apply bonus as extra damage to enemy
       const bonusDmg = Math.floor(result.totalDamage * (passiveBonus.value / 100));
       this.state.enemyHP -= bonusDmg;
@@ -260,7 +277,7 @@ export class CombatEngine {
     // (design/00 §3). Applied AFTER the resolver returns so it survives the
     // defense subtraction floor (Pitfall: applying INT pre-defense would let
     // high-defense enemies eat the entire INT bonus).
-    if (card.category === 'magic' && result.totalDamage > 0 && this.state.heroIntellect > 0) {
+    if (stillLive && card.category === 'magic' && result.totalDamage > 0 && this.state.heroIntellect > 0) {
       const intBonus = this.state.heroIntellect;
       this.state.enemyHP -= intBonus;
       this.stats.damageDealt += intBonus;
@@ -270,7 +287,7 @@ export class CombatEngine {
 
     // C1 relics — first-attack flat damage bonus (Whetstone Shard, Iron Tooth).
     // Fires only when the card actually dealt damage; consumed once per combat.
-    if (this.state.firstAttackDamageBonus > 0 && result.totalDamage > 0) {
+    if (stillLive && this.state.firstAttackDamageBonus > 0 && result.totalDamage > 0) {
       const bonus = this.state.firstAttackDamageBonus;
       this.state.enemyHP -= bonus;
       this.stats.damageDealt += bonus;
@@ -329,7 +346,7 @@ export class CombatEngine {
     // v3: Echo — consume one charge by repeating the same resolution. The
     // `echoExpiresAt` field is treated as a countdown that decays in tick();
     // a positive remaining window means at least one charge is still live.
-    if (this.state.echoCharges > 0 && this.state.echoExpiresAt > 0) {
+    if (stillLive && this.state.echoCharges > 0 && this.state.echoExpiresAt > 0) {
       this.state.echoCharges = Math.max(0, this.state.echoCharges - 1);
       const isUpgradedEcho = this.state.upgraded[slot] ?? false;
       // C7 — Echo Chamber / Tempest Resonator: if this echo was relic-granted,
@@ -342,11 +359,6 @@ export class CombatEngine {
       if (isFreeEcho || this.cardResolver.canAfford(card, this.state, isUpgradedEcho)) {
         this.cardResolver.resolve(card, this.state, null, relicBonus.damageMultiplier, isUpgradedEcho);
       }
-    }
-
-    // v3: force_trigger_all_cards — Tectonic Reckoning blasts the deck.
-    if (result.forceTriggerAll) {
-      this.forceTriggerAllDeck(card.id);
     }
 
     // Emit event
@@ -483,11 +495,11 @@ export class CombatEngine {
     // can absorb the tick — consistent with the "all damage respects armor"
     // rule. Each stack decays by 1 after the tick.
     if (state.heroBurnStacks > 0) {
-      applyHeroDamage(state.heroBurnStacks, state, /*skipRelics=*/true);
+      applyHeroDamage(state.heroBurnStacks, state, /*skipRelics=*/true, /*pierceArmor=*/false, /*selfInflicted=*/true);
       state.heroBurnStacks = Math.max(0, state.heroBurnStacks - 1);
     }
     if (state.heroBleedStacks > 0) {
-      applyHeroDamage(state.heroBleedStacks, state, /*skipRelics=*/true);
+      applyHeroDamage(state.heroBleedStacks, state, /*skipRelics=*/true, /*pierceArmor=*/false, /*selfInflicted=*/true);
       state.heroBleedStacks = Math.max(0, state.heroBleedStacks - 1);
     }
   }
@@ -574,6 +586,9 @@ export class CombatEngine {
     if (this.isFinished) return true;
 
     if (this.state.enemyHP <= 0) {
+      // Clamp overkill so HP-threshold relics / displays never read a negative
+      // enemy HP% within the lethal tick.
+      this.state.enemyHP = 0;
       // v3: on_kill_with_stack — fire any aura whose threshold_stack the
       // dying enemy was still carrying. Cascade triggers must run BEFORE the
       // victory event so spread/copy effects can populate any adjacent
@@ -624,26 +639,6 @@ export class CombatEngine {
       for (const e of arr) fired.push(e);
     }
     for (const e of fired) applyTriggeredPayload(this.state, e);
-  }
-
-  /** v3: Tectonic Reckoning — force-resolve every non-self, non-devoured,
-   *  non-Exhausted deck slot once. Cooldowns are reset to 0 to give the next
-   *  card slot a fresh tick. Costs are bypassed (the closer pays for the
-   *  combo). Hard guard: only fires once per call to avoid loop recursion. */
-  private forceTriggerAllDeck(originatingCardId: string): void {
-    const seen = new Set<string>();
-    for (let i = 0; i < this.state.deckOrder.length; i++) {
-      if (this.state.devouredSlots.has(i)) continue;
-      const cid = this.state.deckOrder[i];
-      if (!cid || cid === originatingCardId || seen.has(cid)) continue;
-      seen.add(cid);
-      const c = getCardById(cid);
-      if (!c) continue;
-      if (c.exhaust && this.state.spentThisCombat.has(cid)) continue;
-      const isUp = this.state.upgraded[i] ?? false;
-      this.cardResolver.resolve(c, this.state, null, 1.0, isUp);
-    }
-    this.heroCooldownTimer = 0;
   }
 
   getStats(): CombatStats {

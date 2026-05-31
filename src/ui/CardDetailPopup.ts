@@ -75,7 +75,6 @@ export function showCardDetail(
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-    cooldown_scale: card.cooldown_scale,
   });
   tip = attachKeywordTooltip(scene, popup, desc, {
     x: cx, y: cy, w: 400, h: 640,

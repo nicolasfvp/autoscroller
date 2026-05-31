@@ -33,10 +33,15 @@ const TOPICS: TutorialTopic[] = [
       'Your hero plays cards on cooldown — you do not click to attack.\n' +
       'Cards in the hand fire one at a time from top to bottom.\n' +
       'Light cards (low cooldown) cycle fast; heavy cards hit harder but recharge slow.\n\n' +
-      'KEYWORDS appear inside card descriptions (Burn, Slow, Vengeance, …).\n' +
-      'When you play a card that introduces a NEW keyword, the game pauses\n' +
-      'and explains what it does. Use the "?" button at any time to revisit\n' +
-      'the keywords you have learned.',
+      'KEYWORDS (Brace, Vengeance, Haste, Exhaust) change HOW a card resolves.\n' +
+      'The first time you play a card with a new keyword, the game pauses and\n' +
+      'explains it.\n\n' +
+      'STACKS are the colored tokens an attack piles on a target — Burn, Bleed\n' +
+      'and Poison deal damage every tick; Stun and Slow hold the enemy back;\n' +
+      'Rage powers your own payoffs. STAT-SCALING means a card grows with your\n' +
+      'attributes (STR/DEX/INT/VIT/SPI) — e.g. more STR = more damage.\n' +
+      'These tokens are NOT pop-up taught: open the "?" Glossary any time for\n' +
+      'a full reference of every stack and stat.',
   },
   {
     id: 'deck',
@@ -130,7 +135,7 @@ export class TutorialScene extends Scene {
       fontFamily: FONTS.family,
     }).setOrigin(0.5);
 
-    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. Combat teaching is also contextual: the game pauses on each new keyword you encounter.', {
+    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. The game also pauses to teach each new keyword (Brace, Vengeance, Haste, Exhaust); stacks & stats live in the "?" Glossary.', {
       fontSize: '12px',
       color: COLORS.textSecondary,
       fontFamily: FONTS.family,

@@ -82,6 +82,41 @@ export function getStorehouseEffects(storehouseLevel: number): { gatheringBoost:
   return { gatheringBoost, deathRetention };
 }
 
+// ── Tavern effects ───────────────────────────────────────────
+// Walks the tavern tiers up to `tavernLevel`, taking the highest applicable
+// value for each effect (absolute per tier, not cumulative). Drives the
+// run-start gold bonus and the seed-input / run-history UI gates.
+export function getTavernEffects(tavernLevel: number): {
+  startingGoldBonus: number;
+  runHistoryVisible: boolean;
+  seedInputEnabled: boolean;
+} {
+  const building = (buildingsData as any).tavern;
+  let startingGoldBonus = 0;
+  let runHistoryVisible = false;
+  let seedInputEnabled = false;
+  if (building && Array.isArray(building.tiers)) {
+    for (const tier of building.tiers) {
+      if (tier.level <= tavernLevel && tier.effect) {
+        if (tier.effect.startingGoldBonus !== undefined) startingGoldBonus = tier.effect.startingGoldBonus;
+        if (tier.effect.runHistoryVisible !== undefined) runHistoryVisible = tier.effect.runHistoryVisible;
+        if (tier.effect.seedInputEnabled !== undefined) seedInputEnabled = tier.effect.seedInputEnabled;
+      }
+    }
+  }
+  return { startingGoldBonus, runHistoryVisible, seedInputEnabled };
+}
+
+// Forge crafting-tier gating + gold discount live in ForgeSystem (driven by
+// ElementSystem.FORGE_TIER_UNLOCK / FORGE_DISCOUNT_BY_LEVEL).
+
+// ── Library effects ──────────────────────────────────────────
+// Library level multiplies class-XP gain, accelerating passive unlocks across
+// runs (passives themselves are XP-threshold gated; see PassiveSkillSystem).
+export function getLibraryXPMultiplier(libraryLevel: number): number {
+  return 1 + 0.15 * libraryLevel; // +15% class XP per level (max +45% at L3)
+}
+
 // ── Run reward banking ───────────────────────────────────────
 
 export function bankRunRewards(
@@ -116,9 +151,11 @@ export function bankRunRewards(
     bankedMaterials[mat] = banked;
   }
 
-  // Tile-adjacency xpBonus uplift removed in Wave 2; banking now applies
-  // only the safe/death exit multiplier.
-  const xpGained = Math.floor(xpEarned * xpMultiplier);
+  // Tile-adjacency xpBonus uplift removed in Wave 2; banking now applies the
+  // safe/death exit multiplier AND the Library XP multiplier (Library level
+  // accelerates passive unlocks across runs).
+  const libraryMult = getLibraryXPMultiplier(state.buildings.library?.level ?? 0);
+  const xpGained = Math.floor(xpEarned * xpMultiplier * libraryMult);
   // B.3: route XP to the correct class bucket. Guard against unknown classes
   // — fall back to warrior with a warning rather than silently dropping XP.
   let resolvedClass = className;

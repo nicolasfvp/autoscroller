@@ -10,7 +10,7 @@
 
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
-import { KEYWORD_DEFINITIONS, type KeywordDef } from './KeywordDefinitions';
+import { KEYWORD_DEFINITIONS, TOKEN_GLOSSARY, type KeywordDef } from './KeywordDefinitions';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 
 const OVERLAY_DEPTH = 11000;
@@ -29,9 +29,9 @@ const CONTENT_W = PANEL_W - PANEL_PADDING * 2;
 const CONTENT_H = PANEL_H - HEADER_H - PANEL_PADDING - 8;
 
 const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
-  stack: 'Stack',
-  modifier: 'Modifier',
-  stat: 'Stat',
+  stack: 'Stacks',
+  modifier: 'Keywords',
+  stat: 'Stats',
 };
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
@@ -40,7 +40,9 @@ const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
   stat: '#66ccff',
 };
 
-const CATEGORY_ORDER: KeywordDef['category'][] = ['stack', 'modifier', 'stat'];
+// Stacks and stats (the new combat vocabulary) are surfaced first since they
+// are the everyday tokens; the four detected modifier keywords come last.
+const CATEGORY_ORDER: KeywordDef['category'][] = ['stack', 'stat', 'modifier'];
 
 const KEYWORD_FONT = 14;
 const DEFINITION_FONT = 12;
@@ -82,7 +84,7 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
     .setStrokeStyle(2, 0x9a6030);
   overlay.add(panelBg);
 
-  const title = scene.add.text(PANEL_X + PANEL_PADDING, PANEL_Y + 12, 'Keywords', {
+  const title = scene.add.text(PANEL_X + PANEL_PADDING, PANEL_Y + 12, 'Glossary', {
     fontSize: '20px',
     fontStyle: 'bold',
     color: COLORS.accent,
@@ -135,37 +137,21 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
   contentContainer.setMask(mask);
   overlay.add(contentContainer);
 
-  // Filter the master list to keywords the player has encountered so the
-  // panel surfaces only learned terms (beginner-mode "curiosidade saudável"
-  // — new players see a short list that grows as they play). The intro
-  // service is hydrated lazily; the helper just returns an empty set when
-  // init() hasn't completed yet, so the worst case is a one-time empty
-  // panel that fills out on the next open.
+  // Stacks and stats (TOKEN_GLOSSARY) are an always-visible reference for the
+  // new combat vocabulary — players need them on demand from any browsing
+  // screen. The four detected MODIFIER keywords keep the original "learned
+  // terms only" behavior (beginner-mode "curiosidade saudável" — the modifier
+  // list grows as the player encounters each one in combat). The intro
+  // service is hydrated lazily; getSeenKeywords() returns an empty set until
+  // init() completes, so at worst the modifier section is briefly empty.
   const seenSet = keywordIntro.getSeenKeywords();
-  const visibleDefs = KEYWORD_DEFINITIONS.filter((def) => seenSet.has(def.keyword));
-
-  if (visibleDefs.length === 0) {
-    const emptyMsg = scene.add.text(
-      LAYOUT.canvasWidth / 2,
-      PANEL_Y + PANEL_H / 2,
-      'No keywords learned yet.\n\nPlay a card with a new keyword in combat — the game will\npause and teach it to you the first time.',
-      {
-        fontSize: '13px',
-        color: COLORS.textSecondary,
-        fontFamily: FONTS.family,
-        align: 'center',
-        lineSpacing: 4,
-      },
-    ).setOrigin(0.5);
-    overlay.add(emptyMsg);
-  }
+  const visibleModifiers = KEYWORD_DEFINITIONS.filter((def) => seenSet.has(def.keyword));
 
   const grouped: Record<KeywordDef['category'], KeywordDef[]> = {
-    stack: [],
-    modifier: [],
-    stat: [],
+    stack: TOKEN_GLOSSARY.filter((d) => d.category === 'stack'),
+    modifier: visibleModifiers,
+    stat: TOKEN_GLOSSARY.filter((d) => d.category === 'stat'),
   };
-  for (const def of visibleDefs) grouped[def.category].push(def);
 
   let cursorY = CONTENT_Y;
   for (const category of CATEGORY_ORDER) {

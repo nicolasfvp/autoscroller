@@ -15,6 +15,7 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
 import { BookLayout, type BookRenderContext, type BookPageBounds, type BookTab } from '../ui/BookLayout';
+import { addGlossaryButton } from '../ui/GlossaryButton';
 
 const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Bosses'] as const;
 type TabName = typeof TAB_NAMES[number];
@@ -71,6 +72,10 @@ export class CollectionScene extends Phaser.Scene {
 
     this.setTabContent('Cards');
     this.installInputBindings();
+
+    // "?" glossary button so players can look up stack/stat tokens while
+    // browsing the compendium. Top-right, above the book chrome.
+    addGlossaryButton(this, LAYOUT.canvasWidth - 30, 30, 6000);
 
     this.events.once('shutdown', () => this.teardown());
   }

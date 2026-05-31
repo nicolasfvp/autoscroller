@@ -29,7 +29,7 @@
     "id": "corpse_eater",
     "name": "Corpse Eater",
     "type": "normal",
-    "baseHP": 167,
+    "baseHP": 100,
     "baseDefense": 2,
     "attack": {
       "damage": 8,
@@ -55,7 +55,7 @@
     "id": "pocket_cat",
     "name": "Pocket Cat",
     "type": "normal",
-    "baseHP": 245,
+    "baseHP": 147,
     "baseDefense": 1,
     "attack": {
       "damage": 6,
@@ -81,7 +81,7 @@
     "id": "baby_dragon",
     "name": "Baby Dragon",
     "type": "normal",
-    "baseHP": 209,
+    "baseHP": 125,
     "baseDefense": 1,
     "attack": {
       "damage": 6,
@@ -107,7 +107,7 @@
     "id": "mutated_salamander",
     "name": "Mutated Salamander",
     "type": "normal",
-    "baseHP": 266,
+    "baseHP": 160,
     "baseDefense": 0,
     "attack": {
       "damage": 8,
@@ -133,7 +133,7 @@
     "id": "ancient_tree",
     "name": "Ancient Tree",
     "type": "normal",
-    "baseHP": 168,
+    "baseHP": 101,
     "baseDefense": 1,
     "attack": {
       "damage": 6,
@@ -159,7 +159,7 @@
     "id": "giant_spider_2",
     "name": "Giant Spider 2",
     "type": "normal",
-    "baseHP": 180,
+    "baseHP": 108,
     "baseDefense": 2,
     "attack": {
       "damage": 3,
@@ -185,7 +185,7 @@
     "id": "giant_spider",
     "name": "Giant Spider",
     "type": "normal",
-    "baseHP": 240,
+    "baseHP": 144,
     "baseDefense": 0,
     "attack": {
       "damage": 3,
@@ -211,7 +211,7 @@
     "id": "mush",
     "name": "Mush",
     "type": "normal",
-    "baseHP": 204,
+    "baseHP": 122,
     "baseDefense": 0,
     "attack": {
       "damage": 3,
@@ -237,7 +237,7 @@
     "id": "forge_slime",
     "name": "Forge Slime",
     "type": "normal",
-    "baseHP": 218,
+    "baseHP": 131,
     "baseDefense": 2,
     "attack": {
       "damage": 3,
@@ -263,7 +263,7 @@
     "id": "lava_golen",
     "name": "Lava Golem",
     "type": "normal",
-    "baseHP": 248,
+    "baseHP": 149,
     "baseDefense": 2,
     "attack": {
       "damage": 6,
@@ -289,7 +289,7 @@
     "id": "depths_horror",
     "name": "Depths Horror",
     "type": "normal",
-    "baseHP": 158,
+    "baseHP": 95,
     "baseDefense": 0,
     "attack": {
       "damage": 5,
@@ -315,7 +315,7 @@
     "id": "toxic_gooze",
     "name": "Toxic Gooze",
     "type": "normal",
-    "baseHP": 167,
+    "baseHP": 100,
     "baseDefense": 1,
     "attack": {
       "damage": 5,
@@ -341,7 +341,7 @@
     "id": "venomous_kobra",
     "name": "Venomous Kobra",
     "type": "normal",
-    "baseHP": 233,
+    "baseHP": 140,
     "baseDefense": 1,
     "attack": {
       "damage": 6,
@@ -474,7 +474,7 @@
     "id": "skeleton",
     "name": "Skeleton",
     "type": "normal",
-    "baseHP": 195,
+    "baseHP": 117,
     "baseDefense": 2,
     "attack": {
       "damage": 6,
@@ -500,7 +500,7 @@
     "id": "vampire",
     "name": "Vampire",
     "type": "normal",
-    "baseHP": 160,
+    "baseHP": 96,
     "baseDefense": 1,
     "attack": {
       "damage": 7,
@@ -526,7 +526,7 @@
     "id": "werewolf",
     "name": "Werewolf",
     "type": "normal",
-    "baseHP": 225,
+    "baseHP": 135,
     "baseDefense": 1,
     "attack": {
       "damage": 7,
@@ -552,7 +552,7 @@
     "id": "scorpion",
     "name": "Sand Scorpion",
     "type": "normal",
-    "baseHP": 185,
+    "baseHP": 111,
     "baseDefense": 1,
     "attack": {
       "damage": 5,
@@ -578,7 +578,7 @@
     "id": "fire_elemental",
     "name": "Fire Elemental",
     "type": "normal",
-    "baseHP": 170,
+    "baseHP": 102,
     "baseDefense": 0,
     "attack": {
       "damage": 8,

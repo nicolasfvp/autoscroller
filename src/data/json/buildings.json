@@ -1,69 +1,104 @@
 {
   "forge": {
     "name": "Forge",
-    "description": "Unlock new cards into the loot pool",
+    "description": "Reduce the gold cost of crafting cards at the Forge",
     "maxLevel": 6,
     "tiers": [
       {
         "level": 1,
-        "cost": { "iron": 8, "crystal": 3 },
-        "unlocks": { "cards": ["counter-strike", "shield-wall", "heal", "parry"] },
-        "description": "Unlock Counter Strike, Shield Wall, Heal, and Parry"
+        "cost": {
+          "iron": 8,
+          "crystal": 3
+        },
+        "unlocks": {},
+        "description": "−5% forge gold cost"
       },
       {
         "level": 2,
-        "cost": { "iron": 20, "crystal": 10 },
-        "unlocks": { "cards": ["fury", "iron-skin", "reckless-charge", "vampiric-touch", "haste"] },
-        "description": "Unlock Fury, Iron Skin, Reckless Charge, Vampiric Touch, and Haste"
+        "cost": {
+          "iron": 20,
+          "crystal": 10
+        },
+        "unlocks": {},
+        "description": "−10% forge gold cost"
       },
       {
         "level": 3,
-        "cost": { "iron": 45, "crystal": 25, "essence": 5 },
-        "unlocks": { "cards": ["fortify", "arcane-shield", "execute", "bulwark", "energy-surge"] },
-        "description": "Unlock Fortify, Arcane Shield, Execute, Bulwark, and Energy Surge"
+        "cost": {
+          "iron": 45,
+          "crystal": 25,
+          "essence": 5
+        },
+        "unlocks": {},
+        "description": "−15% forge gold cost"
       },
       {
         "level": 4,
-        "cost": { "iron": 80, "crystal": 50, "essence": 15 },
-        "unlocks": { "cards": ["berserker", "rejuvenate", "mana-drain", "weaken", "chain-lightning", "poison-cloud"] },
-        "description": "Unlock Berserker, Rejuvenate, Mana Drain, Weaken, Chain Lightning, and Poison Cloud"
+        "cost": {
+          "iron": 80,
+          "crystal": 50,
+          "essence": 15
+        },
+        "unlocks": {},
+        "description": "−20% forge gold cost"
       },
       {
         "level": 5,
-        "cost": { "iron": 120, "crystal": 80, "essence": 30 },
-        "unlocks": { "cards": ["doom-blade", "last-stand", "soul-rend"] },
-        "description": "Unlock Doom Blade, Last Stand, and Soul Rend"
+        "cost": {
+          "iron": 120,
+          "crystal": 80,
+          "essence": 30
+        },
+        "unlocks": {},
+        "description": "−25% forge gold cost"
       },
       {
         "level": 6,
-        "cost": { "iron": 180, "crystal": 120, "essence": 50, "bone": 30 },
-        "unlocks": { "cards": ["sacrifice"] },
-        "description": "Unlock Sacrifice"
+        "cost": {
+          "iron": 180,
+          "crystal": 120,
+          "essence": 50,
+          "bone": 30
+        },
+        "unlocks": {},
+        "description": "−30% forge gold cost"
       }
     ]
   },
   "library": {
     "name": "Library",
-    "description": "Learn passive skills to strengthen the Warrior",
+    "description": "Accelerate class XP to unlock passive skills faster",
     "maxLevel": 3,
     "tiers": [
       {
         "level": 1,
-        "cost": { "wood": 10, "bone": 5 },
-        "unlocks": { "passives": ["passive_attack_up"] },
-        "description": "Unlock Battle Hardened passive"
+        "cost": {
+          "wood": 10,
+          "bone": 5
+        },
+        "unlocks": {},
+        "description": "+15% class XP earned"
       },
       {
         "level": 2,
-        "cost": { "wood": 25, "bone": 15, "herbs": 5 },
-        "unlocks": { "passives": ["passive_defense_up", "passive_regen"] },
-        "description": "Unlock Iron Constitution and Second Wind passives"
+        "cost": {
+          "wood": 25,
+          "bone": 15,
+          "herbs": 5
+        },
+        "unlocks": {},
+        "description": "+30% class XP earned"
       },
       {
         "level": 3,
-        "cost": { "wood": 50, "bone": 30, "herbs": 15, "essence": 5 },
-        "unlocks": { "passives": ["passive_combo_master", "passive_endurance"] },
-        "description": "Unlock Combo Master and Endurance passives"
+        "cost": {
+          "wood": 50,
+          "bone": 30,
+          "herbs": 15,
+          "essence": 5
+        },
+        "unlocks": {},
+        "description": "+45% class XP earned"
       }
     ]
   },
@@ -74,20 +109,40 @@
     "tiers": [
       {
         "level": 1,
-        "cost": { "wood": 8, "stone": 5 },
-        "effect": { "startingGoldBonus": 20 },
+        "cost": {
+          "wood": 8,
+          "stone": 5
+        },
+        "effect": {
+          "startingGoldBonus": 20
+        },
         "description": "Start runs with +20 Gold"
       },
       {
         "level": 2,
-        "cost": { "wood": 20, "stone": 15, "iron": 5 },
-        "effect": { "startingGoldBonus": 50, "runHistoryVisible": true },
+        "cost": {
+          "wood": 20,
+          "stone": 15,
+          "iron": 5
+        },
+        "effect": {
+          "startingGoldBonus": 50,
+          "runHistoryVisible": true
+        },
         "description": "Start with +50 Gold, view run history"
       },
       {
         "level": 3,
-        "cost": { "wood": 45, "stone": 30, "iron": 15, "crystal": 5 },
-        "effect": { "startingGoldBonus": 100, "seedInputEnabled": true },
+        "cost": {
+          "wood": 45,
+          "stone": 30,
+          "iron": 15,
+          "crystal": 5
+        },
+        "effect": {
+          "startingGoldBonus": 100,
+          "seedInputEnabled": true
+        },
         "description": "Start with +100 Gold, enter custom seeds"
       }
     ]
@@ -99,21 +154,46 @@
     "tiers": [
       {
         "level": 1,
-        "cost": { "stone": 10, "iron": 5 },
-        "unlocks": { "tiles": ["graveyard"] },
+        "cost": {
+          "stone": 10,
+          "iron": 5
+        },
+        "unlocks": {
+          "tiles": [
+            "graveyard"
+          ]
+        },
         "description": "Unlock Graveyard tiles"
       },
       {
         "level": 2,
-        "cost": { "stone": 25, "iron": 15, "crystal": 5 },
-        "unlocks": { "tiles": ["swamp"] },
+        "cost": {
+          "stone": 25,
+          "iron": 15,
+          "crystal": 5
+        },
+        "unlocks": {
+          "tiles": [
+            "swamp"
+          ]
+        },
         "description": "Unlock Swamp tiles"
       },
       {
         "level": 3,
-        "cost": { "stone": 50, "iron": 30, "crystal": 15, "essence": 5 },
-        "unlocks": { "tiles": [] },
-        "description": "Reserved for future tile type"
+        "cost": {
+          "stone": 50,
+          "iron": 30,
+          "crystal": 15,
+          "essence": 5
+        },
+        "unlocks": {
+          "tiles": [
+            "desert",
+            "lava"
+          ]
+        },
+        "description": "Unlock Desert and Lava Fields tiles"
       }
     ]
   },
@@ -124,27 +204,78 @@
     "tiers": [
       {
         "level": 1,
-        "cost": { "crystal": 8, "essence": 3 },
-        "unlocks": { "relics": ["warrior_spirit", "iron_will"] },
-        "description": "Unlock Warrior Spirit and Iron Will relics"
+        "cost": {
+          "crystal": 8,
+          "essence": 3
+        },
+        "unlocks": {
+          "relics": [
+            "iron_will",
+            "first_strike_amulet",
+            "thin_deck_charm",
+            "swift_boots",
+            "heavy_tome"
+          ]
+        },
+        "description": "Unlock Iron Will, First Strike Amulet, Thin Deck Charm, Swift Boots, Heavy Tome"
       },
       {
         "level": 2,
-        "cost": { "crystal": 20, "essence": 10 },
-        "unlocks": { "relics": ["berserker_ring", "swift_boots", "thin_deck_charm"] },
-        "description": "Unlock Berserker Ring, Swift Boots, and Thin Deck Charm relics"
+        "cost": {
+          "crystal": 20,
+          "essence": 10
+        },
+        "unlocks": {
+          "relics": [
+            "berserker_ring",
+            "glass_cannon",
+            "catalyst_core",
+            "crimson_stiletto",
+            "stormcallers_rod",
+            "echo_chamber"
+          ]
+        },
+        "description": "Unlock Berserker Ring, Glass Cannon, Catalyst Core, and more"
       },
       {
         "level": 3,
-        "cost": { "crystal": 45, "essence": 25 },
-        "unlocks": { "relics": ["demon_heart", "phoenix_feather", "spell_focus", "first_strike_amulet"] },
-        "description": "Unlock Demon Heart, Phoenix Feather, Spell Focus, and First Strike Amulet relics"
+        "cost": {
+          "crystal": 45,
+          "essence": 25
+        },
+        "unlocks": {
+          "relics": [
+            "phoenix_feather",
+            "demon_heart",
+            "sanguine_pact",
+            "bloodgorged_heart",
+            "soulforge_chalice",
+            "hemlock_vial",
+            "stoneheart_sigil"
+          ]
+        },
+        "description": "Unlock Phoenix Feather, Demon Heart, Sanguine Pact, and more"
       },
       {
         "level": 4,
-        "cost": { "crystal": 80, "essence": 50, "iron": 20 },
-        "unlocks": { "relics": ["blood_pact"] },
-        "description": "Unlock Blood Pact relic"
+        "cost": {
+          "crystal": 80,
+          "essence": 50,
+          "iron": 20
+        },
+        "unlocks": {
+          "relics": [
+            "wargods_mantle",
+            "the_last_banner",
+            "archon_codex",
+            "constellation_sigil",
+            "pandoras_embers",
+            "cinderkeep",
+            "tempest_resonator",
+            "tideheart_amulet"
+          ]
+        },
+        "description": "Unlock the legendary relics: War God’s Mantle, Archon Codex, and more"
       }
     ]
   },
@@ -155,50 +286,105 @@
     "tiers": [
       {
         "level": 1,
-        "cost": { "wood": 10, "stone": 10 },
-        "effect": { "gatheringBoost": 0.10 },
+        "cost": {
+          "wood": 10,
+          "stone": 10
+        },
+        "effect": {
+          "gatheringBoost": 0.1
+        },
         "description": "+10% material gathering"
       },
       {
         "level": 2,
-        "cost": { "wood": 15, "stone": 15, "iron": 5 },
-        "effect": { "deathRetention": 0.30 },
+        "cost": {
+          "wood": 15,
+          "stone": 15,
+          "iron": 5
+        },
+        "effect": {
+          "deathRetention": 0.3
+        },
         "description": "Retain 30% materials on death"
       },
       {
         "level": 3,
-        "cost": { "wood": 20, "stone": 20, "iron": 10 },
-        "effect": { "gatheringBoost": 0.15 },
+        "cost": {
+          "wood": 20,
+          "stone": 20,
+          "iron": 10
+        },
+        "effect": {
+          "gatheringBoost": 0.15
+        },
         "description": "+15% material gathering"
       },
       {
         "level": 4,
-        "cost": { "wood": 30, "stone": 25, "iron": 15 },
-        "effect": { "deathRetention": 0.35 },
+        "cost": {
+          "wood": 30,
+          "stone": 25,
+          "iron": 15
+        },
+        "effect": {
+          "deathRetention": 0.35
+        },
         "description": "Retain 35% materials on death"
       },
       {
         "level": 5,
-        "cost": { "wood": 40, "stone": 35, "iron": 25, "crystal": 5 },
-        "effect": { "gatheringBoost": 0.20, "deathRetention": 0.40 },
+        "cost": {
+          "wood": 40,
+          "stone": 35,
+          "iron": 25,
+          "crystal": 5
+        },
+        "effect": {
+          "gatheringBoost": 0.2,
+          "deathRetention": 0.4
+        },
         "description": "+20% gathering, retain 40% on death"
       },
       {
         "level": 6,
-        "cost": { "wood": 50, "stone": 45, "iron": 35, "crystal": 10 },
-        "effect": { "deathRetention": 0.43 },
+        "cost": {
+          "wood": 50,
+          "stone": 45,
+          "iron": 35,
+          "crystal": 10
+        },
+        "effect": {
+          "deathRetention": 0.43
+        },
         "description": "Retain 43% materials on death"
       },
       {
         "level": 7,
-        "cost": { "wood": 65, "stone": 55, "iron": 45, "crystal": 20, "essence": 5 },
-        "effect": { "gatheringBoost": 0.25, "deathRetention": 0.47 },
+        "cost": {
+          "wood": 65,
+          "stone": 55,
+          "iron": 45,
+          "crystal": 20,
+          "essence": 5
+        },
+        "effect": {
+          "gatheringBoost": 0.25,
+          "deathRetention": 0.47
+        },
         "description": "+25% gathering, retain 47% on death"
       },
       {
         "level": 8,
-        "cost": { "wood": 80, "stone": 70, "iron": 60, "crystal": 30, "essence": 10 },
-        "effect": { "deathRetention": 0.50 },
+        "cost": {
+          "wood": 80,
+          "stone": 70,
+          "iron": 60,
+          "crystal": 30,
+          "essence": 10
+        },
+        "effect": {
+          "deathRetention": 0.5
+        },
         "description": "Retain 50% materials on death"
       }
     ]
