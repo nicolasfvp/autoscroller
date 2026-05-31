@@ -36,6 +36,19 @@ function statTok(s?: StatId | string): string {
   return STAT_TOKEN[s] ?? `[${s}]`;
 }
 
+// ── Dynamic scaled-value markup ───────────────────────────────────────────
+// When `dynamicBuild` is active, scaler clauses are emitted as an invisible
+// sentinel carrying the scale parameters instead of the literal "([str])".
+// formatCardDescription then rewrites each "<number><sentinel>" into either the
+// RESOLVED value (a [[v:N:stat]] token rendered bigger + colored) or the
+// "(base + inc per [stat])" equation (while SHIFT is held). See applyDynamic().
+let dynamicBuild = false;
+const SENT_OPEN = String.fromCharCode(1);
+const SENT_CLOSE = String.fromCharCode(2);
+function sentinel(base: number, inc: number, per: number, stat: string): string {
+  return `${SENT_OPEN}${base}:${inc}:${per}:${stat}${SENT_CLOSE}`;
+}
+
 // Returns "([str])" or "" for a CardEffect's scale clause. The scaler glues
 // directly to the number it scales — the caller decides where to place it.
 function scalerSuffix(fx: CardEffect): string {
@@ -48,6 +61,24 @@ function scalerSuffix(fx: CardEffect): string {
     return '';
   }
   if (!fx.scale.stat) return '';
+  if (dynamicBuild) {
+    if (fx.scale.per <= 0 || fx.scale.value === 0) return '';
+    return sentinel(fx.value, fx.scale.value, fx.scale.per, fx.scale.stat);
+  }
+  return `(${statTok(fx.scale.stat)})`;
+}
+
+// Like scalerSuffix but for inline per-stack / per-consumed clauses where the
+// scaled number is a promoted lead value rather than fx.value. Mirrors the
+// original `fx.scale?.stat ? "([stat])" : ""` exactly when not in dynamic mode
+// (so canonical output is unchanged), and emits a sentinel keyed to `base`
+// when dynamic.
+function statScaleInline(fx: CardEffect, base: number): string {
+  if (!fx.scale?.stat) return '';
+  if (dynamicBuild) {
+    if (fx.scale.per <= 0 || fx.scale.value === 0) return '';
+    return sentinel(base, fx.scale.value, fx.scale.per, fx.scale.stat);
+  }
   return `(${statTok(fx.scale.stat)})`;
 }
 
@@ -195,7 +226,11 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     // value=0 with scale.value=N means the scale.value is the per-stack
     // damage; promote it into the leading number.
     const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
-    const statS = fx.scale?.stat ? `(${statTok(fx.scale.stat)})` : '';
+    // Sentinel base must be the TRUE base (fx.value) so resolved == CardResolver's
+    // value + floor(stat/per)*scale.value. For value:0 detonators the printed
+    // `lead` is the promoted scale.value, but the resolver's base is 0 — using
+    // `lead` here would double-count the increment.
+    const statS = statScaleInline(fx, fx.value);
     if (pierce) {
       return `Deal ${lead}${statS} Pierce per ${stackTok(stk)} ${side}${aoe}`;
     }
@@ -209,7 +244,11 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     const stk = fx.consume_stack_value;
     const target = fx.target === 'aoe' ? ' to all enemies' : '';
     const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
-    const statS = fx.scale?.stat ? `(${statTok(fx.scale.stat)})` : '';
+    // Sentinel base must be the TRUE base (fx.value) so resolved == CardResolver's
+    // value + floor(stat/per)*scale.value. For value:0 detonators the printed
+    // `lead` is the promoted scale.value, but the resolver's base is 0 — using
+    // `lead` here would double-count the increment.
+    const statS = statScaleInline(fx, fx.value);
     if (pierce) {
       return `Deal ${lead}${statS} Pierce per ${stackTok(stk)} consumed${target}`;
     }
@@ -376,26 +415,25 @@ function convertBody(fx: CardEffect): string {
   const amount = (fx.value ?? 0) >= 99 ? 'all' : String(fx.value);
   const factor = fx.factor && fx.factor !== 1 ? fx.factor : 1;
   const cap = fx.cap !== undefined ? ` (max ${fx.cap})` : '';
-  const scaler = scalerSuffix(fx);
+  // The convert scaler scales the per-consumed FACTOR, so the sentinel must be
+  // keyed to the displayed lead number — NOT fx.value (which is the "spend N"
+  // amount; 99 == spend-all). Use statScaleInline with that lead.
 
   // Spend-all variant: "Apply N[to] per [from] consumed" (factor scales).
   if (amount === 'all') {
     if (isArmor) {
-      return `Gain 1${scaler}[armor] per ${from} consumed${cap}`;
+      return `Gain 1${statScaleInline(fx, 1)}[armor] per ${from} consumed${cap}`;
     }
-    const perOutput = factor === 1
-      ? `Apply 1${scaler}${to}`
-      : `Apply ${factor}${scaler}${to}`;
-    return `${perOutput} per ${from} consumed${cap}`;
+    return `Apply ${factor}${statScaleInline(fx, factor)}${to} per ${from} consumed${cap}`;
   }
 
   // Fixed-amount variant: "Apply N[to] (from consumed [from])".
   const N = Number(amount);
   if (isArmor) {
-    return `Gain ${N}${scaler}[armor] (from consumed ${from})${cap}`;
+    return `Gain ${N}${statScaleInline(fx, N)}[armor] (from consumed ${from})${cap}`;
   }
   const outN = N * factor;
-  return `Apply ${outN}${scaler}${to} (from consumed ${from})`;
+  return `Apply ${outN}${statScaleInline(fx, outN)}${to} (from consumed ${from})`;
 }
 
 // Multiply_stack rendering ("double the [poison] on enemy").
@@ -628,6 +666,67 @@ export function formatEffect(fx: CardEffect): string {
 
 type CardDescPick = Pick<CardDefinition, 'effects' | 'exhaust' | 'spend_armor'>;
 
+export interface CardDescOptions {
+  /** When false, strip the "([stat])" scaler suffixes from the prose. Default
+   *  true (preserves the canonical output every existing caller/test relies on). */
+  showScalers?: boolean;
+  /** Dynamic scaled-value mode. When provided, every scaled number is shown
+   *  RESOLVED against `stats` (as a [[v:N:stat]] token the card renderer draws
+   *  bigger + colored) by default, or as the "(base + inc per [stat])" equation
+   *  while `shift` is true. This is what the card face passes. */
+  dynamic?: { stats: Record<StatId, number>; shift: boolean };
+}
+
+/** Matches a stat-scaler suffix like "([str])" / "([dex])". Used to strip
+ *  scalers from the prose when showScalers is false. */
+const SCALER_SUFFIX_RE = /\(\[(?:str|vit|dex|int|spi)\]\)/g;
+
+/** Reads the named stat from a partial stats record (missing = 0). */
+function statValue(stats: Record<StatId, number>, stat: string): number {
+  return (stats as Record<string, number>)[stat] ?? 0;
+}
+
+/**
+ * Rewrite the sentinel-bearing build output into the final dynamic prose. Each
+ * scaled clause is "<number><descriptor><sentinel base:inc:per:stat>", where the
+ * descriptor is whatever the scaler attaches to (an icon and/or words like
+ * " more [armor]"). The number is replaced in place — by the resolved value
+ * token (default) or the "(base + inc per [stat])" equation (SHIFT) — and the
+ * descriptor is preserved. `descriptor` excludes digits and sentinels so it
+ * binds to the NEAREST preceding number. Any leftover sentinel or body-driven
+ * "([stat])" we don't transform is then stripped.
+ */
+function applyDynamicReplacements(
+  out: string,
+  stats: Record<StatId, number>,
+  shift: boolean,
+): string {
+  // \x01 / \x02 are SENT_OPEN / SENT_CLOSE.
+  const re = /(\d+)([^\x01\x02\d]*?)\x01(-?\d+):(-?\d+):(\d+):(str|vit|dex|int|spi)\x02/g;
+  let result = out.replace(re, (_m, _num, mid, base, inc, per, stat) => {
+    const b = parseInt(base, 10);
+    const i = parseInt(inc, 10);
+    const p = parseInt(per, 10);
+    const desc = mid ?? '';
+    if (shift) {
+      const perStr = p > 1 ? `${p} ` : '';
+      // base 0 (value:0 detonators) reads as a pure per-stat rate, no "0 +".
+      const lhs = b === 0 ? '' : `${b} + `;
+      return `(${lhs}${i} per ${perStr}[${stat}])${desc}`;
+    }
+    const resolved = b + Math.floor(statValue(stats, stat) / p) * i;
+    return `[[v:${resolved}:${stat}]]${desc}`;
+  });
+  // Strip any leftover sentinels and any body-driven "([stat])" we don't transform.
+  result = result
+    .replace(/\x01[^\x02]*\x02/g, '')
+    .replace(SCALER_SUFFIX_RE, '')
+    .replace(/ {2,}/g, ' ')
+    .replace(/ \./g, '.')
+    .trim();
+  return result;
+}
+
 /**
  * Skip emitter for stack effects that are pure consume bookkeeping. The cost
  * block (rendered separately by the visual layer) shows the consumed amount;
@@ -651,7 +750,32 @@ function hasDevourConsumer(effects: CardEffect[]): boolean {
   return effects.some(fx => fx.condition?.devour_succeeded === true);
 }
 
-export function formatCardDescription(card: CardDescPick): string {
+export function formatCardDescription(card: CardDescPick, options?: CardDescOptions): string {
+  const dyn = options?.dynamic;
+  // Toggle sentinel emission for the synchronous build, then restore.
+  dynamicBuild = !!dyn;
+  let out: string;
+  try {
+    out = buildCardDescription(card);
+  } finally {
+    dynamicBuild = false;
+  }
+
+  if (dyn) {
+    return applyDynamicReplacements(out, dyn.stats, dyn.shift);
+  }
+  if (options?.showScalers === false) {
+    // Drop the "([stat])" clauses and tidy the spacing they leave behind.
+    return out
+      .replace(SCALER_SUFFIX_RE, '')
+      .replace(/ {2,}/g, ' ')
+      .replace(/ \./g, '.')
+      .trim();
+  }
+  return out;
+}
+
+function buildCardDescription(card: CardDescPick): string {
   const effects = card.effects ?? [];
   if (!effects.length) return '';
 

@@ -12,6 +12,8 @@ import { CombatEngine } from '../systems/combat/CombatEngine';
 import type { SubtileEffect } from '../systems/SubtileResolver';
 import { CombatHUD } from '../ui/CombatHUD';
 import { CardQueueDisplay } from '../ui/CardQueueDisplay';
+import { setLiveStats, clearLiveStats } from '../ui/CardDynamic';
+import { readStat } from '../systems/hero/HeroStatsResolver';
 import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
@@ -287,6 +289,9 @@ export class CombatScene extends Scene {
       // Wave 6: apply pre-fight subtile effects before the engine takes over.
       this.applySubtileEffects(combatState, data.subtileEffects ?? []);
       this.engine = new CombatEngine(combatState);
+      // Seed card headline numbers with the fight's starting stats so the
+      // initial queue renders correct values before the first tick.
+      this.pushLiveStats();
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
       const heroIdleKey = `${sp}_idle`;
@@ -478,7 +483,25 @@ export class CombatScene extends Scene {
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
       if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      // Feed live effective stats so card headline numbers track status changes
+      // (buffs, auras, stat_gain) in real time.
+      this.pushLiveStats();
     }
+  }
+
+  /** Push the hero's current effective stats to CardDynamic so every visible
+   *  card face refreshes its headline number. Reads the same stat values the
+   *  resolver scales with (base + auras + per-combat stat gains). */
+  private pushLiveStats(): void {
+    if (!this.engine) return;
+    const s = this.engine.getState();
+    setLiveStats({
+      str: readStat(s, 'str'),
+      vit: readStat(s, 'vit'),
+      dex: readStat(s, 'dex'),
+      int: readStat(s, 'int'),
+      spi: readStat(s, 'spi'),
+    });
   }
 
   private cleanup(): void {
@@ -491,6 +514,8 @@ export class CombatScene extends Scene {
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
+    // Out of combat, card headline numbers fall back to the run's resolved stats.
+    clearLiveStats();
     try { const run = getRun(); run.isInCombat = false; } catch {}
   }
 }

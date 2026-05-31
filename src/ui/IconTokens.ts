@@ -96,17 +96,30 @@ export function isKnownToken(token: string): boolean {
  */
 export interface PlainSegment { type: 'text'; value: string; }
 export interface TokenSegment { type: 'token'; token: string; style: TokenStyle; }
-export type TextSegment = PlainSegment | TokenSegment;
+/** A dynamic scaled value (e.g. resolved card damage) — rendered larger and
+ *  colored by its scaling stat. Emitted as `[[v:N:stat]]` by CardText's dynamic
+ *  description mode. */
+export interface ValueSegment { type: 'value'; value: string; color: string; }
+export type TextSegment = PlainSegment | TokenSegment | ValueSegment;
 
 export function tokenizeText(text: string): TextSegment[] {
   const out: TextSegment[] = [];
-  // Match `[name]` where name is alphabetic + digits + hyphens. Bracket-pair
-  // only — no nested brackets, no whitespace inside the bracket body.
-  const re = /\[([a-zA-Z][a-zA-Z0-9-]*)\]/g;
+  // Match either a dynamic value token `[[v:N:stat]]` (checked first) or a
+  // normal `[name]` token. Bracket-pair only — no whitespace inside the body.
+  const re = /\[\[v:(-?\d+):(str|vit|dex|int|spi)\]\]|\[([a-zA-Z][a-zA-Z0-9-]*)\]/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = re.exec(text)) !== null) {
-    const tokenName = match[1];
+    if (match[1] !== undefined) {
+      // Dynamic value token.
+      if (match.index > lastIndex) {
+        out.push({ type: 'text', value: text.slice(lastIndex, match.index) });
+      }
+      out.push({ type: 'value', value: match[1], color: getTokenStyle(match[2])?.color ?? '#ffffff' });
+      lastIndex = match.index + match[0].length;
+      continue;
+    }
+    const tokenName = match[3];
     const style = getTokenStyle(tokenName);
     if (!style) continue; // leave unrecognized brackets in place
     if (match.index > lastIndex) {
@@ -187,6 +200,8 @@ export function renderTokenText(
     color: string;
     isToken: boolean;
     spriteKey?: string;
+    /** Dynamic scaled value — rendered larger + bold. */
+    big?: boolean;
   }
   const units: Unit[] = [];
   for (const seg of segments) {
@@ -197,6 +212,8 @@ export function renderTokenText(
         if (p === '') continue;
         units.push({ text: p, color: baseColor, isToken: false });
       }
+    } else if (seg.type === 'value') {
+      units.push({ text: seg.value, color: seg.color, isToken: false, big: true });
     } else {
       const spriteKey = scene.textures ? resolveIconKey(scene.textures, seg.token) : null;
       units.push({
@@ -222,9 +239,15 @@ export function renderTokenText(
   // `strokeThickness: undefined` (or `stroke: undefined`) to Phaser's Text
   // constructor poisons the measured width — it comes back NaN, cascades into
   // NaN positions, and the text renders at undefined coordinates (invisible).
-  const makeTextStyle = (color: string): Phaser.Types.GameObjects.Text.TextStyle => {
-    const style: Phaser.Types.GameObjects.Text.TextStyle = { fontSize, fontFamily, color };
-    if (fontStyle !== undefined) style.fontStyle = fontStyle;
+  const makeTextStyle = (color: string, big = false): Phaser.Types.GameObjects.Text.TextStyle => {
+    const px = parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
+    const style: Phaser.Types.GameObjects.Text.TextStyle = {
+      fontSize: big ? `${Math.round(px * 1.35)}px` : fontSize,
+      fontFamily,
+      color,
+    };
+    if (big) style.fontStyle = 'bold';
+    else if (fontStyle !== undefined) style.fontStyle = fontStyle;
     if (stroke !== undefined) style.stroke = stroke;
     if (strokeThickness !== undefined) style.strokeThickness = strokeThickness;
     return style;
@@ -249,7 +272,7 @@ export function renderTokenText(
       h = img.displayHeight;
       obj = img as Phaser.GameObjects.GameObject & { x: number; y: number; };
     } else {
-      const t = scene.add.text(0, 0, u.text, makeTextStyle(u.color)).setOrigin(0, 0);
+      const t = scene.add.text(0, 0, u.text, makeTextStyle(u.color, u.big)).setOrigin(0, 0);
       w = t.width;
       h = t.height;
       obj = t as Phaser.GameObjects.GameObject & { x: number; y: number; };
