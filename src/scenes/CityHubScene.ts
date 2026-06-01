@@ -73,9 +73,6 @@ export class CityHubScene extends Scene {
     try { AudioManager.transitionTo(this, 'town_song', { volume: 0.4, duration: 1500 }); } catch (_) { /* audio unavailable */ }
 
     // ── Top bar: materials ────────────────────────────────────
-    if (this.textures.exists('icons_up_table')) {
-      this.add.image(10, 10, 'icons_up_table').setOrigin(0, 0).setScale(0.7).setDepth(50);
-    }
     this.renderMaterials();
 
     // ── Top-right: class XP ───────────────────────────────────
@@ -84,8 +81,8 @@ export class CityHubScene extends Scene {
 
     // ── Bottom-right: Start Run ───────────────────────────────
     if (this.textures.exists('btn_start_run_hub')) {
-      const startBtn = this.add.image(780, 562, 'btn_start_run_hub')
-        .setScale(170 / this.textures.get('btn_start_run_hub').getSourceImage().width)
+      const startBtn = this.add.image(801, 567, 'btn_start_run_hub')
+        .setScale(119 / this.textures.get('btn_start_run_hub').getSourceImage().width)
         .setOrigin(1, 0.5)
         .setDepth(20)
         .setInteractive({ useHandCursor: true });
@@ -93,11 +90,8 @@ export class CityHubScene extends Scene {
       startBtn.on('pointerout',  () => startBtn.clearTint());
       startBtn.on('pointerdown', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
     } else {
-      this.createTextButton(730, 562, 'Start Run', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+      this.createTextButton(750, 562, 'Start Run', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
     }
-
-    // ── Bottom-right: Change Hero ─────────────────────────────
-    this.createTextButton(730, 585, 'Change Hero', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
 
     // ── Building buttons ──────────────────────────────────────
     for (const cfg of BUILDINGS) {
@@ -107,30 +101,38 @@ export class CityHubScene extends Scene {
 
   // ─── Material inventory ───────────────────────────────────────
   private renderMaterials(): void {
+    const sx = 35, sy = 36, rh = 26, cw = 90;
+
+    if (this.textures.exists('mat_panel')) {
+      const panel = this.add.image(5, 5, 'mat_panel');
+      panel.setScale(158 / panel.width).setOrigin(0, 0).setDepth(50);
+    }
+
     const mats = [
       ['stone', 'bone'],
       ['essence', 'wood'],
       ['herbs', 'iron'],
     ];
-    const sx = 35, sy = 36, rh = 26, cw = 90;
     mats.forEach((row, i) => {
       row.forEach((mat, col) => {
         const x = sx + col * cw;
         const y = sy + i * rh;
         const val = (this.metaState.materials as any)[mat] ?? 0;
         if (this.textures.exists(`mat_${mat}`)) {
-          this.add.image(x, y, `mat_${mat}`).setDisplaySize(18, 18).setDepth(51);
+          const icon = this.add.image(x, y, `mat_${mat}`);
+          icon.setScale(18 / Math.max(icon.width, icon.height)).setDepth(51);
         }
-        addBitmapText(this, x + 12, y, `${mat}: ${val}`, 12, 'gold')
+        addBitmapText(this, x + 12, y, `${val}`, 12, 'gold')
           .setOrigin(0, 0.5).setDepth(51);
       });
     });
-    // crystal centered
+
     const crystalVal = (this.metaState.materials as any)['crystal'] ?? 0;
     if (this.textures.exists('mat_crystal')) {
-      this.add.image(sx + cw * 0.5, sy + 3 * rh, 'mat_crystal').setDisplaySize(18, 18).setDepth(51);
+      const icon = this.add.image(sx + cw * 0.5, sy + 3 * rh, 'mat_crystal');
+      icon.setScale(18 / Math.max(icon.width, icon.height)).setDepth(51);
     }
-    addBitmapText(this, sx + cw * 0.5 + 12, sy + 3 * rh, `crystal: ${crystalVal}`, 12, 'gold')
+    addBitmapText(this, sx + cw * 0.5 + 12, sy + 3 * rh, `${crystalVal}`, 12, 'gold')
       .setOrigin(0, 0.5).setDepth(51);
   }
 
@@ -182,9 +184,10 @@ export class CityHubScene extends Scene {
 
     // ── Build dialog container ────────────────────────────────
     const cx = 400, cy = 300;
-    const PW = 380;
-    const imgH = isMaxed ? 0 : Math.round((PW - 20) * 0.5);
-    const PH = isMaxed ? 160 : imgH + 14 + 52 + Object.keys(cost).length * 18 + 8 + 46 + 24;
+    const PW      = 380;
+    const imgH    = isMaxed ? 0 : Math.round((PW - 20) * 0.5);
+    const SECTION_H = 46; // REQUER panel e MELHORAR button escalados pela mesma altura
+    const PH = isMaxed ? 160 : imgH + 14 + SECTION_H + 24;
     const c = this.add.container(cx, cy).setDepth(100);
     this.dialog = c;
 
@@ -234,36 +237,47 @@ export class CityHubScene extends Scene {
         yOff += 36;
       }
 
-      // Requirements label — setScale proporcional (sem distorção)
+      // ── REQUER panel (left) + MELHORAR button (right) — mesma altura ──────
+      const panelX = -PW / 2 + 17;
+
       if (this.textures.exists('label_requer')) {
-        const lbl = this.add.image(-PW / 2 + 18, yOff, 'label_requer');
-        lbl.setScale(44 / lbl.height).setOrigin(0, 0);
+        const lbl = this.add.image(panelX, yOff, 'label_requer');
+        lbl.setScale(SECTION_H / lbl.height).setOrigin(0, 0);
         c.add(lbl);
-        yOff += lbl.displayHeight + 6;
       } else {
-        c.add(addBitmapText(this, -PW / 2 + 18, yOff + 20, 'Requer:', 11, 'blue').setOrigin(0, 0.5));
-        yOff += 44;
+        c.add(addBitmapText(this, panelX + 8, yOff + SECTION_H / 2, 'Requer:', 11, 'blue').setOrigin(0, 0.5));
       }
 
-      for (const [mat, required] of Object.entries(cost)) {
-        const have = this.metaState.materials[mat] ?? 0;
+      // Materiais em linha horizontal dentro do painel REQUER
+      const matEntries = Object.entries(cost);
+      const ICON_SIZE = 18;
+      const ENTRY_W   = ICON_SIZE + 30; // ícone + número
+      const matStartX = panelX + 46;   // após "REQUER:" baked
+      const matY      = yOff + SECTION_H / 2;
+      for (let mi = 0; mi < matEntries.length; mi++) {
+        const [mat, required] = matEntries[mi];
+        const have  = this.metaState.materials[mat] ?? 0;
         const color = have >= (required as number) ? 0x88dd88 : 0xff6655;
+        const matX  = matStartX + mi * ENTRY_W;
         if (this.textures.exists(`mat_${mat}`)) {
-          c.add(this.add.image(-PW / 2 + 22, yOff, `mat_${mat}`).setDisplaySize(14, 14).setOrigin(0.5));
+          const icon = this.add.image(matX, matY, `mat_${mat}`);
+          icon.setScale(ICON_SIZE / Math.max(icon.width, icon.height)).setOrigin(0.5);
+          c.add(icon);
         }
-        c.add(addBitmapText(this, -PW / 2 + 34, yOff, `${have} / ${required}`, 12, 'white')
+        c.add(addBitmapText(this, matX + ICON_SIZE / 2 + 3, matY, `${have}/${required}`, 10, 'white')
           .setOrigin(0, 0.5).setTint(color));
-        yOff += 18;
       }
 
-      yOff += 8;
-
-      // MELHORAR button
+      // MELHORAR — à direita do painel, centrado verticalmente
+      const REQUER_ASPECT = 2103 / 748;
+      const panelW  = Math.round(SECTION_H * REQUER_ASPECT);
+      const btnCX   = ((-PW / 2 + 10) + panelW + PW / 2) / 2 + 7;
+      const btnCY   = yOff + SECTION_H / 2;
       const btnAlpha = canAfford ? 1 : 0.45;
-      const btnKey = this.textures.exists('btn_melhorar') ? 'btn_melhorar' : 'btn_sim_melhorar';
+      const btnKey   = this.textures.exists('btn_melhorar') ? 'btn_melhorar' : 'btn_sim_melhorar';
       if (this.textures.exists(btnKey)) {
-        const simImg = this.add.image(0, yOff, btnKey);
-        simImg.setScale(130 / simImg.width).setAlpha(btnAlpha);
+        const simImg = this.add.image(btnCX, btnCY, btnKey);
+        simImg.setScale(SECTION_H / simImg.height).setAlpha(btnAlpha);
         if (!canAfford) simImg.setTint(0x888888);
         c.add(simImg);
         if (canAfford) {
@@ -273,9 +287,9 @@ export class CityHubScene extends Scene {
           simImg.on('pointerdown', () => this.doUpgrade(key, cfg));
         }
       } else {
-        const btnBg = this.add.rectangle(0, yOff, 120, 30, canAfford ? 0x4a7c2a : 0x2a2a2a, 0.92)
+        const btnBg = this.add.rectangle(btnCX, btnCY, 120, 30, canAfford ? 0x4a7c2a : 0x2a2a2a, 0.92)
           .setStrokeStyle(2, canAfford ? 0x88dd44 : 0x555555).setAlpha(btnAlpha);
-        const btnTxt = addBitmapText(this, 0, yOff, 'MELHORAR', 11, 'white')
+        const btnTxt = addBitmapText(this, btnCX, btnCY, 'MELHORAR', 11, 'white')
           .setOrigin(0.5).setAlpha(btnAlpha).setTint(canAfford ? 0xccffaa : 0x888888);
         c.add([btnBg, btnTxt]);
         if (canAfford) {
@@ -285,6 +299,8 @@ export class CityHubScene extends Scene {
           btnBg.on('pointerdown', () => this.doUpgrade(key, cfg));
         }
       }
+
+      yOff += SECTION_H;
     }
 
     // x close button

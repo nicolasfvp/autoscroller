@@ -246,6 +246,7 @@ export class Preloader extends Scene {
     this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
     this.load.image('hud_panel_left',     'assets/ui/panels/hud_panel_left.png');
+    this.load.image('mat_panel',          'assets/ui/panels/mat_panel.png');
     this.load.image('hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/ui/panels/loop_summary_panel.png');
 
