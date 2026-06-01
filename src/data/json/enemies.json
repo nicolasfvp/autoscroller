@@ -368,10 +368,10 @@
     "name": "Doom Knight",
     "type": "boss",
     "bossType": "knight",
-    "baseHP": 550,
-    "baseDefense": 5,
+    "baseHP": 380,
+    "baseDefense": 3,
     "attack": {
-      "damage": 10,
+      "damage": 9,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -379,7 +379,7 @@
       {
         "type": "enrage",
         "hpThreshold": 0.5,
-        "attackSpeedMultiplier": 1.6
+        "attackSpeedMultiplier": 1.4
       }
     ],
     "goldReward": {
@@ -402,10 +402,10 @@
     "name": "Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 700,
-    "baseDefense": 5,
+    "baseHP": 400,
+    "baseDefense": 4,
     "attack": {
-      "damage": 12,
+      "damage": 10,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -413,7 +413,7 @@
       {
         "type": "shield",
         "interval": 8000,
-        "shieldAmount": 15
+        "shieldAmount": 8
       }
     ],
     "goldReward": {
@@ -436,10 +436,10 @@
     "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 450,
-    "baseDefense": 5,
+    "baseHP": 370,
+    "baseDefense": 3,
     "attack": {
-      "damage": 14,
+      "damage": 10,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -605,10 +605,10 @@
     "name": "Bog Witch",
     "type": "boss",
     "bossType": "witch",
-    "baseHP": 820,
+    "baseHP": 410,
     "baseDefense": 2,
     "attack": {
-      "damage": 6,
+      "damage": 7,
       "pattern": "fixed"
     },
     "attackCooldown": 2300,
@@ -643,10 +643,10 @@
     "name": "Desert Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 900,
-    "baseDefense": 5,
+    "baseHP": 450,
+    "baseDefense": 4,
     "attack": {
-      "damage": 11,
+      "damage": 10,
       "pattern": "fixed"
     },
     "attackCooldown": 2700,
@@ -654,7 +654,7 @@
       {
         "type": "shield",
         "interval": 7000,
-        "shieldAmount": 20
+        "shieldAmount": 10
       }
     ],
     "goldReward": {
@@ -677,7 +677,7 @@
     "name": "Infernal Dragon",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 980,
+    "baseHP": 460,
     "baseDefense": 3,
     "attack": {
       "damage": 9,
@@ -693,7 +693,7 @@
       {
         "type": "enrage",
         "hpThreshold": 0.4,
-        "attackSpeedMultiplier": 1.6
+        "attackSpeedMultiplier": 1.4
       }
     ],
     "goldReward": {
@@ -716,10 +716,10 @@
     "name": "Ancient Iron Golem",
     "type": "boss",
     "bossType": "tank",
-    "baseHP": 950,
-    "baseDefense": 5,
+    "baseHP": 470,
+    "baseDefense": 4,
     "attack": {
-      "damage": 13,
+      "damage": 12,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -727,7 +727,7 @@
       {
         "type": "shield",
         "interval": 7000,
-        "shieldAmount": 25
+        "shieldAmount": 12
       },
       {
         "type": "enrage",
