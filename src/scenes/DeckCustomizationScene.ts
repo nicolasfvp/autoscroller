@@ -1,4 +1,4 @@
-﻿// DeckCustomizationScene -- the in-run deck editor.
+// DeckCustomizationScene -- the in-run deck editor.
 //
 // Layout (800×600 canvas):
 //   [00-50]    Header strip — back · title · glossary
@@ -41,10 +41,10 @@ const COLS = 5;
 const MAX_DECK = 15;
 const COL_GAP = 16;
 const TIER_BREAKPOINTS = [
-  // up to N cards, card scale (× small base 150×240), row gap
-  { upTo: 5,  scale: 0.85, rowGap: 18 },   // 1 row,  127.5 × 204
-  { upTo: 10, scale: 0.65, rowGap: 20 },   // 2 rows, 97.5  × 156
-  { upTo: 15, scale: 0.52, rowGap: 22 },   // 3 rows, 78    × 124.8
+  // up to N cards, card scale (reduced by 30%)
+  { upTo: 5,  scale: 0.60, rowGap: 18 },
+  { upTo: 10, scale: 0.45, rowGap: 20 },
+  { upTo: 15, scale: 0.36, rowGap: 22 },
 ] as const;
 
 // Order badge — small parchment chip floating above each card.
@@ -61,9 +61,9 @@ const HOVER_W = 340 * HOVER_SCALE;   // 238
 const HOVER_H = 540 * HOVER_SCALE;   // 378
 
 // Bag (loot) strip
-const BAG_SCALE = 0.4;
-const BAG_CARD_W = STANDARD_CARD_WIDTH * BAG_SCALE;   // 60
-const BAG_CARD_H = STANDARD_CARD_HEIGHT * BAG_SCALE;  // 96
+const BAG_SCALE = 0.28;
+const BAG_CARD_W = STANDARD_CARD_WIDTH * BAG_SCALE;
+const BAG_CARD_H = STANDARD_CARD_HEIGHT * BAG_SCALE;
 const BAG_GAP = 10;
 
 // Chrome palette
@@ -642,7 +642,7 @@ export class DeckCustomizationScene extends Scene {
     // Empty state: use baked asset (already has title + description text)
     if (ids.length === 0 && this.textures.exists('loot_bag_empty')) {
       const bg = this.add.image(cx, cy, 'loot_bag_empty');
-      bg.setScale(w / bg.width);
+      bg.setScale(Math.min(w / bg.width, h / bg.height));
       if (this.dragFromBag) bg.setTint(0xffeeaa);
       this.bagContainer.add(bg);
       return;

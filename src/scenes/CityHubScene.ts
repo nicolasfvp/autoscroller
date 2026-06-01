@@ -1,254 +1,332 @@
-﻿import { Scene } from 'phaser';
-import { loadMetaState } from '../systems/MetaPersistence';
+import { Scene } from 'phaser';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { MetaState } from '../state/MetaState';
-import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
+import { COLORS, FONTS, LAYOUT, addBitmapText } from '../ui/StyleConstants';
 import { AudioManager } from '../systems/AudioManager';
+import { getBuildingTierData, upgradeBuilding } from '../systems/MetaProgressionSystem';
+import { playUnlockCelebration } from '../ui/UnlockCelebration';
+import { SCENE_KEYS } from '../state/SceneKeys';
 
+const GOLD   = '#e6c88a';
+const STROKE = '#2e1b0f';
 
-
-const BUILDING_NAMES: Record<string, string> = {
-  forge: 'FORGE',
-  library: 'LIBRARY',
-  tavern: 'TAVERN',
-  workshop: 'WORKSHOP',
-  shrine: 'ORACLE',
-  storehouse: 'VAULT',
-};
-
-interface BuildingLayout {
+// Building button positions on the map (tune to match bg_city)
+interface BuildingConfig {
   key: string;
+  btnKey: string;
   x: number;
   y: number;
 }
 
-const BUILDING_LAYOUT: BuildingLayout[] = [
-  { key: 'library', x: 400, y: 160 },
-  { key: 'forge', x: 220, y: 310 },
-  { key: 'tavern', x: 400, y: 310 },
-  { key: 'workshop', x: 580, y: 310 },
-  { key: 'shrine', x: 310, y: 460 },
-  { key: 'storehouse', x: 490, y: 460 },
+const BUILDINGS: BuildingConfig[] = [
+  { key: 'forge',      btnKey: 'btn_forge',    x: 150, y: 295 },
+  { key: 'library',    btnKey: 'btn_library',  x: 415, y:  78 },
+  { key: 'workshop',   btnKey: 'btn_workshop', x: 570, y: 270 },
+  { key: 'shrine',     btnKey: 'btn_oracle',   x: 172, y: 483 },
+  { key: 'storehouse', btnKey: 'btn_vault',    x: 388, y: 520 },
 ];
+
+const BUILDING_LABEL: Record<string, string> = {
+  forge: 'FORGE', library: 'LIBRARY', workshop: 'WORKSHOP',
+  shrine: 'ORACLE', storehouse: 'VAULT',
+};
+
+const BUILDING_ASSET_NAME: Record<string, string> = {
+  shrine: 'oracle',
+  storehouse: 'vault',
+};
 
 export class CityHubScene extends Scene {
   private metaState!: MetaState;
   private transitioning = false;
+  private dialog: Phaser.GameObjects.Container | null = null;
 
-  constructor() {
-    super('CityHub');
-  }
+  constructor() { super(SCENE_KEYS.CITY_HUB); }
 
-  private fadeToScene(sceneKey: string, data?: any): void {
+  private fadeToScene(key: string): void {
     if (this.transitioning) return;
     this.transitioning = true;
     this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start(sceneKey, data);
-    });
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key));
   }
 
   async create(): Promise<void> {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
-
     this.metaState = await loadMetaState();
 
-    // Background
+    // ── Background ────────────────────────────────────────────
     this.cameras.main.setBackgroundColor(COLORS.background);
     if (this.textures.exists('bg_city')) {
-      this.add.image(400, 300, 'bg_city').setDisplaySize(800, 600).setDepth(-10);
-    }
-
-    // Stop Theme Song and Play Town Song with crossfade
-    AudioManager.transitionTo(this, 'town_song', { volume: 0.4, duration: 1500 });
-
-    const fontFamily = FONTS.body;
-
-    // Top bar: material inventory (top-left)
-    const tableImg = this.add.image(10, 10, 'icons_up_table').setOrigin(0, 0).setDepth(50);
-    // Let's adjust scale and position slightly based on typical asset size
-    tableImg.setScale(0.7); // Reduced table size further
-
-    const materialsLeft = ['stone', 'essence', 'herbs'];
-    const materialsRight = ['bone', 'wood', 'iron'];
-    
-    // Base positions relative to the table
-    const startX = 35; 
-    const startY = 36; // moved slightly up
-    const rowHeight = 26; // increased spacing a bit
-    const colWidth = 90;
-
-    const renderMat = (matKey: string, x: number, y: number) => {
-      const val = (this.metaState.materials as any)[matKey] || 0;
-      const hasImage = ['stone', 'wood', 'iron', 'crystal', 'bone', 'scroll'].includes(matKey);
-      
-      if (hasImage) {
-        this.add.image(x, y, `mat_${matKey}`).setDisplaySize(18, 18).setOrigin(0.5, 0.5).setDepth(51);
-      } else {
-        let iconStr = '';
-        if (matKey === 'essence') iconStr = '✨';
-        else if (matKey === 'herbs') iconStr = '🌿';
-        
-        this.add.text(x, y, iconStr, {
-          fontSize: '16px', // larger emojis
-          fontFamily
-        }).setOrigin(0.5, 0.5).setDepth(51);
-      }
-
-      // Text always aligned perfectly at x + 10
-      const textX = x + 10;
-      this.add.text(textX, y, `${matKey}: ${val}`, {
-        fontSize: '12px',
-        color: '#e6c88a',
-        stroke: '#2e1b0f',
-        strokeThickness: 2,
-        fontStyle: 'bold',
-        fontFamily,
-        shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-      }).setOrigin(0, 0.5).setDepth(51);
-    };
-
-    materialsLeft.forEach((mat, i) => {
-      renderMat(mat, startX, startY + i * rowHeight);
-    });
-
-    materialsRight.forEach((mat, i) => {
-      renderMat(mat, startX + colWidth, startY + i * rowHeight);
-    });
-
-    // Render crystal centered at the bottom row
-    renderMat('crystal', startX + (colWidth / 2) - 5, startY + 3 * rowHeight);
-
-    // Top bar: class XP display (top-right)
-    this.add.text(776, 24, `Warrior Lv.${this.metaState.classXP.warrior}`, {
-      fontSize: '16px',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontStyle: 'bold',
-      fontFamily,
-      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-    }).setOrigin(1, 0);
-
-    // Title
-    this.add.text(400, 50, '〰 THE VILLAGE 〰', {
-      fontSize: '36px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 3,
-      fontFamily,
-      shadow: { offsetX: 2, offsetY: 2, color: '#1a0d06', blur: 4, fill: true }
-    }).setOrigin(0.5, 0.5).setDepth(10);
-
-    // Hover label (reused across buildings, though maybe not needed with new layout)
-    this.add.text(0, 0, '', {
-      fontSize: '16px',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontStyle: 'bold',
-      fontFamily,
-      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-    }).setOrigin(0.5, 1).setDepth(200).setVisible(false);
-
-    // Buildings
-    for (const layout of BUILDING_LAYOUT) {
-      this.createBuilding(layout, fontFamily);
-    }
-
-    // Change Hero button (feedback #36)
-    const changeHeroBtn = createButton(this, 752, 560, 'Change Hero', () => {
-      this.fadeToScene('CharacterSelectScene');
-    }, 'secondary');
-    changeHeroBtn.setOrigin(1, 1)
-      .setColor('#e6c88a')
-      .setStroke('#2e1b0f', 2)
-      .setShadow(1, 1, '#1a0d06', 2, true, true)
-      .setFontStyle('bold');
-
-
-  }
-
-  private createBuilding(layout: BuildingLayout, fontFamily: string): void {
-    const { key, x, y } = layout;
-    const level = (this.metaState.buildings as any)[key].level as number;
-
-    // Use a container for the building elements
-    const container = this.add.container(x, y);
-
-    // Building background frame
-    const frame = this.add.image(0, 0, 'base_icon_place');
-    frame.setDisplaySize(115, 115);
-    
-    container.add(frame);
-
-    // Building icon image
-    const iconImage = this.add.image(0, -8, `icon_${key}`);
-    iconImage.setDisplaySize(70, 70);
-    container.add(iconImage);
-
-    // Building name over bottom of frame
-    const nameText = this.add.text(0, 38, BUILDING_NAMES[key], {
-      fontSize: '15px',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontStyle: 'bold',
-      fontFamily,
-      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-    }).setOrigin(0.5, 0.5);
-    container.add(nameText);
-
-    // Tier indicator below building (outside frame)
-    const levelText = this.add.text(0, 60, `Level ${level}`, {
-      fontSize: '18px', 
-      color: '#e6c88a', // dull yellow/gold from main menu
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontStyle: 'bold',
-      fontFamily,
-      shadow: { offsetX: 1, offsetY: 1, color: '#1a0d06', blur: 2, fill: true }
-    }).setOrigin(0.5, 0);
-    container.add(levelText);
-
-    // Make frame interactive
-    frame.setInteractive({ useHandCursor: true });
-
-    // Hover effects. Kill any in-flight scale tween before starting a new
-    // one — rapid hover-in/out fires used to enqueue overlapping tweens per
-    // building (1 per pointer event × 6 buildings), which compounded each
-    // time the player ran the cursor across the village row.
-    frame.on('pointerover', () => {
-      frame.setTint(0xffffcc);
-      iconImage.setTint(0xffffcc);
-      this.tweens.killTweensOf(container);
-      this.tweens.add({ targets: container, scaleX: 1.05, scaleY: 1.05, duration: 100 });
-    });
-
-    frame.on('pointerout', () => {
-      frame.clearTint();
-      iconImage.clearTint();
-      this.tweens.killTweensOf(container);
-      this.tweens.add({ targets: container, scaleX: 1, scaleY: 1, duration: 100 });
-    });
-
-    // Click handler
-    frame.on('pointerdown', () => {
-      // Disable CityHub input while overlay is open to prevent click-through
-      this.input.enabled = false;
-
-      if (key === 'tavern') {
-        this.scene.launch('TavernPanelScene', { metaState: this.metaState });
-      } else if (key === 'library') {
-        this.input.enabled = true;
-        this.fadeToScene('CollectionScene');
-      } else {
-        this.scene.launch('BuildingPanelScene', {
-          buildingKey: key,
-          metaState: this.metaState,
+      if (!this.anims.exists('bg_city_anim')) {
+        this.anims.create({
+          key: 'bg_city_anim',
+          frames: this.anims.generateFrameNumbers('bg_city', { start: 0, end: 5 }),
+          frameRate: 4, repeat: -1,
         });
       }
+      const bg = this.add.sprite(400, 300, 'bg_city');
+      bg.setScale(0.7, 0.85).setDepth(-10);
+      bg.play('bg_city_anim');
+    }
+
+    try { AudioManager.transitionTo(this, 'town_song', { volume: 0.4, duration: 1500 }); } catch (_) { /* audio unavailable */ }
+
+    // ── Top bar: materials ────────────────────────────────────
+    if (this.textures.exists('icons_up_table')) {
+      this.add.image(10, 10, 'icons_up_table').setOrigin(0, 0).setScale(0.7).setDepth(50);
+    }
+    this.renderMaterials();
+
+    // ── Top-right: class XP ───────────────────────────────────
+    addBitmapText(this, 770, 14, `Warrior Lv.${this.metaState.classXP.warrior}`, 14, 'gold')
+      .setOrigin(1, 0).setDepth(50);
+
+    // ── Bottom-right: Start Run ───────────────────────────────
+    if (this.textures.exists('btn_start_run_hub')) {
+      const startBtn = this.add.image(780, 562, 'btn_start_run_hub')
+        .setScale(170 / this.textures.get('btn_start_run_hub').getSourceImage().width)
+        .setOrigin(1, 0.5)
+        .setDepth(20)
+        .setInteractive({ useHandCursor: true });
+      startBtn.on('pointerover', () => startBtn.setTint(0xffffcc));
+      startBtn.on('pointerout',  () => startBtn.clearTint());
+      startBtn.on('pointerdown', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+    } else {
+      this.createTextButton(730, 562, 'Start Run', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+    }
+
+    // ── Bottom-right: Change Hero ─────────────────────────────
+    this.createTextButton(730, 585, 'Change Hero', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+
+    // ── Building buttons ──────────────────────────────────────
+    for (const cfg of BUILDINGS) {
+      this.createBuildingButton(cfg);
+    }
+  }
+
+  // ─── Material inventory ───────────────────────────────────────
+  private renderMaterials(): void {
+    const mats = [
+      ['stone', 'bone'],
+      ['essence', 'wood'],
+      ['herbs', 'iron'],
+    ];
+    const sx = 35, sy = 36, rh = 26, cw = 90;
+    mats.forEach((row, i) => {
+      row.forEach((mat, col) => {
+        const x = sx + col * cw;
+        const y = sy + i * rh;
+        const val = (this.metaState.materials as any)[mat] ?? 0;
+        if (this.textures.exists(`mat_${mat}`)) {
+          this.add.image(x, y, `mat_${mat}`).setDisplaySize(18, 18).setDepth(51);
+        }
+        addBitmapText(this, x + 12, y, `${mat}: ${val}`, 12, 'gold')
+          .setOrigin(0, 0.5).setDepth(51);
+      });
     });
+    // crystal centered
+    const crystalVal = (this.metaState.materials as any)['crystal'] ?? 0;
+    if (this.textures.exists('mat_crystal')) {
+      this.add.image(sx + cw * 0.5, sy + 3 * rh, 'mat_crystal').setDisplaySize(18, 18).setDepth(51);
+    }
+    addBitmapText(this, sx + cw * 0.5 + 12, sy + 3 * rh, `crystal: ${crystalVal}`, 12, 'gold')
+      .setOrigin(0, 0.5).setDepth(51);
+  }
+
+  // ─── Building button ──────────────────────────────────────────
+  private createBuildingButton(cfg: BuildingConfig): void {
+    const { key, btnKey, x, y } = cfg;
+    const level = (this.metaState.buildings as any)[key]?.level ?? 0;
+
+    if (!this.textures.exists(btnKey)) return;
+
+    const btn = this.add.image(x, y, btnKey)
+      .setDisplaySize(160, 46)
+      .setInteractive({ useHandCursor: true })
+      .setDepth(10);
+
+    // Level badge below button
+    addBitmapText(this, x, y + 28, `Lv.${level}`, 12, 'gold')
+      .setOrigin(0.5, 0).setDepth(10);
+
+    btn.on('pointerover', () => btn.setTint(0xffffcc));
+    btn.on('pointerout',  () => btn.clearTint());
+    btn.on('pointerdown', () => {
+      if (key === 'library') {
+        this.fadeToScene(SCENE_KEYS.COLLECTION);
+        return;
+      }
+      this.showUpgradeDialog(cfg);
+    });
+  }
+
+  // ─── Upgrade dialog ───────────────────────────────────────────
+  private showUpgradeDialog(cfg: BuildingConfig): void {
+    if (this.dialog) this.closeDialog();
+
+    const { key } = cfg;
+    const tierData = getBuildingTierData(key);
+    if (!tierData) return;
+
+    const currentLevel = (this.metaState.buildings as any)[key]?.level ?? 0;
+    const maxLevel = tierData.maxLevel;
+    const isMaxed = currentLevel >= maxLevel;
+    const nextTier = !isMaxed ? tierData.tiers.find((t: any) => t.level === currentLevel + 1) : null;
+    const cost: Record<string, number> = nextTier?.cost ?? {};
+
+    // Check affordability per material
+    const canAfford = !isMaxed && Object.entries(cost).every(
+      ([mat, req]) => (this.metaState.materials[mat] ?? 0) >= (req as number)
+    );
+
+    // ── Build dialog container ────────────────────────────────
+    const cx = 400, cy = 300;
+    const PW = 380;
+    const imgH = isMaxed ? 0 : Math.round((PW - 20) * 0.5);
+    const PH = isMaxed ? 160 : imgH + 14 + 52 + Object.keys(cost).length * 18 + 8 + 46 + 24;
+    const c = this.add.container(cx, cy).setDepth(100);
+    this.dialog = c;
+
+    // Backdrop (click to close)
+    const backdrop = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.65)
+      .setInteractive()
+      .setOrigin(0.5);
+    backdrop.on('pointerdown', () => this.closeDialog());
+    c.add(backdrop);
+
+    // Invisible hit-blocker — no bg rect (building image provides its own panel)
+    const panelHit = this.add.rectangle(0, 0, PW, PH, 0x000000, 0)
+      .setInteractive();
+    c.add(panelHit);
+
+    let yOff = -PH / 2 + 14;
+
+    if (isMaxed) {
+      yOff += 40;
+      c.add(addBitmapText(this, 0, yOff, BUILDING_LABEL[key] ?? key.toUpperCase(), 20, 'blue')
+        .setOrigin(0.5));
+      yOff += 30;
+      c.add(addBitmapText(this, 0, yOff, 'Totalmente melhorado', 15, 'white')
+        .setOrigin(0.5).setTint(0x9bff9b));
+    } else {
+      // Pre-rendered narrative image
+      const assetName = BUILDING_ASSET_NAME[key] ?? key;
+      const texKey = `building_${assetName}_l${currentLevel + 1}`;
+      if (this.textures.exists(texKey)) {
+        const img = this.add.image(0, yOff, texKey);
+        img.setScale((PW - 20) / img.width);
+        img.setOrigin(0.5, 0);
+        c.add(img);
+        yOff += img.displayHeight + 12;
+      } else {
+        // Fallback: programmatic title + description
+        c.add(addBitmapText(this, 0, yOff, BUILDING_LABEL[key] ?? key.toUpperCase(), 20, 'blue').setOrigin(0.5));
+        yOff += 30;
+        c.add(addBitmapText(this, 0, yOff, `Nivel ${currentLevel} / ${maxLevel}`, 13, 'gold').setOrigin(0.5));
+        yOff += 24;
+        c.add(this.add.graphics().lineStyle(1, 0xd4a04a, 0.6).lineBetween(-PW / 2 + 20, yOff, PW / 2 - 20, yOff));
+        yOff += 14;
+        c.add(this.add.text(0, yOff, nextTier?.description ?? '', {
+          fontSize: '12px', color: GOLD, stroke: STROKE, strokeThickness: 2,
+          fontFamily: FONTS.body, wordWrap: { width: PW - 36 }, align: 'center',
+        }).setOrigin(0.5));
+        yOff += 36;
+      }
+
+      // Requirements label — setScale proporcional (sem distorção)
+      if (this.textures.exists('label_requer')) {
+        const lbl = this.add.image(-PW / 2 + 18, yOff, 'label_requer');
+        lbl.setScale(44 / lbl.height).setOrigin(0, 0);
+        c.add(lbl);
+        yOff += lbl.displayHeight + 6;
+      } else {
+        c.add(addBitmapText(this, -PW / 2 + 18, yOff + 20, 'Requer:', 11, 'blue').setOrigin(0, 0.5));
+        yOff += 44;
+      }
+
+      for (const [mat, required] of Object.entries(cost)) {
+        const have = this.metaState.materials[mat] ?? 0;
+        const color = have >= (required as number) ? 0x88dd88 : 0xff6655;
+        if (this.textures.exists(`mat_${mat}`)) {
+          c.add(this.add.image(-PW / 2 + 22, yOff, `mat_${mat}`).setDisplaySize(14, 14).setOrigin(0.5));
+        }
+        c.add(addBitmapText(this, -PW / 2 + 34, yOff, `${have} / ${required}`, 12, 'white')
+          .setOrigin(0, 0.5).setTint(color));
+        yOff += 18;
+      }
+
+      yOff += 8;
+
+      // MELHORAR button
+      const btnAlpha = canAfford ? 1 : 0.45;
+      const btnKey = this.textures.exists('btn_melhorar') ? 'btn_melhorar' : 'btn_sim_melhorar';
+      if (this.textures.exists(btnKey)) {
+        const simImg = this.add.image(0, yOff, btnKey);
+        simImg.setScale(130 / simImg.width).setAlpha(btnAlpha);
+        if (!canAfford) simImg.setTint(0x888888);
+        c.add(simImg);
+        if (canAfford) {
+          simImg.setInteractive({ useHandCursor: true });
+          simImg.on('pointerover', () => simImg.setTint(0xffffcc));
+          simImg.on('pointerout',  () => simImg.clearTint());
+          simImg.on('pointerdown', () => this.doUpgrade(key, cfg));
+        }
+      } else {
+        const btnBg = this.add.rectangle(0, yOff, 120, 30, canAfford ? 0x4a7c2a : 0x2a2a2a, 0.92)
+          .setStrokeStyle(2, canAfford ? 0x88dd44 : 0x555555).setAlpha(btnAlpha);
+        const btnTxt = addBitmapText(this, 0, yOff, 'MELHORAR', 11, 'white')
+          .setOrigin(0.5).setAlpha(btnAlpha).setTint(canAfford ? 0xccffaa : 0x888888);
+        c.add([btnBg, btnTxt]);
+        if (canAfford) {
+          btnBg.setInteractive({ useHandCursor: true });
+          btnBg.on('pointerover', () => { btnBg.setStrokeStyle(2.5, 0xffffff); btnTxt.setTint(0xffffff); });
+          btnBg.on('pointerout',  () => { btnBg.setStrokeStyle(2, 0x88dd44);   btnTxt.setTint(0xccffaa); });
+          btnBg.on('pointerdown', () => this.doUpgrade(key, cfg));
+        }
+      }
+    }
+
+    // x close button
+    const closeBtn = addBitmapText(this, PW / 2 - 14, -PH / 2 + 14, 'X', 22, 'gold')
+      .setOrigin(0.5).setInteractive({ useHandCursor: true });
+    closeBtn.on('pointerover', () => closeBtn.setTint(0xffffff));
+    closeBtn.on('pointerout',  () => closeBtn.clearTint());
+    closeBtn.on('pointerdown', () => this.closeDialog());
+    c.add(closeBtn);
+  }
+
+  private closeDialog(): void {
+    this.dialog?.destroy(true);
+    this.dialog = null;
+  }
+
+  private async doUpgrade(key: string, cfg: BuildingConfig): Promise<void> {
+    const result = upgradeBuilding(key, this.metaState);
+    if (!result.success || !result.updatedState) return;
+    this.metaState = result.updatedState;
+    await saveMetaState(this.metaState);
+    if (result.newUnlocks) {
+      const unlocked = [
+        ...(result.newUnlocks.cards ?? []),
+        ...(result.newUnlocks.relics ?? []),
+        ...(result.newUnlocks.tiles ?? []),
+        ...(result.newUnlocks.passives ?? []),
+      ];
+      for (const item of unlocked) {
+        playUnlockCelebration(this, item);
+      }
+    }
+    this.closeDialog();
+    // Re-open dialog with updated state
+    this.time.delayedCall(150, () => this.showUpgradeDialog(cfg));
+  }
+
+  private createTextButton(x: number, y: number, label: string, onClick: () => void): void {
+    const txt = addBitmapText(this, x, y, label, 15, 'gold')
+      .setOrigin(1, 1).setDepth(20).setInteractive({ useHandCursor: true });
+    txt.on('pointerover', () => txt.setTint(0xffffff));
+    txt.on('pointerout',  () => txt.clearTint());
+    txt.on('pointerdown', onClick);
   }
 }

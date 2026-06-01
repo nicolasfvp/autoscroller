@@ -1,3 +1,4 @@
+import { FONTS } from '../ui/StyleConstants';
 ﻿import Phaser from 'phaser';
 
 const inFlightScenes = new WeakSet<Phaser.Scene>();
@@ -16,7 +17,7 @@ export function playUnlockCelebration(
   if (inFlightScenes.has(scene)) return;
   inFlightScenes.add(scene);
 
-  const fontFamily = 'Georgia, "Times New Roman", serif';
+  const fontFamily = FONTS.body;
   const rarityHex = '#' + rarityColor.toString(16).padStart(6, '0');
 
   const release = () => { inFlightScenes.delete(scene); };

@@ -1,3 +1,4 @@
+import { FONTS } from '../ui/StyleConstants';
 // Synergy "COMBO!" flash animation at screen center.
 // Auto-destroys all created objects after animation completes.
 
@@ -13,7 +14,7 @@ export function showSynergyFlash(
   // "COMBO!" text at center-top
   const comboText = scene.add.text(400, 120, 'COMBO!', {
     fontSize: '36px',
-    fontFamily: '"Impact", "Arial Black", sans-serif',
+    fontFamily: FONTS.body,
     fontStyle: 'bold',
     color: '#ffff00',
     stroke: '#000000',
@@ -45,7 +46,7 @@ export function showSynergyFlash(
   const bonusLabel = `${displayName} +${bonusValue} ${bonusType}`;
   const bonusText = scene.add.text(400, 160, bonusLabel, {
     fontSize: '20px',
-    fontFamily: '"Impact", "Arial Black", sans-serif',
+    fontFamily: FONTS.body,
     fontStyle: 'bold',
     color: '#00ffff',
     stroke: '#000000',

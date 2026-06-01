@@ -1,3 +1,4 @@
+import { FONTS } from '../ui/StyleConstants';
 ﻿/**
  * RelicTooltip -- hover tooltip showing relic name, effect, and source.
  * Positioned 8px above hovered relic.
@@ -12,7 +13,7 @@ export class RelicTooltip extends Phaser.GameObjects.Container {
     super(scene, 0, 0);
     scene.add.existing(this);
 
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = FONTS.body;
 
     const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame' : 'panel_hover';
     this.bg = scene.add.image(0, 0, tooltipKey).setDisplaySize(180, 96);

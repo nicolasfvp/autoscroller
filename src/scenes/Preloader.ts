@@ -131,7 +131,9 @@ export class Preloader extends Scene {
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
-    this.load.image('bg_city', 'assets/backgrounds/bg_city.png');
+    this.load.spritesheet('bg_city', 'assets/backgrounds/bg_city.png', {
+      frameWidth: 1280, frameHeight: 720,
+    });
     // bg_run.png not yet authored — GameScene falls back to bg_desert when
     // bg_run is missing (see GameScene.ts createDesertBackgrounds).
     this.load.image('bg_battle_basic', 'assets/backgrounds/bg_battle_basic.png');
@@ -162,10 +164,13 @@ export class Preloader extends Scene {
     this.load.image('forge_rune_socket', 'assets/buildings/backgrounds/forge-rune-socket.jpeg');
     this.load.image('forge_card_altar', 'assets/buildings/backgrounds/forge-card-altar.jpeg');
     this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');
+    this.load.image('arco_forja',     'assets/buildings/items/arco_forja.png');
+    this.load.image('bigorna',        'assets/buildings/items/bigorna.png');
+    this.load.image('forge_moldure',  'assets/buildings/items/forge_moldure.png');
     // Forge-specific ornate element sigils (separate from the small `icon_<id>`
     // tokens used inside card faces).
     for (const id of ['attack','defense','agility','counter','fire','water','air','earth']) {
-      this.load.image(`forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.jpeg`);
+      this.load.image(`forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.png`);
     }
     this.load.image('tavern_table', 'assets/buildings/backgrounds/tavern.png');
     this.load.image('shrine_table', 'assets/buildings/backgrounds/shrine.png');
@@ -211,6 +216,7 @@ export class Preloader extends Scene {
     this.load.image('shop_item_frame',   'assets/ui/frames/shop_item_frame.png');
     this.load.image('shop_remove_seal',  'assets/ui/panels/shop_remove_seal.png');
     this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
+    this.load.image('confirm_panel',        'assets/ui/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
     this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
@@ -233,11 +239,14 @@ export class Preloader extends Scene {
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
     this.load.image('card_mold', 'assets/ui/frames/card_mold.png');
     // Bitmap fonts (custom game alphabet)
-    this.load.bitmapFont('game_font_gold',  'assets/fonts/game_font_gold.png',  'assets/fonts/game_font.fnt');
-    this.load.bitmapFont('game_font_blue',  'assets/fonts/game_font_blue.png',  'assets/fonts/game_font.fnt');
-    this.load.bitmapFont('game_font_white', 'assets/fonts/game_font_white.png', 'assets/fonts/game_font.fnt');
+    this.load.bitmapFont('game_font_gold',  'assets/fonts/game_font_gold/game_font_gold.png',   'assets/fonts/game_font_gold/game_font_gold.fnt');
+    this.load.bitmapFont('game_font_blue',  'assets/fonts/game_font_blue/game_font_blue.png',   'assets/fonts/game_font_blue/game_font_blue.fnt');
+    this.load.bitmapFont('game_font_white', 'assets/fonts/game_font_white/game_font_white.png', 'assets/fonts/game_font_white/game_font_white.fnt');
 
-    this.load.image('ui_panel',         'assets/ui/panels/panel.png');
+    this.load.image('ui_panel',           'assets/ui/panels/panel.png');
+    this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
+    this.load.image('hud_panel_left',     'assets/ui/panels/hud_panel_left.png');
+    this.load.image('hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/ui/panels/loop_summary_panel.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)
@@ -252,13 +261,33 @@ export class Preloader extends Scene {
     this.load.image('btn_continue_run',    'assets/ui/buttons/continue-run.png');
     this.load.image('btn_new_game',        'assets/ui/buttons/new-game.png');
     this.load.image('btn_daily_run',       'assets/ui/buttons/daily-run.png');
-    this.load.image('btn_keep_my_run',     'assets/ui/buttons/keep-my-run.png');
-    this.load.image('btn_yes_delete',      "assets/ui/buttons/yes, delete.png");
+    this.load.image('btn_keep_my_run',     'assets/ui/btn_keep_my_run.png');
+    this.load.image('btn_yes_delete',      'assets/ui/btn_yes_delete.png');
     this.load.image('btn_resume',          'assets/ui/buttons/btn_resume.png');
     this.load.image('btn_view_deck',       'assets/ui/buttons/btn_view_deck.png');
     this.load.image('btn_settings',        'assets/ui/buttons/btn_settings.png');
     this.load.image('btn_tutorial',        'assets/ui/buttons/btn_tutorial.png');
-    this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
+    // Building buttons (city hub)
+    this.load.image('btn_forge',         'assets/ui/btn_forge.png');
+    this.load.image('btn_library',       'assets/ui/btn_library.png');
+    this.load.image('btn_workshop',      'assets/ui/btn_workshop.png');
+    this.load.image('btn_oracle',        'assets/ui/btn_oracle.png');
+    this.load.image('btn_vault',         'assets/ui/btn_vault.png');
+    this.load.image('upgrade_panel',     'assets/ui/upgrade_panel.png');
+    this.load.image('btn_sim_melhorar',  'assets/ui/btn_sim_melhorar.png');
+    this.load.image('btn_melhorar',          'assets/ui/btn_melhorar.png');
+    this.load.image('btn_start_run_hub',     'assets/ui/btn_start_run_hub.png');
+    this.load.image('label_requer',          'assets/ui/labels/label_requer.png');
+    // Building upgrade text panels (one per level per building)
+    const buildingPanels: [string, number][] = [
+      ['forge', 6], ['library', 3], ['workshop', 3], ['oracle', 4], ['vault', 8],
+    ];
+    for (const [name, max] of buildingPanels) {
+      for (let l = 1; l <= max; l++) {
+        this.load.image(`building_${name}_l${l}`, `assets/ui/text/buildings/building_${name}_l${l}.png`);
+      }
+    }
+this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     this.load.image('btn_back',            'assets/ui/buttons/btn_back.png');
     this.load.image('btn_leave',           'assets/ui/buttons/btn_leave.png');
     this.load.image('btn_close',           'assets/ui/buttons/btn_close.png');

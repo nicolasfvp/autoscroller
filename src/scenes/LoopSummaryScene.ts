@@ -80,7 +80,7 @@ export class LoopSummaryScene extends Scene {
 
   create(data: SummaryData): void {
     const { loopRunner, loopRunState, lootItems, monstersDefeated, tpEarned, loopCount } = data;
-    const FF = FONTS.family;
+    const FF = FONTS.family; // Cinzel fallback (emoji texts can't use bitmapFont)
     const cx = 400;
 
     this.add.rectangle(cx, 300, 800, 600, 0x05080f, 0.92).setAlpha(0);

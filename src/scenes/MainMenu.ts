@@ -194,8 +194,14 @@ export class MainMenu extends Scene {
     dimBg.setInteractive();
     this.confirmOverlay.add(dimBg);
 
-    // Message panel (panel.png scaled to ~480×140)
-    const msgPanel = this.add.image(LAYOUT.centerX, 250, 'ui_panel').setDisplaySize(480, 140);
+    // Message panel — scale to 480px wide maintaining aspect ratio
+    const panelKey = this.textures.exists('confirm_panel') ? 'confirm_panel' : 'ui_panel';
+    const msgPanel = this.add.image(LAYOUT.centerX, 250, panelKey);
+    if (panelKey === 'confirm_panel') {
+      msgPanel.setScale(480 / msgPanel.width);
+    } else {
+      msgPanel.setDisplaySize(480, 148);
+    }
     this.confirmOverlay.add(msgPanel);
 
     const msg = this.add.text(LAYOUT.centerX, 250, 'This will permanently erase your\ncurrent run. Continue?', {
@@ -204,34 +210,46 @@ export class MainMenu extends Scene {
       color: '#e6c88a',
       stroke: '#2e1b0f',
       strokeThickness: 2,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       align: 'center',
     }).setOrigin(0.5);
     this.confirmOverlay.add(msg);
 
-    // Yes button (panel.png + label)
-    const yesBg = this.add.image(270, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
-    const yesLabel = this.add.text(270, 370, 'Yes, Delete', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
-      stroke: '#1a0000', strokeThickness: 2,
-    }).setOrigin(0.5);
-    yesBg.on('pointerover', () => { yesBg.setTint(0xdddddd); yesLabel.setScale(1.05); });
-    yesBg.on('pointerout',  () => { yesBg.clearTint(); yesLabel.setScale(1); });
+    // Yes, Delete button — scale to 210px wide maintaining aspect ratio
+    const yesBtnKey = this.textures.exists('btn_yes_delete') ? 'btn_yes_delete' : 'ui_panel';
+    const yesBg = this.add.image(270, 370, yesBtnKey);
+    if (yesBtnKey === 'btn_yes_delete') {
+      yesBg.setScale(210 / yesBg.width);
+    } else {
+      yesBg.setDisplaySize(210, 58);
+      this.confirmOverlay.add(this.add.text(270, 370, 'Yes, Delete', {
+        fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
+        stroke: '#1a0000', strokeThickness: 2,
+      }).setOrigin(0.5));
+    }
+    yesBg.setInteractive({ useHandCursor: true });
+    yesBg.on('pointerover', () => yesBg.setAlpha(0.85));
+    yesBg.on('pointerout',  () => yesBg.setAlpha(1));
     yesBg.on('pointerdown', () => { void this.startNewRun(); });
     this.confirmOverlay.add(yesBg);
-    this.confirmOverlay.add(yesLabel);
 
-    // Keep button (panel.png + label)
-    const noBg = this.add.image(530, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
-    const noLabel = this.add.text(530, 370, 'Keep My Run', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
-      stroke: '#2e1b0f', strokeThickness: 2,
-    }).setOrigin(0.5);
-    noBg.on('pointerover', () => { noBg.setTint(0xdddddd); noLabel.setScale(1.05); });
-    noBg.on('pointerout',  () => { noBg.clearTint(); noLabel.setScale(1); });
+    // Keep My Run button — scale to 210px wide maintaining aspect ratio
+    const noBtnKey = this.textures.exists('btn_keep_my_run') ? 'btn_keep_my_run' : 'ui_panel';
+    const noBg = this.add.image(530, 370, noBtnKey);
+    if (noBtnKey === 'btn_keep_my_run') {
+      noBg.setScale(210 / noBg.width);
+    } else {
+      noBg.setDisplaySize(210, 58);
+      this.confirmOverlay.add(this.add.text(530, 370, 'Keep My Run', {
+        fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
+        stroke: '#2e1b0f', strokeThickness: 2,
+      }).setOrigin(0.5));
+    }
+    noBg.setInteractive({ useHandCursor: true });
+    noBg.on('pointerover', () => noBg.setAlpha(0.85));
+    noBg.on('pointerout',  () => noBg.setAlpha(1));
     noBg.on('pointerdown', () => this.hideConfirmation());
     this.confirmOverlay.add(noBg);
-    this.confirmOverlay.add(noLabel);
   }
 
   private hideConfirmation(): void {
@@ -251,6 +269,10 @@ export class MainMenu extends Scene {
       const meta = await loadMetaState();
       if (!meta.tutorialSeen) {
         tutorialDirector.start();
+        // Mark tutorialSeen now so the player isn't trapped in a tutorial
+        // loop if they abandon mid-run. The scripted overlays still play.
+        meta.tutorialSeen = true;
+        await saveMetaState(meta);
       }
     } catch (err) {
       console.warn('[MainMenu] tutorial gate read failed:', err);
@@ -308,7 +330,7 @@ export class MainMenu extends Scene {
     const text = this.add.text(LAYOUT.centerX, 100, msg, {
       fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       wordWrap: { width: 600 }, align: 'center',
     }).setOrigin(0.5).setDepth(50);
     text.setAlpha(0);
@@ -337,14 +359,14 @@ export class MainMenu extends Scene {
     const title = this.add.text(LAYOUT.centerX, 120, SAVE_INCOMPATIBLE_COPY.title, {
       fontSize: '18px', fontStyle: 'bold', color: '#ffaa44',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
     container.add(title);
 
     const body = this.add.text(LAYOUT.centerX, 150, SAVE_INCOMPATIBLE_COPY.body, {
       fontSize: '13px', color: '#ffffff',
       stroke: '#000000', strokeThickness: 2,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       wordWrap: { width: 480 }, align: 'center',
     }).setOrigin(0.5);
     container.add(body);
@@ -352,7 +374,7 @@ export class MainMenu extends Scene {
     const cta = this.add.text(LAYOUT.centerX, 185, SAVE_INCOMPATIBLE_COPY.cta, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.accent,
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     cta.on('pointerover', () => cta.setColor(COLORS.accentHover));
     cta.on('pointerout', () => cta.setColor(COLORS.accent));

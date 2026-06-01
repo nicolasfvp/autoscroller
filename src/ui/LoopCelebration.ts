@@ -1,3 +1,4 @@
+import { FONTS } from '../ui/StyleConstants';
 ﻿import Phaser from 'phaser';
 
 const sceneActive = (scene: Phaser.Scene): boolean =>
@@ -23,7 +24,7 @@ export class LoopCelebration {
     }
     this.inFlight = true;
 
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = FONTS.body;
     const finish = () => {
       this.inFlight = false;
       if (sceneActive(scene)) onComplete();

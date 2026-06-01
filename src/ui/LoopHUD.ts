@@ -10,7 +10,7 @@ import { resolveHeroStats } from '../systems/hero/HeroStatsResolver';
 export { extractStatusRowData, STATUS_ROW_COLORS } from './LoopHUD.helpers';
 export type { StatusRowData } from './LoopHUD.helpers';
 
-const FF = FONTS.family;
+const FF = FONTS.family; // Cinzel — bitmapFont not usable here (emojis)
 
 /**
  * LoopHUD -- redesigned fixed HUD overlay for GameScene.
@@ -74,7 +74,9 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const LP = LoopHUD;
 
     // ── Left panel ─────────────────────────────────────────────
-    const leftPanelBg = scene.add.image(LP.LP_X + LP.LP_W / 2, LP.LP_Y + LP.LP_H / 2, 'ui_panel').setDisplaySize(LP.LP_W, LP.LP_H);
+    const leftPanelKey = scene.textures.exists('hud_panel_left') ? 'hud_panel_left' : 'ui_panel';
+    const leftPanelBg = scene.add.image(LP.LP_X + LP.LP_W / 2, LP.LP_Y + LP.LP_H / 2, leftPanelKey);
+    leftPanelBg.setScale(Math.min(LP.LP_W / leftPanelBg.width, LP.LP_H / leftPanelBg.height));
     this.add(leftPanelBg);
 
     // Top info row — gold (left), loop count (center), difficulty (right)
@@ -144,7 +146,8 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.rightPanelContainer.setVisible(false);
     this.add(this.rightPanelContainer);
 
-    const rpBg = scene.add.image(LP.RP_X + LP.RP_W / 2, LP.RP_Y + LP.RP_H / 2, 'ui_panel').setDisplaySize(LP.RP_W, LP.RP_H);
+    const rpBg = scene.add.image(LP.RP_X + LP.RP_W / 2, LP.RP_Y + LP.RP_H / 2, leftPanelKey);
+    rpBg.setScale(Math.min(LP.RP_W / rpBg.width, LP.RP_H / rpBg.height));
     this.rightPanelContainer.add(rpBg);
 
     const tpIcon = scene.add.text(LP.RP_X + 20, LP.RP_Y + 26, '⬡', {
@@ -276,13 +279,17 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const P = LoopHUD;
     const cx = P.PROG_X + P.PROG_W / 2;
     const cy = P.PROG_Y + P.PROG_H / 2;
-    const pgBg = scene.add.image(cx, cy, 'ui_panel').setDisplaySize(P.PROG_W, P.PROG_H);
+    const pgKey = scene.textures.exists('hud_panel_progress') ? 'hud_panel_progress' : 'ui_panel';
+    const pgBg = scene.add.image(cx, cy, pgKey);
+    pgBg.setScale(Math.min(P.PROG_W / pgBg.width, P.PROG_H / pgBg.height));
     this.add(pgBg);
 
-    this.add(scene.add.text(cx, P.PROG_Y + 32, 'LOOP PROGRESS', {
-      fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
-      color: '#ffcc88', stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5, 0.5));
+    if (pgKey === 'ui_panel') {
+      this.add(scene.add.text(cx, P.PROG_Y + 32, 'LOOP PROGRESS', {
+        fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
+        color: '#ffcc88', stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5, 0.5));
+    }
 
     const pBarX = P.PROG_X + 26;
     const pBarW = P.PROG_W - 52;

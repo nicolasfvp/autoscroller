@@ -1,4 +1,4 @@
-﻿import { Scene } from 'phaser';
+import { Scene } from 'phaser';
 import { createNewRun, setRun, getRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { loadMetaState } from '../systems/MetaPersistence';
@@ -200,7 +200,7 @@ export class CharacterSelectScene extends Scene {
       color: '#f0d080',
       stroke: '#000000',
       strokeThickness: 4,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0.5);
     container.add(nameLabel);
@@ -217,7 +217,7 @@ export class CharacterSelectScene extends Scene {
       color: '#cccccc',
       stroke: '#000000',
       strokeThickness: 2,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       align: 'center',
       resolution: 3,
     }).setOrigin(0.5, 0);
@@ -235,7 +235,7 @@ export class CharacterSelectScene extends Scene {
       color: '#aaaaaa',
       stroke: '#000000',
       strokeThickness: 2,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       align: 'center',
       wordWrap: { width: w - 30 },
       resolution: 3,
@@ -260,7 +260,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(txt);
@@ -287,7 +287,7 @@ export class CharacterSelectScene extends Scene {
       color: '#ffffff',
       stroke: '#000000',
       strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       resolution: 3,
     }).setOrigin(0, 0.5);
     container.add(valTxt);
