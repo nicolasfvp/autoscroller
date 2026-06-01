@@ -614,7 +614,8 @@ export class ForgeScene extends Scene {
       forgeLevel,
       knownRecipes as any,
     );
-    run.deck.droppedCards.push(result.cardId);
+    run.deck.active.push(result.cardId);
+    run.deck.upgraded.push(false);
 
     if (result.isNewRecipe && this.metaState) {
       this.metaState.forgeRecipes = discoverRecipe(knownRecipes as any, this.forgeSlots, result.cardId) as any;

@@ -32,9 +32,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private shopToggleText!: Phaser.GameObjects.Text;
   private rightPanelContainer!: Phaser.GameObjects.Container;
 
-  private pendingBadge!: Phaser.GameObjects.Text;
-  private pendingBg!: Phaser.GameObjects.Graphics;
-
 
   // Phase 9 (Design v2): STR/VIT/DEX/INT/SPI status row
   private statTexts: { str?: Phaser.GameObjects.Text; vit?: Phaser.GameObjects.Text; dex?: Phaser.GameObjects.Text; int?: Phaser.GameObjects.Text; spi?: Phaser.GameObjects.Text } = {};
@@ -130,14 +127,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5, 0.5);
     this.add(this.hpText);
-
-    this.pendingBg = scene.add.graphics();
-    this.add(this.pendingBg);
-    this.pendingBadge = scene.add.text(LP.LP_X + LP.LP_W / 2, LP.LP_Y + LP.LP_H + 10, '', {
-      fontFamily: FF, fontSize: '12px', fontStyle: 'bold', color: '#ff8800',
-      stroke: '#000', strokeThickness: 2,
-    }).setOrigin(0.5, 0).setVisible(false);
-    this.add(this.pendingBadge);
 
     // ── Right panel ────────────────────────────────────────────
     this.rightPanelContainer = scene.add.container(0, 0);
@@ -339,9 +328,6 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const mats = Object.entries(runState.economy.materials ?? {}).filter(([, v]) => v > 0);
     this.materialsRow.setText(mats.slice(0, 5).map(([k, v]) => `${MAT[k] ?? k[0]}${v}`).join('  '));
     this.updateShopToggle(runState.stopAtShop);
-    const pending = runState.deck.droppedCards?.length ?? 0;
-    this.pendingBadge.setText(pending > 0 ? `📦 ${pending} new cards` : '').setVisible(pending > 0);
-
 
     // Phase 9 (Design v2): refresh STR/VIT/DEX/INT/SPI status row from resolveHeroStats.
     const status = extractStatusRowData(runState);

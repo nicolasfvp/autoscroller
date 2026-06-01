@@ -8,6 +8,7 @@ import { SeededRNG } from '../systems/SeededRNG';
 import { MetaState, createDefaultMetaState } from './MetaState';
 import { getAvailableCards, getAvailableRelics, getAvailableTiles } from '../systems/UnlockManager';
 import type { TileSlot } from '../systems/TileRegistry';
+import type { TutorialProgress } from '../systems/tutorial/TutorialDirector';
 import type { StatId } from '../data/types';
 import { eventBus } from '../core/EventBus';
 import { clearPendingLoot } from '../systems/PendingLoot';
@@ -180,6 +181,15 @@ export interface RunState {
     relics: string[];
     tiles: string[];
   };
+
+  /**
+   * Scripted first-run tutorial progress, persisted so a reload + Continue
+   * resumes the tutorial at the same step instead of silently dropping it
+   * (the TutorialDirector is otherwise in-memory only). Absent on
+   * non-tutorial runs and on saves that predate this field — both treated as
+   * "no tutorial in progress" by TutorialDirector.restore().
+   */
+  tutorial?: TutorialProgress;
 }
 
 /** Current RunState save schema version. Bump when shape changes incompatibly. */
@@ -282,6 +292,19 @@ export function migrateRunState(raw: any): RunState | null {
   // so no backfill is required — the version bump just lets the D-07 guard pass.
   if (raw.version === 5) {
     raw.version = 6;
+  }
+  // Loot bag removed: cards now go straight to the active deck. Any cards left
+  // in a resumed save's bag (deck.droppedCards) are folded into the deck so
+  // they aren't orphaned now that the bag UI is gone. The field is kept
+  // (emptied) so the persisted save shape stays stable.
+  if (raw.deck && Array.isArray(raw.deck.droppedCards) && raw.deck.droppedCards.length > 0) {
+    if (!Array.isArray(raw.deck.active)) raw.deck.active = [];
+    if (!Array.isArray(raw.deck.upgraded)) raw.deck.upgraded = [];
+    for (const id of raw.deck.droppedCards) {
+      raw.deck.active.push(id);
+      raw.deck.upgraded.push(false);
+    }
+    raw.deck.droppedCards = [];
   }
   return raw as RunState;
 }

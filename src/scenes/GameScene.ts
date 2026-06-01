@@ -431,6 +431,16 @@ export class GameScene extends Scene {
       return; // Run was cleared, stop updating
     }
 
+    // Tutorial gate: while a click-advance step targets GameScene (map-intro,
+    // complete), freeze the world entirely so the hero can't autoscroll into a
+    // combat tile before the player has read and dismissed the lesson. Bail
+    // before ticking the loop runner AND before moving the hero so the map sits
+    // completely still. CombatScene applies the same gate to its own tick, so
+    // run and battle are both frozen during their respective tutorial modals.
+    if (tutorialDirector.shouldPauseScene(SCENE_KEYS.GAME)) {
+      return;
+    }
+
     // Apply slow debuff — use map speed from RunState (feedback #10, #28).
     // Background tabs force 1x: avoids time-warping when player returns after
     // long absence (browser-throttled ticks accumulate large deltas).

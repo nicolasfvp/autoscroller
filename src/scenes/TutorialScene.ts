@@ -53,7 +53,7 @@ const TOPICS: TutorialTopic[] = [
       'a particular playstyle (Iron Wall, Berserker, Pyromancer, …).\n\n' +
       'Cards play themselves in combat, top to bottom, on cooldown.\n' +
       'The Deck panel (mid-run, from the loop overlay) lets you REORDER\n' +
-      'cards and slot any new ones you have looted into the play order.',
+      'cards — new ones you forge or find are added straight to it.',
   },
   {
     id: 'relics',

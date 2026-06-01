@@ -13,6 +13,8 @@ import {
   resolveIconKey,
   type ElementId,
 } from '../systems/ElementSystem';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 const ELEMENT_SELL_PRICE = 25;
 const ELEMENT_BUY_PRICE = 50;
@@ -49,12 +51,15 @@ export class ShopScene extends Scene {
   private mainLayer!: Phaser.GameObjects.Container;
   private tooltipLayer!: Phaser.GameObjects.Container;
   private cachedRelicRoll?: ShopRelic[];
+  /** Tutorial: counts element purchases so 'shop-buy-elements' advances on the 2nd. */
+  private tutorialElementsBought = 0;
 
   constructor() { super(SCENE_KEYS.SHOP); }
 
   init(data?: { parentScene?: string }): void {
     this.parentSceneKey = data?.parentScene ?? SCENE_KEYS.GAME;
     this.cachedRelicRoll = undefined;
+    this.tutorialElementsBought = 0;
   }
 
   create(): void {
@@ -76,6 +81,20 @@ export class ShopScene extends Scene {
       this.buildElements();
       this.buildServices();
       this.buildLeaveButton();
+
+      // Scripted tutorial: spotlight each step's target and let TutorialOverlay
+      // block everything else. Per-action gating below (buy relic → buy 2
+      // elements → leave) backs this up so off-script clicks inside a spotlight
+      // (e.g. selling an element) are also refused.
+      const overlay = TutorialOverlay.mountIfActive(this);
+      if (overlay) {
+        // Single forced relic renders centred at x≈400, y≈231.
+        overlay.setStepRect('shop-buy-relic', { x: 322, y: 142, width: 156, height: 182 });
+        // The 8-element row + its buy/sell steppers span the mid band.
+        overlay.setStepRect('shop-buy-elements', { x: 40, y: 296, width: 720, height: 184 });
+        // Leave Shop button, bottom-right.
+        overlay.setStepRect('shop-leave', { x: 654, y: 548, width: 150, height: 44 });
+      }
 
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
@@ -139,11 +158,55 @@ export class ShopScene extends Scene {
     }).setOrigin(0, 0.5);
   }
 
+  // ── Tutorial gating ───────────────────────────────────────
+  /** Current scripted-tutorial step targeting the shop, or null (normal play
+   *  or any non-shop step). */
+  private shopTutorialStep(): string | null {
+    if (!tutorialDirector.isActive()) return null;
+    return tutorialDirector.getStepForScene(SCENE_KEYS.SHOP)?.id ?? null;
+  }
+
+  /**
+   * Whether a shop action is permitted right now. Outside the tutorial every
+   * action is allowed; during it only the on-script action for the current
+   * step is — the sequence is buy a relic → buy 2 elements → leave, and
+   * selling / removing cards are never part of it.
+   */
+  private tutAllows(action: 'relic' | 'buy-element' | 'sell-element' | 'remove' | 'leave'): boolean {
+    const step = this.shopTutorialStep();
+    if (step === null) return true;
+    switch (action) {
+      case 'relic':       return step === 'shop-buy-relic';
+      case 'buy-element': return step === 'shop-buy-elements';
+      case 'leave':       return step === 'shop-leave';
+      case 'sell-element':
+      case 'remove':      return false;
+    }
+  }
+
+  /**
+   * Tutorial relic offer: a single affordable common relic. Forcing one option
+   * keeps the "buy a relic" step unambiguous and guarantees the scripted gold
+   * budget (relic 90 + 2 elements 100 + forge 50) balances regardless of the
+   * random pool roll. Warrior-tutorial relic; falls back to the normal roll if
+   * the data is somehow missing.
+   */
+  private tutorialRelicRoll(run: ReturnType<typeof getRun>): ShopRelic[] {
+    const relicId = 'whetstone_shard';
+    const d = getRelicById(relicId);
+    if (!d || run.relics.includes(relicId)) {
+      return ShopSystem.getShopRelics(run, run.pool.relics);
+    }
+    return [{ relicId, name: d.name, price: ShopSystem.getRelicPrice('common', 0) }];
+  }
+
   // ── Relics ────────────────────────────────────────────────
   private buildRelics(): void {
     const run = getRun();
     if (!this.cachedRelicRoll) {
-      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
+      this.cachedRelicRoll = this.shopTutorialStep() !== null
+        ? this.tutorialRelicRoll(run)
+        : ShopSystem.getShopRelics(run, run.pool.relics);
     }
     const relics = this.cachedRelicRoll;
 
@@ -252,15 +315,19 @@ export class ShopScene extends Scene {
       group.add(star);
     }
 
+    // Tutorial gate: during the shop steps a relic may only be bought on the
+    // 'shop-buy-relic' step. Affordability (`ok`) still drives the visuals.
+    const buyable = ok && this.tutAllows('relic');
+
     // Hit area = the full vertical extent so name + frame + price are clickable.
     const hit = new Phaser.Geom.Rectangle(-dispW * 0.45, -dispH * 0.42, dispW * 0.90, dispH * 0.84);
     group.setInteractive(hit, Phaser.Geom.Rectangle.Contains);
-    if (ok) (group as any).input.cursor = 'pointer';
+    if (buyable) (group as any).input.cursor = 'pointer';
 
     const baseScale = 1;
     group.on('pointerover', () => {
       this.showRelicTooltip(x, y - dispH * 0.25, r, d, ok);
-      if (ok) {
+      if (buyable) {
         this.tweens.add({ targets: group, scale: 1.06, duration: 140, ease: 'Cubic.easeOut' });
       }
     });
@@ -268,12 +335,14 @@ export class ShopScene extends Scene {
       this.hideTooltip();
       this.tweens.add({ targets: group, scale: baseScale, duration: 140, ease: 'Cubic.easeOut' });
     });
-    if (ok) {
+    if (buyable) {
       group.on('pointerdown', () => {
         const run = getRun();
         if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
           this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+          // Tutorial: relic bought → advance to the buy-elements step.
+          tutorialDirector.advanceIfMatches('shop-buy-relic');
           this.refreshAll();
         }
       });
@@ -349,13 +418,17 @@ export class ShopScene extends Scene {
     // the right (increments count, −gold). No vertical stacking → no overlap.
     const canSell = owned > 0;
     const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE;
+    // Tutorial gate: during the scripted shop visit only BUYING is on-script
+    // (on the 'shop-buy-elements' step); selling stays disabled throughout.
+    const sellEnabled = canSell && this.tutAllows('sell-element');
+    const buyEnabled = canBuy && this.tutAllows('buy-element');
     const stepperY = dispH * 0.32;
     const btnW = 30;
     const btnH = 18;
     const btnOffset = Math.min(w / 2 - 2, 32);
 
-    const sellBtn = this.makeMiniButton(-btnOffset, stepperY, btnW, btnH, `+${ELEMENT_SELL_PRICE}g`, canSell, '#aaffaa', 0x2e5a18);
-    const buyBtn  = this.makeMiniButton( btnOffset, stepperY, btnW, btnH, `−${ELEMENT_BUY_PRICE}g`,  canBuy,  GOLD,       0x6c3e1a);
+    const sellBtn = this.makeMiniButton(-btnOffset, stepperY, btnW, btnH, `+${ELEMENT_SELL_PRICE}g`, sellEnabled, '#aaffaa', 0x2e5a18);
+    const buyBtn  = this.makeMiniButton( btnOffset, stepperY, btnW, btnH, `−${ELEMENT_BUY_PRICE}g`,  buyEnabled,  GOLD,       0x6c3e1a);
     group.add([sellBtn.container, buyBtn.container]);
 
     // Owned count in the middle of the stepper row.
@@ -365,7 +438,7 @@ export class ShopScene extends Scene {
       stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5));
 
-    if (canSell) {
+    if (sellEnabled) {
       sellBtn.hit.on('pointerdown', () => {
         inv[id] = (inv[id] ?? 0) - 1;
         run.economy.gold += ELEMENT_SELL_PRICE;
@@ -373,11 +446,18 @@ export class ShopScene extends Scene {
         this.refreshAll();
       });
     }
-    if (canBuy) {
+    if (buyEnabled) {
       buyBtn.hit.on('pointerdown', () => {
         run.economy.gold -= ELEMENT_BUY_PRICE;
         inv[id] = (inv[id] ?? 0) + 1;
         AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+        // Tutorial: count element purchases; the 2nd advances to the leave step.
+        if (this.shopTutorialStep() === 'shop-buy-elements') {
+          this.tutorialElementsBought++;
+          if (this.tutorialElementsBought >= 2) {
+            tutorialDirector.advanceIfMatches('shop-buy-elements');
+          }
+        }
         this.refreshAll();
       });
     }
@@ -428,7 +508,9 @@ export class ShopScene extends Scene {
   private buildServices(): void {
     const run = getRun();
     const cost = ShopSystem.getRemoveCardCost(run.economy.removalsThisShop ?? 0);
-    const canAfford = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE;
+    // Tutorial gate: the remove-card service is never part of the scripted visit.
+    const canAfford = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE
+      && this.tutAllows('remove');
 
     const cx = SERVICE_CX;
     const cy = SERVICE_CY;
@@ -559,7 +641,12 @@ export class ShopScene extends Scene {
     (btn as any).input.cursor = 'pointer';
     btn.on('pointerover', () => label.setColor(WHITE));
     btn.on('pointerout', () => label.setColor(GOLD));
-    btn.on('pointerdown', () => this.close());
+    btn.on('pointerdown', () => {
+      // Tutorial gate: can't leave until the scripted buys are done (the
+      // overlay also blocks this button until the 'shop-leave' step).
+      if (!this.tutAllows('leave')) return;
+      this.close();
+    });
     this.mainLayer.add(btn);
   }
 
@@ -598,6 +685,9 @@ export class ShopScene extends Scene {
   }
 
   private close(): void {
+    // Tutorial: leaving the shop completes 'shop-leave' and hands back to
+    // planning with the forge step armed. No-op outside the tutorial.
+    tutorialDirector.advanceIfMatches('shop-leave');
     const parent = this.parentSceneKey;
     const isSleeping = this.scene.isSleeping(parent);
     this.scene.stop();
