@@ -231,7 +231,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
   private applyStatTween(key: 'str' | 'vit' | 'dex' | 'int' | 'spi', newValue: number): void {
     const txt = this.statTexts[key];
     if (!txt) return;
-    const currentValue = parseInt(txt.text, 10);
+    const currentValue = Number.parseInt(txt.text, 10);
     // Always write the final value first so the HUD is correct even if the
     // tween onUpdate is throttled or the scene ticks slower than expected.
     txt.setText(String(newValue));
@@ -349,6 +349,8 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   private updateShopToggle(enabled: boolean): void {
     this.drawShopToggle(enabled);
-    this.shopToggleText.setText(enabled ? 'Shop ✔' : 'Shop ✘').setColor(enabled ? '#00ff88' : '#ff4466');
+    const label = enabled ? 'Shop ✔' : 'Shop ✘';
+    const color = enabled ? '#00ff88' : '#ff4466';
+    this.shopToggleText.setText(label).setColor(color);
   }
 }

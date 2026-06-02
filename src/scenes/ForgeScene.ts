@@ -31,7 +31,6 @@ import type { MetaState } from '../state/MetaState';
 import { createCardVisual } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
 import { showCardDetail } from '../ui/CardDetailPopup';
-import type { ForgePopupOptions } from '../ui/CardDetailPopup';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { saveManager } from '../core/SaveManager';
@@ -48,7 +47,6 @@ const CANVAS_H = 600;
 // ── Arc layout ────────────────────────────────────────────────────────────────
 const ARC_CX = 405;
 const ARC_CY = 360;
-const ARC_W  = 506;         // display width → converted to scale on render
 const SLOT_R = 162;
 const SLOT_ICON = 73;
 
@@ -63,10 +61,6 @@ const CIRCLE_SLOTS: Array<{ id: ElementId; angleDeg: number }> = [
   { id: 'fire',    angleDeg: 315 },
 ];
 
-// Banner position and scale (debug-layout 2026-06-02)
-const BANNER_X = 397.4;
-const BANNER_Y = 121.1;
-const BANNER_SCALE = 0.1012;
 
 // Shard ring positions (debug-layout 2026-06-02)
 const RING_POSITIONS: Record<ElementId, { x: number; y: number }> = {
@@ -248,9 +242,7 @@ export class ForgeScene extends Scene {
       const count  = (elementInv[id] ?? 0) + (shardInv[id] ?? 0);
       const layout = TOP_BAR_LAYOUT[id];
 
-      const sigilKey = `forge_sigil_${id}`;
-      const fallback = resolveIconKey(this.textures, id);
-      const iconKey  = this.textures.exists(sigilKey) ? sigilKey : (fallback ?? null);
+      const iconKey = resolveIconKey(this.textures, id);
       if (iconKey) {
         const icon = this.add.image(layout.ix, layout.iy, iconKey);
         icon.setScale(layout.isize / icon.width);
@@ -280,14 +272,8 @@ export class ForgeScene extends Scene {
       const available = (elementInv[id] ?? 0) - (slotUsage[id] ?? 0);
       const selected  = this.forgeSlots.includes(id);
       const usable    = available > 0 && slotsLeft;
-      const elem      = ELEMENTS[id];
-      const elemColor = parseInt(elem.color.replace('#', ''), 16);
-
-
       // Shard icon
-      const sigilKey = `forge_sigil_${id}`;
-      const iconKey  = resolveIconKey(this.textures, id);
-      const texKey   = this.textures.exists(sigilKey) ? sigilKey : iconKey;
+      const texKey = resolveIconKey(this.textures, id);
       if (!texKey) continue;
 
       const sz      = RING_DISPLAY_SIZES[id] ?? SLOT_ICON;
@@ -387,8 +373,6 @@ export class ForgeScene extends Scene {
 
   // ── Center: card preview (overlays bigorna when recipe found) ─────────────
   private renderCenterContent(forgeLevel: number): void {
-    const run = getRun();
-    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
 
     if (card) {
@@ -443,79 +427,6 @@ export class ForgeScene extends Scene {
     }
   }
 
-  // ── Painel de confirmação (clique na carta) ───────────────────────────────
-  private showConfirmPanel(cardId: string, forgeLevel: number): void {
-    if (this.confirmPanel) return;
-
-    const run = getRun();
-    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
-    const tier = this.forgeSlots.length as 1 | 2 | 3;
-    const cost = getForgeGoldCost(tier, forgeLevel);
-    const deckSize = run.deck.active.length;
-    const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);
-
-    const canForge = validation?.ok && isTierUnlocked(tier, forgeLevel);
-
-    const CX = ARC_CX;
-    const PY = BANNER_Y;
-    const panel = this.add.container(CX, PY).setDepth(50);
-    this.confirmPanel = panel;
-
-    // Banner fundo (debug-layout: scale=0.118, pos=-2.1,0.5)
-    if (this.textures.exists('forge_status_banner')) {
-      panel.add(this.add.image(-2.1, 0.5, 'forge_status_banner').setScale(0.118));
-    } else {
-      panel.add(this.add.rectangle(0, 0, 222, 60, 0x0a0400, 0.92).setStrokeStyle(1.5, 0xd4a04a, 0.8));
-    }
-
-    // Custo (debug-layout: x=-84.9, y=-2.6, origin left-center)
-    panel.add(
-      this.add.text(-84.9, -2.6, `⚒ ${cost} Gold`, {
-        fontSize: '16px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-        stroke: '#000', strokeThickness: 3,
-      }).setOrigin(0, 0.5),
-    );
-
-    // Status (debug-layout: x=27.5, y=0.5, wrapWidth=120)
-    let statusText: string;
-    let statusColor: string;
-    if (!canForge && validation && !validation.ok) {
-      statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
-      statusColor = RED;
-    } else if (!isTierUnlocked(tier, forgeLevel)) {
-      statusText = `Tier ${tier} locked`;
-      statusColor = RED;
-    } else {
-      statusText = '✦ Ready to\nforge ✦';
-      statusColor = '#9bff9b';
-    }
-    panel.add(
-      this.add.text(27.5, 0.5, statusText, {
-        fontSize: '13px', fontStyle: 'bold', color: statusColor, fontFamily: FF,
-        stroke: '#000', strokeThickness: 3,
-        wordWrap: { width: 120 },
-      }).setOrigin(0, 0.5),
-    );
-
-    // Botões com assets (debug-layout: FORGE=-62.2,237.8 / DISMISS=48,237.3, scale=0.0411)
-    const makeImgBtn = (ox: number, oy: number, texKey: string, onClick: () => void) => {
-      const img = this.add.image(ox, oy, texKey).setScale(0.0411)
-        .setInteractive({ useHandCursor: true });
-      img.on('pointerover',  () => img.setTint(0xffffcc));
-      img.on('pointerout',   () => img.clearTint());
-      img.on('pointerdown',  onClick);
-      panel.add(img);
-    };
-
-    if (canForge) {
-      makeImgBtn(-62.2, 237.8, 'btn_forge_action', () => this.executeForgeAction(cardId, forgeLevel));
-    }
-    makeImgBtn(canForge ? 48 : 0, 237.3, 'btn_dismiss', () => this.dismissConfirmPanel());
-
-    panel.setAlpha(0);
-    this.tweens.add({ targets: panel, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
-  }
-
   private dismissConfirmPanel(): void {
     if (!this.confirmPanel) return;
     const p = this.confirmPanel;
@@ -527,7 +438,7 @@ export class ForgeScene extends Scene {
   }
 
   // ── Forge execution ────────────────────────────────────────────────────────
-  private executeForgeAction(cardId: string, forgeLevel: number): void {
+  private executeForgeAction(_cardId: string, forgeLevel: number): void {
     this.dismissConfirmPanel();
     const run = getRun();
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
@@ -538,13 +449,13 @@ export class ForgeScene extends Scene {
         elementInv,
         (amount) => { run.economy.gold -= amount; },
         forgeLevel,
-        this.metaState?.forgeRecipes ?? [],
+        (this.metaState?.forgeRecipes ?? []) as any,
       );
 
       run.deck.active.push(result.cardId);
       if (result.isNewRecipe && this.metaState) {
         this.metaState.forgeRecipes = discoverRecipe(
-          this.metaState.forgeRecipes ?? [],
+          (this.metaState.forgeRecipes ?? []) as any,
           this.forgeSlots,
           result.cardId,
         );
@@ -582,7 +493,7 @@ export class ForgeScene extends Scene {
         const { x: sx, y: sy } = RING_POSITIONS[this.dragId!] ?? ringPos(slot.angleDeg, SLOT_R);
         const gx = this.dragGhost.x;
         const gy = this.dragGhost.y;
-        const col = parseInt(ELEMENTS[this.dragId!].color.replace('#', ''), 16);
+        const col = Number.parseInt(ELEMENTS[this.dragId!].color.replace('#', ''), 16);
         this.drawDashedLine(sx, sy, gx, gy, col, 2.5, 0.55, 10, 6);
       }
     }
@@ -598,7 +509,7 @@ export class ForgeScene extends Scene {
       if (!slot) continue;
 
       const { x: sx, y: sy } = RING_POSITIONS[id] ?? ringPos(slot.angleDeg, SLOT_R);
-      const elemColor = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
+      const elemColor = Number.parseInt(ELEMENTS[id].color.replace('#', ''), 16);
       const count     = countMap[id] ?? 1;
 
       // Espessura e opacidade crescem com o count
@@ -916,7 +827,7 @@ export class ForgeScene extends Scene {
 
 
 
-function forgeReasonDwarf(reason: string, tier: number, forgeLevel: number, cost: number): string {
+function forgeReasonDwarf(reason: string, tier: number, _forgeLevel: number, cost: number): string {
   switch (reason) {
     case 'tier_locked':           return `Tier ${tier} needs\nForge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]}.\nUpgrade first, friend!`;
     case 'no_card':               return `Hmm... no recipe\nmatches that combo.\nTry somethin' else!`;
@@ -927,13 +838,3 @@ function forgeReasonDwarf(reason: string, tier: number, forgeLevel: number, cost
   }
 }
 
-function forgeReason(reason: string, tier: number, forgeLevel: number): string {
-  switch (reason) {
-    case 'tier_locked':            return `Tier ${tier} requires Forge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]} (now ${forgeLevel}).`;
-    case 'no_card':                return 'No card matches that combination.';
-    case 'insufficient_elements':  return 'Not enough element units.';
-    case 'insufficient_gold':      return 'Not enough gold.';
-    case 'deck_full':              return 'Deck full (max 15 cards).';
-    default:                       return '';
-  }
-}

@@ -425,10 +425,10 @@ function drawSecondaryCosts(
   const fitWidth = slot.w / rows.length - 2;
   const maxByH = slot.h * 0.85;
   const baseIcon = Math.min(maxByH, fitWidth);
-  const shrink =
-    rows.length <= 2 ? 1 :
-    rows.length === 3 ? 0.82 :
-    0.68;
+  let shrink: number;
+  if (rows.length <= 2)       shrink = 1;
+  else if (rows.length === 3) shrink = 0.82;
+  else                        shrink = 0.68;
   const iconSize = baseIcon * shrink;
   const gap = Math.max(2, iconSize * 0.08);
   const totalW = rows.length * iconSize + (rows.length - 1) * gap;
@@ -566,8 +566,8 @@ function drawElements(
       img.setDisplaySize(elemSize, elemSize);
       parent.add(img);
     } else {
-      const color = parseInt(ELEMENTS[e].color.replace('#', ''), 16);
-      parent.add(scene.add.circle(cx, slot.cy, elemSize / 2, color).setStrokeStyle(1, COLOR.BORDER));
+      const color = Number.parseInt(ELEMENTS[e].color.replace('#', ''), 16);
+      parent.add(scene.add.circle(cx, slot.cy, elemSize / 2, color).setStrokeStyle(1, COLOR.BORDER_OUTER));
     }
     cx += elemSize + gap;
   }
@@ -698,30 +698,42 @@ function drawCostCell(
 
 interface SecondaryRow { token: string; qty: string }
 
+function collectStackCosts(effects: CardEffect[], rows: SecondaryRow[]): void {
+  for (const fx of effects) {
+    if (fx.type !== 'stack' || !fx.consume_stack || !fx.stack) continue;
+    const amount = Math.abs(fx.value);
+    rows.push({ token: fx.stack, qty: amount >= 99 ? 'X' : String(amount) });
+  }
+}
+
+function collectConvertStackCosts(effects: CardEffect[], rows: SecondaryRow[]): void {
+  for (const fx of effects) {
+    if (fx.type !== 'convert_stack' || !fx.from) continue;
+    if (rows.some(r => r.token === fx.from)) continue;
+    const v = fx.value ?? 0;
+    rows.push({ token: fx.from, qty: v >= 99 ? 'X' : String(v) });
+  }
+}
+
+function collectPyreCost(effects: CardEffect[], rows: SecondaryRow[]): void {
+  const isPyreCard = effects.some(fx =>
+    fx.type === 'damage'
+    && fx.condition?.enemy_has_stack === 'burn'
+    && fx.condition?.per_stack === true,
+  );
+  if (isPyreCard && !rows.some(r => r.token === 'burn')) {
+    rows.push({ token: 'burn', qty: 'X' });
+  }
+}
+
 function buildSecondaryCostRows(card: CardDefinition, isUpgraded: boolean): SecondaryRow[] {
   const rows: SecondaryRow[] = [];
   const effects = isUpgraded && card.upgraded?.effects ? card.upgraded.effects : card.effects;
 
   if (effects) {
-    for (const fx of effects as CardEffect[]) {
-      if (fx.type !== 'stack' || !fx.consume_stack || !fx.stack) continue;
-      const amount = Math.abs(fx.value);
-      rows.push({ token: fx.stack, qty: amount >= 99 ? 'X' : String(amount) });
-    }
-    for (const fx of effects as CardEffect[]) {
-      if (fx.type !== 'convert_stack' || !fx.from) continue;
-      if (rows.some(r => r.token === fx.from)) continue;
-      const v = fx.value ?? 0;
-      rows.push({ token: fx.from, qty: v >= 99 ? 'X' : String(v) });
-    }
-    const pyrePattern = (effects as CardEffect[]).some(fx =>
-      fx.type === 'damage'
-      && fx.condition?.enemy_has_stack === 'burn'
-      && fx.condition?.per_stack === true,
-    );
-    if (pyrePattern && !rows.some(r => r.token === 'burn')) {
-      rows.push({ token: 'burn', qty: 'X' });
-    }
+    collectStackCosts(effects, rows);
+    collectConvertStackCosts(effects, rows);
+    collectPyreCost(effects, rows);
   }
 
   if (card.spend_armor !== undefined) {

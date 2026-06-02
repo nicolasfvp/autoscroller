@@ -7,6 +7,7 @@ import { MainMenu } from './scenes/MainMenu'
 import { TutorialScene } from './scenes/TutorialScene'
 import { CombatScene } from './scenes/CombatScene'
 import { ShopScene } from './scenes/ShopScene'
+import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
 import { SettingsScene } from './scenes/SettingsScene'
@@ -101,6 +102,7 @@ const config: Phaser.Types.Core.GameConfig = {
         GameScene,
         CombatScene,
         ShopScene,
+        ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
         SettingsScene,

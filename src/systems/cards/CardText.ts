@@ -590,115 +590,95 @@ function auraTriggerPhrase(fx: CardEffect): string {
   }
 }
 
-// Format an aura effect into prose. Returns the body without a trailing period.
-function formatAura(fx: CardEffect): string {
-  // A huge ttl_ms (e.g. 9999999) is the "combat-long" sentinel, same as null.
-  const combatLong = fx.ttl_ms === null || (typeof fx.ttl_ms === 'number' && fx.ttl_ms >= 999999);
-  const secs = (!combatLong && fx.ttl_ms) ? Math.round((fx.ttl_ms as number) / 1000) : 0;
-  const dur = combatLong ? 'For the rest of combat' : (secs > 0 ? `For ${secs} seconds` : '');
-  const trig = fx.trigger;
-
-  // Brace — kept keyword. Brace duration is omitted from prose.
-  if (trig === 'on_armor_break') {
-    const body = effectListBody(fx.then);
-    return `Brace: ${body}`;
+function formatModifierAura(fx: CardEffect, dur: string, secs: number): string {
+  const k = fx.modifier!.kind;
+  const v = fx.modifier!.value;
+  if (k === 'cd_reduction') {
+    const pct = Math.round(v * 100);
+    return secs > 0 ? `Haste ${pct}% for ${secs} seconds` : `Haste ${pct}%`;
   }
-
-  // Event-counter aura: count a named event inside the window and fire `then`
-  // at the threshold. "For Ns: if you <event> N+ times, <then>".
-  if (fx.event_counter) {
-    const phrase = eventCounterPhrase(fx.event_counter);
-    const body = lcFirst(effectListBody(fx.then));
-    const clause = phrase ? `${phrase}, ${body}` : body;
-    return dur ? `${dur}: ${clause}` : clause;
-  }
-
-  // Modifier-only auras: Haste / DR (damage_taken_pct) / Empower (damage_dealt_pct) / Reforce (armor_bonus_pct) / Vulnerable / etc.
-  // `passive_armor_scaler` is a declarative trigger that just carries a modifier.
-  if ((!trig || trig === 'passive_armor_scaler') && fx.modifier && !fx.tick_ms) {
-    const k = fx.modifier.kind;
-    const v = fx.modifier.value;
-    if (k === 'cd_reduction') {
-      const pct = Math.round(v * 100);
-      return secs > 0 ? `Haste ${pct}% for ${secs} seconds` : `Haste ${pct}%`;
-    }
-    if (k === 'def') {
-      if (fx.target === 'enemy') {
-        return `${dur}: enemy has −${Math.abs(v)} Defense`;
-      }
-      const sign = v >= 0 ? '+' : '';
-      return `${dur}: ${sign}${v} Defense`;
-    }
-    if (k === 'damage_taken_pct') {
-      const pct = Math.round(Math.abs(v) * 100);
-      const phrase = v < 0 ? `take ${pct}% less damage` : `take ${pct}% more damage`;
-      return secs > 0 ? `${dur}: ${phrase}` : phrase;
-    }
-    if (k === 'damage_dealt_pct') {
-      const pct = Math.round(Math.abs(v) * 100);
-      const phrase = v >= 0 ? `deal ${pct}% more damage` : `deal ${pct}% less damage`;
-      return `${dur}: ${phrase}`;
-    }
-    if (k === 'burn_taken') {
-      return `${dur}: enemy takes +${v} from [burn]`;
-    }
-    if (k === 'armor_bonus_pct') {
-      return `${dur}: every [armor] you gain is +${Math.round(v * 100)}%`;
-    }
-    if (k === 'armor_bonus_flat') {
-      return `${dur}: every [armor] you gain is +${v}`;
-    }
-    if (k === 'hero_hit_bonus') {
-      if (fx.modifier.stack) {
-        return `${dur}: every attack deals ${v} more damage per ${stackTok(fx.modifier.stack)}`;
-      }
-      return `${dur}: every attack deals ${v} more damage`;
-    }
-    if (k === 'ignore_immunity') {
-      const s = fx.modifier.stack ? stackTok(fx.modifier.stack) : '';
-      return `${dur}: ignore enemy ${s} immunity`;
-    }
-    if (k === 'fire_damage_taken_pct') {
-      const pct = Math.round(Math.abs(v) * 100);
-      return `${dur}: enemy takes +${pct}% [fire] damage`;
-    }
-    if (k === 'stack_gain_mult') {
-      const s = fx.modifier.stack ? stackTok(fx.modifier.stack) : '';
-      const pct = Math.round(v * 100);
-      if (v === 1) return `${dur}: double all ${s} gained`;
-      return `${dur}: ${s} gains +${pct}%`;
-    }
-    // Stat-axis modifier: +N [stat].
+  if (k === 'def') {
+    if (fx.target === 'enemy') return `${dur}: enemy has −${Math.abs(v)} Defense`;
     const sign = v >= 0 ? '+' : '';
-    return `${dur}: ${sign}${v} ${statTok(k)}`;
+    return `${dur}: ${sign}${v} Defense`;
   }
-
-  // Tick-only periodic aura: "For Ns: every Ks, <effects>". The body that
-  // follows the "every Ks," prose comes from a sub-effect formatter that
-  // capitalises by default — lowercase it for inline reading.
-  if (!trig && fx.tick_ms && fx.then) {
-    const interval = fx.tick_ms / 1000;
-    const intervalStr = (interval === Math.floor(interval)) ? `${interval}` : interval.toFixed(1);
-    const unit = interval === 1 ? 'second' : 'seconds';
-    const body = lcFirst(effectListBody(fx.then));
-    return `${dur}: every ${intervalStr} ${unit}, ${body}`;
+  if (k === 'damage_taken_pct') {
+    const pct = Math.round(Math.abs(v) * 100);
+    const phrase = v < 0 ? `take ${pct}% less damage` : `take ${pct}% more damage`;
+    return secs > 0 ? `${dur}: ${phrase}` : phrase;
   }
+  if (k === 'damage_dealt_pct') {
+    const pct = Math.round(Math.abs(v) * 100);
+    const phrase = v >= 0 ? `deal ${pct}% more damage` : `deal ${pct}% less damage`;
+    return `${dur}: ${phrase}`;
+  }
+  if (k === 'burn_taken')      return `${dur}: enemy takes +${v} from [burn]`;
+  if (k === 'armor_bonus_pct') return `${dur}: every [armor] you gain is +${Math.round(v * 100)}%`;
+  if (k === 'armor_bonus_flat') return `${dur}: every [armor] you gain is +${v}`;
+  if (k === 'hero_hit_bonus') {
+    const stk = fx.modifier!.stack;
+    return stk
+      ? `${dur}: every attack deals ${v} more damage per ${stackTok(stk)}`
+      : `${dur}: every attack deals ${v} more damage`;
+  }
+  if (k === 'ignore_immunity') {
+    const s = fx.modifier!.stack ? stackTok(fx.modifier!.stack) : '';
+    return `${dur}: ignore enemy ${s} immunity`;
+  }
+  if (k === 'fire_damage_taken_pct') {
+    return `${dur}: enemy takes +${Math.round(Math.abs(v) * 100)}% [fire] damage`;
+  }
+  if (k === 'stack_gain_mult') {
+    const s = fx.modifier!.stack ? stackTok(fx.modifier!.stack) : '';
+    const pct = Math.round(v * 100);
+    return v === 1 ? `${dur}: double all ${s} gained` : `${dur}: ${s} gains +${pct}%`;
+  }
+  const sign = v >= 0 ? '+' : '';
+  return `${dur}: ${sign}${v} ${statTok(k)}`;
+}
 
-  // Trigger-driven aura.
+function formatEventCounterAura(fx: CardEffect, dur: string): string {
+  const phrase = eventCounterPhrase(fx.event_counter!);
+  const body = lcFirst(effectListBody(fx.then));
+  const clause = phrase ? `${phrase}, ${body}` : body;
+  return dur ? `${dur}: ${clause}` : clause;
+}
+
+function formatTickAura(fx: CardEffect, dur: string): string {
+  const interval = fx.tick_ms! / 1000;
+  const intervalStr = interval === Math.floor(interval) ? `${interval}` : interval.toFixed(1);
+  const unit = interval === 1 ? 'second' : 'seconds';
+  return `${dur}: every ${intervalStr} ${unit}, ${lcFirst(effectListBody(fx.then))}`;
+}
+
+function formatTriggerAura(fx: CardEffect, dur: string): string {
   const trigPhrase = auraTriggerPhrase(fx);
-  if (trigPhrase) {
-    const body = lcFirst(effectListBody(fx.then));
-    const cd = fx.cooldown_ms ? ` No more than once every ${Math.round(fx.cooldown_ms / 1000)} seconds.` : '';
-    // Threshold triggers don't need an enclosing duration (they're keyed off state).
-    if (trig === 'on_stack_threshold' || trig === 'on_enemy_stack_threshold') {
-      return `${trigPhrase}: ${body}${cd}`;
-    }
-    if (dur) return `${dur}: ${trigPhrase}, ${body}${cd}`;
+  if (!trigPhrase) return dur || '';
+  const body = lcFirst(effectListBody(fx.then));
+  const cd = fx.cooldown_ms ? ` No more than once every ${Math.round(fx.cooldown_ms / 1000)} seconds.` : '';
+  const trig = fx.trigger;
+  if (trig === 'on_stack_threshold' || trig === 'on_enemy_stack_threshold') {
     return `${trigPhrase}: ${body}${cd}`;
   }
+  if (dur) return `${dur}: ${trigPhrase}, ${body}${cd}`;
+  return `${trigPhrase}: ${body}${cd}`;
+}
 
-  // Empty aura wrapper (no trigger, no modifier, no tick): rare; just emit duration.
-  return dur || '';
+// Format an aura effect into prose. Returns the body without a trailing period.
+function formatAura(fx: CardEffect): string {
+  const combatLong = fx.ttl_ms === null || (typeof fx.ttl_ms === 'number' && fx.ttl_ms >= 999999);
+  const secs = (!combatLong && fx.ttl_ms) ? Math.round((fx.ttl_ms as number) / 1000) : 0;
+  let dur: string;
+  if (combatLong)    dur = 'For the rest of combat';
+  else if (secs > 0) dur = `For ${secs} seconds`;
+  else               dur = '';
+  const trig = fx.trigger;
+
+  if (trig === 'on_armor_break')                                            return `Brace: ${effectListBody(fx.then)}`;
+  if (fx.event_counter)                                                     return formatEventCounterAura(fx, dur);
+  if ((!trig || trig === 'passive_armor_scaler') && fx.modifier && !fx.tick_ms) return formatModifierAura(fx, dur, secs);
+  if (!trig && fx.tick_ms && fx.then)                                       return formatTickAura(fx, dur);
+  return formatTriggerAura(fx, dur);
 }
 
 // -- Single-effect fragment --------------------------------------------
@@ -808,9 +788,9 @@ function applyDynamicReplacements(
   // \x01 / \x02 are SENT_OPEN / SENT_CLOSE.
   const re = /(\d+)([^\x01\x02\d]*?)\x01(-?\d+):(-?\d+):(\d+):(str|vit|dex|int|spi)\x02/g;
   let result = out.replace(re, (_m, _num, mid, base, inc, per, stat) => {
-    const b = parseInt(base, 10);
-    const i = parseInt(inc, 10);
-    const p = parseInt(per, 10);
+    const b = Number.parseInt(base, 10);
+    const i = Number.parseInt(inc, 10);
+    const p = Number.parseInt(per, 10);
     const desc = mid ?? '';
     if (shift) {
       const perStr = p > 1 ? `${p} ` : '';

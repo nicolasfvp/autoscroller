@@ -52,7 +52,7 @@ export class Preloader extends Scene {
     this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Mage scrolling animation (10-frame run, 512×512 per frame)
     this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 256, frameHeight: 256 });
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
 
@@ -267,7 +267,7 @@ export class Preloader extends Scene {
     this.load.image('hud_panel_left',     'assets/ui/panels/hud_panel_left.png');
     this.load.image('mat_panel',          'assets/ui/panels/mat_panel.png');
     this.load.image('hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
-    this.load.image('loop_summary_panel', 'assets/ui/panels/loop_summary_panel.png');
+    this.load.image('loop_summary_panel', 'assets/ui/panels/loopcomplete.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)
     const tileTooltips = ['forest','graveyard','swamp','desert','lava','event','treasure',

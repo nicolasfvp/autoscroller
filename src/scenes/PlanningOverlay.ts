@@ -1216,7 +1216,7 @@ export class PlanningOverlay extends Scene {
       const frac = max > 0 ? Math.max(0, Math.min(1, cur / max)) : 0;
       if (frac > 0) {
         const fillW = trackW * frac;
-        this.add.rectangle(trackX + fillW / 2, by, fillW, barH, parseInt(color.slice(1), 16), 1);
+        this.add.rectangle(trackX + fillW / 2, by, fillW, barH, Number.parseInt(color.slice(1), 16), 1);
       }
       this.add.text(valX, by, `${cur}/${max}`, {
         fontSize: '9px', color: '#ffffff', fontFamily, stroke: '#000000', strokeThickness: 2,
