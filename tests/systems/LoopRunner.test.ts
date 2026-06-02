@@ -295,6 +295,77 @@ describe('LoopRunner', () => {
     expect(runner.getState()).toBe('boss-choice');
   });
 
+  // ── Enemies are assigned once, when planning opens (plan === loop) ──
+
+  /** Drive a fresh run to its first planning phase. */
+  function reachPlanning(): void {
+    runner.startRun(runState);
+    for (const t of runState.loop.tiles) t.defeatedThisLoop = true;
+    for (let i = 0; i < 25; i++) {
+      if (runner.getState() !== 'traversing') break;
+      runner.tick(1000);
+    }
+    expect(runner.getState()).toBe('planning');
+  }
+
+  it('confirmPlanning does not re-roll enemies assigned when planning opened', () => {
+    reachPlanning();
+    // A sentinel the old double-assign would overwrite (assignEnemies clears
+    // then re-rolls). First basic slot sits at index 5 (after 5 buffer tiles).
+    runState.loop.tiles[5].enemyId = 'sentinel_enemy';
+    runState.loop.tiles[5].isElite = true;
+    runner.confirmPlanning();
+    expect(runner.getState()).toBe('traversing');
+    expect(runState.loop.tiles[5].enemyId).toBe('sentinel_enemy');
+    expect(runState.loop.tiles[5].isElite).toBe(true);
+  });
+
+  it('onBossChoice continue assigns the post-boss loop enemies before planning', () => {
+    runner.startRun(runState);
+    // Clear startRun's assignment so we can detect onBossChoice's own pass.
+    for (const t of runState.loop.tiles) { t.enemyId = undefined; t.isElite = false; }
+    runner.onBossDefeated();
+    runner.onBossChoice('continue');
+    expect(runner.getState()).toBe('planning');
+    // rng=0 rolls combat on basic tiles; the ≥2-per-loop guarantee also holds.
+    const withEnemies = runState.loop.tiles.filter(t => t.enemyId !== undefined).length;
+    expect(withEnemies).toBeGreaterThanOrEqual(2);
+  });
+
+  // ── Enemies are pinned to slots: placing a tile over one keeps it ──
+
+  it('placeTile is allowed on a slot with an enemy and pins the enemy to the new tile', () => {
+    reachPlanning();
+    runState.loop.tiles[5].enemyId = 'goblin';
+    runState.loop.tiles[5].isElite = true;
+    runState.loop.tiles[5].reserved = false;
+    const result = runner.placeTile(5, 'forest');
+    expect(result).toBe(true);
+    expect(runState.loop.tiles[5].type).toBe('terrain');
+    expect(runState.loop.tiles[5].enemyId).toBe('goblin');
+    expect(runState.loop.tiles[5].isElite).toBe(true);
+  });
+
+  it('an event/treasure tile placed over an enemy fights it, then clears it', () => {
+    runner = new LoopRunner(emit, () => 0);
+    runner.startRun(runState);
+    // Simulate a planning placement of a treasure tile onto an enemy slot.
+    runState.loop.tiles[6] = { type: 'treasure', defeatedThisLoop: false, enemyId: 'slime' };
+    // Defeat everything before it so traversal reaches the treasure tile first.
+    for (let i = 0; i < 6; i++) runState.loop.tiles[i].defeatedThisLoop = true;
+    // Small steps: at baseSpeed 240px/s a 1000ms tick would jump 2.5 tiles and
+    // skip the treasure slot. 100ms = 24px keeps every tile boundary observed.
+    for (let i = 0; i < 80; i++) {
+      if (runner.getState() !== 'traversing') break;
+      runner.tick(100);
+    }
+    const combat = events.find(e => e.event === 'combat-start');
+    expect(combat).toBeDefined();
+    expect(combat!.data.enemyId).toBe('slime');
+    // Enemy cleared so the tile opens its scene normally on later loops.
+    expect(runState.loop.tiles[6].enemyId).toBeUndefined();
+  });
+
   // Wave 2: adjacency synergy buffs removed along with SynergyResolver.
   // confirmPlanning no longer recomputes buffs; subtile effect resolution
   // happens per-combat in Wave 4+ via SubtileResolver.

@@ -198,7 +198,19 @@ export class LoopRunner {
       case 'treasure': {
         tile.defeatedThisLoop = true;
         this.state = 'tile-interaction';
-        this.emit('open-scene', { kind: tile.type, tileIndex });
+        // A tile placed over an enemy during planning carries that enemy. The
+        // enemy guards the event/treasure: fight it this loop, then clear it so
+        // the tile resumes its normal interaction on subsequent loops.
+        if (tile.enemyId) {
+          const enemyId = tile.enemyId;
+          const isElite = !!tile.isElite;
+          tile.enemyId = undefined;
+          tile.isElite = false;
+          const terrain = this.getAdjacentTerrain(tileIndex);
+          this.emit('combat-start', { enemyId, isBoss: false, isElite, tileIndex, terrain, subtileEffects });
+        } else {
+          this.emit('open-scene', { kind: tile.type, tileIndex });
+        }
         break;
       }
     }
@@ -270,12 +282,13 @@ export class LoopRunner {
     this.runState.loop.positionInLoop = 0;
     this.lastTileIndex = -1;
 
-    // F.5.l: defer enemy assignment to confirmPlanning() — running here AND
-    // in confirmPlanning rerolled enemies twice and burned RNG state for
-    // tiles the player would never see (planning could swap them out).
+    // Assign the upcoming loop's enemies BEFORE planning opens so the planning
+    // grid shows exactly what the hero will face. confirmPlanning no longer
+    // re-rolls — doing it there desynced the planned layout from the loop that
+    // was actually run.
     this.emit('loop-completed', { loopCount: loop.count, traversedLength });
     this.state = 'planning';
-    this.assignEnemies(); // Pre-assign enemies for the next loop layout
+    this.assignEnemies();
     this.emit('planning-phase-started', { loopCount: loop.count });
   }
 
@@ -285,7 +298,11 @@ export class LoopRunner {
 
   confirmPlanning(): void {
     if (this.state !== 'planning') return;
-    this.assignEnemies();
+    // Enemies were already assigned when planning opened and are intentionally
+    // NOT re-rolled here — the player saw them on the planning grid and must
+    // face the same ones. Only refresh the subtile effect bag so subtiles
+    // placed during this planning phase take effect on the upcoming loop.
+    this.subtileEffectBag = resolveSubtileEffects(this.runState.loop.tiles);
     this.state = 'traversing';
     this.emit('loop-started', { loopCount: this.runState.loop.count });
   }
@@ -475,6 +492,10 @@ export class LoopRunner {
     this.lastTileIndex = -1;
 
     this.state = 'planning';
+    // Mirror onLoopCompleted: assign this (post-boss) loop's enemies before
+    // planning opens. confirmPlanning won't re-roll, so the planned layout and
+    // the loop the hero runs stay in sync.
+    this.assignEnemies();
     this.emit('planning-phase-started', { loopCount: this.runState.loop.count, traversedLength });
   }
 
@@ -484,14 +505,13 @@ export class LoopRunner {
     const tile = this.runState.loop.tiles[slotIndex];
     if (!tile) return false;
 
-    // Prevent placing tiles on slots with pre-assigned enemies (feedback #16)
-    if (tile.enemyId) return false;
-
     // Prevent placing on boss or buffer tiles
     if (tile.type === 'boss' || tile.type === 'buffer') return false;
 
     // Wave 5: slot must be empty to accept a new tile. Use removeTile first.
     // Empty here means a basic slot — reserved slots are basic with reserved:true.
+    // A pre-assigned enemy does NOT block placement: enemies are pinned to the
+    // slot position, so a tile dropped on one keeps the enemy (carried below).
     if (tile.type !== 'basic') return false;
 
     // Wave 5: enforce reservation rules. The picker is supposed to gate this
@@ -509,6 +529,12 @@ export class LoopRunner {
     }
 
     const newTile = createTileSlot(tileKey);
+    // Pin any pre-assigned enemy to the slot: a tile placed over an enemy keeps
+    // it (and its elite flag) so the planning preview matches the loop run.
+    if (tile.enemyId) {
+      newTile.enemyId = tile.enemyId;
+      newTile.isElite = tile.isElite;
+    }
     this.runState.loop.tiles[slotIndex] = newTile;
 
     // A new combat (terrain) tile reserves its empty neighbors. Subtile and
@@ -549,9 +575,13 @@ export class LoopRunner {
     } catch {
       // Unknown tile kind shouldn't happen, but never block removal on it.
     }
+    // Returning the slot to basic keeps any pinned enemy — it occupies the slot
+    // independently of the tile that was placed (and removed) over it.
     this.runState.loop.tiles[slotIndex] = {
       type: 'basic',
       defeatedThisLoop: false,
+      enemyId: tile.enemyId,
+      isElite: tile.isElite,
     };
   }
 
@@ -565,7 +595,10 @@ export class LoopRunner {
     const tiles = this.runState.loop.tiles;
     for (let i = 0; i < tiles.length; i++) {
       const slot = tiles[i];
-      if (slot.type !== 'basic' || slot.enemyId) continue;
+      // Enemy-bearing basic slots stay eligible for reservation: the enemy is
+      // pinned to the slot, not the tile, so a subtile can still be placed over
+      // it (and the enemy carries onto the subtile). Treat them like empty.
+      if (slot.type !== 'basic') continue;
       const left = i > 0 ? tiles[i - 1] : null;
       const right = i + 1 < tiles.length ? tiles[i + 1] : null;
       const leftIsCombat = left?.type === 'terrain';
