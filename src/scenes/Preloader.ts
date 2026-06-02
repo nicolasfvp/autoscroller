@@ -328,7 +328,6 @@ this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     this.load.image('lp_permanent_erase',  'assets/ui/text/landing-page/permanente-erase.png');
     this.load.image('btn_reset_progress',  'assets/ui/buttons/btn_reset_progress.png');
     this.load.image('btn_next',            'assets/ui/buttons/btn_next.png');
-    this.load.image('loot_bag_empty',      'assets/ui/panels/loot_bag_empty.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
     this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
     this.load.image('skip_loop_panel', 'assets/ui/panels/skip-loop.png');

@@ -180,6 +180,13 @@ export class MainMenu extends Scene {
   private continueRun(): void {
     if (this.savedRun) {
       setRun(this.savedRun);
+      // create() blindly (re)starts the director at step 0 whenever
+      // tutorialSeen is false. For a continued run that resets a mid-tutorial
+      // run back to the welcome step (a CharacterSelect step) while the player
+      // lands in GameScene — so no overlay shows and the tutorial looks gone.
+      // Restore the progress saved on this run instead (deactivates for
+      // non-tutorial / legacy saves).
+      tutorialDirector.restore(this.savedRun.tutorial);
       this.fadeToScene(SCENE_KEYS.GAME);
     }
   }

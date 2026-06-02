@@ -660,8 +660,6 @@ export class ForgeScene extends Scene {
     // Buttons (Clear, Forge, Library) removed per user request.
   }
 
-  // ── Forge execution ────────────────────────────────────────────────────────
-  // executeForgeAction() was removed as per user request to remove bottom buttons.
 
   private close(): void {
     tutorialDirector.advanceIfMatches('forge-craft');

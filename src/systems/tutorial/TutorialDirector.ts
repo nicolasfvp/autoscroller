@@ -5,9 +5,11 @@
 // Game, Combat, Planning, Forge) checks isActive() in create() and mounts
 // a TutorialOverlay tied to the current step.
 //
-// State is in-memory only — the run that the tutorial drives is just a real
-// run with a fixed seed/class/deck. Completion flips MetaState.tutorialSeen
-// so subsequent boots skip the scripted flow.
+// The director itself is an in-memory singleton, but its progress is
+// snapshot()'d into the run save by SaveManager and restore()'d by MainMenu on
+// Continue, so a reload mid-tutorial resumes at the same step. The run the
+// tutorial drives is just a real run with a fixed seed/class/deck. Completion
+// flips MetaState.tutorialSeen so subsequent boots skip the scripted flow.
 //
 // Steps advance either by:
 //   - 'event': scene calls director.advanceIfMatches(stepId), wired to the
@@ -18,6 +20,17 @@
 import { SCENE_KEYS } from '../../state/SceneKeys';
 
 export type TutorialStepAdvance = 'click' | 'event';
+
+/**
+ * Serializable tutorial progress, persisted inside the run save so a reload +
+ * Continue resumes the scripted flow at the same step. The director itself is
+ * an in-memory singleton; this is its save/restore payload.
+ */
+export interface TutorialProgress {
+  active: boolean;
+  /** Index into TUTORIAL_STEPS, or -1 when inactive. */
+  stepIndex: number;
+}
 
 export interface TutorialStep {
   /** Stable id used by scenes to assert progress. */
@@ -151,14 +164,59 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     advance: 'event',
     panelAnchor: 'top-fixed',
   },
-  // 9. Forge — open it, craft a card.
+  // 8c. Open the merchant. The forge needs ELEMENTS and the player has none
+  //     yet, so we route through the shop first to buy a relic + 2 elements.
+  {
+    id: 'shop-intro',
+    scene: SCENE_KEYS.PLANNING,
+    title: 'Visit the merchant.',
+    body:
+      "Forging needs ELEMENTS — and the merchant sells them.\n\n" +
+      "Click the SHOP button (top-left icon row) to step inside.",
+    advance: 'event',
+    panelAnchor: 'bottom',
+  },
+  // 8d. Buy a relic. The tutorial shop is forced to a single affordable common
+  //     relic so the gold budget (relic + 2 elements + forge) always balances.
+  {
+    id: 'shop-buy-relic',
+    scene: SCENE_KEYS.SHOP,
+    title: 'Buy a relic.',
+    body:
+      "RELICS are passive artifacts — buy one and it works for the rest of the run, no equipping.\n\n" +
+      "Click the relic on the shelf to purchase it.",
+    advance: 'event',
+    panelAnchor: 'bottom',
+  },
+  // 8e. Buy 2 elements. Any two work — every pair maps to a tier-2 card. Only
+  //     buying is allowed here (selling is disabled during the tutorial).
+  {
+    id: 'shop-buy-elements',
+    scene: SCENE_KEYS.SHOP,
+    title: 'Buy two elements.',
+    body:
+      "ELEMENTS normally drop from defeated enemies — and here you can buy or sell them too.\n\n" +
+      "Buy any TWO now (tap a −50g button twice). You'll forge them into a card next.",
+    advance: 'event',
+    panelAnchor: 'top',
+  },
+  // 8f. Leave the shop — returns to planning with the forge step armed.
+  {
+    id: 'shop-leave',
+    scene: SCENE_KEYS.SHOP,
+    title: 'Leave the shop.',
+    body: "That's everything you need here. Click LEAVE SHOP to head back to planning.",
+    advance: 'event',
+    panelAnchor: 'top',
+  },
+  // 9. Forge — open it, craft a card from the two elements just bought.
   {
     id: 'forge-intro',
     scene: SCENE_KEYS.PLANNING,
     title: 'Forge a card.',
     body:
       "Click the FORGE button (top-left icon row of the planning screen).\n\n" +
-      "The forge turns elements you earn from combat into new cards. Two elements = a tier-2 card. Three = tier-3.",
+      "The forge turns elements into new cards. You just bought two — combine them into a tier-2 card.",
     advance: 'event',
     panelAnchor: 'bottom',
   },
@@ -166,7 +224,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     id: 'forge-craft',
     scene: SCENE_KEYS.FORGE,
     title: 'Combine elements.',
-    body: "Tap an element icon to add it, then CRAFT. Leave when done.",
+    body: "Tap your two element sigils on the rack to load the runes, then press ⚒ FORGE. Leave when the card is made.",
     advance: 'event',
     panelAnchor: 'top-fixed',
   },
@@ -260,6 +318,29 @@ class TutorialDirectorImpl {
   complete(): void {
     this.active = false;
     this.currentIndex = -1;
+    this.notify();
+  }
+
+  /** Serialize current progress for persistence in the run save. */
+  snapshot(): TutorialProgress {
+    return { active: this.active, stepIndex: this.currentIndex };
+  }
+
+  /**
+   * Restore progress from a saved snapshot (run resume). Used to override the
+   * blanket start() the menu fires on every first-run boot so a continued run
+   * resumes the tutorial at its saved step. A missing/inactive snapshot, or an
+   * out-of-range index (e.g. a legacy save predating this field), deactivates
+   * the director so non-tutorial runs aren't left with a ghost overlay.
+   */
+  restore(snap: TutorialProgress | null | undefined): void {
+    if (!snap || !snap.active || snap.stepIndex < 0 || snap.stepIndex >= TUTORIAL_STEPS.length) {
+      this.active = false;
+      this.currentIndex = -1;
+    } else {
+      this.active = true;
+      this.currentIndex = snap.stepIndex;
+    }
     this.notify();
   }
 

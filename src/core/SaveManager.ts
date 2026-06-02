@@ -3,6 +3,7 @@ import { migrateRunState, RUN_STATE_VERSION, type RunState } from '../state/RunS
 import { eventBus } from './EventBus';
 import { loadMetaState } from '../systems/MetaPersistence';
 import { dailySeedString } from '../systems/DailySeed';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 
 const gameStore = createStore('rogue-scroll-db', 'save-store');
 const SAVE_KEY = 'active-run';
@@ -41,6 +42,13 @@ export class SaveManager {
       if (toSave.isInCombat) {
         toSave.isInCombat = false;
         toSave.currentScene = 'GameScene';
+      }
+      // Persist scripted first-run tutorial progress with the run. The
+      // director is an in-memory singleton, so without this a reload +
+      // Continue lands back in the run with the tutorial silently gone.
+      // Daily runs never run the tutorial, so they don't record one.
+      if (state.mode !== 'daily') {
+        toSave.tutorial = tutorialDirector.snapshot();
       }
       await set(key, toSave, gameStore);
       eventBus.emit('save:completed', { timestamp: Date.now() });

@@ -1,13 +1,15 @@
-// DeckCustomizationScene -- the in-run deck editor.
+﻿// DeckCustomizationScene -- the in-run deck editor.
 //
 // Layout (800×600 canvas):
 //   [00-50]    Header strip — back · title · glossary
-//   [60-490]   Active deck grid — 5 cols × up to 3 rows (max 15 cards)
+//   [60-578]   Active deck grid — 5 cols × up to 3 rows (max 15 cards)
 //              · Cards centered both axes; rows expand as deck grows
 //              · Order number floats ABOVE each card
 //              · Hover any card to see a large preview beside it
-//   [500-585]  Loot bag strip — drag up into the deck
 //   [590-600]  Contextual hint line
+//
+// New cards (forge, shops, treasure) are added straight to the deck, so the
+// editor is purely for reordering and reviewing — there is no loot bag.
 //
 // Drag-and-drop preserves the click offset on the card: wherever the player
 // grabs the card, that point stays under the cursor for the whole drag.
@@ -27,24 +29,22 @@ import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 // ── Layout zones ─────────────────────────────────────────────────────────
 const HEADER_BOTTOM = 44;
 const DECK_TOP = 56;
-const DECK_BOTTOM = 490;
-const BAG_TOP = 498;
-const BAG_BOTTOM = 585;
+const DECK_BOTTOM = 578;
 const HINT_Y = 593;
 
 // Active-deck grid — 5 cols × up to 3 rows (max 15). The visual size of
 // the cards is RESPONSIVE to deck length: a small deck spreads luxuriously,
 // a full 15-card deck packs tight. The breakpoints are chosen so the
 // rendered grid (with row gaps + badges above the first row) clears the
-// header and the bag in every configuration.
+// header and the hint line in every configuration.
 const COLS = 5;
 const MAX_DECK = 15;
 const COL_GAP = 16;
 const TIER_BREAKPOINTS = [
-  // up to N cards, card scale (reduced by 30%)
-  { upTo: 5,  scale: 0.60, rowGap: 18 },
-  { upTo: 10, scale: 0.45, rowGap: 20 },
-  { upTo: 15, scale: 0.36, rowGap: 22 },
+  // up to N cards, card scale (× small base 150×240), row gap
+  { upTo: 5,  scale: 0.85, rowGap: 18 },   // 1 row,  127.5 × 204
+  { upTo: 10, scale: 0.65, rowGap: 20 },   // 2 rows, 97.5  × 156
+  { upTo: 15, scale: 0.52, rowGap: 22 },   // 3 rows, 78    × 124.8
 ] as const;
 
 // Order badge — small parchment chip floating above each card.
@@ -60,19 +60,10 @@ const HOVER_SCALE = 0.7;
 const HOVER_W = 340 * HOVER_SCALE;   // 238
 const HOVER_H = 540 * HOVER_SCALE;   // 378
 
-// Bag (loot) strip
-const BAG_SCALE = 0.28;
-const BAG_CARD_W = STANDARD_CARD_WIDTH * BAG_SCALE;
-const BAG_CARD_H = STANDARD_CARD_HEIGHT * BAG_SCALE;
-const BAG_GAP = 10;
-
 // Chrome palette
 const CHROME = {
   bgTint: 0x0e0c0a,
   panelStroke: 0x6b5a3a,
-  bagFill: 0x2a1d10,
-  bagStroke: 0x6b4a1f,
-  bagHotStroke: 0xffd700,
   ghost: 0xffd700,
 } as const;
 
@@ -85,7 +76,6 @@ export class DeckCustomizationScene extends Scene {
   private cardSlots: Phaser.GameObjects.Container[] = [];
   private orderBadges: Phaser.GameObjects.Container[] = [];
   private gridContainer!: Phaser.GameObjects.Container;
-  private bagContainer!: Phaser.GameObjects.Container;
   private ghostSlot: Phaser.GameObjects.Graphics | null = null;
 
   // Hint
@@ -98,11 +88,8 @@ export class DeckCustomizationScene extends Scene {
   // Drag state
   private dragCard: Phaser.GameObjects.Container | null = null;
   private dragOffset: DragOffset = { x: 0, y: 0 };
-  private dragFromBag = false;
   private dragFromDeck = false;
-  private dragBagIndex = -1;
   private dragDeckIndex = -1;
-  private dragCardId = '';
   private hoverIndex = -1;
 
   private parentScene: string = SCENE_KEYS.GAME;
@@ -124,7 +111,6 @@ export class DeckCustomizationScene extends Scene {
     this.buildBackground();
     this.buildHeader();
     this.buildDeckGrid();
-    this.buildBag();
     this.buildHint();
 
     void keywordIntro.init();
@@ -286,7 +272,7 @@ export class DeckCustomizationScene extends Scene {
 
     for (let i = 0; i < this.deckOrder.length; i++) {
       const pos = this.getSlotPos(i);
-      const slot = this.createMiniCard(this.deckOrder[i], pos.x, pos.y, i, false);
+      const slot = this.createMiniCard(this.deckOrder[i], pos.x, pos.y, i);
       this.gridContainer.add(slot);
       this.cardSlots.push(slot);
 
@@ -316,10 +302,8 @@ export class DeckCustomizationScene extends Scene {
     x: number,
     y: number,
     deckIndex: number,
-    isDraggable: boolean,
-    scale: number = this.cardScale,
   ): Phaser.GameObjects.Container {
-    const visual = createCardVisual(this, x, y, cardId, { scale });
+    const visual = createCardVisual(this, x, y, cardId, { scale: this.cardScale });
     visual.removeAllListeners('pointerdown');
     visual.removeAllListeners('pointerover');
     visual.removeAllListeners('pointerout');
@@ -333,16 +317,9 @@ export class DeckCustomizationScene extends Scene {
       this.cancelHoverPreview();
     });
 
-    if (isDraggable) {
-      visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-        const bagIdx = visual.getData('bagIndex') as number;
-        this.startDragFromBag(bagIdx, cardId, pointer);
-      });
-    } else {
-      visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-        this.startDragFromDeck(deckIndex, cardId, pointer);
-      });
-    }
+    visual.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      this.startDragFromDeck(deckIndex, cardId, pointer);
+    });
 
     return visual;
   }
@@ -409,34 +386,10 @@ export class DeckCustomizationScene extends Scene {
 
   // ── Drag start ───────────────────────────────────────────────────────────
 
-  private startDragFromBag(bagIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
-    if (this.deckOrder.length >= MAX_DECK) {
-      this.setHint(`Deck is at the ${MAX_DECK}-card maximum — remove a card first.`);
-      return;
-    }
-    this.cancelHoverPreview();
-    this.dragFromBag = true;
-    this.dragBagIndex = bagIndex;
-    this.dragCardId = cardId;
-    this.hoverIndex = this.deckOrder.length;
-
-    const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-    const card = this.bagContainer.list.find(o => (o as any).getData?.('bagIndex') === bagIndex) as Phaser.GameObjects.Container | undefined;
-    const cw = card?.getWorldTransformMatrix();
-    const centerX = cw?.tx ?? wp.x;
-    const centerY = cw?.ty ?? wp.y;
-    this.dragOffset = { x: wp.x - centerX, y: wp.y - centerY };
-    this.dragCard = this.createDragVisual(cardId, centerX, centerY);
-    this.renderBag();
-
-    this.setHint('Drop on the deck grid to add • Release outside to cancel');
-  }
-
   private startDragFromDeck(deckIndex: number, cardId: string, pointer: Phaser.Input.Pointer): void {
     this.cancelHoverPreview();
     this.dragFromDeck = true;
     this.dragDeckIndex = deckIndex;
-    this.dragCardId = cardId;
     this.hoverIndex = deckIndex;
 
     const slot = this.cardSlots[deckIndex];
@@ -493,35 +446,23 @@ export class DeckCustomizationScene extends Scene {
   // ── Animation: open a gap at hoverIndex ─────────────────────────────────
 
   private animateSlots(): void {
-    // Re-position visible cards so a gap opens at hoverIndex.
-    //
-    // - DECK reorder: total stays at N; dragged card is hidden, others shift
-    //   to leave slot `hoverIndex` empty (ghost). Same tier throughout, so
-    //   the animation is smooth.
-    // - BAG insert: total is conceptually N+1 during drag. If the insert
-    //   would cross a tier boundary (5 → 6, 10 → 11), shifting existing
-    //   cards into the new layout while their visuals are still at the old
-    //   scale produces overlap. In that case we leave the cards in place
-    //   and rely on the post-drop scene restart to introduce the new tier.
+    // Re-position visible cards so a gap opens at hoverIndex. The deck count
+    // stays at N during a reorder: the dragged card is hidden and the others
+    // shift to leave slot `hoverIndex` empty (the ghost). The tier is fixed
+    // throughout, so the animation stays smooth.
     const N = this.deckOrder.length;
-    const draggedFromDeck = this.dragFromDeck;
-    let virtualN = N;
-    if (this.dragFromBag) virtualN = N + 1;
-
-    if (this.dragFromBag && this.crossesTierTo(virtualN)) return;
-
-    const gapAt = Math.min(this.hoverIndex, virtualN);
+    const gapAt = Math.min(this.hoverIndex, N);
     let visualCounter = 0;
 
     for (let i = 0; i < N; i++) {
       const slot = this.cardSlots[i];
       const badge = this.orderBadges[i];
       if (!slot) continue;
-      if (draggedFromDeck && i === this.dragDeckIndex) continue;
+      if (i === this.dragDeckIndex) continue;
 
       if (visualCounter === gapAt) visualCounter++;
 
-      const target = this.getSlotPos(visualCounter, virtualN);
+      const target = this.getSlotPos(visualCounter, N);
       this.tweens.add({
         targets: slot,
         x: target.x, y: target.y,
@@ -538,23 +479,13 @@ export class DeckCustomizationScene extends Scene {
     }
   }
 
-  private currentTierIndex(total: number): number {
-    return TIER_BREAKPOINTS.findIndex(t => total <= t.upTo);
-  }
-
-  private crossesTierTo(virtualN: number): boolean {
-    return this.currentTierIndex(this.deckOrder.length) !== this.currentTierIndex(virtualN);
-  }
-
   private showGhost(index: number): void {
     if (!this.ghostSlot) return;
-    // For deck reorder the deck count is unchanged; for bag insert we draw
-    // the ghost in a virtual N+1 layout (unless that would cross a tier —
-    // then we draw within the current N layout to avoid jarring layouts).
-    let virtualN = this.deckOrder.length;
-    if (this.dragFromBag && !this.crossesTierTo(virtualN + 1)) virtualN += 1;
-    const idx = Math.min(index, virtualN);
-    const pos = this.getSlotPos(idx, virtualN);
+    // Reorder keeps the deck count unchanged, so the ghost is placed within
+    // the current N-card layout.
+    const N = this.deckOrder.length;
+    const idx = Math.min(index, N);
+    const pos = this.getSlotPos(idx, N);
     const w = this.cardW + 4;
     const h = this.cardH + 4;
     this.ghostSlot.clear();
@@ -569,34 +500,8 @@ export class DeckCustomizationScene extends Scene {
     if (!this.dragCard) return;
     if (this.ghostSlot) this.ghostSlot.setVisible(false);
 
-    const releaseY = this.dragCard.y;
-    const overGrid = this.isOverGrid(releaseY);
-
     this.dragCard.destroy(true);
     this.dragCard = null;
-
-    if (this.dragFromBag && this.dragBagIndex >= 0) {
-      if (!overGrid) {
-        this.resetDragState();
-        this.animateSlots();
-        this.renderBag();
-        this.setHint(this.getDefaultHint());
-        return;
-      }
-      const run = getRun();
-      if (this.dragBagIndex < run.deck.droppedCards.length) {
-        run.deck.droppedCards.splice(this.dragBagIndex, 1);
-      }
-      const insertAt = Math.min(this.hoverIndex, this.deckOrder.length);
-      this.deckOrder.splice(insertAt, 0, this.dragCardId);
-      this.upgradedOrder.splice(insertAt, 0, false);
-      run.deck.active = [...this.deckOrder];
-      run.deck.upgraded = [...this.upgradedOrder];
-
-      this.resetDragState();
-      this.scene.restart({ parentScene: this.parentScene, tutorialOrigin: this.tutorialOrigin });
-      return;
-    }
 
     if (this.dragFromDeck && this.dragDeckIndex >= 0) {
       const run = getRun();
@@ -619,69 +524,6 @@ export class DeckCustomizationScene extends Scene {
     this.rebuildGrid();
   }
 
-  // ── Bag ──────────────────────────────────────────────────────────────────
-
-  private buildBag(): void {
-    this.bagContainer = this.add.container(0, 0);
-    this.renderBag();
-  }
-
-  private renderBag(): void {
-    this.bagContainer.removeAll(true);
-
-    const run = getRun();
-    const ids = run.deck.droppedCards;
-
-    const cx = LAYOUT.centerX;
-    const cy = (BAG_TOP + BAG_BOTTOM) / 2;
-    const w = LAYOUT.canvasWidth - 24;
-    const h = BAG_BOTTOM - BAG_TOP;
-
-    const stroke = this.dragFromBag ? CHROME.bagHotStroke : CHROME.bagStroke;
-
-    // Empty state: use baked asset (already has title + description text)
-    if (ids.length === 0 && this.textures.exists('loot_bag_empty')) {
-      const bg = this.add.image(cx, cy, 'loot_bag_empty');
-      bg.setScale(Math.min(w / bg.width, h / bg.height));
-      if (this.dragFromBag) bg.setTint(0xffeeaa);
-      this.bagContainer.add(bg);
-      return;
-    }
-
-    // Non-empty (or fallback): plain rectangle + programmatic text
-    this.bagContainer.add(
-      this.add.rectangle(cx, cy, w, h, CHROME.bagFill, 0.78).setStrokeStyle(2, stroke, 1),
-    );
-
-    this.bagContainer.add(this.add.text(cx - w / 2 + 14, BAG_TOP + 8, `📦 LOOT BAG — ${ids.length}`, {
-      fontSize: '13px', fontStyle: 'bold', color: '#f0d68a',
-      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0, 0));
-
-    if (ids.length === 0) {
-      this.bagContainer.add(this.add.text(cx, cy + 4,
-        'Cards earned from combat, shops, and forges appear here.\nDrag them into the deck above.', {
-        fontSize: '11px', color: '#8a7860', fontFamily: FONTS.body,
-        align: 'center', lineSpacing: 4,
-      }).setOrigin(0.5));
-      return;
-    }
-
-    const cardY = BAG_TOP + 32 + BAG_CARD_H / 2;
-    const innerW = w - 28;
-    const desiredW = ids.length * (BAG_CARD_W + BAG_GAP) - BAG_GAP;
-    const fits = desiredW <= innerW;
-    const step = fits ? BAG_CARD_W + BAG_GAP : (innerW - BAG_CARD_W) / Math.max(1, ids.length - 1);
-    const startX = cx - (fits ? desiredW / 2 : innerW / 2) + BAG_CARD_W / 2;
-
-    for (let i = 0; i < ids.length; i++) {
-      const x = startX + i * step;
-      const slot = this.createMiniCard(ids[i], x, cardY, -1, true, BAG_SCALE);
-      slot.setData('bagIndex', i);
-      this.bagContainer.add(slot);
-    }
-  }
-
   // ── Hint ─────────────────────────────────────────────────────────────────
 
   private buildHint(): void {
@@ -692,9 +534,7 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private getDefaultHint(): string {
-    const hasBag = getRun().deck.droppedCards.length > 0;
     if (this.deckOrder.length >= MAX_DECK) return `Deck is full (${MAX_DECK} cards) — remove a card to add new ones.`;
-    if (hasBag) return 'Drag bag cards into the deck • Drag deck cards to reorder • Hover for details';
     return 'Drag deck cards to reorder • Hover any card for the full version';
   }
 
@@ -721,11 +561,8 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private resetDragState(): void {
-    this.dragFromBag = false;
     this.dragFromDeck = false;
-    this.dragBagIndex = -1;
     this.dragDeckIndex = -1;
-    this.dragCardId = '';
     this.hoverIndex = -1;
     this.dragOffset = { x: 0, y: 0 };
   }

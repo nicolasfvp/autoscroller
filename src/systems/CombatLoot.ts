@@ -14,7 +14,8 @@ import { ELEMENTS, type ElementId } from './ElementSystem';
  * Generate and apply combat loot after a victory.
  * - Awards gold directly to RunState
  * - Drops materials from terrain and enemy pools
- * - Drops a random card into droppedCards (not active deck)
+ * - Drops element shards (auto-converted to elements); card drops were
+ *   removed in Phase 10 — new cards come from the Forge instead
  * - Queues floating notifications via PendingLoot
  */
 export function generateAndApplyCombatLoot(

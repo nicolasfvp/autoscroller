@@ -1,6 +1,6 @@
 ﻿import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
-import { getAllPlaceableTiles, getTileConfig, type TileSlot } from '../systems/TileRegistry';
+import { getAllPlaceableTiles, getTileConfig, type TileSlot, type TileSlotType } from '../systems/TileRegistry';
 import { TileVisual } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -231,6 +231,13 @@ export class PlanningOverlay extends Scene {
         flag._tutorialPlanningBootstrapped = true;
         // Enough for one combat tile (3 TP) + one subtile (2 TP) with margin.
         this.loopRunState.economy.tilePoints = Math.max(this.loopRunState.economy.tilePoints, 6);
+        // Scripted shop→forge budget: 1 common relic (90g) + 2 elements
+        // (2×50g) + the tier-2 forge cost (50g) = 240g. Grant 250 so the flow
+        // can't dead-end on gold and the player ends with a small cushion.
+        // The Shop/Forge read run.economy.gold, which openSubScene syncs from
+        // this loopRunState value before launching.
+        this.loopRunState.economy.gold = Math.max(this.loopRunState.economy.gold, 250);
+        run.economy.gold = this.loopRunState.economy.gold;
         // Stake a free subtile in inventory so 'place-subtile' is reachable
         // even if TP runs low on edge-case difficulty changes.
         const inv = this.loopRunState.tileInventory;
@@ -264,6 +271,12 @@ export class PlanningOverlay extends Scene {
       // reserved slots that just spawned) plus the dedicated subtile row.
       overlay.setStepRect('place-subtile', {
         x: 20, y: 150, width: 760, height: 330,
+      });
+      // shop-intro: spotlight the Shop button (3rd in the Deck/Relic/Shop/Forge
+      // icon row at x≈159) — the player buys the relic + elements there before
+      // the forge step.
+      overlay.setStepRect('shop-intro', {
+        x: 141, y: 38, width: 36, height: 56,
       });
       // forge-intro: spotlight the Forge button — now in the top-left
       // 4-icon row (Deck/Relic/Shop/Forge), not the bottom edge.
@@ -442,6 +455,18 @@ export class PlanningOverlay extends Scene {
 
     if (!this.selectedTileKey) return;
 
+    // Tutorial gating: only the on-script tile type may be placed during the
+    // 'place-tile' / 'place-subtile' steps. The inventory pickers already dim
+    // off-script tiles, but this also guards the drag-drop path and any
+    // selection carried over from the previous step — without it the player
+    // could still burn TP on a wrong tile and softlock the scripted run.
+    if (!this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type)) {
+      this.showToast(this.tutorialAllowedTileType() === 'subtile'
+        ? 'Place a subtile in a reserved (cyan) slot.'
+        : 'Place a combat tile from the inventory.');
+      return;
+    }
+
     const placedKey = this.selectedTileKey;
     const success = this.loopRunner.placeTile(slotIndex, placedKey);
     if (success) {
@@ -506,6 +531,15 @@ export class PlanningOverlay extends Scene {
 
   private refreshInventory(): void {
     const fontFamily = 'Georgia, "Times New Roman", serif';
+
+    // Tutorial gating: drop a selection that's no longer on-script (e.g. a
+    // combat tile selected during 'place-tile' that lingers into
+    // 'place-subtile') so a leftover key can't be placed via a path-slot click
+    // and isn't left visually highlighted on a now-dimmed card.
+    if (this.selectedTileKey && !this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type)) {
+      this.selectedTileKey = null;
+      this.selectedCardIndex = -1;
+    }
 
     // Clear existing cards
     for (const card of this.inventoryCards) {
@@ -594,7 +628,8 @@ export class PlanningOverlay extends Scene {
       // empty slot somewhere on the loop, and the picker is disabled entirely
       // while Remove Mode is active.
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
-      const contextOk = !this.removeMode && this.hasOpenNormalSlot();
+      const contextOk = !this.removeMode && this.hasOpenNormalSlot()
+        && this.tutorialAllowsPlacing(tileConfig.type);
       const enabled = canAfford && contextOk;
       // Tooltip + hover effect wired on every card (interactive even when
       // unaffordable) so the player can read the blurb without committing
@@ -691,7 +726,8 @@ export class PlanningOverlay extends Scene {
       }
 
       const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
-      const contextOk = !this.removeMode && subtileSlotsExist;
+      const contextOk = !this.removeMode && subtileSlotsExist
+        && this.tutorialAllowsPlacing(tileConfig.type);
       const enabled = canAfford && contextOk;
       // Tooltip + hover effect on every card so the player can read the
       // description regardless of affordability/context. Click is gated.
@@ -919,6 +955,29 @@ export class PlanningOverlay extends Scene {
     });
 
     refresh();
+  }
+
+  /**
+   * Scripted-tutorial gating: during the 'place-tile' / 'place-subtile' steps
+   * the player must place exactly the on-script tile type. Returns the
+   * required type, or null when no restriction applies (normal play, or any
+   * other tutorial step). The spotlight rect alone can't enforce this — it
+   * exposes the whole inventory — so placing an off-script tile would burn TP
+   * and softlock the run. Callers use this to disable every other picker.
+   */
+  private tutorialAllowedTileType(): TileSlotType | null {
+    if (!tutorialDirector.isActive()) return null;
+    const step = tutorialDirector.getCurrentStep();
+    if (step?.id === 'place-tile') return 'terrain';
+    if (step?.id === 'place-subtile') return 'subtile';
+    return null;
+  }
+
+  /** True when a tile of `tileType` may be placed under the current tutorial
+   *  gate (always true outside the gated steps). */
+  private tutorialAllowsPlacing(tileType: TileSlotType): boolean {
+    const allowed = this.tutorialAllowedTileType();
+    return allowed === null || allowed === tileType;
   }
 
   /** Wave 5: any empty basic slot that is NOT reserved — target for normal tiles. */
@@ -1246,9 +1305,13 @@ export class PlanningOverlay extends Scene {
   private buildShopForgeButtons(_fontFamily: string): void { /* no-op */ }
 
   private openSubScene(sceneKey: string): void {
-    // Tutorial: opening the Forge from planning completes 'forge-intro'.
+    // Tutorial: opening a sub-scene from planning completes its "click the X
+    // button" step. Shop is the new gate before the forge (the player buys the
+    // elements there); Forge stays the step after.
     if (sceneKey === SCENE_KEYS.FORGE) {
       tutorialDirector.advanceIfMatches('forge-intro');
+    } else if (sceneKey === SCENE_KEYS.SHOP) {
+      tutorialDirector.advanceIfMatches('shop-intro');
     }
     // Sync TP/gold back to RunState so the sub-scene sees the up-to-date
     // economy (planning may have spent TP placing tiles).

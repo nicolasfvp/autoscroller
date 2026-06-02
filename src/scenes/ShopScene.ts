@@ -13,6 +13,8 @@ import {
   resolveIconKey,
   type ElementId,
 } from '../systems/ElementSystem';
+import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { TutorialOverlay } from '../ui/TutorialOverlay';
 
 const ELEMENT_SELL_PRICE = 25;
 const ELEMENT_BUY_PRICE  = 50;
@@ -78,6 +80,8 @@ type ShopTab = 'relics' | 'shards';
 export class ShopScene extends Scene {
   private parentSceneKey: string = SCENE_KEYS.GAME;
   private cachedRelicRoll?: ShopRelic[];
+  /** Tutorial: counts element purchases so 'shop-buy-elements' advances on the 2nd. */
+  private tutorialElementsBought = 0;
 
   private _tab: ShopTab = 'shards';
   private _selectedShardId: ElementId = 'fire';
@@ -93,6 +97,7 @@ export class ShopScene extends Scene {
     this._tab            = 'shards';
     this._selectedShardId = 'fire';
     this._selectedRelicIdx = 0;
+    this.tutorialElementsBought = 0;
   }
 
   create(): void {
@@ -106,6 +111,20 @@ export class ShopScene extends Scene {
 
       this.drawBackdrop();
       this.buildAll();
+
+      // Scripted tutorial: spotlight each step's target and let TutorialOverlay
+      // block everything else. Per-action gating below (buy relic → buy 2
+      // elements → leave) backs this up so off-script clicks inside a spotlight
+      // (e.g. selling an element) are also refused.
+      const overlay = TutorialOverlay.mountIfActive(this);
+      if (overlay) {
+        // Single forced relic renders centred at x≈400, y≈231.
+        overlay.setStepRect('shop-buy-relic', { x: 322, y: 142, width: 156, height: 182 });
+        // The 8-element row + its buy/sell steppers span the mid band.
+        overlay.setStepRect('shop-buy-elements', { x: 40, y: 296, width: 720, height: 184 });
+        // Leave Shop button, bottom-right.
+        overlay.setStepRect('shop-leave', { x: 654, y: 548, width: 150, height: 44 });
+      }
 
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
@@ -313,10 +332,40 @@ export class ShopScene extends Scene {
 
   }
 
+  // ── Tutorial gating ───────────────────────────────────────
+  private shopTutorialStep(): string | null {
+    if (!tutorialDirector.isActive()) return null;
+    return tutorialDirector.getStepForScene(SCENE_KEYS.SHOP)?.id ?? null;
+  }
+
+  private tutAllows(action: 'relic' | 'buy-element' | 'sell-element' | 'remove' | 'leave'): boolean {
+    const step = this.shopTutorialStep();
+    if (step === null) return true;
+    switch (action) {
+      case 'relic':       return step === 'shop-buy-relic';
+      case 'buy-element': return step === 'shop-buy-elements';
+      case 'leave':       return step === 'shop-leave';
+      case 'sell-element':
+      case 'remove':      return false;
+    }
+  }
+
+  private tutorialRelicRoll(run: ReturnType<typeof getRun>): ShopRelic[] {
+    const relicId = 'whetstone_shard';
+    const d = getRelicById(relicId);
+    if (!d || run.relics.includes(relicId)) {
+      return ShopSystem.getShopRelics(run, run.pool.relics);
+    }
+    return [{ relicId, name: d.name, price: ShopSystem.getRelicPrice('common', 0) }];
+  }
+
+  // ── Relics ────────────────────────────────────────────────
   private buildRelicList(): void {
     const run = getRun();
     if (!this.cachedRelicRoll) {
-      this.cachedRelicRoll = ShopSystem.getShopRelics(run, run.pool.relics);
+      this.cachedRelicRoll = this.shopTutorialStep() !== null
+        ? this.tutorialRelicRoll(run)
+        : ShopSystem.getShopRelics(run, run.pool.relics);
     }
     const relics = this.cachedRelicRoll;
 
@@ -439,19 +488,25 @@ export class ShopScene extends Scene {
     this.addStatRow('Owned', `x${owned}`,           PR_STATS_Y,      owned > 0 ? GOLD : DIM);
     this.addStatRow('Value', `${ELEMENT_BUY_PRICE} G`, PR_STATS_Y + 18, GOLD);
 
-    const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE;
+    const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE && this.tutAllows('buy-element');
     const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', canBuy, false);
     if (canBuy) {
       buyBtn.on('pointerdown', () => {
         run.economy.gold -= ELEMENT_BUY_PRICE;
         (run.economy.elements as any)[id] = owned + 1;
         AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+        if (this.shopTutorialStep() === 'shop-buy-elements') {
+          this.tutorialElementsBought++;
+          if (this.tutorialElementsBought >= 2) {
+            tutorialDirector.advanceIfMatches('shop-buy-elements');
+          }
+        }
         this.buildAll();
       });
     }
     this._mainLayer.add(buyBtn);
 
-    if (owned > 0) {
+    if (owned > 0 && this.tutAllows('sell-element')) {
       const sellBtn = this.makeActionBtn(PR_CX, PR_SELL_Y, `SELL  +${ELEMENT_SELL_PRICE} G`, true, true);
       sellBtn.on('pointerdown', () => {
         (run.economy.elements as any)[id] = owned - 1;
@@ -505,14 +560,16 @@ export class ShopScene extends Scene {
 
     this.addStatRow('Price', `${r.price} G`, PR_STATS_Y, ok ? GOLD : RED);
 
-    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', ok, false);
-    if (ok) {
+    const buyable = ok && this.tutAllows('relic');
+    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', buyable, false);
+    if (buyable) {
       buyBtn.on('pointerdown', () => {
         const run = getRun();
         if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
           this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
           this._selectedRelicIdx = Math.max(0, this._selectedRelicIdx - 1);
           AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+          tutorialDirector.advanceIfMatches('shop-buy-relic');
           this.buildAll();
         }
       });
@@ -607,7 +664,8 @@ export class ShopScene extends Scene {
 
     // Remove Card
     const cost      = ShopSystem.getRemoveCardCost(run.economy.removalsThisShop ?? 0);
-    const canRemove = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE;
+    const canRemove = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE
+      && this.tutAllows('remove');
     const rg        = this.add.container(REMOVE_CX, FOOTER_Y);
 
     if (this.textures.exists('shop_remove_seal')) {
@@ -668,7 +726,7 @@ export class ShopScene extends Scene {
     (lb as any).input.cursor = 'pointer';
     lb.on('pointerover', () => leaveLabel.setColor(WHITE));
     lb.on('pointerout',  () => leaveLabel.setColor(GOLD));
-    lb.on('pointerdown', () => this.close());
+    lb.on('pointerdown', () => { if (!this.tutAllows('leave')) return; this.close(); });
     this._mainLayer.add(lb);
   }
 
@@ -679,7 +737,6 @@ export class ShopScene extends Scene {
     this.events.once('resume', () => this.buildAll());
   }
 
-  // ── Loop-end auto-heal ────────────────────────────────────────────────────
   private applyLoopEndAutoHeal(run: ReturnType<typeof getRun>): void {
     const heartyMeal  = (run.relics ?? []).includes('hearty_meal');
     const pct         = 0.3 * (heartyMeal ? 1.5 : 1.0);
@@ -691,7 +748,8 @@ export class ShopScene extends Scene {
 
   // ── Close ─────────────────────────────────────────────────────────────────
   private close(): void {
-    const parent    = this.parentSceneKey;
+    tutorialDirector.advanceIfMatches('shop-leave');
+    const parent = this.parentSceneKey;
     const isSleeping = this.scene.isSleeping(parent);
     this.scene.stop();
     if (isSleeping) this.scene.wake(parent); else this.scene.resume(parent);
