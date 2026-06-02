@@ -187,76 +187,45 @@ export class MainMenu extends Scene {
   private showDeleteConfirmation(): void {
     if (this.confirmOverlay) return;
 
+    const CX = LAYOUT.centerX;
+    const CY = LAYOUT.centerY;
+
     this.confirmOverlay = this.add.container(0, 0);
 
-    // Dim background
-    const dimBg = this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.7);
-    dimBg.setInteractive();
-    this.confirmOverlay.add(dimBg);
+    // ── Dim backdrop ──────────────────────────────────────────────────────────
+    const dim = this.add.rectangle(CX, CY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.72);
+    dim.setInteractive();
+    this.confirmOverlay.add(dim);
 
-    // Message panel — scale to 480px wide maintaining aspect ratio
-    const panelKey = this.textures.exists('confirm_panel') ? 'confirm_panel' : 'ui_panel';
-    const msgPanel = this.add.image(LAYOUT.centerX, 250, panelKey);
-    if (panelKey === 'confirm_panel') {
-      msgPanel.setScale(480 / msgPanel.width);
-    } else {
-      msgPanel.setDisplaySize(480, 148);
-    }
-    this.confirmOverlay.add(msgPanel);
+    // ── Painel de aviso (permanente-erase.png) ────────────────────────────────
+    const erasePanel = this.add.image(403.7, 239.7, 'lp_permanent_erase').setScale(0.3199);
+    this.confirmOverlay.add(erasePanel);
 
-    const msg = this.add.text(LAYOUT.centerX, 250, 'This will permanently erase your\ncurrent run. Continue?', {
-      fontSize: '22px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontFamily: FONTS.family,
-      align: 'center',
-    }).setOrigin(0.5);
-    this.confirmOverlay.add(msg);
+    // ── Botões ────────────────────────────────────────────────────────────────
+    const makeImgBtn = (x: number, y: number, texKey: string, scale: number, onClick: () => void) => {
+      const img = this.add.image(x, y, texKey).setScale(scale).setInteractive({ useHandCursor: true });
+      img.on('pointerover',  () => img.setTint(0xffffcc));
+      img.on('pointerout',   () => img.clearTint());
+      img.on('pointerdown',  onClick);
+      this.confirmOverlay!.add(img);
+    };
 
-    // Yes, Delete button — scale to 210px wide maintaining aspect ratio
-    const yesBtnKey = this.textures.exists('btn_yes_delete') ? 'btn_yes_delete' : 'ui_panel';
-    const yesBg = this.add.image(270, 370, yesBtnKey);
-    if (yesBtnKey === 'btn_yes_delete') {
-      yesBg.setScale(210 / yesBg.width);
-    } else {
-      yesBg.setDisplaySize(210, 58);
-      this.confirmOverlay.add(this.add.text(270, 370, 'Yes, Delete', {
-        fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
-        stroke: '#1a0000', strokeThickness: 2,
-      }).setOrigin(0.5));
-    }
-    yesBg.setInteractive({ useHandCursor: true });
-    yesBg.on('pointerover', () => yesBg.setAlpha(0.85));
-    yesBg.on('pointerout',  () => yesBg.setAlpha(1));
-    yesBg.on('pointerdown', () => { void this.startNewRun(); });
-    this.confirmOverlay.add(yesBg);
+    makeImgBtn(314.2, 355.1, 'lp_delete_run', 0.3095, () => { void this.startNewRun(); });
+    makeImgBtn(504.7, 354.6, 'lp_keep',       0.3097, () => this.hideConfirmation());
 
-    // Keep My Run button — scale to 210px wide maintaining aspect ratio
-    const noBtnKey = this.textures.exists('btn_keep_my_run') ? 'btn_keep_my_run' : 'ui_panel';
-    const noBg = this.add.image(530, 370, noBtnKey);
-    if (noBtnKey === 'btn_keep_my_run') {
-      noBg.setScale(210 / noBg.width);
-    } else {
-      noBg.setDisplaySize(210, 58);
-      this.confirmOverlay.add(this.add.text(530, 370, 'Keep My Run', {
-        fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
-        stroke: '#2e1b0f', strokeThickness: 2,
-      }).setOrigin(0.5));
-    }
-    noBg.setInteractive({ useHandCursor: true });
-    noBg.on('pointerover', () => noBg.setAlpha(0.85));
-    noBg.on('pointerout',  () => noBg.setAlpha(1));
-    noBg.on('pointerdown', () => this.hideConfirmation());
-    this.confirmOverlay.add(noBg);
+    // Fade-in
+    this.confirmOverlay.setAlpha(0);
+    this.tweens.add({ targets: this.confirmOverlay, alpha: 1, duration: 200, ease: 'Sine.easeOut' });
   }
 
   private hideConfirmation(): void {
-    if (this.confirmOverlay) {
-      this.confirmOverlay.destroy(true);
-      this.confirmOverlay = null;
-    }
+    if (!this.confirmOverlay) return;
+    const overlay = this.confirmOverlay;
+    this.confirmOverlay = null;
+    this.tweens.add({
+      targets: overlay, alpha: 0, duration: 160, ease: 'Sine.easeIn',
+      onComplete: () => overlay.destroy(true),
+    });
   }
 
   private async startNewRun(): Promise<void> {

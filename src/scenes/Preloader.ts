@@ -52,7 +52,7 @@ export class Preloader extends Scene {
     this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Mage scrolling animation (10-frame run, 512×512 per frame)
     this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 256, frameHeight: 256 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
 
@@ -166,7 +166,8 @@ export class Preloader extends Scene {
     this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');
     this.load.image('arco_forja',     'assets/buildings/items/arco_forja.png');
     this.load.image('bigorna',        'assets/buildings/items/bigorna.png');
-    this.load.image('forge_moldure',  'assets/buildings/items/forge_moldure.png');
+    this.load.image('forge_moldure',       'assets/buildings/items/forge_moldure.png');
+    this.load.image('forge_status_banner', 'assets/ui/forge/forge_status_banner.png');
     // Forge-specific ornate element sigils (separate from the small `icon_<id>`
     // tokens used inside card faces).
     for (const id of ['attack','defense','agility','counter','fire','water','air','earth']) {
@@ -222,6 +223,7 @@ export class Preloader extends Scene {
     this.load.image('shop_row_selected',  'assets/ui/shop/item_selection.png');
     this.load.image('shop_btn_buy',       'assets/ui/shop/buy-button.png');
     this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
+    this.load.image('confirm_dialog',       'assets/ui/panels/confirm_dialog.png');
     this.load.image('confirm_panel',        'assets/ui/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
@@ -236,6 +238,10 @@ export class Preloader extends Scene {
     this.load.image('panel_hero_plaque',      'assets/ui/panels/panel_hero_plaque.png');
     this.load.image('warrior_status',         'assets/ui/panels/warrior_status.png');
     this.load.image('mage_status',            'assets/ui/panels/mage_status.png');
+    // Forge dwarf NPC
+    this.load.image('dwarf_talking',          'assets/characters/npc/forge-dwarf/dwarf_talking.png');
+    this.load.image('dwarf_hands_on_hips',    'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
+    this.load.image('dwarf_thumbs_up',        'assets/characters/npc/forge-dwarf/dwarf_thumbs_up.png');
     this.load.image('panel_modifier_banner',  'assets/ui/panels/panel_modifier_banner.png');
     this.load.image('panel_keyword_frame',    'assets/ui/panels/panel_keyword_frame.png');
     this.load.image('panel_hover_frame',      'assets/ui/panels/panel_hover_frame.png');
@@ -245,7 +251,8 @@ export class Preloader extends Scene {
     this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
-    this.load.image('card_mold', 'assets/ui/frames/card_mold.png');
+    this.load.image('card_mold',    'assets/ui/frames/card_mold.png');
+    this.load.image('card_mold_v2', 'assets/ui/frames/card_mold_v2.png');
     // Bitmap fonts (custom game alphabet)
     this.load.bitmapFont('game_font_gold',  'assets/fonts/game_font_gold/game_font_gold.png',   'assets/fonts/game_font_gold/game_font_gold.fnt');
     this.load.bitmapFont('game_font_blue',  'assets/fonts/game_font_blue/game_font_blue.png',   'assets/fonts/game_font_blue/game_font_blue.fnt');
@@ -313,6 +320,12 @@ this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     this.load.image('btn_banish',          'assets/ui/buttons/btn_banish.png');
     this.load.image('btn_keep',            'assets/ui/buttons/btn_keep.png');
     this.load.image('btn_delete_run',      'assets/ui/buttons/btn_delete_run.png');
+    this.load.image('btn_forge_action',    'assets/ui/buttons/btn_forge_action.png');
+    this.load.image('btn_dismiss',         'assets/ui/buttons/btn_dismiss.png');
+    // Landing-page delete-run dialog assets
+    this.load.image('lp_delete_run',       'assets/ui/text/landing-page/delete-run.png');
+    this.load.image('lp_keep',             'assets/ui/text/landing-page/keep.png');
+    this.load.image('lp_permanent_erase',  'assets/ui/text/landing-page/permanente-erase.png');
     this.load.image('btn_reset_progress',  'assets/ui/buttons/btn_reset_progress.png');
     this.load.image('btn_next',            'assets/ui/buttons/btn_next.png');
     this.load.image('loot_bag_empty',      'assets/ui/panels/loot_bag_empty.png');

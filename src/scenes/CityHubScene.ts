@@ -6,6 +6,8 @@ import { AudioManager } from '../systems/AudioManager';
 import { getBuildingTierData, upgradeBuilding } from '../systems/MetaProgressionSystem';
 import { playUnlockCelebration } from '../ui/UnlockCelebration';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { SeededRNG } from '../systems/SeededRNG';
+import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
 
 const GOLD   = '#e6c88a';
 const STROKE = '#2e1b0f';
@@ -19,11 +21,11 @@ interface BuildingConfig {
 }
 
 const BUILDINGS: BuildingConfig[] = [
-  { key: 'forge',      btnKey: 'btn_forge',    x: 150, y: 295 },
-  { key: 'library',    btnKey: 'btn_library',  x: 415, y:  78 },
-  { key: 'workshop',   btnKey: 'btn_workshop', x: 570, y: 270 },
-  { key: 'shrine',     btnKey: 'btn_oracle',   x: 172, y: 483 },
-  { key: 'storehouse', btnKey: 'btn_vault',    x: 388, y: 520 },
+  { key: 'forge',      btnKey: 'btn_forge',    x: 150,   y: 295   },
+  { key: 'library',    btnKey: 'btn_library',  x: 411.8, y:  70.6 },
+  { key: 'workshop',   btnKey: 'btn_workshop', x: 570,   y: 270   },
+  { key: 'shrine',     btnKey: 'btn_oracle',   x: 172,   y: 483   },
+  { key: 'storehouse', btnKey: 'btn_vault',    x: 388,   y: 520   },
 ];
 
 const BUILDING_LABEL: Record<string, string> = {
@@ -48,6 +50,19 @@ export class CityHubScene extends Scene {
     this.transitioning = true;
     this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key));
+  }
+
+  private startRun(): void {
+    if (this.transitioning) return;
+    this.transitioning = true;
+    const rng = new SeededRNG();
+    const existing = hasActiveRun() ? getRun() : null;
+    const chosenClass = existing ? (existing.hero.className ?? 'warrior') : 'warrior';
+    const customDeck = existing?.deck.active;
+    const run = createNewRun(this.metaState, 1, chosenClass, rng.seed, customDeck);
+    setRun(run);
+    this.scene.stop();
+    this.scene.start(SCENE_KEYS.RUN_TRANSITION, { seed: rng.seed, manualSeed: false });
   }
 
   async create(): Promise<void> {
@@ -75,9 +90,6 @@ export class CityHubScene extends Scene {
     // ── Top bar: materials ────────────────────────────────────
     this.renderMaterials();
 
-    // ── Top-right: class XP ───────────────────────────────────
-    addBitmapText(this, 770, 14, `Warrior Lv.${this.metaState.classXP.warrior}`, 14, 'gold')
-      .setOrigin(1, 0).setDepth(50);
 
     // ── Bottom-right: Start Run ───────────────────────────────
     if (this.textures.exists('btn_start_run_hub')) {
@@ -88,9 +100,9 @@ export class CityHubScene extends Scene {
         .setInteractive({ useHandCursor: true });
       startBtn.on('pointerover', () => startBtn.setTint(0xffffcc));
       startBtn.on('pointerout',  () => startBtn.clearTint());
-      startBtn.on('pointerdown', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+      startBtn.on('pointerdown', () => this.startRun());
     } else {
-      this.createTextButton(750, 562, 'Start Run', () => this.fadeToScene(SCENE_KEYS.CHARACTER_SELECT));
+      this.createTextButton(750, 562, 'Start Run', () => this.startRun());
     }
 
     // ── Building buttons ──────────────────────────────────────
@@ -99,41 +111,42 @@ export class CityHubScene extends Scene {
     }
   }
 
-  // ─── Material inventory ───────────────────────────────────────
+  // ─── Material inventory — header horizontal no topo ──────────────
   private renderMaterials(): void {
-    const sx = 35, sy = 36, rh = 26, cw = 90;
+    const MAT_ORDER = ['stone', 'bone', 'essence', 'wood', 'herbs', 'iron', 'crystal'];
+    const H         = 36;      // altura do header
+    const ICON_SIZE = 20;
+    const CELL_W    = Math.floor(800 / MAT_ORDER.length); // ~114px por célula
+    const CY        = H / 2;   // centro vertical
 
-    if (this.textures.exists('mat_panel')) {
-      const panel = this.add.image(5, 5, 'mat_panel');
-      panel.setScale(158 / panel.width).setOrigin(0, 0).setDepth(50);
-    }
+    // Fundo semi-transparente
+    const bg = this.add.graphics().setDepth(50);
+    bg.fillStyle(0x0d0906, 0.82);
+    bg.fillRect(0, 0, 800, H);
+    bg.lineStyle(1, 0xd4a04a, 0.55);
+    bg.lineBetween(0, H, 800, H);
 
-    const mats = [
-      ['stone', 'bone'],
-      ['essence', 'wood'],
-      ['herbs', 'iron'],
-    ];
-    mats.forEach((row, i) => {
-      row.forEach((mat, col) => {
-        const x = sx + col * cw;
-        const y = sy + i * rh;
-        const val = (this.metaState.materials as any)[mat] ?? 0;
-        if (this.textures.exists(`mat_${mat}`)) {
-          const icon = this.add.image(x, y, `mat_${mat}`);
-          icon.setScale(18 / Math.max(icon.width, icon.height)).setDepth(51);
-        }
-        addBitmapText(this, x + 12, y, `${val}`, 12, 'gold')
-          .setOrigin(0, 0.5).setDepth(51);
-      });
+    MAT_ORDER.forEach((mat, i) => {
+      const cx  = i * CELL_W + CELL_W / 2;
+      const val = (this.metaState.materials as any)[mat] ?? 0;
+
+      // Separador vertical (exceto antes do primeiro)
+      if (i > 0) {
+        bg.lineStyle(1, 0xd4a04a, 0.25);
+        bg.lineBetween(i * CELL_W, 4, i * CELL_W, H - 4);
+      }
+
+      // Ícone
+      if (this.textures.exists(`mat_${mat}`)) {
+        const icon = this.add.image(cx - 18, CY, `mat_${mat}`);
+        icon.setScale(ICON_SIZE / Math.max(icon.width, icon.height))
+            .setDepth(51);
+      }
+
+      // Valor
+      addBitmapText(this, cx - 4, CY, `${val}`, 13, 'gold')
+        .setOrigin(0, 0.5).setDepth(51);
     });
-
-    const crystalVal = (this.metaState.materials as any)['crystal'] ?? 0;
-    if (this.textures.exists('mat_crystal')) {
-      const icon = this.add.image(sx + cw * 0.5, sy + 3 * rh, 'mat_crystal');
-      icon.setScale(18 / Math.max(icon.width, icon.height)).setDepth(51);
-    }
-    addBitmapText(this, sx + cw * 0.5 + 12, sy + 3 * rh, `${crystalVal}`, 12, 'gold')
-      .setOrigin(0, 0.5).setDepth(51);
   }
 
   // ─── Building button ──────────────────────────────────────────
@@ -149,7 +162,7 @@ export class CityHubScene extends Scene {
       .setDepth(10);
 
     // Level badge below button
-    addBitmapText(this, x, y + 28, `Lv.${level}`, 12, 'gold')
+    addBitmapText(this, x, y + 18, `Lv.${level}`, 12, 'gold')
       .setOrigin(0.5, 0).setDepth(10);
 
     btn.on('pointerover', () => btn.setTint(0xffffcc));

@@ -6,7 +6,7 @@
 // Logic unchanged: ForgeSystem (validateForge / executeForge / discoverRecipe).
 
 import { Scene } from 'phaser';
-import { getRun } from '../state/RunState';
+import { getRun, setRun } from '../state/RunState';
 import { FONTS } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -22,13 +22,19 @@ import {
   getForgeGoldCost,
   isTierUnlocked,
   validateForge,
+  executeForge,
+  discoverRecipe,
 } from '../systems/ForgeSystem';
 import type { ElementInventory } from '../systems/ShardSystem';
-import { loadMetaState } from '../systems/MetaPersistence';
+import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { createCardVisual } from '../ui/CardVisual';
+import { disableCardFaceInput } from '../ui/CardFace';
+import { showCardDetail } from '../ui/CardDetailPopup';
+import type { ForgePopupOptions } from '../ui/CardDetailPopup';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { saveManager } from '../core/SaveManager';
 
 const FF   = FONTS.family;
 const GOLD = '#ffd700';
@@ -40,12 +46,11 @@ const CANVAS_W = 800;
 const CANVAS_H = 600;
 
 // ── Arc layout ────────────────────────────────────────────────────────────────
-const ARC_CX = 405;         // center X of the arc ring
-const ARC_CY = 360;         // center Y of the arc ring
-const ARC_W  = 506;         // display width of arco_forja.png
-const SLOT_R = 162;         // radius to shard slot centers (tune to align with arc image)
-const SLOT_ICON = 73;       // shard icon size (+40% −10% = +26%)
-const ANVIL_W = 159;        // anvil display width (−10%)
+const ARC_CX = 405;
+const ARC_CY = 360;
+const ARC_W  = 506;         // display width → converted to scale on render
+const SLOT_R = 162;
+const SLOT_ICON = 73;
 
 const CIRCLE_SLOTS: Array<{ id: ElementId; angleDeg: number }> = [
   { id: 'agility', angleDeg: 0   },
@@ -58,24 +63,74 @@ const CIRCLE_SLOTS: Array<{ id: ElementId; angleDeg: number }> = [
   { id: 'fire',    angleDeg: 315 },
 ];
 
-// Banner.
-const BANNER_Y = 530;
+// Banner position and scale (debug-layout 2026-06-02)
+const BANNER_X = 397.4;
+const BANNER_Y = 121.1;
+const BANNER_SCALE = 0.1012;
 
-// ── Helper: position on the ring ─────────────────────────────────────────────
+// Shard ring positions (debug-layout 2026-06-02)
+const RING_POSITIONS: Record<ElementId, { x: number; y: number }> = {
+  agility: { x: 186.4, y: 288.8 },
+  attack:  { x: 281,   y: 173.5 },
+  defense: { x: 506.6, y: 177.6 },
+  counter: { x: 605.3, y: 291.5 },
+  earth:   { x: 577.9, y: 414.1 },
+  water:   { x: 508.7, y: 522   },
+  air:     { x: 276.7, y: 522   },
+  fire:    { x: 213.7, y: 413.4 },
+};
+
+// Per-element display size override for ring shards (debug-layout 2026-06-02)
+const RING_DISPLAY_SIZES: Partial<Record<ElementId, number>> = {
+  agility: 77,
+  attack:  76,
+  defense: 88,
+  counter: 79,
+  earth:   76,
+  water:   79,
+  air:     82,
+  fire:    79,
+};
+
+// Top bar icon and count positions (unchanged)
+const TOP_BAR_LAYOUT: Record<ElementId, { ix: number; iy: number; isize: number; tx: number; ty: number }> = {
+  attack:  { ix: 46.5,  iy: 54.4, isize: 45, tx: 93.9,  ty: 63.9 },
+  defense: { ix: 145.5, iy: 54.9, isize: 52, tx: 196.1, ty: 65   },
+  agility: { ix: 248.1, iy: 54.4, isize: 45, tx: 292.9, ty: 63.9 },
+  counter: { ix: 347.6, iy: 54.9, isize: 47, tx: 393.9, ty: 62.3 },
+  fire:    { ix: 448.6, iy: 54.4, isize: 45, tx: 488.1, ty: 63.4 },
+  earth:   { ix: 537.6, iy: 53.4, isize: 47, tx: 578.7, ty: 63.9 },
+  air:     { ix: 629.2, iy: 54.9, isize: 47, tx: 667.1, ty: 65   },
+  water:   { ix: 716,   iy: 55.5, isize: 47, tx: 756.6, ty: 64.4 },
+};
+
+// ── Helper: position on the ring (fallback if id not in RING_POSITIONS) ───────
 function ringPos(angleDeg: number, r: number): { x: number; y: number } {
-  // User requested 75 degree offset to fix displacement (-85 + 10)
   const rad = (angleDeg - 75) * (Math.PI / 180);
   return { x: ARC_CX + r * Math.sin(rad), y: ARC_CY - r * Math.cos(rad) };
 }
+
+// Bigorna target position
+const ANVIL_X = 395.8;
+const ANVIL_Y = 477.9;
+const ANVIL_DROP_R = 60; // raio de aceite do drop sobre a bigorna
 
 export class ForgeScene extends Scene {
   private goldText!: Phaser.GameObjects.Text;
   private dynLayer!: Phaser.GameObjects.Container;
   private beamsGfx!: Phaser.GameObjects.Graphics;
+  private anvilGlow!: Phaser.GameObjects.Graphics;
+  private confirmPanel: Phaser.GameObjects.Container | null = null;
   private metaState: MetaState | null = null;
   private forgeSlots: ElementId[] = [];
   private parentSceneKey: string = SCENE_KEYS.PLANNING;
   private beamPulse = 0;
+  // Drag state
+  private dragGhost: Phaser.GameObjects.Image | null = null;
+  private dragId:    ElementId | null = null;
+  private onPtrMove: ((p: Phaser.Input.Pointer) => void) | null = null;
+  private onPtrUp:   ((p: Phaser.Input.Pointer) => void) | null = null;
+  private dwarfSpeakForge: ((text: string, canForge: boolean, onForge: () => void) => void) | null = null; // set by buildDwarfNPC
 
   constructor() { super(SCENE_KEYS.FORGE); }
 
@@ -94,11 +149,12 @@ export class ForgeScene extends Scene {
       this.renderForge();
       this.beamPulse = 0;
       this.events.on('update', (_t: number, dt: number) => {
-        this.beamPulse = (this.beamPulse + dt * 0.0009) % 1;
+        this.beamPulse = (this.beamPulse + dt * 0.00035) % 1;
         this.drawBeams();
       });
       createWoodButton(this, 75, CANVAS_H - 28, '← Leave', () => this.close(),
         { width: 120, height: 34, fontSize: 13 });
+      this.buildDwarfNPC();
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);
     } catch (err) {
@@ -141,13 +197,15 @@ export class ForgeScene extends Scene {
     vig.fillRect(CANVAS_W - 28, 100, 28, CANVAS_H - 148);
 
     // Bigorna (anvil) at center — drawn first so it's behind the arc.
+    // anvilGlow is drawn behind the anvil image and pulsed when slots are active.
+    this.anvilGlow = this.add.graphics();
     if (this.textures.exists('bigorna')) {
-      this.add.image(ARC_CX - 5, ARC_CY + 120, 'bigorna').setDisplaySize(ANVIL_W, ANVIL_W);
+      this.add.image(395.8, 477.9, 'bigorna').setScale(0.1508);
     }
 
-    // Arc ring.
+    // Arc ring — fixed scale from debug-layout (preserves aspect ratio).
     if (this.textures.exists('arco_forja')) {
-      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setDisplaySize(ARC_W, ARC_W);
+      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setScale(0.5172);
     }
 
     // Gold readout.
@@ -184,33 +242,24 @@ export class ForgeScene extends Scene {
     elementInv: ElementInventory,
     shardInv: Record<string, number>,
   ): void {
-    const TOP_BAR_ORDER: ElementId[] = ['attack', 'defense', 'agility', 'counter', 'fire', 'earth', 'air', 'water'];
-    const SLOT_W  = CANVAS_W / TOP_BAR_ORDER.length; // 100px
-    const ICON_Y  = 56;   // vertical center of icon + count (aligns with baked "×")
+    const ORDER: ElementId[] = ['attack', 'defense', 'agility', 'counter', 'fire', 'earth', 'air', 'water'];
 
-    for (let i = 0; i < TOP_BAR_ORDER.length; i++) {
-      const id    = TOP_BAR_ORDER[i];
-      const count = (elementInv[id] ?? 0) + (shardInv[id] ?? 0);
-      const cx    = SLOT_W * (i + 0.5);
+    for (const id of ORDER) {
+      const count  = (elementInv[id] ?? 0) + (shardInv[id] ?? 0);
+      const layout = TOP_BAR_LAYOUT[id];
 
-      // First 6 slots: +20px right; all 8 slots: 35px icon.
-      const first6  = i < 6;
-      const iconPx  = 35;
-      const iconOx  = first6 ? -14 : -34;
-      const cntOx   = first6 ?   6 : -14;
-
-      const sigilKey  = `forge_sigil_${id}`;
-      const fallback  = resolveIconKey(this.textures, id);
-      const iconKey   = this.textures.exists(sigilKey) ? sigilKey : (fallback ?? null);
+      const sigilKey = `forge_sigil_${id}`;
+      const fallback = resolveIconKey(this.textures, id);
+      const iconKey  = this.textures.exists(sigilKey) ? sigilKey : (fallback ?? null);
       if (iconKey) {
-        const icon = this.add.image(cx + iconOx, ICON_Y, iconKey);
-        icon.setScale(iconPx / icon.width);
+        const icon = this.add.image(layout.ix, layout.iy, iconKey);
+        icon.setScale(layout.isize / icon.width);
         icon.setAlpha(count > 0 ? 1 : 0.3);
         this.dynLayer.add(icon);
       }
 
       this.dynLayer.add(
-        this.add.text(cx + cntOx, ICON_Y, `${count}`, {
+        this.add.text(layout.tx, layout.ty, `${count}`, {
           fontSize: '11px', fontStyle: 'bold',
           color: count > 0 ? GOLD : DIM, fontFamily: FF,
           stroke: '#000', strokeThickness: 2,
@@ -227,72 +276,113 @@ export class ForgeScene extends Scene {
     const slotsLeft = this.forgeSlots.length < 3;
 
     for (const { id, angleDeg } of CIRCLE_SLOTS) {
-      const { x: cx, y: cy } = ringPos(angleDeg, SLOT_R);
+      const { x: cx, y: cy } = RING_POSITIONS[id] ?? ringPos(angleDeg, SLOT_R);
       const available = (elementInv[id] ?? 0) - (slotUsage[id] ?? 0);
       const selected  = this.forgeSlots.includes(id);
-      const usable    = available > 0 && slotsLeft && !selected;
+      const usable    = available > 0 && slotsLeft;
       const elem      = ELEMENTS[id];
       const elemColor = parseInt(elem.color.replace('#', ''), 16);
 
-      // Slot glow for selected/usable.
+
+      // Shard icon
+      const sigilKey = `forge_sigil_${id}`;
+      const iconKey  = resolveIconKey(this.textures, id);
+      const texKey   = this.textures.exists(sigilKey) ? sigilKey : iconKey;
+      if (!texKey) continue;
+
+      const sz      = RING_DISPLAY_SIZES[id] ?? SLOT_ICON;
+      const iconObj = this.add.image(cx, cy, texKey).setDisplaySize(sz, sz);
+      if (selected) iconObj.setTint(0xffffff);
+      if (!usable && !selected) iconObj.setAlpha(0.35);
+      this.dynLayer.add(iconObj);
+
+      // Drag para adicionar / clique para remover
       if (selected) {
-        const glow = this.add.graphics();
-        glow.fillStyle(elemColor, 0.35);
-        glow.fillCircle(cx, cy, SLOT_ICON * 0.72);
-        glow.lineStyle(2.5, elemColor, 0.9);
-        glow.strokeCircle(cx, cy, SLOT_ICON * 0.72);
-        this.dynLayer.add(glow);
+        iconObj.setInteractive({ useHandCursor: true });
+        iconObj.on('pointerdown', () => {
+          const idx = this.forgeSlots.lastIndexOf(id);
+          if (idx >= 0) { this.forgeSlots.splice(idx, 1); this.dismissConfirmPanel(); this.renderForge(); }
+        });
       } else if (usable) {
-        const halo = this.add.graphics();
-        halo.lineStyle(1.5, elemColor, 0.45);
-        halo.strokeCircle(cx, cy, SLOT_ICON * 0.65);
-        this.dynLayer.add(halo);
-      }
+        iconObj.setInteractive({ useHandCursor: true, draggable: false });
 
-      // Shard icon.
-      let iconObj: Phaser.GameObjects.Image | null = null;
-      const sigilKey  = `forge_sigil_${id}`;
-      const iconKey   = resolveIconKey(this.textures, id);
-      const texKey    = this.textures.exists(sigilKey) ? sigilKey : iconKey;
-      if (texKey) {
-        iconObj = this.add.image(cx, cy, texKey).setDisplaySize(SLOT_ICON, SLOT_ICON);
-        iconObj.setAlpha(1);
-        if (selected) iconObj.setTint(0xffffff);
-        this.dynLayer.add(iconObj);
-      }
+        iconObj.on('pointerover', () => {
+          this.tweens.add({ targets: iconObj, displayWidth: sz * 1.25, displayHeight: sz * 1.25, duration: 120, ease: 'Sine.easeOut', overwrite: true });
+        });
+        iconObj.on('pointerout', () => {
+          this.tweens.add({ targets: iconObj, displayWidth: sz, displayHeight: sz, duration: 120, ease: 'Sine.easeOut', overwrite: true });
+        });
 
-      // (Count badge and Element label removed by user request)
-
-      // Click zone and hover.
-      if (selected || usable) {
-        let hitTarget: Phaser.GameObjects.GameObject;
-        
-        if (iconObj) {
-          iconObj.setInteractive({ useHandCursor: true });
-          hitTarget = iconObj;
-          
-          iconObj.on('pointerover', () => {
-            if (iconObj) this.tweens.add({ targets: iconObj, displayWidth: SLOT_ICON * 1.35, displayHeight: SLOT_ICON * 1.35, duration: 150, ease: 'Sine.easeOut', overwrite: true });
-          });
-          iconObj.on('pointerout', () => {
-            if (iconObj) this.tweens.add({ targets: iconObj, displayWidth: SLOT_ICON, displayHeight: SLOT_ICON, duration: 150, ease: 'Sine.easeOut', overwrite: true });
-          });
-        } else {
-          const zone = this.add.zone(cx, cy, SLOT_ICON * 1.4, SLOT_ICON * 1.4).setInteractive({ useHandCursor: true });
-          this.dynLayer.add(zone);
-          hitTarget = zone;
-        }
-
-        if (selected) {
-          hitTarget.on('pointerdown', () => {
-            const idx = this.forgeSlots.indexOf(id);
-            if (idx >= 0) { this.forgeSlots.splice(idx, 1); this.renderForge(); }
-          });
-        } else {
-          hitTarget.on('pointerdown', () => { this.forgeSlots.push(id); this.renderForge(); });
-        }
+        iconObj.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+          this.startDrag(id, texKey, sz, ptr);
+        });
       }
     }
+  }
+
+  // ── Drag manual ───────────────────────────────────────────────────────────
+  private ptrToWorld(p: Phaser.Input.Pointer): { x: number; y: number } {
+    const cam = this.cameras.main;
+    return { x: cam.scrollX + p.x / cam.zoom, y: cam.scrollY + p.y / cam.zoom };
+  }
+
+  private startDrag(id: ElementId, texKey: string, sz: number, ptr: Phaser.Input.Pointer): void {
+    // Cancela drag anterior se houver
+    this.cancelDrag();
+
+    const wp = this.ptrToWorld(ptr);
+    this.dragId    = id;
+    this.dragGhost = this.add.image(wp.x, wp.y, texKey)
+      .setDisplaySize(sz * 0.85, sz * 0.85)
+      .setAlpha(0.82)
+      .setDepth(20);
+
+    this.onPtrMove = (p: Phaser.Input.Pointer) => {
+      if (this.dragGhost) {
+        const w = this.ptrToWorld(p);
+        this.dragGhost.setPosition(w.x, w.y);
+      }
+    };
+
+    this.onPtrUp = (p: Phaser.Input.Pointer) => {
+      const w = this.ptrToWorld(p);
+      const dist = Phaser.Math.Distance.Between(w.x, w.y, ANVIL_X, ANVIL_Y);
+      const dropped = dist <= ANVIL_DROP_R && this.dragId !== null && this.forgeSlots.length < 3;
+
+      if (dropped && this.dragId) {
+        // Animação do ghost voando para bigorna
+        const ghost = this.dragGhost;
+        this.dragGhost = null;
+        this.tweens.add({
+          targets: ghost, x: ANVIL_X, y: ANVIL_Y,
+          scaleX: 0, scaleY: 0, alpha: 0,
+          duration: 180, ease: 'Sine.easeIn',
+          onComplete: () => ghost?.destroy(),
+        });
+        this.forgeSlots.push(this.dragId);
+        this.dragId = null;
+        this.removeDragListeners();
+        this.dismissConfirmPanel();
+        this.renderForge();
+      } else {
+        // Drop inválido — ghost volta para origem com bounce
+        this.cancelDrag();
+      }
+    };
+
+    this.input.on('pointermove', this.onPtrMove);
+    this.input.on('pointerup',   this.onPtrUp);
+  }
+
+  private cancelDrag(): void {
+    if (this.dragGhost) { this.dragGhost.destroy(); this.dragGhost = null; }
+    this.dragId = null;
+    this.removeDragListeners();
+  }
+
+  private removeDragListeners(): void {
+    if (this.onPtrMove) { this.input.off('pointermove', this.onPtrMove); this.onPtrMove = null; }
+    if (this.onPtrUp)   { this.input.off('pointerup',   this.onPtrUp);   this.onPtrUp   = null; }
   }
 
   // ── Center: card preview (overlays bigorna when recipe found) ─────────────
@@ -300,16 +390,35 @@ export class ForgeScene extends Scene {
     const run = getRun();
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
-    const tier = this.forgeSlots.length as 1 | 2 | 3;
-    const cost = this.forgeSlots.length >= 2 ? getForgeGoldCost(tier, forgeLevel) : 0;
-    const deckSize = run.deck.active.length;
-    const validation = this.forgeSlots.length >= 2
-      ? validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15)
-      : null;
 
     if (card) {
-      // Card preview floats in the center, above the bigorna.
-      const visual = createCardVisual(this, ARC_CX, ARC_CY - 18, card.id, { scale: 0.52 });
+      const visual = createCardVisual(this, ARC_CX - 5, ARC_CY - 68, card.id, { scale: 0.754 });
+      disableCardFaceInput(visual);
+      visual.setInteractive({ useHandCursor: true });
+      visual.on('pointerdown', () => {
+        const run = getRun();
+        const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+        const tier = this.forgeSlots.length as 1 | 2 | 3;
+        const cost = getForgeGoldCost(tier, forgeLevel);
+        const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, run.deck.active.length, 15);
+        const canForge = !!(validation?.ok && isTierUnlocked(tier, forgeLevel));
+        const elemNames = [...new Set(this.forgeSlots)].join(', ');
+        let line: string;
+        if (canForge) {
+          line = `This'll cost ye ${cost} gold\nan' ${this.forgeSlots.length} ${elemNames} shards.\nShall I forge it?`;
+        } else if (validation && !validation.ok) {
+          line = forgeReasonDwarf(validation.reason ?? 'invalid', tier, forgeLevel, cost);
+        } else {
+          line = `Tier ${tier} is locked, friend.\nUpgrade the forge first!`;
+        }
+        // Abre a carta expandida sem backdrop (anão fala ao lado)
+        showCardDetail(this, card.id, undefined, undefined, true, true);
+        // Anão fala com opções de forge (delay pequeno para não ser interceptado pelo backdrop)
+        if (this.dwarfSpeakForge) {
+          const speak = this.dwarfSpeakForge;
+          this.time.delayedCall(50, () => speak(line, canForge, () => this.executeForgeAction(card.id, forgeLevel)));
+        }
+      });
       this.dynLayer.add(visual);
     } else if (this.forgeSlots.length >= 2) {
       this.dynLayer.add(
@@ -332,96 +441,217 @@ export class ForgeScene extends Scene {
         }).setOrigin(0.5),
       );
     }
-
-    // Status banner (above buttons).
-    let costText = '';
-    let statusText = '';
-    let statusColor = GOLD;
-    if (card) {
-      costText = `⚒ ${cost} Gold + ${this.forgeSlots.length} elements`;
-      if (validation && !validation.ok) {
-        statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
-        statusColor = RED;
-      } else if (!isTierUnlocked(tier, forgeLevel)) {
-        statusText = `Tier ${tier} requires Forge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]}`;
-        statusColor = RED;
-      } else {
-        statusText = '✦ Ready to forge ✦';
-        statusColor = '#9bff9b';
-      }
-    } else if (this.forgeSlots.length >= 2) {
-      statusText = 'No card matches that combination.';
-      statusColor = RED;
-    }
-
-    if (costText || statusText) {
-      this.dynLayer.add(
-        this.add.rectangle(ARC_CX, BANNER_Y, 400, 24, 0x0a0400, 0.85)
-          .setStrokeStyle(1.5, 0xd4a04a, 0.8),
-      );
-      if (costText) {
-        this.dynLayer.add(
-          this.add.text(ARC_CX - 6, BANNER_Y, costText, {
-            fontSize: '11px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-            stroke: '#000', strokeThickness: 2,
-          }).setOrigin(1, 0.5),
-        );
-        this.dynLayer.add(
-          this.add.text(ARC_CX, BANNER_Y, ' ● ', {
-            fontSize: '8px', color: '#d4a04a', fontFamily: FF,
-          }).setOrigin(0.5),
-        );
-      }
-      if (statusText) {
-        this.dynLayer.add(
-          this.add.text(ARC_CX + (costText ? 6 : 0), BANNER_Y, statusText, {
-            fontSize: '11px', fontStyle: 'bold', color: statusColor, fontFamily: FF,
-            stroke: '#000', strokeThickness: 2,
-          }).setOrigin(costText ? 0 : 0.5, 0.5),
-        );
-      }
-    }
   }
 
-  // ── Energy beams from selected slots to center ────────────────────────────
+  // ── Painel de confirmação (clique na carta) ───────────────────────────────
+  private showConfirmPanel(cardId: string, forgeLevel: number): void {
+    if (this.confirmPanel) return;
+
+    const run = getRun();
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const tier = this.forgeSlots.length as 1 | 2 | 3;
+    const cost = getForgeGoldCost(tier, forgeLevel);
+    const deckSize = run.deck.active.length;
+    const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, deckSize, 15);
+
+    const canForge = validation?.ok && isTierUnlocked(tier, forgeLevel);
+
+    const CX = ARC_CX;
+    const PY = BANNER_Y;
+    const panel = this.add.container(CX, PY).setDepth(50);
+    this.confirmPanel = panel;
+
+    // Banner fundo (debug-layout: scale=0.118, pos=-2.1,0.5)
+    if (this.textures.exists('forge_status_banner')) {
+      panel.add(this.add.image(-2.1, 0.5, 'forge_status_banner').setScale(0.118));
+    } else {
+      panel.add(this.add.rectangle(0, 0, 222, 60, 0x0a0400, 0.92).setStrokeStyle(1.5, 0xd4a04a, 0.8));
+    }
+
+    // Custo (debug-layout: x=-84.9, y=-2.6, origin left-center)
+    panel.add(
+      this.add.text(-84.9, -2.6, `⚒ ${cost} Gold`, {
+        fontSize: '16px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
+        stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0, 0.5),
+    );
+
+    // Status (debug-layout: x=27.5, y=0.5, wrapWidth=120)
+    let statusText: string;
+    let statusColor: string;
+    if (!canForge && validation && !validation.ok) {
+      statusText = forgeReason(validation.reason ?? 'invalid', tier, forgeLevel);
+      statusColor = RED;
+    } else if (!isTierUnlocked(tier, forgeLevel)) {
+      statusText = `Tier ${tier} locked`;
+      statusColor = RED;
+    } else {
+      statusText = '✦ Ready to\nforge ✦';
+      statusColor = '#9bff9b';
+    }
+    panel.add(
+      this.add.text(27.5, 0.5, statusText, {
+        fontSize: '13px', fontStyle: 'bold', color: statusColor, fontFamily: FF,
+        stroke: '#000', strokeThickness: 3,
+        wordWrap: { width: 120 },
+      }).setOrigin(0, 0.5),
+    );
+
+    // Botões com assets (debug-layout: FORGE=-62.2,237.8 / DISMISS=48,237.3, scale=0.0411)
+    const makeImgBtn = (ox: number, oy: number, texKey: string, onClick: () => void) => {
+      const img = this.add.image(ox, oy, texKey).setScale(0.0411)
+        .setInteractive({ useHandCursor: true });
+      img.on('pointerover',  () => img.setTint(0xffffcc));
+      img.on('pointerout',   () => img.clearTint());
+      img.on('pointerdown',  onClick);
+      panel.add(img);
+    };
+
+    if (canForge) {
+      makeImgBtn(-62.2, 237.8, 'btn_forge_action', () => this.executeForgeAction(cardId, forgeLevel));
+    }
+    makeImgBtn(canForge ? 48 : 0, 237.3, 'btn_dismiss', () => this.dismissConfirmPanel());
+
+    panel.setAlpha(0);
+    this.tweens.add({ targets: panel, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
+  }
+
+  private dismissConfirmPanel(): void {
+    if (!this.confirmPanel) return;
+    const p = this.confirmPanel;
+    this.confirmPanel = null;
+    this.tweens.add({
+      targets: p, alpha: 0, duration: 140, ease: 'Sine.easeIn',
+      onComplete: () => p.destroy(true),
+    });
+  }
+
+  // ── Forge execution ────────────────────────────────────────────────────────
+  private executeForgeAction(cardId: string, forgeLevel: number): void {
+    this.dismissConfirmPanel();
+    const run = getRun();
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+
+    try {
+      const result = executeForge(
+        this.forgeSlots,
+        elementInv,
+        (amount) => { run.economy.gold -= amount; },
+        forgeLevel,
+        this.metaState?.forgeRecipes ?? [],
+      );
+
+      run.deck.active.push(result.cardId);
+      if (result.isNewRecipe && this.metaState) {
+        this.metaState.forgeRecipes = discoverRecipe(
+          this.metaState.forgeRecipes ?? [],
+          this.forgeSlots,
+          result.cardId,
+        );
+        saveMetaState(this.metaState).catch(() => {});
+      }
+
+      setRun(run);
+      saveManager.save(run).catch(() => {});
+    } catch (err) {
+      console.error('[ForgeScene] executeForge failed:', err);
+    }
+
+    this.forgeSlots = [];
+    tutorialDirector.advanceIfMatches('forge-craft');
+    this.renderForge();
+  }
+
+  // ── Linhas tracejadas dos shards selecionados para a bigorna ─────────────
   private drawBeams(): void {
     if (!this.beamsGfx) return;
     this.beamsGfx.clear();
+    this.anvilGlow?.clear();
 
-    for (let i = 0; i < this.forgeSlots.length; i++) {
-      const id = this.forgeSlots[i];
+    // Endpoint bem acima da bigorna (topo visual do asset)
+    const AY = ANVIL_Y - 52;
+
+    // Agrupa por elemento para calcular "força" (count)
+    const countMap: Partial<Record<ElementId, number>> = {};
+    for (const id of this.forgeSlots) countMap[id] = (countMap[id] ?? 0) + 1;
+
+    // Linha de drag ao vivo (enquanto arrasta)
+    if (this.dragGhost && this.dragId) {
+      const slot = CIRCLE_SLOTS.find(s => s.id === this.dragId);
+      if (slot) {
+        const { x: sx, y: sy } = RING_POSITIONS[this.dragId!] ?? ringPos(slot.angleDeg, SLOT_R);
+        const gx = this.dragGhost.x;
+        const gy = this.dragGhost.y;
+        const col = parseInt(ELEMENTS[this.dragId!].color.replace('#', ''), 16);
+        this.drawDashedLine(sx, sy, gx, gy, col, 2.5, 0.55, 10, 6);
+      }
+    }
+
+    // Uma linha por elemento único (não por slot individual)
+    const drawn = new Set<ElementId>();
+    let lineIdx = 0;
+    for (const id of this.forgeSlots) {
+      if (drawn.has(id)) continue;
+      drawn.add(id);
+
       const slot = CIRCLE_SLOTS.find(s => s.id === id);
       if (!slot) continue;
 
-      const { x: sx0, y: sy0 } = ringPos(slot.angleDeg, SLOT_R);
-      const tx = ARC_CX;
-      const ty = ARC_CY;
+      const { x: sx, y: sy } = RING_POSITIONS[id] ?? ringPos(slot.angleDeg, SLOT_R);
       const elemColor = parseInt(ELEMENTS[id].color.replace('#', ''), 16);
+      const count     = countMap[id] ?? 1;
 
-      const dx = tx - sx0; const dy = ty - sy0;
-      const dist = Math.hypot(dx, dy) || 1;
-      const sx = sx0 + (dx / dist) * (SLOT_ICON * 0.5 + 2);
-      const sy = sy0 + (dy / dist) * (SLOT_ICON * 0.5 + 2);
+      // Espessura e opacidade crescem com o count
+      const thickness = 3 + (count - 1) * 2;   // 3 / 5 / 7
+      const alpha     = 0.60 + (count - 1) * 0.2; // 0.60 / 0.80 / 1.0
 
-      this.beamsGfx.lineStyle(7, elemColor, 0.16);
-      this.beamsGfx.beginPath();
-      this.beamsGfx.moveTo(sx, sy);
-      this.beamsGfx.lineTo(tx, ty);
-      this.beamsGfx.strokePath();
+      this.drawDashedLine(sx, sy, ANVIL_X, AY, elemColor, thickness, alpha, 12, 7);
 
-      this.beamsGfx.lineStyle(2, elemColor, 0.82);
-      this.beamsGfx.beginPath();
-      this.beamsGfx.moveTo(sx, sy);
-      this.beamsGfx.lineTo(tx, ty);
-      this.beamsGfx.strokePath();
-
-      const t = (this.beamPulse + i * 0.33) % 1;
-      const px = sx + (tx - sx) * t;
-      const py = sy + (ty - sy) * t;
+      // Bolinha animada percorrendo a linha
+      const t  = (this.beamPulse + lineIdx * 0.37) % 1;
+      const px = sx + (ANVIL_X - sx) * t;
+      const py = sy + (AY - sy) * t;
       this.beamsGfx.fillStyle(0xffffff, 0.9);
       this.beamsGfx.fillCircle(px, py, 3);
-      this.beamsGfx.fillStyle(elemColor, 0.5);
+      this.beamsGfx.fillStyle(elemColor, 0.65);
       this.beamsGfx.fillCircle(px, py, 6);
+
+      lineIdx++;
+    }
+
+    // Borda da bigorna pisca quando há shards na slot
+    if (this.forgeSlots.length > 0 && this.anvilGlow) {
+      const glowAlpha = 0.4 + Math.sin(this.beamPulse * Math.PI * 2) * 0.35;
+      const glowColor = this.forgeSlots.length >= 2 ? 0xffd700 : 0xaaddff;
+      const glowR     = 38 + Math.sin(this.beamPulse * Math.PI * 2) * 4;
+      this.anvilGlow.lineStyle(3, glowColor, glowAlpha);
+      this.anvilGlow.strokeCircle(ANVIL_X, ANVIL_Y - 4, glowR);
+      this.anvilGlow.lineStyle(6, glowColor, glowAlpha * 0.35);
+      this.anvilGlow.strokeCircle(ANVIL_X, ANVIL_Y - 4, glowR + 6);
+    }
+  }
+
+  private drawDashedLine(
+    x1: number, y1: number, x2: number, y2: number,
+    color: number, thickness: number, alpha: number,
+    dashLen: number, gapLen: number,
+  ): void {
+    const dx   = x2 - x1;
+    const dy   = y2 - y1;
+    const dist = Math.hypot(dx, dy) || 1;
+    const ux   = dx / dist;
+    const uy   = dy / dist;
+    const step = dashLen + gapLen;
+
+    this.beamsGfx.lineStyle(thickness, color, alpha);
+    let d = 0;
+    while (d < dist) {
+      const dEnd = Math.min(d + dashLen, dist);
+      this.beamsGfx.beginPath();
+      this.beamsGfx.moveTo(x1 + ux * d,    y1 + uy * d);
+      this.beamsGfx.lineTo(x1 + ux * dEnd, y1 + uy * dEnd);
+      this.beamsGfx.strokePath();
+      d += step;
     }
   }
 
@@ -436,16 +666,266 @@ export class ForgeScene extends Scene {
   private close(): void {
     tutorialDirector.advanceIfMatches('forge-craft');
     const parent = this.parentSceneKey;
-    const isSleeping = this.scene.isSleeping(parent);
+    const sleeping = this.scene.isSleeping(parent);
+    const paused   = this.scene.isPaused(parent);
     this.scene.stop();
-    if (isSleeping) this.scene.wake(parent); else this.scene.resume(parent);
+    if (sleeping)     this.scene.wake(parent);
+    else if (paused)  this.scene.resume(parent);
+    else              this.scene.start(parent);
+  }
+
+  // ── Forge dwarf NPC ──────────────────────────────────────────────────────────
+  private buildDwarfNPC(): void {
+    const LINES = [
+      "Toss in yer shards an'\nI'll smith somethin'\nfine for ya!",
+      "What're ye combining\ntoday, adventurer?",
+      "The forge hungers\nfor elements!",
+      "Pick yer shards,\nI'll do the rest.",
+      "Every great blade\nstarts right here.",
+      "Combine wisely,\nwarrior.",
+      "Need somethin'\nforged? Let's go!",
+    ];
+
+    const NPC_X     = 744.1;
+    const NPC_Y     = 604.6;
+    const NPC_SCALE = 0.18;
+
+    const idleKey = this.textures.exists('dwarf_hands_on_hips') ? 'dwarf_hands_on_hips' : null;
+    const talkKey = this.textures.exists('dwarf_talking')       ? 'dwarf_talking'       : null;
+    if (!idleKey) return;
+
+    const dwarf = this.add.image(NPC_X, NPC_Y, idleKey)
+      .setScale(NPC_SCALE).setOrigin(0.5, 1).setDepth(10);
+
+    let activeBubble: Phaser.GameObjects.Container | null = null;
+    let fadeTimer:    Phaser.Time.TimerEvent | null = null;
+    let typeTimer:    Phaser.Time.TimerEvent | null = null;
+    let lastLineIdx   = -1;
+
+    const showBubble = (delayMs: number) => {
+      // Cancela balão anterior
+      if (fadeTimer)  { fadeTimer.remove();  fadeTimer  = null; }
+      if (typeTimer)  { typeTimer.remove();  typeTimer  = null; }
+      if (activeBubble) { activeBubble.destroy(); activeBubble = null; }
+      dwarf.setTexture(idleKey);
+
+      // Escolhe linha diferente da anterior
+      let idx: number;
+      do { idx = Math.floor(Math.random() * LINES.length); } while (idx === lastLineIdx && LINES.length > 1);
+      lastLineIdx = idx;
+      const fullText = LINES[idx];
+
+      // Mede o balão com o texto completo para definir tamanho fixo
+      const PAD_X = 14;
+      const PAD_Y = 10;
+      const FONT_SIZE = 18; // VT323 @ 18px lê bem em tamanho pequeno
+      const WRAP_W    = 160;
+
+      const tmp = this.add.bitmapText(0, -9999, 'vt323_white', fullText, FONT_SIZE)
+        .setMaxWidth(WRAP_W);
+      const TW = Math.ceil(tmp.width)  + PAD_X * 2;
+      const TH = Math.ceil(tmp.height) + PAD_Y * 2;
+      tmp.destroy();
+
+      const BX = NPC_X - TW / 2 - 28;
+      const BY = NPC_Y - dwarf.displayHeight - TH / 2 - 8;
+
+      const bubble = this.add.container(BX, BY).setDepth(11).setAlpha(0);
+      activeBubble  = bubble;
+
+      // Fundo
+      const bg = this.add.graphics();
+      bg.fillStyle(0x080808, 0.93);
+      bg.fillRoundedRect(-TW / 2, -TH / 2, TW, TH, 6);
+      bg.lineStyle(1.5, 0xd4a04a, 0.9);
+      bg.strokeRoundedRect(-TW / 2, -TH / 2, TW, TH, 6);
+      // Rabinho
+      bg.fillStyle(0x080808, 0.93);
+      bg.fillTriangle(TW / 2 - 16, TH / 2, TW / 2 - 4, TH / 2, TW / 2 - 4, TH / 2 + 10);
+      bg.lineStyle(1.5, 0xd4a04a, 0.9);
+      bg.strokeTriangle(TW / 2 - 16, TH / 2, TW / 2 - 4, TH / 2, TW / 2 - 4, TH / 2 + 10);
+
+      // Label começa vazio — typewriter vai preenchendo
+      const label = this.add.bitmapText(0, 0, 'vt323_white', '', FONT_SIZE)
+        .setMaxWidth(WRAP_W)
+        .setOrigin(0.5);
+
+      bubble.add([bg, label]);
+
+      // Fade in + troca para boca aberta
+      this.tweens.add({
+        targets: bubble, alpha: 1, duration: 250, ease: 'Sine.easeOut', delay: delayMs,
+        onStart: () => { if (talkKey) dwarf.setTexture(talkKey); },
+        onComplete: () => {
+          // Typewriter: 1 caracter a cada 40ms
+          let charIdx = 0;
+          typeTimer = this.time.addEvent({
+            delay: 40,
+            repeat: fullText.length - 1,
+            callback: () => {
+              if (!label.active) return;
+              charIdx++;
+              label.setText(fullText.substring(0, charIdx));
+            },
+          });
+        },
+      });
+
+      // Duração total: delay + fade-in + typewriter + pausa leitura + fade-out
+      const typewriterMs = fullText.length * 40;
+      const totalDelay   = delayMs + 250 + typewriterMs + 2200;
+
+      fadeTimer = this.time.delayedCall(totalDelay, () => {
+        if (!bubble.active) return;
+        this.tweens.add({
+          targets: bubble, alpha: 0, duration: 400, ease: 'Sine.easeIn',
+          onComplete: () => {
+            bubble.destroy();
+            if (activeBubble === bubble) {
+              activeBubble = null;
+              dwarf.setTexture(idleKey);
+            }
+          },
+        });
+      });
+    };
+
+    const closeBubble = () => {
+      if (fadeTimer)  { fadeTimer.remove();  fadeTimer  = null; }
+      if (typeTimer)  { typeTimer.remove();  typeTimer  = null; }
+      if (!activeBubble) return;
+      const bubble = activeBubble;
+      activeBubble = null;
+      this.tweens.add({
+        targets: bubble, alpha: 0, duration: 220, ease: 'Sine.easeIn',
+        onComplete: () => {
+          bubble.destroy();
+          dwarf.setTexture(idleKey);
+        },
+      });
+    };
+
+    // Balão especial para forge — texto customizado + botões FORGE/DISMISS
+    const showForgeBubble = (text: string, canForge: boolean, onForge: () => void) => {
+      if (fadeTimer)  { fadeTimer.remove();  fadeTimer  = null; }
+      if (typeTimer)  { typeTimer.remove();  typeTimer  = null; }
+      if (activeBubble) { activeBubble.destroy(); activeBubble = null; }
+      if (talkKey) dwarf.setTexture(talkKey);
+
+      const PAD_X     = 14;
+      const PAD_Y     = 11;
+      const FONT_SIZE = 16;
+      const WRAP_W    = 162;
+      const BTN_H     = canForge ? 36 : 0;
+
+      const tmp = this.add.bitmapText(0, -9999, 'vt323_white', text, FONT_SIZE).setMaxWidth(WRAP_W);
+      const TW = Math.ceil(tmp.width)  + PAD_X * 2;
+      const TH = Math.ceil(tmp.height) + PAD_Y * 2 + BTN_H;
+      tmp.destroy();
+
+      const BX = NPC_X - TW / 2 - 28;
+      const BY = NPC_Y - dwarf.displayHeight - TH / 2 + 2;
+
+      const bubble = this.add.container(BX, BY).setDepth(11).setAlpha(0);
+      activeBubble = bubble;
+
+      const bg = this.add.graphics();
+      bg.fillStyle(0x080808, 0.95);
+      bg.fillRoundedRect(-TW / 2, -TH / 2, TW, TH, 6);
+      bg.lineStyle(1.5, 0xd4a04a, 0.9);
+      bg.strokeRoundedRect(-TW / 2, -TH / 2, TW, TH, 6);
+      bg.fillStyle(0x080808, 0.95);
+      bg.fillTriangle(TW / 2 - 16, TH / 2, TW / 2 - 4, TH / 2, TW / 2 - 4, TH / 2 + 10);
+      bg.lineStyle(1.5, 0xd4a04a, 0.9);
+      bg.strokeTriangle(TW / 2 - 16, TH / 2, TW / 2 - 4, TH / 2, TW / 2 - 4, TH / 2 + 10);
+      bubble.add(bg);
+
+      // Texto plain durante typewriter; colorido ao final
+      const textOffY = canForge ? -BTN_H / 2 : 0;
+      const label = this.add.bitmapText(0, textOffY, 'vt323_white', '', FONT_SIZE)
+        .setMaxWidth(WRAP_W).setOrigin(0.5);
+      bubble.add(label);
+
+      // Botões FORGE e DISMISS (só se canForge)
+      if (canForge) {
+        const BTN_Y_OFF = TH / 2 - BTN_H / 2 - PAD_Y / 2;
+        const makeBtn = (ox: number, texKey: string, onClick: () => void) => {
+          const img = this.add.image(ox, BTN_Y_OFF, texKey).setScale(0.038)
+            .setInteractive({ useHandCursor: true });
+          img.on('pointerover', () => img.setTint(0xffffcc));
+          img.on('pointerout',  () => img.clearTint());
+          img.on('pointerdown', (ptr: Phaser.Input.Pointer) => { ptr.event.stopPropagation(); onClick(); });
+          bubble.add(img);
+        };
+        makeBtn(-45, 'btn_forge_action', () => { closeBubble(); onForge(); });
+        makeBtn(45, 'btn_dismiss', () => closeBubble());
+      }
+
+      this.tweens.add({
+        targets: bubble, alpha: 1, duration: 200, ease: 'Sine.easeOut',
+        onComplete: () => {
+          let charIdx = 0;
+          typeTimer = this.time.addEvent({
+            delay: 35, repeat: text.length - 1,
+            callback: () => {
+              if (!label.active) return;
+              charIdx++;
+              label.setText(text.substring(0, charIdx));
+            },
+          });
+        },
+      });
+
+      // Auto-fecha só se não tiver botão forge (mensagem de erro)
+      if (!canForge) {
+        const totalDelay = 200 + text.length * 35 + 3000;
+        fadeTimer = this.time.delayedCall(totalDelay, () => {
+          if (!bubble.active) return;
+          this.tweens.add({
+            targets: bubble, alpha: 0, duration: 400, ease: 'Sine.easeIn',
+            onComplete: () => { bubble.destroy(); if (activeBubble === bubble) { activeBubble = null; dwarf.setTexture(idleKey); } },
+          });
+        });
+      }
+    };
+
+    this.dwarfSpeakForge = showForgeBubble;
+
+    // Aparece automaticamente ao entrar
+    showBubble(400);
+
+    // Clique no anão → nova fala
+    dwarf.setInteractive({ useHandCursor: true });
+    dwarf.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+      ptr.event.stopPropagation();
+      showBubble(0);
+    });
+
+    // Clique fora do anão → fecha o balão
+    this.input.on('pointerdown', () => {
+      if (activeBubble && !this.dragId) closeBubble();
+    });
   }
 
   private cleanup(): void {
+    this.cancelDrag();
     this.dynLayer?.destroy(true);
     this.beamsGfx?.destroy();
     (this as any).dynLayer = null;
     (this as any).beamsGfx = null;
+  }
+}
+
+
+
+function forgeReasonDwarf(reason: string, tier: number, forgeLevel: number, cost: number): string {
+  switch (reason) {
+    case 'tier_locked':           return `Tier ${tier} needs\nForge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]}.\nUpgrade first, friend!`;
+    case 'no_card':               return `Hmm... no recipe\nmatches that combo.\nTry somethin' else!`;
+    case 'insufficient_elements': return `Not enough shards\nfor this one.\nGather more!`;
+    case 'insufficient_gold':     return `Need ${cost} gold for\nthis forge. Yer\nwallet's too light!`;
+    case 'deck_full':             return `Yer deck's full!\nBanish a card first\nthen come back.`;
+    default:                      return `Can't forge that\nright now, friend.`;
   }
 }
 

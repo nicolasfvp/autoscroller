@@ -90,7 +90,7 @@ export class CharacterSelectScene extends Scene {
 
       try {
         // Container do sprite — posicionável independentemente
-        const spriteContainer = this.createSpriteContainer(sprPos.x, sprPos.y, cardWidth, cardHeight, cls);
+        const spriteContainer = this.createSpriteContainer(sprPos.x, sprPos.y, cardWidth, cardHeight, cls, i);
         spriteContainer.setScale(sprPos.scale);
 
         // Container do painel de status — posicionável independentemente
@@ -140,7 +140,7 @@ export class CharacterSelectScene extends Scene {
   // Container com apenas o sprite do personagem — sem fundo, sem painel
   private createSpriteContainer(
     x: number, y: number, w: number, h: number,
-    cls: ClassOption,
+    cls: ClassOption, index: number,
   ): Phaser.GameObjects.Container {
     const container = this.add.container(x, y);
 
@@ -178,6 +178,27 @@ export class CharacterSelectScene extends Scene {
     } else {
       container.add(this.add.rectangle(0, 0, 64, 64, cls.fallbackColor));
     }
+
+    // Hit area invisível sobre o sprite — clique seleciona/confirma
+    const sprH = h * 0.55;
+    const hitArea = this.add.rectangle(0, -sprH / 2, w, sprH, 0x000000, 0)
+      .setInteractive({ useHandCursor: true });
+    container.add(hitArea);
+
+    hitArea.on('pointerdown', () => {
+      this.lastInputWasMouse = true;
+      if (this.selectedIndex === index) {
+        this.confirmSelection();
+      } else {
+        this.selectedIndex = index;
+        this.highlightSelected();
+      }
+    });
+    hitArea.on('pointerover', () => {
+      if (!this.lastInputWasMouse) return;
+      this.selectedIndex = index;
+      this.highlightSelected();
+    });
 
     return container;
   }

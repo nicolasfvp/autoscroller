@@ -18,21 +18,24 @@ import { getRun } from '../state/RunState';
 import { getEffectiveStats, isShiftHeld, subscribeCardDynamic } from './CardDynamic';
 import type { CardCost, CardDefinition, CardEffect } from '../data/types';
 
-// ── Color palette (STS-inspired warm dark leather) ───────────────────────
+// ── Color palette (pixel art dark wood + gold ornamental) ────────────────
 const COLOR = {
-  BODY: 0x241f1a,
-  BORDER: 0x8a7548,
-  HEADER_BG: 0x2e2620,
-  SLOT_OUTLINE: 0x8a7548,
-  SLOT_FILL_DARK: 0x141010,
-  ART_BG: 0x0d0a08,
-  ART_INNER_STROKE: 0x5a4a30,
-  NAME_BANNER: 0xd4c5a0,
-  NAME_BANNER_DIVIDER: 0x6b5a3a,
+  BODY: 0x1a1208,
+  BORDER_OUTER: 0xc8922a,
+  BORDER_INNER: 0x7a5018,
+  BORDER_SHINE: 0xffd966,
+  HEADER_BG: 0x0e0b06,
+  SLOT_OUTLINE: 0xc8922a,
+  SLOT_FILL_DARK: 0x0a0806,
+  ART_BG: 0x080604,
+  ART_INNER_STROKE: 0x7a5018,
+  NAME_BANNER: 0xd4b97a,
+  NAME_BANNER_TOP: 0xe8d090,
+  NAME_BANNER_DIVIDER: 0x7a5018,
   NAME_TEXT_DARK: 0x2a1f10,
   NAME_TEXT_UPG: 0x7a4a10,
-  DESC_PANEL: 0x1c1815,
-  DESC_BORDER: 0x6b5a3a,
+  DESC_PANEL: 0x100d08,
+  DESC_BORDER: 0x7a5018,
   DESC_TEXT: 0xd4c8a8,
 } as const;
 
@@ -196,7 +199,8 @@ export function createCardFace(
   // generated art is composed with the action dead-center).
   drawArt(scene, container, card, artSlot);
   drawName(scene, container, card, isUpgraded, nameSlot);
-  drawElements(scene, container, card, elemSlot);
+  const hasSecondaryCosts = buildSecondaryCostRows(card, options.upgraded ?? resolveUpgradeFlag(cardId)).length > 0;
+  drawElements(scene, container, card, hasSecondaryCosts ? elemSlot : secondarySlot);
   if (descSlot) drawDescription(scene, container, card, isUpgraded, descSlot, finalScale);
 
   // ─── 3. Interactivity ────────────────────────────────────────────────────
@@ -258,22 +262,14 @@ function paintMold(
   scale: number,
   slots: MoldSlots,
 ): void {
-  // The mold geometry (border, header band, slot frames, name banner, desc
-  // panel) is purely a function of (w, h, scale, descFits). For a 164-card
-  // library all cards share the same dimensions — without caching we'd
-  // re-rasterize the same shape 164×. Cache it as a RenderTexture once per
-  // distinct mold size and reuse via a cheap Image.
   const wi = Math.max(1, Math.round(w));
   const hi = Math.max(1, Math.round(h));
-  const key = `__cardMold_${wi}x${hi}_s${scale.toFixed(2)}_d${slots.descSlot ? '1' : '0'}`;
+  const key = `__cardMold2_${wi}x${hi}_s${scale.toFixed(2)}_d${slots.descSlot ? '1' : '0'}`;
 
   if (!moldRenderTextures.has(key) || !scene.textures.exists(key)) {
     rasterizeMold(scene, w, h, scale, slots, key);
   }
 
-  // Image.setOrigin(0.5) matches the original center-anchored draw; the
-  // texture spans wi×hi pixels which is identical to the body rect drawn
-  // from (-w/2, -h/2) to (w/2, h/2) before this caching pass.
   const moldImg = scene.add.image(0, 0, key).setOrigin(0.5, 0.5);
   parent.add(moldImg);
 }
@@ -290,55 +286,92 @@ function rasterizeMold(
   // list — we only need it as a draw source for the RenderTexture and don't
   // want it to flash on-screen for a frame.
   const g = scene.make.graphics({ x: 0, y: 0 }, false);
-  const borderW = Math.max(1.5, 2 * scale);
-  const radius = Math.max(4, 8 * scale);
+  const B1 = Math.max(2, 3 * scale);   // espessura borda externa dourada
+  const B2 = Math.max(1, 1.5 * scale); // borda interna escura
+  const B3 = Math.max(1, 1 * scale);   // linha de brilho fina
+  const radius = Math.max(3, 5 * scale);
+  const sr = Math.max(1.5, 2.5 * scale); // slot radius
 
-  // Body + outer border (coords match the original: -w/2..+w/2, -h/2..+h/2).
+  // ── Corpo principal ────────────────────────────────────────────────────
   g.fillStyle(COLOR.BODY, 1);
   g.fillRoundedRect(-w / 2, -h / 2, w, h, radius);
-  g.lineStyle(borderW, COLOR.BORDER, 1);
-  g.strokeRoundedRect(-w / 2, -h / 2, w, h, radius);
 
-  // Header band background
-  const headerTop = -h / 2 + h * HEADER_TOP_PCT;
+  // Borda multi-camada pixel art: escura → dourada brilhante → escura fina
+  g.lineStyle(B1 + B2 * 2, COLOR.BORDER_INNER, 1);
+  g.strokeRoundedRect(-w / 2, -h / 2, w, h, radius);
+  g.lineStyle(B1, COLOR.BORDER_OUTER, 1);
+  g.strokeRoundedRect(-w / 2, -h / 2, w, h, radius);
+  g.lineStyle(B3, COLOR.BORDER_SHINE, 0.6);
+  g.strokeRoundedRect(-w / 2 + B2, -h / 2 + B2, w - B2 * 2, h - B2 * 2, Math.max(1, radius - B2));
+
+  // Cantos ornamentais — pequenos losangos dourados
+  const cd = Math.max(3, 5 * scale); // tamanho do diamante de canto
+  const cx = w / 2 - cd * 0.5;
+  const cy = h / 2 - cd * 0.5;
+  const corners = [
+    [-cx, -cy], [cx, -cy], [-cx, cy], [cx, cy],
+  ] as const;
+  g.fillStyle(COLOR.BORDER_SHINE, 0.9);
+  for (const [ox, oy] of corners) {
+    g.fillTriangle(ox, oy - cd, ox - cd, oy, ox, oy + cd);
+    g.fillTriangle(ox, oy - cd, ox + cd, oy, ox, oy + cd);
+  }
+
+  // ── Header band ────────────────────────────────────────────────────────
+  const headerTop    = -h / 2 + h * HEADER_TOP_PCT;
   const headerBottomY = -h / 2 + h * HEADER_BOTTOM_PCT;
   g.fillStyle(COLOR.HEADER_BG, 1);
   g.fillRect(-w / 2 + w * SIDE_PAD_PCT, headerTop, w * (1 - 2 * SIDE_PAD_PCT), headerBottomY - headerTop);
 
-  // Header divider line
-  g.lineStyle(1, COLOR.BORDER, 0.7);
-  g.lineBetween(
-    -w / 2 + w * SIDE_PAD_PCT, headerBottomY + (h * HEADER_GAP_BELOW) / 2,
-    w / 2 - w * SIDE_PAD_PCT,  headerBottomY + (h * HEADER_GAP_BELOW) / 2,
-  );
+  // Linha separadora do header — dupla (escura + dourada fina)
+  const divY = headerBottomY + (h * HEADER_GAP_BELOW) / 2;
+  const divX0 = -w / 2 + w * SIDE_PAD_PCT;
+  const divX1 =  w / 2 - w * SIDE_PAD_PCT;
+  g.lineStyle(Math.max(2, 2 * scale), COLOR.BORDER_INNER, 1);
+  g.lineBetween(divX0, divY, divX1, divY);
+  g.lineStyle(B3, COLOR.BORDER_SHINE, 0.5);
+  g.lineBetween(divX0, divY - 1, divX1, divY - 1);
 
-  // Header sub-slot outlines (primary / secondary / cooldown)
-  const slotRadius = Math.max(2, 4 * scale);
-  const outlineThin = Math.max(1, 1 * scale);
-  g.lineStyle(outlineThin, COLOR.SLOT_OUTLINE, 0.7);
+  // ── Header sub-slot outlines ───────────────────────────────────────────
   for (const s of [slots.primarySlot, slots.secondarySlot, slots.cooldownSlot]) {
-    g.strokeRoundedRect(s.x, s.y, s.w, s.h, slotRadius);
+    g.fillStyle(COLOR.SLOT_FILL_DARK, 1);
+    g.fillRoundedRect(s.x, s.y, s.w, s.h, sr);
+    g.lineStyle(Math.max(1.5, 1.5 * scale), COLOR.BORDER_INNER, 1);
+    g.strokeRoundedRect(s.x, s.y, s.w, s.h, sr);
+    g.lineStyle(B3, COLOR.BORDER_OUTER, 0.8);
+    g.strokeRoundedRect(s.x, s.y, s.w, s.h, sr);
   }
 
-  // Art frame — dark fill + inner stroke
+  // ── Art frame ─────────────────────────────────────────────────────────
   g.fillStyle(COLOR.ART_BG, 1);
-  g.fillRoundedRect(slots.artSlot.x, slots.artSlot.y, slots.artSlot.w, slots.artSlot.h, slotRadius);
-  g.lineStyle(outlineThin, COLOR.ART_INNER_STROKE, 1);
-  g.strokeRoundedRect(slots.artSlot.x, slots.artSlot.y, slots.artSlot.w, slots.artSlot.h, slotRadius);
+  g.fillRoundedRect(slots.artSlot.x, slots.artSlot.y, slots.artSlot.w, slots.artSlot.h, sr);
+  g.lineStyle(Math.max(1.5, 1.5 * scale), COLOR.BORDER_INNER, 1);
+  g.strokeRoundedRect(slots.artSlot.x, slots.artSlot.y, slots.artSlot.w, slots.artSlot.h, sr);
+  g.lineStyle(B3, COLOR.BORDER_OUTER, 0.7);
+  g.strokeRoundedRect(slots.artSlot.x, slots.artSlot.y, slots.artSlot.w, slots.artSlot.h, sr);
 
-  // Name banner — parchment cream strip with bronze dividers
+  // ── Name banner ────────────────────────────────────────────────────────
+  // Gradiente simulado: linha mais clara no topo
   g.fillStyle(COLOR.NAME_BANNER, 1);
   g.fillRect(slots.nameSlot.x, slots.nameSlot.y, slots.nameSlot.w, slots.nameSlot.h);
-  g.lineStyle(outlineThin, COLOR.NAME_BANNER_DIVIDER, 1);
+  g.fillStyle(COLOR.NAME_BANNER_TOP, 0.5);
+  g.fillRect(slots.nameSlot.x, slots.nameSlot.y, slots.nameSlot.w, slots.nameSlot.h * 0.35);
+  g.lineStyle(Math.max(1.5, 1.5 * scale), COLOR.NAME_BANNER_DIVIDER, 1);
   g.strokeRect(slots.nameSlot.x, slots.nameSlot.y, slots.nameSlot.w, slots.nameSlot.h);
+  g.lineStyle(B3, COLOR.BORDER_OUTER, 0.6);
+  g.strokeRect(
+    slots.nameSlot.x + 1, slots.nameSlot.y + 1,
+    slots.nameSlot.w - 2, slots.nameSlot.h - 2,
+  );
 
-  // Description panel — recessed dark rectangle with bronze border. Skipped
-  // when the card is too small to fit any description text (responsive mode).
+  // ── Description panel ─────────────────────────────────────────────────
   if (slots.descSlot) {
     g.fillStyle(COLOR.DESC_PANEL, 1);
-    g.fillRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, slotRadius);
-    g.lineStyle(outlineThin, COLOR.DESC_BORDER, 0.9);
-    g.strokeRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, slotRadius);
+    g.fillRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, sr);
+    g.lineStyle(Math.max(1.5, 1.5 * scale), COLOR.BORDER_INNER, 1);
+    g.strokeRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, sr);
+    g.lineStyle(B3, COLOR.BORDER_OUTER, 0.6);
+    g.strokeRoundedRect(slots.descSlot.x, slots.descSlot.y, slots.descSlot.w, slots.descSlot.h, sr);
   }
 
   // Snapshot the Graphics into a RenderTexture sized exactly w×h. The mold

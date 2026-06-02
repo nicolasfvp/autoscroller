@@ -110,3 +110,11 @@ Prompt:
 ```
 A high-quality 2D pixel art background of a lush green field. The scene features rolling green hills, soft grass, and occasional small bushes or rocks. IMPORTANT: The background must have NO SKY (the top area should be empty or a solid dark color to be replaced by a separate sky asset). The image must be perfectly seamless horizontally, so the left edge matches the right edge exactly for infinite scrolling. Professional indie game background art, consistent with the mockup style. Polished pixel art, high readability. No characters or UI.
 ```
+
+---
+
+Texto do prompt para a tela de shoppinhg
+
+```
+Prompt do Shop: A high-quality 2D pixel art game UI mockup for a shop screen (The Merchant). The background is a cozy, dim-lit medieval tavern or shop with wooden barrels, banners, and warm lantern light. In the center, there is a large, elegant UI box with a dark metallic frame and gold accents. The top of the box has two tabs: 'RELICS' and 'SHARDS'. The 'SHARDS' tab is active, showing a list of items. Each list entry has the shard name on the left and its price on the right. If multiple shards are selected, a quantity indicator like 'x3' appears. On the right side of the screen, there is a separate black UI box that displays a large, detailed pixel art icon of the selected shard and a text description below it, in a style similar to Dark Souls item descriptions. The overall aesthetic is professional, clean, and consistent with modern indie pixel art hits like Sea of Stars. No mobile-style icons, just pure game UI. High contrast and readability
+```

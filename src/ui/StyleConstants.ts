@@ -24,12 +24,10 @@ export const FONTS = {
   vt323White: 'vt323_white',
   vt323Blue:  'vt323_blue',
 
-  // Fallback system font for texts that cannot use bitmapFont
-  // (emoji, wordWrap, dynamic rich content). Chosen to match
-  // the fantasy aesthetic of the bitmap fonts.
-  display: '"Cinzel Decorative", "Cinzel", serif',
-  family: '"Cinzel", serif',
-  body: '"Cinzel", Georgia, serif',
+  // System font para texts que não usam bitmapFont (wordWrap, emoji, rich content)
+  display: 'VT323, monospace',
+  family: 'VT323, monospace',
+  body: 'VT323, monospace',
   title: { fontSize: '32px', fontStyle: 'bold' },
   heading: { fontSize: '24px', fontStyle: 'bold' },
   small: { fontSize: '14px' },
