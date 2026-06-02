@@ -15,7 +15,8 @@ import { getTemplatesForClass, TUTORIAL_TEMPLATE_ID } from '../data/DeckTemplate
 
 export class CharacterSelectScene extends Scene {
   private selectedIndex = 0;
-  private classCards: Phaser.GameObjects.Container[] = [];
+  // statusContainers[i] = painel de status do personagem i (para highlight)
+  private statusContainers: Phaser.GameObjects.Container[] = [];
   private transitioning = false;
   private lastInputWasMouse = false;
 
@@ -35,59 +36,94 @@ export class CharacterSelectScene extends Scene {
   create(): void {
     this.transitioning = false;
     this.selectedIndex = 0;
-    this.classCards = [];
+    this.statusContainers = [];
+    this.statusBaseScales.length = 0;
     this.cameras.main.setBackgroundColor('#1a1a2e');
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
-    // Background Image
     this.add.image(400, 300, 'bg_character_selection').setDisplaySize(800, 600);
 
-    // Title
+    // Flame decorations
+    if (this.textures.exists('flame_selection')) {
+      const FLAME_FPS = 12;
+      const FLAME_FRAMES = 10;
+      if (!this.anims.exists('flame_sel_a')) {
+        this.anims.create({
+          key: 'flame_sel_a',
+          frames: this.anims.generateFrameNumbers('flame_selection', { start: 0, end: FLAME_FRAMES - 1 }),
+          frameRate: FLAME_FPS, repeat: -1,
+        });
+      }
+      if (!this.anims.exists('flame_sel_b')) {
+        this.anims.create({
+          key: 'flame_sel_b',
+          frames: this.anims.generateFrameNumbers('flame_selection', { start: 0, end: FLAME_FRAMES - 1 }),
+          frameRate: FLAME_FPS, repeat: -1,
+        });
+      }
+      const flameA = this.add.sprite(82.2, 282.6, 'flame_selection').setOrigin(0, 0.5).setScale(0.1467);
+      flameA.play('flame_sel_a');
+      const flameB = this.add.sprite(714.6, 284.7, 'flame_selection').setOrigin(1, 0.5).setScale(0.1354);
+      flameB.play({ key: 'flame_sel_b', startFrame: 4 });
+    }
+
     this.add.bitmapText(LAYOUT.centerX, 50, 'game_font_white', 'Choose Your Hero', 40).setOrigin(0.5);
 
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
-    const cardWidth = layout.cardW;
+    const cardWidth  = layout.cardW;
     const cardHeight = layout.cardH;
-    const gap = layout.gap;
-    const startX = layout.margin + cardWidth / 2;
+
+    // Posições independentes: sprite e painel de status são containers separados
+    const SPRITE_POSITIONS = [
+      { x: 289.6, y: 314.9, scale: 0.8167 },
+      { x: 512.6, y: 320.2, scale: 0.8171 },
+    ] as const;
+
+    const STATUS_POSITIONS = [
+      { x: 281.2, y: 438.4, scale: 1.0022 },
+      { x: 521.5, y: 437.3, scale: 0.9266 },
+    ] as const;
 
     CLASSES.forEach((cls, i) => {
-      const x = startX + i * (cardWidth + gap);
-      const y = LAYOUT.centerY + 35;
+      const sprPos    = SPRITE_POSITIONS[i]  ?? { x: 200 + i * 360, y: 230, scale: 0.8167 };
+      const statusPos = STATUS_POSITIONS[i] ?? { x: 200 + i * 360, y: 460, scale: 0.8167 };
+
       try {
-        const card = this.createClassCard(x, y, cardWidth, cardHeight, cls, i);
-        this.classCards.push(card);
+        // Container do sprite — posicionável independentemente
+        const spriteContainer = this.createSpriteContainer(sprPos.x, sprPos.y, cardWidth, cardHeight, cls);
+        spriteContainer.setScale(sprPos.scale);
+
+        // Container do painel de status — posicionável independentemente
+        const statusContainer = this.createStatusContainer(statusPos.x, statusPos.y, cardWidth, cardHeight, cls, i);
+        statusContainer.setScale(statusPos.scale);
+        this.statusBaseScales.push(statusPos.scale);
+        this.statusContainers.push(statusContainer);
       } catch (err) {
         console.error('[CharacterSelect] card creation failed for', cls.id, err);
       }
     });
 
-    // Scripted tutorial — force-select warrior (index 0) and lock the choice.
     if (tutorialDirector.isActive()) {
       const warriorIdx = CLASSES.findIndex(c => c.id === 'warrior');
-      this.selectedIndex = warriorIdx >= 0 ? warriorIdx : 0;
+      this.selectedIndex = Math.max(0, warriorIdx);
     }
 
     this.highlightSelected();
     const overlay = TutorialOverlay.mountIfActive(this);
     if (overlay && tutorialDirector.isActive()) {
-      // Register the warrior-card rect for the pick-warrior step. We only
-      // spotlight the upper half of the card so the explanation panel can
-      // sit below the spotlight without occluding the card's click target.
-      // The card's interactive `bg` covers the whole card — a click anywhere
-      // inside the spotlight still resolves to the card itself.
-      const warriorCard = this.classCards[this.selectedIndex];
-      if (warriorCard) {
+      const warriorStatus = this.statusContainers[this.selectedIndex];
+      if (warriorStatus) {
+        const sw = cardWidth  * (STATUS_POSITIONS[this.selectedIndex]?.scale ?? 0.8167);
+        const sh = (cardHeight * 0.45) * (STATUS_POSITIONS[this.selectedIndex]?.scale ?? 0.8167);
         overlay.setStepRect('pick-warrior', {
-          x: warriorCard.x - cardWidth / 2,
-          y: warriorCard.y - cardHeight / 2,
-          width: cardWidth,
-          height: cardHeight / 2,
+          x: warriorStatus.x - sw / 2,
+          y: warriorStatus.y - sh / 2,
+          width: sw,
+          height: sh,
         });
       }
     }
 
-    // Keyboard navigation
     this.input.keyboard?.on('keydown-LEFT', () => {
       this.lastInputWasMouse = false;
       this.selectedIndex = Math.max(0, this.selectedIndex - 1);
@@ -98,75 +134,28 @@ export class CharacterSelectScene extends Scene {
       this.selectedIndex = Math.min(CLASSES.length - 1, this.selectedIndex + 1);
       this.highlightSelected();
     });
-    // Reset to mouse mode when the pointer actually moves — this prevents
-    // a stale pointerover event from overriding keyboard navigation when
-    // the cursor happens to sit over a non-active card.
     this.input.on('pointermove', () => { this.lastInputWasMouse = true; });
-
   }
 
-  private createClassCard(
+  // Container com apenas o sprite do personagem — sem fundo, sem painel
+  private createSpriteContainer(
     x: number, y: number, w: number, h: number,
-    cls: ClassOption, index: number,
+    cls: ClassOption,
   ): Phaser.GameObjects.Container {
     const container = this.add.container(x, y);
 
-    // Ornate wooden plaque frame (Grok-generated). The asset has carved gold
-    // filigree edges + corner medallions and a dark oak inner panel — replaces
-    // the flat grey rectangles that read as AI-mock chrome. The "frame" slot
-    // (container.list[0]) is the plaque itself; the "inner" slot
-    // (container.list[1]) is a soft selection tint we toggle on selection.
-    let frame: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-    if (this.textures.exists('panel_hero_plaque')) {
-      frame = this.add.image(0, 0, 'panel_hero_plaque').setDisplaySize(w, h);
-    } else {
-      // Fallback for missing asset.
-      frame = this.add.rectangle(0, 0, w, h, 0x3a2418).setStrokeStyle(6, 0xd4a04a);
-    }
-    container.add(frame);
-
-    // Selection-tint overlay — invisible by default, a warm gold wash when
-    // selected. Sized to the inner panel of the plaque so the gold filigree
-    // edges stay un-tinted. Also doubles as the click target.
-    const bg = this.add.rectangle(0, 8, w - 60, h - 70, 0xffe680, 0);
-    bg.setInteractive({ useHandCursor: true });
-    container.add(bg);
-
-    // Click to select + confirm
-    bg.on('pointerdown', () => {
-      if (this.selectedIndex === index) {
-        this.confirmSelection();
-      } else {
-        this.selectedIndex = index;
-        this.highlightSelected();
-      }
-    });
-    bg.on('pointerover', () => {
-      // Only follow the cursor's selection when the user is actually
-      // driving with the mouse — a stale pointerover (mouse parked over
-      // a card) shouldn't fight keyboard navigation.
-      if (!this.lastInputWasMouse) return;
-      this.selectedIndex = index;
-      this.highlightSelected();
-    });
-
-    // ── Sprite zone (top 60% of card) ────────────────────────────
-    // Card half-height = 230. Name band occupies -230 to -202 (28px).
-    // Sprite is centered at y=-90 so it sits just below the name band.
-    const SPRITE_Y = -90;
     if (cls.idleFrames?.every(k => this.textures.exists(k))) {
-      const img = this.add.image(0, SPRITE_Y, cls.idleFrames[0]).setScale(cls.spriteScale ?? 0.55);
+      const img = this.add.image(0, 0, cls.idleFrames[0])
+        .setScale(cls.spriteScale ?? 0.55).setOrigin(0.5, 1);
       container.add(img);
-      let frame = 0;
+      let frameIdx = 0;
       this.time.addEvent({
         delay: 500, loop: true,
-        callback: () => { frame = 1 - frame; img.setTexture(cls.idleFrames![frame]); },
+        callback: () => { frameIdx = 1 - frameIdx; img.setTexture(cls.idleFrames![frameIdx]); },
       });
     } else if (this.textures.exists(cls.spriteKey)) {
-      // frameTotal includes __BASE; subtract 1 to get animation frame count.
       const animFrameCount = this.textures.get(cls.spriteKey).frameTotal - 1;
       if (animFrameCount > 0) {
-        // Multi-frame spritesheet: use Phaser animation system.
         const animKey = `select_${cls.id}_idle`;
         if (!this.anims.exists(animKey)) {
           this.anims.create({
@@ -176,71 +165,84 @@ export class CharacterSelectScene extends Scene {
             repeat: -1,
           });
         }
-        const sprite = this.add.sprite(0, SPRITE_Y, cls.spriteKey).setScale(cls.spriteScale ?? 3);
+        const sprite = this.add.sprite(0, 0, cls.spriteKey)
+          .setScale(cls.spriteScale ?? 3).setOrigin(0.5, 1);
         if (cls.spriteTint !== undefined) sprite.setTint(cls.spriteTint);
         sprite.play(animKey);
         container.add(sprite);
       } else {
-        // Single frame or parse failure: show frame 0 as a static image.
-        const img = this.add.image(0, SPRITE_Y, cls.spriteKey, 0).setScale(cls.spriteScale ?? 0.55);
+        const img = this.add.image(0, 0, cls.spriteKey, 0)
+          .setScale(cls.spriteScale ?? 0.55).setOrigin(0.5, 1);
         container.add(img);
       }
     } else {
-      const fallback = this.add.rectangle(0, SPRITE_Y, 64, 64, cls.fallbackColor);
-      container.add(fallback);
+      container.add(this.add.rectangle(0, 0, 64, 64, cls.fallbackColor));
     }
 
-    // Character name — rendered after sprite so it appears on top
-    const NAME_Y = -216;
-    const nameBg = this.add.rectangle(0, NAME_Y, w - 24, 28, 0x000000, 0.6);
-    container.add(nameBg);
-    const nameLabel = this.add.text(0, NAME_Y, cls.name, {
-      fontSize: '20px',
-      fontStyle: 'bold',
-      color: '#f0d080',
-      stroke: '#000000',
-      strokeThickness: 4,
-      fontFamily: FONTS.family,
-      resolution: 3,
-    }).setOrigin(0.5);
-    container.add(nameLabel);
+    return container;
+  }
 
-    // ── Info zone (bottom 40% of card) ───────────────────────────
-    const INFO_TOP = 30;
-    const infoPanelH = h / 2 - INFO_TOP + 10;
-    const infoPanel = this.add.rectangle(0, INFO_TOP + infoPanelH / 2, w - 24, infoPanelH, 0x2a2e3b);
-    container.add(infoPanel);
+  // Container com apenas o painel de status — hitArea, imagem/fallback, interatividade
+  private createStatusContainer(
+    x: number, y: number, w: number, h: number,
+    cls: ClassOption, index: number,
+  ): Phaser.GameObjects.Container {
+    const container = this.add.container(x, y);
 
-    // Description
-    const desc = this.add.text(0, INFO_TOP + 18, cls.description, {
-      fontSize: '15px',
-      color: '#cccccc',
-      stroke: '#000000',
-      strokeThickness: 2,
-      fontFamily: FONTS.family,
-      align: 'center',
-      resolution: 3,
-    }).setOrigin(0.5, 0);
-    container.add(desc);
+    const STATUS_H = h * 0.45;
 
-    // Stats bars (below description, 26px gap between rows)
-    const STATS_TOP = INFO_TOP + 72;
-    this.addStatBar(container, 'HP',  cls.stats.hp,      100, 0xff4444, STATS_TOP);
-    this.addStatBar(container, 'STA', cls.stats.stamina,  60, 0xffaa00, STATS_TOP + 26);
-    this.addStatBar(container, 'MP',  cls.stats.mana,     60, 0x4488ff, STATS_TOP + 52);
+    // list[0]: hitArea (invisível, cobre o painel inteiro)
+    const hitArea = this.add.rectangle(0, 0, w, STATUS_H, 0x000000, 0);
+    hitArea.setInteractive({ useHandCursor: true });
+    container.add(hitArea);
 
-    // Deck hint
-    const deckLabel = this.add.text(0, STATS_TOP + 80, `Deck: ${cls.deckHint}`, {
-      fontSize: '13px',
-      color: '#aaaaaa',
-      stroke: '#000000',
-      strokeThickness: 2,
-      fontFamily: FONTS.family,
-      align: 'center',
-      wordWrap: { width: w - 30 },
-      resolution: 3,
-    }).setOrigin(0.5, 0);
-    container.add(deckLabel);
+    // list[1]: painel de status (imagem ou fallback programático)
+    const statusKey = `${cls.id}_status`;
+    if (this.textures.exists(statusKey)) {
+      const statusImg = this.add.image(0, 0, statusKey).setDisplaySize(w, STATUS_H);
+      container.add(statusImg); // list[1]
+    } else {
+      const infoPanel = this.add.rectangle(0, 0, w, STATUS_H, 0x1a1a2e)
+        .setStrokeStyle(3, 0xd4a04a);
+      container.add(infoPanel); // list[1]
+      const TOP = -STATUS_H / 2 + 20;
+      container.add(
+        this.add.text(0, TOP, cls.name, {
+          fontSize: '18px', fontStyle: 'bold', color: '#f0d080',
+          stroke: '#000000', strokeThickness: 4, fontFamily: FONTS.family, resolution: 3,
+        }).setOrigin(0.5, 0),
+      );
+      container.add(
+        this.add.text(0, TOP + 26, cls.description, {
+          fontSize: '13px', color: '#cccccc', stroke: '#000000', strokeThickness: 2,
+          fontFamily: FONTS.family, align: 'center', resolution: 3,
+        }).setOrigin(0.5, 0),
+      );
+      const SB = TOP + 68;
+      this.addStatBar(container, 'HP',  cls.stats.hp,      100, 0xff4444, SB);
+      this.addStatBar(container, 'STA', cls.stats.stamina,  60, 0xffaa00, SB + 26);
+      this.addStatBar(container, 'MP',  cls.stats.mana,     60, 0x4488ff, SB + 52);
+      container.add(
+        this.add.text(0, SB + 80, `Deck: ${cls.deckHint}`, {
+          fontSize: '12px', color: '#aaaaaa', stroke: '#000000', strokeThickness: 2,
+          fontFamily: FONTS.family, align: 'center', wordWrap: { width: w - 20 }, resolution: 3,
+        }).setOrigin(0.5, 0),
+      );
+    }
+
+    hitArea.on('pointerdown', () => {
+      if (this.selectedIndex === index) {
+        this.confirmSelection();
+      } else {
+        this.selectedIndex = index;
+        this.highlightSelected();
+      }
+    });
+    hitArea.on('pointerover', () => {
+      if (!this.lastInputWasMouse) return;
+      this.selectedIndex = index;
+      this.highlightSelected();
+    });
 
     return container;
   }
@@ -253,70 +255,46 @@ export class CharacterSelectScene extends Scene {
     const barWidth = 116;
     const barHeight = 14;
     const labelW = 34;
-
-    // Label
-    const txt = this.add.text(-barWidth / 2 - labelW, yOffset, label, {
-      fontSize: '16px',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 3,
-      fontFamily: FONTS.family,
-      resolution: 3,
-    }).setOrigin(0, 0.5);
-    container.add(txt);
-
-    // Black outline
-    const outline = this.add.rectangle(0, yOffset, barWidth + 4, barHeight + 4, 0x000000);
-    container.add(outline);
-
-    // Dark grey bg
-    const bgBar = this.add.rectangle(0, yOffset, barWidth, barHeight, 0x333333);
-    container.add(bgBar);
-
-    // Filled bar
-    const fillWidth = (value / max) * barWidth;
-    const fillBar = this.add.rectangle(
-      -barWidth / 2 + fillWidth / 2, yOffset,
-      fillWidth, barHeight, color,
+    container.add(
+      this.add.text(-barWidth / 2 - labelW, yOffset, label, {
+        fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+        fontFamily: FONTS.family, resolution: 3,
+      }).setOrigin(0, 0.5),
     );
-    container.add(fillBar);
-
-    // Value text
-    const valTxt = this.add.text(barWidth / 2 + 10, yOffset, `${value}`, {
-      fontSize: '16px',
-      color: '#ffffff',
-      stroke: '#000000',
-      strokeThickness: 3,
-      fontFamily: FONTS.family,
-      resolution: 3,
-    }).setOrigin(0, 0.5);
-    container.add(valTxt);
+    container.add(this.add.rectangle(0, yOffset, barWidth + 4, barHeight + 4, 0x000000));
+    container.add(this.add.rectangle(0, yOffset, barWidth, barHeight, 0x333333));
+    const fillWidth = (value / max) * barWidth;
+    container.add(
+      this.add.rectangle(-barWidth / 2 + fillWidth / 2, yOffset, fillWidth, barHeight, color),
+    );
+    container.add(
+      this.add.text(barWidth / 2 + 10, yOffset, `${value}`, {
+        fontSize: '16px', color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+        fontFamily: FONTS.family, resolution: 3,
+      }).setOrigin(0, 0.5),
+    );
   }
 
+  private readonly statusBaseScales: number[] = [];
+
   private highlightSelected(): void {
-    this.classCards.forEach((card, i) => {
-      const frame = card.list[0] as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-      const inner = card.list[1] as Phaser.GameObjects.Rectangle;
-      const isImage = (frame as Phaser.GameObjects.Image).setTint !== undefined &&
-                      this.textures.exists('panel_hero_plaque');
+    this.statusContainers.forEach((container, i) => {
+      const base = this.statusBaseScales[i] ?? 1;
+      const statusGO = container.list[1] as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
       if (i === this.selectedIndex) {
-        if (isImage) {
-          (frame as Phaser.GameObjects.Image).setTint(0xfff0c0);
-          card.setScale(1.04);
+        container.setScale(base * 1.06);
+        if ((statusGO as Phaser.GameObjects.Image).setTint) {
+          (statusGO as Phaser.GameObjects.Image).setTint(0xfff0c0);
         } else {
-          (frame as Phaser.GameObjects.Rectangle).setFillStyle(0x3388ff);
-          (frame as Phaser.GameObjects.Rectangle).setStrokeStyle(6, 0x00ccff);
+          (statusGO as Phaser.GameObjects.Rectangle).setStrokeStyle(4, 0xffd700);
         }
-        inner.setFillStyle(0xffe680, 0.18);
       } else {
-        if (isImage) {
-          (frame as Phaser.GameObjects.Image).clearTint();
-          card.setScale(1.0);
+        container.setScale(base);
+        if ((statusGO as Phaser.GameObjects.Image).clearTint) {
+          (statusGO as Phaser.GameObjects.Image).clearTint();
         } else {
-          (frame as Phaser.GameObjects.Rectangle).setFillStyle(0x5a5e6b);
-          (frame as Phaser.GameObjects.Rectangle).setStrokeStyle(6, 0x8a8e9b);
+          (statusGO as Phaser.GameObjects.Rectangle).setStrokeStyle(3, 0xd4a04a);
         }
-        inner.setFillStyle(0xffe680, 0);
       }
     });
   }
@@ -325,10 +303,6 @@ export class CharacterSelectScene extends Scene {
 
   private async confirmSelection(): Promise<void> {
     if (this.transitioning || this.templatePickerOpen) return;
-    // Tutorial gate: only warrior is accepted; skip the template picker,
-    // build the run with the fixed tutorial deck, then launch the deck
-    // panel so the player can review/reorder their starter cards before
-    // the run begins.
     if (tutorialDirector.isActive()) {
       const sel = CLASSES[this.selectedIndex];
       if (sel?.id !== 'warrior') return;
@@ -362,22 +336,6 @@ export class CharacterSelectScene extends Scene {
       console.error('[CharacterSelect] loadMetaState failed', err);
       return;
     }
-
-    // Deck-template picker is disabled — outside the tutorial run, the
-    // starter deck is a random template for the chosen class.
-    // Original flow (commented out for now):
-    //
-    //   this.templatePickerOpen = true;
-    //   this.scene.launch(SCENE_KEYS.STARTING_DECK, {
-    //     className: selected.id,
-    //     onConfirm: (deck: string[]) => {
-    //       this.templatePickerOpen = false;
-    //       Promise.resolve().then(() => this.startRun(meta, selected.id, deck));
-    //     },
-    //     onCancel: () => {
-    //       this.templatePickerOpen = false;
-    //     },
-    //   });
     const templates = getTemplatesForClass(selected.id);
     const randomTpl = templates[Math.floor(Math.random() * templates.length)];
     const randomDeck = randomTpl ? [...randomTpl.cardIds] : undefined;

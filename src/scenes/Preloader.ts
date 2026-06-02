@@ -182,6 +182,7 @@ export class Preloader extends Scene {
     this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
     this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
     this.load.image('bg_character_selection', 'assets/ui/backgrounds/background-character-selection.jpg');
+    this.load.spritesheet('flame_selection', 'assets/ui/backgrounds/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
     this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
     this.load.image('wood_board_collection', 'assets/ui/panels/wood-board-collection.png');
     this.load.image('icons_up_table', 'assets/ui/panels/icons-up-table.png');
@@ -212,9 +213,14 @@ export class Preloader extends Scene {
     // prefers this when present and falls back to bg_shop_scene.
     this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
     // Shop-specific ornate chrome (Grok-generated 2026-05-26).
-    this.load.image('shop_title_banner', 'assets/ui/text/shop_title_banner.png');
-    this.load.image('shop_item_frame',   'assets/ui/frames/shop_item_frame.png');
-    this.load.image('shop_remove_seal',  'assets/ui/panels/shop_remove_seal.png');
+    this.load.image('shop_title_banner',  'assets/ui/text/shop_title_banner.png');
+    this.load.image('shop_item_frame',    'assets/ui/frames/shop_item_frame.png');
+    this.load.image('shop_remove_seal',   'assets/ui/panels/shop_remove_seal.png');
+    this.load.image('shop_panel_list',    'assets/ui/shop/big_panel.png');
+    this.load.image('shop_panel_detail',  'assets/ui/shop/asset description.png');
+    this.load.image('shop_tab',           'assets/ui/shop/shop-section.png');
+    this.load.image('shop_row_selected',  'assets/ui/shop/item_selection.png');
+    this.load.image('shop_btn_buy',       'assets/ui/shop/buy-button.png');
     this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
     this.load.image('confirm_panel',        'assets/ui/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
@@ -228,6 +234,8 @@ export class Preloader extends Scene {
     this.load.image('panel_wood_button',      'assets/ui/panels/panel_wood_button.png');
     this.load.image('panel_parchment_scroll', 'assets/ui/panels/panel_parchment_scroll.png');
     this.load.image('panel_hero_plaque',      'assets/ui/panels/panel_hero_plaque.png');
+    this.load.image('warrior_status',         'assets/ui/panels/warrior_status.png');
+    this.load.image('mage_status',            'assets/ui/panels/mage_status.png');
     this.load.image('panel_modifier_banner',  'assets/ui/panels/panel_modifier_banner.png');
     this.load.image('panel_keyword_frame',    'assets/ui/panels/panel_keyword_frame.png');
     this.load.image('panel_hover_frame',      'assets/ui/panels/panel_hover_frame.png');
@@ -242,6 +250,10 @@ export class Preloader extends Scene {
     this.load.bitmapFont('game_font_gold',  'assets/fonts/game_font_gold/game_font_gold.png',   'assets/fonts/game_font_gold/game_font_gold.fnt');
     this.load.bitmapFont('game_font_blue',  'assets/fonts/game_font_blue/game_font_blue.png',   'assets/fonts/game_font_blue/game_font_blue.fnt');
     this.load.bitmapFont('game_font_white', 'assets/fonts/game_font_white/game_font_white.png', 'assets/fonts/game_font_white/game_font_white.fnt');
+    // VT323 pixel font variants
+    this.load.bitmapFont('vt323_gold',  'assets/fonts/vt323_gold/vt323_gold.png',   'assets/fonts/vt323_gold/vt323_gold.fnt');
+    this.load.bitmapFont('vt323_white', 'assets/fonts/vt323_white/vt323_white.png', 'assets/fonts/vt323_white/vt323_white.fnt');
+    this.load.bitmapFont('vt323_blue',  'assets/fonts/vt323_blue/vt323_blue.png',   'assets/fonts/vt323_blue/vt323_blue.fnt');
 
     this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');

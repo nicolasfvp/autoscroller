@@ -19,6 +19,11 @@ export const FONTS = {
   white: 'game_font_white',
   blue:  'game_font_blue',
 
+  // VT323 pixel font variants
+  vt323Gold:  'vt323_gold',
+  vt323White: 'vt323_white',
+  vt323Blue:  'vt323_blue',
+
   // Fallback system font for texts that cannot use bitmapFont
   // (emoji, wordWrap, dynamic rich content). Chosen to match
   // the fantasy aesthetic of the bitmap fonts.
