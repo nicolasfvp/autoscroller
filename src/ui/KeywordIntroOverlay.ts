@@ -1,4 +1,4 @@
-﻿// KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
+// KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
 //
 // Shown by KeywordIntroService when the player resolves a card that
 // references a keyword they haven't learned yet. While the overlay is
@@ -17,8 +17,6 @@ const BACKDROP_ALPHA = 0.62;
 
 const PANEL_W = 440;
 const PANEL_H = 220;
-const PANEL_X = (LAYOUT.canvasWidth - PANEL_W) / 2;
-const PANEL_Y = (LAYOUT.canvasHeight - PANEL_H) / 2;
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
   stack: '#ff8c00',
@@ -46,17 +44,24 @@ export function openKeywordIntroOverlay(
   ).setOrigin(0, 0).setInteractive();
   overlay.add(backdrop);
 
+  const innerPanel = scene.add.container(LAYOUT.canvasWidth / 2, LAYOUT.canvasHeight / 2 - 30);
+  innerPanel.setScale(0.65);
+  overlay.add(innerPanel);
+
+  const lX = -PANEL_W / 2;
+  const lY = -PANEL_H / 2;
+
   // Dark/gold panel frame — matches the game's unified UI style.
   const frameKey = scene.textures.exists('panel_keyword_frame') ? 'panel_keyword_frame' : '__DEFAULT';
-  const panelBg = scene.add.image(PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, frameKey)
+  const panelBg = scene.add.image(0, 0, frameKey)
     .setDisplaySize(PANEL_W, PANEL_H)
     .setInteractive();
-  overlay.add(panelBg);
+  innerPanel.add(panelBg);
 
   // "New [Category]" badge — small, muted
   const badge = scene.add.text(
-    PANEL_X + 18,
-    PANEL_Y + 16,
+    lX + 18,
+    lY + 16,
     `New ${CATEGORY_LABEL[keyword.category]}`,
     {
       fontSize: '11px',
@@ -67,12 +72,12 @@ export function openKeywordIntroOverlay(
       strokeThickness: 2,
     },
   ).setOrigin(0, 0);
-  overlay.add(badge);
+  innerPanel.add(badge);
 
   // Keyword name — category-colored, prominent
   const name = scene.add.text(
-    PANEL_X + 18,
-    PANEL_Y + 34,
+    lX + 18,
+    lY + 34,
     keyword.keyword,
     {
       fontSize: '26px',
@@ -83,16 +88,16 @@ export function openKeywordIntroOverlay(
       strokeThickness: 3,
     },
   ).setOrigin(0, 0);
-  overlay.add(name);
+  innerPanel.add(name);
 
   // Divider line
-  const divider = scene.add.rectangle(PANEL_X + PANEL_W / 2, PANEL_Y + 78, PANEL_W - 36, 1, 0xffd700, 0.4);
-  overlay.add(divider);
+  const divider = scene.add.rectangle(0, lY + 78, PANEL_W - 36, 1, 0xffd700, 0.4);
+  innerPanel.add(divider);
 
   // Definition — warm amber to match the tutorial text box style
   const definition = scene.add.text(
-    PANEL_X + 18,
-    PANEL_Y + 88,
+    lX + 18,
+    lY + 88,
     keyword.definition,
     {
       fontSize: '13px',
@@ -102,12 +107,12 @@ export function openKeywordIntroOverlay(
       lineSpacing: 4,
     },
   ).setOrigin(0, 0);
-  overlay.add(definition);
+  innerPanel.add(definition);
 
   // "Got it!" button — centered near panel bottom
-  const btnY = PANEL_Y + PANEL_H - 30;
+  const btnY = lY + PANEL_H - 30;
   const btn = scene.add.text(
-    PANEL_X + PANEL_W / 2,
+    0,
     btnY,
     'Got it!  (Enter)',
     {
@@ -121,7 +126,7 @@ export function openKeywordIntroOverlay(
   ).setOrigin(0.5).setInteractive({ useHandCursor: true });
   btn.on('pointerover', () => btn.setColor(COLORS.accentHover));
   btn.on('pointerout', () => btn.setColor(COLORS.accent));
-  overlay.add(btn);
+  innerPanel.add(btn);
 
   let closed = false;
   const close = () => {

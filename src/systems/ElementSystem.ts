@@ -24,8 +24,8 @@ export interface ElementDefinition {
 export const ELEMENTS: Record<ElementId, ElementDefinition> = {
   attack:   { id: 'attack',   name: 'Attack',   category: 'physical',  primaryStat: 'str', identity: 'Direct damage, rage stacks',          color: '#DC2626', icon: 'sword' },
   defense:  { id: 'defense',  name: 'Defense',  category: 'physical',  primaryStat: 'vit', identity: 'Armor, mitigation, retaliation',     color: '#6B7280', icon: 'shield' },
-  agility:  { id: 'agility',  name: 'Agility',  category: 'physical',  primaryStat: 'dex', identity: 'Cooldown reduction, dodge',           color: '#FACC15', icon: 'feather' },
-  counter:  { id: 'counter',  name: 'Counter',  category: 'physical',  primaryStat: 'str', identity: 'Reflect damage, retaliate',           color: '#B91C1C', icon: 'crossed-swords' },
+  agility:  { id: 'agility',  name: 'Agility',  category: 'physical',  primaryStat: 'dex', identity: 'Cooldown reduction, dodge',           color: '#16A34A', icon: 'feather' },
+  counter:  { id: 'counter',  name: 'Counter',  category: 'physical',  primaryStat: 'str', identity: 'Reflect damage, retaliate',           color: '#7C3AED', icon: 'crossed-swords' },
   fire:     { id: 'fire',     name: 'Fire',     category: 'elemental', primaryStat: 'int', identity: 'Burn DoT, sustained damage',          color: '#F97316', icon: 'flame' },
   water:    { id: 'water',    name: 'Water',    category: 'elemental', primaryStat: 'spi', identity: 'Heal, shield, freeze',                color: '#0EA5E9', icon: 'droplet' },
   air:      { id: 'air',      name: 'Air',      category: 'elemental', primaryStat: 'dex', identity: 'Speed, multi-strike, weakness',       color: '#C4B5FD', icon: 'wind' },
@@ -83,16 +83,16 @@ export function isElemental(id: ElementId): boolean {
 
 /**
  * Best Phaser texture key for a given icon token (element id or stat/keyword
- * token like 'str', 'burn'). Prefers the painterly v2 element art when
- * present (registered as `icon_v2_<token>` in Preloader), falls back to the
- * legacy pixel-art token (`icon_<token>`), or returns `null` if neither
- * texture has been loaded. Centralised so all UI surfaces — cards, forge,
- * shop, description tokens — agree on what to render.
+ * token like 'str', 'burn'). Priority: forge sigil art → painterly v2 →
+ * legacy pixel-art → null. Centralised so all UI surfaces agree on what to
+ * render.
  */
 export function resolveIconKey(
   textures: Phaser.Textures.TextureManager,
   token: string,
 ): string | null {
+  const sigil = `forge_sigil_${token}`;
+  if (textures.exists(sigil)) return sigil;
   const v2 = `icon_v2_${token}`;
   if (textures.exists(v2)) return v2;
   const legacy = `icon_${token}`;

@@ -43,10 +43,10 @@ export class SpeedPanelScene extends Scene {
 
     const panelCX = PANEL_X + PANEL_W / 2;
     const panelCY = PANEL_Y + PANEL_H / 2;
-    if (this.textures.exists('ui_panel')) {
-      const bg = this.add.image(panelCX, panelCY, 'ui_panel')
-        .setDisplaySize(PANEL_W, PANEL_H)
-        .setScrollFactor(0).setDepth(999);
+    const panelKey = this.textures.exists('speed_panel') ? 'speed_panel' : 'ui_panel';
+    if (this.textures.exists(panelKey)) {
+      const bg = this.add.image(panelCX, panelCY, panelKey).setScrollFactor(0).setDepth(999);
+      bg.setScale(Math.min(PANEL_W / bg.width, PANEL_H / bg.height));
       this.panelGroup.add(bg);
     } else {
       const bg = this.add.graphics().setScrollFactor(0).setDepth(999);
@@ -67,14 +67,14 @@ export class SpeedPanelScene extends Scene {
     this.mapSlider = new MapSpeedSlider(
       this, sliderCenterX, PANEL_Y + 38,
       initialMap, (s) => { if (hasActiveRun()) getRun().mapSpeed = s; },
-      'Map Speed', SCALE,
+      '', SCALE,
     );
     this.panelGroup.add(this.mapSlider);
 
     this.combatSlider = new MapSpeedSlider(
       this, sliderCenterX, PANEL_Y + 74,
       initialCombat, (s) => { if (hasActiveRun()) getRun().combatSpeed = s; },
-      'Combat Speed', SCALE,
+      '', SCALE,
     );
     this.panelGroup.add(this.combatSlider);
 

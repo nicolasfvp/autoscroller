@@ -343,49 +343,6 @@ export class GameScene extends Scene {
     const posInLoopInitial = Math.max(0, loopInitial.positionInLoop - (loopInitial.tiles.length - nonBufferInitial) * TILE_SIZE);
     if (this.hud) this.hud.update(runInitial, posInLoopInitial, loopTotalPxInitial);
 
-    // Keyboard shortcuts: ESC → Pause, D → Deck, R → Relics.
-    this.input.keyboard?.on('keydown-ESC', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.PAUSE);
-      }
-    });
-    this.input.keyboard?.on('keydown-D', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
-      }
-    });
-    this.input.keyboard?.on('keydown-R', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
-      }
-    });
-
-    // Scripted tutorial overlay — mounts only when the director has an active step.
-    // Also persists tutorialSeen=true when the director completes.
-    TutorialOverlay.mountIfActive(this);
-    if (tutorialDirector.isActive()) {
-      const unsub = tutorialDirector.subscribe(() => {
-        if (!tutorialDirector.isActive()) {
-          (async () => {
-            try {
-              const meta = await loadMetaState();
-              if (!meta.tutorialSeen) {
-                meta.tutorialSeen = true;
-                await saveMetaState(meta);
-              }
-            } catch (err) {
-              console.warn('[GameScene] tutorialSeen persist failed:', err);
-            }
-          })();
-          unsub();
-        }
-      });
-      this.events.once('shutdown', unsub);
-    }
-
     // Cleanup
     this.events.on('shutdown', this.cleanup, this);
   }

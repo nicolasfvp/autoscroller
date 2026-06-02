@@ -1,4 +1,4 @@
-﻿// DeathScene -- shown when the hero dies.
+// DeathScene -- shown when the hero dies.
 // Defeat art fills the screen; minimal text overlay at the top.
 
 import { Scene } from 'phaser';
@@ -6,7 +6,7 @@ import { getRun, clearRun } from '../state/RunState';
 import { bankRunRewards } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
-import { FONTS, LAYOUT } from '../ui/StyleConstants';
+import { LAYOUT, addBitmapText } from '../ui/StyleConstants';
 import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
@@ -52,10 +52,8 @@ export class DeathScene extends Scene {
     this.add.bitmapText(400, 30, 'game_font_white', 'RUN OVER', 46)
       .setOrigin(0.5).setTint(0xff2222).setDepth(2);
 
-    this.add.text(400, 80, `Defeated by ${enemyName}`, {
-      fontFamily: FONTS.body, fontSize: '15px',
-      color: '#aaaaaa',
-    }).setOrigin(0.5).setDepth(2);
+    addBitmapText(this, 400, 80, `Defeated by ${enemyName}`, 15, 'white')
+      .setOrigin(0.5).setDepth(2).setTint(0xaaaaaa);
 
     // ── Bottom overlay + button ──────────────────────────────────
     this.add.graphics().setDepth(1)

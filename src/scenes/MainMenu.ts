@@ -194,58 +194,45 @@ export class MainMenu extends Scene {
   private showDeleteConfirmation(): void {
     if (this.confirmOverlay) return;
 
+    const CX = LAYOUT.centerX;
+    const CY = LAYOUT.centerY;
+
     this.confirmOverlay = this.add.container(0, 0);
 
-    // Dim background
-    const dimBg = this.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.7);
-    dimBg.setInteractive();
-    this.confirmOverlay.add(dimBg);
+    // ── Dim backdrop ──────────────────────────────────────────────────────────
+    const dim = this.add.rectangle(CX, CY, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, 0.72);
+    dim.setInteractive();
+    this.confirmOverlay.add(dim);
 
-    // Message panel (panel.png scaled to ~480×140)
-    const msgPanel = this.add.image(LAYOUT.centerX, 250, 'ui_panel').setDisplaySize(480, 140);
-    this.confirmOverlay.add(msgPanel);
+    // ── Painel de aviso (permanente-erase.png) ────────────────────────────────
+    const erasePanel = this.add.image(403.7, 239.7, 'lp_permanent_erase').setScale(0.3199);
+    this.confirmOverlay.add(erasePanel);
 
-    const msg = this.add.text(LAYOUT.centerX, 250, 'This will permanently erase your\ncurrent run. Continue?', {
-      fontSize: '22px',
-      fontStyle: 'bold',
-      color: '#e6c88a',
-      stroke: '#2e1b0f',
-      strokeThickness: 2,
-      fontFamily: FONTS.body,
-      align: 'center',
-    }).setOrigin(0.5);
-    this.confirmOverlay.add(msg);
+    // ── Botões ────────────────────────────────────────────────────────────────
+    const makeImgBtn = (x: number, y: number, texKey: string, scale: number, onClick: () => void) => {
+      const img = this.add.image(x, y, texKey).setScale(scale).setInteractive({ useHandCursor: true });
+      img.on('pointerover',  () => img.setTint(0xffffcc));
+      img.on('pointerout',   () => img.clearTint());
+      img.on('pointerdown',  onClick);
+      this.confirmOverlay!.add(img);
+    };
 
-    // Yes button (panel.png + label)
-    const yesBg = this.add.image(270, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
-    const yesLabel = this.add.text(270, 370, 'Yes, Delete', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e74c3c', fontFamily: FONTS.body,
-      stroke: '#1a0000', strokeThickness: 2,
-    }).setOrigin(0.5);
-    yesBg.on('pointerover', () => { yesBg.setTint(0xdddddd); yesLabel.setScale(1.05); });
-    yesBg.on('pointerout',  () => { yesBg.clearTint(); yesLabel.setScale(1); });
-    yesBg.on('pointerdown', () => { void this.startNewRun(); });
-    this.confirmOverlay.add(yesBg);
-    this.confirmOverlay.add(yesLabel);
+    makeImgBtn(314.2, 355.1, 'lp_delete_run', 0.3095, () => { void this.startNewRun(); });
+    makeImgBtn(504.7, 354.6, 'lp_keep',       0.3097, () => this.hideConfirmation());
 
-    // Keep button (panel.png + label)
-    const noBg = this.add.image(530, 370, 'ui_panel').setDisplaySize(200, 56).setInteractive({ useHandCursor: true });
-    const noLabel = this.add.text(530, 370, 'Keep My Run', {
-      fontSize: '18px', fontStyle: 'bold', color: '#e6c88a', fontFamily: FONTS.body,
-      stroke: '#2e1b0f', strokeThickness: 2,
-    }).setOrigin(0.5);
-    noBg.on('pointerover', () => { noBg.setTint(0xdddddd); noLabel.setScale(1.05); });
-    noBg.on('pointerout',  () => { noBg.clearTint(); noLabel.setScale(1); });
-    noBg.on('pointerdown', () => this.hideConfirmation());
-    this.confirmOverlay.add(noBg);
-    this.confirmOverlay.add(noLabel);
+    // Fade-in
+    this.confirmOverlay.setAlpha(0);
+    this.tweens.add({ targets: this.confirmOverlay, alpha: 1, duration: 200, ease: 'Sine.easeOut' });
   }
 
   private hideConfirmation(): void {
-    if (this.confirmOverlay) {
-      this.confirmOverlay.destroy(true);
-      this.confirmOverlay = null;
-    }
+    if (!this.confirmOverlay) return;
+    const overlay = this.confirmOverlay;
+    this.confirmOverlay = null;
+    this.tweens.add({
+      targets: overlay, alpha: 0, duration: 160, ease: 'Sine.easeIn',
+      onComplete: () => overlay.destroy(true),
+    });
   }
 
   private async startNewRun(): Promise<void> {
@@ -258,6 +245,10 @@ export class MainMenu extends Scene {
       const meta = await loadMetaState();
       if (!meta.tutorialSeen) {
         tutorialDirector.start();
+        // Mark tutorialSeen now so the player isn't trapped in a tutorial
+        // loop if they abandon mid-run. The scripted overlays still play.
+        meta.tutorialSeen = true;
+        await saveMetaState(meta);
       }
     } catch (err) {
       console.warn('[MainMenu] tutorial gate read failed:', err);
@@ -315,7 +306,7 @@ export class MainMenu extends Scene {
     const text = this.add.text(LAYOUT.centerX, 100, msg, {
       fontSize: '14px', fontStyle: 'bold', color: '#ffffff',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       wordWrap: { width: 600 }, align: 'center',
     }).setOrigin(0.5).setDepth(50);
     text.setAlpha(0);
@@ -344,14 +335,14 @@ export class MainMenu extends Scene {
     const title = this.add.text(LAYOUT.centerX, 120, SAVE_INCOMPATIBLE_COPY.title, {
       fontSize: '18px', fontStyle: 'bold', color: '#ffaa44',
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5);
     container.add(title);
 
     const body = this.add.text(LAYOUT.centerX, 150, SAVE_INCOMPATIBLE_COPY.body, {
       fontSize: '13px', color: '#ffffff',
       stroke: '#000000', strokeThickness: 2,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
       wordWrap: { width: 480 }, align: 'center',
     }).setOrigin(0.5);
     container.add(body);
@@ -359,7 +350,7 @@ export class MainMenu extends Scene {
     const cta = this.add.text(LAYOUT.centerX, 185, SAVE_INCOMPATIBLE_COPY.cta, {
       fontSize: '16px', fontStyle: 'bold', color: COLORS.accent,
       stroke: '#000000', strokeThickness: 3,
-      fontFamily: FONTS.body,
+      fontFamily: FONTS.family,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     cta.on('pointerover', () => cta.setColor(COLORS.accentHover));
     cta.on('pointerout', () => cta.setColor(COLORS.accent));

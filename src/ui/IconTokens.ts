@@ -240,7 +240,7 @@ export function renderTokenText(
   // constructor poisons the measured width — it comes back NaN, cascades into
   // NaN positions, and the text renders at undefined coordinates (invisible).
   const makeTextStyle = (color: string, big = false): Phaser.Types.GameObjects.Text.TextStyle => {
-    const px = parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
+    const px = Number.parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
     const style: Phaser.Types.GameObjects.Text.TextStyle = {
       fontSize: big ? `${Math.round(px * 1.35)}px` : fontSize,
       fontFamily,
@@ -254,8 +254,8 @@ export function renderTokenText(
   };
 
   // Token sprites render at ~1.4× the body font size so they read clearly
-  // inline with prose. parseInt strips the "px" suffix; default to 13.
-  const fontPx = parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
+  // inline with prose. Number.parseInt strips the "px" suffix; default to 13.
+  const fontPx = Number.parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
   const tokenSpriteSize = Math.round(fontPx * 1.4);
 
   for (const u of units) {

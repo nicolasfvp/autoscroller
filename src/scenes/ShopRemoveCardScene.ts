@@ -173,10 +173,10 @@ export class ShopRemoveCardScene extends Scene {
         visual.setAlpha(0.55);
       } else {
         visual.on('pointerover', () => {
-          this.tweens.add({ targets: visual, scale: this.cardScale * 1.08, duration: 120, ease: 'Cubic.easeOut' });
+          this.tweens.add({ targets: visual, scale: 1.08, duration: 120, ease: 'Cubic.easeOut' });
         });
         visual.on('pointerout', () => {
-          this.tweens.add({ targets: visual, scale: this.cardScale, duration: 120, ease: 'Cubic.easeOut' });
+          this.tweens.add({ targets: visual, scale: 1, duration: 120, ease: 'Cubic.easeOut' });
         });
         visual.on('pointerdown', () => this.openConfirm(cardId, deckIndex));
       }

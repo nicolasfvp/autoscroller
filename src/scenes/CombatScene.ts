@@ -18,7 +18,7 @@ import { showSynergyFlash } from '../ui/SynergyFlash';
 import { CombatEffects } from '../effects/CombatEffects';
 import { earnXP, getXPForEnemy, loseAllRunXP } from '../systems/hero/XPSystem';
 import { scaleEnemyForLoop } from '../systems/DifficultyScaler';
-import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { addPendingKill } from '../systems/PendingLoot';
@@ -136,55 +136,30 @@ export class CombatScene extends Scene {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
     }
 
-    // VICTORY uses the hand-crafted image asset; DEFEAT uses Phaser text until
-    // a defeat_asset.png is created (see TEXT_ASSETS.md).
-    let shineGraphics: Phaser.GameObjects.Graphics | null = null;
-    let shineTween: Phaser.Tweens.Tween | null = null;
-    const displayText: Phaser.GameObjects.GameObject = eventData.result === 'victory'
-      ? (() => {
-          const img = this.add.image(400, 290, 'text_victory').setDepth(600);
-          const W = 580;
-          const H = Math.round(img.height * (W / img.width));
-          img.setDisplaySize(W, H);
+    // Texto de resultado — VT323 com animação de typing (janela deslizante de 3 chars).
+    const resultWord = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
+    const displayText = this.add.bitmapText(400, 290, 'vt323_gold', '', 82)
+      .setOrigin(0.5).setDepth(600).setTint(eventData.result === 'victory' ? 0xffd700 : 0xff4444);
 
-          // Shine sweep: a semi-transparent white strip that slides left→right,
-          // clipped to the image bounds via a geometry mask.
-          const imgLeft = 400 - W / 2;
-          const imgTop  = 290 - H / 2;
-          const maskShape = this.make.graphics();
-          maskShape.fillStyle(0xffffff);
-          maskShape.fillRect(imgLeft, imgTop, W, H);
-
-          // Draw strip at local (0,0) and position the graphics object at the
-          // image's top-left — no ADD blend mode so the geometry mask clips reliably.
-          shineGraphics = this.add.graphics().setDepth(601);
-          shineGraphics.fillStyle(0xffffff, 0.45);
-          shineGraphics.fillRect(0, 0, 60, H);
-          shineGraphics.setMask(maskShape.createGeometryMask());
-          shineGraphics.x = imgLeft - 60;
-          shineGraphics.y = imgTop;
-
-          shineTween = this.tweens.add({
-            targets: shineGraphics,
-            x: imgLeft + W,
-            duration: 900,
-            ease: 'Sine.easeIn',
-            repeat: -1,
-            repeatDelay: 1200,
-          });
-
-          return img;
-        })()
-      : this.add.text(400, 300, 'DEFEAT', {
-          fontSize: '56px', fontFamily: FONTS.body, fontStyle: 'bold',
-          color: COLORS.danger, stroke: '#000000', strokeThickness: 6,
-          shadow: { offsetX: 3, offsetY: 3, color: '#000000', fill: true },
-        }).setOrigin(0.5).setDepth(600);
+    const WINDOW = 3;
+    let charIdx = 0;
+    const typeTimer = this.time.addEvent({
+      delay: 80,
+      repeat: resultWord.length + WINDOW - 2,
+      callback: () => {
+        charIdx++;
+        const start = Math.max(0, charIdx - WINDOW);
+        const end   = Math.min(charIdx, resultWord.length);
+        displayText.setText(resultWord.slice(start, end));
+        if (charIdx >= resultWord.length) {
+          displayText.setText(resultWord);
+          typeTimer.remove();
+        }
+      },
+    });
 
     this.time.delayedCall(2500, () => {
       if (displayText) displayText.destroy();
-      if (shineTween) { shineTween.stop(); shineTween = null; }
-      if (shineGraphics) { shineGraphics.destroy(); shineGraphics = null; }
       const enemyDef = getEnemyById(this.initData.enemyId);
       if (!enemyDef) return;
 

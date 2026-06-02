@@ -13,7 +13,7 @@
       "model.size": "auto",
       "model.custom_width": 1024,
       "model.custom_height": 1024,
-      "model.background": "opaque",
+      "model.background": "auto",
       "model.quality": "low",
       "n": 1,
       "seed": 0,

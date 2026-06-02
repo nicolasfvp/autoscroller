@@ -35,6 +35,7 @@ export const SCENE_KEYS = {
   SPEED_PANEL: 'SpeedPanelScene',
   STARTING_DECK: 'StartingDeckScene',
   LIBRARY: 'CardLibraryScene',
+  DEBUG_OVERLAY: 'DebugOverlayScene',
 } as const;
 
 export type SceneKey = typeof SCENE_KEYS[keyof typeof SCENE_KEYS];

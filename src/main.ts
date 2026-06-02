@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import './style.css'
 import Phaser from 'phaser'
 import { Boot } from './scenes/Boot'
@@ -6,6 +7,7 @@ import { MainMenu } from './scenes/MainMenu'
 import { TutorialScene } from './scenes/TutorialScene'
 import { CombatScene } from './scenes/CombatScene'
 import { ShopScene } from './scenes/ShopScene'
+import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
 import { SettingsScene } from './scenes/SettingsScene'
@@ -26,6 +28,8 @@ import { LoopSummaryScene } from './scenes/LoopSummaryScene'
 import { StartingDeckScene } from './scenes/StartingDeckScene'
 import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
+import { DebugOverlayScene } from './scenes/DebugOverlayScene'
+import { SCENE_KEYS } from './state/SceneKeys'
 
 // Responsive scaling: the game is authored in 800×600 game-space (where every
 // hardcoded HUD/sprite/tile coordinate lives). We render into a supersampled
@@ -98,6 +102,7 @@ const config: Phaser.Types.Core.GameConfig = {
         GameScene,
         CombatScene,
         ShopScene,
+        ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
         SettingsScene,
@@ -116,9 +121,53 @@ const config: Phaser.Types.Core.GameConfig = {
         LoopSummaryScene,
         StartingDeckScene,
         CardLibraryScene,
-        SpeedPanelScene
+        SpeedPanelScene,
+        DebugOverlayScene,
     ]
 }
+
+// Debug listener — only active in dev builds (Vite tree-shakes this in production)
+if (import.meta.env.DEV) {
+    class DebugListenerScene extends Phaser.Scene {
+        constructor() { super({ key: 'debug-listener', active: true }); }
+        create() {
+            this.input.keyboard?.on('keydown-F2', () => {
+                if (this.scene.isActive(SCENE_KEYS.DEBUG_OVERLAY)) {
+                    this.scene.manager.scenes.forEach(s => {
+                        if (s.scene.key !== 'debug-listener' && s.scene.key !== SCENE_KEYS.DEBUG_OVERLAY && s.scene.isPaused()) {
+                            s.scene.resume();
+                        }
+                    });
+                    this.scene.stop(SCENE_KEYS.DEBUG_OVERLAY);
+                } else {
+                    this.scene.manager.scenes.forEach(s => {
+                        if (s.scene.key !== 'debug-listener' && s.scene.isActive()) {
+                            s.scene.pause();
+                        }
+                    });
+                    this.scene.launch(SCENE_KEYS.DEBUG_OVERLAY);
+                }
+            });
+        }
+    }
+    (config.scene as any[]).push(DebugListenerScene);
+}
+
+// Patch Phaser.GameObjects.Text to default resolution:2 globally.
+// This makes all this.add.text() calls render their internal canvas at 2×,
+// eliminating the blurry text caused by low-resolution canvas upscaling.
+// Any call that explicitly passes resolution overrides this default.
+const _origTextFactory = Phaser.GameObjects.GameObjectFactory.prototype.text as Function;
+(Phaser.GameObjects.GameObjectFactory.prototype as any).text = function (
+  x: number, y: number, content: string | string[],
+  style?: Phaser.Types.GameObjects.Text.TextStyle,
+) {
+  const patched = { resolution: 2, ...style };
+  return _origTextFactory.call(this, x, y, content, patched);
+};
+
+// Pre-load VT323 so canvas text renders immediately on first frame
+document.fonts.load('16px VT323').catch(() => {});
 
 const game = new Phaser.Game(config)
 

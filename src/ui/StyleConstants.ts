@@ -14,13 +14,44 @@ export const COLORS = {
 } as const;
 
 export const FONTS = {
-  display: '"Cinzel Decorative", "Cinzel", serif',
-  family: '"Cinzel", serif',
-  body: 'Georgia, "Times New Roman", serif',
+  // Bitmap font keys (loaded in Preloader via load.bitmapFont)
+  gold:  'game_font_gold',
+  white: 'game_font_white',
+  blue:  'game_font_blue',
+
+  // VT323 pixel font variants
+  vt323Gold:  'vt323_gold',
+  vt323White: 'vt323_white',
+  vt323Blue:  'vt323_blue',
+
+  // System font para texts que não usam bitmapFont (wordWrap, emoji, rich content)
+  display: 'VT323, monospace',
+  family: 'VT323, monospace',
+  body: 'VT323, monospace',
   title: { fontSize: '32px', fontStyle: 'bold' },
   heading: { fontSize: '24px', fontStyle: 'bold' },
   small: { fontSize: '14px' },
 } as const;
+
+/**
+ * Convenience wrapper: creates a BitmapText using the game's custom font.
+ * @param scene  – Phaser scene
+ * @param x, y  – position
+ * @param text   – string (must use characters in the font atlas: A-Z a-z 0-9 + basic punctuation)
+ * @param size   – font size in pixels (default 18)
+ * @param variant – 'gold' | 'white' | 'blue'  (default 'white')
+ */
+export function addBitmapText(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  text: string,
+  size = 18,
+  variant: 'gold' | 'white' | 'blue' = 'white',
+): Phaser.GameObjects.BitmapText {
+  const key = FONTS[variant];
+  return scene.add.bitmapText(x, y, key, text, size);
+}
 
 export const LAYOUT = {
   canvasWidth: 800,
