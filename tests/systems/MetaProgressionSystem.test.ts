@@ -12,12 +12,14 @@ describe('MetaProgressionSystem', () => {
   describe('upgradeBuilding', () => {
     it('upgrades forge from 0 to 1, deducting cost (Forge gates crafting tiers, not loot)', () => {
       const state = createDefaultMetaState();
-      state.materials = { iron: 50, crystal: 50 };
+      state.materials = { stone: 50, wood: 50 };
       const result = upgradeBuilding('forge', state);
       expect(result.success).toBe(true);
-      // Forge tier 1 costs: iron 8, crystal 3
-      expect(result.updatedState!.materials.iron).toBe(42);
-      expect(result.updatedState!.materials.crystal).toBe(47);
+      // First upgrades cost only stone + wood so the economy can bootstrap
+      // before any terrain (and thus iron/crystal/essence) is unlocked.
+      // Forge tier 1 costs: stone 8, wood 3.
+      expect(result.updatedState!.materials.stone).toBe(42);
+      expect(result.updatedState!.materials.wood).toBe(47);
       expect(result.updatedState!.buildings.forge.level).toBe(1);
       // Forge no longer unlocks loot cards — it gates in-loop crafting tiers +
       // gold discount (ForgeSystem / FORGE_TIER_UNLOCK / FORGE_DISCOUNT_BY_LEVEL).
@@ -44,7 +46,8 @@ describe('MetaProgressionSystem', () => {
 
     it('upgrades shrine from 0 to 1 and adds relics to unlockedRelics', () => {
       const state = createDefaultMetaState();
-      state.materials = { crystal: 200, essence: 100 };
+      // Shrine's first upgrade now costs stone + wood (was crystal + essence).
+      state.materials = { stone: 200, wood: 100 };
       const result = upgradeBuilding('shrine', state);
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.shrine.level).toBe(1);
@@ -55,14 +58,17 @@ describe('MetaProgressionSystem', () => {
 
     it('upgrades workshop from 0 to 1 and adds tiles to unlockedTiles', () => {
       const state = createDefaultMetaState();
-      state.materials = { stone: 200, iron: 100 };
+      // Workshop's first upgrade now costs stone + wood (was stone + iron).
+      state.materials = { stone: 200, wood: 100 };
       const result = upgradeBuilding('workshop', state);
       expect(result.success).toBe(true);
       expect(result.updatedState!.buildings.workshop.level).toBe(1);
-      expect(result.updatedState!.unlockedTiles).toContain('graveyard');
+      // First upgrade now unlocks Desert (the iron source) instead of Graveyard
+      // so the iron-gated upgrades become reachable; graveyard moved to L3.
+      expect(result.updatedState!.unlockedTiles).toContain('desert');
       // Workshop L1 also unlocks a batch of gated combat sub-tiles (camp +
       // mana well ship unlocked by default, so they are not in this set).
-      expect(result.newUnlocks!.tiles).toEqual(['graveyard', 'subtile_warhorn', 'subtile_ambush']);
+      expect(result.newUnlocks!.tiles).toEqual(['desert', 'subtile_warhorn', 'subtile_ambush']);
     });
   });
 
@@ -184,7 +190,7 @@ describe('MetaProgressionSystem', () => {
       expect(data.maxLevel).toBe(6);
       expect(data.tiers).toHaveLength(6);
       expect(data.tiers[0].level).toBe(1);
-      expect(data.tiers[0].cost).toEqual({ iron: 8, crystal: 3 });
+      expect(data.tiers[0].cost).toEqual({ stone: 8, wood: 3 });
       // Forge tiers no longer carry card-unlock IDs (effect-driven crafting gate).
       expect(data.tiers[0].unlocks).toEqual({});
     });

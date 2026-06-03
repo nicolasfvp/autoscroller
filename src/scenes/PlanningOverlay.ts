@@ -509,8 +509,6 @@ export class PlanningOverlay extends Scene {
         this.showToast('Boss tiles cannot be replaced.');
       } else if (slot.type === 'buffer') {
         this.showToast('Buffer tiles cannot be replaced.');
-      } else if (slot.enemyId) {
-        this.showToast('This tile already has an enemy — fight it first.');
       } else if (slot.type === 'basic' && slot.reserved) {
         this.showToast('Reserved slot — place a subtile here.');
       } else {
@@ -980,14 +978,16 @@ export class PlanningOverlay extends Scene {
     return allowed === null || allowed === tileType;
   }
 
-  /** Wave 5: any empty basic slot that is NOT reserved — target for normal tiles. */
+  /** Wave 5: any basic slot that is NOT reserved — target for normal tiles.
+   *  Enemy-bearing slots count: the enemy is pinned and carries onto the tile. */
   private hasOpenNormalSlot(): boolean {
-    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && !t.reserved && !t.enemyId);
+    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && !t.reserved);
   }
 
-  /** Wave 5: any empty basic slot that IS reserved — target for subtile placement. */
+  /** Wave 5: any basic slot that IS reserved — target for subtile placement.
+   *  Enemy-bearing slots count: the enemy is pinned and carries onto the subtile. */
   private hasOpenReservedSlot(): boolean {
-    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && t.reserved === true && !t.enemyId);
+    return this.loopRunState.loop.tiles.some(t => t.type === 'basic' && t.reserved === true);
   }
 
   /**

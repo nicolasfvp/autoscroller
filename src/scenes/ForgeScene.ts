@@ -117,6 +117,8 @@ export class ForgeScene extends Scene {
   private confirmPanel: Phaser.GameObjects.Container | null = null;
   private metaState: MetaState | null = null;
   private forgeSlots: ElementId[] = [];
+  /** Recipe queued by the Forge recipe library; consumed on the next resume. */
+  private pendingRecipe: ElementId[] | null = null;
   private parentSceneKey: string = SCENE_KEYS.PLANNING;
   private beamPulse = 0;
   // Drag state
@@ -125,6 +127,14 @@ export class ForgeScene extends Scene {
   private onPtrMove: ((p: Phaser.Input.Pointer) => void) | null = null;
   private onPtrUp:   ((p: Phaser.Input.Pointer) => void) | null = null;
   private dwarfSpeakForge: ((text: string, canForge: boolean, onForge: () => void) => void) | null = null; // set by buildDwarfNPC
+  // Named handlers/timers so they can be unregistered in cleanup (the scene
+  // instance is reused across stop/start, so anonymous .on() listeners would
+  // accumulate — each stale 'update' listener keeps advancing beamPulse).
+  private onUpdate = (_t: number, dt: number): void => {
+    this.beamPulse = (this.beamPulse + dt * 0.00035) % 1;
+    this.drawBeams();
+  };
+  private onDwarfGlobalPointerDown: ((p: Phaser.Input.Pointer) => void) | null = null;
 
   constructor() { super(SCENE_KEYS.FORGE); }
 
@@ -142,15 +152,15 @@ export class ForgeScene extends Scene {
       this.beamsGfx = this.add.graphics().setDepth(4);
       this.renderForge();
       this.beamPulse = 0;
-      this.events.on('update', (_t: number, dt: number) => {
-        this.beamPulse = (this.beamPulse + dt * 0.00035) % 1;
-        this.drawBeams();
-      });
+      this.events.on('update', this.onUpdate, this);
       createWoodButton(this, 75, CANVAS_H - 28, '← Leave', () => this.close(),
         { width: 120, height: 34, fontSize: 13 });
+      createWoodButton(this, 215, CANVAS_H - 28, 'Recipes', () => this.openRecipeLibrary(),
+        { width: 130, height: 34, fontSize: 13 });
       this.buildDwarfNPC();
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);
+      this.events.on('resume', this.handleResume, this);
     } catch (err) {
       console.error('[ForgeScene] create error:', err);
       this.close();
@@ -379,36 +389,15 @@ export class ForgeScene extends Scene {
 
   // ── Center: card preview (overlays bigorna when recipe found) ─────────────
   private renderCenterContent(forgeLevel: number): void {
-    const card = this.forgeSlots.length >= 2 ? findCardForElements(this.forgeSlots) : null;
+    // Resolve a card for 1–3 selected shards so single-element (tier 1) recipes
+    // also show their card and can be forged, not just 2–3 element combos.
+    const card = this.forgeSlots.length >= 1 ? findCardForElements(this.forgeSlots) : null;
 
     if (card) {
       const visual = createCardVisual(this, ARC_CX - 5, ARC_CY - 68, card.id, { scale: 0.754 });
       disableCardFaceInput(visual);
       visual.setInteractive({ useHandCursor: true });
-      visual.on('pointerdown', () => {
-        const run = getRun();
-        const elementInv = (run.economy.elements ?? {}) as ElementInventory;
-        const tier = this.forgeSlots.length as 1 | 2 | 3;
-        const cost = getForgeGoldCost(tier, forgeLevel);
-        const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, run.deck.active.length, 15);
-        const canForge = !!(validation?.ok && isTierUnlocked(tier, forgeLevel));
-        const elemNames = [...new Set(this.forgeSlots)].join(', ');
-        let line: string;
-        if (canForge) {
-          line = `This'll cost ye ${cost} gold\nan' ${this.forgeSlots.length} ${elemNames} shards.\nShall I forge it?`;
-        } else if (validation && !validation.ok) {
-          line = forgeReasonDwarf(validation.reason ?? 'invalid', tier, forgeLevel, cost);
-        } else {
-          line = `Tier ${tier} is locked, friend.\nUpgrade the forge first!`;
-        }
-        // Abre a carta expandida sem backdrop (anão fala ao lado)
-        showCardDetail(this, card.id, undefined, undefined, true, true);
-        // Anão fala com opções de forge (delay pequeno para não ser interceptado pelo backdrop)
-        if (this.dwarfSpeakForge) {
-          const speak = this.dwarfSpeakForge;
-          this.time.delayedCall(50, () => speak(line, canForge, () => this.executeForgeAction(card.id, forgeLevel)));
-        }
-      });
+      visual.on('pointerdown', () => this.promptForgeForCard(card.id, forgeLevel));
       this.dynLayer.add(visual);
     } else if (this.forgeSlots.length >= 2) {
       this.dynLayer.add(
@@ -431,6 +420,64 @@ export class ForgeScene extends Scene {
         }).setOrigin(0.5),
       );
     }
+  }
+
+  // Open the expanded card + dwarf forge prompt for the current forgeSlots.
+  // Shared by the center-card click and recipes loaded from the library.
+  private promptForgeForCard(cardId: string, forgeLevel: number): void {
+    const run = getRun();
+    const elementInv = (run.economy.elements ?? {}) as ElementInventory;
+    const tier = this.forgeSlots.length as 1 | 2 | 3;
+    const cost = getForgeGoldCost(tier, forgeLevel);
+    const validation = validateForge(this.forgeSlots, elementInv, run.economy.gold, forgeLevel, run.deck.active.length, 15);
+    const canForge = !!(validation?.ok && isTierUnlocked(tier, forgeLevel));
+    const elemNames = [...new Set(this.forgeSlots)].join(', ');
+    let line: string;
+    if (canForge && cost <= 0) {
+      // Tier 1 is free — no gold line.
+      line = `Just yer ${this.forgeSlots.length} ${elemNames} shard\nan' it's yours.\nShall I forge it?`;
+    } else if (canForge) {
+      line = `This'll cost ye ${cost} gold\nan' ${this.forgeSlots.length} ${elemNames} shards.\nShall I forge it?`;
+    } else if (validation && !validation.ok) {
+      line = forgeReasonDwarf(validation.reason ?? 'invalid', tier, forgeLevel, cost);
+    } else {
+      line = `Tier ${tier} is locked, friend.\nUpgrade the forge first!`;
+    }
+    // Abre a carta expandida sem backdrop (anão fala ao lado)
+    showCardDetail(this, cardId, undefined, undefined, true, true);
+    // Anão fala com opções de forge (delay pequeno para não ser interceptado pelo backdrop)
+    if (this.dwarfSpeakForge) {
+      const speak = this.dwarfSpeakForge;
+      this.time.delayedCall(50, () => speak(line, canForge, () => this.executeForgeAction(cardId, forgeLevel)));
+    }
+  }
+
+  // ── Recipe library ──────────────────────────────────────────────────────────
+  // Launch the card library in forge mode (cards expose a "send to anvil"
+  // button). The forge is paused so it regains focus via the resume event.
+  private openRecipeLibrary(): void {
+    this.dismissConfirmPanel();
+    this.scene.launch(SCENE_KEYS.LIBRARY, { parentKey: SCENE_KEYS.FORGE, forgeMode: true });
+    this.scene.pause();
+  }
+
+  /** Queue a recipe selected in the library; loaded onto the anvil on resume. */
+  loadRecipeFromLibrary(elements: ElementId[]): void {
+    this.pendingRecipe = (elements ?? []).slice(0, 3);
+  }
+
+  // Fired when the library (or any overlay) closes and the forge resumes.
+  // Drops a queued recipe's elements onto the anvil, ready to forge — the
+  // player confirms by clicking the anvil card (no auto-prompt).
+  private handleResume(): void {
+    this.cancelDrag(); // clear any drag ghost left from before the overlay
+    const loaded = this.pendingRecipe;
+    this.pendingRecipe = null;
+    if (loaded && loaded.length > 0) {
+      this.forgeSlots = loaded.slice(0, 3);
+    }
+    this.dismissConfirmPanel();
+    this.renderForge();
   }
 
   private dismissConfirmPanel(): void {
@@ -817,12 +864,20 @@ export class ForgeScene extends Scene {
     });
 
     // Clique fora do anão → fecha o balão
-    this.input.on('pointerdown', () => {
+    this.onDwarfGlobalPointerDown = () => {
       if (activeBubble && !this.dragId) closeBubble();
-    });
+    };
+    this.input.on('pointerdown', this.onDwarfGlobalPointerDown);
   }
 
   private cleanup(): void {
+    this.events.off('shutdown', this.cleanup, this);
+    this.events.off('update', this.onUpdate, this);
+    this.events.off('resume', this.handleResume, this);
+    if (this.onDwarfGlobalPointerDown) {
+      this.input.off('pointerdown', this.onDwarfGlobalPointerDown);
+      this.onDwarfGlobalPointerDown = null;
+    }
     this.cancelDrag();
     this.dynLayer?.destroy(true);
     this.beamsGfx?.destroy();
