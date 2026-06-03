@@ -7,8 +7,8 @@
       {
         "level": 1,
         "cost": {
-          "iron": 8,
-          "crystal": 3
+          "stone": 8,
+          "wood": 3
         },
         "unlocks": {},
         "description": "−5% forge gold cost"
@@ -74,7 +74,7 @@
         "level": 1,
         "cost": {
           "wood": 10,
-          "bone": 5
+          "stone": 5
         },
         "unlocks": {},
         "description": "+15% class XP earned"
@@ -156,16 +156,16 @@
         "level": 1,
         "cost": {
           "stone": 10,
-          "iron": 5
+          "wood": 5
         },
         "unlocks": {
           "tiles": [
-            "graveyard",
+            "desert",
             "subtile_warhorn",
             "subtile_ambush"
           ]
         },
-        "description": "Unlock Graveyard + War Horn / Ambush sub-tiles"
+        "description": "Unlock Desert + War Horn / Ambush sub-tiles"
       },
       {
         "level": 2,
@@ -193,13 +193,13 @@
         },
         "unlocks": {
           "tiles": [
-            "desert",
+            "graveyard",
             "lava",
             "subtile_burnaltar",
             "subtile_resonance"
           ]
         },
-        "description": "Unlock Desert, Lava Fields + Burn Altar / Resonance sub-tiles"
+        "description": "Unlock Graveyard, Lava Fields + Burn Altar / Resonance sub-tiles"
       }
     ]
   },
@@ -211,8 +211,8 @@
       {
         "level": 1,
         "cost": {
-          "crystal": 8,
-          "essence": 3
+          "stone": 8,
+          "wood": 3
         },
         "unlocks": {
           "relics": [

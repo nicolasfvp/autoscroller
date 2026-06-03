@@ -9,7 +9,7 @@ Todos os edifícios do City Hub, com custos e efeitos por nível.
 
 | Nível | Efeito | Custo |
 |-------|--------|-------|
-| 1 | −5% custo de forja | 8 iron, 3 crystal |
+| 1 | −5% custo de forja | 8 stone, 3 wood |
 | 2 | −10% custo de forja | 20 iron, 10 crystal |
 | 3 | −15% custo de forja | 45 iron, 25 crystal, 5 essence |
 | 4 | −20% custo de forja | 80 iron, 50 crystal, 15 essence |
@@ -23,7 +23,7 @@ Todos os edifícios do City Hub, com custos e efeitos por nível.
 
 | Nível | Efeito | Custo |
 |-------|--------|-------|
-| 1 | +15% XP de classe | 10 wood, 5 bone |
+| 1 | +15% XP de classe | 10 wood, 5 stone |
 | 2 | +30% XP de classe | 25 wood, 15 bone, 5 herbs |
 | 3 | +45% XP de classe | 50 wood, 30 bone, 15 herbs, 5 essence |
 
@@ -34,9 +34,9 @@ Todos os edifícios do City Hub, com custos e efeitos por nível.
 
 | Nível | Efeito | Custo |
 |-------|--------|-------|
-| 1 | Desbloqueia **Graveyard** + sub-tiles: War Horn, Ambush | 10 stone, 5 iron |
+| 1 | Desbloqueia **Desert** + sub-tiles: War Horn, Ambush | 10 stone, 5 wood |
 | 2 | Desbloqueia **Swamp** + sub-tiles: Magma, Bleed Totem | 25 stone, 15 iron, 5 crystal |
-| 3 | Desbloqueia **Desert**, **Lava Fields** + sub-tiles: Burn Altar, Resonance | 50 stone, 30 iron, 15 crystal, 5 essence |
+| 3 | Desbloqueia **Graveyard**, **Lava Fields** + sub-tiles: Burn Altar, Resonance | 50 stone, 30 iron, 15 crystal, 5 essence |
 
 ---
 
@@ -45,7 +45,7 @@ Todos os edifícios do City Hub, com custos e efeitos por nível.
 
 | Nível | Relíquias desbloqueadas | Custo |
 |-------|------------------------|-------|
-| 1 | Iron Will, First Strike Amulet, Thin Deck Charm, Swift Boots, Heavy Tome | 8 crystal, 3 essence |
+| 1 | Iron Will, First Strike Amulet, Thin Deck Charm, Swift Boots, Heavy Tome | 8 stone, 3 wood |
 | 2 | Berserker Ring, Glass Cannon, Catalyst Core, Crimson Stiletto, Stormcaller's Rod, Echo Chamber | 20 crystal, 10 essence |
 | 3 | Phoenix Feather, Demon Heart, Sanguine Pact, Bloodgorged Heart, Soulforge Chalice, Hemlock Vial, Stoneheart Sigil | 45 crystal, 25 essence |
 | 4 | War God's Mantle, The Last Banner, Archon Codex, Constellation Sigil, Pandora's Embers, Cinderkeep, Tempest Resonator, Tideheart Amulet | 80 crystal, 50 essence, 20 iron |
