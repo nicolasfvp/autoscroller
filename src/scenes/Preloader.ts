@@ -161,6 +161,10 @@ export class Preloader extends Scene {
     this.load.spritesheet('forge_background', 'assets/buildings/backgrounds/forge_background.png', {
       frameWidth: 1168, frameHeight: 880,
     });
+    this.load.image('forge_frame_01', 'assets/buildings/backgrounds/forge_frame_01.png');
+    this.load.spritesheet('forge_fire_sheet', 'assets/buildings/backgrounds/forge_fire_sheet.png', {
+      frameWidth: 390, frameHeight: 590,
+    });
     this.load.image('forge_rune_socket', 'assets/buildings/backgrounds/forge-rune-socket.jpeg');
     this.load.image('forge_card_altar', 'assets/buildings/backgrounds/forge-card-altar.jpeg');
     this.load.image('forge_inventory_rack', 'assets/buildings/backgrounds/forge-inventory-rack-v2.jpeg');

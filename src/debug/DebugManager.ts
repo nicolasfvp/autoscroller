@@ -44,6 +44,7 @@ class DebugManagerSingleton {
   private readonly _savedPD            = new Map<Phaser.GameObjects.GameObject, Function[]>();
 
   private _allDraggable: DraggableGO[] = [];
+  private readonly _deleted: string[] = [];
   private _selected:    DraggableGO | null = null;
   private _dragScene:   Phaser.Scene | null = null;
   private _inputScene:  Phaser.Scene | null = null;
@@ -70,6 +71,53 @@ class DebugManagerSingleton {
     return this._selected ? this.records.get(this._selected) : undefined;
   }
 
+  deleteSelected(): boolean {
+    if (!this._selected) return false;
+    const obj = this._selected;
+    const record = this.records.get(obj);
+    if (record) this._deleted.push(record.textureKey);
+    obj.setAlpha(0);
+    (obj as any).setActive?.(false);
+    this.records.delete(obj);
+    this._allDraggable = this._allDraggable.filter(o => o !== obj);
+    this._applyTint(obj, null);
+    this._selected = null;
+    this._dragScene?.game.events.emit('debug:update', null);
+    return true;
+  }
+
+  spawnAsset(scene: Phaser.Scene, textureKey: string): DraggableGO {
+    const obj = scene.add.image(400, 300, textureKey).setDisplaySize(128, 128).setDepth(500);
+    this._setupObj(obj);
+    this._allDraggable.push(obj);
+    this.snapshot(obj);
+    this.select(obj, scene);
+    return obj;
+  }
+
+  distortSelected(axis: 'w' | 'h', percentDelta: number): void {
+    if (!this._selected) return;
+    const obj = this._selected;
+    this._undoStack.push({ obj, x: obj.x, y: obj.y, scaleX: obj.scaleX, scaleY: obj.scaleY, depth: obj.depth });
+    const factor = 1 + percentDelta / 100;
+    if (obj instanceof Phaser.GameObjects.Rectangle) {
+      if (axis === 'w') obj.setSize(Math.max(1, obj.width  * factor), obj.height);
+      else              obj.setSize(obj.width, Math.max(1, obj.height * factor));
+    } else if (axis === 'w') {
+      obj.setScale(Math.max(0.001, obj.scaleX * factor), obj.scaleY);
+    } else {
+      obj.setScale(obj.scaleX, Math.max(0.001, obj.scaleY * factor));
+    }
+    this.snapshot(obj);
+    this._dragScene?.game.events.emit('debug:update', this.records.get(obj));
+  }
+
+  getLoadedTextureKeys(): string[] {
+    if (!this._dragScene) return [];
+    return this._dragScene.textures.getTextureKeys()
+      .filter(k => k !== '__DEFAULT' && k !== '__MISSING' && k !== '__WHITE');
+  }
+
   injectDrag(scene: Phaser.Scene, inputScene?: Phaser.Scene): void {
     this._dragScene   = scene;
     this._inputScene  = inputScene ?? scene;
@@ -77,6 +125,7 @@ class DebugManagerSingleton {
     this.records.clear();
     this._selected = null;
     this._undoStack.length = 0;
+    this._deleted.length = 0;
     this._newlyInteractive.clear();
     this._savedPD.clear();
     this._lastClickX = this._lastClickY = -10000;
@@ -334,6 +383,16 @@ class DebugManagerSingleton {
     const { obj, x, y, scaleX, scaleY, depth } = entry;
     obj.x = x;
     obj.y = y;
+    this._undoRestoreSize(obj, entry, scaleX, scaleY);
+    this._undoRestoreWrap(obj, entry);
+    this._undoRestoreColor(obj, entry);
+    obj.setDepth(depth);
+    this.snapshot(obj);
+    if (this._selected !== obj && this._dragScene) this.select(obj, this._dragScene);
+    this._dragScene?.game.events.emit('debug:update', this.records.get(obj));
+  }
+
+  private _undoRestoreSize(obj: DraggableGO, entry: UndoEntry, scaleX: number, scaleY: number): void {
     if (entry.rectW !== undefined && obj instanceof Phaser.GameObjects.Rectangle) {
       obj.setSize(entry.rectW, entry.rectH!);
     } else if (entry.fontSize !== undefined
@@ -342,27 +401,28 @@ class DebugManagerSingleton {
     } else {
       obj.setScale(scaleX, scaleY);
     }
-    if (entry.wrapWidth !== undefined) {
-      if (obj instanceof Phaser.GameObjects.Text) obj.setWordWrapWidth(entry.wrapWidth, false);
-      else if (obj instanceof Phaser.GameObjects.BitmapText) obj.setMaxWidth(entry.wrapWidth);
+  }
+
+  private _undoRestoreWrap(obj: DraggableGO, entry: UndoEntry): void {
+    if (entry.wrapWidth === undefined) return;
+    if (obj instanceof Phaser.GameObjects.Text) obj.setWordWrapWidth(entry.wrapWidth, false);
+    else if (obj instanceof Phaser.GameObjects.BitmapText) obj.setMaxWidth(entry.wrapWidth);
+  }
+
+  private _undoRestoreColor(obj: DraggableGO, entry: UndoEntry): void {
+    if (entry.fontColor === undefined) return;
+    if (obj instanceof Phaser.GameObjects.Text) {
+      obj.setColor(entry.fontColor);
+    } else if (obj instanceof Phaser.GameObjects.BitmapText) {
+      obj.setTint(Number.parseInt(entry.fontColor.replace('#', ''), 16));
     }
-    if (entry.fontColor !== undefined) {
-      if (obj instanceof Phaser.GameObjects.Text) obj.setColor(entry.fontColor);
-      else if (obj instanceof Phaser.GameObjects.BitmapText) {
-        const n = Number.parseInt(entry.fontColor.replace('#', ''), 16);
-        obj.setTint(n);
-      }
-    }
-    obj.setDepth(depth);
-    this.snapshot(obj);
-    if (this._selected !== obj && this._dragScene) this.select(obj, this._dragScene);
-    this._dragScene?.game.events.emit('debug:update', this.records.get(obj));
   }
 
   generateLog(sceneName: string): string {
     return JSON.stringify({
       scene: sceneName,
       timestamp: new Date().toISOString(),
+      deleted: [...this._deleted],
       objects: [...this.records.values()],
     }, null, 2);
   }
@@ -417,6 +477,29 @@ class DebugManagerSingleton {
     }
   }
 
+  private _snapshotText(obj: Phaser.GameObjects.Text | Phaser.GameObjects.BitmapText): Pick<DebugRecord, 'textureKey' | 'displayWidth' | 'displayHeight' | 'fontSize' | 'wrapWidth' | 'fontColor' | 'isText'> {
+    const raw = obj instanceof Phaser.GameObjects.BitmapText ? obj.text : ((obj as any).text as string ?? '');
+    const textureKey = '[txt] ' + raw.substring(0, 10);
+    const dw = Math.round(obj.displayWidth);
+    const dh = Math.round(obj.displayHeight);
+    if (obj instanceof Phaser.GameObjects.Text) {
+      const ww = (obj.style as any)?.wordWrapWidth;
+      const rawColor = obj.style.color;
+      return {
+        textureKey, displayWidth: dw, displayHeight: dh, isText: true,
+        fontSize:  Number.parseFloat((obj as any).style?.fontSize ?? '12') || 12,
+        wrapWidth: Math.round(ww > 0 ? ww : dw),
+        fontColor: typeof rawColor === 'string' ? rawColor : '#ffffff',
+      };
+    }
+    return {
+      textureKey, displayWidth: dw, displayHeight: dh, isText: true,
+      fontSize:  obj.fontSize,
+      wrapWidth: Math.round(obj.maxWidth > 0 ? obj.maxWidth : dw),
+      fontColor: '#' + obj.tintTopLeft.toString(16).padStart(6, '0'),
+    };
+  }
+
   private snapshot(obj: DraggableGO): void {
     let textureKey: string;
     let dw: number;
@@ -427,22 +510,7 @@ class DebugManagerSingleton {
     let isText: boolean | undefined;
 
     if (obj instanceof Phaser.GameObjects.Text || obj instanceof Phaser.GameObjects.BitmapText) {
-      const raw = obj instanceof Phaser.GameObjects.BitmapText ? obj.text : (obj as any).text as string ?? '';
-      textureKey = '[txt] ' + raw.substring(0, 10);
-      dw = Math.round(obj.displayWidth);
-      dh = Math.round(obj.displayHeight);
-      isText = true;
-      if (obj instanceof Phaser.GameObjects.Text) {
-        fontSize = Number.parseFloat((obj as any).style?.fontSize ?? '12') || 12;
-        const ww = (obj.style as any)?.wordWrapWidth;
-        wrapWidth = Math.round(ww > 0 ? ww : obj.displayWidth);
-        const rawColor = obj.style.color;
-        fontColor = typeof rawColor === 'string' ? rawColor : '#ffffff';
-      } else {
-        fontSize = obj.fontSize;
-        wrapWidth = Math.round(obj.maxWidth > 0 ? obj.maxWidth : obj.displayWidth);
-        fontColor = '#' + obj.tintTopLeft.toString(16).padStart(6, '0');
-      }
+      ({ textureKey, displayWidth: dw, displayHeight: dh, fontSize, wrapWidth, fontColor, isText } = this._snapshotText(obj));
     } else if (obj instanceof Phaser.GameObjects.Container) {
       textureKey = '[btn]';
       const b = obj.getBounds();

@@ -32,44 +32,35 @@ export class PauseScene extends Scene {
       this.input.keyboard?.on('keydown-ESC', () => this.resume());
     });
 
-    // Overlay panel (wood texture with rounded corners)
-    const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(360, 460);
-    panel.setInteractive();
+    // Título — y=105, fontSize=42
+    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 42).setOrigin(0.5);
 
-    const shape = this.make.graphics();
-    shape.fillStyle(0xffffff);
-    shape.fillRoundedRect(220, 70, 360, 460, 16);
-    panel.setMask(shape.createGeometryMask());
+    createWoodButton(this, 401.6, 171.6, 'Resume', () => this.resume(),
+      { width: 204, height: 82, fontSize: 22, variant: 'primary' });
 
-    // Title
-    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 48).setOrigin(0.5);
-
-    createWoodButton(this, 400, 180, 'Resume', () => this.resume(),
-      { width: 260, height: 52, fontSize: 22, variant: 'primary' });
-
-    createWoodButton(this, 400, 240, 'View Deck', () => {
+    createWoodButton(this, 400.5, 236.8, 'View Deck', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 260, height: 52, fontSize: 22 });
+    }, { width: 196, height: 77, fontSize: 22 });
 
     createWoodButton(this, 400, 300, 'Tutorial', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 260, height: 52, fontSize: 22 });
+    }, { width: 196, height: 78, fontSize: 22 });
 
-    createWoodButton(this, 400, 360, 'Settings', () => {
+    createWoodButton(this, 400, 365.8, 'Settings', () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.SETTINGS);
-    }, { width: 260, height: 52, fontSize: 22 });
+    }, { width: 200, height: 89, fontSize: 22 });
 
-    createWoodButton(this, 400, 420, 'Abandon Run', async () => {
+    createWoodButton(this, 402.6, 432.1, 'Abandon Run', async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
       await saveManager.clearByMode(mode);
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
-    }, { width: 260, height: 52, fontSize: 22, variant: 'danger' });
+    }, { width: 195, height: 88, fontSize: 22, variant: 'danger' });
 
     this.events.on('shutdown', this.cleanup, this);
   }

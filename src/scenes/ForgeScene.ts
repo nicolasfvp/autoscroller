@@ -138,8 +138,8 @@ export class ForgeScene extends Scene {
       this.scene.bringToTop();
       this.buildStaticChrome();
       loadMetaState().then((m) => { this.metaState = m; }).catch(() => {});
-      this.dynLayer = this.add.container(0, 0);
-      this.beamsGfx = this.add.graphics();
+      this.dynLayer = this.add.container(0, 0).setDepth(4);
+      this.beamsGfx = this.add.graphics().setDepth(4);
       this.renderForge();
       this.beamPulse = 0;
       this.events.on('update', (_t: number, dt: number) => {
@@ -159,22 +159,28 @@ export class ForgeScene extends Scene {
 
   // ── Static chrome ─────────────────────────────────────────────────────────
   private buildStaticChrome(): void {
-    // Background.
+    // Background estático (primeiro frame da forge).
     this.add.rectangle(CANVAS_W / 2, CANVAS_H / 2, CANVAS_W, CANVAS_H, 0x000000);
-    if (this.textures.exists('forge_background')) {
-      if (!this.anims.exists('forge_fire')) {
-        this.anims.create({
-          key: 'forge_fire',
-          frames: this.anims.generateFrameNumbers('forge_background', { start: 0, end: 7 }),
-          frameRate: 10, repeat: -1,
-        });
-      }
-      const bg = this.add.sprite(CANVAS_W / 2, CANVAS_H / 2, 'forge_background');
+    if (this.textures.exists('forge_frame_01')) {
+      const bg = this.add.image(CANVAS_W / 2, CANVAS_H / 2, 'forge_frame_01');
       bg.setScale(Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height)).setAlpha(0.90);
-      bg.play('forge_fire');
     } else if (this.textures.exists('forge_backdrop_v2')) {
       const bg = this.add.image(CANVAS_W / 2, CANVAS_H / 2, 'forge_backdrop_v2');
       bg.setScale(Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height)).setAlpha(0.86);
+    }
+
+    // Fornalha animada — atrás da bigorna (depth -1).
+    if (this.textures.exists('forge_fire_sheet')) {
+      if (!this.anims.exists('forge_fire')) {
+        this.anims.create({
+          key: 'forge_fire',
+          frames: this.anims.generateFrameNumbers('forge_fire_sheet', { start: 0, end: 7 }),
+          frameRate: 10, repeat: -1,
+        });
+      }
+      const fire = this.add.sprite(401.1, 338.4, 'forge_fire_sheet');
+      fire.setScale(0.6815).setDepth(1);
+      fire.play('forge_fire');
     }
 
     // Shard inventory bar — forge_moldure at very top, full canvas width.
@@ -194,12 +200,12 @@ export class ForgeScene extends Scene {
     // anvilGlow is drawn behind the anvil image and pulsed when slots are active.
     this.anvilGlow = this.add.graphics();
     if (this.textures.exists('bigorna')) {
-      this.add.image(395.8, 477.9, 'bigorna').setScale(0.1508);
+      this.add.image(395.8, 477.9, 'bigorna').setScale(0.1508).setDepth(3);
     }
 
     // Arc ring — fixed scale from debug-layout (preserves aspect ratio).
     if (this.textures.exists('arco_forja')) {
-      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setScale(0.5172);
+      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setScale(0.5172).setDepth(2);
     }
 
     // Gold readout.

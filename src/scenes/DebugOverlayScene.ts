@@ -76,6 +76,7 @@ export class DebugOverlayScene extends Phaser.Scene {
   private _fontLine:  Phaser.GameObjects.Text | null = null;
   private _wrapLine:  Phaser.GameObjects.Text | null = null;
   private _colorLine: Phaser.GameObjects.Text | null = null;
+  private readonly _modalObjects: Phaser.GameObjects.GameObject[] = [];
 
   private get _px(): number { return this._panelSide === 'right' ? 598 : 0; }
   private get _tx(): number { return this._px + 6; }
@@ -119,16 +120,13 @@ export class DebugOverlayScene extends Phaser.Scene {
       .lineStyle(1, 0x555555).lineBetween(px, 0, px, PH)
       .setScrollFactor(0));
 
-    // Title
-    this._track(this.add.text(tx, y, '◉ DEBUG MODE', { ...FONT, fontSize: '12px', color: C_TITLE }).setScrollFactor(0));
-    y += 16;
-    this._track(this.add.text(tx, y, `cena: ${this.currentSceneKey}`, { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
+    // Title + cena atual na mesma linha
+    this._track(this.add.text(tx, y, '◉ DEBUG', { ...FONT, fontSize: '11px', color: C_TITLE }).setScrollFactor(0));
+    this._track(this.add.text(tx + 52, y, this.currentSceneKey, { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
     y += 13;
-    this._sep(y); y += 6;
+    this._sep(y); y += 4;
 
-    // Scene list
-    this._track(this.add.text(tx, y, 'TROCAR CENA:', { ...FONT_SM, color: C_TEXT }).setScrollFactor(0));
-    y += 12;
+    // Scene list — sem label, item height 10px
     const sceneKeys = Object.values(SCENE_KEYS).filter(k => !UNSAFE_SCENES.has(k));
     sceneKeys.forEach(key => {
       const isCurrent = key === this.currentSceneKey;
@@ -142,163 +140,126 @@ export class DebugOverlayScene extends Phaser.Scene {
       btn.on('pointerover', () => btn.setColor(hoverColor));
       btn.on('pointerout',  () => btn.setColor(baseColor));
       btn.on('pointerdown', () => this.navigateTo(key));
-      y += 11;
+      y += 10;
     });
     y += 2;
-    this._sep(y); y += 6;
+    this._sep(y); y += 4;
 
     // Drag toggle
-    this.dragBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x333333)
+    this.dragBg = this._track(this.add.rectangle(mid, y + 9, PW - 12, 18, 0x333333)
       .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this.dragBtn = this._track(this.add.text(tx, y + 2, 'DRAG: OFF', { ...FONT, color: C_RED }).setScrollFactor(0));
+    this.dragBtn = this._track(this.add.text(tx, y + 1, 'DRAG: OFF', { ...FONT, color: C_RED }).setScrollFactor(0));
     this.dragBg.on('pointerover', () => this.dragBg.setFillStyle(0x444444));
     this.dragBg.on('pointerout',  () => this.dragBg.setFillStyle(DebugManager.isDragEnabled ? 0x1a4a1a : 0x333333));
     this.dragBg.on('pointerdown', () => this.toggleDrag());
-    y += 26;
-    this._sep(y); y += 6;
+    y += 22;
+    this._sep(y); y += 4;
 
-    // Selected object info
+    // Selected object info — 5 linhas (sem a linha de hint)
     this._track(this.add.text(tx, y, 'SELECIONADO:', { ...FONT_SM, color: C_TEXT }).setScrollFactor(0));
-    y += 12;
-    const infoDefaults = ['tex: —', 'x: —   y: —', 'w: —   h: —', 'scl: —% (—)', 'depth: —', 'ctrl+drag ↕=size []=z ^Z'];
+    y += 10;
+    const infoDefaults = ['tex: —', 'x:—  y:—', 'w:—  h:—', 'scl:—  depth:—', 'ctrl+drag []=z ^Z'];
     this.infoLines = infoDefaults.map((txt, i) => {
-      return this._track(this.add.text(tx, y + i * 11, txt, {
-        ...FONT_SM,
-        color: i === 5 ? C_DIM : C_TEXT,
+      return this._track(this.add.text(tx, y + i * 10, txt, {
+        ...FONT_SM, color: i === 4 ? C_DIM : C_TEXT,
       }).setScrollFactor(0));
     });
-    y += infoDefaults.length * 11 + 4;
-    this._sep(y); y += 6;
+    y += infoDefaults.length * 10 + 2;
+    this._sep(y); y += 4;
 
-    // Resize buttons — [-5%] and [+5%]
-    const bw  = Math.floor((PW - 16) / 2);
+    // Resize ±5% | Del | +Asset — 3 botões em 2 linhas compactas
+    const bw   = Math.floor((PW - 16) / 2);
     const b1cx = px + 7 + bw / 2;
     const b2cx = px + PW - 7 - bw / 2;
+    const BH   = 16; // altura dos botões
 
-    const szMinBg = this._track(this.add.rectangle(b1cx, y + 10, bw, 20, 0x2a2a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(b1cx, y + 10, '− 5%', { ...FONT, color: '#ffdd88' }).setScrollFactor(0).setOrigin(0.5));
-    szMinBg.on('pointerover', () => szMinBg.setFillStyle(0x4a4a00));
-    szMinBg.on('pointerout',  () => szMinBg.setFillStyle(0x2a2a00));
-    szMinBg.on('pointerdown', () => DebugManager.resizeSelected(-5));
+    const makePairBtn = (cx: number, cy: number, w: number, label: string, fill: number, hover: number, color: string, cb: () => void) => {
+      const bg = this._track(this.add.rectangle(cx, cy, w, BH, fill).setScrollFactor(0).setInteractive({ useHandCursor: true }));
+      this._track(this.add.text(cx, cy, label, { ...FONT_SM, color }).setScrollFactor(0).setOrigin(0.5));
+      bg.on('pointerover', () => bg.setFillStyle(hover));
+      bg.on('pointerout',  () => bg.setFillStyle(fill));
+      bg.on('pointerdown', cb);
+    };
 
-    const szPlusBg = this._track(this.add.rectangle(b2cx, y + 10, bw, 20, 0x002a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(b2cx, y + 10, '+ 5%', { ...FONT, color: '#88ff88' }).setScrollFactor(0).setOrigin(0.5));
-    szPlusBg.on('pointerover', () => szPlusBg.setFillStyle(0x004a00));
-    szPlusBg.on('pointerout',  () => szPlusBg.setFillStyle(0x002a00));
-    szPlusBg.on('pointerdown', () => DebugManager.resizeSelected(5));
+    makePairBtn(b1cx, y + BH / 2, bw, '− 5%',   0x2a2a00, 0x4a4a00, '#ffdd88', () => DebugManager.resizeSelected(-5));
+    makePairBtn(b2cx, y + BH / 2, bw, '+ 5%',   0x002a00, 0x004a00, '#88ff88', () => DebugManager.resizeSelected(5));
+    y += BH + 2;
+    makePairBtn(b1cx, y + BH / 2, bw, '⌫ DEL',  0x4a1a1a, 0x6a2a2a, C_RED,    () => DebugManager.deleteSelected());
+    makePairBtn(b2cx, y + BH / 2, bw, '+ ASSET', 0x1a3a4a, 0x2a5a6a, C_BLUE,  () => this.openAssetModal());
+    y += BH + 4;
 
-    y += 26;
-    this._sep(y); y += 6;
+    // Distorção W/H — 4 botões em 1 linha
+    const bwQ = Math.floor((PW - 16) / 4);
+    const dCx = [0, 1, 2, 3].map(i => px + 7 + bwQ * i + bwQ / 2);
+    const distDef = [
+      { label: 'W−', axis: 'w' as const, delta: -5, fill: 0x3a1a00, hover: 0x5a3000, color: '#ff9966' },
+      { label: 'W+', axis: 'w' as const, delta:  5, fill: 0x003a00, hover: 0x005a00, color: '#99ff99' },
+      { label: 'H−', axis: 'h' as const, delta: -5, fill: 0x3a1a00, hover: 0x5a3000, color: '#ff9966' },
+      { label: 'H+', axis: 'h' as const, delta:  5, fill: 0x003a00, hover: 0x005a00, color: '#99ff99' },
+    ];
+    distDef.forEach(({ label, axis, delta, fill, hover, color }, i) => {
+      makePairBtn(dCx[i], y + BH / 2, bwQ - 2, label, fill, hover, color, () => DebugManager.distortSelected(axis, delta));
+    });
+    y += BH + 2;
 
-    // Text controls (font size + word wrap)
-    this._track(this.add.text(tx, y, 'TEXTO:', { ...FONT_SM, color: C_TEXT }).setScrollFactor(0));
-    y += 12;
+    // Depth (camada) — 2 botões
+    makePairBtn(b1cx, y + BH / 2, bw, 'Z −1', 0x1a1a3a, 0x2a2a5a, '#aaaaff', () => DebugManager.changeDepth(-1));
+    makePairBtn(b2cx, y + BH / 2, bw, 'Z +1', 0x1a1a3a, 0x2a2a5a, '#ddddff', () => DebugManager.changeDepth(1));
+    y += BH + 4;
+    this._sep(y); y += 4;
 
+    // TEXTO — font + wrap em linhas compactas
     const bwHalf = Math.floor((PW - 16) / 2);
     const fMinCx = px + 7 + bwHalf / 2;
     const fMaxCx = px + PW - 7 - bwHalf / 2;
 
     this._fontLine = this._track(this.add.text(tx, y, 'font: —', { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
-    y += 12;
-    const fMinBg = this._track(this.add.rectangle(fMinCx, y + 10, bwHalf, 18, 0x2a2a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(fMinCx, y + 10, '− 2px', { ...FONT_SM, color: '#ffdd88' }).setScrollFactor(0).setOrigin(0.5));
-    fMinBg.on('pointerover', () => fMinBg.setFillStyle(0x4a4a00));
-    fMinBg.on('pointerout',  () => fMinBg.setFillStyle(0x2a2a00));
-    fMinBg.on('pointerdown', () => DebugManager.adjustFontSize(-2));
-    const fPlusBg = this._track(this.add.rectangle(fMaxCx, y + 10, bwHalf, 18, 0x002a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(fMaxCx, y + 10, '+ 2px', { ...FONT_SM, color: '#88ff88' }).setScrollFactor(0).setOrigin(0.5));
-    fPlusBg.on('pointerover', () => fPlusBg.setFillStyle(0x004a00));
-    fPlusBg.on('pointerout',  () => fPlusBg.setFillStyle(0x002a00));
-    fPlusBg.on('pointerdown', () => DebugManager.adjustFontSize(2));
-    y += 22;
+    y += 10;
+    makePairBtn(fMinCx, y + BH / 2, bwHalf, '− 2px', 0x2a2a00, 0x4a4a00, '#ffdd88', () => DebugManager.adjustFontSize(-2));
+    makePairBtn(fMaxCx, y + BH / 2, bwHalf, '+ 2px', 0x002a00, 0x004a00, '#88ff88', () => DebugManager.adjustFontSize(2));
+    y += BH + 2;
 
     this._wrapLine = this._track(this.add.text(tx, y, 'wrap: —', { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
-    y += 12;
-    const wMinBg = this._track(this.add.rectangle(fMinCx, y + 10, bwHalf, 18, 0x2a2a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(fMinCx, y + 10, '− 20px', { ...FONT_SM, color: '#ffdd88' }).setScrollFactor(0).setOrigin(0.5));
-    wMinBg.on('pointerover', () => wMinBg.setFillStyle(0x4a4a00));
-    wMinBg.on('pointerout',  () => wMinBg.setFillStyle(0x2a2a00));
-    wMinBg.on('pointerdown', () => DebugManager.adjustWordWrap(-20));
-    const wPlusBg = this._track(this.add.rectangle(fMaxCx, y + 10, bwHalf, 18, 0x002a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(fMaxCx, y + 10, '+ 20px', { ...FONT_SM, color: '#88ff88' }).setScrollFactor(0).setOrigin(0.5));
-    wPlusBg.on('pointerover', () => wPlusBg.setFillStyle(0x004a00));
-    wPlusBg.on('pointerout',  () => wPlusBg.setFillStyle(0x002a00));
-    wPlusBg.on('pointerdown', () => DebugManager.adjustWordWrap(20));
-    y += 22;
+    y += 10;
+    makePairBtn(fMinCx, y + BH / 2, bwHalf, '−20px', 0x2a2a00, 0x4a4a00, '#ffdd88', () => DebugManager.adjustWordWrap(-20));
+    makePairBtn(fMaxCx, y + BH / 2, bwHalf, '+20px', 0x002a00, 0x004a00, '#88ff88', () => DebugManager.adjustWordWrap(20));
+    y += BH + 2;
 
-    // Color palette
+    // Paleta de cores
     this._colorLine = this._track(this.add.text(tx, y, 'cor: —', { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
-    y += 12;
+    y += 10;
     const COLORS: { hex: string; fill: number }[] = [
-      { hex: '#ffffff', fill: 0xffffff },
-      { hex: '#ffff44', fill: 0xffff44 },
-      { hex: '#ffcc44', fill: 0xffcc44 },
-      { hex: '#ff8844', fill: 0xff8844 },
-      { hex: '#ff6666', fill: 0xff6666 },
-      { hex: '#ff44aa', fill: 0xff44aa },
-      { hex: '#cc88ff', fill: 0xcc88ff },
-      { hex: '#88ccff', fill: 0x88ccff },
-      { hex: '#66ff66', fill: 0x66ff66 },
-      { hex: '#888888', fill: 0x888888 },
+      { hex: '#ffffff', fill: 0xffffff }, { hex: '#ffff44', fill: 0xffff44 },
+      { hex: '#ffcc44', fill: 0xffcc44 }, { hex: '#ff8844', fill: 0xff8844 },
+      { hex: '#ff6666', fill: 0xff6666 }, { hex: '#ff44aa', fill: 0xff44aa },
+      { hex: '#cc88ff', fill: 0xcc88ff }, { hex: '#88ccff', fill: 0x88ccff },
+      { hex: '#66ff66', fill: 0x66ff66 }, { hex: '#888888', fill: 0x888888 },
     ];
     const swSize = Math.floor((PW - 12) / COLORS.length);
     COLORS.forEach(({ hex, fill }, i) => {
-      const cx = px + 6 + swSize * i + swSize / 2;
-      const sw = this._track(this.add.rectangle(cx, y + 7, swSize - 2, 12, fill)
+      const swcx = px + 6 + swSize * i + swSize / 2;
+      const sw = this._track(this.add.rectangle(swcx, y + 5, swSize - 2, 10, fill)
         .setScrollFactor(0).setInteractive({ useHandCursor: true }));
       sw.on('pointerdown', () => DebugManager.setFontColor(hex));
     });
-    y += 20;
-    this._sep(y); y += 6;
+    y += 16;
+    this._sep(y); y += 4;
 
-    // Save log button
-    const saveBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x1a3a5a)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(tx, y + 2, 'SALVAR LOG', { ...FONT, color: C_BLUE }).setScrollFactor(0));
-    this.saveStatus = this._track(this.add.text(tx + 82, y + 2, '', { ...FONT_SM, color: C_GREEN }).setScrollFactor(0));
-    saveBg.on('pointerover', () => saveBg.setFillStyle(0x224466));
-    saveBg.on('pointerout',  () => saveBg.setFillStyle(0x1a3a5a));
-    saveBg.on('pointerdown', () => this.saveLog());
-    y += 26;
+    // Botões de ação — 2 colunas
+    makePairBtn(b1cx, y + BH / 2, bw, 'SALVAR LOG', 0x1a3a5a, 0x224466, C_BLUE,    () => this.saveLog());
+    makePairBtn(b2cx, y + BH / 2, bw, 'FECHAR[F2]', 0x4a1a1a, 0x6a2a2a, C_RED,    () => this.close());
+    // saveStatus sobreposto ao botão salvar
+    this.saveStatus = this._track(this.add.text(tx, y - 5, '', { ...FONT_SM, color: C_GREEN }).setScrollFactor(0));
+    y += BH + 2;
+    makePairBtn(b1cx, y + BH / 2, bw, 'LIMPAR RUN', 0x4a3a00, 0x6a5a00, '#ffcc44', () => this.resetRun());
+    makePairBtn(b2cx, y + BH / 2, bw, 'RECURSOS',   0x1a3a1a, 0x2a5a2a, C_GREEN,  () => this.giveCheatResources());
+    y += BH + 2;
 
-    // Clear run button
-    const clearBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x4a3a00)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(tx, y + 2, 'LIMPAR RUN', { ...FONT, color: '#ffcc44' }).setScrollFactor(0));
-    clearBg.on('pointerover', () => clearBg.setFillStyle(0x6a5a00));
-    clearBg.on('pointerout',  () => clearBg.setFillStyle(0x4a3a00));
-    clearBg.on('pointerdown', () => this.resetRun());
-    y += 26;
-
-    // Cheat resources button
-    const cheatBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x1a3a1a)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(tx, y + 2, 'DAR RECURSOS', { ...FONT, color: C_GREEN }).setScrollFactor(0));
-    cheatBg.on('pointerover', () => cheatBg.setFillStyle(0x2a5a2a));
-    cheatBg.on('pointerout',  () => cheatBg.setFillStyle(0x1a3a1a));
-    cheatBg.on('pointerdown', () => this.giveCheatResources());
-    y += 26;
-
-    // Close button
-    const closeBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x4a1a1a)
-      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(tx, y + 2, 'FECHAR  [F2]', { ...FONT, color: C_RED }).setScrollFactor(0));
-    closeBg.on('pointerover', () => closeBg.setFillStyle(0x6a2a2a));
-    closeBg.on('pointerout',  () => closeBg.setFillStyle(0x4a1a1a));
-    closeBg.on('pointerdown', () => this.close());
-    y += 26;
-
-    // Panel side toggle
+    // Toggle lado
     const toggleLabel = this._panelSide === 'right' ? '◀ ESQUERDA' : 'DIREITA ▶';
-    const toggleBg = this._track(this.add.rectangle(mid, y + 10, PW - 12, 20, 0x1a1a3a)
+    const toggleBg = this._track(this.add.rectangle(mid, y + BH / 2, PW - 12, BH, 0x1a1a3a)
       .setScrollFactor(0).setInteractive({ useHandCursor: true }));
-    this._track(this.add.text(mid, y + 10, toggleLabel, { ...FONT, color: '#aaaaff' })
+    this._track(this.add.text(mid, y + BH / 2, toggleLabel, { ...FONT_SM, color: '#aaaaff' })
       .setScrollFactor(0).setOrigin(0.5));
     toggleBg.on('pointerover', () => toggleBg.setFillStyle(0x2a2a5a));
     toggleBg.on('pointerout',  () => toggleBg.setFillStyle(0x1a1a3a));
@@ -340,6 +301,8 @@ export class DebugOverlayScene extends Phaser.Scene {
 
     this.input.keyboard?.on('keydown-OPEN_BRACKET',   () => DebugManager.changeDepth(-1));
     this.input.keyboard?.on('keydown-CLOSED_BRACKET', () => DebugManager.changeDepth(+1));
+    this.input.keyboard?.on('keydown-DELETE', () => DebugManager.deleteSelected());
+    this.input.keyboard?.on('keydown-ESC', () => { this._clearModal(); });
 
     this.game.events.on('debug:update', (record: any) => this.refreshInfo(record), this);
   }
@@ -362,8 +325,7 @@ export class DebugOverlayScene extends Phaser.Scene {
     this.infoLines[0].setText(`tex: ${record.textureKey}`);
     this.infoLines[1].setText(`x:${record.x}  y:${record.y}`);
     this.infoLines[2].setText(`w:${record.displayWidth}  h:${record.displayHeight}`);
-    this.infoLines[3].setText(`scl: ${Math.round(record.scaleX * 100)}% (${record.scaleX})`);
-    this.infoLines[4].setText(`depth: ${record.depth}`);
+    this.infoLines[3].setText(`scl:${Math.round(record.scaleX * 100)}%  depth:${record.depth}`);
 
     if (this._fontLine) {
       if (record.isText && record.fontSize !== undefined) {
@@ -475,5 +437,251 @@ export class DebugOverlayScene extends Phaser.Scene {
     }
     this.game.events.off('debug:update', undefined, this);
     this.scene.stop(SCENE_KEYS.DEBUG_OVERLAY);
+  }
+
+  // ── Asset modal helpers ──────────────────────────────────
+
+  private _clearModal(): void {
+    this._modalObjects.forEach(o => o.destroy());
+    this._modalObjects.length = 0;
+  }
+
+  private _trackM<T extends Phaser.GameObjects.GameObject>(o: T): T {
+    this._modalObjects.push(o);
+    return o;
+  }
+
+  // Modal: lista à esquerda + preview grande à direita
+  private openAssetModal(): void {
+    this._clearModal();
+
+    const keys = DebugManager.getLoadedTextureKeys().sort();
+    if (keys.length === 0) { this.saveStatus.setText('sem texturas'); return; }
+
+    // Layout: 740×520 centrado em 400×300
+    const MW = 740;
+    const MH = 520;
+    const MX = 400;
+    const MY = 300;
+    const LIST_W   = 220;  // largura da coluna de lista
+    const PREV_W   = MW - LIST_W - 3; // largura da área de preview
+    const ITEM_H   = 16;
+    const HDR_H    = 42;   // altura do cabeçalho
+
+    const listLeft  = MX - MW / 2;               // x esquerda do modal
+    const listCX    = listLeft + LIST_W / 2;      // centro da coluna de lista
+    const prevLeft  = listLeft + LIST_W + 3;       // x início área preview
+    const prevCX    = prevLeft + PREV_W / 2;       // centro da área preview
+    const listTopY  = MY - MH / 2 + HDR_H;
+    const visibleH  = MH - HDR_H - 28;            // -28 para barra inferior
+    const maxVisible = Math.floor(visibleH / ITEM_H);
+
+    let scrollOffset  = 0;
+    let selectedKey   = keys[0];
+
+    // ── Fundo escurecido ──
+    const dim = this._trackM(this.add.rectangle(400, 300, 800, 600, 0x000000, 0.72)
+      .setScrollFactor(0).setDepth(9000).setInteractive());
+    dim.on('pointerdown', () => this._clearModal());
+
+    // ── Painel branco principal ──
+    this._trackM(this.add.rectangle(MX, MY, MW, MH, 0xf5f5f5, 1)
+      .setScrollFactor(0).setDepth(9001));
+    this._trackM(this.add.rectangle(MX, MY, MW, MH, 0x000000, 0)
+      .setScrollFactor(0).setDepth(9001).setStrokeStyle(2, 0x333333));
+
+    // Divisória vertical entre lista e preview
+    this._trackM(this.add.graphics()
+      .lineStyle(1, 0xcccccc).lineBetween(prevLeft, MY - MH / 2, prevLeft, MY + MH / 2)
+      .setScrollFactor(0).setDepth(9002));
+
+    // ── Cabeçalho ──
+    this._trackM(this.add.text(MX, MY - MH / 2 + 14, 'INSERIR ASSET', {
+      fontFamily: 'monospace', fontSize: '13px', color: '#111111', fontStyle: 'bold',
+    }).setScrollFactor(0).setDepth(9003).setOrigin(0.5));
+
+    const closeBtn = this._trackM(this.add.text(MX + MW / 2 - 8, MY - MH / 2 + 6, '✕', {
+      fontFamily: 'monospace', fontSize: '14px', color: '#cc0000',
+    }).setScrollFactor(0).setDepth(9003).setOrigin(1, 0).setInteractive({ useHandCursor: true }));
+    closeBtn.on('pointerdown', () => this._clearModal());
+
+    // Campo de filtro no cabeçalho
+    const searchBg = this._trackM(this.add.rectangle(listCX, MY - MH / 2 + 30, LIST_W - 8, 16, 0xffffff)
+      .setScrollFactor(0).setDepth(9002).setStrokeStyle(1, 0x999999));
+    const searchTxt = this._trackM(this.add.text(listLeft + 6, MY - MH / 2 + 23, '🔍 filtrar...', {
+      fontFamily: 'monospace', fontSize: '9px', color: '#888888',
+    }).setScrollFactor(0).setDepth(9003));
+    void searchBg;
+
+    // ── Área de preview ──
+    const PREV_AREA_H = MH - HDR_H - 80; // deixa 80px p/ botão na base
+    const prevAreaY   = MY - MH / 2 + HDR_H + PREV_AREA_H / 2;
+
+    // Fundo xadrez pra indicar transparência
+    const checkerGfx = this._trackM(this.add.graphics().setScrollFactor(0).setDepth(9002));
+    const drawChecker = () => {
+      checkerGfx.clear();
+      const sz = 12;
+      for (let row = 0; row * sz < PREV_AREA_H; row++) {
+        for (let col = 0; col * sz < PREV_W - 4; col++) {
+          checkerGfx.fillStyle((row + col) % 2 === 0 ? 0xcccccc : 0xffffff);
+          checkerGfx.fillRect(
+            prevLeft + 2 + col * sz,
+            MY - MH / 2 + HDR_H + row * sz,
+            sz, sz,
+          );
+        }
+      }
+    };
+    drawChecker();
+
+    // Preview image — atualizado ao selecionar item
+    let previewImg: Phaser.GameObjects.Image | null = null;
+    const MAX_PREV = Math.min(PREV_W - 16, PREV_AREA_H - 16);
+
+    const updatePreview = (key: string) => {
+      previewImg?.destroy();
+      previewImg = null;
+      if (!this.textures.exists(key)) return;
+      const tex = this.textures.get(key).getSourceImage() as HTMLImageElement;
+      const tw = tex.width || 1;
+      const th = tex.height || 1;
+      const ratio = Math.min(MAX_PREV / tw, MAX_PREV / th, 1);
+      const dw = Math.round(tw * ratio);
+      const dh = Math.round(th * ratio);
+      previewImg = this.add.image(prevCX, prevAreaY, key)
+        .setDisplaySize(dw, dh).setScrollFactor(0).setDepth(9004);
+      this._modalObjects.push(previewImg);
+
+      // Dimensões no rodapé do preview
+      dimLabel.setText(`${tw} × ${th} px`);
+    };
+
+    const dimLabel = this._trackM(this.add.text(prevCX, MY + MH / 2 - 58, '', {
+      fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+    }).setScrollFactor(0).setDepth(9003).setOrigin(0.5));
+
+    // Botão Inserir, fixo no rodapé do preview
+    const insertY  = MY + MH / 2 - 36;
+    const insertBg = this._trackM(this.add.rectangle(prevCX, insertY, PREV_W - 20, 26, 0x226622)
+      .setScrollFactor(0).setDepth(9003).setInteractive({ useHandCursor: true }));
+    const insertTxt = this._trackM(this.add.text(prevCX, insertY, '✓ Inserir na cena', {
+      fontFamily: 'monospace', fontSize: '11px', color: '#ffffff', fontStyle: 'bold',
+    }).setScrollFactor(0).setDepth(9004).setOrigin(0.5));
+    void insertTxt;
+    insertBg.on('pointerover', () => insertBg.setFillStyle(0x338833));
+    insertBg.on('pointerout',  () => insertBg.setFillStyle(0x226622));
+    insertBg.on('pointerdown', () => {
+      if (!this.targetScene || !DebugManager.isDragEnabled) {
+        this.saveStatus.setText('ative o DRAG primeiro');
+        return;
+      }
+      DebugManager.spawnAsset(this.targetScene, selectedKey);
+      this.saveStatus.setText(`✓ inserido: ${selectedKey}`);
+      this.time.delayedCall(2500, () => this.saveStatus?.setText(''));
+      this._clearModal();
+    });
+
+    // ── Lista de itens ──
+    const itemObjs: Phaser.GameObjects.GameObject[] = [];
+
+    const renderList = (filtered: string[]) => {
+      itemObjs.forEach(o => o.destroy());
+      itemObjs.length = 0;
+
+      const page = filtered.slice(scrollOffset, scrollOffset + maxVisible);
+      page.forEach((key, i) => {
+        const iy = listTopY + i * ITEM_H;
+        const isSelected = key === selectedKey;
+        const bgColor    = isSelected ? '#2255aa' : (i % 2 === 0 ? '#f0f0f0' : '#e8e8e8');
+        const fgColor    = isSelected ? '#ffffff' : '#1a1a1a';
+        const item = this.add.text(listLeft + 4, iy, key, {
+          fontFamily: 'monospace', fontSize: '10px', color: fgColor,
+          backgroundColor: bgColor,
+          padding: { x: 3, y: 2 },
+          fixedWidth: LIST_W - 8,
+        }).setScrollFactor(0).setDepth(9004).setInteractive({ useHandCursor: true });
+
+        item.on('pointerover',  () => { if (key !== selectedKey) item.setBackgroundColor('#bbddff').setColor('#111111'); });
+        item.on('pointerout',   () => { if (key !== selectedKey) item.setBackgroundColor(i % 2 === 0 ? '#f0f0f0' : '#e8e8e8').setColor('#1a1a1a'); });
+        item.on('pointerdown',  () => {
+          selectedKey = key;
+          updatePreview(key);
+          renderList(filtered);
+        });
+        itemObjs.push(item);
+        this._modalObjects.push(item);
+      });
+
+      // Indicadores de scroll
+      if (scrollOffset > 0) {
+        const up = this.add.text(listCX, listTopY - 12, '▲', {
+          fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+        }).setScrollFactor(0).setDepth(9004).setOrigin(0.5);
+        itemObjs.push(up); this._modalObjects.push(up);
+      }
+      if (scrollOffset + maxVisible < filtered.length) {
+        const dn = this.add.text(listCX, listTopY + maxVisible * ITEM_H + 2, '▼', {
+          fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+        }).setScrollFactor(0).setDepth(9004).setOrigin(0.5, 0);
+        itemObjs.push(dn); this._modalObjects.push(dn);
+      }
+    };
+
+    let currentFilter = '';
+    let filtered = keys;
+    updatePreview(selectedKey);
+    renderList(filtered);
+
+    // Scroll com roda do mouse
+    this.input.on('wheel', (_p: any, _objs: any, _dx: number, dy: number) => {
+      if (this._modalObjects.length === 0) return;
+      scrollOffset = Math.max(0, Math.min(Math.max(0, filtered.length - maxVisible), scrollOffset + (dy > 0 ? 3 : -3)));
+      renderList(filtered);
+    });
+
+    // Teclado: filtrar / navegação
+    this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
+      if (this._modalObjects.length === 0) return;
+      if (e.key === 'Escape') { this._clearModal(); return; }
+      if (e.key === 'Enter') {
+        if (!this.targetScene || !DebugManager.isDragEnabled) return;
+        DebugManager.spawnAsset(this.targetScene, selectedKey);
+        this.saveStatus.setText(`✓ inserido: ${selectedKey}`);
+        this.time.delayedCall(2500, () => this.saveStatus?.setText(''));
+        this._clearModal();
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        const idx = filtered.indexOf(selectedKey);
+        if (idx < filtered.length - 1) {
+          selectedKey = filtered[idx + 1];
+          if (idx + 1 >= scrollOffset + maxVisible) scrollOffset++;
+          updatePreview(selectedKey);
+          renderList(filtered);
+        }
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        const idx = filtered.indexOf(selectedKey);
+        if (idx > 0) {
+          selectedKey = filtered[idx - 1];
+          if (idx - 1 < scrollOffset) scrollOffset--;
+          updatePreview(selectedKey);
+          renderList(filtered);
+        }
+        return;
+      }
+      if (e.key === 'Backspace') currentFilter = currentFilter.slice(0, -1);
+      else if (e.key.length === 1) currentFilter += e.key.toLowerCase();
+      else return;
+
+      scrollOffset = 0;
+      filtered = keys.filter(k => k.toLowerCase().includes(currentFilter));
+      selectedKey = filtered[0] ?? selectedKey;
+      searchTxt.setText(currentFilter ? `🔍 "${currentFilter}" (${filtered.length})` : '🔍 filtrar...');
+      updatePreview(selectedKey);
+      renderList(filtered);
+    });
   }
 }
