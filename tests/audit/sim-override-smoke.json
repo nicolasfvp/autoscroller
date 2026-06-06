@@ -1,0 +1,8 @@
+{
+  "matchups": [
+    { "id": "base-reckless", "class": "warrior", "stage": "mid", "runXP": 350, "deck": ["t2-attack-attack","t2-attack-attack","t2-attack-defense","t2-agility-attack","t2-counter-counter"], "enemy": "mutated_salamander", "loopMultiplier": 1.0, "repeats": 4 },
+    { "id": "buff-reckless-val30", "class": "warrior", "stage": "mid", "runXP": 350, "deck": ["t2-attack-attack","t2-attack-attack","t2-attack-defense","t2-agility-attack","t2-counter-counter"], "enemy": "mutated_salamander", "loopMultiplier": 1.0, "repeats": 4, "cardOverrides": { "t2-attack-attack": { "cooldown": 1.2, "effectsPatch": [ { "value": 30 } ] } } },
+    { "id": "base-cd-cut", "class": "warrior", "stage": "mid", "runXP": 350, "deck": ["t2-counter-counter","t2-counter-counter","t2-attack-defense","t2-defense-defense","t1-defense"], "enemy": "mutated_salamander", "loopMultiplier": 1.0, "repeats": 4 },
+    { "id": "mage-direct-elemrate", "class": "mage", "stage": "boss1", "runXP": 520, "deck": ["t2-fire-fire","t2-earth-fire","t2-fire-water","t1-fire","t2-air-fire","t3-attack-fire-fire","t2-water-water","t2-air-water","t2-agility-fire","t3-earth-fire-fire","t2-air-earth"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 5 }
+  ]
+}

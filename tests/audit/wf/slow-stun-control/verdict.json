@@ -1,0 +1,54 @@
+{
+  "lane": "slow-stun-control",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "advResultsPath": "tests/audit/wf/slow-stun-control/adv-results.json",
+  "advRepeats": 8,
+  "overallAssessment": "Plan and execution are sound. Decks are realistic, class-appropriate (mage/elemental), correct stages and profiles; boss1 vs doom_knight (380/def3, mult 1.0) and late vs iron_golem (409/def4) both covered; swap tests use a fair damage filler (Tempest Pike). All quoted numbers reproduce exactly against results.json, and an independent 8-repeat adversarial re-run (adv-results.json) reproduced every load-bearing claim: the boss1 inversion (pure wr=1.0 / finisher wr=0, 8/8 deaths), Stormrage and Frostbind both dropping mutated_salamander (wr=0, 8/8), Quake winning all normals but slower TTK, and Dust Plague the lone deck to beat iron_golem (wr=1.0, 62.9s, 10.9% HP). One real error: the designer used a /5 denominator for the late swap normal battery that actually contains only 4 normals (depths_horror, fire_elemental, werewolf, mutated_salamander) -- win COUNTS are correct but denominators are inflated; SSC-4's 'normals to 5/5' is actually 4/4. Diagnosis that the boss is NOT over-tuned is verified against baseline (mage-poison-late, mage-poison-block-late, war-armor-finisher-late all beat iron_golem; mage-control-late loses).",
+  "verdicts": [
+    {
+      "findingId": "SSC-1",
+      "status": "revised",
+      "reason": "Reproduced: adv-swap-quake wins all 4 normals (NOT 4/5 -- battery is 4 normals) but adds zero damage; TTK signal is noisy (depths_horror 21875 vs base 18525 slower, but mutated_salamander 31300 vs 33000 FASTER). Quake is genuinely the weakest filler (pure 4[slow], no damage) so off_curve_weak is fair, but it does not actually drop a win and severity med is borderline. The proposed double buff (cd 2->1.4 AND 4->5 slow) over-corrects a T1 clean-single-effect card.",
+      "revisedChange": "C1 CD-only rescue: Quake cd 2s -> 1.4s, keep 4[slow], cost 1m. Drop the simultaneous +slow; re-measure before adding value. Severity low-med."
+    },
+    {
+      "findingId": "SSC-2",
+      "status": "confirmed",
+      "reason": "Reproduced at 8 repeats: adv-swap-frostbind loses mutated_salamander (wr=0, 8/8 deaths) where adv-swap-base wins it (wr=1.0). Frostbind (1-2[stun]+4[armor], no damage) lowers throughput below a damage filler. Proposed cd 2s->1.4s with no added damage and Vengeance kept is C1/C5-compliant. (Denominator is 3/4 not 3/5.)"
+    },
+    {
+      "findingId": "SSC-3",
+      "status": "confirmed",
+      "reason": "Highest-stakes weak claim and it reproduces robustly: adv-swap-stormrage loses mutated_salamander (wr=0, 8/8 deaths) vs base wr=1.0. Catalog confirms Stormrage is fully rage-gated ('If you have [rage]: Apply 8[slow]') with NO floor, so in a mage slow/stun deck it frequently does nothing -- a T3 below every T2. The fix is correct per the tier charter: BUFF the T3 by adding a real slow floor (5[slow]) and keeping the rage line as the build-around ceiling, no damage (C5), cd 2.4->2.0 (C1). Confirm."
+    },
+    {
+      "findingId": "SSC-4",
+      "status": "revised",
+      "reason": "Core 'no nerf' is correct and reproduced: adv-swap-dustplague is the ONLY swap deck to beat iron_golem (wr=1.0, 62900ms, 455 dmg, 10.9% HP) and it is not oppressive (62.9s grind, no direct damage, peakOPS 4.33) -- the C3 fantasy. Only correction: it lifts normals to 4/4 (full late battery), NOT '5/5'; the deck has 4 normal enemies. No balance change; evidence wording corrected.",
+      "revisedChange": "NO NERF (confirmed). Correct the evidence: Dust Plague lifts normals to 4/4 (not 5/5); late swap battery is 4 normals."
+    },
+    {
+      "findingId": "SSC-5",
+      "status": "confirmed",
+      "reason": "Reproduced: tectonic-only-boss1 wr=0 (4 deaths, 133 dmg), ctrl-boss1-tectonic wr=0 while the cheaper ctrl-boss1-pure won; ctrl-late-tectonic wr=0 vs iron_golem. Despite peakOPS 70 it self-limits via the 3s+2m + exhaust elite cost (C1-compliant) -- NOT oppressive. 'No nerf' is right. The OPTIONAL mana trim (3s+2m->3s+1m) is correctly flagged as optional and keeps damage as-is; acceptable but should be left out of the mandatory change set since making a 50-Pierce+3[stun] nuke more castable risks edging control toward a race-winner (C3)."
+    },
+    {
+      "findingId": "SSC-6",
+      "status": "confirmed",
+      "reason": "Headline boss1 inversion reproduced at 8 repeats: adv-boss1-pure wr=1.0 (84000ms, 47 cards, 28.1% HP) vs adv-boss1-finisher wr=0 (8/8 deaths). Mid echoes it (ctrl-mid 3/5 normal losses vs ctrl-mid-dmg 4/5 wins -- both verified). Diagnosis (control buys time but chip damage too low; fix via slow->damage CONVERTERS not by buffing control) respects C3/C5. Proposed CD cuts to Thunderstrike Catalyst (2.4->2.0) and Static Skirmish (1.8->1.6) are C1-compliant and target the legit narrow slow->damage line. The specific converter buffs are not directly sim-verified, so med confidence is appropriate."
+    },
+    {
+      "findingId": "SSC-7",
+      "status": "revised",
+      "reason": "Conclusion (Concussive Smash T3 dominates the T2 stuns -> no tier violation) is directionally supported: tier-t3-stun beats tier-t2-stun on every normal TTK (depths_horror 13825 vs 19125, fire_elemental 14000 vs 19000, werewolf 19000 vs 26000, mutated_salamander 22900 vs 27300). BUT the A/B is NOT a clean one-card swap: tier-t3-stun removes THREE T2 cards (Tremor Lock, Frostbind, Bedrock Snare) and adds 2x Concussive Smash + an extra Galetide-class card, so the delta overstates Concussive Smash's isolated edge. 'No change' verdict is safe (it is a no-op finding), but the evidence should be labeled a deck-level comparison, not an isolated tier swap.",
+      "revisedChange": "No card change (confirmed no-op). Re-label evidence as a deck-level T3-vs-T2 comparison, not a clean single-card tier swap; an isolated Concussive-Smash-vs-Tremor-Lock swap was not run."
+    },
+    {
+      "findingId": "SSC-8",
+      "status": "confirmed",
+      "reason": "Reproduced: every late control deck except swap-dustplague died to iron_golem (ctrl-late-pure/dmg/tectonic, all swap variants, tier-t2/t3-stun all wr=0; only swap-dustplague wr=1.0). The 'boss not over-tuned, control under-tuned' diagnosis is verified against baseline sim-battle-results.json: mage-poison-late, mage-poison-block-late, and war-armor-finisher-late all beat iron_golem while mage-control-late loses (wr=0, dmg=271). Proposed converter CD cuts (same as SSC-6) keep slow/stun values pure (C3/C5) and are C1-compliant. Med confidence appropriate (fix untested)."
+    }
+  ]
+}

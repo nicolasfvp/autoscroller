@@ -1,0 +1,326 @@
+{
+  "decks": [
+    {
+      "id": "poison-early-core",
+      "label": "Poison mage EARLY (Mire Bloom + Spark core)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "early",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t1-fire",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-mid-core",
+      "label": "Poison mage MID (T2/T3 appliers, no engine)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "mid",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-mid-engine",
+      "label": "Poison mage MID (Slipvenom + Bog Catalyst engine)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "mid",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-boss1-engine",
+      "label": "Poison mage BOSS1 vs doom_knight (full engine)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-boss1-noengine",
+      "label": "Poison mage BOSS1 vs doom_knight (appliers only, no Slipvenom/Catalyst)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-earth-water",
+        "t3-agility-air-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-boss1-detonator",
+      "label": "Poison mage BOSS1 vs doom_knight (engine + detonators)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t3-air-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-late-engine",
+      "label": "Poison mage LATE (full engine 12-card)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t3-air-earth-water",
+        "t3-agility-counter-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "poison-late-defensive",
+      "label": "Poison mage LATE (defensive poison appliers - dead-card suspects)",
+      "archetype": "poison-block",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-defense-defense-water",
+        "t3-defense-water-water",
+        "t3-defense-earth-water",
+        "t3-counter-earth-water",
+        "t3-earth-water-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility",
+        "t1-defense"
+      ]
+    },
+
+    {
+      "id": "swap-base-filler",
+      "label": "SWAP base: poison shell + Spark filler",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-slipvenom",
+      "label": "SWAP +Slipvenom Tempo (T3 engine)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-water-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-bogcatalyst",
+      "label": "SWAP +Bog Catalyst (T3 doubler)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-earth-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-stagnant-bulwark",
+      "label": "SWAP +Stagnant Bulwark (T3 defensive poison, 6.67 OPS)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-defense-defense-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-bogplate",
+      "label": "SWAP +Bogplate (T3 defensive poison, 9.67 OPS)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-defense-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-bogwrath",
+      "label": "SWAP +Bogwrath (T3 defensive poison, 6.67 OPS)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-counter-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-alchemic-drain",
+      "label": "SWAP +Alchemic Drain (T3 poison+heal, 8 OPS)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-earth-fire-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-mireglide",
+      "label": "SWAP +Mireglide (T3 poison+armor+haste, 11.2 OPS)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "tierab-t2-mirebloom",
+      "label": "TIER A/B: shell + Mire Bloom (T2 poison)",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "tierab-t3-bogcatalyst",
+      "label": "TIER A/B: shell + Bog Catalyst (T3 poison) replacing 1 Mire Bloom",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-earth-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "tierab-t3-stagnant",
+      "label": "TIER A/B: shell + Stagnant Bulwark (T3 poison) replacing 1 Mire Bloom",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-defense-defense-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    }
+  ]
+}

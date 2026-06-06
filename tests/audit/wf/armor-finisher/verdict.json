@@ -1,0 +1,56 @@
+{
+  "lane": "armor-finisher",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Execution is clean and reproducible: the sim ran (results.json present, 62 matchups, ids match decks/matchups), and EVERY quoted number reproduces byte-exact on re-run (the sim is deterministic/seeded, so there are no RNG flukes between runs). The C3 viability story (ARMFIN-1/5/6) is solid and well-grounded. The Aegis-is-dead finding (ARMFIN-2) is CONFIRMED and is actually STRONGER than the designer realized: their swap shell already contained Aegis (t3-defense-defense-defense), so their headline swap test compared 2xAegis vs 1xAegis, not +Aegis vs base. I rebuilt a CLEAN base shell (no Aegis) and isolated each finisher individually (adv-results.json): a single Aegis still yields wr=0/deaths=5 and LOWER damage (300 vs 378 base) - it actively displaces a working filler. The Mountain's-Answer tier-violation (ARMFIN-3) does NOT survive scrutiny: it is a shell-contamination artifact. The designer's own tierAB test (clean shell) shows T3 Mountain's (ttk 89700) BEATING T2 Granite (99500) - the opposite of their swap-test headline (Mountain's 126300 vs Granite 95300). My clean isolation agrees: Mountain's 92100 ~= Shield Bash 91300 < Granite 103100, i.e. Mountain's is competitive, not dominated. The dramatic 126300 came from the baked-in Aegis diluting the deck plus a draw-order interaction that starved Mountain's armor>=32 gate. Consequently ARMFIN-4 (Shield Bash off_curve_strong) is overstated: in clean isolation Shield Bash merely TIES the T3 finishers (it does not beat them), and it is balanced by being non-pierce vs the armored boss. Net: BUFF Aegis (confirmed dead, root cause is the on_armor_break trigger gate, not just the flat 18), but do NOT buff Mountain's Answer and do NOT treat Shield Bash as off-curve.",
+  "verdicts": [
+    {
+      "findingId": "ARMFIN-1",
+      "status": "confirmed",
+      "reason": "C3 race-losing baseline reproduces. My clean no-Aegis base shell: adv-clean-base-boss1 vs doom_knight wr=0, deaths=5/5 (matches swap-base wr=0 deaths=5). Plain-armor mid timeout (arm-pure-noFin-mid vs mutated_salamander wr=0, to=5) and iron_golem timeouts (arm-pure-noFin-late/swap-base-late to=5) are all real in results.json. Finisher decks clear their batteries and beat doom_knight (arm-fin-mountains-boss1 wr=1 ttk=32500 hp%=0.662). No change is correct.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "ARMFIN-2",
+      "status": "confirmed",
+      "reason": "CONFIRMED and reinforced. Original swap test was methodologically weak (base shell already contained Aegis, so it tested 2xAegis vs 1xAegis). My corrected clean-shell isolation (adv-results.json, 5 repeats, reproduced identically on a 2nd run) still shows +Aegis = wr=0 deaths=5/5, AND lower damage than the filler base (300 vs 378) - Aegis is dead weight that actively crowds out a working slot. Mechanistic cause verified in cards.json/EnemyAI.ts: the 'Brace: Deal 18 Pierce' payload is an aura with trigger on_armor_break that fires only when the hero's armor pool transitions >0 -> 0 from an enemy hit; an armor-stacking deck keeps armor high so it almost never fires. BUFF direction (armor-scaling payoff, never nerf a T2) is C1/C3-compliant (stays inside the single armor->damage line). One caveat noted in revised guidance.",
+      "revisedChange": "Keep the BUFF, but the load-bearing fix is the TRIGGER, not the flat value. on_armor_break almost never fires on an armor-stacking deck, so 'Deal 14 Pierce, +1 per 4[armor]' will still rarely fire and may under-correct. Recommend EITHER (a) make the payoff an unconditional on-play armor-scaling hit, e.g. 'Gain 22[armor]([vit]). Deal 6 Pierce, +1 per 4[armor] you have.' (uncapped, no Brace gate) - this guarantees it pulls its weight like Body Slam/Mountain's; OR (b) if Brace flavor must stay, broaden the trigger to fire on any armor-absorbed hit (on_hit_taken with armorPrevented>0) rather than only on full armor break, and add the +1 per 4[armor] scaling. Cost stays 2s; cut CD 2.4->2.0s only if still below the pack after re-sim. Re-sim acceptance: +Aegis on the clean shell must flip wr 0->1 and land ttk within ~10-15% of Mountain's/Body Slam (~90k clean-shell band)."
+    },
+    {
+      "findingId": "ARMFIN-3",
+      "status": "declined",
+      "reason": "The T3>T2 tier violation is NOT supported once the shell is cleaned. (1) The designer's OWN tierAB test contradicts their swap headline: tierAB-T3mountains ttk=89700 BEATS tierAB-T2granite ttk=99500. (2) My clean single-finisher isolation (adv-results.json): Mountain's Answer ttk=92100 ~= Shield Bash 91300, and BEATS Granite 103100 - no T2 dominates it. (3) The cited swap-mountains ttk=126300 vs swap-shieldbash 58500 is a deterministic artifact of the designer's swap shell, which baked in the dead Aegis (t3-defense-defense-defense) plus a draw-order interaction that starved Mountain's armor>=32 gate; remove that contamination and the gap vanishes. Buffing Mountain's would over-correct: it already AoE-clears late iron_golem at dmg=606 / ttk=32500 (arm-fin-mountains-late), and adding '+1 Pierce per 2[armor] above 32' on top of a clean-shell win would push it well past the T2 baseline and risk an oppressive single-target finisher.",
+      "revisedChange": "No card change. If anything is true here it is a deck-construction lesson (don't run two pure-armor T3 walls in the same shell), not a card bug. Mountain's Answer is in-band."
+    },
+    {
+      "findingId": "ARMFIN-4",
+      "status": "revised",
+      "reason": "Overstated. In the contaminated swap shell Shield Bash (58500) looked like it 'beats both canonical T3 finishers', but in a clean isolation it does NOT: Shield Bash ttk=91300 merely TIES Mountain's 92100 and Body Slam 90900 - it ties, it does not beat. It is also self-balancing: Shield Bash's damage is non-pierce (no pierce_armor flag in cards.json), so vs doom_knight def 3 / iron_golem def 4 it loses value the T3 pierce finishers keep. Its 1s cost / 1.6s CD edge is a legitimate, intended T2 strength (snappy, cheap, but flat & non-pierce). It is the correct clean T2 baseline, not an off-curve-strong card. The 'do not nerf, flag only' conclusion is right, but kind=off_curve_strong and severity=med are too high.",
+      "revisedChange": "Downgrade to a non-actionable note: kind -> off_curve (informational) / severity LOW. Shield Bash is the healthy T2 baseline the T3s should match; no flag of strength is warranted. Keep it untouched (T3>T2 rule). Once Aegis (ARMFIN-2) is fixed, the entire finisher line clusters in the ~90k clean-shell band with Shield Bash as a fair floor."
+    },
+    {
+      "findingId": "ARMFIN-5",
+      "status": "confirmed",
+      "reason": "Body Slam Vow is an in-band T3 finisher. Reproduced: swap-bodyslam ttk=60100 (contaminated shell) and adv-clean-bodyslam ttk=90900 (clean shell, wr=1). It solo-carries late iron_golem (swap-bodyslam-late wr=1 ttk=39300 dmg=512) where base/aegis/mountains-swap timeout. Not oppressive (needs the armor wall; can't win a no-armor deck). One nuance worth recording: in clean isolation Body Slam's HP cushion was lower than peers (hp%=0.437 vs 0.662) because it is the most offense-leaning of the line - acceptable, not a problem. No change is correct; use it as the in-band ceiling reference.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "ARMFIN-6",
+      "status": "confirmed",
+      "reason": "doom_knight (380HP, loop-10, mult 1.0) is beatable-not-trivial WITH a working finisher: arm-fin-mountains-boss1 wr=1 ttk=32500 hp%=0.662; arm-fin-bodyslam/aegis decks wr=1 with HP cost; while the finisher-less wall fails (clean base wr=0 deaths=5; arm-pure-noFin only 'wins' at the 180s cap at 4% HP). Matches the brief's first-boss target. No boss retune needed. The real gap (a player who built around Aegis underperforms) is closed by fixing ARMFIN-2 alone.",
+      "revisedChange": null
+    }
+  ],
+  "newFindings": [
+    {
+      "id": "ADV-ARMFIN-A",
+      "kind": "tier_violation",
+      "target": "swap-test methodology (base shell pre-loaded with the card under test's own line)",
+      "evidence": "The lane's swap base shell (swap-base-boss1) already contains t3-defense-defense-defense (Aegis) and two other pure-armor T3 walls. The Aegis swap therefore added a SECOND Aegis (2xAegis vs 1xAegis), and every other finisher was measured ON TOP of a dead Aegis. This inflated TTKs and manufactured the Mountain's-vs-T2 'violation'. Proof: designer's own tierAB (Aegis-free) reverses the result (T3 Mountain's 89700 < T2 Granite 99500), and my clean-shell isolation (adv-results.json) clusters all real finishers at ~90-103k with Aegis still dead.",
+      "severity": "low",
+      "proposedChange": "Process note for the synthesizer: trust the clean tierAB / adv-results.json numbers over the contaminated swap-* numbers for this lane. Only ARMFIN-2 (Aegis) is a real card bug; ARMFIN-3 and ARMFIN-4 are shell artifacts.",
+      "confidence": "high"
+    }
+  ]
+}

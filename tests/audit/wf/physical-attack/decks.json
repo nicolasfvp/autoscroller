@@ -1,0 +1,448 @@
+{
+  "_comment": "LANE: physical-attack. Pure-physical warrior across stages + boss1 (doom_knight) + late (iron_golem). Includes agility-spam outliers and swap/tier-A-B controls. All ids verified against card-catalog.json.",
+  "decks": [
+    {
+      "id": "phys-early",
+      "label": "Pure physical (early)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "early",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-agility-agility"
+      ]
+    },
+    {
+      "id": "phys-mid",
+      "label": "Pure physical (mid T2 core)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-air-attack",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "phys-boss1-balanced",
+      "label": "Pure physical balanced (boss1)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-counter",
+        "t3-air-attack-attack",
+        "t3-attack-earth-earth",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "phys-boss1-t2spam",
+      "label": "Cheap low-CD T2 spam (boss1)",
+      "archetype": "pure-physical-spam",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-agility-agility",
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t2-air-attack",
+        "t2-attack-earth",
+        "t2-attack-defense"
+      ]
+    },
+    {
+      "id": "phys-boss1-t3finisher",
+      "label": "T3 big-finisher physical (boss1)",
+      "archetype": "pure-physical-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t3-attack-earth-earth",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-counter",
+        "t3-attack-counter-counter",
+        "t3-attack-attack-earth",
+        "t3-air-attack-earth",
+        "t3-attack-defense-earth",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "phys-boss1-agility",
+      "label": "Agility-spam outliers (boss1)",
+      "archetype": "agility-spam",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-agility-attack",
+        "t3-agility-air-attack",
+        "t3-agility-agility-agility",
+        "t3-agility-agility-attack",
+        "t3-agility-attack-attack",
+        "t1-agility",
+        "t2-agility-agility",
+        "t2-agility-counter",
+        "t3-agility-attack-earth",
+        "t2-attack-attack"
+      ]
+    },
+    {
+      "id": "phys-late-balanced",
+      "label": "Pure physical balanced (late)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-counter",
+        "t3-air-attack-attack",
+        "t3-attack-earth-earth",
+        "t3-attack-attack-earth",
+        "t3-attack-counter-counter",
+        "t3-air-attack-defense",
+        "t2-attack-defense",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "phys-late-finisher",
+      "label": "T3 big-finisher physical (late)",
+      "archetype": "pure-physical-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t3-attack-earth-earth",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-counter",
+        "t3-attack-counter-counter",
+        "t3-attack-attack-earth",
+        "t3-air-attack-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-counter-earth",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-earth",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "phys-late-agility",
+      "label": "Agility-spam outliers (late)",
+      "archetype": "agility-spam",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-agility-attack",
+        "t3-agility-air-attack",
+        "t3-agility-agility-agility",
+        "t3-agility-agility-attack",
+        "t3-agility-attack-attack",
+        "t1-agility",
+        "t2-agility-agility",
+        "t2-agility-counter",
+        "t3-agility-attack-earth",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "swap-boss1-FILLER",
+      "label": "SWAP base + filler Jab (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "swap-boss1-QUICKSTRIKE",
+      "label": "SWAP +Quickstrike t2-agility-attack (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t2-agility-attack",
+        "t2-agility-attack",
+        "t2-agility-attack"
+      ]
+    },
+    {
+      "id": "swap-boss1-SKYWIRE",
+      "label": "SWAP +Skywire t3-agility-air-attack (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-agility-air-attack",
+        "t3-agility-air-attack",
+        "t3-agility-air-attack",
+        "t3-agility-air-attack"
+      ]
+    },
+    {
+      "id": "swap-boss1-QSIGIL",
+      "label": "SWAP +Quickstep Sigil t3-agility-agility-agility (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-agility-agility-agility",
+        "t3-agility-agility-agility",
+        "t3-agility-agility-agility",
+        "t3-agility-agility-agility"
+      ]
+    },
+    {
+      "id": "swap-boss1-MTNWILL",
+      "label": "SWAP +Mountain's Will t3-attack-earth-earth (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-attack-earth-earth",
+        "t3-attack-earth-earth",
+        "t3-attack-earth-earth",
+        "t3-attack-earth-earth"
+      ]
+    },
+    {
+      "id": "swap-boss1-CLEAVER",
+      "label": "SWAP +Cleaver's Tax t3-attack-counter-counter (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-attack-counter-counter",
+        "t3-attack-counter-counter",
+        "t3-attack-counter-counter",
+        "t3-attack-counter-counter"
+      ]
+    },
+    {
+      "id": "swap-boss1-BERSERKER",
+      "label": "SWAP +Berserker's Ledger t3-attack-attack-attack (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-attack",
+        "t3-attack-attack-attack"
+      ]
+    },
+    {
+      "id": "swap-boss1-CONCUSSIVE",
+      "label": "SWAP +Concussive Smash t3-attack-attack-earth (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-attack-attack-earth",
+        "t3-attack-attack-earth",
+        "t3-attack-attack-earth",
+        "t3-attack-attack-earth"
+      ]
+    },
+    {
+      "id": "swap-boss1-BLOODLASH",
+      "label": "SWAP +Bloodlash Salvo t3-attack-attack-counter (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t2-agility-counter",
+        "t1-attack",
+        "t3-attack-attack-counter",
+        "t3-attack-attack-counter",
+        "t3-attack-attack-counter",
+        "t3-attack-attack-counter"
+      ]
+    },
+    {
+      "id": "ab-boss1-T2-granite",
+      "label": "A/B T2 Granite Lunge x4 (boss1)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-attack",
+        "t2-attack-earth",
+        "t2-attack-earth",
+        "t2-attack-earth",
+        "t2-attack-earth"
+      ]
+    },
+    {
+      "id": "ab-boss1-T3-earthcleaver",
+      "label": "A/B T3 Earthcleaver x4 (boss1)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-attack",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth"
+      ]
+    },
+    {
+      "id": "ab-late-T2-granite",
+      "label": "A/B T2 Granite Lunge x4 (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-attack",
+        "t2-attack-earth",
+        "t2-attack-earth",
+        "t2-attack-earth",
+        "t2-attack-earth"
+      ]
+    },
+    {
+      "id": "ab-late-T3-earthcleaver",
+      "label": "A/B T3 Earthcleaver x4 (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t2-air-attack",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-attack",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-defense-earth"
+      ]
+    }
+  ]
+}

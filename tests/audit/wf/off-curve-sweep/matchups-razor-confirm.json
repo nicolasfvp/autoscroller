@@ -1,0 +1,490 @@
+{
+  "matchups": [
+    {
+      "id": "razor5-mid-FILLER__vs__mutated_salamander",
+      "label": "hit5 host + FILLER(Jab) vs mutated_salamander (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-attack"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-FILLER__vs__venomous_kobra",
+      "label": "hit5 host + FILLER(Jab) vs venomous_kobra (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-attack"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-FILLER__vs__lava_golen",
+      "label": "hit5 host + FILLER(Jab) vs lava_golen (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-attack"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-FILLER__vs__skeleton",
+      "label": "hit5 host + FILLER(Jab) vs skeleton (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-attack"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-FILLER__vs__werewolf",
+      "label": "hit5 host + FILLER(Jab) vs werewolf (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-attack"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE__vs__mutated_salamander",
+      "label": "hit5 host + Razor Stance vs mutated_salamander (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE__vs__venomous_kobra",
+      "label": "hit5 host + Razor Stance vs venomous_kobra (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE__vs__lava_golen",
+      "label": "hit5 host + Razor Stance vs lava_golen (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE__vs__skeleton",
+      "label": "hit5 host + Razor Stance vs skeleton (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE__vs__werewolf",
+      "label": "hit5 host + Razor Stance vs werewolf (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE__vs__mutated_salamander",
+      "label": "hit5 host + Razor Cadence (T3 analog) vs mutated_salamander (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE__vs__venomous_kobra",
+      "label": "hit5 host + Razor Cadence (T3 analog) vs venomous_kobra (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE__vs__lava_golen",
+      "label": "hit5 host + Razor Cadence (T3 analog) vs lava_golen (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE__vs__skeleton",
+      "label": "hit5 host + Razor Cadence (T3 analog) vs skeleton (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE__vs__werewolf",
+      "label": "hit5 host + Razor Cadence (T3 analog) vs werewolf (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RIPOSTE__vs__mutated_salamander",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1) vs mutated_salamander (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RIPOSTE__vs__venomous_kobra",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1) vs venomous_kobra (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RIPOSTE__vs__lava_golen",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1) vs lava_golen (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RIPOSTE__vs__skeleton",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1) vs skeleton (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-mid-RIPOSTE__vs__werewolf",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1) vs werewolf (mid)",
+      "archetype": "razor5-mid",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t1-counter"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-boss1-FILLER__vs__doom_knight",
+      "label": "hit5 host boss1 + FILLER(Jab) vs BOSS doom_knight (boss1)",
+      "archetype": "razor5-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-defense-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-boss1-RAZORSTANCE__vs__doom_knight",
+      "label": "hit5 host boss1 + Razor Stance vs BOSS doom_knight (boss1)",
+      "archetype": "razor5-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-defense-defense",
+        "t2-counter-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "razor5-boss1-RAZORCADENCE__vs__doom_knight",
+      "label": "hit5 host boss1 + Razor Cadence vs BOSS doom_knight (boss1)",
+      "archetype": "razor5-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t2-attack-counter",
+        "t2-defense-defense",
+        "t3-agility-counter-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    }
+  ]
+}

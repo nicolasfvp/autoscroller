@@ -287,7 +287,7 @@ export class CityHubScene extends Scene {
       const btnCX   = ((-PW / 2 + 10) + panelW + PW / 2) / 2 + 7;
       const btnCY   = yOff + SECTION_H / 2;
       const btnAlpha = canAfford ? 1 : 0.45;
-      const btnKey   = this.textures.exists('btn_melhorar') ? 'btn_melhorar' : 'btn_sim_melhorar';
+      const btnKey   = 'btn_melhorar';
       if (this.textures.exists(btnKey)) {
         const simImg = this.add.image(btnCX, btnCY, btnKey);
         simImg.setScale(SECTION_H / simImg.height).setAlpha(btnAlpha);

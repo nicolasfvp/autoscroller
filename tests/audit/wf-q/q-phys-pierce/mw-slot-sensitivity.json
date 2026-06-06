@@ -1,0 +1,29 @@
+{
+  "_comment": "Q(a) robustness: P0-4 (MW buffed) alone vs doom_knight at dmg9, sweeping the deck SLOT of Mountain's Will (fixed-order engine, no shuffle). slot1 won 8/8, slot9 lost 0/8. Test slot3 and slot5 to find how slot-sensitive the 'MW alone fixes the boss' claim is. 8 reps. If the claim only holds when MW is front-loaded, that is a material caveat for ship-one.",
+  "matchups": [
+    {
+      "id": "MW-buff-slot3",
+      "label": "MW buffed at slot3 vs doom_knight dmg9",
+      "class": "warrior", "stage": "boss1", "archetype": "pure-physical",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t3-attack-earth-earth", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] } }
+    },
+    {
+      "id": "MW-buff-slot5",
+      "label": "MW buffed at slot5 vs doom_knight dmg9",
+      "class": "warrior", "stage": "boss1", "archetype": "pure-physical",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t3-attack-earth-earth", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] } }
+    },
+    {
+      "id": "MW-buff-slot7",
+      "label": "MW buffed at slot7 vs doom_knight dmg9",
+      "class": "warrior", "stage": "boss1", "archetype": "pure-physical",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-earth-earth", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] } }
+    }
+  ]
+}

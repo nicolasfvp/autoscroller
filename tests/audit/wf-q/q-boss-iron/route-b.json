@@ -1,0 +1,27 @@
+{
+  "_comment": "ROUTE-B test: EnemyAffinity.ts temporarily patched to boss defense gain 3 (1.5*m), cap 24. These matchups keep the REAL affinity:defense so the patched code path runs. Same fixed strong-late-physical deck. Compare iron_golem here (route B) against the route-A (affinity:null) numbers in iron-defang-results.json. Also boss_iron_golem (defense affinity) to confirm route B keeps the endgame boss hard.",
+  "matchups": [
+    {
+      "id": "RB-iron_golem-gain3cap24",
+      "label": "iron_golem ROUTE-B (defense affinity, patched gain3/cap24, HP400 def4 dmg10, shield+8)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "RB-iron_golem-gain3cap24-shield4",
+      "label": "iron_golem ROUTE-B + shield+4/8s",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "behaviors": [{ "type": "shield", "interval": 8000, "shieldAmount": 4 }] }
+    },
+    {
+      "id": "RB-boss_iron_golem-gain3cap24",
+      "label": "boss_iron_golem ROUTE-B (defense affinity patched, HP470 def4 dmg12, shield+12, enrage1.4) -- should stay HARD",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "boss_iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    }
+  ]
+}

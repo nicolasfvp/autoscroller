@@ -1,0 +1,37 @@
+{
+  "_comment": "Q(a) decompose: which half of the control CD bundle does the work? A=only converters cut (TStrike 2.4->2.0, Static 1.8->1.6), B=only pure-control cut (Frostbind 2->1.4, Quake 2->1.4). Compare to baseline + full bundle from control-cd-results. Same front-loaded deck, late mult 1.15 + doom_knight.",
+  "matchups": [
+    {
+      "id": "dec-convOnly-werewolf",
+      "label": "converters-CD-only vs werewolf",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "werewolf", "loopMultiplier": 1.15, "repeats": 6,
+      "cardOverrides": { "t3-air-attack-counter": { "cooldown": 2.0 }, "t3-agility-air-counter": { "cooldown": 1.6 } }
+    },
+    {
+      "id": "dec-pureOnly-werewolf",
+      "label": "pure-control-CD-only vs werewolf",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "werewolf", "loopMultiplier": 1.15, "repeats": 6,
+      "cardOverrides": { "t2-water-water": { "cooldown": 1.4 }, "t1-earth": { "cooldown": 1.4 } }
+    },
+    {
+      "id": "dec-convOnly-doomknight",
+      "label": "converters-CD-only vs doom_knight",
+      "class": "mage", "stage": "boss1", "runXP": 520, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": { "t3-air-attack-counter": { "cooldown": 2.0 }, "t3-agility-air-counter": { "cooldown": 1.6 } }
+    },
+    {
+      "id": "dec-pureOnly-doomknight",
+      "label": "pure-control-CD-only vs doom_knight",
+      "class": "mage", "stage": "boss1", "runXP": 520, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": { "t2-water-water": { "cooldown": 1.4 }, "t1-earth": { "cooldown": 1.4 } }
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "matchups": [
+    {
+      "id": "PP1-base-comparator",
+      "label": "BASELINE comparator: engine deck, NO detonator (Mireglide in slot) - proposal says WINS 5/5",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-agility-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "PP1-lance-current-slot6",
+      "label": "Drowning Lance CURRENT (consume-all), in original slot 6",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "PP1-lance-current-front",
+      "label": "Drowning Lance CURRENT (consume-all), moved to FRONT slot 0 (fixed-order fairness)",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "PP1-lance-rework-half-front",
+      "label": "Drowning Lance PROPOSED: consume HALF (per-stack 5 on half pool = 2.5/stk full snapshot), base 4->6 Pierce, cd 2.4->1.8, wipe weakened (-4 fixed) to leave a tail ticking. FRONT slot.",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-attack-water-water": {
+          "cooldown": 1.8,
+          "effectsPatch": [
+            { "value": 6 },
+            { "value": 2.5 },
+            { "value": -4 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "PP1-lance-rework-nowipe-front",
+      "label": "OVER-CORRECTION PROBE: Drowning Lance per-stack 5 on FULL pool dmg AND NO wipe (both ticks AND full detonate). base 4->6, cd 1.8. FRONT slot.",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-attack-water-water": {
+          "cooldown": 1.8,
+          "effects": [
+            { "type": "damage", "value": 6, "target": "enemy", "pierce_armor": true },
+            { "type": "damage", "value": 5, "target": "enemy", "pierce_armor": true, "consume_stack_value": "poison" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "PP1-marsh-current-front",
+      "label": "Marsh Squall CURRENT (consume-all, exhaust), FRONT slot 0",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-air-earth-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "PP1-marsh-rework-half-front",
+      "label": "Marsh Squall PROPOSED: per-stack 4->6 on half pool (=3/stk full snapshot), consume HALF (wipe -4), cost 2s+2m->2s, cd 2.4->2.0, keep exhaust. FRONT slot.",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-air-earth-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-air-earth-water": {
+          "cooldown": 2.0,
+          "cost": { "stamina": 2 },
+          "effectsPatch": [
+            {},
+            { "value": 3 },
+            { "value": -4 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "PP1-marsh-rework-nowipe-noexh-front",
+      "label": "OVER-CORRECTION PROBE: Marsh Squall per-stack 6 on FULL pool, NO wipe, exhaust removed, cd 2.0, cost 2s. FRONT slot.",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 6,
+      "deck": ["t3-air-earth-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-air-earth-water": {
+          "cooldown": 2.0,
+          "cost": { "stamina": 2 },
+          "exhaust": false,
+          "effects": [
+            { "type": "dot", "stack": "poison", "value": 2, "target": "enemy", "scale": { "stat": "int", "per": 3, "value": 1 } },
+            { "type": "damage", "value": 6, "target": "aoe", "pierce_armor": true, "consume_stack_value": "poison" }
+          ]
+        }
+      }
+    }
+  ]
+}

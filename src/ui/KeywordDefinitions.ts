@@ -5,12 +5,16 @@
 // to reflect the actual behaviour implemented in src/systems/ (Stack/Shard
 // /Element systems) so the player can spot-check by reading the engine.
 //
-// Post-audit (CARD_AUDIT.md §11.E): the glossary ships only the four
-// kept keywords (Brace, Vengeance, Haste, Exhaust). All other former
-// entries are dropped — those mechanics are now rendered as prose or
-// icon tokens directly in card text. The `KeywordCategory` type still
-// includes 'stack' and 'stat' even though no entries use them, so
-// consumers that switch on the union don't need a churn change.
+// Post-audit (CARD_AUDIT.md §11.E): the glossary ships five modifier
+// keywords (Brace, Exhaust, Haste, Pierce, Vengeance) — the four kept
+// post-audit keywords plus Pierce, re-added so the armor-bypassing
+// "Pierce" damage word that CardText still emits has a definition (it
+// reads like Brace/Vengeance but had no entry, leaving players unable to
+// learn it). All other former entries are dropped — those mechanics are
+// now rendered as prose or icon tokens directly in card text. The
+// `KeywordCategory` type still includes 'stack' and 'stat' even though no
+// entries use them, so consumers that switch on the union don't need a
+// churn change.
 
 export type KeywordCategory = 'stack' | 'modifier' | 'stat';
 
@@ -27,28 +31,33 @@ export const KEYWORD_DEFINITIONS: KeywordDef[] = [
   {
     keyword: 'Brace',
     category: 'modifier',
-    definition: "Bonus effect triggers when your [armor] is broken (depleted from above 0 to 0).",
+    definition: "Triggers its bonus when your [armor] breaks (drops to 0).",
   },
   {
     keyword: 'Exhaust',
     category: 'modifier',
-    definition: "The card can only resolve once per combat. After firing, the slot is disabled until next combat.",
+    definition: "This card only gets played once per combat.",
   },
   {
     keyword: 'Haste',
     category: 'modifier',
-    definition: "Reduces your card cooldowns by the listed percentage for the listed duration.",
+    definition: "Lowers your card cooldowns by the shown % for a few seconds.",
+  },
+  {
+    keyword: 'Pierce',
+    category: 'modifier',
+    definition: "Damage that ignores [armor] and hits [HP] directly.",
   },
   {
     keyword: 'Vengeance',
     category: 'modifier',
-    definition: "Bonus effect triggers if you took [HP] damage within the last 2 seconds. Self-damage and unarmored hits enable this naturally.",
+    definition: "Triggers its bonus if you lost [HP] in the last 2 seconds.",
   },
 ];
 
 // ── Token glossary (stacks + stats) ────────────────────────────────────
 //
-// Separate from KEYWORD_DEFINITIONS on purpose: the four modifier keywords
+// Separate from KEYWORD_DEFINITIONS on purpose: the five modifier keywords
 // are *detected inside card text* (and feed synergy detection via
 // detectKeywords), while the entries below are the colored TOKENS the engine
 // renders as combat chips (🔥 Burn, 😡 Rage, STR/VIT/…). They never need to be

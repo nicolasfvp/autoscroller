@@ -7,6 +7,19 @@ import { readStat } from '../hero/HeroStatsResolver';
 import { applyHeroDamage } from './EnemyAI';
 import { createAura, sumModifier, sumModifierStackScaled, fireRecurringTrigger, applyTriggeredPayload, sumStackGainMult, bumpEventCounters } from './StatusEffects';
 
+/**
+ * Magic per-element damage multiplier rate (C2 / D-13): magic cards scale their
+ * DIRECT damage off their declared stat at this rate per point. Production value
+ * is 0.15. Overridable ONLY for offline balance simulation via SIM_ELEM_RATE
+ * (never set in the running game) so the sim harness can question proposed
+ * elemMult tunings without a code edit. Falls back to 0.15 if unset/invalid.
+ */
+const ELEM_RATE: number = (() => {
+  const raw = typeof process !== 'undefined' ? process.env?.SIM_ELEM_RATE : undefined;
+  const n = raw != null ? Number(raw) : NaN;
+  return Number.isFinite(n) && n >= 0 ? n : 0.15;
+})();
+
 export interface ResolveResult {
   totalDamage: number;
   healed: number;
@@ -398,7 +411,21 @@ export class CardResolver {
         // Wave 8: Resonance Crystal multiplies magic-category damage. Falls
         // back to 1× for non-magic cards so other categories are unaffected.
         const resonanceMult = (card?.category === 'magic') ? state.subtileSpellDamageMult : 1;
-        const baseDmg = (resolvedValue + hitBonus) * strMult * damageMultiplier * buffMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult;
+        // Rebalance (C5): Rage is hero "Fury" — never spent; each stack passively
+        // adds flat damage (capped at 12), so banking rage makes you hit harder.
+        // Added pre-STR so STR amplifies the fury. Cap kept modest because rage
+        // is never consumed now (gate-only payoffs), so it banks to the cap and
+        // holds for the rest of combat.
+        const rageBonus = Math.min(state.rageStacks ?? 0, 12);
+        // Rebalance (C2 / D-13): magic cards get a smaller-than-STR per-element
+        // multiplier on DIRECT damage (NOT DoTs) off their declared scaling stat,
+        // so INT/SPI/DEX mages scale competitively without dethroning STR (0.15/pt).
+        let elemMult = 1;
+        if (card?.category === 'magic' && scale && scale.stat && scale.stat !== 'str') {
+          const elemStatVal = readStat(state, scale.stat);
+          elemMult = 1 + Math.max(0, elemStatVal - 1) * ELEM_RATE;
+        }
+        const baseDmg = (resolvedValue + hitBonus + rageBonus) * strMult * damageMultiplier * buffMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult * elemMult;
         // Enemy defense is the base value plus any timed 'def' aura modifiers
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
@@ -510,7 +537,9 @@ export class CardResolver {
           case 'poison': state.poisonStacks += appliedValue; break;
           case 'bleed': state.bleedStacks += appliedValue; break;
           case 'burn': state.burnStacks += appliedValue; break;
-          case 'stun': state.stunStacks += appliedValue; break;
+          // Rebalance (D-9): respect the stun DR window — after a freeze ends the
+          // enemy briefly resists new stun, so it can't be perma-chained.
+          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0)) state.stunStacks += appliedValue; break;
           case 'slow': state.slowStacks += appliedValue; break;
           case 'rage': state.rageStacks += appliedValue; break;
         }
@@ -592,7 +621,7 @@ export class CardResolver {
           case 'poison': state.poisonStacks += v; break;
           case 'bleed': state.bleedStacks += v; break;
           case 'burn': state.burnStacks += v; break;
-          case 'stun': state.stunStacks += v; break;
+          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0)) state.stunStacks += v; break;
           case 'slow': state.slowStacks += v; break;
         }
         // Rebalance phase: emit stack_applied event for event_counter auras.

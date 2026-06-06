@@ -1,0 +1,66 @@
+{
+  "_comment": "Q(c): Does each BUFFED T3 now beat its T2 analog (Granite Lunge) at the DECK level? Reproduce PA-7 A/B: identical 12-card deck, 4xT2 Granite vs 4xT3 Earthcleaver(buffed) vs 4xT3 Mountain's Will(buffed). Granite (T2) is NEVER touched. 4 cards are at slots 9-12 (matches the adversary's PA-7 shells exactly so numbers compare). vs doom_knight (8 reps, boss) AND lava_golen (highest-def normal, 6 reps).",
+  "matchups": [
+    {
+      "id": "T2granite-vs-doomknight",
+      "label": "A/B T2 Granite Lunge x4 (UNTOUCHED) vs doom_knight",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "T3earthcleaver-buffed-vs-doomknight",
+      "label": "A/B T3 Earthcleaver x4 BUFFED (pierce base, gate10, cd2.0) vs doom_knight",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] }
+      }
+    },
+    {
+      "id": "T3earthcleaver-baseline-vs-doomknight",
+      "label": "A/B T3 Earthcleaver x4 UNBUFFED (current) vs doom_knight (the bug repro)",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "T3mountainswill-buffed-vs-doomknight",
+      "label": "A/B T3 Mountain's Will x4 BUFFED (pierce base, cd2.0) vs doom_knight",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-earth-earth", "t3-attack-earth-earth", "t3-attack-earth-earth", "t3-attack-earth-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "T2granite-vs-lavagolem",
+      "label": "A/B T2 Granite Lunge x4 vs lava_golen (normal)",
+      "class": "warrior", "stage": "mid", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth"],
+      "enemy": "lava_golen", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "T3earthcleaver-buffed-vs-lavagolem",
+      "label": "A/B T3 Earthcleaver x4 BUFFED vs lava_golen (normal)",
+      "class": "warrior", "stage": "mid", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "lava_golen", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] }
+      }
+    },
+    {
+      "id": "T3mountainswill-buffed-vs-lavagolem",
+      "label": "A/B T3 Mountain's Will x4 BUFFED vs lava_golen (normal)",
+      "class": "warrior", "stage": "mid", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-earth-earth", "t3-attack-earth-earth", "t3-attack-earth-earth", "t3-attack-earth-earth"],
+      "enemy": "lava_golen", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    }
+  ]
+}

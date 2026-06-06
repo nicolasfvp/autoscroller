@@ -1,0 +1,91 @@
+{
+  "_comment": "ADVERSARIAL re-test for off-curve-sweep. (1) OCS-8 robustness: does doom_knight really lose to CLEAN-ATTACKER loop-10 warriors even with stronger/larger/better-curved decks than the designer's 7-card host? (2) OCS-1/OCS-2 independent boss confirm with my own host. (3) OCS-3 Vein-Splitter single-card-flip sanity.",
+  "decks": [
+    {
+      "_test": "OCS-8: designer's exact 7-card host (FILLER Jab) replicated to confirm baseline.",
+      "id": "adv-clean7-jab",
+      "label": "Clean 7-card warrior + Jab (designer host)",
+      "archetype": "adv-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t1-attack"]
+    },
+    {
+      "_test": "OCS-8: STRONGER clean physical 10-card loop-10 deck, best clean attackers, NO engine (no Vein Splitter / no rage payoff). If this wins ~0.8+, OCS-8 is a deck-quality issue not a boss-curve issue.",
+      "id": "adv-clean10-strong",
+      "label": "Strong clean 10-card physical warrior",
+      "archetype": "adv-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t3-agility-attack-attack", "t3-attack-attack-attack", "t3-air-attack-attack", "t3-attack-attack-counter", "t2-attack-defense", "t1-attack", "t1-attack"]
+    },
+    {
+      "_test": "OCS-8: clean MAX-OPS attacker 8-card deck (no DoT engine, no rage). Triple Slash + Berserker + Galekick + Reckless + Quickstrike + Bloodprice + 2x Jab.",
+      "id": "adv-clean8-maxops",
+      "label": "Clean 8-card max-OPS attacker",
+      "archetype": "adv-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t3-air-attack-attack", "t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t1-attack", "t1-attack"]
+    },
+    {
+      "_test": "OCS-8: clean physical with Mountain's Will finisher + defense for armor synergy, 9 cards, no DoT/rage engine.",
+      "id": "adv-clean9-armorfinish",
+      "label": "Clean 9-card armor-finisher warrior",
+      "archetype": "adv-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-earth-earth", "t2-defense-defense", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t1-attack", "t1-attack"]
+    },
+    {
+      "_test": "OCS-1 independent: my host + Razor Stance vs Jab filler vs doom_knight.",
+      "id": "adv-razor-jab",
+      "label": "boss1 host + Jab (razor baseline)",
+      "archetype": "adv-razor",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-agility-counter", "t2-defense-defense", "t1-attack"]
+    },
+    {
+      "id": "adv-razor-stance",
+      "label": "boss1 host + Razor Stance",
+      "archetype": "adv-razor",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-agility-counter", "t2-defense-defense", "t2-counter-counter"]
+    },
+    {
+      "id": "adv-razor-cadence",
+      "label": "boss1 host + Razor Cadence (T3)",
+      "archetype": "adv-razor",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-agility-counter", "t2-defense-defense", "t3-agility-counter-counter"]
+    },
+    {
+      "_test": "OCS-2 independent: Wrath Squall vs Jab vs Vein Splitter (T3) in my own host.",
+      "id": "adv-wrath-jab",
+      "label": "boss1 host + Jab (wrath baseline)",
+      "archetype": "adv-wrath",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-attack-defense", "t2-defense-defense", "t2-agility-earth", "t1-attack"]
+    },
+    {
+      "id": "adv-wrath-squall",
+      "label": "boss1 host + Wrath Squall (T3)",
+      "archetype": "adv-wrath",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-attack-defense", "t2-defense-defense", "t2-agility-earth", "t3-air-counter-counter"]
+    },
+    {
+      "id": "adv-wrath-veinsplitter",
+      "label": "boss1 host + Vein Splitter (T3 control)",
+      "archetype": "adv-wrath",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-attack", "t2-attack-defense", "t2-defense-defense", "t2-agility-earth", "t3-agility-attack-counter"]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import { applyDamageTakenRelics } from './RelicSystem';
 import { rand } from '../SharedRNG';
 import { applyEnemyAffinityEffect } from './EnemyAffinity';
 import { fireTrigger, applyTriggeredPayload, fireHpThresholdTriggers, fireRecurringTrigger, sumModifier, bumpEventCounters } from './StatusEffects';
+import { readStat } from '../hero/HeroStatsResolver';
 
 export class EnemyAI {
   private cooldownTimer: number;
@@ -273,7 +274,11 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
     for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
     return damage;
   }
-  const multiplier = state.heroDefenseMultiplier ?? 1;
+  // Rebalance (C3): VIT raises armor mitigation EFFICIENCY (not capacity) —
+  // +3% per point above 1, capped at +50% — giving VIT a defensive identity
+  // with NO armor→damage conversion. Reads effective VIT (auras + stat-gains).
+  const vitMitigation = Math.min(0.5, Math.max(0, readStat(state, 'vit') - 1) * 0.03);
+  const multiplier = (state.heroDefenseMultiplier ?? 1) + vitMitigation;
   const effectiveDefense = state.heroDefense * multiplier;
 
   let remaining = Math.max(0, Math.floor(damage - effectiveDefense));

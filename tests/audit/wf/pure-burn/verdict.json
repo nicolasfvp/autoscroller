@@ -1,0 +1,63 @@
+{
+  "lane": "pure-burn",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Strong, well-grounded lane. PLAN: stages/enemies are canonical, boss1=doom_knight covered, swap-test methodology is the gold standard, and decks are legal (all ids verified in catalog, sane sizes, mage=elemental). EXECUTION: results.json (81) + results-bossconfirm.json (10 @6 repeats) exist and are non-empty; every quoted number re-read and matches exactly; boss claims have >=6 repeats and are 0-variance (deterministic engine). OUTPUT: every coefficient/tier claim is corroborated by card-catalog.md. I independently re-ran 14 matchups @8 repeats (adv-results.json): the core inversion reproduces 8/8 (tick wins @384, detonate dies @222) and the Quench Lance tier violation reproduces on all 4 late enemies. Only correction: PB-6's 'Pierce is decisive' framing is overstated because Cinder Sprint (NON-Pierce 4/burn) WINS while Cinderlance (Pierce 3/burn) LOSES — the true driver is cost/CD/banker-density, not Pierce alone; the proposed Pierce-ify change is still defensible, so PB-6 is revised (rationale), not declined. New nuance worth flagging to the synthesizer: the detonator 'wins' (Cinder Sprint 380, Supernova 439) only hold in the artificial 10-card swap shell — my well-built realistic 12-card decks containing the SAME wincons still lose 8/8 (best-case Sprint+Supernova = 353 dmg < 380 HP). That STRENGTHENS PB-1 (realistic burn cannot beat doom_knight) and means PB-3/PB-4 buffs alone may slightly under-correct at the 12-card realistic profile.",
+  "verdicts": [
+    {
+      "findingId": "PB-1",
+      "status": "confirmed",
+      "reason": "Reproduced. burn-boss1/detonate/int-invest all 0 winRate, 6/6 deaths @6 repeats (190/222/236 dmg) — re-read exactly from results-bossconfirm.json. doom_knight stats (380HP/def3/9dmg/cd2500/enrage1.4x@50%) verified against src/data/json/enemies.json. My independent adv-burn-realistic-boss1 (banker-heavy, good wincons) = 0/8 deaths @272 dmg, and adv-burn-sprintnova-boss1 (best-case Cinder Sprint + Supernova, 6 bankers) = 0/8 @353 dmg — a competently built realistic 12-card burn deck STILL loses. Do-not-nerf-boss + lift-T3-wincon is C1/C3-compliant (other archetypes clear doom_knight).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-2",
+      "status": "confirmed",
+      "reason": "Inversion reproduced deterministically. adv-burn-tickonly-boss1 = 8/8 wins @384 dmg vs adv-burn-detonate-boss1 = 8/8 deaths @222 dmg (matches the 6/6 boss-confirm). Late vs iron_golem: tick winRate 1 @413 vs detonate 0 @283 (results.json). Detonating dumps one armor-taxed chunk and resets the pool; ticking out-DPSes the enrage. Two-part fix (Pierce-ify per-stack + raise weak coefficients, keep soft-cap) is C1/C5-compliant.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-3",
+      "status": "confirmed",
+      "reason": "det-venomdet-boss1 = 0/6 deaths @327 dmg, below T2 Pyre swap (374) and the winners Cinder Sprint (380) and Supernova (439). Catalog confirms Venom Detonation 'deal 2([str]) per [burn]' — lowest coefficient of any detonator AND non-Pierce. Buff 2->4 + Pierce raises the T3 toward its peers without a nerf; it keeps its 2burn+3poison hybrid identity, so not oppressive. C1/C5-compliant.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-4",
+      "status": "confirmed",
+      "reason": "det-cinderlance-boss1 = 0/6 deaths @359 dmg while cheaper same-tier det-cindersprint-boss1 WINS 6/6 @380 (re-read from results-bossconfirm.json). Catalog confirms Cinderlance cd 2.2, '8([str]) twice' (≈16 flat on a mage) + '3 Pierce per [burn]'. CD cut 2.2->1.8 (C1 snappy) + 3->4 Pierce is a pure T3 buff, never a T2 nerf. Compliant.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-5",
+      "status": "confirmed",
+      "reason": "det-supernova-boss1 = 6/6 wins @439 dmg, best detonator by a wide margin; catalog confirms 5([int]) Pierce/burn, AoE, exhaust, cost 2s+1m cd 2.8. It is a one-shot exhaust capstone and the shell still wins/loses on its own (det swaps converge vs normals), so NOT oppressive. No-nerf + use-as-anchor is correct (C5).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-6",
+      "status": "revised",
+      "reason": "The proposed CHANGE (make all dedicated burn detonators Pierce on the per-stack payoff; C4 wiring/keyword fix, C5-consistent) is sound and I confirm it. But the stated EVIDENCE/RATIONALE that 'Pierce vs non-Pierce is decisive at the boss layer' is overstated and partly self-contradicted by the same data: Cinder Sprint is NON-Pierce (4([dex])/burn per catalog) yet WINS 6/6 @380, while Cinderlance IS Pierce (3/burn) yet LOSES @359. The decisive factors are cost (1m vs 1s+1m), CD (1.6 vs 2.2) and self-applied burn / banker density, with Pierce a secondary armor-tax saver. Keep the change; downgrade the rationale and confidence.",
+      "revisedChange": "Pierce-ify the per-stack payoff of Cinder Sprint (4 DEX -> 4 DEX Pierce) and Pyre (3 -> 3 Pierce) as a C4 keyword-consistency pass that removes the def-3/def-4 boss armor tax. Frame it as a secondary lever stacked on the primary PB-3/PB-4 coefficient+CD buffs and the cheap-banker shell, NOT as the decisive fix (Cinder Sprint already wins while non-Pierce). Re-sim a realistic 12-card detonate deck after applying PB-3/4/6 together to confirm it crosses ~0.8 winRate vs doom_knight, since my tests show the best realistic 12-card deck currently tops out at 353 dmg < 380 HP."
+    },
+    {
+      "findingId": "PB-7",
+      "status": "confirmed",
+      "reason": "Independently reproduced @8 repeats. Aggregate late swap: Quench Lance avgTTK 13975 / avgHP% 0.323 vs Flame Dart baseline avgTTK 11869 / avgHP% 0.348 — the T3 is slower AND squishier than the T2 it replaces, on every one of the 4 late enemies (depths 10225>7975, fire_elem 8600>7400, were 15100>13900, salamander 21500>19000). Catalog confirms QL cd 2.4, '2[burn] + consume-10+ gain INT' that rarely fires in pure-burn (peakOPS 8.33). Buff-the-T3 (cd 2.4->1.6, 2->3 burn, threshold 10->6) per C1/T3>T2; never nerf Flame Dart. Compliant.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-8",
+      "status": "confirmed",
+      "reason": "Firestorm (audited peakOPS 0) is the best in-context filler: swap-firestorm-late avgTTK 10163 / avgHP% 0.389, faster than the Flame Dart baseline (11869) and every other candidate. The 14% TTK improvement vs baseline shows Firestorm contributes (not carried by the fixed shell). Its 'play 3+ cards in 4s -> 10[burn]' trivially fires in a fast burn deck. No-change (correct the OPS-0 false negative) is right; do not buff off the isolated score.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PB-9",
+      "status": "confirmed",
+      "reason": "Baseline burn-late wins 4/4 normals but at avgHP% 0.200 (min 0.065 salamander, 0.094 werewolf), while cleaner tick/detonate variants hold ~0.40, confirming the thinness is partly dead fillers (Quench Lance, Pyre Surge) not only the archetype. Low severity, no card nerf; raising effective DPS via PB-3/4/6/7 is the C3-compliant lever (no defensive grafting onto a glass-cannon-by-intent archetype). Reasonable design note.",
+      "revisedChange": null
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "cluster": "q-boss-iron (P0-2: defang iron_golem defense-affinity ratchet)",
+  "specPaths": [
+    "tests/audit/wf-q/q-boss-iron/iron-defang.json",
+    "tests/audit/wf-q/q-boss-iron/route-b.json"
+  ],
+  "resultPaths": [
+    "tests/audit/wf-q/q-boss-iron/iron-defang-results.json",
+    "tests/audit/wf-q/q-boss-iron/route-b-results.json"
+  ],
+  "method": "One fixed strong-late-physical T3-core deck (late-war-physical-strong, runXP 720) held identical across every matchup; only the enemy/enemyOverride changed. ALL bosses run at loopMultiplier 1.0 (bossMultiplier=1.0) so we compare intrinsic base profiles, not loop-scaling noise. 6 repeats per matchup (boss claims). The defense affinity ratchet = +6 armor/attack (EnemyAffinity.ts 3*m, m=2 boss) cap 60; the shield behavior (+8/8s) is a SEPARATE code path and survives affinity:null. Route B (global ratchet nerf gain3/cap24) was tested by a temporary, then-reverted EnemyAffinity.ts patch.",
+  "items": [
+    {
+      "proposalId": "P0-2 (iron_golem ratchet)",
+      "question": "Does the affinity:null / shield-trim / HP-trim fix OVER-correct (iron_golem becomes trivial), or is the defense-affinity ratchet even the real driver vs base def4/HP400? And does the GLOBAL EnemyAffinity.ts route (gain 6->3, cap 60->24) actually suffice, or under-correct?",
+      "answer": "The ratchet IS the dominant driver, and affinity:null is the correct, non-over-correcting fix. Baseline iron_golem (full ratchet) LOSES 0/6, the strong deck only landing 233 of 400 HP because armor saturates near cap 60. Flip affinity to null OR \"attack\" (identical: the function returns null for attack) and it flips to 6/6 WIN, dmgDealt 233->409, at an 11.3% HP cushion, ttk 22.7s -- a real win, NOT trivial. The global Route B (gain 3, cap 24) UNDER-corrects: iron_golem still LOSES 0/6 at 381/400 dmg, and even with the shield trim 394/400 -- the deck dies a hair short of the kill. Even the lighter earth ratchet (gain 2, cap 40) leaves it 0/6 at 301/400. So any ratchet that still stacks meaningful armor starves the physical deck below the 400-HP wall.",
+      "verdict": "revise",
+      "revisedValue": "Adopt ROUTE A, not Route B: set iron_golem affinity off \"defense\" (to \"attack\" or null). Route B (global gain3/cap24) is empirically insufficient (0/6, 381-394/400). Pair affinity:null with the shield trim +8/8s -> +4/8s (lifts cushion 11.3% -> 17.3%). The baseHP 400 -> 360 trim is OPTIONAL and largely INERT here (360/380/400 all give 11.3% / 409 dmg / 22.7s when the ratchet is off -- the bottleneck is armor, not the HP wall); keep HP at 400 unless the curve needs the extra cushion. Recommended precise edit: enemies.json iron_golem affinity \"defense\" -> \"attack\", behaviors shieldAmount 8 -> 4, baseHP unchanged at 400.",
+      "evidence": "iron-defang-results.json: IG-baseline 0/6 deaths, 233/400 dmg. IG-affNull 6/6, 409 dmg, cushion 0.113, ttk 22.7s. IG-affAttack identical 6/6 0.113. IG-affNull-shield4 6/6, cushion 0.173. IG-affNull-hp360/380/400 ALL 6/6 cushion 0.113 (HP inert). IG-affNull-shield4-hp360 6/6 cushion 0.214 ttk 18.9s. IG-affEarth (gain2/cap40) 0/6 301/400. route-b-results.json: RB-iron_golem-gain3cap24 0/6 381/400; RB-...-shield4 0/6 394/400 (Route B under-corrects).",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P0-2 (monotonicity)",
+      "question": "Does the fix restore a MONOTONE boss curve -- is iron_golem (loop 20) no harder than lizard_king (30) / bog_witch (40), which the SAME deck already beats?",
+      "answer": "Yes. Baseline iron_golem is a non-monotone spike: the SAME deck loses it 0/6 yet wins lizard_king 6/6 (14.3% cushion) and bog_witch 6/6 (20.8%) which come AFTER it. After affinity:null alone the curve is monotone in win-rate (all three WIN) but iron_golem is still the TIGHTEST (11.3% < lizard_king 14.3% < bog_witch 20.8%). Adding the shield +8->+4 trim places iron_golem cleanly between them by cushion: lizard_king 14.3% < iron_golem 17.3% < bog_witch 20.8% -- appropriate, since iron_golem is the earlier boss and should be a touch easier. So affinity:null + shield trim restores a genuinely smooth ramp; affinity:null alone is the minimum that removes the spike.",
+      "verdict": "holds",
+      "revisedValue": null,
+      "evidence": "iron-defang-results.json: MONO-lizard_king-baseline 6/6 cushion 0.143 ttk 17.0s; MONO-bog_witch-baseline 6/6 cushion 0.208 ttk 21.1s; IG-baseline 0/6 (spike); IG-affNull 6/6 0.113; IG-affNull-shield4 6/6 0.173 (sits between lizard_king and bog_witch).",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P0-2 (side-effects: desert_golem / boss_iron_golem)",
+      "question": "Side effects: desert_golem and boss_iron_golem also armor-stack. Does the same affinity-off fix make THEM appropriately beatable or trivial -- and would the GLOBAL EnemyAffinity.ts edit wrongly trivialize the endgame boss?",
+      "answer": "No trivialization risk, and this argues for the per-enemy (data) fix over the global (code) one. Tested at this loop-20-strength deck: desert_golem baseline LOSES 0/6 (288/450); with affinity:null STILL 0/6 (368/450) -- its 450 HP + shield+10 keep it hard, and note desert_golem's affinity is \"earth\" (a lighter, different code path) so the global defense-ratchet edit would not even touch it. boss_iron_golem (the loop-70 endgame boss, also \"defense\" affinity) baseline LOSES 0/6 (214/470); affinity:null -> STILL 0/6 (302/470); Route B -> STILL 0/6 (318/470). So defanging the ratchet correctly leaves BOTH the higher-HP desert_golem and the endgame boss_iron_golem hard for a loop-20-strength deck -- exactly the desired monotone outcome (a loop-70 hero would be far stronger). The data-level affinity flip on iron_golem ONLY is the surgical choice; the global code edit is unnecessary (under-corrects iron_golem AND needlessly touches the endgame boss).",
+      "verdict": "holds",
+      "revisedValue": null,
+      "evidence": "iron-defang-results.json: SIDE-desert_golem-baseline 0/6 288/450; SIDE-desert_golem-affNull 0/6 368/450; SIDE-boss_iron_golem-baseline 0/6 214/470; SIDE-boss_iron_golem-affNull 0/6 302/470. route-b-results.json: RB-boss_iron_golem-gain3cap24 0/6 318/470. None trivialized.",
+      "decisionForUser": "Route choice is settled by data (use Route A per-enemy affinity flip, not Route B global code nerf). The one genuine design fork left for the user: KEEP iron_golem thematically armor-stacking but tamer (would require a bespoke smaller per-enemy ratchet, which the sim shows still under-corrects unless gain<=2/cap<=24 AND HP/shield also trimmed) -- OR simply drop the ratchet (affinity:\"attack\") and lean on the shield trim for the smooth curve. The evidence favors the latter as clean and reliable."
+    }
+  ],
+  "newConcerns": [
+    "The win cushions here (11-21%) are measured at loopMultiplier 1.0 (iron_golem base 400/4/10). In real play iron_golem is fought at loop 20 with loopMultiplier ~1.05 (boss-half-rate -> ~+2.5% stats), which will shave a couple points off the cushion. affinity:null + shield+4 still wins comfortably, but affinity:null ALONE (11.3% at base) may dip to single digits at the real 1.05 multiplier -- another reason to pair it with the shield trim, not ship affinity:null in isolation.",
+    "Route B (global EnemyAffinity.ts ratchet nerf) under-corrects iron_golem (0/6 at 381-394/400). If the user wants to keep the defense affinity for theme on OTHER future enemies, the global constant is still safe to leave at gain3/cap24 -- but it must NOT be relied on as iron_golem's fix.",
+    "desert_golem (450 HP, shield+10, earth affinity) is itself a candidate non-monotone spike vs strong physical even after defanging (still 0/6 at 368/450 for a loop-20 deck) -- but it sits at loop 50 where the hero is stronger, so this is likely fine; flagged for the desert_golem/boss_iron_golem follow-up lane the proposal already calls for.",
+    "All numbers use the FIXED-ORDER engine with one specific 12-card late-physical deck. The affinity:null delta (233->409 dmg) is large and consistent enough that deck-order sensitivity is not a concern for the headline conclusion, but the exact cushion percentages are deck-specific."
+  ]
+}

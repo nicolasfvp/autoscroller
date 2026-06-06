@@ -1,0 +1,18 @@
+{
+  "matchups": [
+    {
+      "id": "direct-mage-vs-fireelem",
+      "label": "direct mage vs fire_elemental (mid)",
+      "class": "mage", "stage": "mid", "runXP": 350,
+      "deck": ["t2-agility-fire","t2-fire-water","t2-fire-fire","t1-fire","t2-air-fire","t3-attack-attack-fire","t2-earth-fire","t3-agility-fire-water","t1-water","t2-water-water"],
+      "enemy": "fire_elemental", "isBoss": false, "loopMultiplier": 1.0, "repeats": 4
+    },
+    {
+      "id": "direct-mage-vs-salamander",
+      "label": "direct mage vs mutated_salamander (mid)",
+      "class": "mage", "stage": "mid", "runXP": 350,
+      "deck": ["t2-agility-fire","t2-fire-water","t2-fire-fire","t1-fire","t2-air-fire","t3-attack-attack-fire","t2-earth-fire","t3-agility-fire-water","t1-water","t2-water-water"],
+      "enemy": "mutated_salamander", "isBoss": false, "loopMultiplier": 1.0, "repeats": 4
+    }
+  ]
+}

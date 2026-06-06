@@ -1,0 +1,56 @@
+{
+  "matchups": [
+    {
+      "id": "fire-air-mage-vs-dk",
+      "label": "realistic INT3 fire/air direct mage vs doom_knight (elemMult sweep)",
+      "archetype": "direct-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-air-fire",
+        "t3-attack-attack-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t2-water-water",
+        "t3-air-attack-fire",
+        "t2-agility-fire"
+      ],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "repeats": 6
+    },
+    {
+      "id": "burn-deck-vs-dk",
+      "label": "realistic INT3 12-card burn deck vs doom_knight (elemMult sweep)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t2-air-fire",
+        "t3-agility-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire"
+      ],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "repeats": 6
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "lane": "hybrid-combos",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "PLAN and EXECUTION are sound: the simulator (deck-battle-sim.test.ts) drives the real CombatEngine, results.json (71 matchups) matches matchups.json, all quoted main-table numbers (Brine Crucible losses, pure-burn 96 dmg, block-hybrids beating doom_knight, aggressive hybrids losing it) re-read TRUE, decks are legal/coherent (valid ids, sane sizes, class-appropriate), and boss claims use 5 reps. The BANK-shell detonator probe is the strongest evidence and REPRODUCES EXACTLY in my independent re-run (adv-results.json): adv-bank-nodet/Bog Catalyst 380dmg/15900ttk/0.405hp; tremor 396/22000/0.083; drown 381/22000/0.083; marsh 387/22000/0.083; venom 389/20000/0.298 — digit-for-digit. The detonators genuinely under-deliver vs a strong non-detonator on high-HP targets and slow the kill. HOWEVER the SWAP-TEST evidence cited in HC-1..HC-4 is METHODOLOGICALLY INVALID: deckOrder is played in strict array order (CombatState.ts L245 deckOrder=[...active]; no shuffle) and the swap card was placed in SLOT 12 of a 12-card deck, while late fights only play 4-6 cards (and iron_golem ~10) — so the swap card is NEVER DRAWN. That is why every swap variant (incl. strong Boilstep and Soaking Blade) is byte-identical to baseline: it measures nothing, not 'zero marginal value'. I re-ran a FRONT-LOADED swap (test card at SLOT 1) which (a) confirms the artifact (variants now differ) and (b) still supports the weakness conclusion: front-tremor and front-drown match or trail a 0-cost t1-water filler and trail Bog Catalyst (e.g. vs depths_horror tremor 109dmg/0.409hp vs filler 119/0.5 vs bog 118/0.452 faster). Net: the FINDINGS (detonators weak, Bog Catalyst is the strong reference, boss not over-tuned, burn parent non-viable) are CORRECT, but one pillar of evidence (the swap test) is bogus and must be replaced by the BANK-shell + my front-loaded probe. Separately, HC-6's proposed FIX edits the LOCKED C5 burn soft-cap formula and is non-compliant.",
+  "verdicts": [
+    {
+      "findingId": "HC-1",
+      "status": "revised",
+      "reason": "DIRECTION CONFIRMED, EVIDENCE PARTLY BOGUS. BANK-shell reproduces exactly (adv-bank-tremor 396/22000/0.083 vs adv-bank-nodet 380/15900/0.405): Tremor adds +16 dmg but +6100ms and crashes the cushion 0.405->0.083 — genuinely off-curve vs Bog Catalyst. hy-tremor-boss1 LOSES doom_knight (wr=0,D=4,251dmg) — TRUE in results.json. BUT the 'SWAP byte-identical on all 5 late enemies' claim is an artifact: the swap card sat in slot 12 of a no-shuffle deck and was never drawn in 4-6 card fights. My front-loaded re-run (adv-front-tremor) shows Tremor at slot 1 actually trails a t1-water filler (vs depths 109dmg/0.409hp vs filler 119/0.5). The buff is a C1/charter-legal rescue (raise ceiling 3->5/stack, drop [exhaust]; cost/CD unchanged). Revise: keep the proposal but strip the invalid swap evidence and cite the BANK-shell + front-loaded probe; treat the 5/stack magnitude as UNVERIFIED (designer did not sim the buffed card) — must re-sim post-change to confirm it clears the Bog Catalyst bar without overshooting.",
+      "revisedChange": "C1 + charter ceiling buff (keep): raise per-stack 3->5([str]) Pierce and remove [exhaust]; hold cost 2s and cd 2.4s. REQUIRED follow-up: re-run the BANK-shell probe with the buffed card and confirm it beats adv-bank-nodet (Bog Catalyst: 380dmg/15900ttk/0.405hp) on both kill speed and HP cushion before shipping."
+    },
+    {
+      "findingId": "HC-2",
+      "status": "revised",
+      "reason": "DIRECTION CONFIRMED, EVIDENCE PARTLY BOGUS. BANK-shell reproduces (adv-bank-drown 381/22000/0.083 vs nodet 380/15900/0.405): +1 dmg, +6100ms, 5x worse cushion — Drowning Lance is the weakest single-target detonator. Front-loaded re-run agrees (adv-front-drown vs depths 127dmg/0.452hp roughly = filler 119/0.5, < bog). The slot-12 swap evidence is the same never-drawn artifact and must be discarded. CD cut 2.4->1.8s is C1-compliant (rescue weak via CD). Magnitude (6 base / 5 per stack) is UNVERIFIED by sim.",
+      "revisedChange": "Keep: 'Deal 6 Pierce. Consume all [poison], 5 Pierce per stack', cd 2.4->1.8s, cost 2s+1m. Drop the bogus swap citation; rely on BANK-shell + front-loaded probe. Re-sim the buffed card vs the Bog Catalyst bank baseline before shipping."
+    },
+    {
+      "findingId": "HC-3",
+      "status": "revised",
+      "reason": "DIRECTION CONFIRMED, EVIDENCE PARTLY BOGUS, severity OK at med. BANK-shell reproduces (adv-bank-marsh 387/22000/0.083 vs nodet 380/15900/0.405). Marsh Squall is the most expensive detonator (2s+2m, exhaust) for single-target value no better than the others — confirmed worst cost-to-impact. The slot-12 swap 'identical to base' claim is the never-drawn artifact (discard). Dropping the mana half (2s+2m -> 2s) is C1-compliant; +per-stack 4->6 raises ceiling not cost. It is a niche AoE card so med severity is right (single-enemy sim cannot credit its AoE upside — a real limitation of this lane's single-target battery).",
+      "revisedChange": "Keep: 6 Pierce/[poison] to all enemies (from 4), cost 2s+2m -> 2s, keep [exhaust]+cd2.4s. Note: AoE value is untestable in the current 1-enemy sim, so the buff is a reasonable wiring/cost correction but its ceiling should be validated in a multi-enemy probe if/when available."
+    },
+    {
+      "findingId": "HC-4",
+      "status": "revised",
+      "reason": "DIRECTION CONFIRMED (weak-but-least-bad), EVIDENCE PARTLY BOGUS. BANK-shell reproduces (adv-bank-venom 389/20000/0.298): better than other detonators because it re-applies 3 poison + 2 burn rather than emptying the pool — TRUE. hy-venomdet-late clears late normals + iron_golem (wr=1) — TRUE. The 'consume all burn' clause being dead in a poison shell is a correct mechanical read (catalog: Venom only consumes BURN, not poison). The dual-pool wiring buff is C4-compliant (wiring-first) and rewards the dual-DoT identity. The slot-12 swap delta '0.471 vs 0.452 within noise' is again the never-drawn artifact (the +0.019 is just RNG on the rest of the deck, not Venom). Discard that line; keep the wiring proposal.",
+      "revisedChange": "Keep wiring buff: 'Apply 2[burn]. Apply 3[poison]. Consume all [burn] AND all [poison]; deal 2([str]) per stack consumed.' Cost/CD unchanged (1s+1m, 2.4s). Drop the swap citation; cite the BANK-shell (0.298hp, best of the detonators) and the mechanical fact that the burn-only clause is dead in a poison shell."
+    },
+    {
+      "findingId": "HC-5",
+      "status": "confirmed",
+      "reason": "FULLY SUPPORTED. The 158 peakOPS is an isolated-metric artifact, not oppressive in real combat: hy-brinecrucible-late wins all 4 late normals (hp 0.381-0.506, re-read TRUE) but hy-brinecrucible-late__vs__iron_golem LOSES (wr=0,D=4,407dmg vs 409HP) and hy-brinecrucible-boss1__vs__doom_knight LOSES (wr=0,D=4,375dmg vs 380HP) — both TRUE in results.json. 'No nerf' is correct and C1-C5-compliant. The tooling note (don't credit 'consume all X' detonators a full pre-banked pool in OPS triage) is sound. Strong-but-fair normal clearer."
+    },
+    {
+      "findingId": "HC-6",
+      "status": "declined",
+      "reason": "DIAGNOSIS TRUE, FIX NON-COMPLIANT. cmp-pureburn-boss1 wr=0/D=5/96dmg vs poison 397, physical 418, bleed 336 — all re-read TRUE; burn parent is genuinely non-viable vs a 380-HP boss and drags hy-pburn-boss1 to a loss (D=4,310dmg, TRUE). BUT the proposed fix edits the burn soft-cap formula from 8+floor((n-8)/2) to 12+floor((n-12)/1.5) — that is exactly the C5 status formula the brief declares LOCKED ('C5 STATUS (locked, already implemented in-engine): burn = soft-cap 8+floor((n-8)/2)/tick, bank-and-cash'). Confirmed against CombatEngine.ts L483 which implements that locked formula. Changing the knee/slope is a status-system rewrite, out of bounds for this pass. The correct C-compliant lever is to fix the burn DETONATORS/appliers (HC-1, HC-4) and/or price (C1), not the locked DoT curve. DECLINE the proposed change; keep the viability flag as context only.",
+      "revisedChange": "Do NOT change the burn soft-cap (C5-locked). Address burn-hybrid boss throughput via the detonator buffs (HC-1 Tremor, HC-4 Venom) and, if still short, a C1 cost cut on the burn appliers/Pyre line — verified by re-sim, not by editing the DoT formula."
+    },
+    {
+      "findingId": "HC-7",
+      "status": "confirmed",
+      "reason": "SUPPORTED with a caveat. Of 5 boss1 hybrids only the two with a BLOCK half beat doom_knight: hy-pblock-boss1 wr=1/hp0.769 and hy-burnblock-boss1 wr=1/hp0.388 (TRUE); aggressive hybrids lose (pburn D=4/310, bleedpoison D=4/304, tremor D=4/251 — TRUE). 'Do not touch doom_knight' is defensible and C3-aligned (defense buys time for a 2nd win condition). Caveat: doom_knight is not trivially easy even for some pure parents — pure-physical wins at hp=0.007 (razor-thin) and pure-bleed LOSES (D=5), so 'beatable by every single-engine build' overstates; it is beatable by survival builds and pure-poison comfortably, and barely by pure-physical. The conclusion (fix the cards, not the boss) still holds, but it rests on HC-1/HC-4 landing — and HC-6's burn lever is disallowed, so burn-hybrid boss races may stay weak until a compliant burn fix is found."
+    },
+    {
+      "findingId": "HC-8",
+      "status": "confirmed",
+      "reason": "FULLY SUPPORTED and independently reproduced. Bog Catalyst bank shell (adv-bank-nodet) beats doom_knight at 380dmg/15900ttk/0.405hp — digit-identical to the designer's det-bank-nodet and faster + higher-cushion than every detonator shell. My front-loaded probe also shows Bog Catalyst at slot 1 outpaces a 0-cost filler (vs depths 6800ttk vs 8400). It is correctly the reference target the detonator buffs should be brought UP toward; 'no change' is right. Non-detonator double-poison is the real poison-hybrid powerhouse."
+    }
+  ],
+  "newFindings": [
+    {
+      "id": "ADV-1",
+      "kind": "off_curve_weak",
+      "target": "swap-test methodology (HC-1..HC-4 evidence pillar)",
+      "stage": "late",
+      "evidence": "In results-compare.json every swap variant is byte-identical to swap-base-late across ALL 6 enemies (e.g. iron_golem dmg=432/ttk=16000/hp=0.493 for base, venom, drown, marsh, tremor, boilstep AND soaking). Root cause: CombatState.ts L245 builds deckOrder=[...run.deck.active] with NO shuffle and CombatEngine plays cards in strict pointer order; the swap card was at slot 12 of a 12-card deck while late fights play only 4-6 cards (iron_golem ~10), so the swap slot is never drawn. Boilstep (peakOPS 45.56, strong) producing identical results to a no-op proves the test measures nothing. My front-loaded re-test (adv-results.json, card at slot 1) makes variants diverge and still shows the detonators trailing Bog Catalyst and ~tying a t1-water filler.",
+      "severity": "med",
+      "proposedChange": "Tooling/methodology fix (not a card change): for swap tests, place the candidate in an EARLY deck slot (or shuffle deckOrder, or shorten the shell so all cards are drawn) so the swapped card is actually played; otherwise the test is null. Future lanes must verify avgCardsPlayed >= swap-slot-index before trusting a swap delta.",
+      "confidence": "high"
+    }
+  ]
+}

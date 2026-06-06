@@ -134,14 +134,14 @@ describe('DoT mechanics — Burn (per-stack with cap 8)', () => {
     }
   });
 
-  it('Burn caps at 8 damage per tick regardless of stack count', () => {
+  it('Burn soft-caps above 8 (8 + floor((n-8)/2)), so deep fire is not wasted', () => {
     const run = makeMockRun();
     setRun(run);
     try {
       const state = makeState({ burnStacks: 20, enemyHP: 1000 });
       const engine = new (CombatEngine as unknown as new (s: CombatState) => CombatEngine)(state);
       tickDoTs(engine);
-      expect(state.enemyHP).toBe(992); // 1000 - 8
+      expect(state.enemyHP).toBe(986); // 1000 - (8 + floor((20-8)/2)) = 1000 - 14
       expect(state.burnStacks).toBe(20);
     } finally {
       clearRun();

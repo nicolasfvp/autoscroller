@@ -20,6 +20,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { detectKeywords, type KeywordDef } from './KeywordDefinitions';
+import { renderTokenText } from './IconTokens';
 import { hideFilterBarInputs, showFilterBarInputs } from './FilterBarVisibility';
 
 const PANEL_WIDTH = 220;
@@ -218,7 +219,8 @@ function mountStandalonePanel(
 
   type Entry = {
     nameText: Phaser.GameObjects.Text;
-    defText: Phaser.GameObjects.Text;
+    defBlock: Phaser.GameObjects.Container;
+    defHeight: number;
     blockHeight: number;
   };
 
@@ -231,16 +233,20 @@ function mountStandalonePanel(
       fontFamily,
     }).setOrigin(0, 0);
 
-    const defText = scene.add.text(0, 0, kw.definition, {
+    // renderTokenText so bracketed tokens in the definition (e.g. [armor], [HP])
+    // render as their colored icons rather than literal "[armor]" text. Built at
+    // (0,0) and repositioned in the layout pass below.
+    const defBlock = renderTokenText(scene, 0, 0, kw.definition, {
       fontSize: `${DEFINITION_FONT_SIZE}px`,
       color: COLORS.textPrimary,
       fontFamily,
-      wordWrap: { width: TEXT_WRAP_WIDTH },
+      wrapWidth: TEXT_WRAP_WIDTH,
       lineSpacing: 2,
-    }).setOrigin(0, 0);
+    });
+    const defHeight = (defBlock.getData('tokenTextHeight') as number | undefined) ?? 0;
 
-    const blockHeight = nameText.height + KEYWORD_TO_DEF_GAP + defText.height;
-    entries.push({ nameText, defText, blockHeight });
+    const blockHeight = nameText.height + KEYWORD_TO_DEF_GAP + defHeight;
+    entries.push({ nameText, defBlock, defHeight, blockHeight });
   }
 
   let contentHeight = title.height + TITLE_TO_BODY_GAP;
@@ -288,9 +294,9 @@ function mountStandalonePanel(
     panel.add(e.nameText);
     cursorY += e.nameText.height + KEYWORD_TO_DEF_GAP;
 
-    e.defText.setPosition(contentX, cursorY);
-    panel.add(e.defText);
-    cursorY += e.defText.height;
+    e.defBlock.setPosition(contentX, cursorY);
+    panel.add(e.defBlock);
+    cursorY += e.defHeight;
 
     if (i < entries.length - 1) cursorY += ENTRY_SPACING;
   }

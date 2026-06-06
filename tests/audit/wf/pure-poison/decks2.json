@@ -1,0 +1,240 @@
+{
+  "decks": [
+    {
+      "id": "b1-appliers-pure",
+      "label": "BOSS1 pure appliers, no detonator, no engine doubler",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-earth-water",
+        "t3-agility-air-water",
+        "t3-earth-fire-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-engine-no-detonator",
+      "label": "BOSS1 Slipvenom+Catalyst engine, NO detonators",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-engine-with-detonator",
+      "label": "BOSS1 engine WITH Drowning Lance detonator (counterproductive check)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-engine-defmix",
+      "label": "BOSS1 engine + 1 defensive poison (survival mix)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-defense-water-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-engine-12card",
+      "label": "BOSS1 full 12-card engine (realistic loop-10 deck size)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-earth-water",
+        "t3-agility-air-water",
+        "t3-defense-water-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-slipvenom-spam",
+      "label": "BOSS1 Slipvenom-heavy (oppression check)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "b1-catalyst-spam",
+      "label": "BOSS1 Bog Catalyst doubling chain (oppression check)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-earth-earth-water",
+        "t3-earth-earth-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap2-base-filler",
+      "label": "SWAP2 base 7-card shell + Spark filler (late)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap2-stagnant",
+      "label": "SWAP2 +Stagnant Bulwark (late, dead-card check)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-defense-defense-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap2-bogwrath",
+      "label": "SWAP2 +Bogwrath (late, dead-card check)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-counter-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap2-slipvenom",
+      "label": "SWAP2 +Slipvenom (late, ceiling check)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-water-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap2-bogcatalyst",
+      "label": "SWAP2 +Bog Catalyst (late, ceiling check)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-earth-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap2-mirebloom",
+      "label": "SWAP2 +Mire Bloom T2 (late, T2 baseline for tier check)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": false
+    }
+  ]
+}

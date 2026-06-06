@@ -1,0 +1,65 @@
+{
+  "lane": "bleed-rage",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "EXECUTION is sound: all 45 main matchups + 6 swap2 matchups reproduce to the digit (45/45, one 0.007 HP jitter), decks use valid ids, sizes are sane (5-12), class-appropriate (warrior physical), repeats=4-5, boss stats (doom_knight 380/def3/9dmg/cd2500ms, enrage +40% @50% confirmed in enemies.json). PLAN is mostly representative (right stages, boss1=doom_knight covered, mid/late batteries, tier-AB clean 2-for-2 swaps). The central OUTPUT problem: the SWAP methodology placed the test card in the LAST deck slot (pos 10 of 10). The engine plays cards in FIXED deck order (deckOrder=[...deck.active], no shuffle; seed only affects rand() in effects), so a pos-10 card in a ~10-14-card fight is played ~once or never. This made the swap2 (fed-rage) tests NON-DISCRIMINATING: Crimson Spiral, Cleaver's Tax, Wrath Brand, AND Berserker's Ledger ALL returned byte-identical hp%=0.278/ttk=14500 -- impossible for cards as different as a 24-pierce 8-rage gate vs a no-condition 8x3 raw-damage card unless the slot is barely exercised. Berserker's Ledger (NO rage interaction) getting the same +0.086 'fed' lift disproves the designer's causal story that 'feeding rage activates the gate payoffs.' Re-running with the test card at an EARLY position (pos2) INVERTS several conclusions: fed Crimson Spiral is WORSE than Jab (0.099 vs 0.192, -0.093, +2400ms slower), and Cleaver's Tax is GOOD when actually played (thin-rage +0.086 over Jab), not a tie. Net: weak-card identifications are partly right (Crimson Spiral, Crimson Cascade genuinely weak; both reproduce in my independent early-slot test) but the 'fed rage rescues them' evidence is an artifact, and Cleaver's Tax is wrongly flagged.",
+  "verdicts": [
+    {
+      "findingId": "BR-1",
+      "status": "confirmed",
+      "reason": "Numbers reproduce exactly (core 0.199, ragegate 0.026, bleedheavy 0.046, all wr=1.0/0 deaths). doom_knight stats + enrage verified in enemies.json. Stance is conservative and correct: boss is winnable, do not nerf it. NOTE: the thin-cushion problem is BUILD-SPECIFIC -- the CORE deck finishes at hp%=0.199 which is a healthy first-boss cushion; only the gate-heavy/bleed-heavy variants are razor-thin, and those are arguably mis-built (over-committed to dead gate cards / inconsistent bleed). The linkage 'BR-2/BR-3 will lift the cushion' is NOT supported by my re-test (the rage-gate cards do not reliably help). The contingent doom_knight cd 2500->2700 lever is fine as a last resort.",
+      "revisedChange": "Keep: no doom_knight nerf. The core build's 0.199 cushion already meets a healthy first-boss bar; treat the thin gate/bleed-heavy variants as deck-building artifacts, not a boss-tuning problem. Pursue BR-4 (Crimson Cascade) and a real Crimson Spiral fix to raise floors, but do NOT assume they lift the boss cushion -- re-measure after any card change."
+    },
+    {
+      "findingId": "BR-2",
+      "status": "confirmed",
+      "reason": "CONCLUSION (Crimson Spiral t3-counter-counter-counter is off-curve weak) is CONFIRMED by my independent early-slot re-test: thin-rage 0.040 vs Jab 0.126 (-0.086) AND fed-rage 0.099 vs Jab 0.192 (-0.093), slower TTK both ways (+2400ms). It loses to a T1 Jab in BOTH rage regimes. HOWEVER the designer's EVIDENCE is partly false: the swap2 '+0.086 when fed' (0.278) is a last-slot artifact -- when the card is actually played, fed Crimson Spiral is WORSE than the fed Jab baseline, not +0.086 better. The 8-rage gate plus a long 2.4s cd makes it a brick that also slows the deck. Proposed fix (gate 8->5, cd 2.4->1.8, cost stays 2s) is C1-compliant and directionally correct; it raises only this T3 (no T2 touched).",
+      "revisedChange": "Apply the proposed gate 8->5 and cd 2.4s->1.8s, but VALIDATE post-change -- in my test even a fed Crimson Spiral slowed the fight, so a gate cut alone may under-correct. If still <= Jab after the change, also raise the payoff floor (e.g. make the non-gated case deal a baseline 12 pierce) so the card is never dead. Re-run an EARLY-SLOT swap to confirm, not a last-slot swap."
+    },
+    {
+      "findingId": "BR-3",
+      "status": "revised",
+      "reason": "PARTIALLY REFUTED. The designer bundled two cards. Cleaver's Tax (t3-attack-counter-counter) is NOT off-curve weak: my early-slot re-test shows it ADDS value -- thin-rage 0.212 vs Jab 0.126 (+0.086) and fed-rage 0.192 (ties the already-strong 0.192 baseline). The designer's 'ties Jab (delta 0.000)' was a last-slot non-play artifact. Cleaver's Tax has a snappy 2.0s cd and a clean 12-pierce base (no gate needed for the base), so it is healthy. Wrath Brand (t3-attack-counter-fire) is borderline: it ties Jab in my early-slot fed test (0.192) and does not clearly beat it -- weak-ish but not a brick. The proposed cd cuts are harmless C1 buffs and violate nothing, but the FINDING as written (both cards off-curve weak) is wrong about Cleaver's Tax.",
+      "revisedChange": "DROP Cleaver's Tax from the weak list -- it is a healthy T3 (verified +0.086 over Jab under thin rage when actually played); leave its cost/cd as-is. Keep only a LOW-severity note on Wrath Brand: optional cd 2.4s->1.8s (C1) to lift a borderline T3 floor, but it is not a confirmed brick. Do not present this as a high-confidence weak-card finding."
+    },
+    {
+      "findingId": "BR-4",
+      "status": "confirmed",
+      "reason": "STRONGLY CONFIRMED and independently reproduced. Designer swap: Crimson Cascade 0.093 vs Jab 0.192 (-0.099, +2300ms). My early-slot re-test: identical 0.093 vs 0.192 (-0.099) vs doom_knight, AND it is slightly worse than Jab even vs the late NORMAL battery where the kill-chain could fire (hp% 0.504/0.381/0.417/0.399 vs Jab 0.510/0.446/0.423/0.405, and slower ttk 6917 vs 5883 vs depths_horror). The self-bleed is pure downside and the kill-chain adds little even in its best case. Genuine off-curve-weak T3. Severity high is justified. Proposed fix (base bleed 3->4([spi]), cd 2.4->2.0) is C1/C4-compliant, buffs only this T3.",
+      "revisedChange": "Apply as proposed (base 3->4 bleed, cd 2.4->2.0). Consider also removing or reducing the 1 self-bleed (pure downside in single-target) since my normals test shows the kill-chain upside barely compensates. Re-validate vs both boss and normals after change."
+    },
+    {
+      "findingId": "BR-5",
+      "status": "confirmed",
+      "reason": "Working-as-designed, no card change. The supporting datum (bleed-heavy boss build br-boss1-bleedheavy is the worst core build, hp%=0.046 vs core 0.199) reproduces exactly. Interpretation (bleed front-loads / x2 swing fires inconsistently vs slow 2.5s-cadence boss) is consistent with the C5 bleed spec. Low severity, no formula change requested -- correctly conservative.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "BR-6",
+      "status": "confirmed",
+      "reason": "Bloodprice Strike (t2-attack-counter) self-cost is NOT a trap. Designer swap (slot 9) shows +0.059 over Jab (0.185 vs 0.126); this is credible because Bloodprice has a short 1.6s cd and low 1s cost so it recycles often even from a late slot. 'No change' is correct and low-risk. Useful positive control; it is strong but not oppressive (does not trivialize anything alone).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "BR-7",
+      "status": "confirmed",
+      "reason": "Berserker's Ledger (t3-attack-attack-attack) is marginally below Jab, corroborated. Designer thin-rage swap: -0.020. My early-slot fed-rage re-test: 0.172 vs Jab 0.192 (-0.020) -- same delta, so the self-bleed (2 stacks) does slightly eat its 24-raw-damage edge. Borderline/low severity is right. Proposed mild C1 buff (cd 2.4->2.0, optionally self-bleed 2->1) raises a T3 floor without touching damage value or any T2. CAVEAT: this card was also the 'control' that exposed the swap2 artifact -- it got the SAME fake +0.086 fed lift as the rage cards despite having no rage interaction, which is what flagged the methodology.",
+      "revisedChange": "Apply the optional self-bleed 2->1 (the cleaner lever -- removes pure downside) rather than the cd cut, or both. Low severity; not urgent."
+    },
+    {
+      "findingId": "BR-8",
+      "status": "revised",
+      "reason": "PARTIALLY SUPPORTED. The rage pair is a legitimate T3>T2 demonstration: tierab-T3-ragegate WINS iron_golem (wr=1.0, hp%=0.095) while tierab-T2-rage DIES (wr=0, 4 deaths) -- clean 2-for-2 swap, reproduces. BUT the bleed pair is INCONCLUSIVE: BOTH tierab-T2-bleed AND tierab-T3-bleed DIE to iron_golem (wr=0, 4 deaths each). You cannot conclude 'T3-bleed > T2-bleed' from two decks that both lose 0/4; the designer leaned on avgDamageDealt-on-a-loss (359 vs 221) and normal-battery TTK, which is an indirect/weak signal. The verdict 'no T3<T2 inversion found' is acceptable (none was observed), but it is a pass-by-absence for bleed, NOT a positive demonstration. Severity stays low (no fix needed), but the claim should be softened.",
+      "revisedChange": "Restate as: 'rage T3>T2 demonstrated (T3-ragegate wins iron_golem, T2-rage dies); bleed T3-vs-T2 INCONCLUSIVE (both decks die to iron_golem) -- no inversion observed but not positively shown. No tier-violation fix needed. To properly demonstrate bleed T3>T2, re-test vs an enemy both decks can beat (e.g. doom_knight or the normal battery) with the test cards in early slots.'"
+    }
+  ],
+  "methodologyNote": "Engine plays cards in FIXED deck order (no shuffle); swap tests MUST place the candidate in an early/mid slot or they do not exercise the card. Last-slot swaps produced false ties/jumps. Re-run all swap-based weak/strong claims with early-slot placement before acting on cost/CD changes.",
+  "artifacts": {
+    "advDecks": "tests/audit/wf/bleed-rage/adv-decks.json",
+    "advMatchups": "tests/audit/wf/bleed-rage/adv-matchups.json",
+    "advResults": "tests/audit/wf/bleed-rage/adv-results.json",
+    "reproMain": "tests/audit/wf/bleed-rage/adv-reproduce-main.json",
+    "reproSwap2": "tests/audit/wf/bleed-rage/adv-reproduce-results2.json"
+  }
+}

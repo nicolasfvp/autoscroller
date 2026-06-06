@@ -1,0 +1,69 @@
+{
+  "lane": "armor-finisher",
+  "resultsPath": "tests/audit/wf/armor-finisher/results.json",
+  "decksTested": 24,
+  "matchupsRun": 62,
+  "summary": "C3 holds: plain armor is race-LOSING. The no-finisher armor wall DIES to doom_knight (swap-base-boss1 wr=0, deaths=5) and TIMES OUT vs iron_golem and even normal mutated_salamander (arm-pure-noFin-mid wr=0, to=5). The single narrow armor->damage finisher line is exactly what makes the archetype playable, and it does NOT trivialize bosses (doom_knight beaten with ~66% HP, not oppressive). HOWEVER the finisher line is badly mis-tiered: Aegis of Returning Wrath (T3) adds ZERO marginal value (swap-aegis-boss1 is byte-identical to the no-finisher base: wr=0, deaths=5, dmg=300, cards=66), and Mountain's Answer (T3, the canonical finisher) is the SLOWEST winner (ttk 126300) while T2 Shield Bash (ttk 58500) and T2 Granite Lunge (ttk 95300) outperform it -> two T3>T2 violations. Body Slam Vow (T3) and the armor=damage scalers are the only finishers pulling their weight.",
+  "findings": [
+    {
+      "id": "ARMFIN-1",
+      "kind": "viability",
+      "target": "armor-finisher archetype (plain armor as a win condition)",
+      "stage": "boss1/mid/late",
+      "evidence": "C3 race-losing CONFIRMED working: swap-base-boss1__vs__doom_knight wr=0, deaths=5/5 (380HP boss, the 'should be easy' loop-10 boss). arm-pure-noFin-boss1__vs__doom_knight technically wr=1 but only by grinding to the 180000ms sim cap at 4% HP (hp%=0.04, cards=83) - a non-functional 'win'. Plain armor also TIMES OUT vs iron_golem (arm-pure-noFin-late to=5; swap-base-late to=5) AND vs a NORMAL mid enemy (arm-pure-noFin-mid__vs__mutated_salamander wr=0, to=5). With a finisher, arm-fin-mountains-mid clears every mid normal (wr=1, ttk 9100-26500) and arm-fin-mountains-boss1 beats doom_knight at ttk=32500, hp%=0.662.",
+      "severity": "low",
+      "proposedChange": "No change. This is C3 behaving as intended (armor/heal = race-losing; survival buys time for the single finisher win condition). Documented here as the lane-viability baseline; the actionable problems are inside the finisher line (ARMFIN-2..5).",
+      "confidence": "high"
+    },
+    {
+      "id": "ARMFIN-2",
+      "kind": "tier_violation",
+      "target": "t3-defense-defense-defense (Aegis of Returning Wrath)",
+      "stage": "boss1",
+      "evidence": "SWAP TEST, identical 10-card no-finisher shell + 1 slot, 5 repeats vs doom_knight. BASE (filler t1-agility): wr=0, deaths=5, dmg=300, cards=66. +Aegis (swap-aegis-boss1): wr=0, deaths=5, dmg=300, cards=66 - BYTE-IDENTICAL to base; Aegis contributes ZERO. Every other finisher flips the loss to a win: +Body Slam wr=1 ttk=60100; +Shield Bash(T2) wr=1 ttk=58500; +Granite Lunge(T2) wr=1 ttk=95300; +Mountain's Answer wr=1 ttk=126300. swap-aegis-late also TIMES OUT iron_golem (to=5, dmg=138 = base) and matches base TTK on every normal. Cause: 'Brace: Deal 18 Pierce' is a flat (non-armor-scaling) hit gated on the Brace condition (must have blocked a recent hit), so it rarely/weakly fires and never scales with the armor pool the deck stacks. A T3 finisher that is strictly dominated by two T2s and adds nothing in its own swap test is a clear T3>T2 violation.",
+      "severity": "high",
+      "proposedChange": "BUFF the T3 (never nerf T2). Convert Aegis's payoff to armor-scaling so it actually belongs to the finisher line: change 'Brace: Deal 18 Pierce' -> 'Brace: Deal 14 Pierce, +1 damage per 4[armor] you have' (uncapped on a 2.4s CD, gated on Brace it stays a defensive-reactive finisher, distinct from Body Slam's per-armor and Shield Bash's full-armor). Keep cost 2s. If still under the pack after re-sim, additionally cut CD 2.4s -> 2.0s (C1: rescue a weak card by trimming CD, snappy floor respected). Do NOT touch Shield Bash/Granite Lunge.",
+      "confidence": "high"
+    },
+    {
+      "id": "ARMFIN-3",
+      "kind": "tier_violation",
+      "target": "t3-earth-earth-earth (Mountain's Answer)",
+      "stage": "boss1",
+      "evidence": "SWAP TEST vs doom_knight (identical shell + 1 slot, 5 repeats): +Mountain's Answer flips base loss to wr=1 BUT is the SLOWEST winner of every finisher - ttk=126300, cards=59. It is beaten by T2 Shield Bash (ttk=58500) and even T2 Granite Lunge (ttk=95300), and by all other T3s (Body Slam 60100, Mountain's Will 80900). TIER A/B (clean, identical shell): T2 Granite Lunge ttk=99500 vs T3 Mountain's Answer ttk=89700 - only a hair apart, i.e. the headline T3 finisher barely edges a T2. swap-mountains-late also TIMES OUT iron_golem (to=5) like the base shell. Cause vs single targets: its 22 Pierce is FLAT, conditional on armor>=32, and AoE-flavored ('to all enemies') so it wastes its ceiling on solo bosses while costing 2s on a 2.4s CD.",
+      "severity": "med",
+      "proposedChange": "BUFF the T3 so its single-target ceiling clears its own element's T2 finishers. Make its damage scale with the armor it just gained: change 'If [armor] is at least 32: Deal 22 Pierce to all enemies' -> 'If [armor] is at least 32: Deal 22 Pierce to all enemies, +1 Pierce per 2[armor] above 32 to the primary target'. Keep cost 2s / CD 2.4s (C1: ceiling lift, not a cost/CD nerf). Re-sim target: ttk vs doom_knight at or below T2 Shield Bash's ~58500.",
+      "confidence": "high"
+    },
+    {
+      "id": "ARMFIN-4",
+      "kind": "off_curve_strong",
+      "target": "t2-attack-defense (Shield Bash)",
+      "stage": "boss1/late",
+      "evidence": "SWAP TEST vs doom_knight: +Shield Bash (T2) wr=1, ttk=58500, cards=33 - TIES the best T3 (Body Slam 60100) and BEATS both canonical T3 finishers (Mountain's Answer 126300, Aegis 0/loss). 'Deal damage equal to your [armor]' scales 1:1 with the stacked armor pool at 1s cost on a 1.6s CD (snappier than every T3 in the line). A T2 sitting at or above the T3 finishers is the mirror of the tier violations in ARMFIN-2/3.",
+      "severity": "med",
+      "proposedChange": "Do NOT nerf (T3>T2 rule forbids fixing this by nerfing the T2; and it is not oppressive - it still cannot win without the armor wall). Resolve the relationship by BUFFING the T3 finishers above it (ARMFIN-2 Aegis, ARMFIN-3 Mountain's Answer) so Shield Bash becomes the clean T2 baseline the T3s must beat. Flag only - no direct change to this card.",
+      "confidence": "high"
+    },
+    {
+      "id": "ARMFIN-5",
+      "kind": "off_curve_strong",
+      "target": "t3-attack-defense-defense (Body Slam Vow)",
+      "stage": "boss1/late",
+      "evidence": "Best finisher in the lane and the only one that solo-carries late bosses: swap-bodyslam-boss1__vs__doom_knight wr=1 ttk=60100 cards=33; swap-bodyslam-late__vs__iron_golem wr=1 ttk=39300 (vs base/aegis/mountains which all TIMEOUT, to=5). On late normals it collapses TTK to ~18500ms (swap-bodyslam-late vs depths_horror 17980 / fire_elemental 18500 / werewolf 18500) and ~2x the damage of other finishers (dmg 200-278 vs 111-164). 'Deal 2 Pierce, +1 per [armor]' at 1s cost is the correct power level for this archetype - NOT oppressive (still needs the armor wall to function; cannot win a no-armor deck).",
+      "severity": "low",
+      "proposedChange": "No change - keep as the in-band T3 ceiling reference. Use its boss1 ttk (~60100) and its iron_golem clear as the target the buffed Aegis (ARMFIN-2) and Mountain's Answer (ARMFIN-3) should approach. This card defines 'correct' for the narrow armor->damage line.",
+      "confidence": "high"
+    },
+    {
+      "id": "ARMFIN-6",
+      "kind": "progression",
+      "target": "doom_knight (loop-10 'should-be-easy' boss) vs armor-finisher",
+      "stage": "boss1",
+      "evidence": "A realistic finisher deck clears the loop-10 boss comfortably but NOT trivially: arm-fin-mountains-boss1__vs__doom_knight wr=1, ttk=32500, hp%=0.662; arm-fin-bodyslam-boss1 hp%=0.662; arm-fin-aegis-boss1 wr=1 ttk=71700 hp%=0.616 (wins because that deck also runs Body Slam). Meanwhile the finisher-LESS wall fails it (swap-base wr=0, deaths=5; arm-pure-noFin only 'wins' at the 180s cap at 4% HP). This matches the WORKFLOW-BRIEF target for a first boss (winnable ~0.8+ with some HP cost) PROVIDED the player has a working finisher.",
+      "severity": "low",
+      "proposedChange": "No boss retune. doom_knight tuning is correct for armor-finisher. The realism risk is NOT the boss - it is that two of the four named finishers (Aegis, Mountain's Answer) under-deliver, so a player who built around them (per their names) gets a much worse boss1 experience than one who lucked into Body Slam/Shield Bash. Fixing ARMFIN-2/3 closes that gap; no enemy-side change needed.",
+      "confidence": "high"
+    }
+  ]
+}

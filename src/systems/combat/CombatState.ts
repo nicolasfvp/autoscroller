@@ -53,6 +53,12 @@ export interface CombatState {
    * back-compat with test fixtures that build CombatState literals. */
   heroStunStacks?: number;
   /**
+   * Rebalance: stun diminishing-returns window. While `combatElapsedMs` is
+   * below this timestamp the enemy RESISTS new stun applications (set after a
+   * freeze fully decays, so stun can't be perma-chained). Optional for
+   * back-compat with test fixtures that build CombatState literals. */
+  stunImmuneUntilMs?: number;
+  /**
    * Per-deck-position upgrade flags for this combat. Length matches
    * `deckOrder`. Index `i` corresponds to `deckOrder[i]`.
    */
@@ -255,6 +261,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     activePassives: [],
     heroStunned: false,
     heroStunStacks: 0,
+    stunImmuneUntilMs: 0,
     upgraded: [...run.deck.upgraded],
     behaviors: (enemy as any).behaviors ?? [],
 

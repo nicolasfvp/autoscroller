@@ -10,6 +10,7 @@
 
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
+import { renderTokenText } from './IconTokens';
 import type { KeywordDef } from './KeywordDefinitions';
 
 const OVERLAY_DEPTH = 12000;
@@ -94,8 +95,11 @@ export function openKeywordIntroOverlay(
   const divider = scene.add.rectangle(0, lY + 78, PANEL_W - 36, 1, 0xffd700, 0.4);
   innerPanel.add(divider);
 
-  // Definition — warm amber to match the tutorial text box style
-  const definition = scene.add.text(
+  // Definition — warm amber to match the tutorial text box style. renderTokenText
+  // so bracketed tokens (e.g. [armor], [HP]) show as their colored icons; plain
+  // prose keeps the amber base color, tokens override with their own.
+  const definition = renderTokenText(
+    scene,
     lX + 18,
     lY + 88,
     keyword.definition,
@@ -103,10 +107,10 @@ export function openKeywordIntroOverlay(
       fontSize: '13px',
       color: '#e6c88a',
       fontFamily: FONTS.body,
-      wordWrap: { width: PANEL_W - 36 },
+      wrapWidth: PANEL_W - 36,
       lineSpacing: 4,
     },
-  ).setOrigin(0, 0);
+  );
   innerPanel.add(definition);
 
   // "Got it!" button — centered near panel bottom

@@ -1,0 +1,52 @@
+{
+  "matchups": [
+    {
+      "id": "burn-survival-hybrid-baseline",
+      "label": "realistic burn+sustain hybrid baseline (no overrides) full HP",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t2-fire-water","t1-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire","t3-fire-water-water","t2-earth-fire","t1-water","t3-agility-fire-water","t2-air-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "burn-survival-hybrid-P1",
+      "label": "realistic burn+sustain hybrid P1-2+P1-3 full HP",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t2-fire-water","t1-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire","t3-fire-water-water","t2-earth-fire","t1-water","t3-agility-fire-water","t2-air-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] }
+      }
+    },
+    {
+      "id": "burn-survival-hybrid-P1-dmg7",
+      "label": "realistic burn+sustain hybrid P1 + P0-1 dmg7 (no HP trim) full HP",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t2-fire-water","t1-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire","t3-fire-water-water","t2-earth-fire","t1-water","t3-agility-fire-water","t2-air-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "attack": { "damage": 7, "pattern": "fixed" } },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] }
+      }
+    },
+    {
+      "id": "burn-survival-hybrid-P1-hp350-dmg7",
+      "label": "realistic burn+sustain hybrid P1 + P0-1 dmg7 + HP350 full HP",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t2-fire-water","t1-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire","t3-fire-water-water","t2-earth-fire","t1-water","t3-agility-fire-water","t2-air-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "baseHP": 350, "attack": { "damage": 7, "pattern": "fixed" } },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] }
+      }
+    }
+  ]
+}

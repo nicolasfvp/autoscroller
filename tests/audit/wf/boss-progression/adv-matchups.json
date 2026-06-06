@@ -1,0 +1,124 @@
+{
+  "matchups": [
+    {
+      "id": "adv-war-physical__vs__doom_knight",
+      "label": "ADV warrior physical vs BOSS doom_knight (baseline reproduce)",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-counter", "t2-attack-earth", "t2-agility-earth", "t1-attack", "t2-counter-counter", "t3-attack-attack-attack", "t3-agility-attack-counter"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight", "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-mage-poison__vs__doom_knight",
+      "label": "ADV mage poison vs BOSS doom_knight (baseline reproduce)",
+      "archetype": "pure-poison",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": ["t2-earth-water", "t1-water", "t2-water-water", "t2-agility-water", "t3-agility-water-water", "t3-earth-earth-water", "t2-fire-water", "t3-air-fire-water", "t2-air-water", "t3-agility-earth-water", "t2-agility-fire"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight", "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-mage-burn__vs__doom_knight",
+      "label": "ADV mage burn vs BOSS doom_knight (baseline reproduce)",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t2-air-fire", "t1-fire", "t2-fire-water", "t3-attack-fire-fire", "t3-agility-fire-fire", "t2-water-water", "t2-air-water", "t2-agility-water"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight", "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical__vs__doom_knight_dmg7",
+      "label": "PROBE warrior physical vs doom_knight DMG 7 (BP-1 lever)",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-counter", "t2-attack-earth", "t2-agility-earth", "t1-attack", "t2-counter-counter", "t3-attack-attack-attack", "t3-agility-attack-counter"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight",
+      "enemyOverride": { "attack": { "damage": 7, "pattern": "fixed" } },
+      "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical__vs__doom_knight_dmg8",
+      "label": "PROBE warrior physical vs doom_knight DMG 8 (BP-1 alt lever)",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-counter", "t2-attack-earth", "t2-agility-earth", "t1-attack", "t2-counter-counter", "t3-attack-attack-attack", "t3-agility-attack-counter"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight",
+      "enemyOverride": { "attack": { "damage": 8, "pattern": "fixed" } },
+      "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-mage-burn__vs__doom_knight_dmg7",
+      "label": "PROBE mage burn vs doom_knight DMG 7 (does dmg cut rescue burn? expect NO)",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t2-air-fire", "t1-fire", "t2-fire-water", "t3-attack-fire-fire", "t3-agility-fire-fire", "t2-water-water", "t2-air-water", "t2-agility-water"],
+      "runXP": 520, "relics": [], "enemy": "doom_knight",
+      "enemyOverride": { "attack": { "damage": 7, "pattern": "fixed" } },
+      "loopMultiplier": 1, "isBoss": true, "loopCount": 10, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__iron_golem",
+      "label": "ADV strong warrior physical vs BOSS iron_golem (baseline reproduce)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem", "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__lizard_king",
+      "label": "ADV strong warrior physical vs BOSS lizard_king (curve reproduce)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "lizard_king", "loopMultiplier": 1.1, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__bog_witch",
+      "label": "ADV strong warrior physical vs BOSS bog_witch (curve reproduce)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "bog_witch", "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__iron_golem_def3",
+      "label": "PROBE iron_golem baseDefense 4->3 (BP-4 proposed fix)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "baseDefense": 3 },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__iron_golem_def3_dmg9",
+      "label": "PROBE iron_golem def 4->3 AND dmg 10->9 (BP-4 combined fix)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "baseDefense": 3, "attack": { "damage": 9, "pattern": "fixed" } },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-war-physical-late__vs__iron_golem_noshield",
+      "label": "PROBE iron_golem shield behavior removed (isolate shield contribution)",
+      "archetype": "pure-physical",
+      "stage": "late",
+      "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [] },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    }
+  ]
+}

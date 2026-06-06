@@ -1,0 +1,57 @@
+{
+  "rate": "0.22",
+  "results": [
+    {
+      "id": "burn-baseline-vs-dk",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 246,
+      "avgCards": 15,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-P1-vs-dk",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 283,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "direct-baseline-vs-dk",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 423,
+      "avgCards": 15,
+      "hpOnWin": 0.347,
+      "ttkS": 22.8,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "direct-P1-vs-dk",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 437,
+      "avgCards": 15,
+      "hpOnWin": 0.24,
+      "ttkS": 22.6,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    }
+  ]
+}

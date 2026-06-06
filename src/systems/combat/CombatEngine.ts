@@ -24,6 +24,17 @@ const STAMINA_REGEN = 1;
 const MANA_REGEN = 1;
 /** Retry delay when all cards are unaffordable */
 const RETRY_DELAY = 500;
+
+/** Rebalance: DoTs tick on a real-time (wall-clock) cadence, decoupled from
+ *  deck tempo, so slow/control decks no longer waste their stacks (D-4). */
+const DOT_TICK_MS = 1000;
+/** Per-tick damage chunk cap for poison/bleed — guards against geometric stack
+ *  pools (e.g. Bog Catalyst → 1500+ stacks) draining the enemy through the DoT
+ *  path in one tick. */
+const DOT_CHUNK_CAP = 60;
+/** After a freeze fully decays, the enemy resists new stun for this long
+ *  (diminishing-returns window) so stun can't be perma-chained (D-9). */
+const STUN_IMMUNE_MS = 2500;
 /** Maximum total combat duration (ms) before a deadlock fail-safe defeats the hero */
 const DEADLOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -39,6 +50,10 @@ export class CombatEngine {
   private isFinished = false;
 
   private regenAccumulator = 0;
+  /** Rebalance: wall-clock accumulator for DoT ticking (decoupled from card plays). */
+  private dotTickAccumulator = 0;
+  /** Last card played — attributes wall-clock DoT ticks to a source for relics. */
+  private lastPlayedCardId: string | null = null;
   /** Total elapsed ms in this combat — used by the deadlock fail-safe. */
   private totalElapsedMs = 0;
 
@@ -88,6 +103,16 @@ export class CombatEngine {
       if (this.checkEndConditions()) return;
 
       this.enemyAI.tick(deltaMs, this.state, this.stats);
+      if (this.checkEndConditions()) return;
+    }
+
+    // Rebalance: wall-clock DoT ticking — fire tickActiveDoTs on a fixed
+    // real-time cadence instead of once per card play, so DoT value is
+    // decoupled from deck tempo (root fix for under-using decaying DoTs).
+    this.dotTickAccumulator += deltaMs;
+    while (this.dotTickAccumulator >= DOT_TICK_MS) {
+      this.dotTickAccumulator -= DOT_TICK_MS;
+      this.tickActiveDoTs(this.lastPlayedCardId ?? '');
       if (this.checkEndConditions()) return;
     }
 
@@ -303,10 +328,10 @@ export class CombatEngine {
       this.state.firstFireCardBurnBonus = 0;
     }
 
-    // Phase 9: DoT tick cadence is "every card play" (INDEX §7 #2, RESEARCH
-    // A2). Tick BEFORE deck-pointer advance so attribution to the triggering
-    // card is preserved (Pitfall 4).
-    this.tickActiveDoTs(card.id);
+    // Rebalance: DoTs now tick on a wall-clock cadence (see tick()), NOT per
+    // card play. Record the card so the next wall-clock DoT tick can attribute
+    // its dot_tick relic dispatch to a source.
+    this.lastPlayedCardId = card.id;
 
     // Set cooldown for next card. Upgraded variants override base cooldown.
     // `isUpgraded` is already resolved above for this deck position.
@@ -405,7 +430,7 @@ export class CombatEngine {
     const crimsonStiletto = state.activeRelicIds.includes('crimson_stiletto');
 
     if (state.poisonStacks > 0) {
-      const dmg = state.poisonStacks;
+      const dmg = Math.min(state.poisonStacks, DOT_CHUNK_CAP);
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
@@ -433,7 +458,7 @@ export class CombatEngine {
       const perStack = basePerStack + state.subtileBleedTickBonus;
       // C4 — Crimson Stiletto: bleed ticks fire 2× faster (= deal double per tick).
       const speedMult = crimsonStiletto ? 2 : 1;
-      const dmg = state.bleedStacks * perStack * speedMult;
+      const dmg = Math.min(state.bleedStacks * perStack * speedMult, DOT_CHUNK_CAP);
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
@@ -451,8 +476,12 @@ export class CombatEngine {
       // Base: min(stacks, 8). C4 — Cinderkeep keeps its prior formula
       // (ceil(stacks/4), min 2) since that relic is sold as a burn-tempo
       // amplifier rather than a raw scaler.
-      const base = Math.min(state.burnStacks, 8);
-      const dmg = cinderkeep ? Math.max(base, Math.ceil(state.burnStacks / 4)) : base;
+      // Rebalance: soft cap (was hard min(8)) so deep-fire investment isn't
+      // wasted — flattens above 8 but never flatlines (bank-and-cash burn).
+      // Clamped to the global chunk cap so a huge banked pool can't one-shot
+      // through ticks (it should be detonated instead).
+      const base = state.burnStacks <= 8 ? state.burnStacks : 8 + Math.floor((state.burnStacks - 8) / 2);
+      const dmg = Math.min(DOT_CHUNK_CAP, cinderkeep ? Math.max(base, Math.ceil(state.burnStacks / 4)) : base);
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
@@ -461,23 +490,24 @@ export class CombatEngine {
       anyDotTicked = true;
     }
 
-    // Stun (renamed from Freeze): no damage. While stunStacks > 0, EnemyAI
-    // halts the cooldown timer. Stacks decay -1 per tick here.
+    // Stun: no damage; while stunStacks > 0, EnemyAI halts the cooldown timer.
+    // Rebalance: decays on the wall-clock tick (1/sec = elite hard control).
+    // When a freeze fully ends, open a diminishing-returns window during which
+    // the enemy RESISTS new stun (CardResolver checks stunImmuneUntilMs) so it
+    // cannot be perma-chained.
     if (state.stunStacks > 0) {
       state.stunStacks = Math.max(0, state.stunStacks - 1);
+      if (state.stunStacks === 0) {
+        state.stunImmuneUntilMs = state.combatElapsedMs + STUN_IMMUNE_MS;
+      }
     }
 
-    // Slow (renamed from Shock): small DoT + per-stack enemy attack-cooldown
-    // slow (applied in EnemyAI.tick — 8% per stack, capped at 50%). Stack
-    // decays each tick.
+    // Slow: rebalance — now PURE soft control (NO tick damage). It throttles
+    // the enemy attack cadence (8%/stack, cap 50%, applied in EnemyAI.tick) and
+    // decays 1 per wall-clock tick. De-duplicates the DoT taxonomy (slow = soft
+    // control, stun = hard control, neither deals damage).
     if (state.slowStacks > 0) {
-      const dmg = state.slowStacks;
-      state.enemyHP -= dmg;
-      this.stats.damageDealt += dmg;
-      getRun().stats.damageDealt += dmg;
-      eventBus.emit('combat:dot-tick', { stack: 'slow', damage: dmg, sourceCard: triggeringCardId });
       state.slowStacks = Math.max(0, state.slowStacks - 1);
-      anyDotTicked = true;
     }
 
     // Phase 9 (WR-01 fix): dispatch the `dot_tick` relic trigger ONCE per

@@ -1,0 +1,49 @@
+{
+  "matchups": [
+    {
+      "id": "TS-A-frostbind-boss",
+      "label": "A T2 Frostbind (slot0) vs doom_knight",
+      "archetype": "water-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t2-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "TS-B-tidesong-cur-boss",
+      "label": "B T3 Tidesong Aura CURRENT (slot0) vs doom_knight",
+      "archetype": "water-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-water-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "TS-C-tidesong-prop-boss",
+      "label": "C T3 Tidesong Aura PROPOSED cd1.8 heal22 (slot0) vs doom_knight",
+      "archetype": "water-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-water-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-water-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 22 }, {}, {} ] } }
+    },
+
+    {
+      "id": "TS-A-frostbind-sal",
+      "label": "A T2 Frostbind (slot0) vs salamander",
+      "archetype": "water-mage", "stage": "mid", "class": "mage",
+      "deck": ["t2-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    },
+    {
+      "id": "TS-B-tidesong-cur-sal",
+      "label": "B T3 Tidesong Aura CURRENT (slot0) vs salamander",
+      "archetype": "water-mage", "stage": "mid", "class": "mage",
+      "deck": ["t3-water-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    },
+    {
+      "id": "TS-C-tidesong-prop-sal",
+      "label": "C T3 Tidesong Aura PROPOSED (slot0) vs salamander",
+      "archetype": "water-mage", "stage": "mid", "class": "mage",
+      "deck": ["t3-water-water-water","t1-water","t2-earth-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-water-water","t3-agility-air-water","t2-fire-water","t1-fire","t3-defense-water-water","t3-earth-fire-water","t2-earth-earth"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5,
+      "cardOverrides": { "t3-water-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 22 }, {}, {} ] } }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "rate": "0.22",
+  "results": [
+    {
+      "id": "warrior-phys-baseline-dmg9",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 376,
+      "avgCards": 14,
+      "hpOnWin": 0.503,
+      "ttkS": 21,
+      "startHP": 151,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-P1-hp380-dmg9-full",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 283,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-P1-hp380-dmg7-full",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 303,
+      "avgCards": 18,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 7
+    },
+    {
+      "id": "burn-P1-hp350-dmg9-full",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 283,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 350,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-P1-hp350-dmg7-full",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 303,
+      "avgCards": 18,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 350,
+      "enemyDmg": 7
+    },
+    {
+      "id": "burn-P1-hp320-dmg7-full",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 303,
+      "avgCards": 18,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 320,
+      "enemyDmg": 7
+    }
+  ]
+}

@@ -1,0 +1,485 @@
+{
+  "decks": [
+    {
+      "id": "arm-pure-noFin-early",
+      "label": "Pure armor, NO finisher (early)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "early",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-defense",
+        "t2-agility-defense",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "arm-pure-noFin-mid",
+      "label": "Pure armor, NO finisher (mid)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-agility-defense-defense",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "arm-pure-noFin-boss1",
+      "label": "Pure armor wall, NO finisher (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-agility-defense-defense",
+        "t3-defense-defense-water",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "arm-pure-noFin-late",
+      "label": "Pure armor wall, NO finisher (late)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-agility-defense-defense",
+        "t3-defense-defense-water",
+        "t3-agility-air-defense",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "arm-fin-mountains-early",
+      "label": "Armor finisher (Mountain's Answer) early",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "early",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-attack-earth",
+        "t3-earth-earth-earth",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-defense",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "arm-fin-mountains-mid",
+      "label": "Armor finisher (Mountain's Answer) mid",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-attack-earth",
+        "t3-earth-earth-earth",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "arm-fin-mountains-boss1",
+      "label": "Armor finisher (Mountain's Answer) BOSS1",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-attack-earth",
+        "t3-earth-earth-earth",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "arm-fin-mountains-late",
+      "label": "Armor finisher (Mountain's Answer) late",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-attack-earth",
+        "t3-earth-earth-earth",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack"
+      ]
+    },
+
+    {
+      "id": "arm-fin-aegis-boss1",
+      "label": "Armor finisher (Aegis Brace line) BOSS1",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-earth",
+        "t3-defense-defense-defense",
+        "t3-attack-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-defense-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "arm-fin-bodyslam-boss1",
+      "label": "Armor finisher (Body Slam Vow) BOSS1",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-counter-earth",
+        "t3-attack-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t3-air-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "arm-shieldbash-boss1",
+      "label": "Armor + Shield Bash (armor->dmg) BOSS1",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t2-attack-defense",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "swap-base-boss1",
+      "label": "SWAP BASE armor shell + filler slot (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-mountains-boss1",
+      "label": "SWAP +Mountain's Answer (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-earth-earth-earth"
+      ]
+    },
+    {
+      "id": "swap-aegis-boss1",
+      "label": "SWAP +Aegis of Returning Wrath (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t3-defense-defense-defense"
+      ]
+    },
+    {
+      "id": "swap-bodyslam-boss1",
+      "label": "SWAP +Body Slam Vow (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-attack-defense-defense"
+      ]
+    },
+    {
+      "id": "swap-granite-boss1",
+      "label": "SWAP +Granite Lunge T2 (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ]
+    },
+    {
+      "id": "swap-shieldbash-boss1",
+      "label": "SWAP +Shield Bash T2 (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-defense"
+      ]
+    },
+    {
+      "id": "swap-mountainswill-boss1",
+      "label": "SWAP +Mountain's Will (armor-cond pure dmg, boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-attack-earth-earth"
+      ]
+    },
+
+    {
+      "id": "tierAB-T2granite-boss1",
+      "label": "TIER A/B: T2 Granite Lunge variant (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ]
+    },
+    {
+      "id": "tierAB-T3mountains-boss1",
+      "label": "TIER A/B: T3 Mountain's Answer variant (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-earth-earth-earth"
+      ]
+    },
+
+    {
+      "id": "swap-base-late",
+      "label": "SWAP BASE armor shell (late)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-mountains-late",
+      "label": "SWAP +Mountain's Answer (late)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-earth-earth-earth"
+      ]
+    },
+    {
+      "id": "swap-aegis-late",
+      "label": "SWAP +Aegis of Returning Wrath (late)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t3-defense-defense-defense"
+      ]
+    },
+    {
+      "id": "swap-bodyslam-late",
+      "label": "SWAP +Body Slam Vow (late)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-defense-defense",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t3-attack-defense-defense"
+      ]
+    }
+  ]
+}

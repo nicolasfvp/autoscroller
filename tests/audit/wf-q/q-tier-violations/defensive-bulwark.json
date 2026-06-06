@@ -1,0 +1,85 @@
+{
+  "matchups": [
+    {
+      "id": "BV-A-bulwarkvow-boss",
+      "label": "A T2 Bulwark Vow (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-defense-defense","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+
+    {
+      "id": "SGB-B-stagnant-cur-boss",
+      "label": "B T3 Stagnant Bulwark CURRENT (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-defense-defense-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "SGB-C-stagnant-prop-boss",
+      "label": "C T3 Stagnant Bulwark PROPOSED cd1.6 aura2 (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-defense-defense-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-defense-defense-water": { "cooldown": 1.6, "effects": [
+        {"type":"armor","value":10,"target":"self","scale":{"stat":"vit","per":2,"value":2}},
+        {"type":"aura","value":0,"target":"self","ttl_ms":12000,"tick_ms":2000,"then":{"type":"dot","value":2,"target":"enemy","stack":"poison","scale":{"stat":"int","per":3,"value":1}}}
+      ] } }
+    },
+
+    {
+      "id": "STR-B-stoneward-cur-boss",
+      "label": "B T3 Stoneward Reprisal CURRENT (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-defense-defense-earth","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "STR-C-stoneward-prop-boss",
+      "label": "C T3 Stoneward Reprisal PROPOSED cd1.6 (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-defense-defense-earth","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-defense-defense-earth": { "cooldown": 1.6 } }
+    },
+
+    {
+      "id": "BOG-B-bogwrath-cur-boss",
+      "label": "B T3 Bogwrath CURRENT (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-earth-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "BOG-C-bogwrath-prop-boss",
+      "label": "C T3 Bogwrath PROPOSED ungate->uncond 4 poison cd1.6 (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-earth-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-counter-earth-water": { "cooldown": 1.6, "effects": [
+        {"type":"armor","value":10,"target":"self","scale":{"stat":"vit","per":2,"value":2}},
+        {"type":"dot","value":4,"target":"enemy","stack":"poison"},
+        {"type":"aura","value":0,"target":"self","ttl_ms":12000,"trigger":"on_armor_break","then":{"type":"stack","value":3,"target":"self","stack":"rage"}}
+      ] } }
+    },
+
+    {
+      "id": "TFB-B-tidefoot-cur-boss",
+      "label": "B T3 Tidefoot Bloom CURRENT (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-water-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "TFB-C-tidefoot-prop-boss",
+      "label": "C T3 Tidefoot Bloom PROPOSED no-exhaust 4 poison floor cd1.6 (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-water-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-counter-water-water": { "cooldown": 1.6, "exhaust": false, "effects": [
+        {"type":"dot","stack":"poison","value":4,"target":"enemy"},
+        {"type":"aura","value":0,"target":"self","ttl_ms":9999999,"event_counter":{"event":"heal_received","threshold":1,"repeat":true},"then":{"type":"dot","stack":"poison","value":1,"target":"enemy","scale":{"stat":"int","per":3,"value":1}}}
+      ] } }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "lane": "boss-progression",
+  "resultsPath": "tests/audit/wf/boss-progression/results.json",
+  "diagResultsPath": "tests/audit/wf/boss-progression/diag-results.json",
+  "decksTested": 17,
+  "matchupsRun": 52,
+  "summary": "doom_knight (the should-be-easy first boss, 380HP/9dmg/def3, enrage x1.4 @50%) is NOT easy for an average loop-10 deck. Across 8 realistic boss1 decks (runXP520, ~11 cards, mostly T2 + a couple T3, 0 relics) only 6/8 win and only 2/8 win with a real HP cushion (>=15%). Two archetypes (mage burn, mage slow/stun control) LOSE outright (5/5 deaths). Three more (warrior physical, warrior bleed-rage, mage poison) win at 3-15% HP. Boss-tuning probes show a modest doom_knight DAMAGE cut (9->7 or 8) lifts race-y physical/poison decks from 3% to 14-22% cushion without trivializing or rescuing the DPS-starved decks. Burn cannot be rescued by boss tuning (it loses even at 320HP) -- that is a card-economy problem. Boss CURVE is also non-monotonic: the strong late physical deck LOSES iron_golem (1.05, 409HP/10dmg/def4) but WINS lizard_king (1.10, 388/10/def3) and bog_witch (1.05, 420/7/def2) -- iron_golem is a spike for race decks because of its higher def(4)+HP pushing the kill past the enrage window.",
+  "findings": [
+    {
+      "id": "BP-1",
+      "kind": "progression",
+      "target": "doom_knight",
+      "stage": "boss1",
+      "evidence": "8 realistic boss1 decks vs doom_knight (380HP/9dmg/def3, 5 repeats each). Outright LOSSES (5/5 deaths): b1-mage-burn__vs__doom_knight (dmg 202/380, 53%), b1-mage-control__vs__doom_knight (213/380, 56%). Razor-thin WINS: b1-war-physical 3.3% HP, b1-war-physical-relic 4.0%, b1-war-bleed-rage 4.6%, b1-mage-poison 14.9%. Comfortable: b1-war-armor-bruiser 27.2%, b1-mage-poison-block 54.5% (but slow ttk 56s). Net: 6/8 win, only 2/8 with >=15% cushion. Brief target = ~0.8+ winrate with a real cushion.",
+      "severity": "high",
+      "proposedChange": "Cut doom_knight attack damage 9 -> 7 (or 8). Probe probe-war-dmg7 (380HP/7dmg): warrior physical win rises 3.3% -> 13.9% HP; probe-poison-hp340 cross-checks the trend. This does NOT trivialize (race decks still finish ~14-22% HP) and does NOT rescue the DPS-starved burn/control decks (burn still dies at 7dmg AND at 320HP -- separate card issue). Damage cut is the cleanest lever: it buys the should-be-easy survivability without shortening the fight or touching HP/relics. Alternatively soften enrage 1.4 -> 1.25 is INEFFECTIVE (probe-war-enrage125 unchanged) so do not rely on it.",
+      "confidence": "high"
+    },
+    {
+      "id": "BP-2",
+      "kind": "viability",
+      "target": "pure-burn (mage)",
+      "stage": "boss1",
+      "evidence": "Burn is DPS-starved and non-viable vs every boss. boss1: b1-mage-burn dmg 202/380 (53%), 5 deaths. Adding detonators (diag-mage-burn-detrich) made it WORSE: 116/380 (Supernova/t3-fire-fire-fire exhausts and thins the deck). Pivoting burn to poison closers (diag-mage-burn-pivot-poison) jumped damage to 345/380 -- proving the deck frame is fine but the burn payoff cards are the bottleneck. Late strong burn loses ALL three curve bosses: iron_golem DIED, lizard_king DIED (only 113 dmg), bog_witch DIED. Even vs normals it barely closes (werewolf 9.4% HP/21s, mutated_salamander 6.5%/23s). Boss tuning cannot fix this (burn dies at doom_knight 320HP too).",
+      "severity": "high",
+      "proposedChange": "Buff the burn DETONATOR/payoff ceiling (C5-compliant, T3 build-around). Concretely: (a) Supernova t3-fire-fire-fire -- cut CD 2.8s -> 2.2s (C1: long-CD rescue) so the cash-out lands more than once; (b) Cinderlance t3-attack-fire-fire -- raise the post-detonate Pierce 3 -> 4 per burn consumed (raises the assembled ceiling, T3-only). Do NOT raise costs. These lift burn's closing damage toward the poison-pivot's 345 baseline. Re-sim before/after via the same boss1 burn deck.",
+      "confidence": "high"
+    },
+    {
+      "id": "BP-3",
+      "kind": "viability",
+      "target": "slow-stun-control (mage)",
+      "stage": "boss1",
+      "evidence": "Control mage loses doom_knight: b1-mage-control dmg 213/380 (56%), 5 deaths. Adding damage closers (diag-mage-control-plus-dmg) only nudged to 220/380, still 5 deaths -- the control package buys time but has no second win condition that scales (C3: control is intentionally race-losing and must pair with a damage line). The boss1 control deck leans on t2-earth-earth (Tremor Lock) / t2-water-water (Frostbind) for stun, but pure stun cannot out-DPS a 380HP enrage boss with low INT.",
+      "severity": "med",
+      "proposedChange": "This is partly working-as-intended (C3 says control alone loses the race). The actionable fix is to ensure the control class has an accessible damage CLOSER that benefits from the control it stacks. Buff t3-air-attack-counter Thunderstrike Catalyst (slow detonator): raise consume payoff 6 -> 8 Pierce per slow consumed (T3 ceiling buff, C1 keeps cost/CD). Lower confidence because control is designed to be a time-buy archetype, not a solo boss-killer.",
+      "confidence": "med"
+    },
+    {
+      "id": "BP-4",
+      "kind": "progression",
+      "target": "iron_golem",
+      "stage": "late",
+      "evidence": "Boss curve is non-monotonic for race decks. late-war-physical-strong: LOSES iron_golem (1.05 -> 409HP/10dmg/def4, dmg only 233/409, 5 deaths) but WINS lizard_king (1.10 -> 388HP/10dmg/def3, 394 dmg, 14.3% HP) and bog_witch (1.05 -> 420HP/7dmg/def2, 515 dmg, 20.8% HP). iron_golem is HARDER than the two bosses that follow it. Driver = iron_golem def 4 (highest of the early curve) + 409HP pushing the kill past the enrage death-window; lizard_king/bog_witch with def 3/2 let the same deck close. Survival/DoT archetypes (poison, armor-finisher) clear iron_golem fine (poison 46.4% HP, armor 59.5%).",
+      "severity": "med",
+      "proposedChange": "Smooth the curve so the FIRST post-doom_knight boss is not the hardest. Cut iron_golem baseDefense 4 -> 3 (matches lizard_king; def is what starves the physical deck's per-hit output) and/or attack damage 10 -> 9. With BP-1's doom_knight at 7dmg, keep iron_golem slightly above doom_knight (8-9 dmg) so the ramp is monotone: doom_knight 7 < iron_golem 8-9 < later bosses. Do not raise HP. Re-sim late-war-physical-strong vs the three curve bosses to confirm monotonic winrate/cushion.",
+      "confidence": "high"
+    },
+    {
+      "id": "BP-5",
+      "kind": "off_curve_weak",
+      "target": "t3-fire-fire-fire (Supernova)",
+      "stage": "late",
+      "evidence": "Supernova is the burn archetype's nominal T3 capstone (5 dmg per burn consumed, exhaust, cost 2s+1m, cd 2.8s -- the longest CD and highest cost in burn). In the rescue test diag-mage-burn-detrich (built AROUND extra detonators incl. Supernova) the deck dealt only 116/380 vs doom_knight -- WORSE than the plain burn deck's 202. The exhaust + 2.8s CD means it fires at most once on a small soft-capped pool (C5 burn soft-cap 8+floor((n-8)/2)) and then the deck is a card down. Its OPS-on-paper (28.57) does not translate to combat closing power.",
+      "severity": "med",
+      "proposedChange": "Buff the capstone per C1 (cut CD, it is the long-CD case) and C5 (detonators consume the pool -- give it a bigger one-shot ceiling, not spam): Supernova CD 2.8s -> 2.2s and damage-per-burn 5 -> 6. Keep exhaust and cost (it is the elite cash-out). This raises the assembled-burn ceiling that the archetype is supposed to pay off, addressing both BP-2 and the dead-capstone feel. T3-only change; no T2 is touched.",
+      "confidence": "med"
+    }
+  ]
+}

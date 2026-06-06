@@ -1,0 +1,94 @@
+{
+  "matchups": [
+    {
+      "id": "stormrage-FILLER-doom",
+      "label": "Stormrage BASELINE filler Spark slot0, poison mage vs doom_knight",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stormrage-CURRENT-doom",
+      "label": "Stormrage CURRENT (rage-gated, dead for mage) slot0 vs doom_knight",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-air-air-counter","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stormrage-PROPOSED-doom",
+      "label": "Stormrage PROPOSED (5 slow floor + 8 if rage, cd2.0) slot0 vs doom_knight",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-air-air-counter","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-counter": {
+          "cooldown": 2.0,
+          "effects": [
+            { "type": "dot", "value": 5, "target": "enemy", "stack": "slow", "scale": { "stat": "int", "per": 3, "value": 1 } },
+            { "type": "dot", "value": 8, "target": "enemy", "stack": "slow", "condition": { "self_has_stack": "rage" }, "scale": { "stat": "int", "per": 3, "value": 1 } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stormrage-FILLER-werewolf",
+      "label": "Stormrage BASELINE filler Spark slot0, poison mage vs werewolf late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t1-fire","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "stormrage-CURRENT-werewolf",
+      "label": "Stormrage CURRENT slot0 vs werewolf late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-counter","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "stormrage-PROPOSED-werewolf",
+      "label": "Stormrage PROPOSED slot0 vs werewolf late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-counter","t2-earth-water","t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t1-water","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-counter": {
+          "cooldown": 2.0,
+          "effects": [
+            { "type": "dot", "value": 5, "target": "enemy", "stack": "slow", "scale": { "stat": "int", "per": 3, "value": 1 } },
+            { "type": "dot", "value": 8, "target": "enemy", "stack": "slow", "condition": { "self_has_stack": "rage" }, "scale": { "stat": "int", "per": 3, "value": 1 } }
+          ]
+        }
+      }
+    }
+  ]
+}

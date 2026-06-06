@@ -34,7 +34,7 @@ const TOPICS: TutorialTopic[] = [
       'Your hero plays cards on cooldown — you do not click to attack.\n' +
       'Cards in the hand fire one at a time from top to bottom.\n' +
       'Light cards (low cooldown) cycle fast; heavy cards hit harder but recharge slow.\n\n' +
-      'KEYWORDS (Brace, Vengeance, Haste, Exhaust) change HOW a card resolves.\n' +
+      'KEYWORDS (Brace, Vengeance, Haste, Pierce, Exhaust) change HOW a card resolves.\n' +
       'The first time you play a card with a new keyword, the game pauses and\n' +
       'explains it.\n\n' +
       'STACKS are the colored tokens an attack piles on a target — Burn, Bleed\n' +
@@ -136,7 +136,7 @@ export class TutorialScene extends Scene {
       fontFamily: FONTS.body,
     }).setOrigin(0.5);
 
-    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. The game also pauses to teach each new keyword (Brace, Vengeance, Haste, Exhaust); stacks & stats live in the "?" Glossary.', {
+    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. The game also pauses to teach each new keyword (Brace, Vengeance, Haste, Pierce, Exhaust); stacks & stats live in the "?" Glossary.', {
       fontSize: '12px',
       color: COLORS.textSecondary,
       fontFamily: FONTS.body,

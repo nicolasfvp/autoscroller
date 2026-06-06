@@ -1,0 +1,53 @@
+{
+  "cluster": "q-phys-pierce",
+  "scope": "P0-3 Earthcleaver (cd 2.4->2.0, gate 15->10, base 14->Pierce) and P0-4 Mountain's Will (cd 2.4->2.0, base 20->Pierce)",
+  "method": "Real CombatEngine headless via deck-battle-sim.test.ts. cardOverrides effectsPatch to add pierce_armor + cut cd + lower gate; enemyOverride to model P0-1 doom_knight dmg7. boss1 profile runXP520, isBoss, loopMult 1.0. Candidate cards placed in EARLY slots; T2 Granite (t2-attack-earth) NEVER touched. 8 reps boss, 6 reps normals.",
+  "specs": [
+    "boss-overcorrection.json", "normal-oppression.json", "t3-beats-t2.json",
+    "earthcleaver-revise.json", "with-p0-1-dmg7.json", "mw-slot-sensitivity.json"
+  ],
+  "items": [
+    {
+      "proposalId": "P0-4 Mountain's Will",
+      "question": "(a) Does Mountain's Will ALONE actually make warrior physical beat doom_knight, or is the '0/8 -> 8/8' single-swap claim a fixed-order artifact (card only wins if drawn first)?",
+      "answer": "The claim is largely a FIXED-ORDER ARTIFACT at dmg9. Buffed MW (base20 pierce, cd2.0) in slot1 wins 8/8 (0.7% HP). In its realistic deck slot9 it LOSES 0/8; at slots 3/5/7 it ALSO LOSES 0/8 (all 365 dmg). So 'P0-4 alone fixes the boss' holds ONLY if MW is the literal first card drawn. As a CARD-LEVEL buff vs the T2 Granite benchmark it IS real and well-tuned: 4xMW buffed beats doom_knight 8/8 (2.6% HP, 384 dmg) where Granite wins 8/8 (6.0%). MW's magnitude (base20 pierce, cd2.0) is correct and not over-corrected (BOTH EC+MW buffed = same 0.7% cushion as MW alone -> no over-correction). The fragility is the boss-curve, not the card.",
+      "verdict": "holds",
+      "revisedValue": null,
+      "decisionForUser": null,
+      "evidence": "boss-overcorrection-results.json: MW-only-early 8/8 0.7%HP 414dmg; MW-only-realistic(slot9) 0/8 deaths; baseline 0/8. mw-slot-sensitivity-results.json: MW-buff slot3/5/7 ALL 0/8 deaths 365dmg. t3-beats-t2-results.json: T3mountainswill-buffed 8/8 2.6%HP 384dmg vs T2granite 8/8 6.0%HP 380dmg. with-p0-1-dmg7-results.json: dmg7-MW-asproposed 8/8 11.9%HP. BOTH-early 8/8 0.7%HP == MW-only-early 0.7% (no over-correction)."
+    },
+    {
+      "proposalId": "P0-3 Earthcleaver",
+      "question": "(c) Does the buffed Earthcleaver (base14->Pierce, gate15->10, cd2.4->2.0) actually restore T3>T2 at the deck level vs its T2 analog Granite Lunge, as the proposal's PA-7 evidence claims?",
+      "answer": "NO. As specified it does NOT close the violation. Identical 12-card A/B vs doom_knight: 4x T2 Granite WINS 8/8 (6.0% HP, 380 dmg) while 4x Earthcleaver WITH the proposed buff still LOSES 0/8 (328 dmg) -- only +12 dmg over the unbuffed 0/8 (316 dmg). Root cause is the base value: at STR4 (runXP520, strMult 1.75) EC's 14 base = 24.5/hit vs MW's 20 base = 35/hit; pierce only adds back the def3 it would have lost. The proposed pierce+gate+cd2.0 cannot make a 14-base card race a tuned 380HP boss. Even with P0-1 (dmg7) the as-proposed EC wins but on 1.3% HP (vs Granite's 17.9%) -- a T3 winning on fumes while its T2 wins comfortably is still a soft T3<T2 violation by cushion. Sweep shows the minimum that truly fixes it: base 14->18 pierce + cd 2.4->1.8 -> 8/8 at dmg9 (2.6% HP, 386 dmg), and 8/8 at dmg7 (11.9% HP, healthy). C1-compliant (cd floor 1.8 >= 1.2, value lift, no cost change). Granite untouched.",
+      "verdict": "revise",
+      "revisedValue": "Earthcleaver: base 14 -> 18 Pierce, gate 15 -> 10, cd 2.4 -> 1.8 (NOT 2.0). The as-proposed base14/cd2.0 leaves it 0/8 vs doom_knight where T2 Granite is 8/8.",
+      "decisionForUser": null,
+      "evidence": "t3-beats-t2-results.json: T2granite 8/8 6.0%HP 380dmg; T3earthcleaver-buffed(as-proposed) 0/8 deaths 328dmg; T3earthcleaver-baseline 0/8 316dmg. earthcleaver-revise-results.json: base16/cd2.0 0/8 344; base18/cd2.0 0/8 356; base14/cd1.8 0/8 358; base16/cd1.8 0/8 374; base18/cd1.8 8/8 2.6%HP 386. with-p0-1-dmg7: dmg7-EC-asproposed 8/8 1.3%HP vs dmg7-T2granite 8/8 17.9%HP; dmg7-EC-revised18-1.8 8/8 11.9%HP."
+    },
+    {
+      "proposalId": "P0-3 + P0-4 (pierce on normals)",
+      "question": "(b) Does adding Pierce make Earthcleaver/Mountain's Will OPPRESSIVE vs NORMAL enemies (trivial kills)?",
+      "answer": "NO -- not even close. Normals have def 0-2, so pierce_armor (which only matters when there is armor to subtract) changes per-hit damage by at most ~2. Across the mid battery, BUFFED both (pierce + cd2.0, both cards early) vs BASELINE produced near-identical outcomes: all 1.0 winRate either way, with only small TTK/HP improvements from the cd cut, never trivialization. salamander 39.3%->45.0% HP (TTK 11.3s->10.5s); werewolf 42.9%->47.9%; skeleton 55.0%->55.0% (8.9s->8.1s); lava_golen (highest-def normal, def2) 42.9%->47.9% (11.3s->10.5s). The buff is a modest throughput gain (driven by cd 2.4->2.0), not an oppression risk. Pierce is essentially inert vs low-def normals -- it does its job only vs armored bosses, exactly as intended (C3-safe).",
+      "verdict": "holds",
+      "revisedValue": null,
+      "decisionForUser": null,
+      "evidence": "normal-oppression-results.json: NORM base vs buff -- salamander win1/1 39.3%->45.0%HP 11.3s->10.5s; werewolf 1/1 42.9%->47.9%; skeleton 1/1 55.0%->55.0% 8.9s->8.1s; lava_golen 1/1 42.9%->47.9% 11.3s->10.5s. t3-beats-t2-results.json: vs lava_golen all three decks (T2granite, EC-buffed, MW-buffed) = 1.0 win, identical 47.9% HP / 9.5s TTK, dmg 155/171/181."
+    },
+    {
+      "proposalId": "P0-3 + P0-4 ship-one vs ship-both",
+      "question": "Recommend ship-one vs ship-both: does shipping both pierce T3s over-correct (warrior physical trivializes the boss)?",
+      "answer": "SHIP BOTH -- it does NOT over-correct. The over-correction worry in the proposal (critic B3: 3 pierce T3s at once) is unfounded for THIS pair. BOTH buffed (EC slot1 + MW slot2) vs doom_knight = 8/8 at 0.7% HP -- IDENTICAL cushion to MW-alone (0.7%); adding the 2nd pierce card did not inflate the cushion at all (the boss enrage burst caps survivability, not damage output). The real lever for cushion is P0-1 (dmg9->7), under which everything sits at a healthy 11-18% HP. Because P0-4-alone is slot-fragile (only wins drawn first) and P0-3-alone (as-proposed) doesn't even clear its own T3>T2 test, shipping ONE is the riskier choice. Recommendation: ship P0-4 as proposed + P0-3 at the REVISED magnitude (base18/cd1.8), AND land P0-1 -- the cluster's healthy cushion depends on the boss damage cut far more than on the card buffs.",
+      "verdict": "user_decision",
+      "revisedValue": null,
+      "decisionForUser": "Ship BOTH pierce T3s (P0-4 as-proposed + P0-3 REVISED to base18/cd1.8) -- they are mutually non-redundant, non-oppressive (boss cushion identical to ship-one; normals untouched), and each independently fails as a sole fix (MW-alone is slot-fragile, EC-as-proposed fails its T3>T2 test). The genuine fork is whether the loop-10 boss should be cleared by the CARD buffs (which only scrape 0.7-2.6% HP at dmg9) or by P0-1's doom_knight dmg9->7 (which lifts every variant to 11-18% HP). Recommend: ship both cards AND P0-1; do not rely on the card buffs alone to make the 'easy' first boss feel easy.",
+      "evidence": "boss-overcorrection-results.json: BOTH-early 8/8 0.7%HP == MW-only-early 8/8 0.7%HP (no cushion inflation from 2nd card). with-p0-1-dmg7: EVERY variant comfortable only once dmg=7 (T2granite 17.9%, EC-revised 11.9%, MW 11.9%, EC-asproposed 1.3%). At dmg9 the best card-only result is 2.6% HP (revised EC / MW). mw-slot-sensitivity: MW-alone wins ONLY at slot1; 0/8 at slots 3/5/7/9."
+    }
+  ],
+  "newConcerns": [
+    "P0-4's 'single-swap 0/8->8/8' evidence is a fixed-order artifact: buffed MW wins doom_knight (dmg9) ONLY when it is the FIRST card drawn (slot1 8/8; slots 3/5/7/9 all 0/8). The proposal should not present P0-4 alone as a reliable boss fix.",
+    "P0-3 as written (base14 pierce, gate10, cd2.0) FAILS its own stated goal: 4xEarthcleaver still loses doom_knight 0/8 where 4xGranite (T2) wins 8/8. The pierce buff adds only ~+12 deck damage. EC's 14 base is the bottleneck; needs base->18 + cd->1.8 to restore T3>T2.",
+    "The cluster's boss survivability is dominated by P0-1 (doom_knight dmg 9->7), NOT the card buffs. At dmg9 even the strongest card-only variants scrape 0.7-2.6% HP; at dmg7 they sit at 11-18%. The pierce T3 buffs are correct for the T3>T2 charter but are NOT a substitute for the boss-damage nerf.",
+    "Revised EC (base18) still wins doom_knight at a LOWER cushion (2.6% dmg9 / 11.9% dmg7) than the untouched T2 Granite (6.0% / 17.9%). It clears the win-rate bar but not the cushion bar -- acceptable given Granite is a cheaper armor-engine card, but worth noting the T3 edge is throughput/pierce-vs-armored-targets, not raw cushion."
+  ]
+}

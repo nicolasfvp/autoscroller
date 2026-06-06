@@ -1,0 +1,90 @@
+{
+  "lane": "bleed-rage",
+  "resultsPath": "tests/audit/wf/bleed-rage/results.json",
+  "secondaryResultsPath": "tests/audit/wf/bleed-rage/results2.json",
+  "decksTested": 23,
+  "matchupsRun": 51,
+  "summary": "Bleed+Rage warrior clears every normal-enemy battery (mid/late wr=1.0, healthy 0.43-0.59 HP cushions) and now WINS the headline first boss doom_knight at wr=1.0 across all builds (0 deaths over 4-5 repeats each). The baseline 'bleed-rage loses to the boss' was specifically iron_golem (late boss, 409 HP/def4): core late deck now scrapes a win at hp%=0.048, but two pure-bleed/pure-rage tier-AB control decks still DIE to it (tierab-T2-bleed, tierab-T3-bleed wr=0/deaths=4). The doom_knight win is FRAGILE: best core deck finishes at hp%=0.199, gate-heavy and bleed-heavy variants at hp%=0.026/0.046 -- below a comfortable first-boss cushion given doom_knight enrages (+40% atk speed) at 50% HP. Root cause is the rage loop: swap tests prove the rage-gate payoffs (Crimson Spiral 8+, Cleaver's Tax 5+, Wrath Brand any-rage) are DEAD unless heavily fed -- under thin rage gen they match or trail a T1 Jab (hp deltas -0.086/0.000/0.000), but with proper rage gen they all jump to +0.086 hp over Jab. Bleed swing (x2) fires inconsistently vs the slow 2.5s-cadence boss, so the bleed-heavy boss build is the worst core build. One genuinely off-curve-weak T3: Crimson Cascade (its kill-trigger clause is dead single-target and its self-bleed is pure downside). T3>T2 holds everywhere -- no tier violations.",
+  "findings": [
+    {
+      "id": "BR-1",
+      "kind": "progression",
+      "target": "doom_knight (boss1) vs bleed-rage",
+      "stage": "boss1",
+      "evidence": "doom_knight (380 HP/def3/9dmg/cd2.5s, mult 1.0). All bleed-rage builds WIN wr=1.0, 0 deaths over 4-5 repeats, but HP cushion is razor-thin: br-boss1-core hp%=0.199 (ttk 13000), br-boss1-ragegate hp%=0.026 (ttk 17000), br-boss1-bleedheavy hp%=0.046 (ttk 19700), swap-base-noslot hp%=0.126. doom_knight enrages +40% atk speed at 50% HP, so a 2-5% HP finish is one bad swing from a death. Healthy-first-boss bar is wr>=0.8 with SOME cushion; winRate is met but cushion is not.",
+      "severity": "med",
+      "proposedChange": "Do NOT nerf doom_knight (it is the headline 'easy' boss and is beatable). Lift the floor of the rage win-condition instead so the archetype finishes with a healthier cushion (see BR-2/BR-3). No boss-stat change proposed; the fix is on the bleed-rage payoff side. If after BR-2/BR-3 the cushion is still <0.25, consider doom_knight attackCooldown 2500->2700ms (C1: snappy-cd philosophy applies to cards, not bosses; this is a boss-tuning lever).",
+      "confidence": "high"
+    },
+    {
+      "id": "BR-2",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-counter-counter Crimson Spiral (rage gate 8+)",
+      "stage": "boss1",
+      "evidence": "SWAP test, same deck one slot. Under THIN rage gen (swap-crimson-spiral) it is WORSE than a T1 Jab filler: hp%=0.040 vs baseline swap-base-noslot hp%=0.126 (delta -0.086), ttk 20900 vs 18500 (+2400, slower). Only when rage is heavily fed (swap2-crimson-spiral-fed) does it reach +0.086 over Jab (hp%=0.278 vs 0.192). The 8-rage gate is too high vs how fast the archetype banks rage before it matters, so this build-around T3 is a brick in most realistic decks.",
+      "severity": "med",
+      "proposedChange": "C1 (cut CD to rescue, keep cost): lower the gate from 'If you have 8 or more rage' to 'If you have 5 or more rage', and cut cd 2.4s->1.8s so it can re-fire and bank rage toward its own gate. Keeps cost 2s. This raises the T3 ceiling (C5 gate-payoff) without touching any T2.",
+      "confidence": "high"
+    },
+    {
+      "id": "BR-3",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-counter-fire Wrath Brand (if-you-have-rage payoff)",
+      "stage": "boss1",
+      "evidence": "SWAP test. Under thin rage gen (swap-wrath-brand) hp%=0.126 -- EXACTLY a T1 Jab (delta 0.000), ttk 18500 (=Jab). A T3 build-around tying a T1 single-effect card is off-curve. With fed rage (swap2-wrath-brand-fed) it reaches +0.086 over Jab (hp%=0.278). Same dead-without-feed pattern as Cleaver's Tax (t3-attack-counter-counter), which also tied Jab at hp%=0.126/delta 0.000 under thin rage.",
+      "severity": "med",
+      "proposedChange": "C1 cut CD to raise reliability/ceiling, keep cost: Wrath Brand cd 2.4s->1.8s (cost stays 2s). The 'if you have rage' condition is already low; the issue is throughput -- a snappier CD lets it fire more often and exploit Fury. T3 ceiling rises, no T2 touched. (Cleaver's Tax t3-attack-counter-counter: leave its 5+ gate but cut cd 2s->1.6s for the same reason.)",
+      "confidence": "high"
+    },
+    {
+      "id": "BR-4",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-counter-water Crimson Cascade (T3 bleed)",
+      "stage": "boss1",
+      "evidence": "SWAP test, fed-rage batch. swap2-crimson-cascade hp%=0.093 vs same-deck Jab filler swap2-base-fedrage hp%=0.192 (delta -0.099), ttk 18000 vs 15700 (+2300, SLOWER). A T3 bleed card losing to a T1 Jab. Its payoff clause 'every time you kill an enemy with bleed, apply 4 bleed to nearest enemy' is 100% dead in single-target boss fights (no kills happen), and the 'apply 1 bleed to yourself' is pure HP downside. Off-curve weak / unused-tier.",
+      "severity": "high",
+      "proposedChange": "C1+C4 (wiring/value, keep snappy): give it a baseline that stands without the kill-chain. Change to 'Apply 4[bleed]([spi]) (was 3). Apply 1[bleed] to yourself. For 15 seconds, every time you kill an enemy with [bleed], apply 4[bleed]([spi]) to the nearest enemy.' and cut cd 2.4s->2.0s. Bumping base bleed 3->4 and trimming CD lets the card carry single-target weight while keeping the multi-target kill-chain as upside. T3 ceiling up; no T2 nerf.",
+      "confidence": "high"
+    },
+    {
+      "id": "BR-5",
+      "kind": "viability",
+      "target": "bleed swing (x2) vs slow high-HP bosses",
+      "stage": "boss1",
+      "evidence": "Bleed decays -1/tick and ticks once per card play (~1.2-1.6s), while doom_knight attacks on cd 2.5s, so the enemy has rarely 'just attacked' when a bleed tick lands -> the x2 swing fires inconsistently. Direct evidence: the bleed-heavy boss build br-boss1-bleedheavy is the WORST core boss build (hp%=0.046, ttk 19700) vs the rage/physical br-boss1-core (hp%=0.199, ttk 13000). Bleed front-loads and fizzles against slow tanky targets.",
+      "severity": "low",
+      "proposedChange": "Working-as-designed per C5 (bleed is front-loaded, gate-only payoffs). No formula change to bleed. Note for synthesis: bleed-rage's boss plan should lean on rage/Fury + physical finishers vs slow bosses, which the BR-2/BR-3 buffs support. No card change required beyond those.",
+      "confidence": "med"
+    },
+    {
+      "id": "BR-6",
+      "kind": "off_curve_strong",
+      "target": "t2-attack-counter Bloodprice Strike (self-cost trap check)",
+      "stage": "boss1",
+      "evidence": "SWAP test. Despite costing 4 self-HP per cast, swap-bloodprice was the BEST swap slot vs doom_knight under thin rage: hp%=0.185 vs Jab baseline 0.126 (delta +0.059), ttk 17700 (-800, faster). The HP cost is fully repaid by 12 dmg + 2 rage + 1 stam, and the rage it generates feeds the gate cards. The self-cost is NOT a trap -- it is a strong, healthy T2 rage generator.",
+      "severity": "low",
+      "proposedChange": "No change. Confirms the self-cost design is balanced (paid back via rage+tempo). Flagged only as a positive control for the swap methodology; it is strong but NOT oppressive (it does not trivialize anything on its own).",
+      "confidence": "high"
+    },
+    {
+      "id": "BR-7",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-attack-attack Berserker's Ledger (self-bleed trap check)",
+      "stage": "boss1",
+      "evidence": "SWAP test. Under thin rage (swap-berserker-ledger) hp%=0.106 vs Jab 0.126 (delta -0.020) -- a 3-attack T3 narrowly LOSING to a T1 Jab, the self-bleed (2 stacks to self) eating its raw-damage edge. With fed rage (swap2-berserker-ledger-fed) it recovers to +0.086 (hp%=0.278) only because the surrounding rage carries it. Borderline off-curve for a T3 pure-damage card whose only hook is a downside.",
+      "severity": "low",
+      "proposedChange": "C1 cut CD (keep cost 2s): Berserker's Ledger cd 2.4s->2.0s so its 24 raw damage (8 thrice) lands more often to outpace the self-bleed cost. Optionally drop self-bleed 2->1. Raises the T3 floor without buffing damage value or touching any T2.",
+      "confidence": "med"
+    },
+    {
+      "id": "BR-8",
+      "kind": "tier_violation",
+      "target": "T3 rage/bleed vs T2 rage/bleed (enforcement check)",
+      "stage": "late",
+      "evidence": "Tier A/B decks (identical but T2->T3 swap) vs the late battery + iron_golem. T3-bleed beats T2-bleed: tierab-T3-bleed ttk 3700-5700 / dmg 359 vs iron_golem; tierab-T2-bleed ttk 3825-13700 and DIES to iron_golem (wr=0, deaths=4). T3-ragegate beats T2-rage: tierab-T3-ragegate WINS iron_golem (wr=1, hp%=0.095, ttk 34100) while tierab-T2-rage DIES (wr=0, deaths=4). No T3<T2 inversion found in this lane.",
+      "severity": "low",
+      "proposedChange": "No tier-violation fix needed -- T3>T2 holds across bleed and rage. Reported as a passing enforcement check. (The BR-2/3/4/7 buffs only raise weak T3s further above T2, consistent with the T3>T2 rule.)",
+      "confidence": "high"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "lane": "slow-stun-control",
+  "resultsPath": "tests/audit/wf/slow-stun-control/results.json",
+  "decksTested": 20,
+  "matchupsRun": 84,
+  "summary": "Control (slow=no-dmg soft throttle, stun=no-dmg hard freeze) is intentionally race-losing (C3). Sims confirm it can BUY time but struggles to CLOSE: the pure defensive control shell ground out doom_knight (ctrl-boss1-pure wr=1.0 but 84000ms / 47 cards / 28.1% HP), yet the SAME shell with stamina-heavy damage finishers DIED (ctrl-boss1-finisher wr=0, ctrl-boss1-tectonic wr=0) because finishers can't be cast fast enough alongside control on a low-INT mage. Several pure-control cards are dead: Quake (t1-earth) and Frostbind (t2-water-water) and Stormrage (t3-air-air-counter) all underperform a plain damage filler in swap tests. Dust Plague (t3-air-air-earth) is the lone card that wins iron_golem (armor + sustained AoE slow->stun lock). Tectonic Reckoning is NOT oppressive: its 3s+2m cost is unplayable for a low-INT mage and its decks lost every boss.",
+  "findings": [
+    {
+      "id": "SSC-1",
+      "kind": "off_curve_weak",
+      "target": "t1-earth (Quake)",
+      "stage": "late",
+      "evidence": "Swap test vs Tempest Pike filler (swap-base): swap-quake normalsWon 4/5, avgTtkNormals 25269ms — SLOWER than swap-base (24638ms), still lost iron_golem. Per-matchup: swap-quake__vs__depths_horror ttk 21575 vs swap-base 16950; swap-quake__vs__mutated_salamander ttk 31300 vs swap-base 33000 (noise). Quake applies 4[slow] and nothing else (no damage), so it is strictly worse than any damage filler for closing fights.",
+      "severity": "med",
+      "proposedChange": "C1 rescue (cut CD, T1 clean single effect): Quake cd 2s -> 1.4s and raise to 5[slow]. Keeps it pure soft-control (C5/C3) but makes the throttle land fast enough that the slow actually accrues meaningfully across a fight. Cost stays 1m.",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-2",
+      "kind": "off_curve_weak",
+      "target": "t2-water-water (Frostbind)",
+      "stage": "late",
+      "evidence": "Swap test: swap-frostbind dropped to normalsWon 3/5 (LOST mutated_salamander: swap-frostbind__vs__mutated_salamander wr=0 / 4 deaths) where swap-base won it (wr=1). avgTtkNormals 25025ms ~ baseline. Frostbind gives only 1[stun] (2 with Vengeance) + 4[armor], no damage; as a deck slot it lowers throughput below a plain filler.",
+      "severity": "med",
+      "proposedChange": "C1 rescue (cut CD): Frostbind cd 2s -> 1.4s. The stun stays pure hard-control (C5), but a snappier CD lets the stun chain actually keep the enemy frozen instead of leaving long uncontrolled gaps. Cost stays 1m. (T2: do NOT add damage; keep the one-conditional Vengeance hook.)",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-3",
+      "kind": "off_curve_weak",
+      "target": "t3-air-air-counter (Stormrage)",
+      "stage": "late",
+      "evidence": "Swap test: swap-stormrage dropped to normalsWon 3/5 (LOST mutated_salamander: swap-stormrage__vs__mutated_salamander wr=0 / 4 deaths; swap-base won it). It is gated on 'If you have [rage]' — a mage slow/stun deck almost never holds [rage], so the card frequently does NOTHING. A T3 that is conditionally inert is below every T2 control card.",
+      "severity": "high",
+      "proposedChange": "C1+tier-charter (T3 build-around must beat any T2; buff the T3): drop the dead rage gate. Make Stormrage 'Apply 5[slow]([int]). If you have [rage]: apply 8 more [slow]([int]).' so the floor is real soft-control and the rage line becomes the build-around ceiling. Keep cost 1s+1m, cd 2.4s -> 2.0s. Still pure soft-control (C5/C3), no damage.",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-4",
+      "kind": "off_curve_strong",
+      "target": "t3-air-air-earth (Dust Plague)",
+      "stage": "late",
+      "evidence": "swap-dustplague is the ONLY late deck that beats iron_golem: swap-dustplague__vs__iron_golem wr=1.0, ttk 62900ms, 455 avg dmg, 29 cards (every other swap/late deck died vs iron_golem: swap-base/quake/frostbind/zephyr/stormrage/galeecho/staticskirmish/sandfury all wr=0). It also pushed normalsWon to 5/5 with healthy HP (werewolf hp% 0.377, mutated_salamander hp% 0.355 vs swap-base 0.188/0.072). Driver = 8[armor] + a 12s AoE engine that ramps slow into stun, fully pacifying the boss while armor absorbs hits.",
+      "severity": "low",
+      "proposedChange": "NO NERF. This is exactly the C3 fantasy (elite survival/control buying time) and it is NOT oppressive: it wins by a 62.9s grind at only 10.9% HP, and does no direct damage. Leave Dust Plague as-is; it is the archetype's intended payoff and the benchmark the weak control cards should be measured against.",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-5",
+      "kind": "off_curve_strong",
+      "target": "t3-air-counter-earth (Tectonic Reckoning)",
+      "stage": "boss1",
+      "evidence": "Despite a 50 Pierce + 3[stun] AoE nuke (peakOPS 70), it is NOT oppressive in real combat. tectonic-only-boss1__vs__doom_knight wr=0 (4 deaths, only 133 avg dmg, 18 cards). ctrl-boss1-tectonic__vs__doom_knight wr=0 (4 deaths) while the cheaper ctrl-boss1-pure WON the same boss. ctrl-late-tectonic__vs__iron_golem wr=0. Its 3s+2m cost + exhaust is unaffordable for the low-INT mage's stamina/mana pool, so it cannot be cast often enough to matter.",
+      "severity": "low",
+      "proposedChange": "NO NERF needed for oppressiveness (it self-limits via the 3s+2m elite cost — C1-compliant). Optional: it sits as a dead-on-arrival elite for control mages; if it should be a usable control finisher, trim mana 3s+2m -> 3s+1m so a control mage can actually fire it once mid-fight. Leave damage/stun as-is.",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-6",
+      "kind": "viability",
+      "target": "slow-stun-control (archetype)",
+      "stage": "boss1",
+      "evidence": "Headline boss1 check vs doom_knight (380 HP, mult 1.0): the archetype CAN win but only via pacifist grind. ctrl-boss1-pure__vs__doom_knight wr=1.0 at 84000ms / 47 cards / 28.1% HP. Adding damage finishers INVERTED the result: ctrl-boss1-finisher wr=0 (4 deaths) and ctrl-boss1-tectonic wr=0 (4 deaths). Mid stage echoes this: ctrl-mid (no damage) lost 3/5 normals (mutated_salamander/lava_golen/werewolf all wr=0), while ctrl-mid-dmg won 4/5. So the archetype is viable but fragile and damage-starved: control buys time but the deck's chip damage is too low to close before HP/resources run out when finishers compete for casts.",
+      "severity": "med",
+      "proposedChange": "Per C3 the slow/stun verbs stay no-damage; fix viability by sharpening the slow->damage CONVERTERS (the archetype's legit win-con) rather than buffing control. Concretely: Thunderstrike Catalyst (t3-air-attack-counter, det:slow) cd 2.4s -> 2.0s and Static Skirmish (t3-agility-air-counter) cd 1.8s -> 1.6s so the converters fire often enough to turn accrued slow into a kill. This keeps slow/stun pure (C5) while giving the archetype a faster closer.",
+      "confidence": "med"
+    },
+    {
+      "id": "SSC-7",
+      "kind": "tier_violation",
+      "target": "t3-attack-attack-earth (Concussive Smash) vs t2 stun shell",
+      "stage": "late",
+      "evidence": "Tier A/B: tier-t3-stun (Concussive Smash replacing the T2 stun pair) beat tier-t2-stun on every normal: ttk depths_horror 13825 vs 19125, fire_elemental 14000 vs 19000, werewolf 19000 vs 26000, mutated_salamander 22900 vs 27300; both still lost iron_golem. So the T3 stun (14 dmg + 2 stun + 3 slow) correctly DOMINATES the T2 stuns — NO violation here. Reported as the clean tier reference for the lane.",
+      "severity": "low",
+      "proposedChange": "No change. Concussive Smash is correctly above the T2 stun cards; it is the model the dead T2/T3 control cards (Frostbind, Stormrage) should be brought up toward (via CD cuts, never by nerfing it).",
+      "confidence": "high"
+    },
+    {
+      "id": "SSC-8",
+      "kind": "progression",
+      "target": "control deck vs iron_golem (late, 2nd boss)",
+      "stage": "late",
+      "evidence": "Every realistic late control deck except the Dust Plague build died to iron_golem (409 HP / def 4 / 10 dmg): ctrl-late-pure wr=0 (271 dmg, 24 cards), ctrl-late-dmg wr=0 (236 dmg), ctrl-late-tectonic wr=0 (261 dmg), swap-base/quake/frostbind/zephyr/stormrage/galeecho/staticskirmish/sandfury all wr=0, tier-t2-stun wr=0, tier-t3-stun wr=0. Only swap-dustplague won (wr=1.0). iron_golem's def 4 blunts the control deck's already-thin chip damage. This is consistent with the baseline (mage-control-late__vs__iron_golem wr=0).",
+      "severity": "med",
+      "proposedChange": "Diagnosis: late-game control cards under-tuned, not the boss over-tuned (poison/poison-block decks beat iron_golem in the baseline). Apply SSC-6's converter CD cuts (Thunderstrike Catalyst, Static Skirmish) so control's slow can be cashed into damage that pierces def 4 (both are Pierce). Do not buff stun/slow values (C3/C5). This lifts non-Dust-Plague control toward winnable without making it a race-winner.",
+      "confidence": "med"
+    }
+  ]
+}

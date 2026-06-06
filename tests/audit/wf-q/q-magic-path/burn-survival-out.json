@@ -1,0 +1,57 @@
+{
+  "rate": "0.22",
+  "results": [
+    {
+      "id": "burn-survival-hybrid-baseline",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 381,
+      "avgCards": 17,
+      "hpOnWin": 0.256,
+      "ttkS": 27,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-survival-hybrid-P1",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 423,
+      "avgCards": 16,
+      "hpOnWin": 0.364,
+      "ttkS": 23.8,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-survival-hybrid-P1-dmg7",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 423,
+      "avgCards": 16,
+      "hpOnWin": 0.38,
+      "ttkS": 23.8,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 7
+    },
+    {
+      "id": "burn-survival-hybrid-P1-hp350-dmg7",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 423,
+      "avgCards": 16,
+      "hpOnWin": 0.38,
+      "ttkS": 23.8,
+      "startHP": 121,
+      "enemyHP": 350,
+      "enemyDmg": 7
+    }
+  ]
+}

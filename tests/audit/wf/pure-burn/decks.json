@@ -1,0 +1,92 @@
+{
+  "_comment": "PURE-BURN lane: bank-and-cash mage + detonators across stages and boss1 (doom_knight). Tests (A) archetype viability vs baseline; (B) bank-and-cash vs pure-tick; (C) detonator coefficient swaps; (D) weak-burn-card swap tests; (F) INT-investment realism. All ids verified against card-catalog.json. Mage = mostly elemental. Sections: A baseline-by-stage, B detonate-vs-tick, C detonator-coefficient-swap (9 fixed bankers + 1 swap slot), D weak-card-swap (8 fixed shell + 1 candidate slot, filler baseline = Flame Dart), E same weak swaps vs boss, F INT invest.",
+  "decks": [
+    { "id": "burn-early", "label": "Burn mage (early)", "archetype": "pure-burn", "class": "mage", "stage": "early",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t3-agility-fire-fire"] },
+
+    { "id": "burn-mid", "label": "Burn mage (mid)", "archetype": "pure-burn", "class": "mage", "stage": "mid",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t3-agility-fire-fire", "t3-attack-fire-fire", "t3-earth-fire-fire", "t2-earth-fire"] },
+
+    { "id": "burn-boss1", "label": "Burn mage vs doom_knight", "archetype": "pure-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t3-agility-fire-fire", "t3-attack-fire-fire", "t3-fire-fire-fire", "t3-earth-fire-fire", "t3-air-fire-fire", "t2-earth-fire", "t3-attack-attack-fire", "t3-agility-agility-fire"] },
+
+    { "id": "burn-late", "label": "Burn bank-and-cash mage (late, baseline repro)", "archetype": "pure-burn", "class": "mage", "stage": "late",
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"] },
+
+    { "id": "burn-detonate-late", "label": "Burn DETONATE-heavy (late)", "archetype": "pure-burn-detonate", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-air-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t3-agility-agility-fire", "t2-earth-fire", "t1-fire"] },
+
+    { "id": "burn-tickonly-late", "label": "Burn PURE-TICK (no detonators)", "archetype": "pure-burn-tick", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-agility-agility-fire", "t1-fire", "t2-earth-fire", "t3-fire-fire-water", "t2-agility-fire", "t1-fire", "t3-earth-fire-fire", "t2-air-fire"] },
+
+    { "id": "burn-detonate-boss1", "label": "Burn DETONATE-heavy vs doom_knight", "archetype": "pure-burn-detonate", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-air-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t3-agility-agility-fire", "t2-earth-fire", "t1-fire"] },
+
+    { "id": "burn-tickonly-boss1", "label": "Burn PURE-TICK vs doom_knight", "archetype": "pure-burn-tick", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-agility-agility-fire", "t1-fire", "t2-earth-fire", "t3-fire-fire-water", "t2-agility-fire", "t1-fire", "t3-earth-fire-fire", "t2-air-fire"] },
+
+    { "id": "det-cinderlance-boss1", "label": "DET swap = Cinderlance vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-attack-fire-fire"] },
+
+    { "id": "det-cindersprint-boss1", "label": "DET swap = Cinder Sprint vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-agility-fire-fire"] },
+
+    { "id": "det-supernova-boss1", "label": "DET swap = Supernova vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-fire-fire-fire"] },
+
+    { "id": "det-venomdet-boss1", "label": "DET swap = Venom Detonation vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-counter-fire-water"] },
+
+    { "id": "det-pyre-boss1", "label": "DET swap = Pyre (T2) vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t2-fire-fire"] },
+
+    { "id": "det-tremor-boss1", "label": "DET swap = Tremor Detonate vs doom_knight", "archetype": "det-swap", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-attack-fire-water"] },
+
+    { "id": "det-cinderlance-late", "label": "DET swap = Cinderlance (late)", "archetype": "det-swap", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-attack-fire-fire"], "vsBoss": false },
+
+    { "id": "det-cindersprint-late", "label": "DET swap = Cinder Sprint (late)", "archetype": "det-swap", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-agility-fire-fire"], "vsBoss": false },
+
+    { "id": "det-supernova-late", "label": "DET swap = Supernova (late)", "archetype": "det-swap", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-fire-fire-fire"], "vsBoss": false },
+
+    { "id": "det-venomdet-late", "label": "DET swap = Venom Detonation (late)", "archetype": "det-swap", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t2-air-fire", "t2-earth-fire", "t3-counter-fire-water"], "vsBoss": false },
+
+    { "id": "swap-baseline-late", "label": "SWAP baseline filler = Flame Dart (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t2-agility-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-firestorm-late", "label": "SWAP candidate = Firestorm t2-air-fire (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t2-air-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-quenchlance-late", "label": "SWAP candidate = Quench Lance t3-fire-fire-water (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-fire-fire-water", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-pyresurge-late", "label": "SWAP candidate = Pyre Surge t3-air-fire-fire (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-air-fire-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-twinflame-late", "label": "SWAP candidate = Twinflame Flicker t3-agility-agility-fire (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-agility-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-counterfire-late", "label": "SWAP candidate = Cinderscar t2-counter-fire (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t2-counter-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-spark-late", "label": "SWAP candidate = Spark t1-fire (late, T1 banker baseline)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t1-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "swap-baseline-boss1", "label": "SWAP baseline filler vs doom_knight", "archetype": "swap-test", "class": "mage", "stage": "boss1",
+      "deck": ["t2-agility-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"] },
+
+    { "id": "swap-firestorm-boss1", "label": "SWAP Firestorm vs doom_knight", "archetype": "swap-test", "class": "mage", "stage": "boss1",
+      "deck": ["t2-air-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"] },
+
+    { "id": "swap-pyresurge-boss1", "label": "SWAP Pyre Surge vs doom_knight", "archetype": "swap-test", "class": "mage", "stage": "boss1",
+      "deck": ["t3-air-fire-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"] },
+
+    { "id": "burn-int-invest-boss1", "label": "Burn mage w/ INT investment vs doom_knight", "archetype": "pure-burn", "class": "mage", "stage": "boss1",
+      "stats": { "int": 4 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t3-agility-fire-fire", "t3-attack-fire-fire", "t3-fire-fire-fire", "t3-earth-fire-fire", "t3-air-fire-fire", "t2-earth-fire", "t3-attack-attack-fire", "t3-agility-agility-fire"] }
+  ]
+}

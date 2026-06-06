@@ -1,0 +1,89 @@
+{
+  "lane": "physical-attack",
+  "resultsPath": "tests/audit/wf/physical-attack/results.json (+ results-boss.json)",
+  "decksTested": 26,
+  "matchupsRun": 58,
+  "summary": "Pure-physical warrior clears EVERY normal-enemy battery (early/mid/late) at winRate 1.0 with 43-83% HP cushions, but hits a hard BOSS WALL: no realistic full-physical deck beats doom_knight (the 'should-be-easy' first boss, 380HP/def3). The realistic loop-10 deck phys-boss1-balanced goes 0/6 (6 deaths, 369 dmg vs 380 HP). Only decks stacked with the snappiest high-output T3s squeak through at 5-26% HP. iron_golem (late, 409HP/def4) is also a 0/6 loss for every physical build. The agility-spam outliers (Skywire/Quickstep Sigil/Quickstrike) are NOT oppressive vs normals (slower than balanced physical). Swap tests show CD, not peakOPS, decides boss viability; and Quickstrike (T2, cost 2s) is off-curve weak. Recommended fixes are C1-compliant: cut CDs / add Pierce to the under-tuned T3 finisher line so physical has an honest answer to def-armored bosses, and re-price Quickstrike.",
+  "findings": [
+    {
+      "id": "PA-1",
+      "kind": "progression",
+      "target": "doom_knight (boss1) vs pure-physical archetype",
+      "stage": "boss1",
+      "evidence": "doom_knight (380HP/def3/9dmg/cd2.5s, enrage 1.4x at 50% HP, loop-10 mult 1.0). At 6 repeats the realistic loop-10 deck phys-boss1-balanced__vs__doom_knight = winRate 0, deaths 6, avgDamageDealt 369 (just short of 380). All four main physical archetypes lose: phys-boss1-t2spam (wr 0, 356 dmg), phys-boss1-t3finisher (wr 0, 286), phys-boss1-agility (wr 0, 325). Brief target for first boss is winRate >=0.8 with HP cost. Only snappy-T3 builds win and only barely: phys-boss1-finisher-snappy wr 1 @ 9.3% HP, phys-boss1-control wr 1 @ 9.9% HP, phys-boss1-sustain wr 1 @ 7.9% HP. Contrast: armor-finisher beats the harder iron_golem at 59.5% HP in baseline, so this is a physical-specific damage/race shortfall vs def+enrage.",
+      "severity": "high",
+      "proposedChange": "Do NOT nerf the boss. Fix the physical T3 finisher line so a realistic deck beats doom_knight at ~0.8+ winRate with HP to spare. Concretely (C1: cut CD, never raise; C2: keep STR mult): give the armor/earth-gated single-hit T3 finishers Pierce by default and snappier CDs so they punch through def 3. Mountain's Will (t3-attack-earth-earth) cd 2.4s->2.0s and make its base 20 a Pierce hit (currently only the armor-gated +8 pierces). Concussive Smash (t3-attack-attack-earth) cd 2.4s->2.0s. Earthcleaver (t3-attack-defense-earth) cd 2.4s->2.0s and lower its armor gate from 15 to 10. This raises the assembled physical ceiling vs armored bosses without touching any T2 or the boss.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-2",
+      "kind": "progression",
+      "target": "iron_golem (late boss) vs pure-physical archetype",
+      "stage": "late",
+      "evidence": "iron_golem (409HP/def4, loop mult 1.05). Every physical build loses 0/6 or 0/4: phys-late-balanced wr 0 (deaths 4, 354 dmg), phys-late-finisher wr 0 (203 dmg), phys-late-agility wr 0 (179 dmg), phys-late-snappy wr 0 @ 6 repeats (304 dmg), ab-late-T3-earthcleaver wr 0 (152 dmg), ab-late-T2-granite wr 0 (178 dmg, 43 cards played = it stalls completely). Matches the baseline where war-physical-late and war-physical-t2only-late both went winRate 0 vs iron_golem. Pure-physical has zero def-pierce on its core and no sustain, so def 4 taxes every hit and the race is unwinnable.",
+      "severity": "high",
+      "proposedChange": "Same direction as PA-1 (the PA-1 CD/Pierce buffs to the earth/armor-gated T3 finishers also help here). Additionally ensure the physical kit has at least one accessible Pierce finisher that does not require an armor gate the pure-attack deck can't reach: Cliffwind Maul (t3-air-attack-earth) lower armor gate 12->8; Granitewrath (t3-attack-counter-earth) cd 2.4s->2.0s so its Vengeance pierce fires more often. No T2 nerf, no boss nerf.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-3",
+      "kind": "off_curve_weak",
+      "target": "t2-agility-attack (Quickstrike)",
+      "stage": "boss1",
+      "evidence": "Swap test, 4x candidate over fixed base vs doom_knight (4 repeats): swap-boss1-QUICKSTRIKE = winRate 0, avgDamageDealt 324 -- LOWER than the cost-1 Jab filler swap-boss1-FILLER (winRate 0, 332 dmg). Quickstrike is cost 2 stamina / cd 1.2s / peakOPS 48.33; Jab is cost 1 / cd 1.2 / peakOPS 24.17. Despite double the isolated OPS, Quickstrike underperforms Jab in real combat because the 2-stamina cost throttles its play rate -- the stamina economy can't sustain a 2-cost on a 1.2s CD. It is the cheapest-CD T2 attack yet does not beat a T1 filler.",
+      "severity": "med",
+      "proposedChange": "C1 (cost is the primary lever; tier != bigger cost): re-price Quickstrike to cost 1 stamina (from 2), keeping cd 1.2s and 'Deal 8([dex])'. This makes its OPS economy-feasible and gives DEX-attack a clean cheap staple. It stays below the T3 agility ceiling (Skywire/Quickstep Sigil) since those add slow/haste/triple-hit. This is a buff to an under-tuned card, not a T2 nerf.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-4",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-earth-earth (Mountain's Will)",
+      "stage": "boss1",
+      "evidence": "Swap test 4x vs doom_knight: swap-boss1-MTNWILL = winRate 0, avgDamageDealt 366 (highest dmg of any losing swap, still dies). Compare swap-boss1-CLEAVER (Cleaver's Tax, peakOPS only 28) = winRate 1.0 @ 25.8% HP, and swap-boss1-QSIGIL (Quickstep Sigil) = winRate 1.0 @ 25.8% HP. Mountain's Will has peakOPS 40.42 (higher than Cleaver) but LOSES because its 20 base damage is non-Pierce (taxed by def 3 to 17/hit) and its cd is 2.4s, so against a def boss it under-delivers vs lower-OPS but snappier/pierce T3s.",
+      "severity": "med",
+      "proposedChange": "C1 (cut CD to rescue) + raise its ceiling vs armored targets: Mountain's Will cd 2.4s->2.0s; make the base 20 hit Pierce (it is the flagship attack/earth 'Will' card and should answer armor). Keep cost 2 stamina. This buffs the T3 so it beats T2 staples vs def bosses; no T2 touched.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-5",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-attack-counter (Bloodlash Salvo)",
+      "stage": "boss1",
+      "evidence": "Swap test 4x vs doom_knight: swap-boss1-BLOODLASH = winRate 0, avgDamageDealt 348 -- a LOSS, despite cd 1.8s and peakOPS 33.89. By contrast swap-boss1-BERSERKER (Berserker's Ledger, t3-attack-attack-attack, cd 2.4s) = winRate 1.0 @ 13.2% HP and swap-boss1-CLEAVER = winRate 1.0 @ 25.8%. Bloodlash's 'Deal 9 + gain 4 STR this combat' ramps too slowly in a ~14s boss kill window and its 9 base is taxed by def 3; the STR ramp never pays off before the enrage race ends.",
+      "severity": "med",
+      "proposedChange": "C2-compliant ceiling buff (the STR gain is the build-around hook): raise the in-combat STR gain from 4 to 6 and add 'Deal 9([str]) Pierce' (make the hit Pierce) so the ramp matters and the early hits aren't eaten by armor. Keep cost 2s / cd 1.8s. Buffs the T3; nothing else changes.",
+      "confidence": "med"
+    },
+    {
+      "id": "PA-6",
+      "kind": "off_curve_strong",
+      "target": "agility-spam outliers (t2-agility-attack Quickstrike, t3-agility-air-attack Skywire, t3-agility-agility-agility Quickstep Sigil)",
+      "stage": "late",
+      "evidence": "C1 oppressive-ceiling hypothesis is REFUTED vs normals. phys-late-agility clears all late normals at winRate 1.0 but is SLOWER than phys-late-balanced on every one: depths_horror 4625ms vs 3925, fire_elemental 5200 vs 4100, werewolf 6300 vs 4100, mutated_salamander 8100 vs 4100; HP cushions comparable (0.435-0.565 vs 0.506-0.536). The only place the snappy T3 agility cards shine is bosses: swap-boss1-SKYWIRE and swap-boss1-QSIGIL flip a 0/4 loss into a 1.0 win (Sigil @ 25.8% HP, the best survivor). They are a strong-but-fair boss answer, not an oppressive trivializer.",
+      "severity": "low",
+      "proposedChange": "No nerf. These cards are correctly tuned: high snappy output that earns its keep ONLY at bosses, and is a sidegrade (slightly slower) vs normals. Leave Skywire (cost 2s+1m, cd1.5), Quickstep Sigil (cost 2s, cd1.8) as-is. They illustrate the target T3 ceiling the underperforming finishers (PA-4/PA-5) should be buffed UP toward, not nerfed down to.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-7",
+      "kind": "tier_violation",
+      "target": "t2-attack-earth (Granite Lunge, T2) vs t3-attack-defense-earth (Earthcleaver, T3)",
+      "stage": "boss1",
+      "evidence": "Tier A/B, identical 12-card deck except one slot is 4x T2 Granite Lunge vs 4x T3 Earthcleaver, vs doom_knight (4 repeats): ab-boss1-T2-granite = winRate 1.0 (TTK 19100ms, 6% HP, 380 dmg) but ab-boss1-T3-earthcleaver = winRate 0, deaths 4, 316 dmg. The T2 version WINS and the T3 version LOSES -- a direct T3<T2 violation. Earthcleaver (cd 2.4s, 14 base, +8 Pierce only if armor>=15 which a pure-attack deck rarely reaches) under-delivers vs def 3, while cheap snappy Granite Lunge (cost 1s, cd 1.4s) plays far more often. At late vs iron_golem both lose (ab-late T2 178 dmg / T3 152 dmg) but T3 still trails T2 on damage.",
+      "severity": "high",
+      "proposedChange": "BUFF the T3 (never nerf the T2). Earthcleaver: cd 2.4s->2.0s, lower armor gate 15->10, and make the base 14 hit Pierce. This guarantees the T3 out-performs Granite Lunge regardless of whether the deck stacks armor, restoring T3>T2. Granite Lunge (T2) stays cost 1s / cd 1.4s / 'Gain 6 armor, Deal 4 +1 per 4 armor'.",
+      "confidence": "high"
+    },
+    {
+      "id": "PA-8",
+      "kind": "viability",
+      "target": "pure-physical archetype (early/mid/late normals)",
+      "stage": "all",
+      "evidence": "Across normal batteries the archetype is healthy: phys-early winRate 1.0 vs all four early enemies (HP 0.496-0.829); phys-mid winRate 1.0 vs all five mid enemies (HP 0.507-0.593); phys-late-balanced winRate 1.0 vs all four late normals (TTK 3925-4100ms, HP 0.506-0.536). The problem is strictly bosses (PA-1/PA-2), so the fix should be targeted T3-finisher buffs, NOT broad attack buffs that would over-tune the already-fine normal clears.",
+      "severity": "low",
+      "proposedChange": "No change to normal-fight tuning. Confine buffs to the T3 finisher line (PA-1/PA-2/PA-4/PA-5/PA-7) so boss viability rises without inflating normal-enemy TTK. Re-validate that post-buff phys-boss1-balanced reaches winRate >=0.8 vs doom_knight while normal-clear HP cushions stay roughly unchanged.",
+      "confidence": "high"
+    }
+  ]
+}

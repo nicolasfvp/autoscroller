@@ -1,0 +1,47 @@
+{
+  "matchups": [
+    {
+      "id": "cascade-ISO-selfbleed-only",
+      "label": "Cascade: current bleed3+cd2.4 but REMOVE self-bleed only (isolate self-bleed)",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-counter-counter-water","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-counter-counter-water": {
+          "cooldown": 2.4,
+          "effects": [
+            { "type": "dot", "stack": "bleed", "value": 3, "target": "enemy", "scale": { "stat": "spi", "per": 3, "value": 1 } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 15000, "trigger": "on_kill_with_stack", "threshold_stack": "bleed", "then": { "type": "dot", "value": 4, "target": "enemy_nearest", "stack": "bleed", "scale": { "stat": "spi", "per": 3, "value": 2 } } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cascade-ISO-bleed4-cd2.0-withselfbleed",
+      "label": "Cascade: bleed4+cd2.0 but KEEP self-bleed (isolate value/cd buff)",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-counter-counter-water","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-counter-counter-water": {
+          "cooldown": 2.0,
+          "effects": [
+            { "type": "dot", "stack": "bleed", "value": 4, "target": "enemy", "scale": { "stat": "spi", "per": 3, "value": 1 } },
+            { "type": "dot", "value": 1, "target": "self_dot", "stack": "bleed" },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 15000, "trigger": "on_kill_with_stack", "threshold_stack": "bleed", "then": { "type": "dot", "value": 4, "target": "enemy_nearest", "stack": "bleed", "scale": { "stat": "spi", "per": 3, "value": 2 } } }
+          ]
+        }
+      }
+    }
+  ]
+}

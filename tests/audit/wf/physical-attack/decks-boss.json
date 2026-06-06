@@ -1,0 +1,45 @@
+{
+  "_comment": "Boss-focused re-test at higher repeats + sustain-diagnosis decks. boss1=doom_knight, late=iron_golem.",
+  "decks": [
+    {
+      "id": "phys-boss1-balanced",
+      "label": "Pure physical balanced (boss1)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-earth-earth", "t1-attack"]
+    },
+    {
+      "id": "phys-boss1-finisher-snappy",
+      "label": "T3 snappy finisher (Cleaver+Sigil+Berserker)",
+      "archetype": "pure-physical-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-counter-counter", "t3-agility-agility-agility", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-attack-earth", "t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t1-attack"]
+    },
+    {
+      "id": "phys-boss1-sustain",
+      "label": "Physical + minimal sustain (Last Stand + Forge Strike)",
+      "archetype": "pure-physical-sustain",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t3-attack-attack-attack", "t3-attack-counter-counter", "t3-air-attack-attack", "t3-attack-attack-earth", "t3-attack-defense-fire", "t3-attack-counter-defense", "t2-attack-defense", "t1-attack"]
+    },
+    {
+      "id": "phys-boss1-control",
+      "label": "Physical + Concussive stun control",
+      "archetype": "pure-physical-control",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-attack-earth", "t3-attack-counter-counter", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-agility-agility-agility", "t2-attack-attack", "t2-agility-attack", "t2-air-attack", "t1-attack"]
+    },
+    {
+      "id": "phys-late-snappy",
+      "label": "T3 snappy finisher (late, iron_golem)",
+      "archetype": "pure-physical-finisher",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-attack-counter-counter", "t3-agility-agility-agility", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-attack-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t1-attack"]
+    }
+  ]
+}

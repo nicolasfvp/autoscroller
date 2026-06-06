@@ -64,11 +64,12 @@ describe('CardText — dynamic scaled value', () => {
 
   it('transforms relative/gated scalers with intervening text (e.g. "gain 10 more [armor]([vit])")', () => {
     // Last Stand Bulwark has 3 scalers: armor, a relative armor ("gain N more
-    // [armor]([vit])"), and damage ("deal N([str]) more Pierce").
+    // [armor]([vit])" — has an unconditional base to add onto), and a gated Pierce
+    // hit with NO unconditional base, so it reads absolute ("deal N([str]) Pierce").
     const def = formatCardDescription(byId('t3-attack-counter-defense'), { dynamic: { stats: stats({ str: 6, vit: 6 }), shift: false } });
     expect((def.match(/\[\[v:/g) ?? []).length).toBe(3);
     expect(def).toContain('more [armor]');
-    expect(def).toContain('more Pierce');
+    expect(def).toContain('deal [[v:18:str]] Pierce');
     expect(def).not.toMatch(SCALER);
 
     const eq = formatCardDescription(byId('t3-attack-counter-defense'), { dynamic: { stats: stats({ str: 6, vit: 6 }), shift: true } });
@@ -83,14 +84,15 @@ describe('CardText — dynamic scaled value', () => {
     expect(formatCardDescription(jab, { dynamic: { stats: stats({ str: 9 }), shift: true } })).toBe('Deal 9.');
   });
 
-  it('value:0 detonator resolves to the per-unit value WITHOUT double-counting the base (Necrotic Festering)', () => {
-    // damage value:0, scale {str, per:2, value:4}, consume_stack_value bleed.
-    // Resolver per bleed = 0 + floor(str/2)*4 = 12 at str 6 (NOT 16).
+  it('per-stack [bleed] detonator resolves the scaled per-unit value (Necrotic Festering)', () => {
+    // Bug-fix rework: bleed now lands on the ENEMY and is READ (never consumed) —
+    // damage value:2, scale {str, per:3, value:1}, condition {enemy_has_stack:bleed, per_stack}.
+    // Resolver per bleed = 2 + floor(str/3)*1 = 4 at str 6.
     const s = stats({ str: 6, dex: 6, int: 6 });
     const def = formatCardDescription(byId('t3-attack-counter-water'), { dynamic: { stats: s, shift: false } });
-    expect(def).toContain('Deal [[v:12:str]] Pierce per [bleed] consumed');
+    expect(def).toContain('Deal [[v:4:str]] Pierce per [bleed] on enemy');
     const eq = formatCardDescription(byId('t3-attack-counter-water'), { dynamic: { stats: s, shift: true } });
-    expect(eq).toContain('Deal (4 per 2 [str]) Pierce per [bleed] consumed'); // base 0 → no "0 +"
+    expect(eq).toContain('Deal (2 + 1 per 3 [str]) Pierce per [bleed] on enemy');
   });
 
   it('convert_stack scaler keys to the displayed lead, not the "spend-all" 99 (Ember Aegis Gust)', () => {
@@ -106,13 +108,14 @@ describe('CardText — dynamic scaled value', () => {
     expect(bleed).toContain('[[v:3:dex]][bleed] per [burn] consumed'); // 2 + floor(6/4)*1 = 3
   });
 
-  it('relative DoT scalers ("apply N more [stack]([stat])") are transformed, not dropped (Bedrock Snare)', () => {
+  it('gated DoT scalers are transformed, not dropped (Bedrock Snare)', () => {
     const def = formatCardDescription(byId('t2-air-earth'), { dynamic: { stats: stats({ str: 6, int: 6 }), shift: false } });
-    // The relative stun clause must carry a resolved value token, not a bare "1".
-    expect(def).toMatch(/\[\[v:\d+:int\]\] more \[stun\]/);
+    // The gated stun clause must carry a resolved value token, not a bare "1". The
+    // stun has no unconditional base, so it reads absolute ("Apply N[stun]"), not "more".
+    expect(def).toMatch(/\[\[v:\d+:int\]\]\[stun\]/);
     expect(hasSentinel(def)).toBe(false);
     const eq = formatCardDescription(byId('t2-air-earth'), { dynamic: { stats: stats({ str: 6, int: 6 }), shift: true } });
-    expect(eq).toMatch(/\(1 \+ 1 per 5 \[int\]\) more \[stun\]/); // base 1, inc 1, per 5
+    expect(eq).toMatch(/\(1 \+ 1 per 5 \[int\]\)\[stun\]/); // base 1, inc 1, per 5
   });
 
   it('every card renders dynamically without leaking sentinels or raw scalers', () => {

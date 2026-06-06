@@ -1,0 +1,135 @@
+{
+  "_comment": "Q(a): do control CD cuts (Frostbind 2->1.4, Quake 2->1.4, Thunderstrike Catalyst 2.4->2.0, Static Skirmish 1.8->1.6) measurably help a control deck CLOSE fights, or are they cosmetic? Control cards FRONT-LOADED (fixed deck order). Baseline vs proposed in same spec. Late battery at mult 1.15, plus doom_knight close-rate stress.",
+  "matchups": [
+    {
+      "id": "ctrl-baseline-depths_horror",
+      "label": "control BASELINE vs depths_horror (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "repeats": 6
+    },
+    {
+      "id": "ctrl-proposed-depths_horror",
+      "label": "control PROPOSED-CD vs depths_horror (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-water-water": { "cooldown": 1.4 },
+        "t1-earth": { "cooldown": 1.4 },
+        "t3-air-attack-counter": { "cooldown": 2.0 },
+        "t3-agility-air-counter": { "cooldown": 1.6 }
+      }
+    },
+    {
+      "id": "ctrl-baseline-werewolf",
+      "label": "control BASELINE vs werewolf (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "repeats": 6
+    },
+    {
+      "id": "ctrl-proposed-werewolf",
+      "label": "control PROPOSED-CD vs werewolf (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-water-water": { "cooldown": 1.4 },
+        "t1-earth": { "cooldown": 1.4 },
+        "t3-air-attack-counter": { "cooldown": 2.0 },
+        "t3-agility-air-counter": { "cooldown": 1.6 }
+      }
+    },
+    {
+      "id": "ctrl-baseline-salamander",
+      "label": "control BASELINE vs mutated_salamander (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "repeats": 6
+    },
+    {
+      "id": "ctrl-proposed-salamander",
+      "label": "control PROPOSED-CD vs mutated_salamander (late)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 720,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-water-water": { "cooldown": 1.4 },
+        "t1-earth": { "cooldown": 1.4 },
+        "t3-air-attack-counter": { "cooldown": 2.0 },
+        "t3-agility-air-counter": { "cooldown": 1.6 }
+      }
+    },
+    {
+      "id": "ctrl-baseline-doomknight",
+      "label": "control BASELINE vs doom_knight (boss1 close-rate)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "repeats": 6
+    },
+    {
+      "id": "ctrl-proposed-doomknight",
+      "label": "control PROPOSED-CD vs doom_knight (boss1 close-rate)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t1-earth", "t2-water-water", "t3-agility-air-counter", "t3-air-attack-counter", "t2-earth-earth", "t2-air-earth", "t3-air-air-fire", "t3-attack-attack-earth", "t3-agility-agility-air", "t3-air-attack-water", "t3-agility-air-earth", "t3-air-air-earth"],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-water-water": { "cooldown": 1.4 },
+        "t1-earth": { "cooldown": 1.4 },
+        "t3-air-attack-counter": { "cooldown": 2.0 },
+        "t3-agility-air-counter": { "cooldown": 1.6 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "decks": [
+    {
+      "id": "swap2-base-fedrage",
+      "label": "SWAP2 base: well-fed rage, filler Jab in slot (boss1)",
+      "archetype": "swap2-base",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "swap2-crimson-spiral-fed",
+      "label": "SWAP2 slot: Crimson Spiral w/ fed rage (boss1)",
+      "archetype": "swap2-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-counter-counter-counter"
+      ]
+    },
+    {
+      "id": "swap2-cleavers-tax-fed",
+      "label": "SWAP2 slot: Cleaver's Tax w/ fed rage (boss1)",
+      "archetype": "swap2-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-counter-counter"
+      ]
+    },
+    {
+      "id": "swap2-wrath-brand-fed",
+      "label": "SWAP2 slot: Wrath Brand w/ fed rage (boss1)",
+      "archetype": "swap2-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-counter-fire"
+      ]
+    },
+    {
+      "id": "swap2-berserker-ledger-fed",
+      "label": "SWAP2 slot: Berserker's Ledger w/ fed rage (boss1)",
+      "archetype": "swap2-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-attack-attack"
+      ]
+    },
+    {
+      "id": "swap2-crimson-cascade",
+      "label": "SWAP2 slot: Crimson Cascade (T3 bleed) w/ fed rage (boss1)",
+      "archetype": "swap2-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-counter-counter-water"
+      ]
+    }
+  ]
+}
