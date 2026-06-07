@@ -25,15 +25,6 @@ export class BossExitScene extends Scene {
     super('BossExitScene');
   }
 
-  private fadeToScene(sceneKey: string, data?: any): void {
-    if (this.transitioning) return;
-    this.transitioning = true;
-    this.cameras.main.fadeOut(LAYOUT.fadeDuration, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start(sceneKey, data);
-    });
-  }
-
   create(data: { loopRunner: LoopRunner; loopRunState: LoopRunState }): void {
     this.transitioning = false;
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
@@ -170,31 +161,33 @@ export class BossExitScene extends Scene {
 
       // Bank 100% materials and XP for safe exit
       const run = getRun();
+      const targetScene = run.mode === 'daily' ? SCENE_KEYS.MAIN_MENU : SCENE_KEYS.CITY_HUB;
       const materialsEarned: Record<string, number> = { ...(run.economy.materials ?? {}) };
       const xpEarned = run.hero.runXP ?? 0;
-      const metaState = await loadMetaState();
-      const updatedState = bankRunRewards(
-        materialsEarned,
-        xpEarned,
-        'safe',
-        {
-          seed: run.runId,
-          loopsCompleted: Math.max(0, run.loop.count - 1),
-          bossesDefeated: run.loop.bossesDefeated ?? 0,
-        },
-        metaState,
-        run.hero.className ?? 'warrior',
-        run.economy.gatheringBoost ?? 0,
-      );
-      await saveMetaState(updatedState);
-
-      // Wipe the persisted run save — the run is resolved, MainMenu shouldn't
-      // offer "Continue" pointing at it. clearByMode targets the daily slot
-      // when the run is a daily, leaving any separate normal save intact.
-      await saveManager.clearByMode(run.mode);
+      try {
+        const metaState = await loadMetaState();
+        const updatedState = bankRunRewards(
+          materialsEarned,
+          xpEarned,
+          'safe',
+          {
+            seed: run.runId,
+            loopsCompleted: Math.max(0, run.loop.count - 1),
+            bossesDefeated: run.loop.bossesDefeated ?? 0,
+          },
+          metaState,
+          run.hero.className ?? 'warrior',
+          run.economy.gatheringBoost ?? 0,
+        );
+        await saveMetaState(updatedState);
+        await saveManager.clearByMode(run.mode);
+      } catch (e) {
+        console.error('[BossExit] Failed to bank rewards:', e);
+      }
       clearRun();
       stopAllRunScenes(this, SCENE_KEYS.BOSS_EXIT);
-      this.fadeToScene(run.mode === 'daily' ? SCENE_KEYS.MAIN_MENU : 'CityHub');
+      this.scene.stop(SCENE_KEYS.BOSS_EXIT);
+      this.scene.start(targetScene);
     } else {
       this.loopRunner.onBossChoice('continue');
       // Resume GameScene -- LoopRunner is now in 'planning' state

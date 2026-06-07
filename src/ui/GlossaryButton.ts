@@ -1,61 +1,40 @@
-﻿// GlossaryButton -- small circular "?" affordance that opens the keyword
-// glossary modal. Mounted by any scene that benefits from a persistent
-// reference panel: DeckCustomization, Combat.
+// GlossaryButton -- book icon button that opens the keyword glossary modal.
+// Mounted by any scene that benefits from a persistent reference panel.
 //
-// Visual: 28×28 circle, dark fill + accent stroke, "?" glyph centered.
-// Hover brightens stroke + glyph; click opens the glossary.
+// Visual: book sprite icon with hover glow effect.
 
 import Phaser from 'phaser';
-import { COLORS, FONTS } from './StyleConstants';
 import { openGlossary } from './GlossaryPanel';
 
-const BUTTON_RADIUS = 14;
-const BUTTON_FILL = 0x1a1a2e;
-const BUTTON_STROKE = 0x9a6030;
-const BUTTON_STROKE_HOVER = 0xffd700;
+const BUTTON_SIZE = 40;
 
 /**
- * Add a "?" button at the given canvas-space position. Returns the
- * Container so callers can attach it to a parent, reposition, or destroy.
+ * Add a book-icon glossary button at the given canvas-space position.
  *
  * `depth` controls draw order (default 5000 — above HUD, below modals).
+ * `callbacks.onOpen` fires right before the glossary opens.
+ * `callbacks.onClose` fires when the glossary closes.
  */
 export function addGlossaryButton(
   scene: Phaser.Scene,
   x: number,
   y: number,
   depth = 5000,
+  callbacks?: { onOpen?: () => void; onClose?: () => void },
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y).setDepth(depth);
 
-  const circle = scene.add.circle(0, 0, BUTTON_RADIUS, BUTTON_FILL, 0.92)
-    .setStrokeStyle(2, BUTTON_STROKE);
-  container.add(circle);
+  const icon = scene.add.image(0, 0, 'glossary_book_icon')
+    .setDisplaySize(BUTTON_SIZE, BUTTON_SIZE)
+    .setInteractive({ useHandCursor: true });
+  container.add(icon);
 
-  const glyph = scene.add.text(0, 1, '?', {
-    fontSize: '18px',
-    fontStyle: 'bold',
-    color: COLORS.accent,
-    fontFamily: FONTS.body,
-  }).setOrigin(0.5);
-  container.add(glyph);
-
-  // Use the circle for hit testing so the click area matches the visual.
-  circle.setInteractive(
-    new Phaser.Geom.Circle(0, 0, BUTTON_RADIUS),
-    Phaser.Geom.Circle.Contains,
-  );
-  circle.input!.cursor = 'pointer';
-
-  circle.on('pointerover', () => {
-    circle.setStrokeStyle(2, BUTTON_STROKE_HOVER);
-    glyph.setColor(COLORS.accentHover);
+  icon.on('pointerover', () => { icon.setTint(0xffd700); });
+  icon.on('pointerout', () => { icon.clearTint(); });
+  icon.on('pointerdown', () => {
+    callbacks?.onOpen?.();
+    openGlossary(scene, callbacks?.onClose);
   });
-  circle.on('pointerout', () => {
-    circle.setStrokeStyle(2, BUTTON_STROKE);
-    glyph.setColor(COLORS.accent);
-  });
-  circle.on('pointerdown', () => openGlossary(scene));
 
   return container;
 }

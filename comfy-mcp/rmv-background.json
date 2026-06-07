@@ -1,18 +1,18 @@
 {
-  "1": {
+  "17": {
     "inputs": {
-      "image": "baby dragon_1.png"
+      "image": "tutorial_place_subtile (1).png"
     },
     "class_type": "LoadImage",
     "_meta": {
       "title": "Load Image"
     }
   },
-  "129": {
+  "22": {
     "inputs": {
       "filename_prefix": "ComfyUI",
       "images": [
-        "128:16",
+        "19:16",
         0
       ]
     },
@@ -21,30 +21,14 @@
       "title": "Save Image"
     }
   },
-  "128:16": {
+  "19:13": {
     "inputs": {
       "image": [
-        "1",
-        0
-      ],
-      "alpha": [
-        "128:15",
-        0
-      ]
-    },
-    "class_type": "JoinImageWithAlpha",
-    "_meta": {
-      "title": "Join Image with Alpha"
-    }
-  },
-  "128:13": {
-    "inputs": {
-      "image": [
-        "1",
+        "17",
         0
       ],
       "bg_removal_model": [
-        "128:14",
+        "19:14",
         0
       ]
     },
@@ -53,10 +37,19 @@
       "title": "Remove Background"
     }
   },
-  "128:15": {
+  "19:14": {
+    "inputs": {
+      "bg_removal_name": "birefnet.safetensors"
+    },
+    "class_type": "LoadBackgroundRemovalModel",
+    "_meta": {
+      "title": "Load Background Removal Model"
+    }
+  },
+  "19:15": {
     "inputs": {
       "mask": [
-        "128:13",
+        "19:13",
         0
       ]
     },
@@ -65,13 +58,20 @@
       "title": "Invert Mask"
     }
   },
-  "128:14": {
+  "19:16": {
     "inputs": {
-      "bg_removal_name": "birefnet.safetensors"
+      "image": [
+        "17",
+        0
+      ],
+      "alpha": [
+        "19:15",
+        0
+      ]
     },
-    "class_type": "LoadBackgroundRemovalModel",
+    "class_type": "JoinImageWithAlpha",
     "_meta": {
-      "title": "Load Background Removal Model"
+      "title": "Join Image with Alpha"
     }
   }
 }

@@ -1,13 +1,3 @@
-﻿// GlossaryPanel -- persistent keyword reference modal. Surfaced via the
-// circular "?" GlossaryButton from any scene that shows cards or runs
-// combat. Read-only: lists every keyword in KEYWORD_DEFINITIONS, grouped
-// by category (Stack / Modifier / Stat), in a scrollable centered panel.
-//
-// Lifecycle: openGlossary(scene) creates a high-depth container overlay on
-// the calling scene; it tears itself down on close button, click-outside,
-// ESC, or scene shutdown. Multiple openings are guarded so a double-click
-// can't stack two panels.
-
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { KEYWORD_DEFINITIONS, TOKEN_GLOSSARY, type KeywordDef } from './KeywordDefinitions';
@@ -16,17 +6,19 @@ import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 const OVERLAY_DEPTH = 11000;
 const BACKDROP_ALPHA = 0.72;
 
-const PANEL_W = 720;
-const PANEL_H = 520;
+const PANEL_W = 700;
+const PANEL_H = 510;
 const PANEL_X = (LAYOUT.canvasWidth - PANEL_W) / 2;
 const PANEL_Y = (LAYOUT.canvasHeight - PANEL_H) / 2;
 
-const PANEL_PADDING = 20;
-const HEADER_H = 44;
-const CONTENT_X = PANEL_X + PANEL_PADDING;
-const CONTENT_Y = PANEL_Y + HEADER_H + 4;
-const CONTENT_W = PANEL_W - PANEL_PADDING * 2;
-const CONTENT_H = PANEL_H - HEADER_H - PANEL_PADDING - 8;
+const PAD_H = 22;   // horizontal padding (inside gold border)
+const PAD_V = 16;   // vertical padding top/bottom (inside border)
+const HEADER_H = 46;
+
+const CONTENT_X = PANEL_X + PAD_H;
+const CONTENT_Y = PANEL_Y + HEADER_H + PAD_V;
+const CONTENT_W = PANEL_W - PAD_H * 2;
+const CONTENT_H = PANEL_H - HEADER_H - PAD_V * 2;
 
 const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
   stack: 'Stacks',
@@ -40,119 +32,98 @@ const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
   stat: '#66ccff',
 };
 
-// Stacks and stats (the new combat vocabulary) are surfaced first since they
-// are the everyday tokens; the four detected modifier keywords come last.
+const KEYWORD_ICON: Partial<Record<string, string>> = {
+  Burn:       'icon_burn',
+  Bleed:      'icon_bleed',
+  Poison:     'icon_poison',
+  Stun:       'icon_stun',
+  Slow:       'icon_slow',
+  Rage:       'icon_rage',
+  Armor:      'icon_armor',
+  Strength:   'icon_str',
+  Dexterity:  'icon_dex',
+  Intellect:  'icon_int',
+  Vitality:   'icon_vit',
+  Spirit:     'icon_spi',
+  Exhaust:    'icon_exhaust',
+};
+
 const CATEGORY_ORDER: KeywordDef['category'][] = ['stack', 'stat', 'modifier'];
 
-const KEYWORD_FONT = 14;
-const DEFINITION_FONT = 12;
-const SECTION_HEADER_FONT = 16;
-const SECTION_HEADER_GAP_TOP = 6;
-const SECTION_HEADER_GAP_BOTTOM = 6;
-const KEYWORD_TO_DEF_GAP = 2;
-const ENTRY_GAP = 8;
+const KEYWORD_FONT   = 14;
+const DEF_FONT       = 12;
+const SEC_FONT       = 15;
+const SEC_GAP_TOP    = 8;
+const SEC_GAP_BOTTOM = 4;
+const KW_DEF_GAP     = 2;
+const ENTRY_GAP      = 8;
+const ICON_SIZE      = 18;
+const ICON_GAP       = 6;
 
-interface GlossaryHandle {
-  close: () => void;
-}
-
+interface GlossaryHandle { close: () => void; }
 let openHandle: GlossaryHandle | null = null;
 
-/**
- * Open the glossary modal on top of the given scene. Idempotent — calling
- * again while one is already open is a no-op (the existing one stays).
- */
-export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
+export function openGlossary(scene: Phaser.Scene, onClose?: () => void): GlossaryHandle {
   if (openHandle) return openHandle;
 
   const overlay = scene.add.container(0, 0).setDepth(OVERLAY_DEPTH);
 
-  const backdrop = scene.add.rectangle(
-    0,
-    0,
-    LAYOUT.canvasWidth,
-    LAYOUT.canvasHeight,
-    0x000000,
-    BACKDROP_ALPHA,
-  )
-    .setOrigin(0, 0)
-    .setInteractive();
+  // Semi-transparent full-screen backdrop
+  const backdrop = scene.add.rectangle(0, 0, LAYOUT.canvasWidth, LAYOUT.canvasHeight, 0x000000, BACKDROP_ALPHA)
+    .setOrigin(0, 0).setInteractive();
   overlay.add(backdrop);
 
-  const panelBg = scene.add.rectangle(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 0x1a1a2e, 0.98)
-    .setOrigin(0, 0)
-    .setStrokeStyle(2, 0x9a6030);
-  overlay.add(panelBg);
+  // Programmatic panel — very dark fill + double gold border
+  const gfx = scene.add.graphics();
+  // Main fill
+  gfx.fillStyle(0x08080f, 0.97);
+  gfx.fillRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H);
+  // Outer gold border
+  gfx.lineStyle(3, 0xc8920a, 1);
+  gfx.strokeRect(PANEL_X, PANEL_Y, PANEL_W, PANEL_H);
+  // Inner accent line
+  gfx.lineStyle(1, 0x6b4a10, 0.8);
+  gfx.strokeRect(PANEL_X + 5, PANEL_Y + 5, PANEL_W - 10, PANEL_H - 10);
+  overlay.add(gfx);
 
-  const title = scene.add.text(PANEL_X + PANEL_PADDING, PANEL_Y + 12, 'Glossary', {
-    fontSize: '20px',
-    fontStyle: 'bold',
-    color: COLORS.accent,
-    fontFamily: FONTS.body,
-  }).setOrigin(0, 0);
+  // Invisible hit-area so clicks on the panel don't reach the backdrop
+  const panelHit = scene.add.rectangle(PANEL_X, PANEL_Y, PANEL_W, PANEL_H, 0, 0)
+    .setOrigin(0, 0).setInteractive();
+  overlay.add(panelHit);
+
+  // Title — centered
+  const title = scene.add.text(PANEL_X + PANEL_W / 2, PANEL_Y + PAD_V, 'Glossary', {
+    fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily: FONTS.body,
+  }).setOrigin(0.5, 0);
   overlay.add(title);
 
-  const hint = scene.add.text(
-    PANEL_X + PANEL_PADDING,
-    PANEL_Y + 18,
-    '',
-    { fontSize: '11px', color: COLORS.textSecondary, fontFamily: FONTS.body },
-  );
-  hint.setText('Scroll for more • ESC to close');
-  hint.setPosition(PANEL_X + PANEL_W - PANEL_PADDING - hint.width, PANEL_Y + 22);
-  overlay.add(hint);
-
-  const closeBtn = scene.add.text(
-    PANEL_X + PANEL_W - PANEL_PADDING,
-    PANEL_Y + 12,
-    '×',
-    {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-      fontFamily: FONTS.body,
-    },
-  ).setOrigin(1, 0).setInteractive({ useHandCursor: true });
-  closeBtn.on('pointerover', () => closeBtn.setColor(COLORS.accentHover));
-  closeBtn.on('pointerout', () => closeBtn.setColor(COLORS.accent));
-  overlay.add(closeBtn);
-
-  const divider = scene.add.rectangle(
-    PANEL_X + PANEL_PADDING,
-    PANEL_Y + HEADER_H,
-    PANEL_W - PANEL_PADDING * 2,
-    1,
-    0x444466,
-  ).setOrigin(0, 0);
+  // Divider below title
+  const divider = scene.add.rectangle(PANEL_X + PAD_H, PANEL_Y + HEADER_H, CONTENT_W, 1, 0xc8920a, 0.7)
+    .setOrigin(0, 0);
   overlay.add(divider);
 
-  // Scroll viewport: a content container masked to CONTENT_W × CONTENT_H.
-  // The mask is a Graphics with a hit-tested rectangle that the wheel
-  // listener uses to constrain scroll to the panel region.
+  // Close button — top-right, inside border
+  const closeBtn = scene.add.text(PANEL_X + PANEL_W - PAD_H, PANEL_Y + PAD_V, '×', {
+    fontSize: '26px', fontStyle: 'bold', color: COLORS.accent, fontFamily: FONTS.body,
+  }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
+  closeBtn.on('pointerover', () => closeBtn.setColor(COLORS.accentHover));
+  closeBtn.on('pointerout',  () => closeBtn.setColor(COLORS.accent));
+  overlay.add(closeBtn);
+
+  // Scrollable content container with geometry mask
   const contentContainer = scene.add.container(0, 0);
-  const maskGraphics = scene.make.graphics({ x: 0, y: 0 });
-  maskGraphics.fillStyle(0xffffff);
-  maskGraphics.fillRect(CONTENT_X, CONTENT_Y, CONTENT_W, CONTENT_H);
-  const mask = maskGraphics.createGeometryMask();
-  contentContainer.setMask(mask);
+  const maskGfx = scene.make.graphics({ x: 0, y: 0 });
+  maskGfx.fillStyle(0xffffff);
+  maskGfx.fillRect(CONTENT_X, CONTENT_Y, CONTENT_W, CONTENT_H);
+  contentContainer.setMask(maskGfx.createGeometryMask());
   overlay.add(contentContainer);
 
-  // Stacks and stats (TOKEN_GLOSSARY) are an always-visible reference for the
-  // new combat vocabulary — players need them on demand from any browsing
-  // screen. The four detected MODIFIER keywords keep the original "learned
-  // terms only" behavior (beginner-mode "curiosidade saudável" — the modifier
-  // list grows as the player encounters each one in combat). The intro
-  // service is hydrated lazily; getSeenKeywords() returns an empty set until
-  // init() completes, so at worst the modifier section is briefly empty.
+  // Build content
   const seenSet = keywordIntro.getSeenKeywords();
-
-  const visibleModifiers = KEYWORD_DEFINITIONS.filter((def) => seenSet.has(def.keyword));
-
-
   const grouped: Record<KeywordDef['category'], KeywordDef[]> = {
-    stack: TOKEN_GLOSSARY.filter((d) => d.category === 'stack'),
-    modifier: visibleModifiers,
-    stat: TOKEN_GLOSSARY.filter((d) => d.category === 'stat'),
+    stack:    TOKEN_GLOSSARY.filter((d) => d.category === 'stack'),
+    modifier: KEYWORD_DEFINITIONS.filter((def) => seenSet.has(def.keyword)),
+    stat:     TOKEN_GLOSSARY.filter((d) => d.category === 'stat'),
   };
 
   let cursorY = CONTENT_Y;
@@ -160,78 +131,80 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
     const list = grouped[category];
     if (list.length === 0) continue;
 
-    cursorY += SECTION_HEADER_GAP_TOP;
-    const sectionTitle = scene.add.text(
-      CONTENT_X,
-      cursorY,
+    cursorY += SEC_GAP_TOP;
+    const secTitle = scene.add.text(CONTENT_X, cursorY,
       `${CATEGORY_LABEL[category]} (${list.length})`,
-      {
-        fontSize: `${SECTION_HEADER_FONT}px`,
-        fontStyle: 'bold',
-        color: CATEGORY_COLOR[category],
-        fontFamily: FONTS.body,
-      },
+      { fontSize: `${SEC_FONT}px`, fontStyle: 'bold', color: CATEGORY_COLOR[category], fontFamily: FONTS.body },
     ).setOrigin(0, 0);
-    contentContainer.add(sectionTitle);
-    cursorY += sectionTitle.height + SECTION_HEADER_GAP_BOTTOM;
+    contentContainer.add(secTitle);
+    cursorY += secTitle.height + SEC_GAP_BOTTOM;
 
     for (const kw of list) {
-      const nameText = scene.add.text(CONTENT_X, cursorY, kw.keyword, {
-        fontSize: `${KEYWORD_FONT}px`,
-        fontStyle: 'bold',
-        color: CATEGORY_COLOR[category],
-        fontFamily: FONTS.body,
+      const iconKey = KEYWORD_ICON[kw.keyword];
+      const hasIcon = iconKey ? scene.textures.exists(iconKey) : false;
+      const nameX   = hasIcon ? CONTENT_X + ICON_SIZE + ICON_GAP : CONTENT_X;
+
+      const nameText = scene.add.text(nameX, cursorY, kw.keyword, {
+        fontSize: `${KEYWORD_FONT}px`, fontStyle: 'bold', color: CATEGORY_COLOR[category], fontFamily: FONTS.body,
       }).setOrigin(0, 0);
       contentContainer.add(nameText);
-      cursorY += nameText.height + KEYWORD_TO_DEF_GAP;
+
+      if (hasIcon && iconKey) {
+        const iconImg = scene.add.image(CONTENT_X + ICON_SIZE / 2, cursorY + nameText.height / 2, iconKey)
+          .setDisplaySize(ICON_SIZE, ICON_SIZE).setOrigin(0.5);
+        contentContainer.add(iconImg);
+      }
+
+      cursorY += nameText.height + KW_DEF_GAP;
 
       const defText = scene.add.text(CONTENT_X, cursorY, kw.definition, {
-        fontSize: `${DEFINITION_FONT}px`,
-        color: COLORS.textPrimary,
-        fontFamily: FONTS.body,
-        wordWrap: { width: CONTENT_W },
-        lineSpacing: 2,
+        fontSize: `${DEF_FONT}px`, color: COLORS.textPrimary, fontFamily: FONTS.body,
+        wordWrap: { width: CONTENT_W }, lineSpacing: 2,
       }).setOrigin(0, 0);
       contentContainer.add(defText);
       cursorY += defText.height + ENTRY_GAP;
     }
   }
 
-  const totalContentHeight = cursorY - CONTENT_Y;
-  const maxScroll = Math.max(0, totalContentHeight - CONTENT_H);
+  const totalH  = cursorY - CONTENT_Y;
+  const maxScroll = Math.max(0, totalH - CONTENT_H);
   let scrollOffset = 0;
+
+  // Scroll arrow indicator (visible when more content below)
+  const scrollArrow = scene.add.text(
+    PANEL_X + PANEL_W / 2,
+    PANEL_Y + PANEL_H - PAD_V - 4,
+    '▼  scroll for more',
+    { fontSize: '11px', color: '#9a6030', fontFamily: FONTS.body },
+  ).setOrigin(0.5, 1).setAlpha(maxScroll > 0 ? 1 : 0);
+  overlay.add(scrollArrow);
+  if (maxScroll > 0) {
+    scene.tweens.add({ targets: scrollArrow, alpha: 0.2, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
 
   const applyScroll = () => {
     contentContainer.setY(-scrollOffset);
+    // hide arrow when reached the bottom
+    scrollArrow.setAlpha(scrollOffset >= maxScroll - 2 ? 0 : 1);
   };
 
-  const wheelHandler = (
-    _pointer: Phaser.Input.Pointer,
-    _objects: Phaser.GameObjects.GameObject[],
-    _dx: number,
-    dy: number,
-  ) => {
+  const wheelHandler = (_p: Phaser.Input.Pointer, _o: Phaser.GameObjects.GameObject[], _dx: number, dy: number) => {
     if (maxScroll <= 0) return;
     scrollOffset = Phaser.Math.Clamp(scrollOffset + dy * 0.5, 0, maxScroll);
     applyScroll();
   };
   scene.input.on('wheel', wheelHandler);
 
-  // Close on backdrop click (the panel itself eats the click).
-  panelBg.setInteractive();
   backdrop.on('pointerdown', () => close());
-  panelBg.on('pointerdown', () => { /* swallow */ });
-
+  panelHit.on('pointerdown', () => { /* swallow */ });
   closeBtn.on('pointerdown', () => close());
 
-  const escHandler = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') close();
-  };
+  const escHandler = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
   window.addEventListener('keydown', escHandler);
 
   const onShutdown = () => close();
   scene.events.once(Phaser.Scenes.Events.SHUTDOWN, onShutdown);
-  scene.events.once(Phaser.Scenes.Events.DESTROY, onShutdown);
+  scene.events.once(Phaser.Scenes.Events.DESTROY,  onShutdown);
 
   let closed = false;
   const close = () => {
@@ -240,9 +213,10 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
     window.removeEventListener('keydown', escHandler);
     scene.input.off('wheel', wheelHandler);
     scene.events.off(Phaser.Scenes.Events.SHUTDOWN, onShutdown);
-    scene.events.off(Phaser.Scenes.Events.DESTROY, onShutdown);
+    scene.events.off(Phaser.Scenes.Events.DESTROY,  onShutdown);
     if (overlay.active) overlay.destroy(true);
     if (openHandle && openHandle.close === handle.close) openHandle = null;
+    onClose?.();
   };
 
   const handle: GlossaryHandle = { close };
@@ -250,7 +224,6 @@ export function openGlossary(scene: Phaser.Scene): GlossaryHandle {
   return handle;
 }
 
-/** Closes any open glossary. Safe to call when none is open. */
 export function closeGlossary(): void {
   if (openHandle) openHandle.close();
 }

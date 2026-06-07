@@ -421,17 +421,15 @@ function drawSecondaryCosts(
   const rows = buildSecondaryCostRows(card, isUpgraded);
   if (rows.length === 0) return;
 
-  // Responsive sizing: 1–2 fixed large, 3 shrink, 4 shrink more.
-  const fitWidth = slot.w / rows.length - 2;
+  // Size icons so the full row always fits within slot.w.
   const maxByH = slot.h * 0.85;
-  const baseIcon = Math.min(maxByH, fitWidth);
-  let shrink: number;
-  if (rows.length <= 2)       shrink = 1;
-  else if (rows.length === 3) shrink = 0.82;
-  else                        shrink = 0.68;
-  const iconSize = baseIcon * shrink;
+  const n = rows.length;
+  // Solve: n*iconSize + (n-1)*gap = slot.w  where gap = max(2, iconSize*0.08)
+  // Approximate: iconSize ≈ slot.w / (n + (n-1)*0.08)
+  const fitWidth = slot.w / (n + (n - 1) * 0.08);
+  const iconSize = Math.min(maxByH, fitWidth);
   const gap = Math.max(2, iconSize * 0.08);
-  const totalW = rows.length * iconSize + (rows.length - 1) * gap;
+  const totalW = n * iconSize + (n - 1) * gap;
   let cx = slot.cx - totalW / 2 + iconSize / 2;
   for (const row of rows) {
     const sub: SlotBox = { x: 0, y: 0, w: iconSize, h: iconSize, cx, cy: slot.cy };

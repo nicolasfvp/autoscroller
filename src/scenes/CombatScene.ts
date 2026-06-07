@@ -39,14 +39,17 @@ export class CombatScene extends Scene {
   // Visual representations
   private heroSprite!: Phaser.GameObjects.Sprite;
   private enemySprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  private enemyShadow?: Phaser.GameObjects.Image | Phaser.GameObjects.Graphics;
   private enemyTextureKey = '';
 
   private gameSpeed: number = 1;
+  private _glossaryOpen = false;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
+    if (this.hud && this.engine) this.hud.showCooldownBurst(this.engine.getHeroMaxCooldown());
     // Contextual keyword teaching: if this card introduces a keyword the
     // player hasn't learned, the intro service queues an overlay that
     // pauses combat until dismissed. Combine the static description with
@@ -126,11 +129,10 @@ export class CombatScene extends Scene {
 
     if (eventData.result === 'victory') {
       if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
-        this.tweens.add({
-          targets: this.enemySprite,
-          alpha: 0,
-          duration: 500
-        });
+        this.tweens.add({ targets: this.enemySprite, alpha: 0, duration: 500 });
+      }
+      if (this.enemyShadow) {
+        this.tweens.add({ targets: this.enemyShadow, alpha: 0, duration: 500 });
       }
     } else {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
@@ -321,7 +323,11 @@ export class CombatScene extends Scene {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
         this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? 0.495 : 0.7);
-        this.add.ellipse(200, 472, 110, 22, 0x000000, 0.35).setDepth(9);
+        if (this.textures.exists('hero_shadow')) {
+          this.add.image(178, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+        } else {
+          this.add.ellipse(200, 450, 160, 28, 0x000000, 0.45).setDepth(9);
+        }
 
         const idle2Key = `${sp}_idle2`;
         const hasIdle2 = this.textures.exists(idle2Key);
@@ -429,7 +435,11 @@ export class CombatScene extends Scene {
 
       if (this.textures.exists(this.enemyTextureKey)) {
         this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
-        this.add.ellipse(600, 472, 110, 22, 0x000000, 0.35).setDepth(9);
+        if (this.textures.exists('hero_shadow')) {
+          this.enemyShadow = this.add.image(600, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+        } else {
+          this.enemyShadow = this.add.ellipse(600, 430, 160, 28, 0x000000, 0.45).setDepth(9) as unknown as Phaser.GameObjects.Graphics;
+        }
         const key2 = `${this.enemyTextureKey}_2`;
         if (this.textures.exists(key2)) {
           let frame = 0;
@@ -447,16 +457,19 @@ export class CombatScene extends Scene {
         this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
 
-      this.hud = new CombatHUD(this);
+      this.hud = new CombatHUD(this, this.enemyTextureKey);
+      this.hud.setFlipCallback((flipping) => this.engine.setHourglassFlipping(flipping));
       this.cardQueue = new CardQueueDisplay(this);
       this.combatEffects = new CombatEffects(this);
       // Initialize HUD and Queue with initial state
-      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
       this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
 
-      // Keyword glossary "?" — top-right corner. Depth above HUD so it stays
-      // tappable when the HUD overlays the upper-right area.
-      addGlossaryButton(this, 775, 20, 600);
+      // Keyword glossary book icon — bottom-right corner. Pauses combat while open.
+      addGlossaryButton(this, 775, 575, 600, {
+        onOpen:  () => { this._glossaryOpen = true; },
+        onClose: () => { this._glossaryOpen = false; },
+      });
       // Speed slider lives in the persistent SpeedPanelScene; it writes to
       // run.combatSpeed directly so this scene's `gameSpeed` is re-read each
       // tick (see update()) rather than wired through a per-scene slider.
@@ -491,8 +504,8 @@ export class CombatScene extends Scene {
       // Pause the simulation while a contextual keyword-intro overlay is
       // up so the player can read the explanation without enemies still
       // ticking down in the background.
-      if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT)) {
-        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT) || this._glossaryOpen) {
+        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
         return;
       }
       // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
@@ -503,7 +516,7 @@ export class CombatScene extends Scene {
       const inBackground = typeof document !== 'undefined' && document.hidden;
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
-      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown());
+      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount());
       // Feed live effective stats so card headline numbers track status changes
       // (buffs, auras, stat_gain) in real time.
       this.pushLiveStats();

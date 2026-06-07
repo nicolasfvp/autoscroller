@@ -37,6 +37,8 @@ export class CombatEngine {
   private heroCooldownTimer = 0; // starts at 0 so first card plays immediately
   private deckPointer = 0;
   private isFinished = false;
+  private _cardPlayCount = 0;
+  private _hourglassFlipping = false; // true while flip animation plays — pauses hero cooldown
 
   private regenAccumulator = 0;
   /** Total elapsed ms in this combat — used by the deadlock fail-safe. */
@@ -65,8 +67,8 @@ export class CombatEngine {
       return;
     }
 
-    // Decrement both timers up front, then resolve in fairness order.
-    this.heroCooldownTimer -= deltaMs;
+    // Decrement hero cooldown only when the hourglass flip animation is not playing.
+    if (!this._hourglassFlipping) this.heroCooldownTimer -= deltaMs;
     // Determine who reached 0 first using *projected* post-decrement enemy
     // timer. If both are overdue this tick, the more-negative one acts first.
     const projectedEnemyTimer = this.enemyAI.getCooldownTimer() - deltaMs;
@@ -168,6 +170,7 @@ export class CombatEngine {
   }
 
   private executeCard(card: CardDefinition): void {
+    this._cardPlayCount++;
     // v4: card-pair synergies removed (data file was empty). Relic + passive
     // bonuses below still cover combo-style payoffs.
 
@@ -659,6 +662,14 @@ export class CombatEngine {
 
   getHeroCooldownTimer(): number {
     return this.heroCooldownTimer;
+  }
+
+  getCardPlayCount(): number {
+    return this._cardPlayCount;
+  }
+
+  setHourglassFlipping(flipping: boolean): void {
+    this._hourglassFlipping = flipping;
   }
 
   getHeroMaxCooldown(): number {

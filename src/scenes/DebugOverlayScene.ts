@@ -99,9 +99,12 @@ export class DebugOverlayScene extends Phaser.Scene {
   }
 
   private detectTarget(): void {
-    const found = this.scene.manager.scenes.find(
+    // Pick the topmost active/paused scene (last in manager order = highest visual priority).
+    // This ensures CombatScene is preferred over GameScene when both are active.
+    const candidates = this.scene.manager.scenes.filter(
       s => (s.scene.isActive() || s.scene.isPaused()) && !SKIP_SCENES.has(s.scene.key)
     );
+    const found = candidates[candidates.length - 1] ?? null;
     this.targetScene = found ?? null;
     this.currentSceneKey = found?.scene.key ?? '?';
   }
@@ -254,6 +257,28 @@ export class DebugOverlayScene extends Phaser.Scene {
     makePairBtn(b1cx, y + BH / 2, bw, 'LIMPAR RUN', 0x4a3a00, 0x6a5a00, '#ffcc44', () => this.resetRun());
     makePairBtn(b2cx, y + BH / 2, bw, 'RECURSOS',   0x1a3a1a, 0x2a5a2a, C_GREEN,  () => this.giveCheatResources());
     y += BH + 2;
+    // Botão largo: revelar objetos ocultos (alpha=0, visible=false)
+    const revealBg = this._track(this.add.rectangle(mid, y + BH / 2, PW - 12, BH, 0x2a1a4a)
+      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
+    this._track(this.add.text(mid, y + BH / 2, 'MOSTRAR OCULTOS', { ...FONT_SM, color: '#cc88ff' })
+      .setScrollFactor(0).setOrigin(0.5));
+    revealBg.on('pointerover', () => revealBg.setFillStyle(0x3a2a6a));
+    revealBg.on('pointerout',  () => revealBg.setFillStyle(0x2a1a4a));
+    revealBg.on('pointerdown', () => {
+      if (!this.targetScene) return;
+      const n = DebugManager.revealHidden(this.targetScene);
+      this.saveStatus.setText(`✓ ${n} revelados`);
+      this.time.delayedCall(2500, () => this.saveStatus?.setText(''));
+    });
+    y += BH + 2;
+
+    // BG Scale — ajusta tileScale dos backgrounds em tempo real
+    this._sep(y); y += 4;
+    this._track(this.add.text(tx, y, 'BG SCALE', { ...FONT_SM, color: C_DIM }).setScrollFactor(0));
+    y += 10;
+    makePairBtn(b1cx, y + BH / 2, bw, '− 0.05', 0x2a1a00, 0x4a3a00, '#ffbb66', () => this._adjustBgScale(-0.05));
+    makePairBtn(b2cx, y + BH / 2, bw, '+ 0.05', 0x001a2a, 0x003a4a, '#66bbff', () => this._adjustBgScale(0.05));
+    y += BH + 2;
 
     // Toggle lado
     const toggleLabel = this._panelSide === 'right' ? '◀ ESQUERDA' : 'DIREITA ▶';
@@ -267,6 +292,16 @@ export class DebugOverlayScene extends Phaser.Scene {
       this._panelSide = this._panelSide === 'right' ? 'left' : 'right';
       this._rebuildPanel();
     });
+  }
+
+  private _adjustBgScale(delta: number): void {
+    const scenes = this.scene.manager.scenes;
+    for (const s of scenes) {
+      if ((s as any).adjustBgScale) {
+        (s as any).adjustBgScale(delta);
+        return;
+      }
+    }
   }
 
   private _sep(y: number): void {
@@ -444,6 +479,7 @@ export class DebugOverlayScene extends Phaser.Scene {
   private _clearModal(): void {
     this._modalObjects.forEach(o => o.destroy());
     this._modalObjects.length = 0;
+    DebugManager.setModalOpen(false);
   }
 
   private _trackM<T extends Phaser.GameObjects.GameObject>(o: T): T {
@@ -454,6 +490,7 @@ export class DebugOverlayScene extends Phaser.Scene {
   // Modal: lista à esquerda + preview grande à direita
   private openAssetModal(): void {
     this._clearModal();
+    DebugManager.setModalOpen(true);
 
     const keys = DebugManager.getLoadedTextureKeys().sort();
     if (keys.length === 0) { this.saveStatus.setText('sem texturas'); return; }

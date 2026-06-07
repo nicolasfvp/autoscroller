@@ -94,7 +94,10 @@ export class ShopScene extends Scene {
   init(data?: { parentScene?: string }): void {
     this.parentSceneKey  = data?.parentScene ?? SCENE_KEYS.GAME;
     this.cachedRelicRoll = undefined;
-    this._tab            = 'shards';
+    // During 'shop-buy-relic' tutorial step start on RELICS tab — the RELICS
+    // tab button lives in the left panel which is outside the spotlight rect,
+    // so the player would be softlocked if we left them on SHARDS.
+    this._tab = tutorialDirector.getCurrentStep()?.id === 'shop-buy-relic' ? 'relics' : 'shards';
     this._selectedShardId = 'fire';
     this._selectedRelicIdx = 0;
     this.tutorialElementsBought = 0;
@@ -118,10 +121,19 @@ export class ShopScene extends Scene {
       // (e.g. selling an element) are also refused.
       const overlay = TutorialOverlay.mountIfActive(this);
       if (overlay) {
-        // Single forced relic renders centred at x≈400, y≈231.
-        overlay.setStepRect('shop-buy-relic', { x: 322, y: 142, width: 156, height: 182 });
-        // The 8-element row + its buy/sell steppers span the mid band.
-        overlay.setStepRect('shop-buy-elements', { x: 40, y: 296, width: 720, height: 184 });
+        // Both panels: player must select a relic from the left list, then click
+        // BUY in the right panel — so the spotlight must cover the full width.
+        overlay.setStepRect('shop-buy-relic', {
+          x: PL.x, y: PL.y,
+          width: PR.x + PR.w - PL.x,
+          height: Math.max(PL.y + PL.h, PR.y + PR.h) - PL.y,
+        });
+        // Both panels: player must select a shard from the list and click BUY.
+        overlay.setStepRect('shop-buy-elements', {
+          x: PL.x, y: PL.y,
+          width: PR.x + PR.w - PL.x,
+          height: Math.max(PL.y + PL.h, PR.y + PR.h) - PL.y,
+        });
         // Leave Shop button, bottom-right.
         overlay.setStepRect('shop-leave', { x: 654, y: 548, width: 150, height: 44 });
       }
@@ -135,6 +147,16 @@ export class ShopScene extends Scene {
 
   // ── Full rebuild ──────────────────────────────────────────────────────────
   private buildAll(): void {
+    // Keep the tab in sync with the tutorial script so the player is never
+    // stranded on the wrong tab after a step transition (e.g. finishing
+    // shop-buy-relic leaves _tab='relics', but shop-buy-elements needs SHARDS).
+    const tStep = this.shopTutorialStep();
+    if (tStep === 'shop-buy-relic' && this._tab !== 'relics') this._tab = 'relics';
+    if (tStep === 'shop-buy-elements' && this._tab !== 'shards') {
+      this._tab = 'shards';
+      this._selectedShardId = 'fire';
+    }
+
     this._mainLayer?.destroy(true);
     this._mainLayer = this.add.container(0, 0);
 
@@ -489,26 +511,22 @@ export class ShopScene extends Scene {
     this.addStatRow('Value', `${ELEMENT_BUY_PRICE} G`, PR_STATS_Y + 18, GOLD);
 
     const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE && this.tutAllows('buy-element');
-    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', canBuy, false);
-    if (canBuy) {
-      buyBtn.on('pointerdown', () => {
-        run.economy.gold -= ELEMENT_BUY_PRICE;
-        (run.economy.elements as any)[id] = owned + 1;
-        AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-        if (this.shopTutorialStep() === 'shop-buy-elements') {
-          this.tutorialElementsBought++;
-          if (this.tutorialElementsBought >= 2) {
-            tutorialDirector.advanceIfMatches('shop-buy-elements');
-          }
+    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', canBuy, false, canBuy ? () => {
+      run.economy.gold -= ELEMENT_BUY_PRICE;
+      (run.economy.elements as any)[id] = owned + 1;
+      AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+      if (this.shopTutorialStep() === 'shop-buy-elements') {
+        this.tutorialElementsBought++;
+        if (this.tutorialElementsBought >= 2) {
+          tutorialDirector.advanceIfMatches('shop-buy-elements');
         }
-        this.buildAll();
-      });
-    }
+      }
+      this.buildAll();
+    } : undefined);
     this._mainLayer.add(buyBtn);
 
     if (owned > 0 && this.tutAllows('sell-element')) {
-      const sellBtn = this.makeActionBtn(PR_CX, PR_SELL_Y, `SELL  +${ELEMENT_SELL_PRICE} G`, true, true);
-      sellBtn.on('pointerdown', () => {
+      const sellBtn = this.makeActionBtn(PR_CX, PR_SELL_Y, `SELL  +${ELEMENT_SELL_PRICE} G`, true, true, () => {
         (run.economy.elements as any)[id] = owned - 1;
         run.economy.gold += ELEMENT_SELL_PRICE;
         AudioManager.playSFX(this, 'sfx_cashing', 0.6);
@@ -561,19 +579,16 @@ export class ShopScene extends Scene {
     this.addStatRow('Price', `${r.price} G`, PR_STATS_Y, ok ? GOLD : RED);
 
     const buyable = ok && this.tutAllows('relic');
-    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', buyable, false);
-    if (buyable) {
-      buyBtn.on('pointerdown', () => {
-        const run = getRun();
-        if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
-          this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
-          this._selectedRelicIdx = Math.max(0, this._selectedRelicIdx - 1);
-          AudioManager.playSFX(this, 'sfx_cashing', 0.6);
-          tutorialDirector.advanceIfMatches('shop-buy-relic');
-          this.buildAll();
-        }
-      });
-    }
+    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', buyable, false, buyable ? () => {
+      const run = getRun();
+      if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
+        this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
+        this._selectedRelicIdx = Math.max(0, this._selectedRelicIdx - 1);
+        AudioManager.playSFX(this, 'sfx_cashing', 0.6);
+        tutorialDirector.advanceIfMatches('shop-buy-relic');
+        this.buildAll();
+      }
+    } : undefined);
     this._mainLayer.add(buyBtn);
   }
 
@@ -595,17 +610,19 @@ export class ShopScene extends Scene {
   private makeActionBtn(
     cx: number, cy: number,
     label: string, enabled: boolean, isSell: boolean,
+    onClick?: () => void,
   ): Phaser.GameObjects.Container {
     const w = 147, h = 27;
     const c = this.add.container(cx, cy);
 
-    const useBuyAsset = !isSell && this.textures.exists('shop_btn_buy');
+    const useBuyAsset  = !isSell && this.textures.exists('shop_btn_buy');
+    const useSellAsset =  isSell && this.textures.exists('shop_btn_sell');
     if (useBuyAsset) {
-      // Asset já tem texto "BUY" gravado — não adicionar texto por cima
-      this.addBuyAssetBg(c, w, enabled);
+      this.addBuyAssetBg(c, w, enabled, onClick);
+    } else if (useSellAsset) {
+      this.addSellAssetBg(c, w, enabled, onClick);
     } else {
-      this.addGraphicsBg(c, w, h, enabled, isSell);
-      // Sell e fallback gráfico precisam do label em texto
+      this.addGraphicsBg(c, w, h, enabled, isSell, onClick);
       c.add(this.add.text(0, 0, label, {
         fontSize: '13px', fontStyle: 'bold',
         color: this.btnTextColor(enabled, isSell),
@@ -615,8 +632,7 @@ export class ShopScene extends Scene {
     return c;
   }
 
-  private addBuyAssetBg(c: Phaser.GameObjects.Container, w: number, enabled: boolean): void {
-    // buy-button.png (270×50) — scale uniformly to target width; text already baked in
+  private addBuyAssetBg(c: Phaser.GameObjects.Container, w: number, enabled: boolean, onClick?: () => void): void {
     const img = this.add.image(0, 0, 'shop_btn_buy').setScale(w / 270);
     if (!enabled) { img.setTint(0x444444); img.setAlpha(0.6); }
     c.add(img);
@@ -625,10 +641,24 @@ export class ShopScene extends Scene {
     const zone = this.add.zone(0, 0, w, bh).setInteractive({ useHandCursor: true });
     zone.on('pointerover', () => img.setTint(0xddaa44));
     zone.on('pointerout',  () => img.clearTint());
+    if (onClick) zone.on('pointerdown', onClick);
     c.add(zone);
   }
 
-  private addGraphicsBg(c: Phaser.GameObjects.Container, w: number, h: number, enabled: boolean, isSell: boolean): void {
+  private addSellAssetBg(c: Phaser.GameObjects.Container, w: number, enabled: boolean, onClick?: () => void): void {
+    const img = this.add.image(0, 0, 'shop_btn_sell').setScale(w / 2103);
+    if (!enabled) { img.setTint(0x444444); img.setAlpha(0.6); }
+    c.add(img);
+    if (!enabled) return;
+    const bh = Math.round(466 * (w / 2103));
+    const zone = this.add.zone(0, 0, w, bh).setInteractive({ useHandCursor: true });
+    zone.on('pointerover', () => img.setTint(0xffee88));
+    zone.on('pointerout',  () => img.clearTint());
+    if (onClick) zone.on('pointerdown', onClick);
+    c.add(zone);
+  }
+
+  private addGraphicsBg(c: Phaser.GameObjects.Container, w: number, h: number, enabled: boolean, isSell: boolean, onClick?: () => void): void {
     let fillN: number;
     let fillH: number;
     let borderN: number;
@@ -650,6 +680,7 @@ export class ShopScene extends Scene {
     const zone = this.add.zone(0, 0, w, h).setInteractive({ useHandCursor: true });
     zone.on('pointerover', () => draw(fillH));
     zone.on('pointerout',  () => draw(fillN));
+    if (onClick) zone.on('pointerdown', onClick);
     c.add(zone);
   }
 
@@ -660,35 +691,25 @@ export class ShopScene extends Scene {
 
   // ── Footer ────────────────────────────────────────────────────────────────
   private buildFooter(): void {
-    const run  = getRun();
+    const run = getRun();
 
-    // Remove Card
+    // Remove Card button — seal only, no "REMOVE CARD" text label
     const cost      = ShopSystem.getRemoveCardCost(run.economy.removalsThisShop ?? 0);
     const canRemove = run.economy.gold >= cost && run.deck.active.length > MIN_DECK_SIZE
       && this.tutAllows('remove');
-    const rg        = this.add.container(REMOVE_CX, FOOTER_Y);
-
+    const rg = this.add.container(REMOVE_CX, FOOTER_Y);
     if (this.textures.exists('shop_remove_seal')) {
       const seal = this.add.image(0, 0, 'shop_remove_seal').setDisplaySize(200, 46);
       if (!canRemove) seal.setTint(0x444444);
       rg.add(seal);
     }
-
-    rg.add(this.add.text(0, -7, 'REMOVE CARD', {
-      fontSize: '13px', fontStyle: 'bold',
-      color: canRemove ? GOLD : DIM,
-      fontFamily: FF, stroke: '#1a0500', strokeThickness: 3,
-    }).setOrigin(0.5));
-
-    rg.add(this.add.text(0, 9, canRemove ? `${cost} g`
+    rg.add(this.add.text(0, 0, canRemove ? `${cost} g`
       : (run.deck.active.length <= MIN_DECK_SIZE ? 'Min deck size' : `Need ${cost} g`), {
-      fontSize: '10px', fontStyle: 'italic',
+      fontSize: '11px', fontStyle: 'italic',
       color: canRemove ? '#e8c98c' : RED,
       fontFamily: FF, stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5));
-
-    const hit = new Phaser.Geom.Rectangle(-100, -20, 200, 40);
-    rg.setInteractive(hit, Phaser.Geom.Rectangle.Contains);
+    rg.setInteractive(new Phaser.Geom.Rectangle(-100, -23, 200, 46), Phaser.Geom.Rectangle.Contains);
     if (canRemove) {
       (rg as any).input.cursor = 'pointer';
       rg.on('pointerover', () => this.tweens.add({ targets: rg, scale: 1.05, duration: 120 }));
@@ -697,35 +718,33 @@ export class ShopScene extends Scene {
     }
     this._mainLayer.add(rg);
 
-    // Gold badge
+    // Gold panel — shop_gold_panel asset (same dark/gold style as buy-button)
+    const GOLD_W = 148;
     const gb = this.add.container(GOLD_CX, FOOTER_Y);
-    if (this.textures.exists('panel_wood_button')) {
-      gb.add(this.add.image(0, 0, 'panel_wood_button').setDisplaySize(108, 28).setTint(0x4a2810));
+    if (this.textures.exists('shop_gold_panel')) {
+      const gp = this.add.image(0, 0, 'shop_gold_panel');
+      gp.setScale(GOLD_W / gp.width);
+      gb.add(gp);
     }
-    gb.add(this.add.text(-40, 0, '♦', {
+    gb.add(this.add.image(-GOLD_W / 2 + 18, 0, 'icon_coin').setDisplaySize(18, 18));
+    gb.add(this.add.text(0, 0, `${run.economy.gold} g`, {
       fontSize: '14px', fontStyle: 'bold', color: GOLD,
       fontFamily: FF, stroke: '#000', strokeThickness: 2,
-    }).setOrigin(0, 0.5));
-    gb.add(this.add.text(6, 0, `${run.economy.gold}g`, {
-      fontSize: '13px', fontStyle: 'bold', color: GOLD,
-      fontFamily: FF, stroke: '#000', strokeThickness: 2,
-    }).setOrigin(0, 0.5));
+    }).setOrigin(0.5));
     this._mainLayer.add(gb);
 
-    // Leave button
+    // Leave button — btn_leave asset (scale to ~148×42)
+    const LEAVE_W = 148;
     const lb = this.add.container(LEAVE_CX, FOOTER_Y);
-    if (this.textures.exists('panel_wood_button')) {
-      lb.add(this.add.image(0, 0, 'panel_wood_button').setDisplaySize(128, 30));
+    if (this.textures.exists('btn_leave')) {
+      const li = this.add.image(0, 0, 'btn_leave');
+      li.setScale(LEAVE_W / li.width);
+      lb.add(li);
     }
-    const leaveLabel = this.add.text(0, 0, '← Leave Shop', {
-      fontSize: '13px', fontStyle: 'bold', color: GOLD,
-      fontFamily: FF, stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5);
-    lb.add(leaveLabel);
-    lb.setInteractive(new Phaser.Geom.Rectangle(-64, -15, 128, 30), Phaser.Geom.Rectangle.Contains);
+    lb.setInteractive(new Phaser.Geom.Rectangle(-LEAVE_W / 2, -21, LEAVE_W, 42), Phaser.Geom.Rectangle.Contains);
     (lb as any).input.cursor = 'pointer';
-    lb.on('pointerover', () => leaveLabel.setColor(WHITE));
-    lb.on('pointerout',  () => leaveLabel.setColor(GOLD));
+    lb.on('pointerover', () => this.tweens.add({ targets: lb, scale: 1.05, duration: 100 }));
+    lb.on('pointerout',  () => this.tweens.add({ targets: lb, scale: 1,    duration: 100 }));
     lb.on('pointerdown', () => { if (!this.tutAllows('leave')) return; this.close(); });
     this._mainLayer.add(lb);
   }

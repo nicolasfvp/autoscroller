@@ -54,9 +54,10 @@ export class GameScene extends Scene {
   // Auto-save subscription (cleared on shutdown to avoid stacked listeners)
   private autoSaveUnsubscribe?: () => void;
 
-  // Parallax Backgrounds
-  private bgSky?: Phaser.GameObjects.TileSprite;
-  private bgDesert?: Phaser.GameObjects.TileSprite;
+  // Parallax Backgrounds — two image copies per layer for seamless horizontal scroll
+  private bgSkyImgs: Phaser.GameObjects.Image[] = [];
+  private bgFieldImgs: Phaser.GameObjects.Image[] = [];
+  private bgImgW = 0; // scaled width of one bg image copy
 
   constructor() {
     super(SCENE_KEYS.GAME);
@@ -73,23 +74,46 @@ export class GameScene extends Scene {
 
     // 1. Setup Backgrounds BEFORE mask logic
     this.cameras.main.setBackgroundColor(COLORS.background);
-    
+
+    // Reset bg arrays in case scene is restarted (new run after death)
+    this.bgSkyImgs = [];
+    this.bgFieldImgs = [];
+    this.bgImgW = 0;
+
     // Explicitly create backgrounds here to ensure they are visible under the mask
+    const screenW = this.cameras.main.width;
+    const screenH = this.cameras.main.height;
+    const bgScale = 0.334;
+    const bgY     = 346.7;
+
     if (this.textures.exists('bg_sky')) {
+      this.textures.get('bg_sky').setFilter(Phaser.Textures.FilterMode.NEAREST);
       const skySrc = this.textures.get('bg_sky').source[0];
-      this.bgSky = this.add.tileSprite(400, 300, 800, 600, 'bg_sky')
-        .setScrollFactor(0).setDepth(-11)
-        .setTileScale(800 / skySrc.width, 600 / skySrc.height);
+      const skyImgW = skySrc.width * bgScale;
+      for (let i = 0; i < 2; i++) {
+        const img = this.add.image(skyImgW * i + skyImgW / 2, 193.9, 'bg_sky')
+          .setScrollFactor(0).setDepth(-11).setScale(bgScale);
+        this.bgSkyImgs.push(img);
+      }
     }
+
     if (this.textures.exists('bg_green_field')) {
+      this.textures.get('bg_green_field').setFilter(Phaser.Textures.FilterMode.NEAREST);
       const gfSrc = this.textures.get('bg_green_field').source[0];
-      const gfScale = 600 / gfSrc.height;
-      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_green_field').setScrollFactor(0).setDepth(-10).setTileScale(gfScale);
-    } else if (this.textures.exists('bg_desert')) {
-      this.bgDesert = this.add.tileSprite(400, 300, 800, 600, 'bg_desert').setScrollFactor(0).setDepth(-10);
+      const imgW  = gfSrc.width * bgScale;
+      this.bgImgW = imgW;
+      for (let i = 0; i < 2; i++) {
+        const img = this.add.image(imgW * i + imgW / 2, bgY, 'bg_green_field')
+          .setScrollFactor(0).setDepth(-10).setScale(bgScale);
+        this.bgFieldImgs.push(img);
+      }
     } else if (this.textures.exists('bg_run')) {
-      this.add.image(400, 300, 'bg_run').setScrollFactor(0).setDepth(-10).setDisplaySize(800, 600);
+      this.bgFieldImgs.push(
+        this.add.image(screenW / 2, screenH / 2, 'bg_run')
+          .setScrollFactor(0).setDepth(-10).setDisplaySize(screenW, screenH)
+      );
     }
+
 
     if (this.introPlaying) {
       // Ensure GameScene is on top of RunTransitionScene
@@ -102,18 +126,20 @@ export class GameScene extends Scene {
       const mask = maskGfx.createGeometryMask();
       this.cameras.main.setMask(mask);
 
-      const edgeLine = this.add.rectangle(0, 300, 2, 600, 0xe6c88a, 0.6).setDepth(1000).setScrollFactor(0);
+      const camH = this.cameras.main.height;
+      const camW = this.cameras.main.width;
+      const edgeLine = this.add.rectangle(0, camH / 2, 2, camH, 0xe6c88a, 0.6).setDepth(1000).setScrollFactor(0);
 
       const maskState = { width: 0 };
       this.tweens.add({
         targets: maskState,
-        width: 800,
+        width: camW,
         duration: 1500,
         ease: 'Linear',
         onUpdate: () => {
           maskGfx.clear();
           maskGfx.fillStyle(0xffffff);
-          maskGfx.fillRect(0, 0, maskState.width, 600);
+          maskGfx.fillRect(0, 0, maskState.width, camH);
           edgeLine.x = maskState.width;
         },
         onComplete: () => {
@@ -121,16 +147,18 @@ export class GameScene extends Scene {
           maskGfx.destroy();
           edgeLine.destroy();
           this.introPlaying = false;
-          // Resume hero animation
+          // Swap chibi → normal walk spritesheet; restore the correct walk scale
           const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
           const walkAnim = `${sp}_walk`;
-          if (this.anims.exists(walkAnim)) {
-            this.heroSprite?.play(walkAnim, true);
-          } else if (!this.heroWalkTimer) {
-            // Warrior uses plain images — start toggle timer now
-            const idleK = `${sp}_idle`;
+          const idleK = `${sp}_idle`;
+          // walkFrameH captured from outer create() scope — avoids realHeight lookup failures
+          this.heroSprite?.setScale(walkFrameH > 100 ? 96 / walkFrameH : 1.5);
+          if (this.heroSprite && this.textures.exists(walkAnim)) {
+            this.heroSprite.setTexture(walkAnim).play(walkAnim, true);
+          } else if (this.heroSprite && this.textures.exists(idleK)) {
+            this.heroSprite.setTexture(idleK);
             const idle2K = `${sp}_idle2`;
-            if (this.textures.exists(idle2K)) {
+            if (!this.heroWalkTimer && this.textures.exists(idle2K)) {
               let frame = 0;
               this.heroWalkTimer = this.time.addEvent({
                 delay: 200, loop: true,
@@ -212,19 +240,33 @@ export class GameScene extends Scene {
       }
     }
 
-    // Hero sprite — use idle texture as base
+    // Hero sprite — starts hidden during intro; shown after wipe completes
+    const chibKey = `hero_chibi_${run.hero.className ?? 'warrior'}`;
     const initialTexture = this.textures.exists(idleKey) ? idleKey : '__DEFAULT';
-    this.heroSprite = this.add.sprite(100, 455, initialTexture);
+    this.heroSprite = this.add.sprite(100, 420, initialTexture);
     this.heroSprite.setOrigin(0.5, 1.0);
-    // Normalize hero to ~96px tall regardless of source frame size (warrior=64px, mage=724px)
-    const walkFrameH = this.textures.exists(walkKey) && this.textures.get(walkKey).frameTotal > 1
-      ? (this.textures.get(walkKey).get(0)?.realHeight ?? 64)
+    // Normalize hero to ~96px tall. Walk spritesheets are single-row (all frames same height
+    // as the source texture). source[0].height is always the frame height for single-row sheets.
+    const walkTex = this.textures.exists(walkKey) ? this.textures.get(walkKey) : null;
+    const walkFrameH = walkTex && walkTex.frameTotal > 1
+      ? (walkTex.source[0]?.height ?? 64)
       : 64;
     this.heroSprite.setScale(walkFrameH > 100 ? 96 / walkFrameH : 1.5);
     this.heroSprite.setDepth(50);
 
+    // During intro use chibi pocket texture — scale to match the walk sprite's visual height.
+    // source[0].height = full PNG height = frame height (single-row sheets).
+    const chibTex = this.textures.exists(chibKey) ? this.textures.get(chibKey) : null;
+    const chibFrameH = chibTex ? (chibTex.source[0]?.height ?? 256) : 256;
+    if (this.introPlaying && this.textures.exists(chibKey)) {
+      const chibAnimKey = `transition_walk_${run.hero.className ?? 'warrior'}`;
+      this.heroSprite.setTexture(chibKey);
+      this.heroSprite.setScale(96 / chibFrameH);
+      if (this.anims.exists(chibAnimKey)) this.heroSprite.play(chibAnimKey, true);
+    }
+
     if (this.introPlaying) {
-      // During intro just show idle — no animation needed
+      // Hero hidden — shown and animated in the onComplete callback
     } else if (this.anims.exists(walkKey)) {
       this.heroSprite.play(walkKey, true);
     } else {
@@ -249,7 +291,7 @@ export class GameScene extends Scene {
     const cam = this.cameras.main;
     const halfW = (cam.width / cam.zoom) / 2;
     const halfH = (cam.height / cam.zoom) / 2;
-    cam.startFollow(this.heroSprite, true, 1.0, 1.0, halfW, 280 + halfH);
+    cam.startFollow(this.heroSprite, true, 1.0, 1.0, halfW, 245 + halfH);
 
     // Create UI components with safety guards
     try {
@@ -415,13 +457,26 @@ export class GameScene extends Scene {
     const heroWorldX = this.worldOffset + this.loopRunState.loop.positionInLoop;
     this.heroSprite.x = heroWorldX + 100; // +100 offset so hero starts visible
 
-    // Parallax update
-    if (this.bgSky) {
-      this.bgSky.tilePositionX = heroWorldX * 0.05;
+    // Parallax update — seamless horizontal wrap, no gap
+    // offset = how far copy0 has shifted right from its origin (0..imgW)
+    // copy0 left edge at: offset - imgW  (so at offset=0 copy0 starts at -imgW, fully off left)
+    // Actually: offset is the left edge of copy0 in [0..imgW), copy1 is always copy0 - imgW
+    // Both together cover [offset-imgW .. offset+imgW], screen is [0..screenW]
+    const parallaxUpdate = (imgs: Phaser.GameObjects.Image[], imgW: number, factor: number) => {
+      if (imgs.length < 2 || imgW <= 0) return;
+      // offset: moves from 0 to imgW as hero scrolls one full image width
+      const offset = ((-(heroWorldX * factor) % imgW) + imgW) % imgW;
+      // overlap by 1px to prevent sub-pixel seam from texture filtering
+      const x0 = Math.round(offset + imgW / 2);
+      imgs[0].x = x0;
+      imgs[1].x = x0 - imgW + 1;
+    };
+    parallaxUpdate(this.bgFieldImgs, this.bgImgW, 0.3);
+    if (this.bgSkyImgs.length === 2) {
+      const skyImgW = this.bgSkyImgs[0].displayWidth;
+      parallaxUpdate(this.bgSkyImgs, skyImgW, 0.05);
     }
-    if (this.bgDesert) {
-      this.bgDesert.tilePositionX = heroWorldX * 0.5; // Faster foreground
-    }
+
 
     // Update tile visuals
     this.updateTilePool();
@@ -431,9 +486,16 @@ export class GameScene extends Scene {
     const loop = this.loopRunState.loop;
     const nonBufferCount = loop.tiles.filter((t: any) => t.type !== 'buffer').length;
     const loopTotalPx = nonBufferCount * TILE_SIZE;
-    // positionInLoop counts world pixels since loop start; subtract buffer tiles
     const posInLoop = Math.max(0, loop.positionInLoop - (loop.tiles.length - nonBufferCount) * TILE_SIZE);
     if (this.hud) this.hud.update(run, posInLoop, loopTotalPx);
+  }
+
+  adjustBgScale(delta: number): void {
+    const all = [...this.bgFieldImgs, ...this.bgSkyImgs];
+    for (const img of all) {
+      img.setScale(Math.max(0.05, img.scaleX + delta));
+    }
+    console.log('[BG] scale:', all[0]?.scaleX.toFixed(3));
   }
 
   /** Sync LoopRunState values back to global RunState */
@@ -645,7 +707,7 @@ export class GameScene extends Scene {
       if (!tileSlot) continue;
 
       const worldX = gi * TILE_SIZE + 100; // +100 to match hero offset
-      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 450, tileSlot, 1, tileDataIndex);
+      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 490, tileSlot, 1, tileDataIndex);
       this.add.existing(tv);
       tv.setDepth(10);
       this.tilePool.set(gi, tv);

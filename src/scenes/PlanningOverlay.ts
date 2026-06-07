@@ -1,7 +1,7 @@
 ﻿import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
 import { getAllPlaceableTiles, getTileConfig, type TileSlot, type TileSlotType } from '../systems/TileRegistry';
-import { TileVisual } from '../ui/TileVisual';
+import { TileVisual, LANDMARK_MAP } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
@@ -460,7 +460,7 @@ export class PlanningOverlay extends Scene {
     // off-script tiles, but this also guards the drag-drop path and any
     // selection carried over from the previous step — without it the player
     // could still burn TP on a wrong tile and softlock the scripted run.
-    if (!this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type)) {
+    if (!this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type, this.selectedTileKey)) {
       this.showToast(this.tutorialAllowedTileType() === 'subtile'
         ? 'Place a subtile in a reserved (cyan) slot.'
         : 'Place a combat tile from the inventory.');
@@ -518,11 +518,11 @@ export class PlanningOverlay extends Scene {
   }
 
   private buildInventoryPanel(_fontFamily: string): void {
-    // Panel background — shifted up to make room for the subtile row beneath
-    // the main tile row while keeping the "don't stop here for" + Remove Mode
-    // toolbar at y=505 untouched.
-    const board = this.add.image(400, 367, 'tile_selection_board');
-    board.setScale(655 / board.width);
+    const boardKey = this.textures.exists('tile_inventory_panel') ? 'tile_inventory_panel' : 'tile_selection_board';
+    const board = this.add.image(400, 367, boardKey);
+    // tile_inventory_panel: debug-layout scale=0.2592 → displayWidth=514
+    // tile_selection_board: original scale kept at 655/width
+    board.setScale(boardKey === 'tile_inventory_panel' ? 514 / board.width : 655 / board.width);
 
     this.refreshInventory();
   }
@@ -530,120 +530,92 @@ export class PlanningOverlay extends Scene {
   private refreshInventory(): void {
     const fontFamily = 'Georgia, "Times New Roman", serif';
 
-    // Tutorial gating: drop a selection that's no longer on-script (e.g. a
-    // combat tile selected during 'place-tile' that lingers into
-    // 'place-subtile') so a leftover key can't be placed via a path-slot click
-    // and isn't left visually highlighted on a now-dimmed card.
-    if (this.selectedTileKey && !this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type)) {
+    if (this.selectedTileKey && !this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type, this.selectedTileKey)) {
       this.selectedTileKey = null;
       this.selectedCardIndex = -1;
     }
 
-    // Clear existing cards
-    for (const card of this.inventoryCards) {
-      card.destroy();
-    }
+    for (const card of this.inventoryCards) card.destroy();
     this.inventoryCards = [];
-    // Wave 5: clear the parallel subtile row too.
-    for (const card of this.subtileInventoryCards) {
-      card.destroy();
-    }
+    for (const card of this.subtileInventoryCards) card.destroy();
     this.subtileInventoryCards = [];
 
-    // Wave 5: split placeable tiles into the two pickers. Subtiles render
-    // in a dedicated row below the main inventory and dim out when there
-    // is no reserved slot to receive them.
     const allPlaceable = getAllPlaceableTiles();
-    // Workshop gating: terrain tiles (graveyard/swamp/desert/lava) AND combat
-    // sub-tile amplifiers are only placeable once unlocked via the Workshop
-    // building (run.pool.tiles is seeded from meta.unlockedTiles at run start).
-    // forest + event + treasure are in the base pool.
     const unlockedTileKeys = new Set(getRun().pool?.tiles ?? []);
     const inPool = (key: string) => unlockedTileKeys.size === 0 || unlockedTileKeys.has(key);
-    const placeableTiles = allPlaceable.filter(t => t.type !== 'subtile' && inPool(t.key));
-    const subtileTiles = allPlaceable.filter(t => t.type === 'subtile' && inPool(t.key));
+    // Subtiles are landmarks placed on reserved slots — they don't go in the left tile slot
+    const allTiles = allPlaceable.filter(t => inPool(t.key) && t.type !== 'subtile');
+    const subtileSlotsExist = this.hasOpenReservedSlot();
 
-    // Fixed uniform tile size for all tiles across both rows
-    const frameWidth  = 55;
-    const frameHeight = 55;
-    const cols        = Math.min(placeableTiles.length, 8);
-    // First row has fewer tiles → larger gap to fill the panel width
-    const gap         = placeableTiles.length < 8 ? 26 : 20;
-    const totalRowW   = cols * frameWidth + (cols - 1) * gap;
-    const startX      = 400 - totalRowW / 2 + frameWidth / 2;
-    const rowStartY   = 330;
+    // ── Layout from debug-layout.json (timestamp 2026-06-06T22:08) ────────────
+    // Tile cards: x=194.1, 272.6, 351.1 @ y=336 (step≈78.5)
+    // Landmark cards row0: x=442.5,501.1,561,617.6 @ y=340; row1: y≈409
+    const FRAME         = 52;
+    const TILE_XS       = [194.1, 272.6, 351.1];
+    const TILE_Y        = 336;
 
-    placeableTiles.forEach((tileConfig, idx) => {
-      const col = idx % cols;
-      const row = Math.floor(idx / cols);
-      const x   = startX + col * (frameWidth + gap);
-      const y   = rowStartY + row * (frameHeight + 46);
+    // Section labels — fontSize from debug-layout (~16.6px)
+    const labelStyle = { fontSize: '16px', color: '#c4a84a', fontFamily, fontStyle: 'italic' };
+    this.inventoryCards.push(this.add.text(247.3, 297.1, 'TILES',     labelStyle).setOrigin(0.5) as any);
+    this.inventoryCards.push(this.add.text(550.8, 297,   'LANDMARKS', labelStyle).setOrigin(0.5) as any);
+
+    // ── LEFT SLOT: all tiles ──────────────────────────────────────────────────
+    const TILE_COLS = TILE_XS.length;
+    allTiles.forEach((tileConfig, idx) => {
+      const col = idx % TILE_COLS;
+      const row = Math.floor(idx / TILE_COLS);
+      const x   = TILE_XS[col];
+      const y   = TILE_Y + row * 80;
       const container = this.add.container(x, y);
 
-      // Card background
-      const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(frameWidth, frameHeight);
+      const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(FRAME, FRAME);
       container.add(frame);
 
-      // Tile preview — getAllPlaceableTiles guarantees `key` is set
-      const tileKey = tileConfig.key;
+      const isSubtile = tileConfig.type === 'subtile';
       const pseudoSlot: TileSlot = {
         type: tileConfig.type,
         terrain: tileConfig.terrain,
-        defeatedThisLoop: false
+        kind: isSubtile ? tileConfig.key : undefined,
+        subtileEffect: isSubtile ? tileConfig.effect : undefined,
+        defeatedThisLoop: false,
       };
-      
-      const previewSize = Math.round(frameWidth * 0.65);
+
+      const previewSize = Math.round(FRAME * 0.65);
       const scale = previewSize / TILE_SIZE;
       const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
-      
-      if (['rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) {
-        preview.hideFloor();
-      }
+      if (['rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) preview.hideFloor();
+      preview.hideLandmark();
       container.add(preview);
 
-      const nameText = this.add.text(0, frameHeight / 2 + 5, tileConfig.name, {
-        fontSize: '9px', color: '#ffdca0', fontFamily,
+      const nameText = this.add.text(0, FRAME / 2 + 6, tileConfig.name, {
+        fontSize: '11px', color: '#ffdca0', fontFamily,
       }).setOrigin(0.5);
       container.add(nameText);
 
-      const costText = this.add.text(0, frameHeight / 2 + 16, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '9px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
+      const costText = this.add.text(0, FRAME / 2 + 18, `${tileConfig.tilePointCost} TP`, {
+        fontSize: '10px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
 
-      // Free copies badge
-      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileKey);
+      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileConfig.key);
       const freeCount = invEntry?.count ?? 0;
       if (freeCount > 0) {
-        const countText = this.add.text(frameWidth / 2 - 6, -frameHeight / 2 + 6, `x${freeCount}`, {
-          fontSize: '11px', color: '#ffffff', fontFamily, fontStyle: 'bold',
-          backgroundColor: '#333333', padding: { x: 2, y: 1 }
-        }).setOrigin(1, 0);
-        container.add(countText);
+        container.add(this.add.text(FRAME / 2 - 4, -FRAME / 2 + 4, `x${freeCount}`, {
+          fontSize: '10px', color: '#ffffff', fontFamily, fontStyle: 'bold',
+          backgroundColor: '#333333', padding: { x: 2, y: 1 },
+        }).setOrigin(1, 0));
       }
 
-      // Affordability + Wave 5 context guards: normal tiles need a non-reserved
-      // empty slot somewhere on the loop, and the picker is disabled entirely
-      // while Remove Mode is active.
-      const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
-      const contextOk = !this.removeMode && this.hasOpenNormalSlot()
-        && this.tutorialAllowsPlacing(tileConfig.type);
-      const enabled = canAfford && contextOk;
-      // Tooltip + hover effect wired on every card (interactive even when
-      // unaffordable) so the player can read the blurb without committing
-      // to a pick. Only the click handler is gated by `enabled`.
+      const canAfford  = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
+      const hasSlot    = isSubtile ? subtileSlotsExist : this.hasOpenNormalSlot();
+      const contextOk  = !this.removeMode && hasSlot && this.tutorialAllowsPlacing(tileConfig.type, tileConfig.key);
+      const enabled    = canAfford && contextOk;
+
       frame.setInteractive({ useHandCursor: enabled });
-      this.attachTooltip(frame, x, y - frameHeight / 2, tileConfig.description, tileConfig.key);
-      frame.on('pointerover', () => {
-        const hoverScale = this.selectedCardIndex === idx ? 1.15 : 1.1;
-        container.setScale(hoverScale);
-        frame.setTint(0xdddddd);
-      });
-      frame.on('pointerout', () => {
-        const baseScale = this.selectedCardIndex === idx ? 1.05 : 1.0;
-        container.setScale(baseScale);
-        frame.clearTint();
-      });
+      this.attachTooltip(frame, x, y - FRAME / 2, tileConfig.description, tileConfig.key);
+      frame.on('pointerover', () => { container.setScale(this.selectedCardIndex === idx ? 1.15 : 1.1); frame.setTint(0xdddddd); });
+      frame.on('pointerout',  () => { container.setScale(this.selectedCardIndex === idx ? 1.05 : 1.0); frame.clearTint(); });
+
       if (!enabled) {
         container.setAlpha(0.5);
         if (!canAfford) costText.setColor('#880000');
@@ -653,6 +625,8 @@ export class PlanningOverlay extends Scene {
           this.startInventoryDrag(pointer, tileConfig.key, {
             type: tileConfig.type,
             terrain: tileConfig.terrain,
+            kind: isSubtile ? tileConfig.key : undefined,
+            subtileEffect: isSubtile ? tileConfig.effect : undefined,
             defeatedThisLoop: false,
           });
         });
@@ -661,122 +635,79 @@ export class PlanningOverlay extends Scene {
       this.inventoryCards.push(container);
     });
 
-    // Wave 5: render the dedicated subtile row underneath the main panel.
-    this.renderSubtileRow(subtileTiles, fontFamily);
-  }
+    // ── RIGHT SLOT: subtile landmarks only ────────────────────────────────────
+    // Biome/special landmarks (forest, graveyard, swamp, desert, lava, event,
+    // treasure, boss) appear automatically when the tile is placed — they are
+    // not shown here. Only subtile landmarks are listed so the player knows
+    // which subtile effect each landmark represents.
+    // Only show subtile landmarks that are unlocked (in pool) — same gate as the tile slot
+    const subtileLandmarkEntries = Object.entries(LANDMARK_MAP).filter(
+      ([tileKey, texKey]) => tileKey.startsWith('subtile_') && this.textures.exists(texKey) && inPool(tileKey)
+    );
 
-  /**
-   * Wave 5: subtile picker. Renders below the main inventory panel as a
-   * single row of smaller frames. Entries dim out when no reserved slot
-   * exists to receive them (or when Remove Mode is active).
-   */
-  private renderSubtileRow(
-    subtileTiles: ReturnType<typeof getAllPlaceableTiles>,
-    fontFamily: string,
-  ): void {
-    if (subtileTiles.length === 0) return;
+    const LM_FRAME  = 44;
+    // Exact positions from debug-layout (2026-06-06T22:08)
+    const LM_XS = [442.5, 501.1, 561, 617.6];
+    const LM_YS = [340, 409.3];
+    const LM_COLS = LM_XS.length;
 
-    const FRAME = 55;
-    const GAP = 14;
-    const total = subtileTiles.length * FRAME + (subtileTiles.length - 1) * GAP;
-    const startX = 400 - total / 2 + FRAME / 2;
-    const rowY = 408;
+    // Index offset so selectInventoryTile can find these cards in inventoryCards array
+    const lmIndexOffset = allTiles.length + 2; // +2 for the two label texts pushed before tiles
 
-    const subtileSlotsExist = this.hasOpenReservedSlot();
+    subtileLandmarkEntries.forEach(([tileKey, texKey], idx) => {
+      const col = idx % LM_COLS;
+      const row = Math.floor(idx / LM_COLS);
+      const x   = LM_XS[col];
+      const y   = LM_YS[row] ?? (LM_YS[LM_YS.length - 1] + (row - LM_YS.length + 1) * 70);
+      const container = this.add.container(x, y);
 
-    subtileTiles.forEach((tileConfig, idx) => {
-      const x = startX + idx * (FRAME + GAP);
-      const container = this.add.container(x, rowY);
+      const bg = this.add.rectangle(0, 0, LM_FRAME, LM_FRAME, 0x111111, 0.7)
+        .setStrokeStyle(1, 0x886633, 0.8);
+      container.add(bg);
 
-      const frame = this.add.image(0, 0, 'tile_frame').setDisplaySize(FRAME, FRAME);
-      container.add(frame);
+      const img = this.add.image(0, 0, texKey);
+      const src = this.textures.get(texKey).getSourceImage() as HTMLImageElement;
+      img.setScale((LM_FRAME * 0.85) / Math.max(src.width, src.height));
+      container.add(img);
 
-      const pseudoSlot: TileSlot = {
-        type: tileConfig.type,
-        terrain: tileConfig.terrain,
-        kind: tileConfig.key,           // needed so TileVisual resolves to the specific subtile_* config
-        subtileEffect: tileConfig.effect,
-        defeatedThisLoop: false,
-      };
-      const previewSize = Math.round(FRAME * 0.65);
-      const scale = previewSize / TILE_SIZE;
-      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
-      container.add(preview);
+      const label = tileKey.replace('subtile_', '').replace(/_/g, ' ');
+      container.add(this.add.text(0, LM_FRAME / 2 + 6, label, {
+        fontSize: '10px', color: '#ffdca0', fontFamily,
+      }).setOrigin(0.5));
 
-      const nameText = this.add.text(0, FRAME / 2 + 5, tileConfig.name, {
-        fontSize: '9px', color: '#ffdca0', fontFamily,
-      }).setOrigin(0.5);
-      container.add(nameText);
+      // Subtile landmarks are draggable — they get placed on reserved slots
+      const tileConfig = getAllPlaceableTiles().find(t => t.key === tileKey);
+      if (tileConfig) {
+        const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileKey);
+        const freeCount = invEntry?.count ?? 0;
+        const canAfford  = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
+        const contextOk  = !this.removeMode && subtileSlotsExist && this.tutorialAllowsPlacing(tileConfig.type, tileKey);
+        const enabled    = canAfford && contextOk;
+        const cardIndex  = lmIndexOffset + idx;
 
-      const costText = this.add.text(0, FRAME / 2 + 16, `${tileConfig.tilePointCost} TP`, {
-        fontSize: '9px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
-      }).setOrigin(0.5);
-      container.add(costText);
+        bg.setInteractive({ useHandCursor: enabled });
+        this.attachTooltip(bg, x, y - LM_FRAME / 2, tileConfig.description, tileKey);
+        bg.on('pointerover', () => { container.setScale(this.selectedCardIndex === cardIndex ? 1.15 : 1.1); bg.setStrokeStyle(1, 0xffd700, 1); });
+        bg.on('pointerout',  () => { container.setScale(this.selectedCardIndex === cardIndex ? 1.05 : 1.0); bg.setStrokeStyle(1, 0x886633, 0.8); });
 
-      const invEntry = this.loopRunState.tileInventory.find(t => t.tileType === tileConfig.key);
-      const freeCount = invEntry?.count ?? 0;
-      if (freeCount > 0) {
-        const badge = this.add.text(FRAME / 2 - 5, -FRAME / 2 + 5, `x${freeCount}`, {
-          fontSize: '11px', color: '#ffffff', fontFamily, fontStyle: 'bold',
-          backgroundColor: '#333333', padding: { x: 2, y: 1 },
-        }).setOrigin(1, 0);
-        container.add(badge);
-      }
-
-      const canAfford = freeCount > 0 || this.loopRunState.economy.tilePoints >= tileConfig.tilePointCost;
-      const contextOk = !this.removeMode && subtileSlotsExist
-        && this.tutorialAllowsPlacing(tileConfig.type);
-      const enabled = canAfford && contextOk;
-      // Tooltip + hover effect on every card so the player can read the
-      // description regardless of affordability/context. Click is gated.
-      frame.setInteractive({ useHandCursor: enabled });
-      this.attachTooltip(frame, x, rowY - FRAME / 2, tileConfig.description, tileConfig.key);
-      frame.on('pointerover', () => { container.setScale(1.1); frame.setTint(0xdddddd); });
-      frame.on('pointerout',  () => { container.setScale(1);   frame.clearTint(); });
-      if (!enabled) {
-        container.setAlpha(0.5);
-        if (!canAfford) costText.setColor('#880000');
-      } else {
-        frame.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-          this.selectSubtile(idx, tileConfig.key);
-          this.startInventoryDrag(pointer, tileConfig.key, {
-            type: tileConfig.type,
-            terrain: tileConfig.terrain,
-            kind: tileConfig.key,
-            subtileEffect: tileConfig.effect,
-            defeatedThisLoop: false,
+        if (!enabled) {
+          container.setAlpha(0.5);
+        } else {
+          bg.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            this.selectInventoryTile(cardIndex, tileKey);
+            this.startInventoryDrag(pointer, tileKey, {
+              type: tileConfig.type,
+              terrain: tileConfig.terrain,
+              kind: tileKey,
+              subtileEffect: tileConfig.effect,
+              defeatedThisLoop: false,
+            });
           });
-        });
+        }
       }
 
-      this.subtileInventoryCards.push(container);
+      this.inventoryCards.push(container);
     });
-  }
-
-  /**
-   * Wave 5: subtile picker selection. Mirrors selectInventoryTile but
-   * operates on the subtileInventoryCards array so highlight/deselect
-   * find the correct container.
-   */
-  private selectSubtile(cardIndex: number, tileKey: string): void {
-    // Deselect anything in either pool.
-    if (this.selectedCardIndex >= 0) {
-      const prevMain = this.inventoryCards[this.selectedCardIndex];
-      const prevSub = this.subtileInventoryCards[this.selectedCardIndex];
-      if (prevMain) prevMain.setScale(1);
-      if (prevSub) prevSub.setScale(1);
-    }
-
-    if (this.selectedTileKey === tileKey) {
-      // Toggle off
-      this.selectedTileKey = null;
-      this.selectedCardIndex = -1;
-      return;
-    }
-
-    this.selectedTileKey = tileKey;
-    this.selectedCardIndex = cardIndex;
-    this.subtileInventoryCards[cardIndex]?.setScale(1.05);
   }
 
   private selectInventoryTile(cardIndex: number, tileKey: string): void {
@@ -971,9 +902,18 @@ export class PlanningOverlay extends Scene {
     return null;
   }
 
-  /** True when a tile of `tileType` may be placed under the current tutorial
-   *  gate (always true outside the gated steps). */
-  private tutorialAllowsPlacing(tileType: TileSlotType): boolean {
+  private tutorialAllowedTileKey(): string | null {
+    if (!tutorialDirector.isActive()) return null;
+    const step = tutorialDirector.getCurrentStep();
+    if (step?.id === 'place-tile') return 'forest';
+    return null;
+  }
+
+  /** True when a tile of `tileType`/`tileKey` may be placed under the current
+   *  tutorial gate (always true outside the gated steps). */
+  private tutorialAllowsPlacing(tileType: TileSlotType, tileKey?: string): boolean {
+    const allowedKey = this.tutorialAllowedTileKey();
+    if (allowedKey !== null) return tileKey === allowedKey;
     const allowed = this.tutorialAllowedTileType();
     return allowed === null || allowed === tileType;
   }
@@ -1112,8 +1052,8 @@ export class PlanningOverlay extends Scene {
     const iconY  = top + 37;
     const labelY = top + 57;
     const items: [string, string, string, string][] = [
-      ['icon_coin',  `${run.economy.gold}`,                      '#f0c040', 'Gold' ],
-      ['icon_brick', `${this.loopRunState.economy.tilePoints}`,  '#00e5ff', 'TP'   ],
+      ['icon_coin',  `${this.loopRunState.economy.gold}`,         '#f0c040', 'Gold' ],
+      ['icon_brick', `${this.loopRunState.economy.tilePoints}`,  '#00e5ff', 'Tile Points'],
       ['icon_card',  `${run.deck.active.length}`,                '#ffffff', 'Cards'],
     ];
 

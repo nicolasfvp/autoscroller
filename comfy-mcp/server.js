@@ -359,12 +359,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     return err(e.message);
   }
 
-  // 2. Patch prompt node
+  // 2. Patch prompt node (optional — workflows without a prompt node are allowed)
   const target = resolveTarget(workflow, prompt_node_id);
-  if (!target) {
-    return err('Could not find a prompt node. Pass prompt_node_id explicitly or ensure the workflow has an OpenAIGPTImageNodeV2 or CLIPTextEncode node.');
+  if (target && prompt) {
+    workflow[target.id].inputs[target.field] = prompt;
   }
-  workflow[target.id].inputs[target.field] = prompt;
 
   // 3. Upload & patch reference image (uses default if not provided)
   const refImage = reference_image ? String(reference_image) : DEFAULT_REFERENCE_IMAGE;
@@ -408,7 +407,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
   const wf = workflowName ?? 'workflow';
   if (wf === 'image_video') finalizeMonsterAsset(destFolder, stem);
-  else if (wf === 'image_to_sprites') finalizeSpritesAsset(destFolder);
+  else if (wf === 'image_to_sprites' || wf === 'image_to_sprites_portrait') finalizeSpritesAsset(destFolder);
 
   const finalFiles = readdirSync(destFolder)
     .filter(f => f !== 'arquivo')
@@ -417,9 +416,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   return {
     content: [{
       type: 'text',
-      text: `✅ comfy/${output_path}/\n${finalFiles.join('\n')}\n` +
-            `   Prompt: "${prompt}"\n` +
-            `   Node: #${target.id} (field: ${target.field})`,
+      text: `✅ comfy/${output_path}/\n${finalFiles.join('\n')}` +
+            (target ? `\n   Prompt: "${prompt}"\n   Node: #${target.id} (field: ${target.field})` : ''),
     }],
   };
 });

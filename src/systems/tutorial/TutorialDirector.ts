@@ -147,7 +147,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     scene: SCENE_KEYS.PLANNING,
     title: 'Place a combat tile.',
     body:
-      "Pick a COMBAT tile from the inventory (Forest, Graveyard, Swamp, Desert, or Lava — the leftmost icons).\n\n" +
+      "Pick the FOREST tile from the inventory (leftmost icon).\n\n" +
       "Then click an empty slot on the path above to drop it in.",
     advance: 'event',
     panelAnchor: 'top-fixed',

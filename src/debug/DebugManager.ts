@@ -20,6 +20,27 @@ type DraggableGO = Phaser.GameObjects.Image | Phaser.GameObjects.Sprite
                  | Phaser.GameObjects.Container
                  | Phaser.GameObjects.Rectangle;
 
+/** Walk up the container hierarchy to find the effective scrollFactor. */
+function effectiveScrollFactor(obj: Phaser.GameObjects.GameObject): number {
+  let cur: any = obj;
+  while (cur) {
+    if (typeof cur.scrollFactorX === 'number' && cur.scrollFactorX !== 1) return cur.scrollFactorX;
+    cur = cur.parentContainer ?? null;
+  }
+  return 1;
+}
+
+/**
+ * If obj is a direct child of a Container that has scrollFactor=0,
+ * return that Container (so drag moves the whole panel, not just the child).
+ * Otherwise returns obj itself.
+ */
+function draggableRoot(obj: DraggableGO): DraggableGO {
+  const parent = (obj as any).parentContainer as Phaser.GameObjects.Container | undefined;
+  if (parent && (parent as any).scrollFactorX === 0) return parent as unknown as DraggableGO;
+  return obj;
+}
+
 interface UndoEntry {
   obj: DraggableGO;
   x: number;
@@ -52,6 +73,7 @@ class DebugManagerSingleton {
   private _lastClickX  = -10000;
   private _lastClickY  = -10000;
   private _blockRect:  Phaser.GameObjects.Rectangle | null = null;
+  private _modalOpen   = false;
 
   // Manual drag state
   private _manualDragging  = false;
@@ -67,6 +89,7 @@ class DebugManagerSingleton {
   private _onPointerUp:      (() => void) | null = null;
 
   get isDragEnabled() { return this._dragEnabled; }
+  setModalOpen(open: boolean) { this._modalOpen = open; }
   get selectedRecord(): DebugRecord | undefined {
     return this._selected ? this.records.get(this._selected) : undefined;
   }
@@ -118,6 +141,26 @@ class DebugManagerSingleton {
       .filter(k => k !== '__DEFAULT' && k !== '__MISSING' && k !== '__WHITE');
   }
 
+  /**
+   * Reveal all hidden/invisible objects in the target scene.
+   * Sets alpha=1 and visible=true on every game object that is invisible
+   * (alpha < 0.05 or visible=false). Returns the count of objects revealed.
+   */
+  revealHidden(scene: Phaser.Scene): number {
+    let count = 0;
+    const reveal = (list: Phaser.GameObjects.GameObject[]) => {
+      for (const obj of list) {
+        if (!obj.active) continue;
+        const go = obj as any;
+        if (go.visible === false) { go.setVisible(true); count++; }
+        else if (typeof go.alpha === 'number' && go.alpha < 0.05) { go.setAlpha(1); count++; }
+        if (go.list) reveal(go.list);
+      }
+    };
+    reveal(scene.children.list);
+    return count;
+  }
+
   injectDrag(scene: Phaser.Scene, inputScene?: Phaser.Scene): void {
     this._dragScene   = scene;
     this._inputScene  = inputScene ?? scene;
@@ -131,42 +174,50 @@ class DebugManagerSingleton {
     this._lastClickX = this._lastClickY = -10000;
     this._manualDragging = false;
 
+    const scenePaused = scene.scene.isPaused();
+
     const objs = this.collectObjects(scene.children.list)
       .filter(o => !this.isBackground(o));
     this._allDraggable = objs;
-    objs.forEach(obj => { this._setupObj(obj); this.snapshot(obj); });
+    // Don't call setInteractive on objects in a paused scene — the input manager
+    // is suspended and the call may corrupt input state without erroring.
+    objs.forEach(obj => { this._setupObj(obj, scenePaused); this.snapshot(obj); });
 
-    // Transparent full-screen rect at max depth blocks all game-object input events.
-    // Scene-level listeners (pointerdown/move/up) still fire normally.
-    this._blockRect = scene.add.rectangle(400, 300, 800, 600, 0x000000, 0)
-      .setDepth(999999).setScrollFactor(0).setInteractive();
+    // _blockRect prevents accidental game-button clicks while drag is active.
+    // In a paused scene, game buttons are already non-responsive, so skip it.
+    if (!scenePaused) {
+      this._blockRect = scene.add.rectangle(400, 300, 800, 600, 0x000000, 0)
+        .setDepth(999999).setScrollFactor(0).setInteractive();
+    }
 
     // Selection cycling: click without Ctrl selects object under cursor.
     // Scans fresh each click to catch objects created after injectDrag().
     this._onPointerDown = (pointer) => {
+      if (this._modalOpen) return;
       if ((pointer.event as MouseEvent)?.ctrlKey) return;
       const cam = scene.cameras.main;
       const wx = cam.scrollX + pointer.x / cam.zoom;
       const wy = cam.scrollY + pointer.y / cam.zoom;
 
+      const scenePausedFresh = scene.scene.isPaused();
       const fresh = this.collectObjects(scene.children.list).filter(o => !this.isBackground(o));
       fresh.forEach(obj => {
         if (!this._allDraggable.includes(obj)) {
-          this._setupObj(obj);
+          this._setupObj(obj, scenePausedFresh);
           this._allDraggable.push(obj);
           this.snapshot(obj);
         }
       });
 
       // For scrollFactor=0 objects (HUD), bounds are in screen-space not world-space.
-      // Use screen coords (pointer.x/zoom) for those, world coords for the rest.
+      // Walk up the container hierarchy to get the real effective scrollFactor.
       const sx = pointer.x / cam.zoom;
       const sy = pointer.y / cam.zoom;
       const hits = fresh
         .filter(o => {
           if (!o.active || !o.scene) return false;
           try {
-            const sf = (o as any).scrollFactorX ?? (o.parentContainer as any)?.scrollFactorX ?? 1;
+            const sf = effectiveScrollFactor(o);
             const hx = sf === 0 ? sx : wx;
             const hy = sf === 0 ? sy : wy;
             return o.getBounds().contains(hx, hy);
@@ -197,42 +248,62 @@ class DebugManagerSingleton {
       }
     };
 
-    // Manual drag: Ctrl + pointerdown over _selected starts drag
+    // Manual drag: Ctrl + pointerdown over _selected starts drag.
+    // Use draggableRoot so dragging a child of a scrollFactor=0 container
+    // moves the whole container instead of just the child inside it.
     this._onManualDragDown = (pointer) => {
+      if (this._modalOpen) return;
       if (!(pointer.event as MouseEvent)?.ctrlKey) return;
       if (!this._selected?.active) return;
-      const cam2 = scene.cameras.main;
-      const sf2  = (this._selected as any).scrollFactorX
-                ?? (this._selected.parentContainer as any)?.scrollFactorX ?? 1;
-      const wx2  = sf2 === 0 ? pointer.x / cam2.zoom : cam2.scrollX + pointer.x / cam2.zoom;
-      const wy2  = sf2 === 0 ? pointer.y / cam2.zoom : cam2.scrollY + pointer.y / cam2.zoom;
+      const cam2   = scene.cameras.main;
+      const sf2    = effectiveScrollFactor(this._selected);
+      const wx2    = sf2 === 0 ? pointer.x / cam2.zoom : cam2.scrollX + pointer.x / cam2.zoom;
+      const wy2    = sf2 === 0 ? pointer.y / cam2.zoom : cam2.scrollY + pointer.y / cam2.zoom;
       let inBounds = false;
       try { inBounds = this._selected.getBounds().contains(wx2, wy2); } catch {}
       if (!inBounds) return;
+      const root = draggableRoot(this._selected);
       this._undoStack.push({
-        obj: this._selected,
-        x: this._selected.x, y: this._selected.y,
-        scaleX: this._selected.scaleX, scaleY: this._selected.scaleY,
-        depth: this._selected.depth,
+        obj: root,
+        x: root.x, y: root.y,
+        scaleX: root.scaleX, scaleY: root.scaleY,
+        depth: root.depth,
       });
       this._manualDragging  = true;
       this._dragStartWorldX = wx2;
       this._dragStartWorldY = wy2;
-      this._dragObjStartX   = this._selected.x;
-      this._dragObjStartY   = this._selected.y;
+      this._dragObjStartX   = root.x;
+      this._dragObjStartY   = root.y;
     };
 
-    // Manual drag: move _selected while Ctrl held
+    // Manual drag: move draggableRoot while Ctrl held.
+    // Always move the root container so HUD panels drag as a whole unit.
     this._onPointerMove = (pointer) => {
       if (!this._manualDragging || !this._selected) return;
       if (!(pointer.event as MouseEvent)?.ctrlKey) { this._manualDragging = false; return; }
       const cam3 = scene.cameras.main;
-      const sf3  = (this._selected as any).scrollFactorX
-                ?? (this._selected.parentContainer as any)?.scrollFactorX ?? 1;
+      const sf3  = effectiveScrollFactor(this._selected);
       const wx3  = sf3 === 0 ? pointer.x / cam3.zoom : cam3.scrollX + pointer.x / cam3.zoom;
       const wy3  = sf3 === 0 ? pointer.y / cam3.zoom : cam3.scrollY + pointer.y / cam3.zoom;
-      this._selected.x = this._dragObjStartX + (wx3 - this._dragStartWorldX);
-      this._selected.y = this._dragObjStartY + (wy3 - this._dragStartWorldY);
+      const root = draggableRoot(this._selected);
+      const newX = this._dragObjStartX + (wx3 - this._dragStartWorldX);
+      const newY = this._dragObjStartY + (wy3 - this._dragStartWorldY);
+      // If this object is the camera's follow target, stop follow, move object,
+      // then restart follow so the camera snaps to the new Y without dragging the world.
+      const camTarget = (cam3 as any)._follow as Phaser.GameObjects.GameObject | null;
+      if (camTarget && camTarget === root) {
+        const lerpX = (cam3 as any).lerp?.x ?? 1;
+        const lerpY = (cam3 as any).lerp?.y ?? 1;
+        const offX  = (cam3 as any).followOffset?.x ?? 0;
+        const offY  = (cam3 as any).followOffset?.y ?? 0;
+        cam3.stopFollow();
+        root.x = newX;
+        root.y = newY;
+        cam3.startFollow(root as any, true, lerpX, lerpY, offX, offY);
+      } else {
+        root.x = newX;
+        root.y = newY;
+      }
       this.snapshot(this._selected);
       scene.game.events.emit('debug:update', this.records.get(this._selected));
     };
@@ -250,6 +321,7 @@ class DebugManagerSingleton {
     if (!this._dragEnabled) return;
     this._dragEnabled    = false;
     this._manualDragging = false;
+    this._modalOpen      = false;
     if (this._selected) this._applyTint(this._selected, null);
     this._selected = null;
     this._undoStack.length = 0;
@@ -458,9 +530,14 @@ class DebugManagerSingleton {
     }
   }
 
-  private _setupObj(obj: DraggableGO): void {
+  private _setupObj(obj: DraggableGO, skipInteractive = false): void {
     if (obj instanceof Phaser.GameObjects.Container) {
       (obj.list as any[]).filter(c => !!c.input).forEach(c => this._saveClearPD(c));
+    } else if (skipInteractive) {
+      // In a paused scene the input manager is suspended; setInteractive would
+      // have no effect and may corrupt input state. Hit detection uses getBounds
+      // (pure geometry) so interactivity isn't required for drag to work.
+      if (obj.input) this._saveClearPD(obj);
     } else if (obj instanceof Phaser.GameObjects.Rectangle) {
       // Rectangle.setInteractive() needs the geom shape explicitly
       obj.setInteractive(
@@ -546,6 +623,8 @@ class DebugManagerSingleton {
     if (obj instanceof Phaser.GameObjects.Text
      || obj instanceof Phaser.GameObjects.BitmapText
      || obj instanceof Phaser.GameObjects.Container) return false;
+    // Negative depth = intentional background layer — always include in debug
+    if (obj.depth < 0) return false;
     if (obj instanceof Phaser.GameObjects.Rectangle) {
       return obj.width >= GAME_W * 0.75 && obj.height >= GAME_H * 0.75;
     }

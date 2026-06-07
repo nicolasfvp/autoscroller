@@ -19,6 +19,8 @@ import type { ActiveAura } from '../combat/StatusEffects';
 import { sumModifier } from '../combat/StatusEffects';
 import { getLevel } from './XPSystem';
 import relicsData from '../../data/json/relics.json';
+import magePassives from '../../data/json/mage-passives.json';
+import warriorPassives from '../../data/json/warrior-passives.json';
 
 export interface ResolvedHeroStats {
   maxHP: number;
@@ -131,11 +133,8 @@ function classPassiveBonus(run: RunState): Partial<Record<keyof ResolvedHeroStat
   const totalXP = run.hero.totalXP ?? 0;
   if (totalXP <= 0) return {};
   const className = run.hero.className ?? 'warrior';
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const data: Array<{ xpThreshold: number; effect: { type: string; stat?: string; value?: number } }> =
-    className === 'mage'
-      ? require('../../data/json/mage-passives.json')
-      : require('../../data/json/warrior-passives.json');
+    className === 'mage' ? magePassives : warriorPassives;
   const out: Partial<Record<keyof ResolvedHeroStats, number>> = {};
   for (const p of data) {
     if (totalXP < p.xpThreshold) continue;

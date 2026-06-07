@@ -1,13 +1,9 @@
 {
   "forest": {
     "base": [
-      "mush",
-      "giant_spider"
+      "mush"
     ],
     "addAtLoop": {
-      "5": [
-        "giant_spider_2"
-      ],
       "10": [
         "ancient_tree"
       ]
@@ -51,7 +47,7 @@
     ],
     "addAtLoop": {
       "5": [
-        "lava_golen"
+        "lava_golem"
       ],
       "10": [
         "fire_elemental"

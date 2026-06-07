@@ -71,7 +71,6 @@ const config: Phaser.Types.Core.GameConfig = {
         autoRound: true,
     },
     render: {
-        pixelArt: true,
         powerPreference: 'high-performance',
         batchSize: 4096,
         // Generate and sample mipmaps for downscaled textures (the 1024×1024
