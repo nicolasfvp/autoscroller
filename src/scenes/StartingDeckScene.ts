@@ -9,7 +9,6 @@
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { createCardVisual, STANDARD_CARD_WIDTH } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
 import { getTemplatesForClass, type DeckTemplate } from '../data/DeckTemplates';
@@ -85,14 +84,21 @@ export class StartingDeckScene extends Scene {
       fontSize: '12px', color: DIM, fontFamily: FF,
     }).setOrigin(0.5);
 
-    createWoodButton(this, 750, 26, '✕ Cancel', () => this.cancel(),
-      { width: 92, height: 28, fontSize: 13, variant: 'danger' });
+    const cancelImg = this.add.image(0, 0, 'btn_cancel_remove').setScale(92 / 1821);
+    const cancelCont = this.add.container(750, 26, [cancelImg])
+      .setSize(92, 44).setInteractive({ useHandCursor: true });
+    cancelCont.on('pointerover', () => this.tweens.add({ targets: cancelCont, scale: 1.05, duration: 100 }));
+    cancelCont.on('pointerout',  () => this.tweens.add({ targets: cancelCont, scale: 1,    duration: 100 }));
+    cancelCont.on('pointerdown', () => this.cancel());
 
     this.renderRows();
 
-    createWoodButton(this, 400, 560, '▶ Start Run',
-      () => this.confirm(),
-      { width: 240, height: 38, fontSize: 18, variant: 'primary' });
+    const startImg = this.add.image(0, 0, 'btn_start_run_deck').setScale(240 / 2030);
+    const startCont = this.add.container(400, 560, [startImg])
+      .setSize(240, 92).setInteractive({ useHandCursor: true });
+    startCont.on('pointerover', () => this.tweens.add({ targets: startCont, scale: 1.05, duration: 100 }));
+    startCont.on('pointerout',  () => this.tweens.add({ targets: startCont, scale: 1,    duration: 100 }));
+    startCont.on('pointerdown', () => this.confirm());
 
     this.input.keyboard?.on('keydown-ESC', () => this.cancel());
     this.input.keyboard?.on('keydown-UP', () => this.move(-1));

@@ -366,7 +366,7 @@ export class LoopRunner {
           break;
         }
         case 'boss': {
-          const BOSS_ROTATION = ['doom_knight', 'iron_golem', 'lizard_king', 'bog_witch', 'desert_golem', 'infernal_dragon', 'boss_iron_golem'];
+          const BOSS_ROTATION = ['doom_knight', 'iron_golem', 'bog_witch', 'desert_golem', 'infernal_dragon', 'boss_iron_golem'];
           tile.enemyId = BOSS_ROTATION[this.bossKillCount % BOSS_ROTATION.length];
           break;
         }
@@ -534,6 +534,11 @@ export class LoopRunner {
     if (tile.enemyId) {
       newTile.enemyId = tile.enemyId;
       newTile.isElite = tile.isElite;
+    }
+    // Subtiles placed on a reserved slot inherit the host terrain so TileVisual
+    // can render the correct ground sprite beneath the subtile landmark.
+    if (isSubtile && tile.hostTerrain) {
+      newTile.hostTerrain = tile.hostTerrain;
     }
     this.runState.loop.tiles[slotIndex] = newTile;
 

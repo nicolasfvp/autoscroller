@@ -2,7 +2,6 @@
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
-import { createWoodButton } from '../ui/WoodButton';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -35,34 +34,40 @@ export class PauseScene extends Scene {
     // Título — y=105, fontSize=42
     this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 42).setOrigin(0.5);
 
-    createWoodButton(this, 401.6, 171.6, 'Resume', () => this.resume(),
-      { width: 204, height: 82, fontSize: 22, variant: 'primary' });
-
-    createWoodButton(this, 400.5, 236.8, 'View Deck', () => {
+    this.makePauseBtn('btn_resume_pause',     401.6, 171.6, 204, 50, () => this.resume());
+    this.makePauseBtn('btn_view_deck_pause',  400.5, 236.8, 196, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 196, height: 77, fontSize: 22 });
-
-    createWoodButton(this, 400, 300, 'Tutorial', () => {
+    });
+    this.makePauseBtn('btn_tutorial_pause',   400,   300,   196, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 196, height: 78, fontSize: 22 });
-
-    createWoodButton(this, 400, 365.8, 'Settings', () => {
+    });
+    this.makePauseBtn('btn_settings_pause',   400,   365.8, 200, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.SETTINGS);
-    }, { width: 200, height: 89, fontSize: 22 });
-
-    createWoodButton(this, 402.6, 432.1, 'Abandon Run', async () => {
+    });
+    this.makePauseBtn('btn_abandon_run_pause', 402.6, 432.1, 210, 50, async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
       await saveManager.clearByMode(mode);
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
-    }, { width: 195, height: 88, fontSize: 22, variant: 'danger' });
+    });
 
     this.events.on('shutdown', this.cleanup, this);
+  }
+
+  private makePauseBtn(key: string, x: number, y: number, w: number, _h: number, cb: () => void): void {
+    const img = this.add.image(0, 0, key);
+    const sc = w / img.width;
+    img.setScale(sc);
+    const dh = img.height * sc;
+    const cont = this.add.container(x, y, [img]).setSize(w, dh).setInteractive({ useHandCursor: true });
+    cont.on('pointerover', () => this.tweens.add({ targets: cont, scale: 1.05, duration: 100 }));
+    cont.on('pointerout',  () => this.tweens.add({ targets: cont, scale: 1,    duration: 100 }));
+    cont.on('pointerdown', cb);
   }
 
   private resume(): void {

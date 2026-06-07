@@ -195,19 +195,32 @@ export class LoopSummaryScene extends Scene {
       });
     }
 
-    // ── Continue button (y=478 absoluto) ──────────────────
+    // ── Continue button ──────────────────────────────────
     const btnDelay = 400 + maxRows * 45;
-    const btnBg = this.add.rectangle(cx, 478, 220, 40, 0x0f1f0f)
-      .setStrokeStyle(2, 0x44aa44).setInteractive({ useHandCursor: true }).setAlpha(0);
-    const btnText = this.add.text(cx, 478, 'CONTINUE  ▶', {
-      fontFamily: FF, fontSize: '15px', fontStyle: 'bold',
-      color: '#88ff88', stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5).setAlpha(0);
-
-    this.tweens.add({ targets: [btnBg, btnText], alpha: 1, duration: 300, delay: btnDelay });
-    btnBg.on('pointerover', () => { btnBg.setFillStyle(0x1a3a1a); btnText.setColor('#bbffbb'); });
-    btnBg.on('pointerout',  () => { btnBg.setFillStyle(0x0f1f0f); btnText.setColor('#88ff88'); });
-    btnBg.on('pointerdown', () => this.proceed(loopRunner, loopRunState));
+    if (this.textures.exists('btn_continue_loop')) {
+      const btnImg = this.add.image(400, 562, 'btn_continue_loop')
+        .setScale(114 / 1548)
+        .setInteractive({ useHandCursor: true }).setAlpha(0);
+      btnImg.on('pointerdown', () => this.proceed(loopRunner, loopRunState));
+      this.tweens.add({
+        targets: btnImg, alpha: 1, duration: 300, delay: btnDelay,
+        onComplete: () => {
+          btnImg.on('pointerover', () => btnImg.setAlpha(0.82));
+          btnImg.on('pointerout',  () => btnImg.setAlpha(1));
+        },
+      });
+    } else {
+      const btnBg = this.add.rectangle(400, 562, 114, 34, 0x0f1f0f)
+        .setStrokeStyle(2, 0x44aa44).setInteractive({ useHandCursor: true }).setAlpha(0);
+      const btnText = this.add.text(cx, 562, 'CONTINUE  ▶', {
+        fontFamily: FF, fontSize: '15px', fontStyle: 'bold',
+        color: '#88ff88', stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5).setAlpha(0);
+      this.tweens.add({ targets: [btnBg, btnText], alpha: 1, duration: 300, delay: btnDelay });
+      btnBg.on('pointerover', () => { btnBg.setFillStyle(0x1a3a1a); btnText.setColor('#bbffbb'); });
+      btnBg.on('pointerout',  () => { btnBg.setFillStyle(0x0f1f0f); btnText.setColor('#88ff88'); });
+      btnBg.on('pointerdown', () => this.proceed(loopRunner, loopRunState));
+    }
 
     this.input.keyboard?.once('keydown-SPACE', () => this.proceed(loopRunner, loopRunState));
     this.input.keyboard?.once('keydown-ENTER', () => this.proceed(loopRunner, loopRunState));
@@ -218,10 +231,9 @@ export class LoopSummaryScene extends Scene {
     item: AggregatedEntry, iconSize: number,
     ff: string, delay: number,
   ): void {
-    const elementId = SHARD_ELEMENT_IDS[item.type];
-    const iconKey = elementId
-      ? resolveIconKey(this.textures, elementId)
-      : (LOOT_ICONS[item.type.toLowerCase()] ?? null);
+    const elementId = SHARD_ELEMENT_IDS[item.type] ?? item.type.toLowerCase();
+    const iconKey = resolveIconKey(this.textures, elementId)
+      ?? (LOOT_ICONS[item.type.toLowerCase()] ?? null);
     const resolvedIcon = (iconKey && this.textures.exists(iconKey)) ? iconKey : null;
 
     if (resolvedIcon) {

@@ -10,7 +10,6 @@ import { getRun } from '../state/RunState';
 import { ShopSystem, MIN_DECK_SIZE } from '../systems/ShopSystem';
 import { AudioManager } from '../systems/AudioManager';
 import { FONTS, LAYOUT, COLORS } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
@@ -94,8 +93,12 @@ export class ShopRemoveCardScene extends Scene {
       fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    createWoodButton(this, 70, HEADER_BOTTOM / 2, '← Cancel', () => this.close(),
-      { width: 110, height: 32, fontSize: 13, variant: 'normal' });
+    const cancelImg = this.add.image(0, 0, 'btn_cancel_remove').setScale(110 / 1821);
+    const cancelCont = this.add.container(70, HEADER_BOTTOM / 2, [cancelImg])
+      .setSize(110, 52).setInteractive({ useHandCursor: true });
+    cancelCont.on('pointerover', () => this.tweens.add({ targets: cancelCont, scale: 1.05, duration: 100 }));
+    cancelCont.on('pointerout',  () => this.tweens.add({ targets: cancelCont, scale: 1,    duration: 100 }));
+    cancelCont.on('pointerdown', () => this.close());
 
     this.add.text(740, HEADER_BOTTOM / 2, `Cost: ${this.cost}g`, {
       fontSize: '15px', fontStyle: 'bold', color: '#ffe28a',
@@ -239,7 +242,12 @@ export class ShopRemoveCardScene extends Scene {
       fontFamily: FONTS.body, stroke: '#1a0500', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(1, 1, '#000', 3, true, true));
 
-    const banish = createWoodButton(this, LAYOUT.centerX - 80, 490, 'Banish', () => {
+    const banishImg = this.add.image(0, 0, 'btn_banish_remove').setScale(140 / 2103);
+    const banishCont = this.add.container(LAYOUT.centerX - 80, 490, [banishImg])
+      .setSize(140, 50).setInteractive({ useHandCursor: true });
+    banishCont.on('pointerover', () => this.tweens.add({ targets: banishCont, scale: 1.05, duration: 100 }));
+    banishCont.on('pointerout',  () => this.tweens.add({ targets: banishCont, scale: 1,    duration: 100 }));
+    banishCont.on('pointerdown', () => {
       const run = getRun();
       const current = run.economy.removalsThisShop ?? 0;
       if (ShopSystem.removeCard(run, deckIndex, current)) {
@@ -249,14 +257,19 @@ export class ShopRemoveCardScene extends Scene {
       overlay.destroy(true);
       this.confirmOverlay = undefined;
       this.close();
-    }, { width: 140, height: 44, fontSize: 16, variant: 'danger' });
-    overlay.add(banish.container);
+    });
+    overlay.add(banishCont);
 
-    const keep = createWoodButton(this, LAYOUT.centerX + 80, 490, 'Keep', () => {
+    const keepImg = this.add.image(0, 0, 'btn_keep_remove').setScale(140 / 1774);
+    const keepCont = this.add.container(LAYOUT.centerX + 80, 490, [keepImg])
+      .setSize(140, 70).setInteractive({ useHandCursor: true });
+    keepCont.on('pointerover', () => this.tweens.add({ targets: keepCont, scale: 1.05, duration: 100 }));
+    keepCont.on('pointerout',  () => this.tweens.add({ targets: keepCont, scale: 1,    duration: 100 }));
+    keepCont.on('pointerdown', () => {
       overlay.destroy(true);
       this.confirmOverlay = undefined;
-    }, { width: 140, height: 44, fontSize: 16, variant: 'normal' });
-    overlay.add(keep.container);
+    });
+    overlay.add(keepCont);
 
     this.confirmOverlay = overlay;
   }

@@ -1,6 +1,5 @@
 ﻿import { Scene } from 'phaser';
 import { COLORS, FONTS, LAYOUT, createButton } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { AudioManager } from '../systems/AudioManager';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
@@ -288,8 +287,12 @@ export class SettingsScene extends Scene {
 
   // ── Back Button (y: 540) ───────────────────────────────
   private createBackButton(): void {
-    createWoodButton(this, LAYOUT.centerX, 540, 'Back', () => this.saveAndClose(),
-      { width: 200, height: 48, fontSize: 22, variant: 'primary' });
+    const backImg = this.add.image(0, 0, 'btn_back_settings').setScale(200 / 1995);
+    const backCont = this.add.container(LAYOUT.centerX, 540, [backImg])
+      .setSize(200, 79).setInteractive({ useHandCursor: true });
+    backCont.on('pointerover', () => this.tweens.add({ targets: backCont, scale: 1.05, duration: 100 }));
+    backCont.on('pointerout',  () => this.tweens.add({ targets: backCont, scale: 1,    duration: 100 }));
+    backCont.on('pointerdown', () => this.saveAndClose());
   }
 
   // ── Confirmation overlay ───────────────────────────────

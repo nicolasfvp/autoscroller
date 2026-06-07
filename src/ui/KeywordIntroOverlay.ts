@@ -1,12 +1,8 @@
 // KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
 //
-// Shown by KeywordIntroService when the player resolves a card that
-// references a keyword they haven't learned yet. While the overlay is
-// visible the combat tick loop is paused (CombatScene.update reads
-// keywordIntro.isPaused()).
-//
-// UX: small centered panel with the keyword name (category-colored),
-// the canonical definition, and a "Got it!" button. ESC also dismisses.
+// When a baked image asset exists for the keyword (keyword_<name> texture),
+// it is shown as a simple image — same approach as TutorialOverlay.
+// Falls back to a programmatic panel for any keyword without a baked asset.
 
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
@@ -15,19 +11,19 @@ import type { KeywordDef } from './KeywordDefinitions';
 const OVERLAY_DEPTH = 12000;
 const BACKDROP_ALPHA = 0.62;
 
-const PANEL_W = 440;
-const PANEL_H = 220;
+// Baked image display width (same ratio as tutorial panels)
+const IMG_DISPLAY_W = 360;
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
-  stack: '#ff8c00',
+  stack:    '#ff8c00',
   modifier: '#ffd700',
-  stat: '#66ccff',
+  stat:     '#66ccff',
 };
 
 const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
-  stack: 'Stack',
-  modifier: 'Modifier',
-  stat: 'Stat',
+  stack:    'New Stack',
+  modifier: 'New Modifier',
+  stat:     'New Stat',
 };
 
 export function openKeywordIntroOverlay(
@@ -44,90 +40,92 @@ export function openKeywordIntroOverlay(
   ).setOrigin(0, 0).setInteractive();
   overlay.add(backdrop);
 
-  const innerPanel = scene.add.container(LAYOUT.canvasWidth / 2, LAYOUT.canvasHeight / 2 - 30);
-  innerPanel.setScale(0.65);
-  overlay.add(innerPanel);
+  const cx = LAYOUT.canvasWidth / 2;
+  const cy = LAYOUT.canvasHeight / 2 - 20;
 
-  const lX = -PANEL_W / 2;
-  const lY = -PANEL_H / 2;
+  const texKey = `keyword_${keyword.keyword.toLowerCase()}`;
+  const useImage = scene.textures.exists(texKey);
 
-  // Dark/gold panel frame — matches the game's unified UI style.
-  const frameKey = scene.textures.exists('panel_keyword_frame') ? 'panel_keyword_frame' : '__DEFAULT';
-  const panelBg = scene.add.image(0, 0, frameKey)
-    .setDisplaySize(PANEL_W, PANEL_H)
-    .setInteractive();
-  innerPanel.add(panelBg);
+  let panelTopY: number;
+  let panelDisplayH: number;
 
-  // "New [Category]" badge — small, muted
-  const badge = scene.add.text(
-    lX + 18,
-    lY + 16,
-    `New ${CATEGORY_LABEL[keyword.category]}`,
-    {
-      fontSize: '11px',
-      fontStyle: 'bold',
-      color: '#aaaaaa',
-      fontFamily: FONTS.body,
-      stroke: '#000000',
-      strokeThickness: 2,
-    },
-  ).setOrigin(0, 0);
-  innerPanel.add(badge);
+  if (useImage) {
+    // ── Baked image path ────────────────────────────────────────────
+    const img = scene.add.image(0, 0, texKey).setOrigin(0.5, 0.5);
+    const sc = IMG_DISPLAY_W / img.width;
+    img.setScale(sc);
+    panelDisplayH = Math.round(img.height * sc);
+    panelTopY = cy - panelDisplayH / 2;
+    img.x = cx;
+    img.y = cy;
+    img.setInteractive();
+    img.on('pointerdown', () => { /* swallow */ });
+    overlay.add(img);
+  } else {
+    // ── Programmatic fallback ────────────────────────────────────────
+    const PANEL_W = 320;
+    const PAD = 16;
 
-  // Keyword name — category-colored, prominent
-  const name = scene.add.text(
-    lX + 18,
-    lY + 34,
-    keyword.keyword,
-    {
-      fontSize: '26px',
-      fontStyle: 'bold',
-      color: CATEGORY_COLOR[keyword.category],
-      fontFamily: FONTS.body,
-      stroke: '#000000',
-      strokeThickness: 3,
-    },
-  ).setOrigin(0, 0);
-  innerPanel.add(name);
+    const nameColor = CATEGORY_COLOR[keyword.category];
 
-  // Divider line
-  const divider = scene.add.rectangle(0, lY + 78, PANEL_W - 36, 1, 0xffd700, 0.4);
-  innerPanel.add(divider);
+    const badge = scene.add.text(cx - PANEL_W / 2 + PAD, cy - 80,
+      CATEGORY_LABEL[keyword.category],
+      { fontSize: '11px', fontStyle: 'italic', color: '#999999', fontFamily: FONTS.body },
+    ).setOrigin(0, 0);
 
-  // Definition — warm amber to match the tutorial text box style
-  const definition = scene.add.text(
-    lX + 18,
-    lY + 88,
-    keyword.definition,
-    {
-      fontSize: '13px',
-      color: '#e6c88a',
-      fontFamily: FONTS.body,
-      wordWrap: { width: PANEL_W - 36 },
-      lineSpacing: 4,
-    },
-  ).setOrigin(0, 0);
-  innerPanel.add(definition);
+    const name = scene.add.text(cx - PANEL_W / 2 + PAD, cy - 62,
+      keyword.keyword,
+      { fontSize: '22px', fontStyle: 'bold', color: nameColor, fontFamily: FONTS.body,
+        stroke: '#000000', strokeThickness: 3 },
+    ).setOrigin(0, 0);
 
-  // "Got it!" button — centered near panel bottom
-  const btnY = lY + PANEL_H - 30;
-  const btn = scene.add.text(
-    0,
-    btnY,
-    'Got it!  (Enter)',
-    {
-      fontSize: '15px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-      fontFamily: FONTS.body,
-      backgroundColor: '#2a1a00',
-      padding: { left: 18, right: 18, top: 6, bottom: 6 },
-    },
-  ).setOrigin(0.5).setInteractive({ useHandCursor: true });
-  btn.on('pointerover', () => btn.setColor(COLORS.accentHover));
-  btn.on('pointerout', () => btn.setColor(COLORS.accent));
-  innerPanel.add(btn);
+    const def = scene.add.text(cx - PANEL_W / 2 + PAD, cy - 20,
+      keyword.definition,
+      { fontSize: '13px', color: '#e6c88a', fontFamily: FONTS.body,
+        wordWrap: { width: PANEL_W - PAD * 2 }, lineSpacing: 4 },
+    ).setOrigin(0, 0);
 
+    panelDisplayH = 160;
+    panelTopY = cy - 90;
+
+    const bg = scene.add.rectangle(cx, cy - 90 + panelDisplayH / 2,
+      PANEL_W, panelDisplayH, 0x1a1008, 0.96,
+    ).setOrigin(0.5, 0.5).setInteractive();
+    bg.on('pointerdown', () => { /* swallow */ });
+    bg.setStrokeStyle(2, 0xffd700, 1);
+
+    overlay.add(bg);
+    overlay.add(badge);
+    overlay.add(name);
+    overlay.add(def);
+  }
+
+  // ── "Got it!" button ─────────────────────────────────────────────
+  const BTN_TARGET_W = 110;
+  const btnY = panelTopY + panelDisplayH + 22;
+  let btn: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
+
+  if (scene.textures.exists('btn_got_it')) {
+    const imgBtn = scene.add.image(cx, btnY, 'btn_got_it')
+      .setScale(BTN_TARGET_W / 1443)
+      .setInteractive({ useHandCursor: true });
+    imgBtn.on('pointerover', () => { imgBtn.setAlpha(0.82); imgBtn.setScale(BTN_TARGET_W / 1443 * 1.05); });
+    imgBtn.on('pointerout',  () => { imgBtn.setAlpha(1);    imgBtn.setScale(BTN_TARGET_W / 1443); });
+    overlay.add(imgBtn);
+    btn = imgBtn;
+  } else {
+    const txtBtn = scene.add.text(cx, btnY, 'Got it!  (Enter)',
+      { fontSize: '13px', fontStyle: 'bold', color: COLORS.accent,
+        fontFamily: FONTS.body, backgroundColor: '#2a1a00',
+        padding: { left: 12, right: 12, top: 4, bottom: 4 } },
+    ).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    txtBtn.on('pointerover', () => txtBtn.setColor(COLORS.accentHover));
+    txtBtn.on('pointerout',  () => txtBtn.setColor(COLORS.accent));
+    overlay.add(txtBtn);
+    btn = txtBtn;
+  }
+
+  // ── Dismiss logic ─────────────────────────────────────────────────
   let closed = false;
   const close = () => {
     if (closed) return;
@@ -140,9 +138,7 @@ export function openKeywordIntroOverlay(
   };
 
   const keyHandler = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      close();
-    }
+    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') close();
   };
   window.addEventListener('keydown', keyHandler);
 
@@ -151,18 +147,8 @@ export function openKeywordIntroOverlay(
   scene.events.once(Phaser.Scenes.Events.DESTROY, onShutdown);
 
   btn.on('pointerdown', close);
-  // Swallow clicks on the panel itself so backdrop-click-to-dismiss doesn't
-  // fire when the player clicks on the panel body. Backdrop click also
-  // dismisses (consistent with the glossary modal pattern).
   backdrop.on('pointerdown', close);
-  panelBg.on('pointerdown', () => { /* swallow */ });
 
-  // Fade-in (subtle — the player just resolved a card and is reading).
   overlay.setAlpha(0);
-  scene.tweens.add({
-    targets: overlay,
-    alpha: 1,
-    duration: 180,
-    ease: 'Sine.easeOut',
-  });
+  scene.tweens.add({ targets: overlay, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
 }
