@@ -1,6 +1,6 @@
 // Horizontal bottom-bar card queue for the combat scene.
-// Active card (slot 0) sits at x=400 (screen center); the staircase cascades
-// right so cards never overlap the SpeedPanelScene (x=8–276, depth 999).
+// Active card (slot 0) sits at x=120 (left side); the staircase cascades
+// down-right exactly like the original centered layout, just shifted left.
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
@@ -9,13 +9,14 @@ import { createCardVisual } from './CardVisual';
 const VISIBLE_COUNT = 3;
 
 // [centerX, centerY, scale, alpha]
-// Active card anchored at screen-center (x=400); queue cascades down-right.
+// Active card is rightmost/largest; queue cascades down-left getting smaller.
+// When played, remaining cards slide RIGHT (left→right flow).
 const SLOTS: [number, number, number, number][] = [
-  [400, 490, 0.62, 1.00],   // 0 — PLAYING (screen center)
-  [520, 510, 0.50, 0.70],   // 1 — NEXT
-  [600, 530, 0.38, 0.35],   // 2 — hint of next
+  [274, 510, 0.60, 1.00],   // 0 — PLAYING (right, large)
+  [164, 528, 0.48, 0.70],   // 1 — NEXT
+  [89,  542, 0.36, 0.35],   // 2 — hint of next
 ];
-const SLOT_INCOMING_X = 600; // same column as slot 2 — cards slide UP into it
+const SLOT_INCOMING_X = 120; // same column as slot 2 — cards slide UP into it
 const SLOT_INCOMING_Y = 650; // off-screen bottom
 
 export class CardQueueDisplay {
@@ -158,7 +159,7 @@ export class CardQueueDisplay {
   }
 
   onDeckReshuffled(): void {
-    const resetText = this.scene.add.text(480, 490, 'Deck Reset', {
+    const resetText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1], 'Deck Reset', {
       fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 
