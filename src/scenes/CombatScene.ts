@@ -29,6 +29,42 @@ import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { getEnemyAttackCards } from '../data/EnemyAttackCards';
+import { EnemyCardQueueDisplay } from '../ui/EnemyCardQueueDisplay';
+
+/** Maps enemy id → hit effect spritesheet key.
+ *  Defaults to 'fx_slash' for anything not listed. */
+const ENEMY_ATTACK_FX: Record<string, string> = {
+  // Slash (claws / blades)
+  werewolf:          'fx_slash',
+  ancient_tree:      'fx_slash',
+  corpse_eater:      'fx_slash',
+  skeleton:          'fx_slash',
+  vampire:           'fx_slash',
+  doom_knight:       'fx_slash',
+  bog_witch:         'fx_slash',
+  blighted_knight:   'fx_slash',
+  void_shade:        'fx_slash',
+  // Stomp (heavy / earth impact)
+  lava_golem:        'fx_stomp',
+  boss_iron_golem:   'fx_stomp',
+  earth_dragon:      'fx_stomp',
+  iron_golem:        'fx_stomp',
+  desert_golem:      'fx_stomp',
+  infernal_dragon:   'fx_stomp',
+  drowned_king:      'fx_stomp',
+  // Bite / Venom (slime / poison / acid)
+  slime:             'fx_bite',
+  red_slime:         'fx_bite',
+  toxic_gooze:       'fx_bite',
+  venomous_kobra:    'fx_bite',
+  depths_horror:     'fx_bite',
+  forge_slime:       'fx_bite',
+  giant_spider:      'fx_bite',
+  drowned_soldier:   'fx_bite',
+  necromancer:       'fx_bite',
+  // Remaining use slash as default
+};
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -46,6 +82,9 @@ export class CombatScene extends Scene {
   private _glossaryOpen = false;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
+
+  // Enemy attack-card queue — right-side mirror of the hero's card queue
+  private enemyCardQueue?: EnemyCardQueueDisplay;
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -96,12 +135,17 @@ export class CombatScene extends Scene {
   private onDeckReshuffled = () => this.cardQueue?.onDeckReshuffled();
 
   private onEnemyAttack = (data: GameEvents['combat:enemy-attack']) => {
+    this.enemyCardQueue?.onAttack();
     if (data.damage > 0) AudioManager.playSFX(this, 'sfx_hurt', 0.6);
     if (this.combatEffects) { this.combatEffects.floatingNumber(200, 320, data.damage, '#ff0000', '-'); this.combatEffects.screenShake(3, 150); }
     this.heroSprite.setTint(0xff0000);
     this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
-    // Enemy no longer plays an attack animation
-    // Just a small visual jump toward the player if it's an image/sprite
+    // Hit effect spritesheet over the hero
+    if (this.combatEffects) {
+      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_slash';
+      this.combatEffects.enemyAttackEffect(200, 320, fxKey);
+    }
+    // Visual jump toward the player
     if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
       this.tweens.add({
         targets: this.enemySprite,
@@ -460,9 +504,13 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this, this.enemyTextureKey);
       this.hud.setFlipCallback((flipping) => this.engine.setHourglassFlipping(flipping));
       this.cardQueue = new CardQueueDisplay(this);
+      // Enemy attack-card queue — right-side mirror of the hero queue. Fed the
+      // generic attacks this enemy can use (claw, smash, fire_breath, …).
+      this.enemyCardQueue = new EnemyCardQueueDisplay(this);
+      this.enemyCardQueue.setAttacks(getEnemyAttackCards(enemyDef.id));
       this.combatEffects = new CombatEffects(this);
       // Initialize HUD and Queue with initial state
-      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
+      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
       this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
 
       // Keyword glossary book icon — bottom-right corner. Pauses combat while open.
@@ -505,7 +553,7 @@ export class CombatScene extends Scene {
       // up so the player can read the explanation without enemies still
       // ticking down in the background.
       if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT) || this._glossaryOpen) {
-        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
+        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
         return;
       }
       // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
@@ -516,7 +564,7 @@ export class CombatScene extends Scene {
       const inBackground = typeof document !== 'undefined' && document.hidden;
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
-      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount());
+      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
       // Feed live effective stats so card headline numbers track status changes
       // (buffs, auras, stat_gain) in real time.
       this.pushLiveStats();
@@ -546,6 +594,7 @@ export class CombatScene extends Scene {
     eventBus.off('combat:enemy-attack', this.onEnemyAttack);
     eventBus.off('combat:end', this.onCombatEnd);
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
+    if (this.enemyCardQueue) { this.enemyCardQueue.destroy(); this.enemyCardQueue = undefined; }
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
     // Out of combat, card headline numbers fall back to the run's resolved stats.

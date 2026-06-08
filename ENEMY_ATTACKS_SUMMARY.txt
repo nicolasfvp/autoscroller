@@ -1,0 +1,106 @@
+═══════════════════════════════════════════════════════════════════════════════
+ ENEMY ATTACKS MAPPING - IMPLEMENTATION COMPLETE
+═══════════════════════════════════════════════════════════════════════════════
+
+SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ All 26 enemies analyzed and categorized
+✓ 14 generic attack types identified (reusable across enemies)
+✓ Attack mapping complete in EnemyAttackCards.ts
+✓ Asset specification document created
+
+═══════════════════════════════════════════════════════════════════════════════
+ ATTACK TYPES & DISTRIBUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+PHYSICAL ATTACKS (9)
+───────────────────────────────────────────────────────────────────────────────
+1. CLAW (3-hit)              → Lost Lizard, Pocket Cat, Werewolf, Infernal Dragon (4 enemies)
+2. BITE (1-hit)              → Corpse Eater (1 enemy)
+3. SLASH (1-hit, sword)      → Doom Knight (1 enemy)
+4. SMASH (1-hit, crushing)   → Lava Golem, Iron Golem, Desert Golem, Ancient Iron Golem (4 enemies)
+5. SLAM (1-hit, organic)     → Depths Horror (1 enemy)
+6. PIERCE (1-hit, stinger)   → Sand Scorpion (1 enemy)
+7. BONE THROW (1-hit, proj.)  → Skeleton (1 enemy)
+8. SPIT (projectile)         → Forge Slime (1 enemy)
+9. THORN SPIKE (burst)       → Ancient Tree (1 enemy)
+
+ELEMENTAL ATTACKS (3)
+───────────────────────────────────────────────────────────────────────────────
+10. FIRE BREATH              → Baby Dragon, Mutated Salamander, Fire Elemental, Infernal Dragon (4 enemies)
+11. WATER SURGE              → (Ready for future enemies)
+12. POISON                   → Mush, Toxic Gooze, Venomous Kobra (3 enemies, Sand Scorpion as pierce variant)
+
+MAGIC ATTACKS (2)
+───────────────────────────────────────────────────────────────────────────────
+13. DRAIN (heal)             → Vampire, Bog Witch (2 enemies)
+14. CURSE (debuff)           → Bog Witch (1 enemy)
+
+═══════════════════════════════════════════════════════════════════════════════
+ REUSE EFFICIENCY
+═══════════════════════════════════════════════════════════════════════════════
+
+14 generic attacks serve 26 enemies = 1.86 attack-per-card ratio (highly efficient)
+
+Most used attacks:
+  - CLAW: 4 enemies (Lost Lizard, Pocket Cat, Werewolf, Infernal Dragon)
+  - SMASH: 4 enemies (All 4 Golems)
+  - FIRE BREATH: 4 enemies (Both Dragons + 2 Fire creatures)
+  - POISON: 3+ enemies (Toxic creatures)
+
+═══════════════════════════════════════════════════════════════════════════════
+ GENERATION ROADMAP
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Phase 1 - Data & Mapping (COMPLETE)
+  ✓ Analyzed all 26 enemies
+  ✓ Created ENEMY_ATTACK_CARDS.ts with all 14 attacks
+  ✓ Created ENEMY_ATTACK_CARD_MAPPING with enemy → attacks
+  ✓ Created asset specification
+
+→ Phase 2 - Asset Generation (NEXT)
+  → Generate 14 PNG files (256×384px)
+  → Priority: CLAW, SMASH, FIRE BREATH, POISON (4 files = 4 enemies × 4 attacks)
+  → Secondary: BITE, SLASH, PIERCE, BONE_THROW, DRAIN, SPIT
+  → Tertiary: SLAM, THORN_SPIKE, CURSE, WATER_SURGE
+
+→ Phase 3 - Integration
+  → Register card assets in texture loader
+  → Create enemy card UI component
+  → Link to combat mechanics
+  → Test in combat scenes
+
+═══════════════════════════════════════════════════════════════════════════════
+ FILES CREATED
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ENEMY_ATTACKS_MAPPING.md
+   - Detailed breakdown of each enemy
+   - Rationale for attack choices
+   - Summary table by attack type
+
+2. ENEMY_CARD_ASSETS_SPEC.md
+   - Visual design specifications for all 14 cards
+   - Color palettes and composition guidelines
+   - Generation priority and file locations
+
+3. src/data/EnemyAttackCards.ts
+   - TypeScript interface for enemy attack cards
+   - ENEMY_ATTACK_CARDS: Record of all 14 attacks with stats
+   - ENEMY_ATTACK_CARD_MAPPING: Links enemies to their attacks
+   - Helper functions: getEnemyAttackCard(), getEnemyAttackCards()
+
+═══════════════════════════════════════════════════════════════════════════════
+ NEXT STEPS
+═══════════════════════════════════════════════════════════════════════════════
+
+You can now:
+
+1. Review the attack mappings (ENEMY_ATTACKS_MAPPING.md)
+2. Review asset specifications (ENEMY_CARD_ASSETS_SPEC.md)
+3. Approve or adjust attack assignments
+4. Generate assets in priority order (CLAW, SMASH, FIRE BREATH, POISON first)
+5. Integrate into combat UI
+
+═══════════════════════════════════════════════════════════════════════════════

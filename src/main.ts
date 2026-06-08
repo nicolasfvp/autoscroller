@@ -29,6 +29,7 @@ import { StartingDeckScene } from './scenes/StartingDeckScene'
 import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 import { DebugOverlayScene } from './scenes/DebugOverlayScene'
+import { CombatTestScene } from './scenes/CombatTestScene'
 import { SCENE_KEYS } from './state/SceneKeys'
 
 // Responsive scaling: the game is authored in 800×600 game-space (where every
@@ -122,6 +123,7 @@ const config: Phaser.Types.Core.GameConfig = {
         CardLibraryScene,
         SpeedPanelScene,
         DebugOverlayScene,
+        CombatTestScene,
     ]
 }
 

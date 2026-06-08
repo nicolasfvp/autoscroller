@@ -272,6 +272,19 @@ export class DebugOverlayScene extends Phaser.Scene {
     });
     y += BH + 2;
 
+    // Combat Test Scene
+    const ctBg = this._track(this.add.rectangle(mid, y + BH / 2, PW - 12, BH, 0x001a2a)
+      .setScrollFactor(0).setInteractive({ useHandCursor: true }));
+    this._track(this.add.text(mid, y + BH / 2, '⚔ COMBAT EFFECT TEST', { ...FONT_SM, color: '#88ddff' })
+      .setScrollFactor(0).setOrigin(0.5));
+    ctBg.on('pointerover', () => ctBg.setFillStyle(0x002a3a));
+    ctBg.on('pointerout',  () => ctBg.setFillStyle(0x001a2a));
+    ctBg.on('pointerdown', () => {
+      this.close();
+      this.scene.launch(SCENE_KEYS.COMBAT_TEST);
+    });
+    y += BH + 2;
+
     // BG Scale — ajusta tileScale dos backgrounds em tempo real
     this._sep(y); y += 4;
     this._track(this.add.text(tx, y, 'BG SCALE', { ...FONT_SM, color: C_DIM }).setScrollFactor(0));

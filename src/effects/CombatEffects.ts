@@ -154,6 +154,58 @@ export class CombatEffects {
             ease: 'Sine.easeInOut'
         });
     }
+
+    /** Play a looping status effect spritesheet anchored at (x, y) bottom-center.
+     *  Returns the sprite so the caller can destroy it when the status ends.
+     *  key: 'fx_fire' */
+    statusEffect(x: number, y: number, key: string, displayW: number = 200): Phaser.GameObjects.Sprite | null {
+        if (!this.scene.textures.exists(key)) return null;
+        const animKey = `__fx_status_${key}`;
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+        }
+        const src = this.scene.textures.get(key).getSourceImage() as HTMLImageElement;
+        const sc = displayW / (src.width / 4);
+        const sprite = this.scene.add.sprite(x, y, key)
+            .setScale(sc)
+            .setDepth(15)
+            .setAlpha(0.85)
+            .setOrigin(0.5, 1);
+        sprite.play(animKey);
+        return sprite;
+    }
+
+    /** Play a 4-frame hit effect spritesheet centered on (x, y).
+     *  key: 'fx_slash' | 'fx_stomp' | 'fx_bite' */
+    enemyAttackEffect(x: number, y: number, key: string): void {
+        if (!this.scene.textures.exists(key)) return;
+        const animKey = `__fx_anim_${key}`;
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
+                frameRate: 14,
+                repeat: 0,
+            });
+        }
+        // Display at 50% of native height so it fits over the hero area without dominating
+        const DISPLAY_H = 220;
+        const src = this.scene.textures.get(key).getSourceImage() as HTMLImageElement;
+        const frameW = src.width / 4;
+        const sc = DISPLAY_H / src.height;
+        const sprite = this.scene.add.sprite(x, y, key).setScale(sc).setDepth(20).setAlpha(0.92);
+        sprite.play(animKey);
+        sprite.once('animationcomplete', () => {
+            this.scene.tweens.add({ targets: sprite, alpha: 0, duration: 80, onComplete: () => sprite.destroy() });
+        });
+        // Unused — keeps TypeScript happy about frameW
+        void frameW;
+    }
 }
 
 export function createCombatEffects(scene: Scene): CombatEffects {

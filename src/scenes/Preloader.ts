@@ -178,7 +178,7 @@ export class Preloader extends Scene {
     this.load.image('status_panel', 'assets/ui/panels/status_panel.png');
     this.load.image('combat_hero_panel',    'assets/ui/battle/combat_hero_panel.png');
     this.load.image('combat_monster_panel', 'assets/ui/battle/combat_monster_panel.png');
-    this.load.spritesheet('hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 480, frameHeight: 952 });
+    this.load.spritesheet('hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
     this.load.image('combat_chip_panel', 'assets/ui/combat_chip_panel.png');
     this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
     this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
@@ -186,6 +186,15 @@ export class Preloader extends Scene {
     this.load.spritesheet('flame_selection', 'assets/ui/backgrounds/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
     this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
     this.load.image('fog', 'assets/ui/effects/fog.png');
+
+    // Combat hit effects — 4-frame spritesheets
+    const FX_W = 444; const FX_H = 887;
+    this.load.spritesheet('fx_slash', 'assets/effects/combat/fx_slash.png', { frameWidth: FX_W, frameHeight: FX_H });
+    this.load.spritesheet('fx_stomp', 'assets/effects/combat/fx_stomp.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_bite',  'assets/effects/combat/fx_bite.png',  { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_fire',  'assets/effects/combat/fx_fire.png',  { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_bleed', 'assets/effects/combat/fx_bleed.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_stun',  'assets/effects/combat/fx_stun.png',  { frameWidth: 1024, frameHeight: 1024 });
 
     // Tutorial step text-box images (pre-rendered via ComfyUI)
     const tutorialSteps = [
@@ -487,6 +496,16 @@ this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     ];
     for (const id of newCardIds) {
       this.load.image(`card_${id}`, `assets/cards/${id}.png`);
+    }
+
+    // Enemy attack cards (generic attacks shared across many enemies)
+    const enemyAttackIds = [
+      'claw', 'bite', 'slash', 'smash', 'slam', 'pierce', 'bone_throw',
+      'spit', 'thorn_spike', 'fire_breath', 'water_surge', 'poison',
+      'drain', 'curse',
+    ];
+    for (const id of enemyAttackIds) {
+      this.load.image(`enemy/enemy_${id}`, `assets/cards/enemy/enemy_${id}.png`);
     }
 
 

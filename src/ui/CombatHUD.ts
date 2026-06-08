@@ -61,8 +61,12 @@ const E_NAME_Y = RP.y + (0.5567 - 0.2163 / 2) * RP.h - 3;
 const TROUGH_HP   = 0x200808;
 const TROUGH_STA  = 0x181000;
 const TROUGH_MANA = 0x0e0820;
-// Ghost alpha — lost portion appears as a dim semi-transparent echo of the fill
-const GHOST_ALPHA = 0.38;
+// Ghost colours — contrasting with each bar so lost health is clearly visible
+const GHOST_HP   = 0xff8800; // HP verde  → ghost laranja
+const GHOST_STA  = 0xffee44; // STA laranja → ghost amarelo claro
+const GHOST_MANA = 0x44ddff; // Mana roxa  → ghost ciano
+const GHOST_ENEMY_HP = 0xff8800; // HP vermelho → ghost laranja
+const GHOST_ALPHA = 0.80;
 
 // Status-chip row geometry (effect icons row under each panel)
 const CHIP_POOL_SIZE = 10;
@@ -221,9 +225,9 @@ export class CombatHUD {
 
     // Stat bars sit BEHIND the panel art (trough → ghost → fill); the asset on
     // top reveals each bar through its baked-in transparent window.
-    const makeBar = (cy: number, fillColor: number, troughColor: number, valSize: string) => {
+    const makeBar = (cy: number, fillColor: number, troughColor: number, valSize: string, ghostColor: number) => {
       const trough = s.add.rectangle(H_BAR_CX, cy, H_BAR_MAXW, H_WIN_H, troughColor).setOrigin(0.5);
-      const ghost  = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5).setAlpha(0);
+      const ghost  = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, ghostColor).setOrigin(0, 0.5).setAlpha(0);
       const fill   = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5);
       const val    = s.add.text(H_BAR_CX, cy, '', {
         fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
@@ -233,9 +237,9 @@ export class CombatHUD {
       return { ghost, fill, val };
     };
 
-    const hp  = makeBar(H_ROW_CY[0], 0x22cc44, TROUGH_HP,   '13px');
-    const sta = makeBar(H_ROW_CY[1], 0xf0a020, TROUGH_STA,  '12px');
-    const mp  = makeBar(H_ROW_CY[2], 0x9966ff, TROUGH_MANA, '12px');
+    const hp  = makeBar(H_ROW_CY[0], 0x22cc44, TROUGH_HP,   '13px', GHOST_HP);
+    const sta = makeBar(H_ROW_CY[1], 0xf0a020, TROUGH_STA,  '12px', GHOST_STA);
+    const mp  = makeBar(H_ROW_CY[2], 0x9966ff, TROUGH_MANA, '12px', GHOST_MANA);
     this.hpBar = hp.fill;       this.hpGhost = hp.ghost;       this.hpText = hp.val;
     this.staminaBar = sta.fill; this.staminaGhost = sta.ghost; this.staminaText = sta.val;
     this.manaBar = mp.fill;     this.manaGhost = mp.ghost;     this.manaText = mp.val;
@@ -258,7 +262,7 @@ export class CombatHUD {
 
     // HP bar behind the panel art (trough → ghost → fill)
     const trough = s.add.rectangle(E_BAR_CX, E_ROW_CY, E_BAR_MAXW, E_WIN_H, TROUGH_HP).setOrigin(0.5);
-    this.enemyHpGhost = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5).setAlpha(0);
+    this.enemyHpGhost = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, GHOST_ENEMY_HP).setOrigin(0, 0.5).setAlpha(0);
     this.enemyHpBar   = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5);
     this.container.add([trough, this.enemyHpGhost, this.enemyHpBar]);
 
@@ -664,7 +668,6 @@ export class CombatHUD {
       // Damage: fill snaps to new value; ghost (semi-transparent echo of fill
       // colour) holds the old width and drains down to meet it.
       bar.width = wTo;
-      ghost.setFillStyle(getColor(clamp(from)));
       ghost.width = Math.max(ghost.width, maxW * clamp(from));
       ghost.setAlpha(GHOST_ALPHA);
       this.setGhostTween(key, this.scene.tweens.add({

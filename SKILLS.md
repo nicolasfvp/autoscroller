@@ -148,6 +148,7 @@ Existem dois métodos e cada workflow exige um específico. **Nunca trocar.**
 | Workflow | Método correto | Por quê |
 |---|---|---|
 | `rmv-background.json` | **API Python direta** (`POST /api/prompt`) | Não tem nó de prompt — o MCP falha com "Could not find a prompt node" |
+| `good-rmv-background.json` | **`mcp__comfyui__generate_asset`** | Usa `BriaRemoveImageBackground` que exige sessão autenticada — API direta recebe "Unauthorized" |
 | `image-reference-to-image.json` | **`mcp__comfyui__generate_asset`** | Usa `OpenAIGPTImageNodeV2` que exige sessão autenticada — chamada Python direta recebe "Unauthorized" |
 | `ui_button.json` | **`mcp__comfyui__generate_asset`** | Mesmo motivo: nó OpenAI requer sessão |
 | `monster.json` | **`mcp__comfyui__generate_asset`** | Mesmo motivo |
@@ -158,6 +159,65 @@ Se o workflow usa apenas nós locais (birefnet, ControlNet, etc.) → usar API d
 **O erro "Unauthorized: Please login first"** ao chamar via Python significa que
 você usou API direta num workflow que exige sessão. A solução é trocar para o MCP,
 **não** tentar recuperar cookie, não tentar reautenticar. Só trocar o método.
+
+---
+
+## Geração de Spritesheets — fluxo frame a frame
+
+Para gerar um spritesheet de 4 frames com consistência visual:
+
+```
+Frame 1 — gerar sem reference_image (define o estilo base)
+      ↓
+Frame 2 — gerar com reference_image = frame 1 (mantém consistência)
+      ↓
+Frame 3 — gerar com reference_image = frame 2
+      ↓
+Frame 4 — gerar com reference_image = frame 3
+      ↓
+Montar spritesheet horizontal com System.Drawing (PowerShell)
+      ↓
+Aplicar rmv-background good no spritesheet final
+```
+
+### Regras
+
+- **Nunca pedir "spritesheet" no prompt** — o modelo gera uma grade bagunçada. Gerar um frame por vez.
+- **Cada frame usa o anterior como `reference_image`** — garante que estilo, proporção e paleta se mantenham coerentes entre frames.
+- **Aplicar rmv-background DEPOIS de montar o spritesheet**, não em cada frame separado — economiza crédito.
+- **`reference_image` deve ser ≤ 512×512** — imagens grandes geram input tokens absurdos (1500+) e desperdiçam crédito. Se o frame gerado for maior, não usar como referência direta.
+- **Nunca gerar múltiplas variações sem aprovação** — gerar um frame, mostrar, aguardar "continue" ou feedback antes do próximo.
+- **CRÍTICO: Ajustar dimensões do workflow ANTES de gerar** — sempre que gerar um sprite baseado numa imagem de referência, verificar as dimensões da imagem de entrada e **alterar `model.custom_width` e `model.custom_height` no workflow `image-reference-to-image.json`** para que a saída tenha as mesmas dimensões. Isso evita upscaling/downscaling indesejado e garante consistência entre frames.
+
+### Montar o spritesheet com PowerShell
+
+```powershell
+Add-Type -AssemblyName System.Drawing
+$frames = @("frame1.png","frame2.png","frame3.png","frame4.png")
+$img0 = [System.Drawing.Bitmap]::new($frames[0])
+$fw = $img0.Width; $fh = $img0.Height; $img0.Dispose()
+$sheet = [System.Drawing.Bitmap]::new($fw * 4, $fh, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$g = [System.Drawing.Graphics]::FromImage($sheet)
+$g.Clear([System.Drawing.Color]::Transparent)
+for ($i = 0; $i -lt 4; $i++) {
+  $src = [System.Drawing.Bitmap]::new($frames[$i])
+  $g.DrawImage($src, $i * $fw, 0, $fw, $fh)
+  $src.Dispose()
+}
+$g.Dispose()
+$sheet.Save("fx_output.png", [System.Drawing.Imaging.ImageFormat]::Png)
+$sheet.Dispose()
+```
+
+### Preloader — ajustar frameWidth após rmv-background
+
+O rmv-background pode alterar as dimensões do spritesheet. Sempre verificar com:
+```powershell
+$img = [System.Drawing.Image]::FromFile("fx_output.png")
+Write-Output "$($img.Width) x $($img.Height) → frameW=$([int]($img.Width/4))"
+$img.Dispose()
+```
+E atualizar o `frameWidth`/`frameHeight` no Preloader com os valores reais.
 
 ---
 

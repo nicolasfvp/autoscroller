@@ -686,4 +686,12 @@ export class CombatEngine {
     const dexReduction = Math.min(0.60, this.state.heroDexterity * 0.02);
     return effectiveCooldown * 1000 * (1 - dexReduction);
   }
+
+  getEnemyCooldownTimer(): number {
+    return this.enemyAI.getCooldownTimer();
+  }
+
+  getEnemyMaxCooldown(): number {
+    return this.state.enemyAttackCooldown;
+  }
 }

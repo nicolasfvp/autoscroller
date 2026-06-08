@@ -92,6 +92,9 @@ export interface CardFaceOptions {
   hover?: boolean;
   onClick?: (() => void) | true;
   upgraded?: boolean;
+  /** Override the art texture key. Defaults to `card_${card.id}`.
+   *  Used by enemy attack cards whose art lives under `enemy/enemy_*`. */
+  artKey?: string;
 }
 
 interface SlotBox { x: number; y: number; w: number; h: number; cx: number; cy: number }
@@ -122,6 +125,32 @@ export function createCardFace(
   const card = getCardById(cardId);
   const container = scene.add.container(x, y);
   if (!card) return container;
+  return renderCardFace(scene, container, card, cardId, options);
+}
+
+/**
+ * Render a card face from an already-resolved CardDefinition, skipping the
+ * DataLoader lookup. Lets non-hero cards (e.g. enemy attack cards, which live
+ * in their own registry) reuse the exact same mold, art-fit, and layout.
+ */
+export function createCardFaceFromDef(
+  scene: Phaser.Scene,
+  x: number,
+  y: number,
+  card: CardDefinition,
+  options: CardFaceOptions = {},
+): Phaser.GameObjects.Container {
+  const container = scene.add.container(x, y);
+  return renderCardFace(scene, container, card, card.id, options);
+}
+
+function renderCardFace(
+  scene: Phaser.Scene,
+  container: Phaser.GameObjects.Container,
+  card: CardDefinition,
+  cardId: string,
+  options: CardFaceOptions,
+): Phaser.GameObjects.Container {
 
   const base = typeof options.baseSize === 'object'
     ? options.baseSize
@@ -197,7 +226,7 @@ export function createCardFace(
   // 1:1 so the square source is shown almost in full; the wider popup slot
   // crops top/bottom to fill horizontally (action stays in view because all
   // generated art is composed with the action dead-center).
-  drawArt(scene, container, card, artSlot);
+  drawArt(scene, container, card, artSlot, 'cover', options.artKey);
   drawName(scene, container, card, isUpgraded, nameSlot);
   const hasSecondaryCosts = buildSecondaryCostRows(card, options.upgraded ?? resolveUpgradeFlag(cardId)).length > 0;
   drawElements(scene, container, card, hasSecondaryCosts ? elemSlot : secondarySlot);
@@ -222,7 +251,7 @@ export function createCardFace(
       cursor: 'pointer',
     });
   }
-  if (options.hover !== false) attachHover(scene, container, y);
+  if (options.hover !== false) attachHover(scene, container, container.y);
   if (options.onClick) {
     container.on('pointerdown', () => {
       if (typeof options.onClick === 'function') options.onClick();
@@ -471,8 +500,9 @@ function drawArt(
   card: CardDefinition,
   slot: SlotBox,
   fitMode: 'cover' | 'contain' = 'cover',
+  artKey?: string,
 ): void {
-  const key = `card_${card.id}`;
+  const key = artKey ?? `card_${card.id}`;
   if (!scene.textures.exists(key)) {
     const fallback: Record<string, string> = { attack: '⚔️', defense: '🛡️', magic: '✨' };
     parent.add(
