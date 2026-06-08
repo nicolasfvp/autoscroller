@@ -1,0 +1,77 @@
+{
+  "matchups": [
+    {
+      "id": "burn-baseline-vs-dk",
+      "label": "BASELINE 12-card burn vs doom_knight (no overrides)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire", "t1-fire", "t2-fire-fire", "t3-agility-fire-fire",
+        "t2-fire-water", "t3-attack-fire-fire", "t2-air-fire", "t3-agility-fire-water",
+        "t1-fire", "t2-fire-fire", "t3-fire-fire-fire", "t2-agility-fire"
+      ],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "burn-P1-vs-dk",
+      "label": "PROPOSED P1-2+P1-3 12-card burn vs doom_knight",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire", "t1-fire", "t2-fire-fire", "t3-agility-fire-fire",
+        "t2-fire-water", "t3-attack-fire-fire", "t2-air-fire", "t3-agility-fire-water",
+        "t1-fire", "t2-fire-fire", "t3-fire-fire-fire", "t2-agility-fire"
+      ],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [
+          { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" },
+          { "type": "damage", "value": 2, "target": "enemy" }
+        ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "direct-baseline-vs-dk",
+      "label": "BASELINE fire/air direct mage vs doom_knight",
+      "archetype": "direct-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire", "t2-fire-water", "t2-fire-fire", "t1-fire", "t2-air-fire",
+        "t3-attack-attack-fire", "t2-earth-fire", "t3-agility-fire-water", "t1-water",
+        "t2-water-water", "t3-air-attack-fire", "t2-agility-fire"
+      ],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "direct-P1-vs-dk",
+      "label": "PROPOSED P1-2+P1-3 fire/air direct mage vs doom_knight",
+      "archetype": "direct-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 520,
+      "deck": [
+        "t2-agility-fire", "t2-fire-water", "t2-fire-fire", "t1-fire", "t2-air-fire",
+        "t3-attack-attack-fire", "t2-earth-fire", "t3-agility-fire-water", "t1-water",
+        "t2-water-water", "t3-air-attack-fire", "t2-agility-fire"
+      ],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [
+          { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" },
+          { "type": "damage", "value": 2, "target": "enemy" }
+        ] }
+      }
+    }
+  ]
+}

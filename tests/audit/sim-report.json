@@ -245,7 +245,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 9,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -260,7 +260,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 9,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -663,11 +663,11 @@
       "agility"
     ],
     "category": "attack",
-    "description": "Deal 4. Deal 4.",
+    "description": "Deal 4 twice.",
     "cost": {
       "stamina": 1
     },
-    "cooldown": 0.9,
+    "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
     "exhaust": false,
@@ -906,7 +906,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 18,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -921,7 +921,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 18,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -996,7 +996,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "For 6 seconds: every time you hit an enemy, deal 3.",
+    "description": "For 6 seconds, every time you hit an enemy, deal 3.",
     "cost": {
       "stamina": 1
     },
@@ -2904,7 +2904,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 9,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -2919,7 +2919,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 9,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -3346,7 +3346,7 @@
     "cost": {
       "stamina": 1
     },
-    "cooldown": 0.9,
+    "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
     "exhaust": false,
@@ -3590,7 +3590,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 18,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -3605,7 +3605,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 18,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -3681,7 +3681,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "For 10 seconds: every time you hit an enemy, apply 1[bleed]([dex]). Vengeance: For 4 seconds: every time you hit an enemy, apply 1[bleed]([dex]).",
+    "description": "For 10 seconds, every time you hit an enemy, apply 1[bleed]([dex]). Vengeance: +4 seconds.",
     "cost": {
       "stamina": 1
     },
@@ -4044,7 +4044,7 @@
       "fire"
     ],
     "category": "magic",
-    "description": "Deal 4([str]). Deal 3 damage per [burn] on enemy. Apply 3[burn].",
+    "description": "Deal 4([int]). Consume all [burn] and deal 3 damage per [burn] consumed. Apply 3[burn].",
     "cost": {
       "mana": 1
     },
@@ -4058,7 +4058,7 @@
         "value": 4,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "int",
           "per": 2,
           "value": 1
         }
@@ -4102,7 +4102,7 @@
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 29,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -4117,7 +4117,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 29,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -4142,7 +4142,7 @@
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 4,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -4157,7 +4157,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -4302,7 +4302,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 4,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -4317,7 +4317,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -4393,7 +4393,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 1[stun]([int]). Gain 4[armor]([vit]). Vengeance: apply 1 more [stun]([int]).",
+    "description": "Apply 1[stun]([int]). Vengeance: apply 1 more [stun]([int]). Gain 4[armor]([vit]).",
     "cost": {
       "mana": 1
     },
@@ -4752,8 +4752,10 @@
       "air"
     ],
     "category": "magic",
-    "description": "Deal 4([str]). Haste 20% for 5 seconds. Gain 1[mana].",
-    "cost": null,
+    "description": "Deal 4([dex]). Haste 20% for 5 seconds. Gain 1[mana].",
+    "cost": {
+      "mana": 1
+    },
     "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
@@ -4764,7 +4766,7 @@
         "value": 4,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "dex",
           "per": 2,
           "value": 1
         }
@@ -4808,7 +4810,7 @@
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 29,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -4823,12 +4825,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 29,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 4,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -4843,7 +4845,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -5008,7 +5010,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 4,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -5023,7 +5025,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -5099,7 +5101,7 @@
       "earth"
     ],
     "category": "magic",
-    "description": "If enemy is [stun]: deal 5([int]) more. Apply 1[stun]([int]). Apply 4[slow]([int]).",
+    "description": "If enemy is [stun]: Deal 5([int]). Apply 1[stun]([int]). Apply 4[slow]([int]).",
     "cost": {
       "mana": 1
     },
@@ -5460,9 +5462,9 @@
     "category": "attack",
     "description": "Deal 8([dex]).",
     "cost": {
-      "stamina": 1
+      "stamina": 2
     },
-    "cooldown": 0.8,
+    "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
     "exhaust": false,
@@ -5484,7 +5486,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5504,7 +5506,7 @@
         "damageDealt": 26,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5524,7 +5526,7 @@
         "damageDealt": 18,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5544,7 +5546,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5564,7 +5566,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5584,7 +5586,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5604,7 +5606,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5624,7 +5626,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5644,7 +5646,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5664,7 +5666,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5684,7 +5686,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5701,10 +5703,10 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5716,7 +5718,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -5724,7 +5726,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5744,7 +5746,7 @@
         "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5764,7 +5766,7 @@
         "damageDealt": 1,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -5796,7 +5798,7 @@
     "cost": {
       "stamina": 1
     },
-    "cooldown": 1.1,
+    "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
     "exhaust": false,
@@ -6054,7 +6056,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 5,
+        "damageDealt": 10,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -6069,7 +6071,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 5,
+        "resultTotalDamage": 10,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -6145,8 +6147,10 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Gain 5[armor]([dex]). Gain 1[stam]. Brace: Deal 4.",
-    "cost": null,
+    "description": "Gain 5[armor]([vit]). Gain 1[stam]. Brace: Deal 4.",
+    "cost": {
+      "stamina": 1
+    },
     "cooldown": 1.3,
     "targeting": "self",
     "rarity": "common",
@@ -6157,7 +6161,7 @@
         "value": 5,
         "target": "self",
         "scale": {
-          "stat": "dex",
+          "stat": "vit",
           "per": 2,
           "value": 1
         }
@@ -6225,7 +6229,7 @@
       "dex_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 10,
+        "armorGained": 5,
         "staminaSpent": 0,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -6240,7 +6244,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 10
+        "resultArmorGained": 5
       },
       "int_10": {
         "damageDealt": 0,
@@ -6285,7 +6289,7 @@
       "vit_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 5,
+        "armorGained": 10,
         "staminaSpent": 0,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -6300,7 +6304,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 5
+        "resultArmorGained": 10
       },
       "enemy_bleed_5": {
         "damageDealt": 0,
@@ -6498,7 +6502,7 @@
     "cost": {
       "mana": 1
     },
-    "cooldown": 1.1,
+    "cooldown": 1.2,
     "targeting": "random",
     "rarity": "common",
     "exhaust": false,
@@ -6563,7 +6567,7 @@
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 8,
+        "damageDealt": 18,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -6578,7 +6582,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 18,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -6743,7 +6747,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 5,
+        "damageDealt": 10,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -6758,7 +6762,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 5,
+        "resultTotalDamage": 10,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -6834,8 +6838,10 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 3([spi]). Gain 1[stam]. For 6 seconds: +1 [dex]. Apply 1[slow].",
-    "cost": null,
+    "description": "Heal 3([spi]). Gain 1[stam]. Apply 1[slow]. For 6 seconds, +1[dex].",
+    "cost": {
+      "stamina": 1
+    },
     "cooldown": 1.3,
     "targeting": "self",
     "rarity": "common",
@@ -7191,7 +7197,7 @@
     "cost": {
       "mana": 1
     },
-    "cooldown": 1.1,
+    "cooldown": 1.2,
     "targeting": "single",
     "rarity": "common",
     "exhaust": false,
@@ -7265,7 +7271,7 @@
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 6,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -7280,7 +7286,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -7445,7 +7451,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 3,
+        "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -7460,7 +7466,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 3,
+        "resultTotalDamage": 8,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -7789,7 +7795,7 @@
         "resultArmorGained": 6
       },
       "hero_rage_5": {
-        "damageDealt": 7,
+        "damageDealt": 12,
         "selfDamage": 0,
         "armorGained": 6,
         "staminaSpent": 1,
@@ -7804,7 +7810,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 7,
+        "resultTotalDamage": 12,
         "resultHealed": 0,
         "resultArmorGained": 6
       },
@@ -7880,7 +7886,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Lose 4[HP] (Pierce). Deal 12([str]). Gain 2([str])[rage]. Gain 1[stam].",
+    "description": "Lose 4[HP], ignoring your [armor]. Deal 12([str]). Gain 2([str])[rage]. Gain 1[stam].",
     "cost": {
       "stamina": 1
     },
@@ -8145,7 +8151,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 17,
         "selfDamage": 4,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -8160,7 +8166,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 17,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -8480,7 +8486,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -8495,7 +8501,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 5,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -8571,7 +8577,7 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Apply 3[burn]([int]). If enemy has [bleed]: Apply 3[burn]([int]).",
+    "description": "Apply 3[burn]([int]). If enemy has [bleed]: apply 3 more [burn]([int]).",
     "cost": {
       "stamina": 1
     },
@@ -8920,7 +8926,7 @@
       "water"
     ],
     "category": "attack",
-    "description": "Lose 5[HP] (Pierce). Gain 1[stam]([spi]). Gain 1[mana]([spi]). For 6 seconds: every time you lose [HP], gain 1[rage].",
+    "description": "Gain 1[stam]([spi]) and 1[mana]([spi]). Gain 3[rage].",
     "cost": {
       "stamina": 1
     },
@@ -8929,12 +8935,6 @@
     "rarity": "common",
     "exhaust": false,
     "effects": [
-      {
-        "type": "damage",
-        "value": 5,
-        "target": "self",
-        "pierce_armor": true
-      },
       {
         "type": "stamina",
         "value": 1,
@@ -8956,24 +8956,17 @@
         }
       },
       {
-        "type": "aura",
-        "value": 0,
+        "type": "stack",
+        "value": 3,
         "target": "self",
-        "ttl_ms": 6000,
-        "trigger": "on_self_damage",
-        "then": {
-          "type": "stack",
-          "value": 1,
-          "target": "self",
-          "stack": "rage"
-        }
+        "stack": "rage"
       }
     ],
     "upgraded": null,
     "scenarios": {
       "baseline": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -8982,10 +8975,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -8993,7 +8986,7 @@
       },
       "str_10": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9002,10 +8995,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9013,7 +9006,7 @@
       },
       "dex_10": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9022,10 +9015,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9033,7 +9026,7 @@
       },
       "int_10": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9042,10 +9035,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9053,7 +9046,7 @@
       },
       "spi_10": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9062,10 +9055,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9073,7 +9066,7 @@
       },
       "vit_10": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9082,10 +9075,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9093,7 +9086,7 @@
       },
       "enemy_bleed_5": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9102,10 +9095,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9113,7 +9106,7 @@
       },
       "enemy_burn_5": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9122,10 +9115,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9133,7 +9126,7 @@
       },
       "enemy_poison_5": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9142,10 +9135,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9153,7 +9146,7 @@
       },
       "enemy_slow_5": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9162,10 +9155,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9173,7 +9166,7 @@
       },
       "enemy_stunned": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9182,10 +9175,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9193,7 +9186,7 @@
       },
       "hero_rage_5": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9202,10 +9195,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9213,7 +9206,7 @@
       },
       "hero_low_hp": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9222,10 +9215,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9233,7 +9226,7 @@
       },
       "hero_armored": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9242,10 +9235,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9253,7 +9246,7 @@
       },
       "enemy_armored": {
         "damageDealt": 0,
-        "selfDamage": 5,
+        "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
         "manaSpent": 0,
@@ -9262,10 +9255,10 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": 0,
+        "heroRage": 3,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
@@ -9536,7 +9529,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -9551,7 +9544,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -9627,7 +9620,7 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Gain 6[armor]([vit]). Deal 4, +1([str]) damage per 4[armor] you have.",
+    "description": "Gain 6[armor]([vit]). Deal 4, +1 damage per 4[armor] you have.",
     "cost": {
       "stamina": 1
     },
@@ -9881,7 +9874,7 @@
         "resultArmorGained": 6
       },
       "hero_rage_5": {
-        "damageDealt": 5,
+        "damageDealt": 10,
         "selfDamage": 0,
         "armorGained": 6,
         "staminaSpent": 1,
@@ -9896,7 +9889,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 5,
+        "resultTotalDamage": 10,
         "resultHealed": 0,
         "resultArmorGained": 6
       },
@@ -9972,7 +9965,7 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Gain 4[armor]([vit]). For 8 seconds: every attack deals 1 more damage per [rage].",
+    "description": "Gain 4[armor]([vit]). For 8 seconds, every attack deals 1 more damage per [rage].",
     "cost": {
       "stamina": 1
     },
@@ -10317,7 +10310,7 @@
       "fire"
     ],
     "category": "magic",
-    "description": "Apply 2[burn]([int]). Vengeance: Apply 1[bleed] for each [burn] on enemy.",
+    "description": "Apply 2[burn]([int]). Vengeance: Apply 1[bleed] per [burn] on enemy.",
     "cost": {
       "stamina": 1
     },
@@ -10663,8 +10656,10 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 5([spi]). Apply 2[bleed] to yourself. Vengeance: gain 1[spi] this combat (max 4 per combat).",
-    "cost": null,
+    "description": "Heal 5([spi]). Apply 2[bleed] to yourself. Vengeance: Gain 1[spi] this combat (max 4 per combat).",
+    "cost": {
+      "stamina": 1
+    },
     "cooldown": 1.5,
     "targeting": "self",
     "rarity": "common",
@@ -10703,7 +10698,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10723,7 +10718,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10743,7 +10738,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10763,7 +10758,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10783,7 +10778,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10803,7 +10798,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10823,7 +10818,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10843,7 +10838,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10863,7 +10858,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10883,7 +10878,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10903,7 +10898,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10923,7 +10918,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10943,7 +10938,7 @@
         "damageDealt": 0,
         "selfDamage": -5,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10963,7 +10958,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -10983,7 +10978,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11012,7 +11007,9 @@
     ],
     "category": "defense",
     "description": "Deal 5([str]). Vengeance: deal 3 more. Haste 15% for 4 seconds.",
-    "cost": null,
+    "cost": {
+      "stamina": 1
+    },
     "cooldown": 1.3,
     "targeting": "self",
     "rarity": "common",
@@ -11053,7 +11050,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11073,7 +11070,7 @@
         "damageDealt": 32,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11093,7 +11090,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11113,7 +11110,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11133,7 +11130,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11153,7 +11150,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11173,7 +11170,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11193,7 +11190,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11213,7 +11210,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11233,7 +11230,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11253,7 +11250,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11270,10 +11267,10 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 5,
+        "damageDealt": 10,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11285,7 +11282,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 5,
+        "resultTotalDamage": 10,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -11293,7 +11290,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11313,7 +11310,7 @@
         "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11333,7 +11330,7 @@
         "damageDealt": 1,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -11621,7 +11618,7 @@
         "resultArmorGained": 8
       },
       "hero_rage_5": {
-        "damageDealt": 5,
+        "damageDealt": 10,
         "selfDamage": 0,
         "armorGained": 8,
         "staminaSpent": 1,
@@ -11636,7 +11633,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 5,
+        "resultTotalDamage": 10,
         "resultHealed": 0,
         "resultArmorGained": 8
       },
@@ -11712,7 +11709,7 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 5[armor]([vit]). For 6 seconds: if you gain 12+ [armor], gain 1[vit] this combat (max 3 per combat).",
+    "description": "Gain 5[armor]([vit]). For 6 seconds, if you gain at least 12[armor], gain 1[vit] this combat (max 3 per combat).",
     "cost": {
       "stamina": 1
     },
@@ -12066,7 +12063,7 @@
       "water"
     ],
     "category": "defense",
-    "description": "Gain 5[armor]([vit]). Heal 3. Gain 1[stam]. For 6 seconds: +1 [spi].",
+    "description": "Gain 5[armor]([vit]). Heal 3. Gain 1[stam]. For 6 seconds, +1[spi].",
     "cost": {
       "mana": 1
     },
@@ -12421,7 +12418,9 @@
     ],
     "category": "defense",
     "description": "Gain 5[armor]([vit]). Haste 15% for 4 seconds.",
-    "cost": null,
+    "cost": {
+      "stamina": 1
+    },
     "cooldown": 1.4,
     "targeting": "self",
     "rarity": "common",
@@ -12454,7 +12453,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12474,7 +12473,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12494,7 +12493,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12514,7 +12513,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12534,7 +12533,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12554,7 +12553,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 8,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12574,7 +12573,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12594,7 +12593,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12614,7 +12613,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12634,7 +12633,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12654,7 +12653,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12674,7 +12673,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12694,7 +12693,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12714,7 +12713,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12734,7 +12733,7 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 5,
-        "staminaSpent": 0,
+        "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -12762,7 +12761,7 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 8[armor]([vit]). If [armor] is at least 10: deal 6 more Pierce.",
+    "description": "Gain 8[armor]([vit]). If [armor] is at least 10: Deal 6 Pierce.",
     "cost": {
       "stamina": 1
     },
@@ -13105,7 +13104,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Deal 4([str]). If enemy has [burn]: +4 damage. Heal 4. Gain 1[stam].",
+    "description": "Deal 4([int]). If enemy has [burn]: +4 damage. Heal 4. Gain 1[stam].",
     "cost": {
       "mana": 1
     },
@@ -13119,7 +13118,7 @@
         "value": 4,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "int",
           "per": 2,
           "value": 1
         }
@@ -13166,7 +13165,7 @@
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 29,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -13181,7 +13180,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 29,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -13206,7 +13205,7 @@
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 4,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -13221,7 +13220,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -13366,7 +13365,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 4,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -13381,7 +13380,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -13457,7 +13456,7 @@
       "fire"
     ],
     "category": "magic",
-    "description": "For 4 seconds: if you play 3 or more cards, apply 10[burn]([int]).",
+    "description": "For 4 seconds, if you play 3 or more cards, apply 10[burn]([int]).",
     "cost": {
       "mana": 1
     },
@@ -13802,7 +13801,7 @@
       "fire"
     ],
     "category": "magic",
-    "description": "Gain 7[armor]. Deal 6([str]). Apply 2[burn].",
+    "description": "Gain 7[armor]. Deal 6([int]). Apply 2[burn].",
     "cost": {
       "mana": 2
     },
@@ -13821,7 +13820,7 @@
         "value": 6,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "int",
           "per": 2,
           "value": 1
         }
@@ -13856,7 +13855,7 @@
         "resultArmorGained": 7
       },
       "str_10": {
-        "damageDealt": 35,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 7,
         "staminaSpent": 0,
@@ -13871,7 +13870,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 35,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 7
       },
@@ -13896,7 +13895,7 @@
         "resultArmorGained": 7
       },
       "int_10": {
-        "damageDealt": 6,
+        "damageDealt": 25,
         "selfDamage": 0,
         "armorGained": 7,
         "staminaSpent": 0,
@@ -13911,7 +13910,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 25,
         "resultHealed": 0,
         "resultArmorGained": 7
       },
@@ -14056,7 +14055,7 @@
         "resultArmorGained": 7
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 7,
         "staminaSpent": 0,
@@ -14071,7 +14070,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 7
       },
@@ -14147,7 +14146,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 3([spi]). Haste 15% for 5 seconds. For 6 seconds: +1 [int]. Gain 1[mana].",
+    "description": "Heal 3([spi]). Haste 15% for 5 seconds. Gain 1[mana]. For 6 seconds, +1[int].",
     "cost": {
       "mana": 1
     },
@@ -14506,7 +14505,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Gain 4[armor]([vit]). Heal 3([spi]). Deal 3([str]). Apply 2[poison]([int]).",
+    "description": "Gain 4[armor]([vit]). Heal 3([spi]). Deal 3([int]). Apply 2[poison]([int]).",
     "cost": {
       "mana": 1
     },
@@ -14540,7 +14539,7 @@
         "value": 3,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "int",
           "per": 2,
           "value": 1
         }
@@ -14580,7 +14579,7 @@
         "resultArmorGained": 4
       },
       "str_10": {
-        "damageDealt": 26,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 4,
         "staminaSpent": 0,
@@ -14595,7 +14594,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 26,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 4
       },
@@ -14620,7 +14619,7 @@
         "resultArmorGained": 4
       },
       "int_10": {
-        "damageDealt": 3,
+        "damageDealt": 18,
         "selfDamage": 0,
         "armorGained": 4,
         "staminaSpent": 0,
@@ -14635,7 +14634,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 3,
+        "resultTotalDamage": 18,
         "resultHealed": 0,
         "resultArmorGained": 4
       },
@@ -14780,7 +14779,7 @@
         "resultArmorGained": 4
       },
       "hero_rage_5": {
-        "damageDealt": 3,
+        "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 4,
         "staminaSpent": 0,
@@ -14795,7 +14794,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 3,
+        "resultTotalDamage": 8,
         "resultHealed": 0,
         "resultArmorGained": 4
       },
@@ -14871,7 +14870,7 @@
       "earth"
     ],
     "category": "magic",
-    "description": "If enemy is [stun]: deal 4([str]) more. If enemy has at least 4[slow]: apply 1 more [stun]([int]). Apply 2[slow]([int]).",
+    "description": "If enemy is [stun]: Deal 4([dex]). If enemy has 4 or more [slow]: Apply 1[stun]([int]). Apply 2[slow]([int]).",
     "cost": {
       "mana": 1
     },
@@ -14885,7 +14884,7 @@
         "value": 4,
         "target": "enemy",
         "scale": {
-          "stat": "str",
+          "stat": "dex",
           "per": 2,
           "value": 1
         },
@@ -15241,7 +15240,7 @@
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -15487,7 +15486,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 24,
+        "damageDealt": 39,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -15502,7 +15501,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 24,
+        "resultTotalDamage": 39,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -15583,7 +15582,7 @@
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -15929,7 +15928,7 @@
     "category": "attack",
     "description": "Deal 5([dex]) three times. Haste 30% for 6 seconds.",
     "cost": {
-      "stamina": 1
+      "stamina": 2
     },
     "cooldown": 1.8,
     "targeting": "single",
@@ -15964,7 +15963,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -15984,7 +15983,7 @@
         "damageDealt": 48,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16004,7 +16003,7 @@
         "damageDealt": 30,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16024,7 +16023,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16044,7 +16043,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16064,7 +16063,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16084,7 +16083,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16104,7 +16103,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16124,7 +16123,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16144,7 +16143,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16164,7 +16163,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16181,10 +16180,10 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 15,
+        "damageDealt": 30,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16196,7 +16195,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 15,
+        "resultTotalDamage": 30,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -16204,7 +16203,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16224,7 +16223,7 @@
         "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16244,7 +16243,7 @@
         "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -16273,43 +16272,48 @@
       "counter"
     ],
     "category": "defense",
-    "description": "Deal 2 Pierce per [rage] consumed. Apply 1[bleed]([dex]) for each [rage] on yourself.",
+    "description": "If you have 8 or more [rage]: Deal 24([str]) Pierce and apply 4[bleed]([dex]).",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 4.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
     "effects": [
       {
         "type": "damage",
-        "value": 2,
+        "value": 24,
         "target": "enemy",
         "pierce_armor": true,
-        "consume_stack_value": "rage"
+        "scale": {
+          "stat": "str",
+          "per": 2,
+          "value": 2
+        },
+        "condition": {
+          "self_stack_atleast": {
+            "stack": "rage",
+            "value": 8
+          }
+        }
       },
       {
         "type": "dot",
-        "value": 1,
+        "value": 4,
         "target": "enemy",
         "stack": "bleed",
-        "condition": {
-          "self_has_stack": "rage",
-          "per_stack": true
-        },
         "scale": {
           "stat": "dex",
           "per": 4,
           "value": 1
+        },
+        "condition": {
+          "self_stack_atleast": {
+            "stack": "rage",
+            "value": 8
+          }
         }
-      },
-      {
-        "type": "stack",
-        "value": -99,
-        "target": "self",
-        "stack": "rage",
-        "consume_stack": true
       }
     ],
     "upgraded": null,
@@ -16535,22 +16539,22 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
-        "enemyBleed": 5,
+        "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": -5,
+        "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 0,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -16627,11 +16631,11 @@
       "defense"
     ],
     "category": "attack",
-    "description": "Deal 6 twice, +1([str]) damage per 2[armor] you have.",
+    "description": "Deal 6 twice, +1 damage per 2[armor] you have.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -16872,7 +16876,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 22,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -16887,7 +16891,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 22,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -17208,7 +17212,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 18,
+        "damageDealt": 33,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17223,7 +17227,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 18,
+        "resultTotalDamage": 33,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -17300,24 +17304,23 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Exhaust. Apply 2[stun]([str]) to yourself. Gain 4[str] this combat (max 4 per combat).",
+    "description": "Deal 9([str]). Gain 4[str] this combat.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 1.8,
     "targeting": "single",
     "rarity": "rare",
-    "exhaust": true,
+    "exhaust": false,
     "effects": [
       {
-        "type": "dot",
-        "stack": "stun",
-        "value": 2,
-        "target": "self_dot",
+        "type": "damage",
+        "value": 9,
+        "target": "enemy",
         "scale": {
           "stat": "str",
-          "per": 3,
-          "value": 1
+          "per": 2,
+          "value": 2
         }
       },
       {
@@ -17331,7 +17334,7 @@
     "upgraded": null,
     "scenarios": {
       "baseline": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17346,12 +17349,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 0,
+        "damageDealt": 61,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17366,12 +17369,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 61,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17386,12 +17389,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17406,12 +17409,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "spi_10": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17426,12 +17429,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "vit_10": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17446,12 +17449,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_bleed_5": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17466,12 +17469,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_burn_5": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17486,12 +17489,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_poison_5": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17506,12 +17509,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_slow_5": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17526,12 +17529,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_stunned": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17546,12 +17549,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17566,12 +17569,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_low_hp": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17586,12 +17589,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_armored": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17606,12 +17609,12 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_armored": {
-        "damageDealt": 0,
+        "damageDealt": 1,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -17626,7 +17629,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 1,
         "resultHealed": 0,
         "resultArmorGained": 0
       }
@@ -17643,11 +17646,11 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Deal 2 Pierce, +1([vit]) damage per 1[armor] you have. Gain 6[armor]([vit]).",
+    "description": "Deal 2 Pierce, +1 damage per [armor] you have. Gain 6[armor]([vit]).",
     "cost": {
       "stamina": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -17898,7 +17901,7 @@
         "resultArmorGained": 6
       },
       "hero_rage_5": {
-        "damageDealt": 2,
+        "damageDealt": 7,
         "selfDamage": 0,
         "armorGained": 6,
         "staminaSpent": 1,
@@ -17913,7 +17916,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 2,
+        "resultTotalDamage": 7,
         "resultHealed": 0,
         "resultArmorGained": 6
       },
@@ -17994,7 +17997,7 @@
     "cost": {
       "stamina": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -18347,12 +18350,12 @@
       "defense"
     ],
     "category": "defense",
-    "description": "For 12 seconds: every [armor] you gain is +50%. Gain 8[armor]([vit]).",
+    "description": "For 12 seconds, every [armor] you gain is +50%. Gain 8[armor]([vit]).",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -18939,7 +18942,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 15,
+        "damageDealt": 30,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -18954,7 +18957,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 15,
+        "resultTotalDamage": 30,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -19031,7 +19034,7 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Gain 14[armor]([dex]). Haste 20% for 6 seconds.",
+    "description": "Gain 14[armor]([vit]). Haste 20% for 6 seconds.",
     "cost": {
       "stamina": 1
     },
@@ -19045,7 +19048,7 @@
         "value": 14,
         "target": "self",
         "scale": {
-          "stat": "dex",
+          "stat": "vit",
           "per": 2,
           "value": 1
         }
@@ -19106,7 +19109,7 @@
       "dex_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 19,
+        "armorGained": 14,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -19121,7 +19124,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 19
+        "resultArmorGained": 14
       },
       "int_10": {
         "damageDealt": 0,
@@ -19166,7 +19169,7 @@
       "vit_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 14,
+        "armorGained": 19,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -19181,7 +19184,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 14
+        "resultArmorGained": 19
       },
       "enemy_bleed_5": {
         "damageDealt": 0,
@@ -19376,7 +19379,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Apply 3[bleed]([dex]). For 6 seconds: if you apply [bleed] 3+ times, gain 2[dex] this combat (max 4 per combat).",
+    "description": "Apply 3[bleed]([dex]). For 6 seconds, if you apply [bleed] 3+ times, gain 2[dex] this combat (max 4 per combat).",
     "cost": {
       "stamina": 1
     },
@@ -19732,7 +19735,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Deal 12([str]) Pierce. If you have at least 5[rage]: deal 20([str]) more Pierce and this card delays 4 more seconds next time.",
+    "description": "Deal 12([str]) Pierce. If you have 5 or more [rage]: deal 20([str]) more Pierce and this card delays 4 more seconds next time.",
     "cost": {
       "stamina": 2
     },
@@ -19769,19 +19772,6 @@
           }
         },
         "overload_lockout_ms": 4000
-      },
-      {
-        "type": "stack",
-        "value": -5,
-        "target": "self",
-        "stack": "rage",
-        "consume_stack": true,
-        "condition": {
-          "self_stack_atleast": {
-            "stack": "rage",
-            "value": 5
-          }
-        }
       }
     ],
     "upgraded": null,
@@ -20007,7 +19997,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 32,
+        "damageDealt": 42,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -20017,12 +20007,12 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": -5,
+        "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 32,
+        "resultTotalDamage": 42,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -20099,11 +20089,11 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Exhaust. Gain 6([str])[rage]. For 15 seconds: every 2 seconds, gain 1[rage].",
+    "description": "Exhaust. Gain 6([str])[rage]. For 15 seconds, every 2 seconds, gain 1[rage].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 10,
+    "cooldown": 2,
     "targeting": "self",
     "rarity": "epic",
     "exhaust": true,
@@ -20731,7 +20721,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 15,
+        "damageDealt": 30,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -20746,7 +20736,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 15,
+        "resultTotalDamage": 30,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -21081,7 +21071,7 @@
         "resultArmorGained": 10
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 10,
         "staminaSpent": 2,
@@ -21096,7 +21086,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 15,
         "resultHealed": 0,
         "resultArmorGained": 10
       },
@@ -21173,11 +21163,11 @@
       "defense"
     ],
     "category": "attack",
-    "description": "Gain 10[armor]([vit]). If you have less than 50%[HP]: gain 10 more [armor]([vit]) and deal 12([str]) more Pierce.",
+    "description": "Gain 10[armor]([vit]). If you have less than 50%[HP]: gain 10 more [armor]([vit]) and deal 12([str]) Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -21535,7 +21525,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Deal 4([dex]) three times. Each hit applies 1[bleed]([dex]). If enemy has [bleed]: each hit applies 1[bleed]([dex]).",
+    "description": "Deal 4([dex]) three times. Each hit applies 1[bleed]([dex]). If enemy has [bleed]: each hit applies 1 more [bleed]([dex]).",
     "cost": {
       "stamina": 2
     },
@@ -21806,7 +21796,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 27,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -21821,7 +21811,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 27,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -21898,7 +21888,7 @@
       "defense"
     ],
     "category": "defense",
-    "description": "Gain 10[armor]([dex]). Brace: Apply 3[bleed].",
+    "description": "Gain 10[armor]([vit]). Brace: Apply 3[bleed].",
     "cost": {
       "stamina": 1
     },
@@ -21912,7 +21902,7 @@
         "value": 10,
         "target": "self",
         "scale": {
-          "stat": "dex",
+          "stat": "vit",
           "per": 2,
           "value": 1
         }
@@ -21976,7 +21966,7 @@
       "dex_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 15,
+        "armorGained": 10,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -21991,7 +21981,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 15
+        "resultArmorGained": 10
       },
       "int_10": {
         "damageDealt": 0,
@@ -22036,7 +22026,7 @@
       "vit_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 10,
+        "armorGained": 15,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -22051,7 +22041,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 10
+        "resultArmorGained": 15
       },
       "enemy_bleed_5": {
         "damageDealt": 0,
@@ -22246,12 +22236,12 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Exhaust. Deal 5([int]) Pierce per [burn] consumed to all enemies.",
+    "description": "Exhaust. Consume all [burn]. Deal 5([int]) Pierce per [burn] consumed to all enemies.",
     "cost": {
       "stamina": 2,
       "mana": 1
     },
-    "cooldown": 4,
+    "cooldown": 2.8,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": true,
@@ -22499,7 +22489,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -22514,7 +22504,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 5,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -22595,7 +22585,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 4,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -22942,7 +22932,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -23191,7 +23181,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -23206,7 +23196,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -23283,11 +23273,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Gain 26[armor]([vit]). If [armor] is at least 32: deal 22 more Pierce to all enemies.",
+    "description": "Gain 26[armor]([vit]). If [armor] is at least 32: Deal 22 Pierce to all enemies.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 4.5,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -23627,7 +23617,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 2[burn]([int]). For 6 seconds: if you consume 10+ [burn], gain 2[int] this combat (max 4 per combat).",
+    "description": "Apply 2[burn]([int]). For 6 seconds, if you consume 10+ [burn], gain 2[int] this combat (max 4 per combat).",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -23985,12 +23975,12 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Double the [burn] on enemy. For 8 seconds: enemy takes +100% [fire] damage.",
+    "description": "Double the [burn] on enemy. For 8 seconds, enemy takes +2 from [burn].",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -24007,8 +23997,8 @@
         "target": "enemy",
         "ttl_ms": 8000,
         "modifier": {
-          "kind": "fire_damage_taken_pct",
-          "value": 1
+          "kind": "burn_taken",
+          "value": 2
         }
       }
     ],
@@ -24331,7 +24321,7 @@
     "cost": {
       "stamina": 2
     },
-    "cooldown": 4.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -24673,11 +24663,11 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds: if you have less than 50%[HP], gain 18[armor].",
+    "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds, if you have less than 50%[HP], gain 18[armor].",
     "cost": {
       "mana": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -25036,7 +25026,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -25382,11 +25372,11 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 15([spi]). Vengeance: apply 3 more [poison].",
+    "description": "Heal 15([spi]). Vengeance: Apply 3[poison].",
     "cost": {
       "mana": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -25726,12 +25716,12 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Apply 3[slow]([int]) to all enemies. If enemy has at least 5[slow]: apply 1 more [stun]([int]) to all enemies. Deal 2([int]) damage per [slow] on enemy to all enemies.",
+    "description": "Apply 3[slow]([int]) to all enemies. If enemy has 5 or more [slow]: Apply 1[stun]([int]) to all enemies. Deal 2([int]) damage per [slow] on enemy to all enemies.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "uncommon",
     "exhaust": false,
@@ -26002,7 +25992,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -26017,7 +26007,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -26098,7 +26088,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "uncommon",
     "exhaust": false,
@@ -26444,12 +26434,12 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Gain 8[armor]([vit]). For 12 seconds: every 2.5 seconds, apply 1[slow]([int]) to all enemies. When enemy has at least 5[slow]: apply 1[stun]([int]).",
+    "description": "Gain 8[armor]([vit]). For 12 seconds, every 2.5 seconds, apply 1[slow]([int]) to all enemies. If enemy has 5 or more [slow]: apply 1[stun]([int]).",
     "cost": {
       "stamina": 1,
       "mana": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -26818,11 +26808,11 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Gain 14[armor]([vit]). Vengeance: deal 14 more Pierce.",
+    "description": "Gain 14[armor]([vit]). Vengeance: Deal 14 Pierce.",
     "cost": {
       "mana": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -27167,7 +27157,7 @@
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 4,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -27510,7 +27500,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -27863,7 +27853,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 3[poison]([int]) to all enemies. If enemy has [poison]: Apply 2[poison]([int]) to all enemies.",
+    "description": "Apply 3[poison]([int]) to all enemies. If enemy has [poison]: apply 2 more [poison]([int]).",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -28214,33 +28204,30 @@
       "water"
     ],
     "category": "magic",
-    "description": "Heal 4([spi]) per [poison] consumed.",
+    "description": "Apply 3[poison]. Heal 6([spi]).",
     "cost": {
-      "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
     "effects": [
       {
+        "type": "dot",
+        "value": 3,
+        "target": "enemy",
+        "stack": "poison"
+      },
+      {
         "type": "heal",
-        "value": 4,
+        "value": 6,
         "target": "self",
-        "consume_stack_value": "poison",
         "scale": {
           "stat": "spi",
           "per": 3,
           "value": 1
         }
-      },
-      {
-        "type": "stack",
-        "value": -4,
-        "target": "enemy",
-        "stack": "poison",
-        "consume_stack": true
       }
     ],
     "upgraded": null,
@@ -28249,9 +28236,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28269,9 +28256,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28289,9 +28276,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28309,9 +28296,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28329,9 +28316,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28349,9 +28336,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28369,9 +28356,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28389,9 +28376,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28409,9 +28396,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": -4,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28429,9 +28416,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28449,9 +28436,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28469,9 +28456,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28487,11 +28474,11 @@
       },
       "hero_low_hp": {
         "damageDealt": 0,
-        "selfDamage": 0,
+        "selfDamage": -6,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28502,16 +28489,16 @@
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
-        "resultHealed": 0,
+        "resultHealed": 6,
         "resultArmorGained": 0
       },
       "hero_armored": {
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28529,9 +28516,9 @@
         "damageDealt": 0,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
-        "enemyPoison": 0,
+        "enemyPoison": 3,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
@@ -28562,7 +28549,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -28812,7 +28799,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 16,
+        "damageDealt": 26,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -28827,7 +28814,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 16,
+        "resultTotalDamage": 26,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -28904,12 +28891,12 @@
       "water"
     ],
     "category": "magic",
-    "description": "Exhaust. Apply 2[poison]([int]). 50% of enemy's [poison] spreads to up to 4 other enemies. Deal 4 Pierce per [poison] consumed to all enemies.",
+    "description": "Exhaust. Consume all [poison]. Apply 2[poison]([int]). Deal 4 Pierce per [poison] consumed to all enemies.",
     "cost": {
       "stamina": 2,
       "mana": 2
     },
-    "cooldown": 5,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": true,
@@ -28923,17 +28910,6 @@
           "stat": "int",
           "per": 3,
           "value": 1
-        }
-      },
-      {
-        "type": "stack",
-        "value": 0,
-        "target": "enemy",
-        "stack": "poison",
-        "spread": {
-          "ratio": 0.5,
-          "target": "aoe",
-          "max_targets": 4
         }
       },
       {
@@ -29174,7 +29150,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 5,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -29189,7 +29165,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 5,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -29516,7 +29492,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 24,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -29531,7 +29507,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 24,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -29862,7 +29838,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 19,
+        "damageDealt": 29,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -29877,7 +29853,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 19,
+        "resultTotalDamage": 29,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -30204,7 +30180,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 24,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -30219,7 +30195,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 24,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -30556,7 +30532,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -30571,7 +30547,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -30648,12 +30624,12 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 12[armor]([vit]). For 14 seconds: every time you gain at least 4[armor], apply 1[burn]([int]).",
+    "description": "Gain 12[armor]([vit]). For 14 seconds, every time you gain at least 4[armor], apply 1[burn]([int]).",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -31003,12 +30979,12 @@
       "water"
     ],
     "category": "defense",
-    "description": "Gain 10[armor]([vit]). For 12 seconds: every 2 seconds, apply 1[poison]([int]).",
+    "description": "Gain 10[armor]([vit]). For 12 seconds, every 2 seconds, apply 1[poison]([int]).",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -31361,7 +31337,7 @@
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -31706,7 +31682,7 @@
     "cost": {
       "stamina": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -32050,7 +32026,7 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Apply 4[burn]. For 8 seconds: if you apply [burn] 4+ times, gain 2[int] this combat (max 4 per combat).",
+    "description": "Apply 4[burn]. For 8 seconds, if you apply [burn] 4+ times, gain 2[int] this combat (max 4 per combat).",
     "cost": {
       "stamina": 1
     },
@@ -32661,7 +32637,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -32676,7 +32652,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 1,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -33095,7 +33071,7 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 12[armor]([dex]). Haste 25% for 6 seconds.",
+    "description": "Gain 12[armor]([vit]). Haste 25% for 6 seconds.",
     "cost": {
       "stamina": 1
     },
@@ -33109,7 +33085,7 @@
         "value": 12,
         "target": "self",
         "scale": {
-          "stat": "dex",
+          "stat": "vit",
           "per": 2,
           "value": 2
         }
@@ -33170,7 +33146,7 @@
       "dex_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 22,
+        "armorGained": 12,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -33185,7 +33161,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 22
+        "resultArmorGained": 12
       },
       "int_10": {
         "damageDealt": 0,
@@ -33230,7 +33206,7 @@
       "vit_10": {
         "damageDealt": 0,
         "selfDamage": 0,
-        "armorGained": 12,
+        "armorGained": 22,
         "staminaSpent": 1,
         "manaSpent": 0,
         "enemyPoison": 0,
@@ -33245,7 +33221,7 @@
         "enemyAurasAdded": 0,
         "resultTotalDamage": 0,
         "resultHealed": 0,
-        "resultArmorGained": 12
+        "resultArmorGained": 22
       },
       "enemy_bleed_5": {
         "damageDealt": 0,
@@ -33440,11 +33416,11 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Exhaust. Gain 3[rage]. Exhaust the next card in order. For the rest of combat: double all [rage] gained.",
+    "description": "Exhaust. Gain 3[rage]. Exhaust the next card in order. For the rest of combat, double all [rage] gained.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.8,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": true,
@@ -33790,12 +33766,12 @@
       "water"
     ],
     "category": "defense",
-    "description": "Apply 3[bleed]([spi]). Apply 1[bleed] to yourself. For 15 seconds: every time you kill an enemy with [bleed], apply 4[bleed]([spi]) to the nearest enemy.",
+    "description": "Apply 3[bleed]([spi]). Apply 1[bleed] to yourself. For 15 seconds, every time you kill an enemy with [bleed], apply 4[bleed]([spi]) to the nearest enemy.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -34152,7 +34128,7 @@
       "counter"
     ],
     "category": "defense",
-    "description": "Exhaust. For 8 seconds: each time you lose [HP], gain 1[str] this combat (max 5 per combat). For 8 seconds: each time you lose [HP], gain 3([vit])[rage].",
+    "description": "Exhaust. For 8 seconds, each time you lose [HP], gain 1[str] this combat (max 5 per combat) and gain 3([vit])[rage].",
     "cost": {
       "stamina": 2
     },
@@ -34517,11 +34493,11 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 12[armor]([vit]). For 15 seconds: if you have less than 50%[HP], gain 6[rage].",
+    "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 50%[HP], gain 6[rage].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -35120,7 +35096,7 @@
         "resultArmorGained": 8
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 17,
         "selfDamage": 0,
         "armorGained": 8,
         "staminaSpent": 2,
@@ -35135,7 +35111,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 17,
         "resultHealed": 0,
         "resultArmorGained": 8
       },
@@ -35467,7 +35443,7 @@
         "resultArmorGained": 8
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 8,
         "staminaSpent": 1,
@@ -35482,7 +35458,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 15,
         "resultHealed": 0,
         "resultArmorGained": 8
       },
@@ -35808,7 +35784,7 @@
         "resultArmorGained": 6
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 22,
         "selfDamage": 0,
         "armorGained": 6,
         "staminaSpent": 2,
@@ -35823,7 +35799,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 22,
         "resultHealed": 0,
         "resultArmorGained": 6
       },
@@ -35900,11 +35876,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Deal 14([str]). If [armor] is at least 15: deal 8 more Pierce.",
+    "description": "Deal 14([str]). If [armor] is at least 15: Deal 8 Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -36152,7 +36128,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -36167,7 +36143,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -36494,7 +36470,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 22,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -36509,7 +36485,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 22,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -36837,7 +36813,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -36852,7 +36828,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -36931,7 +36907,8 @@
     "category": "attack",
     "description": "Deal 5([dex]) three times. Apply 2[slow].",
     "cost": {
-      "stamina": 2
+      "stamina": 2,
+      "mana": 1
     },
     "cooldown": 1.5,
     "targeting": "single",
@@ -36963,7 +36940,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -36983,7 +36960,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37003,7 +36980,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37023,7 +37000,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37043,7 +37020,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37063,7 +37040,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37083,7 +37060,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37103,7 +37080,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37123,7 +37100,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37143,7 +37120,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37163,7 +37140,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37179,11 +37156,11 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 15,
+        "damageDealt": 30,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37194,7 +37171,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 15,
+        "resultTotalDamage": 30,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -37203,7 +37180,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37223,7 +37200,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37243,7 +37220,7 @@
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
-        "manaSpent": 0,
+        "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
@@ -37522,7 +37499,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -37537,7 +37514,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 15,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -37614,11 +37591,11 @@
       "fire"
     ],
     "category": "attack",
-    "description": "If you have [rage]: deal 12([str]) twice more and apply 2[burn].",
+    "description": "If you have [rage]: Deal 12([str]) twice and apply 2[burn].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -37642,16 +37619,6 @@
         "value": 2,
         "target": "enemy",
         "stack": "burn",
-        "condition": {
-          "self_has_stack": "rage"
-        }
-      },
-      {
-        "type": "stack",
-        "value": -3,
-        "target": "self",
-        "stack": "rage",
-        "consume_stack": true,
         "condition": {
           "self_has_stack": "rage"
         }
@@ -37880,7 +37847,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 24,
+        "damageDealt": 34,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -37890,12 +37857,12 @@
         "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
-        "heroRage": -3,
+        "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 24,
+        "resultTotalDamage": 34,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -37972,7 +37939,7 @@
       "water"
     ],
     "category": "attack",
-    "description": "Apply 3[bleed]([dex]) to yourself. Apply 1[poison]([int]) for each [bleed] on yourself. Deal 4([str]) Pierce per [bleed] consumed.",
+    "description": "Apply 3[bleed]([dex]). Apply 1[poison]([int]) per [bleed] on enemy. Deal 2([str]) Pierce per [bleed] on enemy.",
     "cost": {
       "stamina": 2
     },
@@ -37984,7 +37951,7 @@
       {
         "type": "dot",
         "value": 3,
-        "target": "self_dot",
+        "target": "enemy",
         "stack": "bleed",
         "scale": {
           "stat": "dex",
@@ -37993,7 +37960,7 @@
         }
       },
       {
-        "type": "stack",
+        "type": "dot",
         "value": 1,
         "target": "enemy",
         "stack": "poison",
@@ -38003,40 +37970,36 @@
           "value": 1
         },
         "condition": {
-          "self_has_stack": "bleed",
+          "enemy_has_stack": "bleed",
           "per_stack": true
         }
       },
       {
         "type": "damage",
-        "value": 0,
+        "value": 2,
         "target": "enemy",
         "pierce_armor": true,
-        "consume_stack_value": "bleed",
         "scale": {
           "stat": "str",
-          "per": 2,
-          "value": 4
+          "per": 3,
+          "value": 1
+        },
+        "condition": {
+          "enemy_has_stack": "bleed",
+          "per_stack": true
         }
-      },
-      {
-        "type": "stack",
-        "value": -99,
-        "target": "self",
-        "stack": "bleed",
-        "consume_stack": true
       }
     ],
     "upgraded": null,
     "scenarios": {
       "baseline": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38045,18 +38008,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 0,
+        "damageDealt": 29,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38065,18 +38028,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 29,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 0,
+        "damageDealt": 12,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 6,
-        "enemyBleed": 0,
+        "enemyBleed": 6,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38085,18 +38048,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 12,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 6,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38105,18 +38068,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "spi_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38125,18 +38088,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "vit_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38145,18 +38108,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_bleed_5": {
-        "damageDealt": 0,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
-        "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyPoison": 8,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38165,18 +38128,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_burn_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38185,18 +38148,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_poison_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38205,18 +38168,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_slow_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38225,18 +38188,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_stunned": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38245,18 +38208,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38265,18 +38228,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_low_hp": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38285,18 +38248,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_armored": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38305,18 +38268,18 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_armored": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 3,
-        "enemyBleed": 0,
+        "enemyBleed": 3,
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 0,
@@ -38325,7 +38288,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       }
@@ -38342,7 +38305,7 @@
       "counter"
     ],
     "category": "attack",
-    "description": "Deal 6([str]). If enemy has [slow]: Deal 6([int]) Pierce per [slow] consumed.",
+    "description": "Deal 6([str]). Consume all [slow] and deal 6([int]) Pierce per [slow] consumed.",
     "cost": {
       "stamina": 2
     },
@@ -38378,7 +38341,7 @@
       },
       {
         "type": "stack",
-        "value": -4,
+        "value": -99,
         "target": "enemy",
         "stack": "slow",
         "consume_stack": true
@@ -38576,7 +38539,7 @@
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": -4,
+        "enemySlow": -5,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
@@ -38607,7 +38570,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -38622,7 +38585,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -38699,11 +38662,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Deal 14([str]). Vengeance: deal 10 more Pierce.",
+    "description": "Deal 14([str]). Vengeance: Deal 10 Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -38951,7 +38914,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -38966,7 +38929,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -40093,12 +40056,12 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 14[armor]([vit]). For 15 seconds: if you have less than 60%[HP], haste 30% for 6 seconds.",
+    "description": "Gain 14[armor]([vit]). For 15 seconds, if you have less than 60%[HP], haste 30% for 6 seconds.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -40447,11 +40410,11 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 12[armor]([vit]). Brace: Deal 12. Brace: Apply 2[burn].",
+    "description": "Gain 12[armor]([vit]). Brace: Deal 12 and apply 2[burn].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -40807,12 +40770,12 @@
       "water"
     ],
     "category": "defense",
-    "description": "Gain 8[armor]([vit]). For 12 seconds: every 1 second, if you have less than 50%[HP]: heal 3([spi]) more. For 12 seconds: take 20% less damage.",
+    "description": "Gain 8[armor]([vit]). For 12 seconds, take 20% less damage and every 1 second, if you have less than 50%[HP], heal 3([spi]).",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -41542,11 +41505,11 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 18[armor]([vit]). For 15 seconds: if you have less than 40%[HP], gain 10[armor]. For 15 seconds: if you have less than 40%[HP], gain 4[rage].",
+    "description": "Gain 18[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 10[armor] and 4[rage].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3.5,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -41904,7 +41867,7 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Apply 3[burn]([dex]). For 8 seconds: if you lose [HP] 4+ times, gain 2[dex] this combat (max 4 per combat).",
+    "description": "Apply 3[burn]([dex]). For 8 seconds, if you lose [HP] 4+ times, gain 2[dex] this combat (max 4 per combat).",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -42258,7 +42221,7 @@
       "water"
     ],
     "category": "defense",
-    "description": "Apply 3[poison]([int]). 50% of enemy's [poison] spreads to up to 2 other enemies. Vengeance: Apply 5[poison] (from consumed [bleed]).",
+    "description": "Apply 3[poison]([int]). Vengeance: apply 5 more [poison].",
     "cost": {
       "stamina": 1
     },
@@ -42279,22 +42242,10 @@
         }
       },
       {
-        "type": "stack",
-        "value": 0,
+        "type": "dot",
+        "value": 5,
         "target": "enemy",
         "stack": "poison",
-        "spread": {
-          "ratio": 0.5,
-          "target": "aoe",
-          "max_targets": 2
-        }
-      },
-      {
-        "type": "convert_stack",
-        "value": 5,
-        "target": "self",
-        "from": "bleed",
-        "to": "poison",
         "condition": {
           "took_damage_within_ms": 2000
         }
@@ -42870,7 +42821,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 9,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -42885,7 +42836,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 9,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -42962,7 +42913,7 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 8[armor]([vit]). For 6 seconds: if you lose [HP] 2+ times, gain 2[vit] this combat (max 4 per combat).",
+    "description": "Gain 8[armor]([vit]). For 6 seconds, if you lose [HP] 2+ times, gain 2[vit] this combat (max 4 per combat).",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -43315,7 +43266,7 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Deal 8([str]) twice. Deal 3 Pierce per [burn] on enemy.",
+    "description": "Deal 8([str]) twice. Consume all [burn] and deal 3 Pierce per [burn] consumed.",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -43577,7 +43528,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 16,
+        "damageDealt": 26,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -43592,7 +43543,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 16,
+        "resultTotalDamage": 26,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -43669,12 +43620,12 @@
       "water"
     ],
     "category": "magic",
-    "description": "Deal 4 Pierce. Deal 3 Pierce per [poison] consumed.",
+    "description": "Deal 4 Pierce. Consume all [poison] and deal 3 Pierce per [poison] consumed.",
     "cost": {
       "stamina": 2,
       "mana": 1
     },
-    "cooldown": 3.2,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -43923,7 +43874,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 4,
+        "damageDealt": 14,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -43938,7 +43889,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 14,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -44265,7 +44216,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 22,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -44280,7 +44231,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 22,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -44357,11 +44308,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Deal 20([str]). If [armor] is at least 20: deal 8 more Pierce.",
+    "description": "Deal 20([str]). If [armor] is at least 20: Deal 8 Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -44609,7 +44560,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 20,
+        "damageDealt": 25,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -44624,7 +44575,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 20,
+        "resultTotalDamage": 25,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -44701,11 +44652,11 @@
       "water"
     ],
     "category": "magic",
-    "description": "Exhaust. Deal 6([str]) Pierce. Deal 3([str]) Pierce per [poison] consumed. Deal 3([str]) Pierce per [bleed] consumed. Deal 3([str]) Pierce per [burn] consumed.",
+    "description": "Exhaust. Deal 6([str]) Pierce. Consume all [poison], [bleed] and [burn] and deal 3([str]) Pierce per stack consumed.",
     "cost": {
-      "stamina": 3
+      "stamina": 2
     },
-    "cooldown": 5.5,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "epic",
     "exhaust": true,
@@ -44785,7 +44736,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44805,7 +44756,7 @@
         "damageDealt": 35,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44825,7 +44776,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44845,7 +44796,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44865,7 +44816,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44885,7 +44836,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44905,7 +44856,7 @@
         "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": -5,
@@ -44925,7 +44876,7 @@
         "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44945,7 +44896,7 @@
         "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": -5,
         "enemyBleed": 0,
@@ -44965,7 +44916,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -44985,7 +44936,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -45002,10 +44953,10 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 26,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -45017,7 +44968,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 26,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -45025,7 +44976,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -45045,7 +44996,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -45065,7 +45016,7 @@
         "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 3,
+        "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
@@ -45350,7 +45301,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 8,
+        "damageDealt": 13,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -45365,7 +45316,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 8,
+        "resultTotalDamage": 13,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -45442,18 +45393,18 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Deal 14([str]). Brace: Deal 12. Brace: Apply 2[burn].",
+    "description": "Deal 16([str]). Apply 2[burn].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
     "effects": [
       {
         "type": "damage",
-        "value": 14,
+        "value": 16,
         "target": "enemy",
         "scale": {
           "stat": "str",
@@ -45462,310 +45413,291 @@
         }
       },
       {
-        "type": "aura",
-        "value": 0,
-        "target": "self",
-        "ttl_ms": 12000,
-        "trigger": "on_armor_break",
-        "then": {
-          "type": "damage",
-          "value": 12,
-          "target": "enemy"
-        }
-      },
-      {
-        "type": "aura",
-        "value": 0,
-        "target": "self",
-        "ttl_ms": 12000,
-        "trigger": "on_armor_break",
-        "then": {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "burn"
-        }
+        "type": "dot",
+        "value": 2,
+        "target": "enemy",
+        "stack": "burn"
       }
     ],
     "upgraded": null,
     "scenarios": {
       "baseline": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 61,
+        "damageDealt": 68,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 61,
+        "resultTotalDamage": 68,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "spi_10": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "vit_10": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_bleed_5": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_burn_5": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_poison_5": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_slow_5": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_stunned": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_low_hp": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_armored": {
-        "damageDealt": 14,
+        "damageDealt": 16,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 16,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -45777,13 +45709,13 @@
         "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
-        "enemyBurn": 0,
+        "enemyBurn": 2,
         "enemyStun": 0,
         "enemySlow": 0,
         "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
         "resultTotalDamage": 1,
         "resultHealed": 0,
@@ -46059,7 +45991,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -46074,7 +46006,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 15,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -46151,12 +46083,12 @@
       "water"
     ],
     "category": "magic",
-    "description": "Deal 14([str]). If enemy has [poison]: deal 6 more Pierce.",
+    "description": "Deal 14([str]). If enemy has [poison]: Deal 6 Pierce.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "uncommon",
     "exhaust": false,
@@ -46404,7 +46336,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 14,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -46419,7 +46351,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 14,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -46496,11 +46428,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Deal 12([str]). If [armor] is at least 12: deal 10 more Pierce.",
+    "description": "Deal 12([str]). If [armor] is at least 12: Deal 10 Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "aoe",
     "rarity": "rare",
     "exhaust": false,
@@ -46748,7 +46680,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 17,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -46763,7 +46695,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 17,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -46840,12 +46772,12 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Exhaust. If [armor] is at least 10: Deal 2([str]) Pierce per [armor] consumed to all enemies.",
+    "description": "Exhaust. Consume all [armor]. If [armor] is at least 10: Deal 2 Pierce per [armor] consumed to all enemies.",
     "cost": {
       "stamina": 2,
       "mana": 1
     },
-    "cooldown": 4,
+    "cooldown": 2.8,
     "targeting": "aoe",
     "rarity": "epic",
     "exhaust": true,
@@ -47185,7 +47117,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -47542,7 +47474,7 @@
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -47887,7 +47819,7 @@
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -48235,11 +48167,11 @@
       "water"
     ],
     "category": "defense",
-    "description": "Gain 14[armor]([vit]). Brace: Apply 3[poison]. Brace: Apply 2[burn].",
+    "description": "Gain 14[armor]([vit]). Brace: Apply 3[poison] and 2[burn].",
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -48596,12 +48528,12 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 1([vit])[armor] per [burn] consumed (max 20). Haste 15% for 6 seconds.",
+    "description": "Consume all [burn]. Gain 1[armor]([vit]) per [burn] consumed (max 20). Haste 15% for 6 seconds.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -48945,11 +48877,11 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 16[armor]([vit]). Brace: Deal 14. Brace: Apply 2[burn].",
+    "description": "Gain 16[armor]([vit]). Brace: Deal 14 and apply 2[burn].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -49309,7 +49241,7 @@
     "cost": {
       "mana": 2
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -49652,12 +49584,12 @@
       "water"
     ],
     "category": "defense",
-    "description": "Gain 14[armor]([vit]). Vengeance: apply 3 more [poison].",
+    "description": "Gain 14[armor]([vit]). Vengeance: Apply 3[poison].",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -50002,7 +49934,7 @@
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3.3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -50356,7 +50288,7 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Apply 3[burn]. Deal 4([dex]) damage per [burn] on enemy.",
+    "description": "Apply 3[burn]. Consume all [burn] and deal 4([dex]) damage per [burn] consumed.",
     "cost": {
       "mana": 1
     },
@@ -50616,7 +50548,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 12,
+        "damageDealt": 17,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -50631,7 +50563,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 12,
+        "resultTotalDamage": 17,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -50708,7 +50640,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 5[poison]([int]). Haste 15% for 6 seconds. If enemy has at least 10[poison]: apply 5 more [poison]([int]).",
+    "description": "Apply 5[poison]([int]). If enemy has 10 or more [poison]: apply 5 more [poison]([int]). Haste 15% for 6 seconds.",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -51072,7 +51004,7 @@
       "air"
     ],
     "category": "magic",
-    "description": "For 12 seconds: every time you apply [slow], apply 1[slow]([int]). Haste 15% for 6 seconds.",
+    "description": "For 12 seconds, every time you apply [slow], apply 1[slow]([int]). Haste 15% for 6 seconds.",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -51426,7 +51358,7 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Exhaust. Gain 3[vit] this combat (max 3 per combat). Haste 30% for 12 seconds.",
+    "description": "Exhaust. Gain 3[vit] this combat. Haste 30% for 12 seconds.",
     "cost": {
       "stamina": 1
     },
@@ -51844,7 +51776,7 @@
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 9,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -51859,7 +51791,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 9,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -52024,7 +51956,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 6,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -52039,7 +51971,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 6,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -52373,7 +52305,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 20,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -52388,7 +52320,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 20,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -52465,7 +52397,7 @@
       "fire"
     ],
     "category": "attack",
-    "description": "Deal 10([dex]). If [armor] is at least 10: deal 4 more Pierce and apply 2 more [burn].",
+    "description": "Deal 10([dex]). If [armor] is at least 10: Deal 4 Pierce and apply 2[burn].",
     "cost": {
       "mana": 1
     },
@@ -52726,7 +52658,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 10,
+        "damageDealt": 15,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 0,
@@ -52741,7 +52673,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 10,
+        "resultTotalDamage": 15,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -53517,11 +53449,11 @@
       "earth"
     ],
     "category": "attack",
-    "description": "Deal 6([dex]) three times. Each hit applies 1[slow]. If enemy is [stun]: each hit deals 4([str]) more Pierce.",
+    "description": "Deal 6([dex]) three times. Each hit applies 1[slow]. If enemy is [stun]: each hit also deals 4([dex]) Pierce.",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "single",
     "rarity": "rare",
     "exhaust": false,
@@ -53551,7 +53483,7 @@
         "pierce_armor": true,
         "per_hit": true,
         "scale": {
-          "stat": "str",
+          "stat": "dex",
           "per": 2,
           "value": 1
         },
@@ -53783,7 +53715,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 18,
+        "damageDealt": 33,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 2,
@@ -53798,7 +53730,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 18,
+        "resultTotalDamage": 33,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -53875,7 +53807,7 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Apply 2([dex])[bleed] per [burn] consumed. Apply 2[bleed]([dex]). Next card delays 3 more seconds.",
+    "description": "Consume all [burn] and apply 2[bleed]([dex]) per [burn] consumed, plus 2[bleed]([dex]). Next card delays 3 more seconds.",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -54230,7 +54162,7 @@
       "water"
     ],
     "category": "magic",
-    "description": "Exhaust. For the rest of combat: each time you heal, apply 1[poison]([int]).",
+    "description": "Exhaust. For the rest of combat, each time you heal, apply 1[poison]([int]).",
     "cost": {
       "stamina": 1,
       "mana": 1
@@ -54583,7 +54515,7 @@
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -54601,13 +54533,6 @@
           "per": 3,
           "value": 1
         }
-      },
-      {
-        "type": "stack",
-        "value": -4,
-        "target": "self",
-        "stack": "rage",
-        "consume_stack": true
       }
     ],
     "upgraded": null,
@@ -54843,7 +54768,7 @@
         "enemyBurn": 0,
         "enemyStun": 0,
         "enemySlow": 8,
-        "heroRage": -4,
+        "heroRage": 0,
         "heroBleed": 0,
         "heroBurn": 0,
         "heroAurasAdded": 0,
@@ -54925,11 +54850,11 @@
       "earth"
     ],
     "category": "defense",
-    "description": "Gain 12[armor]([vit]). For 15 seconds: if you have less than 40%[HP], gain 8[rage].",
+    "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 8[rage].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -55274,12 +55199,12 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 2[burn]. Apply 3[poison]. Deal 2([str]) damage per [burn] on enemy.",
+    "description": "Apply 2[burn]. Apply 3[poison]. Consume all [burn] and deal 2([str]) damage per [burn] consumed.",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.8,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -55541,7 +55466,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 4,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
@@ -55556,7 +55481,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 4,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
@@ -55633,340 +55558,331 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Apply 2[bleed]([dex]) to yourself. Brace: Apply 4[slow].",
+    "description": "Apply 4[slow]. Deal 3([dex]).",
     "cost": {
-      "stamina": 1,
-      "mana": 1
+      "stamina": 1
     },
-    "cooldown": 2.4,
+    "cooldown": 1.8,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
     "effects": [
       {
         "type": "dot",
-        "value": 2,
-        "target": "self_dot",
-        "stack": "bleed",
+        "value": 4,
+        "target": "enemy",
+        "stack": "slow"
+      },
+      {
+        "type": "damage",
+        "value": 3,
+        "target": "enemy",
         "scale": {
           "stat": "dex",
           "per": 3,
           "value": 1
-        }
-      },
-      {
-        "type": "aura",
-        "value": 0,
-        "target": "self",
-        "ttl_ms": 12000,
-        "trigger": "on_armor_break",
-        "then": {
-          "type": "dot",
-          "value": 4,
-          "target": "enemy",
-          "stack": "slow"
         }
       }
     ],
     "upgraded": null,
     "scenarios": {
       "baseline": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 0,
+        "damageDealt": 9,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 9,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 5,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "spi_10": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "vit_10": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_bleed_5": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_burn_5": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_poison_5": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_slow_5": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_stunned": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 8,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 8,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_low_hp": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_armored": {
-        "damageDealt": 0,
+        "damageDealt": 3,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 3,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_armored": {
-        "damageDealt": 0,
+        "damageDealt": 1,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 1,
-        "manaSpent": 1,
+        "manaSpent": 0,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 4,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 1,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 1,
         "resultHealed": 0,
         "resultArmorGained": 0
       }
@@ -55983,11 +55899,11 @@
       "fire"
     ],
     "category": "defense",
-    "description": "Gain 10[armor]([vit]). Brace: Deal 16 Pierce. Brace: Apply 2[burn].",
+    "description": "Gain 10[armor]([vit]). Brace: Deal 16 Pierce and apply 2[burn].",
     "cost": {
       "stamina": 2
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "rare",
     "exhaust": false,
@@ -56344,352 +56260,331 @@
       "water"
     ],
     "category": "magic",
-    "description": "Apply 2[bleed]([dex]) to yourself. Brace: Deal 6. Brace: Apply 2[slow].",
+    "description": "Deal 6([spi]). Apply 2[slow].",
     "cost": {
-      "stamina": 1,
       "mana": 1
     },
-    "cooldown": 2.6,
+    "cooldown": 1.8,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
     "effects": [
       {
-        "type": "dot",
-        "value": 2,
-        "target": "self_dot",
-        "stack": "bleed",
+        "type": "damage",
+        "value": 6,
+        "target": "enemy",
         "scale": {
-          "stat": "dex",
+          "stat": "spi",
           "per": 3,
           "value": 1
         }
       },
       {
-        "type": "aura",
-        "value": 0,
-        "target": "self",
-        "ttl_ms": 12000,
-        "trigger": "on_armor_break",
-        "then": {
-          "type": "damage",
-          "value": 6,
-          "target": "enemy"
-        }
-      },
-      {
-        "type": "aura",
-        "value": 0,
-        "target": "self",
-        "ttl_ms": 12000,
-        "trigger": "on_armor_break",
-        "then": {
-          "type": "dot",
-          "value": 2,
-          "target": "enemy",
-          "stack": "slow"
-        }
+        "type": "dot",
+        "value": 2,
+        "target": "enemy",
+        "stack": "slow"
       }
     ],
     "upgraded": null,
     "scenarios": {
       "baseline": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "str_10": {
-        "damageDealt": 0,
+        "damageDealt": 19,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 19,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "dex_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 5,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "int_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "spi_10": {
-        "damageDealt": 0,
+        "damageDealt": 21,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 21,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "vit_10": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_bleed_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_burn_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_poison_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_slow_5": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_stunned": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 0,
+        "damageDealt": 11,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 11,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_low_hp": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "hero_armored": {
-        "damageDealt": 0,
+        "damageDealt": 6,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 6,
         "resultHealed": 0,
         "resultArmorGained": 0
       },
       "enemy_armored": {
-        "damageDealt": 0,
+        "damageDealt": 1,
         "selfDamage": 0,
         "armorGained": 0,
-        "staminaSpent": 1,
+        "staminaSpent": 0,
         "manaSpent": 1,
         "enemyPoison": 0,
         "enemyBleed": 0,
         "enemyBurn": 0,
         "enemyStun": 0,
-        "enemySlow": 0,
+        "enemySlow": 2,
         "heroRage": 0,
-        "heroBleed": 2,
+        "heroBleed": 0,
         "heroBurn": 0,
-        "heroAurasAdded": 2,
+        "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 0,
+        "resultTotalDamage": 1,
         "resultHealed": 0,
         "resultArmorGained": 0
       }
@@ -56706,12 +56601,12 @@
       "water"
     ],
     "category": "magic",
-    "description": "Gain 10[armor]([vit]). Brace: Apply 4[poison]. Brace: Gain 3[rage].",
+    "description": "Gain 10[armor]([vit]). Brace: Apply 4[poison] and gain 3[rage].",
     "cost": {
       "stamina": 1,
       "mana": 1
     },
-    "cooldown": 3,
+    "cooldown": 2.4,
     "targeting": "self",
     "rarity": "uncommon",
     "exhaust": false,
@@ -57068,12 +56963,12 @@
       "earth"
     ],
     "category": "magic",
-    "description": "Exhaust. Apply 3[stun]([int]) to all enemies. Deal 50([str]) Pierce to all enemies.",
+    "description": "Exhaust. To all enemies: apply 3[stun]([int]) and deal 50([str]) Pierce.",
     "cost": {
       "stamina": 3,
       "mana": 2
     },
-    "cooldown": 5,
+    "cooldown": 2.8,
     "targeting": "aoe",
     "rarity": "epic",
     "exhaust": true,
@@ -57324,7 +57219,7 @@
         "resultArmorGained": 0
       },
       "hero_rage_5": {
-        "damageDealt": 50,
+        "damageDealt": 55,
         "selfDamage": 0,
         "armorGained": 0,
         "staminaSpent": 3,
@@ -57339,7 +57234,7 @@
         "heroBurn": 0,
         "heroAurasAdded": 0,
         "enemyAurasAdded": 0,
-        "resultTotalDamage": 50,
+        "resultTotalDamage": 55,
         "resultHealed": 0,
         "resultArmorGained": 0
       },

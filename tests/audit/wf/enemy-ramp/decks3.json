@@ -1,0 +1,59 @@
+{
+  "decks": [
+    {
+      "id": "tierAB2-t2-flamedart",
+      "label": "TierAB mid: T2 Flame Dart core (mage)",
+      "archetype": "tier-ab-fire2",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-agility-fire", "t2-agility-fire", "t1-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"],
+      "vsEnemies": ["mutated_salamander", "werewolf", "lava_golen"]
+    },
+    {
+      "id": "tierAB2-t3-cindersprint",
+      "label": "TierAB mid: T3 Cinder Sprint (DEX det) for 1 Flame Dart (mage)",
+      "archetype": "tier-ab-fire2",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t3-agility-fire-fire", "t2-agility-fire", "t1-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"],
+      "vsEnemies": ["mutated_salamander", "werewolf", "lava_golen"]
+    },
+    {
+      "id": "tierAB2-t3-boilstep",
+      "label": "TierAB mid: T3 Boilstep (DEX pierce+burn+poison) for 1 Flame Dart (mage)",
+      "archetype": "tier-ab-fire2",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t3-agility-fire-water", "t2-agility-fire", "t1-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"],
+      "vsEnemies": ["mutated_salamander", "werewolf", "lava_golen"]
+    },
+    {
+      "id": "lizard-probe-strong",
+      "label": "Optimized warrior probe vs lost_lizard (pushover check)",
+      "archetype": "lizard-probe",
+      "class": "warrior",
+      "stage": "early",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t1-attack", "t1-agility", "t1-defense"],
+      "vsEnemies": ["lost_lizard", "giant_spider"],
+      "vsBoss": false
+    },
+    {
+      "id": "war-boss1-phys-opt",
+      "label": "Warrior boss1 OPTIMIZED physical (vs doom_knight)",
+      "archetype": "boss1-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-attack-defense", "t2-defense-defense", "t1-attack", "t1-agility", "t1-defense", "t2-agility-earth"]
+    },
+    {
+      "id": "war-late-base-igtest",
+      "label": "Warrior late T2-heavy vs depths/fire (trivial-kill check)",
+      "archetype": "trivial-check",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t1-attack", "t1-attack", "t1-agility", "t1-defense", "t2-agility-attack"],
+      "vsEnemies": ["depths_horror", "fire_elemental", "werewolf", "mutated_salamander"],
+      "vsBoss": false
+    }
+  ]
+}

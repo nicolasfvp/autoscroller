@@ -1,0 +1,112 @@
+{
+  "matchups": [
+    {
+      "id": "P2-comparator-front",
+      "label": "FAIR comparator: Mireglide (non-detonator poison T3) in FRONT slot 0 - same deck shape as the detonator-front tests",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-agility-earth-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "P2-lance-current-front",
+      "label": "Drowning Lance CURRENT, FRONT slot 0 (re-run for stability, 8 reps)",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "P2-lance-current-cd18-front",
+      "label": "ISOLATE CD: current Drowning Lance (consume-all) but ONLY cd 2.4->1.8, FRONT slot. Does the snappier re-arm alone rescue it?",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8 } }
+    },
+    {
+      "id": "P2-lance-rework-half-front",
+      "label": "Drowning Lance PROPOSED consume-half model: per-stack 2.5 (=5 on half pool), base 6, cd 1.8, wipe -4. FRONT slot, 8 reps.",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-attack-water-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -4 } ] }
+      }
+    },
+
+    {
+      "id": "P2-lance-current-slot6",
+      "label": "Drowning Lance CURRENT, original slot 6 (reproduce the trap, 8 reps)",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "P2-lance-rework-half-slot6",
+      "label": "Drowning Lance PROPOSED rework in original slot 6: does the rework rescue the trap even when late-drawn?",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -4 } ] }
+      }
+    },
+
+    {
+      "id": "P2-marsh-current-slot6",
+      "label": "Marsh Squall CURRENT, original slot 6 (reproduce trap)",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-air-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0
+    },
+    {
+      "id": "P2-marsh-rework-half-slot6",
+      "label": "Marsh Squall PROPOSED rework in original slot 6",
+      "class": "mage",
+      "stage": "boss1",
+      "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-air-earth-water","t1-water","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "cardOverrides": {
+        "t3-air-earth-water": { "cooldown": 2.0, "cost": { "stamina": 2 }, "effectsPatch": [ {}, { "value": 3 }, { "value": -4 } ] }
+      }
+    }
+  ]
+}

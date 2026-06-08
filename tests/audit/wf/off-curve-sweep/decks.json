@@ -1,0 +1,305 @@
+{
+  "_comment": "OFF-CURVE SWEEP lane. Marginal SWAP TESTS: a fixed host deck where exactly ONE slot is varied. The variant's win/TTK/HP delta vs the neutral-filler baseline = that card's marginal value. Covers OPS-0 engine cards (Tidefoot Bloom, Gale Echo, Razor Stance, Firestorm, Wrath Squall) and OPS outliers (Brine Crucible, Vein Splitter, Reckless Strike). Each swap family shares an identical host except for the tested slot. Filler = a clean T1 (Jab for warrior, Spark for mage).",
+
+  "decks": [
+    {
+      "_swapfamily": "WAR-MID host: physical core, slot12 varies. baseline=t1-attack (Jab).",
+      "id": "swap-war-mid-FILLER",
+      "label": "WAR mid host + FILLER(Jab)",
+      "archetype": "swap-warrior-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t1-attack"]
+    },
+    {
+      "id": "swap-war-mid-RECKLESS",
+      "label": "WAR mid host + Reckless Strike",
+      "archetype": "swap-warrior-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack"]
+    },
+    {
+      "id": "swap-war-mid-RAZORSTANCE",
+      "label": "WAR mid host + Razor Stance",
+      "archetype": "swap-warrior-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-counter-counter"]
+    },
+    {
+      "id": "swap-war-mid-VEINSPLITTER",
+      "label": "WAR mid host + Vein Splitter (T3)",
+      "archetype": "swap-warrior-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "swap-war-mid-RAZORCADENCE",
+      "label": "WAR mid host + Razor Cadence (T3 control)",
+      "archetype": "swap-warrior-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t3-agility-counter-counter"]
+    },
+
+    {
+      "_swapfamily": "WAR-LATE host: T3 physical core, slot12 varies. baseline=t1-attack.",
+      "id": "swap-war-late-FILLER",
+      "label": "WAR late host + FILLER(Jab)",
+      "archetype": "swap-warrior-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t2-agility-attack", "t2-attack-counter", "t3-air-attack-attack", "t2-attack-defense", "t2-counter-counter", "t3-attack-attack-counter", "t1-attack"]
+    },
+    {
+      "id": "swap-war-late-RECKLESS",
+      "label": "WAR late host + Reckless Strike",
+      "archetype": "swap-warrior-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t2-agility-attack", "t2-attack-counter", "t3-air-attack-attack", "t2-attack-defense", "t2-counter-counter", "t3-attack-attack-counter", "t2-attack-attack"]
+    },
+    {
+      "id": "swap-war-late-VEINSPLITTER",
+      "label": "WAR late host + Vein Splitter",
+      "archetype": "swap-warrior-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t2-agility-attack", "t2-attack-counter", "t3-air-attack-attack", "t2-attack-defense", "t2-counter-counter", "t3-attack-attack-counter", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "swap-war-late-WRATHSQUALL",
+      "label": "WAR late host + Wrath Squall",
+      "archetype": "swap-warrior-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t2-agility-attack", "t2-attack-counter", "t3-air-attack-attack", "t2-attack-defense", "t2-counter-counter", "t3-attack-attack-counter", "t3-air-counter-counter"]
+    },
+    {
+      "id": "swap-war-late-RAZORSTANCE",
+      "label": "WAR late host + Razor Stance",
+      "archetype": "swap-warrior-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-agility-attack-attack", "t3-attack-attack-attack", "t2-agility-attack", "t2-attack-counter", "t3-air-attack-attack", "t2-attack-defense", "t2-counter-counter", "t3-attack-attack-counter", "t2-counter-counter"]
+    },
+
+    {
+      "_swapfamily": "WAR-BOSS1 host vs doom_knight, slot12 varies. baseline=t1-attack.",
+      "id": "swap-war-boss1-FILLER",
+      "label": "WAR boss1 host + FILLER(Jab)",
+      "archetype": "swap-warrior-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t1-attack"]
+    },
+    {
+      "id": "swap-war-boss1-VEINSPLITTER",
+      "label": "WAR boss1 host + Vein Splitter",
+      "archetype": "swap-warrior-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "swap-war-boss1-WRATHSQUALL",
+      "label": "WAR boss1 host + Wrath Squall",
+      "archetype": "swap-warrior-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t3-air-counter-counter"]
+    },
+    {
+      "id": "swap-war-boss1-RAZORSTANCE",
+      "label": "WAR boss1 host + Razor Stance",
+      "archetype": "swap-warrior-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t2-counter-counter"]
+    },
+
+    {
+      "_swapfamily": "BLEED-ENGINE host: bleed appliers feed Razor Stance / Vein Splitter. slot12 varies. baseline=t1-attack.",
+      "id": "swap-bleed-late-FILLER",
+      "label": "BLEED host + FILLER(Jab)",
+      "archetype": "swap-bleed-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-attack-counter", "t2-agility-counter", "t3-agility-attack-counter", "t2-agility-attack", "t3-attack-attack-counter", "t2-attack-defense", "t1-attack"]
+    },
+    {
+      "id": "swap-bleed-late-RAZORSTANCE",
+      "label": "BLEED host + Razor Stance",
+      "archetype": "swap-bleed-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-attack-counter", "t2-agility-counter", "t3-agility-attack-counter", "t2-agility-attack", "t3-attack-attack-counter", "t2-attack-defense", "t2-counter-counter"]
+    },
+    {
+      "id": "swap-bleed-late-RAZORCADENCE",
+      "label": "BLEED host + Razor Cadence (T3 analog)",
+      "archetype": "swap-bleed-late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-attack-counter", "t2-agility-counter", "t3-agility-attack-counter", "t2-agility-attack", "t3-attack-attack-counter", "t2-attack-defense", "t3-agility-counter-counter"]
+    },
+
+    {
+      "_swapfamily": "BURN-ENGINE host (mage): burn appliers (no Firestorm in host) so both Firestorm and Brine Crucible are clean swaps vs Spark filler. slot7 varies.",
+      "id": "swap-burn-late-FILLER",
+      "label": "BURN host + FILLER(Spark)",
+      "archetype": "swap-burn-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t1-fire"]
+    },
+    {
+      "id": "swap-burn-late-FIRESTORM",
+      "label": "BURN host + Firestorm",
+      "archetype": "swap-burn-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t2-air-fire"]
+    },
+    {
+      "id": "swap-burn-late-BRINECRUCIBLE",
+      "label": "BURN host + Brine Crucible (det)",
+      "archetype": "swap-burn-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t3-counter-fire-fire"]
+    },
+    {
+      "id": "swap-burn-late-BRINE-WARRIOR",
+      "label": "BURN host(warrior) + Brine Crucible",
+      "archetype": "swap-burn-late-war",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t3-counter-fire-fire"]
+    },
+    {
+      "id": "swap-burn-late-NOBRINE-WARRIOR",
+      "label": "BURN host(warrior) + FILLER(Spark)",
+      "archetype": "swap-burn-late-war",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t1-fire"]
+    },
+
+    {
+      "_swapfamily": "MAGE-ELEM host: elemental core, slot7 varies. baseline=t1-fire (Spark).",
+      "id": "swap-mage-late-FILLER",
+      "label": "MAGE elem host + FILLER(Spark)",
+      "archetype": "swap-mage-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-air-air", "t1-water", "t2-water-water", "t1-fire"]
+    },
+    {
+      "id": "swap-mage-late-FIRESTORM",
+      "label": "MAGE elem host + Firestorm",
+      "archetype": "swap-mage-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-air-air", "t1-water", "t2-water-water", "t2-air-fire"]
+    },
+
+    {
+      "_swapfamily": "GALE-ENGINE host (mage slow control): slow appliers feed Gale Echo. slot8 varies. baseline=t1-earth (Quake).",
+      "id": "swap-gale-late-FILLER",
+      "label": "GALE host + FILLER(Quake)",
+      "archetype": "swap-gale-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t3-agility-air-earth", "t3-air-attack-counter", "t3-agility-air-water", "t2-air-earth", "t2-water-water", "t1-earth", "t1-earth"]
+    },
+    {
+      "id": "swap-gale-late-GALEECHO",
+      "label": "GALE host + Gale Echo",
+      "archetype": "swap-gale-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t3-agility-air-earth", "t3-air-attack-counter", "t3-agility-air-water", "t2-air-earth", "t2-water-water", "t1-earth", "t3-agility-air-air"]
+    },
+    {
+      "id": "swap-gale-late-CINDERSQUALL",
+      "label": "GALE host + Cinder Squall (T3 payoff analog)",
+      "archetype": "swap-gale-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t3-agility-air-earth", "t3-air-attack-counter", "t3-agility-air-water", "t2-air-earth", "t2-water-water", "t1-earth", "t3-air-air-fire"]
+    },
+
+    {
+      "_swapfamily": "HEAL-ENGINE host (mage poison+heal): heals feed Tidefoot Bloom. slot8 varies. baseline=t1-water (Mend).",
+      "id": "swap-heal-late-FILLER",
+      "label": "HEAL host + FILLER(Mend)",
+      "archetype": "swap-heal-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-defense-water-water", "t3-fire-water-water", "t3-air-water-water", "t2-earth-water", "t3-agility-water-water", "t2-water-water", "t1-water", "t1-water"]
+    },
+    {
+      "id": "swap-heal-late-TIDEFOOTBLOOM",
+      "label": "HEAL host + Tidefoot Bloom",
+      "archetype": "swap-heal-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-defense-water-water", "t3-fire-water-water", "t3-air-water-water", "t2-earth-water", "t3-agility-water-water", "t2-water-water", "t1-water", "t3-counter-water-water"]
+    },
+    {
+      "id": "swap-heal-late-BOGCATALYST",
+      "label": "HEAL host + Bog Catalyst (T3 poison payoff)",
+      "archetype": "swap-heal-late",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-defense-water-water", "t3-fire-water-water", "t3-air-water-water", "t2-earth-water", "t3-agility-water-water", "t2-water-water", "t1-water", "t3-earth-earth-water"]
+    },
+
+    {
+      "_swapfamily": "BOSS1 mage host vs doom_knight: poison engine + heal slot8 varies. baseline=t1-water.",
+      "id": "swap-heal-boss1-FILLER",
+      "label": "HEAL host boss1 + FILLER(Mend)",
+      "archetype": "swap-heal-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t2-earth-water", "t3-air-fire-water", "t3-defense-water-water", "t2-water-water", "t1-water", "t1-water"]
+    },
+    {
+      "id": "swap-heal-boss1-TIDEFOOTBLOOM",
+      "label": "HEAL host boss1 + Tidefoot Bloom",
+      "archetype": "swap-heal-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t2-earth-water", "t3-air-fire-water", "t3-defense-water-water", "t2-water-water", "t1-water", "t3-counter-water-water"]
+    },
+
+    {
+      "_swapfamily": "BOSS1 mage burn host vs doom_knight (no Firestorm in host): Brine Crucible / Firestorm engine value at boss scale. slot7 varies.",
+      "id": "swap-burn-boss1-FILLER",
+      "label": "BURN host boss1 + FILLER(Spark)",
+      "archetype": "swap-burn-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t1-fire"]
+    },
+    {
+      "id": "swap-burn-boss1-BRINECRUCIBLE",
+      "label": "BURN host boss1 + Brine Crucible",
+      "archetype": "swap-burn-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t3-counter-fire-fire"]
+    },
+    {
+      "id": "swap-burn-boss1-FIRESTORM",
+      "label": "BURN host boss1 + Firestorm",
+      "archetype": "swap-burn-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t2-air-fire"]
+    }
+  ]
+}

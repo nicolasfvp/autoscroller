@@ -1,0 +1,76 @@
+{
+  "decks": [
+    {
+      "id": "mage-boss1-poison",
+      "label": "Mage boss1 POISON (vs doom_knight)",
+      "archetype": "boss1-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-water", "t2-earth-water", "t3-earth-earth-water", "t1-water", "t1-water", "t2-agility-fire", "t1-fire", "t1-earth", "t2-air-air", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-boss1-elem-pierce",
+      "label": "Mage boss1 elemental w/ pierce vs def (vs doom_knight)",
+      "archetype": "boss1-elemental",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-fire-fire", "t2-fire-water", "t1-fire", "t1-fire", "t2-air-air", "t1-water", "t1-water", "t2-earth-water"]
+    },
+    {
+      "id": "mage-boss1-control2",
+      "label": "Mage boss1 control + stun lock (vs doom_knight)",
+      "archetype": "boss1-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-water-water", "t2-water-water", "t2-earth-earth", "t2-agility-fire", "t2-fire-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"]
+    },
+    {
+      "id": "swap-late-base",
+      "label": "Late phys baseline (filler=t1-attack) vs salamander+horror",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t1-agility", "t1-defense", "t2-defense-defense", "t1-attack", "t1-attack", "t1-attack", "t1-attack"],
+      "vsEnemies": ["mutated_salamander", "depths_horror", "fire_elemental"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap-late-supernova",
+      "label": "Late phys + Supernova (t1-attack->t3-fire-fire-fire)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t1-agility", "t1-defense", "t2-defense-defense", "t3-fire-fire-fire", "t1-attack", "t1-attack", "t1-attack"],
+      "vsEnemies": ["mutated_salamander", "depths_horror", "fire_elemental"],
+      "vsBoss": false
+    },
+    {
+      "id": "swap-late-tripleslash",
+      "label": "Late phys + Triple Slash (t1-attack->t3-agility-attack-attack)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t1-agility", "t1-defense", "t2-defense-defense", "t3-agility-attack-attack", "t1-attack", "t1-attack", "t1-attack"],
+      "vsEnemies": ["mutated_salamander", "depths_horror", "fire_elemental"],
+      "vsBoss": false
+    },
+    {
+      "id": "tierAB-t2-pyre",
+      "label": "TierAB mid: T2 Pyre core vs salamander+werewolf",
+      "archetype": "tier-ab-fire",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t1-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"],
+      "vsEnemies": ["mutated_salamander", "werewolf", "lava_golen"]
+    },
+    {
+      "id": "tierAB-t3-cinderlance",
+      "label": "TierAB mid: T3 Cinderlance for T2 Pyre vs salamander+werewolf",
+      "archetype": "tier-ab-fire",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t3-attack-fire-fire", "t2-agility-fire", "t1-fire", "t1-fire", "t1-water", "t2-air-air", "t1-earth", "t2-earth-water"],
+      "vsEnemies": ["mutated_salamander", "werewolf", "lava_golen"]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "_note": "ADVERSARIAL re-test of mage-scaling lane. (1) Reproduce the boss1 headline at the REALISTIC profile with a FRESH run and 5 repeats: fire/air/earth direct-damage mages vs doom_knight (expect wr 0), water/poison mage (expect wr 1), warrior (expect wr 1). (2) Re-test the INT magnitude bracket independently (+1 wr0 / +2 wr1 expected) to confirm the scaling axis is the cause and the curve is ~+0.30 short. (3) MS-4 scrutiny: compare the boss1 fire deck with three different T3 finishers -- Cinderlance (attack, STR-scaled, the named example), Cinder Sprint (attack, DEX-scaled, what the proposed fix WOULD help), and Steaming Plague (magic baseline). If Cinder Sprint also lags badly the dropped-gate fix is justified for that subset; if Cinderlance is the only laggard the fix mis-targets.",
+  "decks": [
+    {
+      "id": "adv-fire-boss1",
+      "label": "ADV Fire boss1 (realistic)",
+      "archetype": "fire-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "adv-air-boss1",
+      "label": "ADV Air boss1 (realistic)",
+      "archetype": "air-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-air-air", "t2-agility-air", "t2-air-fire", "t3-agility-air-water", "t1-fire", "t1-water", "t2-fire-fire", "t2-water-water", "t2-agility-fire", "t2-earth-fire"]
+    },
+    {
+      "id": "adv-earth-boss1",
+      "label": "ADV Earth boss1 (realistic)",
+      "archetype": "earth-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-earth", "t2-earth-earth", "t2-earth-fire", "t2-water-water", "t1-fire", "t2-agility-fire", "t1-water", "t2-air-air", "t3-agility-air-water", "t2-fire-fire"]
+    },
+    {
+      "id": "adv-water-boss1",
+      "label": "ADV Water/Poison boss1 (realistic)",
+      "archetype": "water-mage",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-water", "t3-agility-fire-water", "t3-earth-earth-water", "t3-agility-water-water", "t2-agility-water", "t1-water", "t2-fire-water", "t2-water-water", "t1-fire", "t3-air-fire-water"]
+    },
+    {
+      "id": "adv-warrior-boss1",
+      "label": "ADV Warrior boss1 (realistic)",
+      "archetype": "physical-warrior",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack", "t1-agility", "t2-attack-attack", "t2-agility-attack", "t2-attack-earth", "t2-air-attack", "t1-defense", "t2-agility-earth", "t3-agility-attack-attack", "t3-attack-attack-attack"]
+    },
+
+    {
+      "id": "adv-fire-boss1-INT1",
+      "label": "ADV Fire boss1 +INT1 (elemMult 1.45)",
+      "archetype": "fire-mage-mag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 1 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "adv-fire-boss1-INT2",
+      "label": "ADV Fire boss1 +INT2 (elemMult 1.60)",
+      "archetype": "fire-mage-mag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 2 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+
+    {
+      "id": "adv-cat-cinderlance",
+      "label": "ADV cat: Cinderlance (attack/STR finisher)",
+      "archetype": "fire-category",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "adv-cat-cindersprint",
+      "label": "ADV cat: Cinder Sprint (attack/DEX finisher)",
+      "archetype": "fire-category",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-fire", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "adv-cat-steamingplague",
+      "label": "ADV cat: Steaming Plague (magic finisher)",
+      "archetype": "fire-category",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-air-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    }
+  ]
+}

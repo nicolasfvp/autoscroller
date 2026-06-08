@@ -1,0 +1,124 @@
+{
+  "decks": [
+    {
+      "id": "adv-clean-base-boss1",
+      "label": "ADV clean base shell, NO Aegis, filler slot (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "adv-clean-aegis-boss1",
+      "label": "ADV clean base + Aegis ONLY (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t3-defense-defense-defense"
+      ]
+    },
+    {
+      "id": "adv-clean-mountains-boss1",
+      "label": "ADV clean base + Mountain's Answer ONLY (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t3-earth-earth-earth"
+      ]
+    },
+    {
+      "id": "adv-clean-bodyslam-boss1",
+      "label": "ADV clean base + Body Slam Vow ONLY (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t3-attack-defense-defense"
+      ]
+    },
+    {
+      "id": "adv-clean-shieldbash-boss1",
+      "label": "ADV clean base + Shield Bash T2 ONLY (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t2-attack-defense"
+      ]
+    },
+    {
+      "id": "adv-clean-granite-boss1",
+      "label": "ADV clean base + Granite Lunge T2 ONLY (boss1)",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-defense",
+        "t2-defense-earth",
+        "t3-defense-earth-earth",
+        "t3-counter-defense-defense",
+        "t3-counter-defense-earth",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-agility",
+        "t2-attack-earth"
+      ]
+    }
+  ]
+}

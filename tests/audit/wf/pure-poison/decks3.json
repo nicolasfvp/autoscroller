@@ -1,0 +1,64 @@
+{
+  "decks": [
+    {
+      "id": "det-base-applier",
+      "label": "Detonator isolation: poison shell + extra applier (Boilstep)",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": true
+    },
+    {
+      "id": "det-drowning-lance",
+      "label": "Detonator isolation: same shell, Boilstep -> Drowning Lance",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": true
+    },
+    {
+      "id": "det-marsh-squall",
+      "label": "Detonator isolation: same shell, Boilstep -> Marsh Squall",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-air-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": ["mutated_salamander"],
+      "vsBoss": true
+    }
+  ]
+}

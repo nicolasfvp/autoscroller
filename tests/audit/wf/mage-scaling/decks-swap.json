@@ -1,0 +1,116 @@
+{
+  "_note": "Swap / Tier-A-B / INT-availability diagnostics for the mage-scaling lane.",
+  "decks": [
+    {
+      "_note": "DIAGNOSIS A: re-run the 3 FAILING boss1 direct-damage mages with a SMALL INT buff (statDeltas.int +3, i.e. realistic-INT 3 -> 6) to prove the scaling axis is the cause. elemMult would go 1.30 -> 1.75. If they now win, the failure is scaling, not deck quality.",
+      "id": "mage-fire-boss1-INT6",
+      "label": "Mage Fire boss1 +INT3 (diag)",
+      "archetype": "fire-mage-diag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 3 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "mage-earth-boss1-INT6",
+      "label": "Mage Earth boss1 +INT3 (diag)",
+      "archetype": "earth-mage-diag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 3 },
+      "deck": ["t1-earth", "t2-earth-earth", "t2-earth-fire", "t2-water-water", "t1-fire", "t2-agility-fire", "t1-water", "t2-air-air", "t3-agility-air-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-air-boss1-INT6",
+      "label": "Mage Air boss1 +INT3 (diag)",
+      "archetype": "air-mage-diag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 3 },
+      "deck": ["t2-air-air", "t2-agility-air", "t2-air-fire", "t3-agility-air-water", "t1-fire", "t1-water", "t2-fire-fire", "t2-water-water", "t2-agility-fire", "t2-earth-fire"]
+    },
+
+    {
+      "_note": "DIAGNOSIS B: same 3 mages at boss1, baseline INT, but +STR3 instead (statDeltas.str). If STR fixes them but INT does not, that proves the elemMult curve (0.15) is structurally too weak vs strMult (0.25) AND that attack-category fire cards (Cinder-line) rely on STR a mage never has.",
+      "id": "mage-fire-boss1-STR4",
+      "label": "Mage Fire boss1 +STR3 (diag)",
+      "archetype": "fire-mage-diag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "str": 3 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+
+    {
+      "_note": "TIER A/B fire: baseline mid fire deck with a T2 direct burst (t2-agility-fire Flame Dart, magic) in slot vs the analogous T3 (t3-agility-fire-water Boilstep, magic). Both magic so both get elemMult. Decks otherwise identical.",
+      "id": "mage-fire-tierA-T2",
+      "label": "Fire TierA T2 (Flame Dart)",
+      "archetype": "fire-tierAB",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-agility-fire", "t1-fire", "t2-fire-fire", "t1-water", "t2-water-water", "t2-fire-water"]
+    },
+    {
+      "id": "mage-fire-tierB-T3",
+      "label": "Fire TierB T3 (Boilstep)",
+      "archetype": "fire-tierAB",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t3-agility-fire-water", "t1-fire", "t2-fire-fire", "t1-water", "t2-water-water", "t2-fire-water"]
+    },
+
+    {
+      "_note": "SWAP TEST: fixed mid mage core; one flex slot. Baseline = t1-fire (Spark, weak filler). Candidate1 = t2-fire-fire Pyre (T2 detonator). Candidate2 = t3-agility-fire-water Boilstep (T3). Measures marginal value of each in identical context.",
+      "id": "mage-swap-baseline-spark",
+      "label": "Swap baseline (Spark)",
+      "archetype": "fire-swap",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-agility-fire", "t2-fire-water", "t1-water", "t2-water-water", "t1-fire"]
+    },
+    {
+      "id": "mage-swap-pyre",
+      "label": "Swap +Pyre",
+      "archetype": "fire-swap",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-agility-fire", "t2-fire-water", "t1-water", "t2-water-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-swap-boilstep",
+      "label": "Swap +Boilstep",
+      "archetype": "fire-swap",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-agility-fire", "t2-fire-water", "t1-water", "t2-water-water", "t3-agility-fire-water"]
+    },
+
+    {
+      "_note": "CATEGORY TEST: two equivalent mid fire decks, identical except the T3 finisher. Magic finisher (t3-air-fire-water Steaming Plague, gets elemMult) vs attack-category finisher (t3-attack-fire-fire Cinderlance, gets strMult=1.0 for mage, NO scaling). Shows attack-category 'mage' T3s are dead weight for a real mage.",
+      "id": "mage-cat-magic-finisher",
+      "label": "Cat magic finisher (Steaming Plague)",
+      "archetype": "fire-category",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-air-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "mage-cat-attack-finisher",
+      "label": "Cat attack finisher (Cinderlance)",
+      "archetype": "fire-category",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+
+    {
+      "_note": "WARRIOR EQUAL-PROGRESSION CONTROL at boss1 with NO T3 (pure T1/T2, matching a realistic loop-10 deck) to confirm the warrior beats doom_knight even without T3 power, isolating that the gap is the offense axis, not card tier access.",
+      "id": "war-physical-boss1-noT3",
+      "label": "Warrior physical boss1 (T1/T2 only)",
+      "archetype": "physical-warrior-ctrl",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack", "t1-agility", "t2-attack-attack", "t2-agility-attack", "t2-attack-earth", "t2-air-attack", "t1-defense", "t2-agility-earth"]
+    }
+  ]
+}

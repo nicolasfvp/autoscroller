@@ -1,0 +1,42 @@
+{
+  "_comment": "ADVERSARIAL re-test. (1) Reproduce the BANK-shell detonator-ceiling probe (detonator at slot 1, so it actually fires) vs doom_knight AND iron_golem, 5 reps. (2) FRONT-LOADED swap: same poison shell but the test card is moved to SLOT 1 (not slot 12) so it is actually drawn in short late-normal fights — exposes whether the original slot-12 swap measured anything. Baseline uses Bog Catalyst (strong) and a true no-op filler (t1-water) at slot 1.",
+  "decks": [
+
+    { "id": "adv-bank-nodet", "label": "Bank shell + Bog Catalyst (no detonator)", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-drown", "label": "Bank shell + Drowning Lance", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-attack-water-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-marsh", "label": "Bank shell + Marsh Squall", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-air-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-tremor", "label": "Bank shell + Tremor Detonate", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-attack-fire-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-venom", "label": "Bank shell + Venom Detonation", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-counter-fire-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-nodet-ig", "label": "Bank shell + Bog Catalyst vs iron_golem", "archetype": "det-probe", "class": "mage", "stage": "late", "vsEnemies": [],
+      "deck": ["t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-tremor-ig", "label": "Bank shell + Tremor Detonate vs iron_golem", "archetype": "det-probe", "class": "mage", "stage": "late", "vsEnemies": [],
+      "deck": ["t3-attack-fire-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-bank-drown-ig", "label": "Bank shell + Drowning Lance vs iron_golem", "archetype": "det-probe", "class": "mage", "stage": "late", "vsEnemies": [],
+      "deck": ["t3-attack-water-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "adv-front-filler", "label": "FRONT-LOADED swap: no-op filler at slot 1 (late)", "archetype": "front-swap", "class": "mage", "stage": "late", "vsBoss": false,
+      "deck": ["t1-water", "t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t2-fire-fire"] },
+
+    { "id": "adv-front-bog", "label": "FRONT-LOADED swap: Bog Catalyst at slot 1 (late)", "archetype": "front-swap", "class": "mage", "stage": "late", "vsBoss": false,
+      "deck": ["t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t2-fire-fire"] },
+
+    { "id": "adv-front-tremor", "label": "FRONT-LOADED swap: Tremor Detonate at slot 1 (late)", "archetype": "front-swap", "class": "mage", "stage": "late", "vsBoss": false,
+      "deck": ["t3-attack-fire-water", "t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t2-fire-fire"] },
+
+    { "id": "adv-front-drown", "label": "FRONT-LOADED swap: Drowning Lance at slot 1 (late)", "archetype": "front-swap", "class": "mage", "stage": "late", "vsBoss": false,
+      "deck": ["t3-attack-water-water", "t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t2-fire-fire"] }
+
+  ]
+}

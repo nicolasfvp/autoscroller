@@ -1,0 +1,38 @@
+{
+  "lane": "boss-progression",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "PLAN and EXECUTION are solid. Decks are legal (all card ids exist in the catalog, sizes 11-12, class-appropriate), the canonical stage profiles were used, boss1/doom_knight is covered, and 5 repeats were used for every boss claim. results.json and diag-results.json exist, are non-empty, and matchup ids/labels match. I independently reproduced the load-bearing numbers via adv-results.json / adv-results2.json and they matched to the decimal: warrior physical vs doom_knight 5/5 @3.3% HP, mage poison 5/5 @14.9%, burn 0/5 @202 dmg, the dmg7 probe lifting warrior cushion 3.3%->13.9%, and the non-monotonic late curve (iron_golem 0/5 / lizard_king 5/5 14.3% / bog_witch 5/5 20.8%). BP-1, BP-2, BP-3, BP-5 are CONFIRMED (BP-1 high confidence; the boss-economy probes are directionally sound). BP-4 is REVISED: its core observation (iron_golem is a non-monotonic difficulty spike for race decks) reproduces, but its DIAGNOSIS and FIX are empirically wrong. I ran the designer's own proposed override (iron_golem baseDefense 4->3, and 3+dmg9, and shield removed, and HP360, and dmg8, and HP360+dmg8) and the deck STILL dies 0/5 in every case. The real driver is iron_golem's affinity:'defense', which via EnemyAffinity.ts grants the boss +6 armor PER ATTACK (cap 60) on top of the shield behavior (+8/8s) -- a runaway armor ratchet that a one-point baseDefense cut cannot touch. lizard_king (affinity attack) and bog_witch (affinity water) lack this ratchet, which is the actual reason the same deck clears them. The fix must target the affinity ratchet / HP, not baseDefense.",
+  "verdicts": [
+    {
+      "findingId": "BP-1",
+      "status": "confirmed",
+      "reason": "Reproduced independently in adv-results.json: warrior physical 5/5 @3.3% HP (383-384 dmg), mage poison 5/5 @14.9%, burn 0/5 @202; dmg7 probe 5/5 @13.9% (matches designer's 13.9% exactly), dmg8 probe 5/5 @7.3%. The damage cut is the clean lever and does NOT rescue burn (burn dmg7 still 0/5 @212). doom_knight base stats (380/9/def3, enrage x1.4 @50%) and the 1.0 boss multiplier all verified against enemies.json + DifficultyScaler. Caveat noted (does not change verdict): the 'should-be-easy' bar is partly subjective -- 6/8 archetypes win and the 2 losses (burn, control) are separate card-economy problems, so the boss is thin rather than unbeatable; the dmg 9->8 option (7.3% cushion) is a gentler alternative to 9->7 and also valid.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "BP-2",
+      "status": "confirmed",
+      "reason": "Burn non-viability reproduced: burn vs doom_knight 0/5 @202 and burn dmg7 probe still 0/5 @212 (boss-tuning cannot fix it). diag-results.json corroborates the deck-frame argument: diag-mage-burn-detrich 116/380 (worse with extra detonators) vs diag-mage-burn-pivot-poison 345/380 (same frame, poison closers) -- the burn payoff cards are the bottleneck, not the shell. Proposed change (Cinderlance t3-attack-fire-fire pierce-per-burn 3->4; Supernova t3-fire-fire-fire cd 2.8->2.2 + dmg/burn 5->6) is T3-only, no cost increase, no T2 nerf -- compliant with C1/C5 and T3>T2. Weakness: the evidence is whole-deck swaps, not isolated single-card swap tests, so the exact magnitude is a hypothesis to re-sim, but the direction is sound and severity:high is justified (burn loses ALL bosses and barely clears late normals).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "BP-3",
+      "status": "confirmed",
+      "reason": "Control mage 0/5 @213 reproduced in the supplied results; diag-mage-control-plus-dmg 0/5 @220 corroborates that adding damage closers barely moves it. Correctly flagged as partly working-as-intended under C3 (control is intentionally race-losing) with med severity/confidence. Proposed T3 ceiling buff (Thunderstrike Catalyst t3-air-attack-counter consume payoff 6->8 Pierce per slow, cost/CD unchanged) is C1/C5-compliant and is the narrow scaling-closer C3 explicitly permits. Reasonable as written; lower priority than BP-1/BP-4.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "BP-4",
+      "status": "revised",
+      "reason": "OBSERVATION CONFIRMED, FIX REFUTED. The non-monotonic spike reproduces exactly (adv-results.json: iron_golem 0/5 @233, lizard_king 5/5 @14.3%/394 dmg, bog_witch 5/5 @20.8%/515 dmg). BUT I ran the designer's actual proposed override and it does NOT work: iron_golem baseDefense 4->3 stays 0/5 (@243); def3+dmg9 stays 0/5 (@253); shield removed stays 0/5 (@249); and in adv-results2.json even HP360 stays 0/5 (@233), dmg8 stays 0/5 (@275), def3+dmg8 stays 0/5 (@285), and HP360+dmg8 (LIGHTER than lizard_king, which the deck beats) STILL stays 0/5 (@275). The deck deals ~394 to lizard_king but only ~250-285 to a same-or-weaker iron_golem, proving the gate is not baseDefense/HP/damage. Root cause (src/systems/combat/EnemyAffinity.ts): iron_golem affinity='defense' grants +6 armor PER boss attack up to a 60 cap -- a runaway ratchet that starves per-hit output and is invisible to a 1-point baseDefense change; the shield behavior (+8/8s) compounds it. lizard_king (affinity attack) and bog_witch (affinity water) have no such ratchet. The designer never simulated the override, so the proposed lever was untested and is wrong.",
+      "revisedChange": "Keep the progression finding (iron_golem is a non-monotonic spike for race decks). Re-target the fix at the actual driver: (a) change iron_golem affinity from 'defense' to a non-armor-stacking identity (e.g. 'earth' or 'attack') OR cut the defense-affinity boss armor cap (EnemyAffinity.ts: isBoss cap 60 -> ~24 and/or gain 3*m=6 -> 3) so a physical deck's per-hit damage is not starved past the kill window; AND (b) cut iron_golem HP (e.g. baseHP 400 -> ~340) and/or soften the shield behavior (shieldAmount 8 -> 4) so the kill lands before the deck dies. baseDefense 4->3 alone is empirically useless -- drop it. Re-sim late-war-physical-strong vs iron_golem/lizard_king/bog_witch to confirm a monotone, winnable curve (target winRate 1.0 with a non-trivial cushion, comparable to lizard_king's 14.3%). Note: a defense-affinity ratchet this strong likely also makes desert_golem/boss_iron_golem (also armor-stacking) spikes -- worth a follow-up lane."
+    },
+    {
+      "findingId": "BP-5",
+      "status": "confirmed",
+      "reason": "Supernova t3-fire-fire-fire stats verified in the catalog (cost 2s+1m, cd 2.8s -- longest CD + highest cost in burn, 5 dmg/burn, exhaust, det:burn). diag-mage-burn-detrich (built around extra detonators incl. Supernova) dealing only 116/380 -- WORSE than the plain 202 -- supports the dead-capstone claim. Proposed buff (cd 2.8->2.2 per C1 long-CD rescue, dmg/burn 5->6 raising the assembled ceiling, exhaust+cost kept) is T3-only and C1/C5-compliant. med severity/confidence is appropriate: the evidence is a deck-level rescue test rather than an isolated swap, and it overlaps BP-2 (same card), so treat BP-2 and BP-5 as one burn-capstone change rather than double-counting."
+    }
+  ]
+}

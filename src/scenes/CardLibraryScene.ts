@@ -15,7 +15,9 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getAllCards } from '../data/DataLoader';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
-import { disableCardFaceInput } from '../ui/CardFace';
+import { createCardFace, disableCardFaceInput } from '../ui/CardFace';
+import { attachKeywordTooltip, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
+import { formatCardDescription } from '../systems/cards/CardText';
 import { getRun } from '../state/RunState';
 import {
   CardFilterBar,
@@ -62,6 +64,10 @@ export class CardLibraryScene extends Phaser.Scene {
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private wheelHandler: ((p: Phaser.Input.Pointer, go: unknown, dx: number, dy: number) => void) | null = null;
   private detailContainer: Phaser.GameObjects.Container | null = null;
+  // Active keyword-glossary tooltip for the open detail view. Stored so its
+  // pending timer is cancelled when the view closes or reopens (it self-mounts
+  // after a short delay, so a stale handle could still fire otherwise).
+  private detailTip: KeywordTooltipHandle | null = null;
   // Active ESC-to-close handler for the open detail view. Stored so it can be
   // unregistered when the view closes via a click (the once() listener would
   // otherwise linger until the next ESC press and accumulate across opens).
@@ -156,6 +162,7 @@ export class CardLibraryScene extends Phaser.Scene {
 
   private teardown(): void {
     if (this.escHandler) { this.input.keyboard?.off('keydown-ESC', this.escHandler); this.escHandler = null; }
+    if (this.detailTip) { this.detailTip.cancel(); this.detailTip = null; }
     if (this.detailContainer) { this.detailContainer.destroy(true); this.detailContainer = null; }
     if (this.filterBar) {
       this.filterBar.destroy();
@@ -331,33 +338,61 @@ export class CardLibraryScene extends Phaser.Scene {
     if (!this.canCraft(card)) visual.setAlpha(0.4);
   }
 
-  /** Expanded ("clicked") card view for forge mode. Shows the big card plus a
-   *  "Send to Anvil" button when craftable, or the elements the hero has
-   *  (have/need) with a hint when not. */
+  /** Expanded ("clicked") card view for forge mode. Shows the full card (popup
+   *  layout, with its description panel) plus a "Send to Anvil" button when
+   *  craftable, or the elements the hero has (have/need) with a hint when not. */
   private showForgeCardDetail(card: CardDefinition): void {
+    if (this.detailTip) { this.detailTip.cancel(); this.detailTip = null; }
     if (this.detailContainer) this.detailContainer.destroy(true);
-    this.detailContainer = this.add.container(0, 0).setDepth(200);
-    const close = () => { this.detailContainer?.destroy(true); this.detailContainer = null; };
+    const container = this.add.container(0, 0).setDepth(200);
+    this.detailContainer = container;
+
+    const close = () => {
+      if (this.detailTip) { this.detailTip.cancel(); this.detailTip = null; }
+      if (this.detailContainer === container) this.detailContainer = null;
+      container.destroy(true);
+    };
 
     const dim = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.82).setInteractive();
     dim.on('pointerdown', close);
     this.registerDetailEsc(close);
-    this.detailContainer.add(dim);
+    container.add(dim);
 
     const craftable = this.canCraft(card);
-    const cardVisual = createCardVisual(this, 400, 248, card.id, { scale: 1.2 });
+    const isUpgraded = this.upgradedIds.has(card.id);
+
+    // Full card face (popup layout → includes the description panel). The
+    // user's cardScale multiplier is folded in by createCardFace; 0.64 keeps
+    // the card + the action below it within the 800×600 overlay at max scale.
+    const cardVisual = createCardFace(this, 400, 240, card.id, {
+      baseSize: 'popup',
+      hover: false,
+      scale: 0.64,
+      upgraded: isUpgraded,
+    });
     disableCardFaceInput(cardVisual);
     if (!craftable) cardVisual.setAlpha(0.55);
-    this.detailContainer.add(cardVisual);
+    container.add(cardVisual);
 
-    const bottom = cardVisual.getBounds().bottom;
-    const belowY = Math.min(514, bottom + 36);
+    // Lateral keyword glossary, for parity with the standard card detail popup.
+    const effects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
+    const desc = formatCardDescription({
+      effects,
+      exhaust: card.exhaust,
+      spend_armor: card.spend_armor,
+    });
+    const cb = cardVisual.getBounds();
+    this.detailTip = attachKeywordTooltip(this, container, desc, {
+      x: cb.centerX, y: cb.centerY, w: cb.width, h: cb.height,
+    });
+
+    const belowY = Math.min(540, cb.bottom + 30);
 
     if (craftable) {
-      this.addSendToAnvilButton(this.detailContainer, 400, belowY, card);
+      this.addSendToAnvilButton(container, 400, belowY, card);
     } else {
-      this.detailContainer.add(this.makeElementNeedOverlay(card, 400, belowY));
-      this.detailContainer.add(this.add.text(400, belowY + 44, 'Not enough shards to forge', {
+      container.add(this.makeElementNeedOverlay(card, 400, belowY));
+      container.add(this.add.text(400, belowY + 44, 'Not enough shards to forge', {
         fontSize: '13px', fontStyle: 'bold', fontFamily: FF, color: '#ff8866',
         stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5));

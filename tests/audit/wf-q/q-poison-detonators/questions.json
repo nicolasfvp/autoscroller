@@ -1,0 +1,53 @@
+{
+  "cluster": "Poison detonator rework (Drowning Lance t3-attack-water-water, Marsh Squall t3-air-earth-water): change consume-ALL -> consume-HALF + higher per-stack coefficient",
+  "specs": [
+    "tests/audit/wf-q/q-poison-detonators/detonators.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators2.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators3.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators4.json"
+  ],
+  "results": [
+    "tests/audit/wf-q/q-poison-detonators/detonators-results.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators2-results.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators3-results.json",
+    "tests/audit/wf-q/q-poison-detonators/detonators4-results.json"
+  ],
+  "engine_caveat": "The simulator has NO fractional-consume mechanic. consume_stack_value reads the FULL pre-cast poison snapshot; the wipe effect (value:-999 consume_stack:true) clamps to Math.min(cur, |value|). 'Consume HALF' was modeled two ways that bracket the design: (A) per-stack damage coefficient halved on the full snapshot ((coeff/2)*P approximates coeff*(P/2)) + a weak fixed wipe (-2/-4/-6) leaving the rest ticking; (B) over-correction ceiling = full per-stack coeff on the full pool AND NO wipe (both ticks AND full detonate). Shipping the real change requires a NEW CardResolver feature: consume Math.ceil(pool/2) and multiply per-stack damage by the consumed half, not the full snapshot.",
+  "findings": [
+    {
+      "proposalId": "PP-1 / Drowning Lance (t3-attack-water-water)",
+      "question": "Does consume-HALF actually fix the trap, or is the trap a fixed-deck-order artifact AND can a cheaper lever (cd cut, coeff bump alone) fix it without a new engine feature?",
+      "answer": "The rework FIXES the trap in a clean same-slot A/B: current Drowning Lance loses doom_knight 0/8 (deaths=8) in slot 6, while the consume-half rework wins 8/8 at hp%=0.248 (ttk 13000), edging the plain-applier comparator (Mireglide same slot) 8/8 @hp%=0.207. The decisive variable is 'does poison keep ticking after detonation', NOT the coefficient or cd alone: halving DAMAGE but still wiping the whole pool (per-stk 2.5 + consume-all) STILL dies 0/8; pure cd 2.4->1.8 with current effects STILL dies 0/8. Leaving a ticking tail (wipe -2 or -6) wins 8/8 @0.248. Cross-boss: vs iron_golem current Lance 6/6 @0.109 -> rework 6/6 @0.326, ttk 20000->13000.",
+      "verdict": "holds",
+      "evidence": "detonators2-results.json: P2-lance-current-slot6 wr=0 deaths=8; P2-lance-rework-half-slot6 wr=1.0 hp%=0.248 ttk=13000. detonators3-results.json: P3-lance-consume-full (half-coeff, consume-ALL) wr=0 deaths=8; P3-lance-current-noop-cd-only (cd1.8 only) wr=0 deaths=8; P3-lance-consume-2 & consume-6 wr=1.0 hp%=0.248; P3-lance-fullcoeff-full wr=1.0 hp%=0.281 ttk=10600; P3-lance-rework-iron wr=1.0 hp%=0.326 vs P3-lance-current-iron wr=1.0 hp%=0.109. detonators4: P4-comparator-mireglide-slot6 hp%=0.207, P4-lance-rework-half-slot6 hp%=0.248."
+    },
+    {
+      "proposalId": "PP-1 / Drowning Lance — over-correction",
+      "question": "Does consume-half over-correct (poison now both ticks AND detonates = too strong / oppressive)?",
+      "answer": "No over-correction. The consume-half model lands at hp%=0.248 (doom) / 0.326 (iron) - barely above the plain-applier comparator (0.207 doom) and well within a healthy single-boss cushion at 13s ttk; it does not trivialize. Even the absolute ceiling (full per-stack coeff on full pool + ZERO consumption, i.e. both full-tick AND full-detonate) only reaches hp%=0.281 (doom) / 0.333 (iron). On the armor boss (iron_golem) - the best case for a pierce detonator - the strongest variant is 6/6 @0.333 in ~12s, comparable to the existing strong engine cards, not a one-card trivializer. Detonator pierce vs an armor-stacking boss is a fair answer, not oppressive.",
+      "verdict": "holds",
+      "evidence": "detonators-results.json: PP1-lance-rework-nowipe-front (full burst, no consume) hp%=0.140 dmg=458. detonators3-results.json: P3-lance-fullcoeff-full hp%=0.281. detonators4-results.json: P4-lance-fullcoeff-full-iron wr=1.0 hp%=0.333 ttk=12000; P4-lance-rework-half-slot6 hp%=0.248 vs P4-comparator-mireglide-slot6 hp%=0.207."
+    },
+    {
+      "proposalId": "PP-1 / Marsh Squall (t3-air-earth-water)",
+      "question": "The proposal claims Marsh Squall '-> 0.033 HP' as a trap. Is it actually a death-trap, and does the rework help without over-correcting? (AoE upside is untestable in 1-enemy sim.)",
+      "answer": "Marsh Squall is NOT a death-trap in this engine: current Marsh WINS doom_knight 8/8 at hp%=0.033 (a razor-thin WIN, not 0 deaths) and wins iron_golem 6/6 @0.181. The proposal's '0.033 HP' is that thin win, mislabeled as a loss-equivalent. The rework still clearly improves it: doom 8/8 @0.033 -> @0.174 (ttk 17000->12000), iron 6/6 @0.181 -> @0.326 (ttk 18000->13000). No over-correction (0.174-0.326 cushions are healthy, not oppressive). The single-target sim cannot value the AoE per-stack buff - a multi-enemy probe is still required before locking Marsh's coefficient.",
+      "verdict": "holds",
+      "evidence": "detonators2-results.json: P2-marsh-current-slot6 wr=1.0 deaths=0 hp%=0.033 ttk=17000; P2-marsh-rework-half-slot6 wr=1.0 hp%=0.174 ttk=12000. detonators4-results.json: P4-marsh-current-iron wr=1.0 hp%=0.181 ttk=18000; P4-marsh-rework-iron wr=1.0 hp%=0.326 ttk=13000; P4-marsh-rework-half-slot6 (doom) hp%=0.174."
+    },
+    {
+      "proposalId": "PP-1 / mechanism — is 'consume HALF' the right knob, or is 'leave a ticking tail' the actual fix (and it needs new engine code)?",
+      "question": "Is 'consume exactly half + higher coeff' the minimal correct fix, or could a simpler/cleaner wiring achieve the same with less new code? And is this really a C4 'wiring fix' the implementer can do with a JSON value change?",
+      "answer": "The empirically-decisive lever is 'do not zero the quadratic pool' - ANY surviving tail (consume -2 through -6) flips 0/8 -> 8/8 @~0.248, and even keeping the full wipe but raising per-stack 3->5 flips it 8/8 @0.281 (the bigger one-shot burst out-paces the lost ticks). So 'consume HALF' is a reasonable, on-flavor middle, but it is NOT uniquely required - 'leave a fixed tail' or 'raise the coeff and keep consume-all' both work. CAVEAT: the engine has no fractional-consume; 'consume HALF (round up)' is a genuine NEW CardResolver feature (consume Math.ceil(pool/2) and scale per-stack damage by the consumed half), not a JSON-only value patch. The proposal's 'C4 wiring fix, not a cost hike' label is right in spirit but understates the engine work.",
+      "verdict": "user_decision",
+      "decisionForUser": "Two equally-valid fixes for the poison-detonator trap, pick the identity: (A) CONSUME-HALF + higher coeff (Lance per-stack 5, base 6, cd 1.8; Marsh per-stack 6, cost 2s, cd 2.0) -> requires a new consume_fraction:0.5 / Math.ceil(pool/2) feature in CardResolver; gives a 'burst-AND-keep-ramping' identity (hp% ~0.25 doom / ~0.33 iron). OR (B) KEEP consume-ALL but raise the burst (Lance per-stack 3->5, base 4->6, cd 2.4->1.8) -> pure JSON, no engine change; gives a snappier 'big one-shot then re-ramp' identity (hp% ~0.28 doom / ~0.33 iron, fastest ttk ~10.6s). Both clear the trap and neither over-corrects; (A) is more on-theme but costs engine code, (B) is cheaper to ship.",
+      "evidence": "detonators3-results.json: P3-lance-consume-full (half-coeff + consume-ALL) wr=0 deaths=8 [halving damage alone fails]; P3-lance-current-noop-cd-only (cd only) wr=0 deaths=8 [cd alone fails]; P3-lance-consume-2 wr=1.0 hp%=0.248 & P3-lance-consume-6 wr=1.0 hp%=0.248 [tail survives = fix]; P3-lance-fullcoeff-full (per-stk5 + consume-ALL) wr=1.0 hp%=0.281 ttk=10600 [coeff bump + keep wipe also fixes]. Source check: no consume_fraction/consume_half in src/systems/combat/*.ts (CardResolver consume_stack_value reads full snapshot; wipe clamps Math.min(cur,|value|))."
+    }
+  ],
+  "newConcerns": [
+    "FIXED-ORDER ARTIFACT inflates the trap: the CURRENT Drowning Lance loses 0/8 in slot 6 but WINS 8/8 (@0.033) when moved to FRONT slot 0 (detonators2: P2-lance-current-front wr=1.0 vs P2-lance-current-slot6 wr=0). Part of the '0/5 deaths' headline is the no-shuffle deck order detonating at a bad moment, not purely a card-design flaw. The rework is still justified because it wins in BOTH slots (front 0.140, slot6 0.248) and lifts the cushion everywhere - but the severity of the original 'trap' claim is overstated by the contaminated comparison (slot-6 detonator vs a non-detonator deck).",
+    "ENGINE GAP: 'consume HALF (round up)' has no existing implementation. Shipping option (A) needs a new CardResolver path: snapshot poison P, consume Math.ceil(P/2), and multiply the per-stack damage by the CONSUMED amount (not the full snapshot). My sim approximated this with (coeff/2)*fullSnapshot + a fixed-amount wipe; on these decks the exact wipe magnitude (-2 vs -6) made no measurable difference (both 0.248), so the verdict is robust to the approximation - but the production coefficient should be tuned against the real Math.ceil(P/2) once implemented.",
+    "MARSH AoE UNVALIDATED: every result here is single-target doom_knight/iron_golem. Marsh Squall's whole pitch is AoE 'per [poison] consumed to all enemies'. The per-stack 4->6 buff cannot be judged until a multi-enemy probe runs; the single-target numbers only prove it is not a death-trap and that consume-half is a strict improvement 1v1.",
+    "If the user picks option (B) (keep consume-all, raise burst) it is the cheaper ship and slightly stronger/faster (hp 0.281, ttk 10.6s) - watch that the snappier one-shot does not creep toward oppressive against future lower-HP enemies; it is fine at doom_knight/iron_golem today."
+  ]
+}

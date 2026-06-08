@@ -29,8 +29,6 @@ export class Preloader extends Scene {
       this.load.image(`tile_reserved_${id}`, `assets/map/tiles/tile_reserved_${id}.png`);
     }
 
-    // Building Icons — files removed; city hub uses btn_forge/btn_library/etc. instead
-
     // Hero warrior assets
     this.load.image('hero_idle',  'assets/characters/hero/idle/idle_1.png');
     this.load.image('hero_shadow', 'assets/characters/hero/shadow.png');
@@ -67,24 +65,37 @@ export class Preloader extends Scene {
       { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
       { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
       { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
-      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
-      // Default-terrain enemies
+      { id: 'zombie',               folder: 'a melhorar', file: 'zombie.png' },
+      // Default-terrain bosses. doom_knight has art (default/doom_knight_*.png).
+      // iron_golem and lizard_king are live in enemies.json but have NO sprite
+      // on disk — they render the missing-texture placeholder until art is added
+      // (iron_golem could reuse boss/iron_golem_*.png).
       { id: 'doom_knight',          folder: 'default',  file: 'doom_knight_1.png',          hasFrame2: true },
+      { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
+      { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
       // Desert
       { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png',          hasFrame2: true },
       { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated_salamander_1.png',   hasFrame2: true },
       { id: 'scorpion',             folder: 'desert',   file: 'scorpion_1.png',             hasFrame2: true },
-      // Forest
+      // Forest. ancient_tree and mush have art (forest/*.png). giant_spider and
+      // giant_spider_2 are live enemies in enemies.json but have NO sprite on
+      // disk yet — they show the missing-texture placeholder until art is added.
+      // ogre's surviving art lives under 'a melhorar/'.
       { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree_1.png',         hasFrame2: true },
+      { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
+      { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
       { id: 'mush',                 folder: 'forest',   file: 'mush_1.png',                 hasFrame2: true },
-      // Lava
+      { id: 'ogre',                 folder: 'a melhorar', file: 'ogre.png' },
+      // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
+      // spellings used in enemies.json; the disk files now use underscored
+      // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.
       { id: 'forge_slime',          folder: 'lava',     file: 'forge_slime_1.png',          hasFrame2: true },
       { id: 'lava_golem',           folder: 'lava',     file: 'lava_golem_1.png',           hasFrame2: true },
       { id: 'fire_elemental',       folder: 'lava',     file: 'fire_elemental_1.png',       hasFrame2: true },
       // Swamp
       { id: 'depths_horror',        folder: 'swamp',    file: 'depths_horror_1.png',        hasFrame2: true },
       { id: 'toxic_gooze',          folder: 'swamp',    file: 'toxic gooze_1.png',          hasFrame2: true },
-      { id: 'venomous_kobra',       folder: 'forest',   file: 'venomous_kobra_1.png',       hasFrame2: true },
+      { id: 'venomous_kobra',       folder: 'swamp',    file: 'venomous_kobra_1.png',       hasFrame2: true },
       // Green Field
       { id: 'slime',               folder: 'green_field', file: 'slime_1.png',              hasFrame2: true },
       { id: 'red_slime',           folder: 'green_field', file: 'red_slime_1.png',          hasFrame2: true },
@@ -128,9 +139,9 @@ export class Preloader extends Scene {
     this.load.image('homepage', 'assets/backgrounds/ui/homepage.jpg');
 
     // Parallax backgrounds
-    this.load.image('bg_green_field', 'assets/backgrounds/loop/green_field_background.png');
-    this.load.image('bg_sky',         'assets/backgrounds/ui/sky-background.png');
-    this.load.image('bg_desert',      'assets/backgrounds/loop/desert.png');
+    this.load.image('bg_green_field', 'assets/backgrounds/green_field_background.png');
+    this.load.image('bg_sky',         'assets/backgrounds/sky-background.jpg');
+    this.load.image('bg_desert', 'assets/backgrounds/desert.png');
 
     // Special tile sprites (256x256, baked-in decoration).
     this.load.image('tile_event', 'assets/map/tiles/tile_event.png');
@@ -159,10 +170,6 @@ export class Preloader extends Scene {
     // Building panel backgrounds
     this.load.spritesheet('forge_background', 'assets/buildings/backgrounds/forge_background.png', {
       frameWidth: 1168, frameHeight: 880,
-    });
-    this.load.image('forge_frame_01', 'assets/buildings/backgrounds/forge_frame_01.png');
-    this.load.spritesheet('forge_fire_sheet', 'assets/buildings/backgrounds/forge_fire_sheet.png', {
-      frameWidth: 390, frameHeight: 590,
     });
     this.load.image('arco_forja',     'assets/buildings/items/arco_forja.png');
     this.load.image('bigorna',        'assets/buildings/items/bigorna.png');
@@ -213,37 +220,38 @@ export class Preloader extends Scene {
     this.load.image('deck_frame', 'assets/ui/frames/deck-frame.png');
     this.load.image('bg_tile_selection', 'assets/ui/backgrounds/background-tile-selection.png');
     this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
-
+    // v2 (2026-05-26) Grok-generated alchemist-merchant interior. ShopScene
+    // prefers this when present and falls back to bg_shop_scene.
+    this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
+    // Shop-specific ornate chrome (Grok-generated 2026-05-26).
+    this.load.image('shop_item_frame',    'assets/ui/frames/shop_item_frame.png');
+    this.load.image('shop_remove_seal',   'assets/ui/panels/shop_remove_seal.png');
     this.load.image('shop_panel_list',    'assets/ui/shop/big_panel.png');
     this.load.image('shop_panel_detail',  'assets/ui/shop/asset description.png');
     this.load.image('shop_tab',           'assets/ui/shop/shop-section.png');
     this.load.image('shop_row_selected',  'assets/ui/shop/item_selection.png');
     this.load.image('shop_btn_buy',       'assets/ui/shop/buy-button.png');
-    this.load.image('shop_btn_sell',      'assets/ui/shop/sell-button.png');
-    this.load.image('shop_gold_panel',    'assets/ui/shop/gold_panel.png');
-
-    this.load.image('confirm_panel',        'assets/ui/panels/confirm_panel.png');
+    this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
+    this.load.image('confirm_panel',        'assets/ui/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
     this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
     this.load.image('bg_deck_editor_v2', 'assets/ui/backgrounds/deck-editor-v2.png');
     this.load.image('bg_relic_vault',  'assets/ui/backgrounds/bg_relic_vault.png');
     this.load.image('bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
-    // Visual-upgrade pass (audit2): parchment chrome,
-    // hero-card plaques, painted Settings backdrop, modifier-popup banner.
-
-    this.load.image('warrior_status', 'assets/ui/panels/warrior_status.png');
-    this.load.image('mage_status',    'assets/ui/panels/mage_status.png');
-    this.load.image('warrior_status_panel', 'assets/ui/panels/warrior_status_panel.png');
-    this.load.image('mage_status_panel',    'assets/ui/panels/mage_status_panel.png');
+    // Visual-upgrade pass (audit2): wooden buttons + painted Settings backdrop.
+    this.load.image('panel_wood_button',      'assets/ui/panels/panel_wood_button.png');
+    this.load.image('warrior_status',         'assets/ui/panels/warrior_status.png');
+    this.load.image('mage_status',            'assets/ui/panels/mage_status.png');
     // Forge dwarf NPC
     this.load.image('dwarf_talking',          'assets/characters/npc/forge-dwarf/dwarf_talking.png');
     this.load.image('dwarf_hands_on_hips',    'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
-
+    this.load.image('dwarf_thumbs_up',        'assets/characters/npc/forge-dwarf/dwarf_thumbs_up.png');
     this.load.image('panel_keyword_frame',    'assets/ui/panels/panel_keyword_frame.png');
     this.load.image('panel_hover_frame',      'assets/ui/panels/panel_hover_frame.png');
     this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
-
+    this.load.image('panel_card_grid_v2',     'assets/ui/panels/panel_card_grid_v2.png');
+    this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
     this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
 
@@ -259,7 +267,6 @@ export class Preloader extends Scene {
     this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
     this.load.image('hud_panel_left',     'assets/ui/panels/hud_panel_left.png');
-
     this.load.image('hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/ui/panels/loopcomplete.png');
 
@@ -282,15 +289,14 @@ export class Preloader extends Scene {
     this.load.image('btn_settings',        'assets/ui/buttons/btn_settings.png');
     this.load.image('btn_tutorial',        'assets/ui/buttons/btn_tutorial.png');
     // Building buttons (city hub)
-    this.load.image('btn_forge',         'assets/ui/buttons/btn_forge.png');
-    this.load.image('btn_library',       'assets/ui/buttons/btn_library.png');
-    this.load.image('btn_workshop',      'assets/ui/buttons/btn_workshop.png');
-    this.load.image('btn_oracle',        'assets/ui/buttons/btn_oracle.png');
-    this.load.image('btn_vault',         'assets/ui/buttons/btn_vault.png');
-
-
-    this.load.image('btn_melhorar',          'assets/ui/buttons/btn_melhorar.png');
-    this.load.image('btn_start_run_hub',     'assets/ui/buttons/btn_start_run_hub.png');
+    this.load.image('btn_forge',         'assets/ui/btn_forge.png');
+    this.load.image('btn_library',       'assets/ui/btn_library.png');
+    this.load.image('btn_workshop',      'assets/ui/btn_workshop.png');
+    this.load.image('btn_oracle',        'assets/ui/btn_oracle.png');
+    this.load.image('btn_vault',         'assets/ui/btn_vault.png');
+    this.load.image('upgrade_panel',     'assets/ui/upgrade_panel.png');
+    this.load.image('btn_melhorar',          'assets/ui/btn_melhorar.png');
+    this.load.image('btn_start_run_hub',     'assets/ui/btn_start_run_hub.png');
     this.load.image('label_requer',          'assets/ui/labels/label_requer.png');
     // Building upgrade text panels (one per level per building)
     const buildingPanels: [string, number][] = [

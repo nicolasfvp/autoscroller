@@ -1,0 +1,41 @@
+{
+  "matchups": [
+    {
+      "id": "probe-filler-doom",
+      "label": "PROBE filler Jab slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "probe-filler-doom-d7",
+      "label": "PROBE filler Jab slot0 vs doom_knight dmg7 (P0-1 applied)",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "attack": { "damage": 7, "pattern": "fixed" } },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "probe-filler-werewolf-late",
+      "label": "PROBE filler Jab slot0 vs werewolf (late mult)",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    }
+  ]
+}

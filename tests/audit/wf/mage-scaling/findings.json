@@ -1,0 +1,69 @@
+{
+  "lane": "mage-scaling",
+  "summary": "At REALISTIC low INT (1 early, 2 mid, 3 boss1, 4 late) elemental mages that win via DIRECT damage scale far worse than warriors on the same offense axis. The headline: at boss1 the 'should-be-easy' doom_knight (380 HP / def 3) is cleared by the warrior (wr=1.0, even with a T1/T2-only deck) but KILLS the fire/earth/air direct-damage mages (wr=0, 4/4 deaths each). Only the water/poison mage survives, because poison is flat quadratic DoT that bypasses the multiplier gap entirely. Controlled diagnostics confirm the cause is the scaling axis, not deck quality: granting the failing fire/air mages +INT (elemMult 1.30->1.60) flips them to wr=1.0, and +STR does the same. Root cause is structural: mage hero STR stays 1 so strMult=1.0 while warrior reaches 1.75 at boss1, and elemMult only adds 0.15/pt off INT (1.30 at boss1) on MAGIC-category direct damage; the def-3 boss shreds the mage's small per-hit values. Two off-curve issues compound it: (a) many 'fire' T3 cards are category=attack, so a mage gets NO multiplier on them (strMult=1.0) and they are dead weight; (b) earth-control mage has no aggressive win condition at all.",
+  "resultsPath": "tests/audit/wf/mage-scaling/results.json",
+  "decksTested": 35,
+  "matchupsRun": 110,
+  "findings": [
+    {
+      "id": "MS-1",
+      "kind": "progression",
+      "target": "doom_knight (boss1) vs direct-damage mage archetypes",
+      "stage": "boss1",
+      "evidence": "results.json: fire-mage-boss1__vs__doom_knight wr=0 (4/4 deaths, dmg=331/380), earth-mage wr=0 (4/4 deaths, dmg=242), air-mage wr=0 (4/4 deaths, dmg=322); water-mage (poison DoT) wr=1.0 (dmg=382, hp=0.198); warrior physical-warrior-boss1 wr=1.0 (dmg=380, hp=0.119). results-swap.json: war-physical-boss1-noT3 (T1/T2 only) STILL wr=1.0 (5/5, dmg=388) -> warrior clears the first boss without any T3. doom_knight = 380 HP / def 3 / 9 dmg.",
+      "severity": "high",
+      "proposedChange": "Treat the first boss as the realism anchor: direct-damage mages must reach ~0.8 winRate at boss1. Do NOT nerf doom_knight or STR. Fix via C2 INT availability + flat mage values (see MS-2/MS-3). Target: fire/air mage wr at boss1 from 0 -> ~0.8.",
+      "confidence": "high"
+    },
+    {
+      "id": "MS-2",
+      "kind": "off_curve_weak",
+      "target": "elemMult scaling curve (INT/SPI/DEX magic multiplier, 0.15/pt)",
+      "stage": "boss1",
+      "evidence": "Controlled diagnostics (results-swap.json + results-magnitude.json), 5 repeats each, identical decks: fire-mage-boss1 at realistic INT3 (elemMult 1.30) = wr 0 (5/5 deaths). +INT1 (elemMult 1.45) = wr 0 (dmg 360). +INT2 (elemMult 1.60) = wr 1.0 (dmg 382, hp 0.025). +INT3 (elemMult 1.75) = wr 1.0 (hp 0.132). air-mage +INT3 = wr 1.0 (was 0). The SAME deck with +STR3 instead = wr 1.0 (dmg 401). So a ~+0.30 effective offense multiplier (about +2 INT) closes the boss1 gap; at realistic INT the curve is ~30% short. Cross-stage: mid avg TTK mage=17946ms vs warrior=12690ms; late normals warrior avgTTK=8338ms vs fire-mage=12500ms / earth-mage=17288ms.",
+      "severity": "high",
+      "proposedChange": "C2-compliant, never touches STR: raise the magic per-point multiplier from 0.15 to 0.22/pt (elemMult = 1 + (elemStat-1)*0.22). At realistic INT this gives elemMult: early 1.0, mid 1.22, boss1 1.44, late 1.66 -- still well under strMult (1.25/1.5/1.75/2.0) so STR stays king, but enough to lift boss1 fire/air mages over the line (boss1 effective offense moves 1.30->1.44, partway to the 1.60 win threshold; combine with MS-3 to fully clear). Alternatively/additionally, grant mages +1 INT every 2 levels at a faster cadence (offense axis) -- but the per-point curve fix is the cleaner single lever.",
+      "confidence": "high"
+    },
+    {
+      "id": "MS-3",
+      "kind": "off_curve_weak",
+      "target": "low-flat-value magic direct-damage cards vs def-3 boss (t2-fire-water Steam Surge, t1-fire Spark, t2-agility-fire Flame Dart base value)",
+      "stage": "boss1",
+      "evidence": "doom_knight def=3. Mage per-hit values are small (Steam Surge Deal 4; Flame Dart Deal 5; Spark only applies burn) and elemMult at INT3 is 1.30, so a Deal-4 hit -> 4*1.30=5.2 -> minus def 3 = ~2 landed; the def subtraction eats ~half of every small mage hit. Warrior's Deal-9 Jab at strMult 1.75 = 15.75 - 3 = ~12 landed. results.json boss1: fire-mage total dmg over a full fight only reached 331 vs the 380 needed, dying first. This is the per-hit-vs-defense interaction, not just the multiplier.",
+      "severity": "med",
+      "proposedChange": "C2/C5 flat-value lift on the cheap magic direct-damage staples so volume mages chip past defense at low INT (does not touch STR or DoT formulas): t2-fire-water Steam Surge base Deal 4 -> 6; t2-agility-fire Flame Dart base Deal 5 -> 6; give t1-fire Spark a small Deal 2 alongside its burn so it is not pure-DoT filler (see MS-5). Keep costs/CDs as-is (C1: power via value, not cost). Net effect stacks with MS-2 to clear boss1.",
+      "confidence": "med"
+    },
+    {
+      "id": "MS-4",
+      "kind": "off_curve_weak",
+      "target": "attack-category 'fire' T3 finishers used by mages (t3-attack-fire-fire Cinderlance, and the Cinder/Galecinder/Supernova line)",
+      "stage": "boss1",
+      "evidence": "results-swap.json category test, 5 repeats, identical boss1 fire deck except the T3 finisher: magic finisher t3-air-fire-water Steaming Plague -> dmg 247; attack finisher t3-attack-fire-fire Cinderlance -> dmg 157 (both wr 0, but the attack version dealt 36% LESS). Reason (CardResolver.ts:411): elemMult only applies when card.category==='magic'; attack-category cards get strMult, which is 1.0 for a mage (STR stays 1). So these 'fire' T3s give a mage ZERO offense scaling -- strictly worse than a magic card of equal raw value.",
+      "severity": "med",
+      "proposedChange": "C2 wiring fix (no cost/CD change, no STR change): let elemMult apply to ANY card whose declared scale.stat is a magic stat (int/spi/dex) regardless of card.category -- i.e. drop the category==='magic' gate in the elemMult branch and gate on scale.stat !== 'str' only. This makes DEX/INT-scaled 'attack' cards (Cinder Sprint, Galecinder, agility lines) scale for mages without buffing warriors (whose offense stat is str, which is excluded from elemMult). Strictly a buff to under-served mage cards; cannot raise any STR card.",
+      "confidence": "med"
+    },
+    {
+      "id": "MS-5",
+      "kind": "off_curve_weak",
+      "target": "t1-fire (Spark)",
+      "stage": "mid",
+      "evidence": "results-swap.json swap test, 5 repeats, fixed mid mage core, one flex slot, avg across 5 enemies: baseline +Spark avgTTK=18468ms; +Pyre (t2-fire-fire) avgTTK=19668ms; +Boilstep (t3-agility-fire-water) avgTTK=17680ms (all wr 1.0). Spark (pure 'Apply 3 burn', no direct damage, peakOPS 8.57) is the weakest filler and at INT 1-2 its burn realizes slowly; it is the kind of barely-weak T1 that becomes unused. (Note: Pyre's slower TTK here is a detonator-timing artifact of the tiny deck, not a Pyre weakness.)",
+      "severity": "low",
+      "proposedChange": "C1: cut Spark CD 1.4s -> 1.2s (snappier, no cost change) and/or add a token Deal 2 so it contributes direct chip damage at low INT (supports MS-3). Keeps it a clean T1 single-effect card while making it a non-dead pick.",
+      "confidence": "med"
+    },
+    {
+      "id": "MS-6",
+      "kind": "viability",
+      "target": "earth-control mage archetype",
+      "stage": "boss1",
+      "evidence": "results.json earth-mage-boss1__vs__doom_knight wr=0 (4/4 deaths, dmg=242, lowest of all). Diagnostics: even +INT3 (results-swap mage-earth-boss1-INT6) stays wr=0 (5/5 deaths, dmg 263), and adding a poison damage win-condition (results-magnitude mage-earth-boss1-dmgfix: Bog Catalyst + Steaming Plague) still wr=0 (5/5, dmg 278). Earth leans on Quake (t1-earth, pure slow, NO damage) + Tremor Lock (control), so it has no throughput AND mage defenseMultiplier 0.8 means its armor is worse than a warrior's -- it cannot out-survive to a second win condition (C3).",
+      "severity": "med",
+      "proposedChange": "This is partly archetype design, not a single off-curve card. Per C3, earth/control is allowed to be race-losing IF it buys time for a second win condition -- but earth mage has none. Recommend the slow/earth payoff cards carry a real secondary damage hook scaled off INT (e.g. t3-agility-air-water Stormsplash / a slow-detonator) so a control mage has a closer. Concretely: t1-earth Quake -> add 'Deal 2([int])' alongside the 4 slow (still T1-clean) so the earth opener is not pure-zero-damage. Lower confidence: needs its own archetype pass.",
+      "confidence": "low"
+    }
+  ]
+}

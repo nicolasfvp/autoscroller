@@ -1,0 +1,38 @@
+{
+  "_comment": "ADVERSARIAL re-test of boss-progression findings. Reproduce baselines independently (same decks the designer used) + add enemyOverride probes the adversary controls. Goal: confirm/refute BP-1 (doom_knight overtuned, dmg7 lifts cushion), BP-4 (iron_golem non-monotonic spike). Uses vsEnemies/vsBoss:false where needed; probes are driven via matchups patched after expand.",
+  "decks": [
+    {
+      "id": "adv-war-physical",
+      "label": "ADV warrior physical (designer deck)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-counter", "t2-attack-earth", "t2-agility-earth", "t1-attack", "t2-counter-counter", "t3-attack-attack-attack", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "adv-mage-poison",
+      "label": "ADV mage poison (designer deck)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-water", "t1-water", "t2-water-water", "t2-agility-water", "t3-agility-water-water", "t3-earth-earth-water", "t2-fire-water", "t3-air-fire-water", "t2-air-water", "t3-agility-earth-water", "t2-agility-fire"]
+    },
+    {
+      "id": "adv-mage-burn",
+      "label": "ADV mage burn (designer deck)",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t2-air-fire", "t1-fire", "t2-fire-water", "t3-attack-fire-fire", "t3-agility-fire-fire", "t2-water-water", "t2-air-water", "t2-agility-water"]
+    },
+    {
+      "id": "adv-war-physical-late",
+      "label": "ADV strong warrior physical late (designer deck)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "late",
+      "vsEnemies": [],
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"]
+    }
+  ]
+}

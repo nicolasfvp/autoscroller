@@ -1,0 +1,63 @@
+{
+  "_comment": "HYBRID two-archetype lane. poison+burn, poison+block, burn+block, bleed+poison. Plus cross-archetype detonator decks (Tremor Detonate, Boilstep) and bridge-card probes (Venom Detonation, Drowning Lance, Marsh Squall, Brine Crucible). Includes boss1 (doom_knight) decks and Tier A/B + swap baselines. Mage decks are mostly elemental; the bleed+poison hybrid is warrior-leaning physical.",
+  "decks": [
+
+    { "id": "hy-pburn-mid", "label": "Poison+Burn hybrid (mid)", "archetype": "poison-burn", "class": "mage", "stage": "mid",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-water", "t2-earth-fire", "t3-agility-fire-water", "t3-air-fire-water", "t1-fire", "t1-water"] },
+
+    { "id": "hy-pburn-late", "label": "Poison+Burn hybrid (late)", "archetype": "poison-burn", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-fire-water", "t3-air-fire-water", "t3-attack-fire-fire", "t2-fire-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-earth-water", "t3-agility-air-water", "t2-earth-fire", "t1-fire", "t1-water", "t3-agility-fire-fire"] },
+
+    { "id": "hy-pburn-boss1", "label": "Poison+Burn hybrid (boss1)", "archetype": "poison-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t3-agility-fire-water", "t3-air-fire-water", "t3-attack-fire-fire", "t2-fire-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-earth-water", "t3-agility-air-water", "t2-earth-fire", "t1-fire", "t1-water"] },
+
+    { "id": "hy-pblock-mid", "label": "Poison+Block hybrid (mid)", "archetype": "poison-block", "class": "mage", "stage": "mid",
+      "deck": ["t2-earth-water", "t2-defense-defense", "t2-water-water", "t3-defense-water-water", "t3-earth-earth-water", "t1-water", "t3-agility-defense-water", "t3-defense-earth-water"] },
+
+    { "id": "hy-pblock-late", "label": "Poison+Block hybrid (late)", "archetype": "poison-block", "class": "mage", "stage": "late",
+      "deck": ["t3-defense-water-water", "t3-defense-earth-water", "t3-defense-defense-water", "t3-attack-defense-water", "t3-agility-defense-water", "t3-air-defense-water", "t3-earth-earth-water", "t2-earth-water", "t2-defense-defense", "t3-agility-earth-water", "t1-water", "t2-water-water"] },
+
+    { "id": "hy-pblock-boss1", "label": "Poison+Block hybrid (boss1)", "archetype": "poison-block", "class": "mage", "stage": "boss1",
+      "deck": ["t3-defense-water-water", "t3-defense-earth-water", "t3-defense-defense-water", "t3-attack-defense-water", "t3-agility-defense-water", "t3-earth-earth-water", "t2-earth-water", "t2-defense-defense", "t3-agility-earth-water", "t1-water", "t2-water-water"] },
+
+    { "id": "hy-burnblock-mid", "label": "Burn+Block hybrid (mid)", "archetype": "burn-block", "class": "mage", "stage": "mid",
+      "deck": ["t2-earth-fire", "t2-fire-fire", "t2-defense-defense", "t2-defense-fire", "t1-fire", "t3-defense-earth-fire", "t3-earth-fire-fire", "t3-counter-defense-fire"] },
+
+    { "id": "hy-burnblock-late", "label": "Burn+Block hybrid (late)", "archetype": "burn-block", "class": "mage", "stage": "late",
+      "deck": ["t3-defense-earth-fire", "t3-earth-fire-fire", "t3-counter-defense-fire", "t3-defense-defense-fire", "t2-earth-fire", "t2-fire-fire", "t2-defense-defense", "t1-fire", "t3-attack-defense-fire", "t3-fire-fire-water", "t2-defense-fire", "t3-agility-fire-fire"] },
+
+    { "id": "hy-burnblock-boss1", "label": "Burn+Block hybrid (boss1)", "archetype": "burn-block", "class": "mage", "stage": "boss1",
+      "deck": ["t3-defense-earth-fire", "t3-earth-fire-fire", "t3-counter-defense-fire", "t3-defense-defense-fire", "t2-earth-fire", "t2-fire-fire", "t2-defense-defense", "t1-fire", "t3-attack-defense-fire", "t3-fire-fire-water", "t2-defense-fire"] },
+
+    { "id": "hy-bleedpoison-late", "label": "Bleed+Poison warrior (late)", "archetype": "bleed-poison", "class": "warrior", "stage": "late",
+      "deck": ["t3-attack-counter-water", "t2-attack-attack", "t2-agility-counter", "t3-agility-attack-counter", "t3-agility-counter-counter", "t3-attack-attack-attack", "t2-attack-counter", "t3-agility-agility-counter", "t3-attack-attack-water", "t2-counter-counter", "t2-counter-fire", "t2-attack-fire"] },
+
+    { "id": "hy-bleedpoison-boss1", "label": "Bleed+Poison warrior (boss1)", "archetype": "bleed-poison", "class": "warrior", "stage": "boss1",
+      "deck": ["t3-attack-counter-water", "t2-attack-attack", "t2-agility-counter", "t3-agility-attack-counter", "t3-agility-counter-counter", "t3-attack-attack-attack", "t2-attack-counter", "t3-agility-agility-counter", "t2-counter-counter", "t2-counter-fire"] },
+
+    { "id": "hy-tremor-late", "label": "Tremor Detonate tri-stack (late)", "archetype": "hybrid-detonator", "class": "mage", "stage": "late",
+      "deck": ["t3-attack-fire-water", "t3-agility-fire-water", "t3-air-fire-water", "t2-earth-water", "t2-agility-fire", "t2-fire-fire", "t3-attack-counter-water", "t3-earth-earth-water", "t2-earth-fire", "t1-fire", "t1-water", "t2-counter-fire"] },
+
+    { "id": "hy-tremor-boss1", "label": "Tremor Detonate tri-stack (boss1)", "archetype": "hybrid-detonator", "class": "mage", "stage": "boss1",
+      "deck": ["t3-attack-fire-water", "t3-agility-fire-water", "t3-air-fire-water", "t2-earth-water", "t2-agility-fire", "t2-fire-fire", "t3-earth-earth-water", "t2-earth-fire", "t1-fire", "t1-water", "t2-counter-fire"] },
+
+    { "id": "hy-boilstep-late", "label": "Boilstep dual-applier engine (late)", "archetype": "hybrid-detonator", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-fire-water", "t3-attack-fire-water", "t2-earth-water", "t2-fire-fire", "t2-agility-fire", "t3-air-fire-water", "t3-earth-earth-water", "t3-agility-air-water", "t2-earth-fire", "t1-fire", "t1-water", "t3-agility-fire-fire"] },
+
+    { "id": "hy-venomdet-late", "label": "Venom Detonation bridge probe (late)", "archetype": "hybrid-detonator", "class": "mage", "stage": "late",
+      "deck": ["t3-counter-fire-water", "t3-agility-fire-water", "t3-air-fire-water", "t2-earth-water", "t2-fire-fire", "t2-agility-fire", "t3-earth-earth-water", "t2-earth-fire", "t1-fire", "t1-water", "t3-agility-air-water", "t2-counter-fire"] },
+
+    { "id": "hy-drownlance-late", "label": "Drowning Lance poison-detonator (late)", "archetype": "hybrid-detonator", "class": "mage", "stage": "late",
+      "deck": ["t3-attack-water-water", "t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-defense-water-water", "t1-water", "t3-agility-earth-water", "t2-water-water", "t3-defense-earth-water", "t3-defense-defense-water"] },
+
+    { "id": "hy-marshsquall-late", "label": "Marsh Squall poison-detonator (late)", "archetype": "hybrid-detonator", "class": "mage", "stage": "late",
+      "deck": ["t3-air-earth-water", "t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-defense-water-water", "t1-water", "t3-agility-earth-water", "t2-water-water", "t3-defense-earth-water", "t3-defense-defense-water"] },
+
+    { "id": "hy-brinecrucible-late", "label": "Brine Crucible burn->bleed convert (late)", "archetype": "burn-bleed-convert", "class": "warrior", "stage": "late",
+      "deck": ["t3-counter-fire-fire", "t2-attack-fire", "t2-counter-fire", "t3-agility-attack-counter", "t3-agility-counter-counter", "t2-agility-fire", "t1-fire", "t2-attack-attack", "t3-attack-attack-attack", "t2-agility-counter", "t2-counter-counter", "t3-attack-counter-fire"] },
+
+    { "id": "hy-brinecrucible-boss1", "label": "Brine Crucible burn->bleed convert (boss1)", "archetype": "burn-bleed-convert", "class": "warrior", "stage": "boss1",
+      "deck": ["t3-counter-fire-fire", "t2-attack-fire", "t2-counter-fire", "t3-agility-attack-counter", "t3-agility-counter-counter", "t2-agility-fire", "t1-fire", "t2-attack-attack", "t3-attack-attack-attack", "t2-agility-counter", "t2-counter-counter"] }
+
+  ]
+}

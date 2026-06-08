@@ -1,0 +1,77 @@
+{
+  "_comment": "Q(b): Does adding pierce to Earthcleaver/Mountain's Will make them OPPRESSIVE vs NORMAL enemies (trivial kills)? Normals have low defense, so pierce_armor on the base hit changes little vs them (pierce only matters vs armor it would otherwise be blocked by). We compare baseline vs buffed for a deck running BOTH buffed cards early, across the mid+late normal battery. Watch for TTK collapse / HP-cushion jump that would indicate trivialization. 6 reps.",
+  "matchups": [
+    {
+      "id": "NORM-base-salamander",
+      "label": "BASELINE (both unbuffed, early) vs mutated_salamander",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "mutated_salamander", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "NORM-buff-salamander",
+      "label": "BUFFED both (pierce+cd2.0, early) vs mutated_salamander",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "mutated_salamander", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] },
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "NORM-base-werewolf",
+      "label": "BASELINE vs werewolf",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "werewolf", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "NORM-buff-werewolf",
+      "label": "BUFFED both vs werewolf",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "werewolf", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] },
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "NORM-base-skeleton",
+      "label": "BASELINE vs skeleton",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "skeleton", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "NORM-buff-skeleton",
+      "label": "BUFFED both vs skeleton",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "skeleton", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] },
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "NORM-base-lavagolem",
+      "label": "BASELINE vs lava_golen (highest-def normal — pierce most relevant here)",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "lava_golen", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "NORM-buff-lavagolem",
+      "label": "BUFFED both vs lava_golen",
+      "class": "warrior", "stage": "mid", "archetype": "pure-physical",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t1-attack", "t1-attack"],
+      "enemy": "lava_golen", "runXP": 350, "isBoss": false, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] },
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    }
+  ]
+}

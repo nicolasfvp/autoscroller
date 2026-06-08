@@ -1,0 +1,77 @@
+{
+  "_comment": "Confirmation re-run of the boss1 (doom_knight) swap tests at higher repeats to firm up the headline progression + Vein Splitter / Wrath Squall / Razor Stance boss-swing claims.",
+  "decks": [
+    {
+      "id": "cwar-boss1-FILLER",
+      "label": "WAR boss1 + FILLER(Jab)",
+      "archetype": "confirm-war-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t1-attack"]
+    },
+    {
+      "id": "cwar-boss1-VEINSPLITTER",
+      "label": "WAR boss1 + Vein Splitter",
+      "archetype": "confirm-war-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "cwar-boss1-WRATHSQUALL",
+      "label": "WAR boss1 + Wrath Squall",
+      "archetype": "confirm-war-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t3-air-counter-counter"]
+    },
+    {
+      "id": "cwar-boss1-RAZORSTANCE",
+      "label": "WAR boss1 + Razor Stance",
+      "archetype": "confirm-war-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t2-counter-counter"]
+    },
+    {
+      "id": "cwar-boss1-MOUNTAINSWILL",
+      "label": "WAR boss1 + Mountain's Will (strong T3 control)",
+      "archetype": "confirm-war-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-earth", "t2-attack-attack", "t2-defense-defense", "t3-attack-earth-earth"]
+    },
+    {
+      "id": "cwar-boss1-WRATHSQUALL-RAGEPAYOFF",
+      "label": "WAR boss1 + Wrath Squall WITH rage payoff (Wrath Brand)",
+      "archetype": "confirm-war-boss1-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-attack-attack", "t2-defense-defense", "t3-attack-counter-fire", "t3-air-counter-counter"]
+    },
+    {
+      "id": "cwar-boss1-NORAGE-control",
+      "label": "WAR boss1 + Wrath Brand only (rage-payoff control)",
+      "archetype": "confirm-war-boss1-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-attack-attack", "t2-defense-defense", "t3-attack-counter-fire", "t1-attack"]
+    },
+    {
+      "id": "cmage-burn-boss1-FILLER",
+      "label": "MAGE burn boss1 + FILLER(Spark)",
+      "archetype": "confirm-mage-burn-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t1-fire"]
+    },
+    {
+      "id": "cmage-burn-boss1-FIRESTORM",
+      "label": "MAGE burn boss1 + Firestorm",
+      "archetype": "confirm-mage-burn-boss1",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t1-fire", "t2-air-fire"]
+    }
+  ]
+}

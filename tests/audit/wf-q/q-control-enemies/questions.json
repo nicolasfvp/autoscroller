@@ -1,0 +1,53 @@
+{
+  "cluster": "Control CD cuts + normal-enemy ramp",
+  "methodology": "Real CombatEngine via tests/audit/deck-battle-sim.test.ts. Control cards FRONT-LOADED in fixed deck order (no shuffle). Late battery at loopMultiplier 1.15 (canonical late profile, enemy mult 1.15). enemyOverride.baseHP is BASE; sim then applies the 1.15 mult: base95->109, base130->149, base135->155, base150->172, werewolf base135->155, salamander base160->184. Baseline AND proposed in the same spec. >=5 reps normals, 6 reps boss.",
+  "specs": [
+    "tests/audit/wf-q/q-control-enemies/control-cd.json -> control-cd-results.json",
+    "tests/audit/wf-q/q-control-enemies/control-cd-decompose.json -> control-cd-decompose-results.json",
+    "tests/audit/wf-q/q-control-enemies/enemy-hp.json -> enemy-hp-results.json",
+    "tests/audit/wf-q/q-control-enemies/enemy-hp-finegrain.json -> enemy-hp-finegrain-results.json"
+  ],
+  "items": [
+    {
+      "proposalId": "Control CD cuts (Frostbind 2->1.4, Quake 2->1.4, Thunderstrike Catalyst 2.4->2.0, Static Skirmish 1.8->1.6)",
+      "question": "Are pure-control CD cuts cosmetic? Frostbind/Quake add no damage (C3/C5 pure control), so cutting their CD cannot directly close a fight faster -- only the converters (Thunderstrike/Static Skirmish) deal damage. Does the bundle measurably improve close rate, or is it placebo?",
+      "answer": "NOT cosmetic -- measurable across every matchup. Full bundle improves TTK and HP cushion everywhere; both halves of the bundle contribute and they stack. Decompose proves pure-control (Frostbind/Quake) CD-cut alone beats converters-alone on the boss.",
+      "verdict": "holds",
+      "evidence": "control-cd-results: depths_horror TTK 19100->15483ms (-19%), cushion 0.385->0.464; werewolf TTK 27500->21000ms (-24%), cushion 0.304->0.412; mutated_salamander TTK 28000->24500ms, cushion 0.277->0.399; doom_knight TTK 34000->29000ms, cushion 0.107->0.282 (winRate already 1.0 baseline, so cuts improve margin not win/loss). control-cd-decompose vs werewolf: baseline 27500, convOnly 26900, pureOnly 25100, FULL 21000 (halves stack). vs doom_knight: baseline 34000, convOnly 33000, pureOnly 31600, FULL 29000 -- pure-control alone (31600) outperforms converters alone (33000), so Frostbind/Quake CD cuts carry independent weight throttling the enemy and feeding the converters. Respects C1 (cd>=1.2 floor: 1.4/1.4/2.0/1.6 all legal), C3/C5 (no damage added to slow/stun).",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "depths_horror baseHP 95->150",
+      "question": "Does 150 over-correct? The proposal says 'WITHOUT spiking past the other late normals (werewolf ~155, salamander ~184)' -- but those numbers are the SCALED late values (mult 1.15). base150 scales to floor(150*1.15)=172, which EXCEEDS werewolf's scaled 155. Did the proposal conflate base vs scaled HP?",
+      "answer": "Yes -- 150 over-corrects. The late 1.15 mult pushes base150 to scaled 172, ABOVE werewolf (155) and into salamander territory (184). The corrected base is ~130-135 (scaled 149-155), which sits just below/at werewolf and matches the burn-mage TTK to the werewolf/salamander band. The 'trivial 4-6s' claim is confirmed and then some (warrior one-shots base95 in 1.3s).",
+      "verdict": "revise",
+      "evidence": "enemy-hp-results (warrior burst deck): depths base95(scaled109) ttk 1300ms [trivial, confirms complaint]; base130(149) 1300ms; base150(172) 3600ms; werewolf-ref(155) 1300ms; salamander-ref(184) 3600ms. enemy-hp-finegrain (warrior): scaled155 1300, scaled161 1300, scaled166 1300, scaled184 3900 -- warrior's first-window burst eats anything <=166 scaled, so NO in-band HP makes it non-trivial for warrior (deck-burst trait, not an HP-tuning problem). Burn mage gradient is smooth and is the real beneficiary: depths base95(109) ttk 6560, base130(149) 10480, base135(155) 12200, base150(172) 12920; werewolf-burn-ref 10000, salamander-burn-ref 10100. So base~130-135 lands depths in the werewolf/salamander burn-TTK band; base150 over-shoots both refs.",
+      "decisionForUser": null,
+      "revisedValue": "baseHP 95->130 (scaled 149, just under werewolf 155). Lifts burn-mage TTK from 6560ms onto the werewolf/salamander band (~10000-10500ms) without exceeding the werewolf guardrail. base150 is rejected: scaled 172 > werewolf 155. Note: depths_horror dmg stays 5 (very low) -- this only makes it a tankier soft battery enemy; acceptable per 'battery' framing but it remains low-threat."
+    },
+    {
+      "proposalId": "fire_elemental baseHP 102->150",
+      "question": "Same over-correction as depths_horror: base150 -> scaled 172 > werewolf 155. Also, does fire_elemental even need a lift as large as depths_horror given its higher base (102) and meaningful damage (9)?",
+      "answer": "Same over-correction. base150 scales to 172, above werewolf. fire_elemental already has dmg 9 (real threat) so it needs less of an HP bump than depths_horror to feel non-trivial. Corrected base ~130 (scaled 149).",
+      "verdict": "revise",
+      "evidence": "enemy-hp-results: warrior fire base102(scaled117) ttk 1300ms; base130(149) 1300ms; base150(172) 3600ms (warrior burst caps at floor below ~166 scaled, same as depths). Burn mage fire base102(117) ttk 6500, base130(149) 9000, base150(172) 10100; werewolf-burn-ref 10000, salamander-burn-ref 10100 -- base130 (9000ms) already reaches the werewolf-burn band, base150 (10100ms) equals salamander, over-shooting the werewolf guardrail.",
+      "decisionForUser": null,
+      "revisedValue": "baseHP 102->130 (scaled 149, just under werewolf 155). Reaches the werewolf-burn TTK band without exceeding it. base150 rejected (scaled 172 > werewolf 155). fire_elemental dmg 9 is already a fair threat -- no damage change needed."
+    },
+    {
+      "proposalId": "lost_lizard (accept as gentle intro OR buff damage 2->5)",
+      "question": "Is lost_lizard in-scope for this cluster's evidence at all? It is an EARLY-stage enemy (base68 HP, dmg2), never in the late battery, and the proposal itself rates it low priority.",
+      "answer": "Out of cluster's tested scope. lost_lizard never appears in the late battery (early stage only); I did not author matchups for it because the cluster's load-bearing question is the late ramp. The proposal already calls it 'gentle intro / low priority' -- no evidence here contradicts that. The damage 2->5 buff is a 2.5x jump on the first-ever enemy a player meets; defer to the user as an intentional new-player-experience choice, not a balance fix.",
+      "verdict": "user_decision",
+      "evidence": "No sim run (early-stage enemy, outside the late-battery cluster). lost_lizard base: HP68 dmg2 cd3500ms, affinity attack. Proposal text itself marks it 'low priority'. The question is purely design intent: should the very first enemy threaten a fresh deck at all?",
+      "decisionForUser": "Keep lost_lizard as a zero-threat tutorial bag (dmg 2) so loop-1 never punishes a 5-card starter, OR bump damage 2->5 to make the first fight a real (if gentle) check. This is a new-player-experience call, not a measurable balance gap -- recommend leaving it as a gentle intro."
+    }
+  ],
+  "newConcerns": [
+    "Warrior triviality of soft battery enemies is a DECK-BURST trait, not an HP problem: the front-loaded warrior physical deck one-shots anything up to scaled ~166 HP in a single 1300ms window (enemy-hp-finegrain). No HP value that respects the werewolf/salamander ceiling will make depths_horror/fire_elemental non-trivial for warrior. The HP ramp only helps DoT/mage decks. If the user wants these enemies non-trivial for warrior too, the lever is enemy DAMAGE or DEFENSE (a small baseDefense, e.g. 2-3, would blunt warrior burst) -- NOT HP. Out of scope for this proposal but flagged.",
+    "depths_horror dmg stays 5 (very low) even after the HP buff -- it becomes a tankier HP sponge with negligible threat. If 'non-trivial' is meant to include some risk, depths_horror needs a small damage bump (e.g. 5->6/7) alongside HP, not HP alone. fire_elemental (dmg 9) does not have this issue.",
+    "The proposal's werewolf ~155 / salamander ~184 figures are SCALED late values (mult 1.15), but the HP proposals (95->150) are stated as BASE. This base-vs-scaled conflation is exactly what makes 150 over-correct (scaled 172 > werewolf 155). Any future enemy-HP proposal in this codebase must state whether the number is base or post-mult.",
+    "Control deck winRate was already 1.0 at baseline in every front-loaded matchup including doom_knight -- the CD cuts are a QUALITY-OF-LIFE buff (faster, safer), not a viability fix. Caveat: this used the candidate cards front-loaded; with control cards buried in late slots the control archetype may still under-perform, but that is the fixed-order engine caveat, not a property of the CD change."
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "matchups": [
+    {
+      "id": "war-starter-vs-lizard-l1",
+      "label": "Warrior starter vs Lost Lizard (loop 1)",
+      "class": "warrior",
+      "stage": "early",
+      "deck": ["t2-attack-attack", "t2-defense-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1.0,
+      "repeats": 3
+    },
+    {
+      "id": "war-starter-vs-corpse-l3",
+      "label": "Warrior starter vs Corpse Eater (loop ~3)",
+      "class": "warrior",
+      "stage": "early",
+      "deck": ["t2-attack-attack", "t2-defense-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1.0,
+      "repeats": 3
+    },
+    {
+      "id": "war-starter-vs-doomknight-l10",
+      "label": "Warrior STARTER (underleveled) vs first boss Doom Knight",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t2-attack-attack", "t2-defense-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "loopCount": 10,
+      "repeats": 3
+    },
+    {
+      "id": "war-loop10-vs-doomknight",
+      "label": "Warrior realistic loop-10 deck+stats vs first boss",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-attack-attack-attack", "t2-attack-attack", "t3-attack-counter-counter", "t2-counter-counter", "t2-attack-defense", "t2-defense-defense", "t2-agility-agility", "t3-attack-attack-counter", "t2-attack-fire", "t2-agility-attack"],
+      "runXP": 500,
+      "relics": [],
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "loopCount": 10,
+      "repeats": 3
+    },
+    {
+      "id": "mage-starter-vs-lizard-l1",
+      "label": "Mage starter vs Lost Lizard (loop 1)",
+      "class": "mage",
+      "stage": "early",
+      "deck": ["t2-fire-fire", "t2-water-water", "t2-fire-water", "t2-air-earth", "t2-attack-fire"],
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1.0,
+      "repeats": 3
+    },
+    {
+      "id": "mage-poison-loop10-vs-doomknight",
+      "label": "Mage poison build vs first boss (loop 10)",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-earth-earth-water", "t2-earth-water", "t3-water-water-water", "t2-water-water", "t2-earth-earth", "t3-earth-water-water", "t2-earth-fire", "t2-fire-water", "t2-air-water", "t2-attack-fire"],
+      "runXP": 500,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1.0,
+      "loopCount": 10,
+      "repeats": 3
+    }
+  ]
+}

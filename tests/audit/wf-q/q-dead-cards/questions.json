@@ -1,0 +1,78 @@
+{
+  "cluster": "Dead-card rescues",
+  "method": "Per card: candidate in EARLY slot (slot0), 6 repeats, baseline filler (Jab/Spark) + CURRENT + PROPOSED in one spec. Primary context = boss1 doom_knight (380HP/def3/9dmg, runXP520). Secondary = late werewolf (mult1.15, runXP720). Stress variant = lean 7-card shell vs doom_knight HP440 to force a thin margin. Caveat honored: fixed deck order, no shuffle; slot0 placement amplifies a recurring card's per-play effects (notably self-bleed / cd).",
+  "shellNote": "Vanilla 9-card warrior shell wins doom_knight at ~20.5% HP with a filler Jab, so genuinely-dead cards show as LOSS-where-filler-WINS (Cascade, Crimson Spiral), while merely-underpowered cards show as smaller HP-cushion / ttk deltas rather than win-rate flips.",
+  "items": [
+    {
+      "proposalId": "Aegis of Returning Wrath (t3-defense-defense-defense)",
+      "question": "Is the Brace:Deal-18-Pierce clause actually dead, and does the unconditional armor-scaling rewrite restore a payoff WITHOUT over-buffing a defensive T3 into an oppressive armor-bruiser?",
+      "answer": "CURRENT is not a zero-value card in a winnable shell (the 22 armor gives a huge +27pt HP cushion: 47.7% vs filler 20.5% vs doom_knight), but the Brace clause IS dead: CURRENT deals only 329 dmg < filler 387, i.e. the on_armor_break payoff never fires for an armor deck. PROPOSED (unconditional Deal 6 Pierce +1/4armor, cd2.0) recovers ~+70 dmg to 399 (above filler) while KEEPING the 47% HP cushion. Not oppressive: filler shell already wins; proposed neither flips a loss nor trivializes.",
+      "verdict": "holds",
+      "evidence": "aegis-results.json: FILLER 387dmg/20.5%HP; CURRENT 329dmg/47.7%HP (Brace dead, dmg<filler); PROPOSED 399dmg/47.0%HP. werewolf: CURRENT 175/0.595, PROPOSED 170/0.595 (parity). All 6/6 wins, 0 deaths.",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "Crimson Cascade (t3-counter-counter-water)",
+      "question": "The proposal blames the self-bleed as the 'pure downside' to remove. Is self-bleed actually the killer, or is the load-bearing fix the cd 2.4->2.0? (mis-attributed fix = wrong magnitude.)",
+      "answer": "The change set WORKS (CURRENT loses doom_knight 0/6 with deaths where filler wins 6/6; PROPOSED wins 6/6), but the proposal's RATIONALE is wrong. Isolation: removing self-bleed alone while keeping cd2.4 STILL LOSES 0/6 (373dmg, 6 deaths); keeping self-bleed but cutting cd to 2.0 + bleed3->4 WINS 6/6 (383dmg, 10.6%HP). The load-bearing fix is the COOLDOWN, not the self-bleed removal. Removing self-bleed is a fine QoL but not what rescues it. Keep the full proposed bundle (cd2.0 + bleed4 + drop self-bleed); it rescues from negative-marginal (worse than Jab) to a clean 6/6.",
+      "verdict": "revise",
+      "evidence": "crimson-cascade-results.json: FILLER 387/20.5% 6/6; CURRENT 373dmg/0.6 deaths/LOSS; PROPOSED 383dmg/11.9%/6-0. isolation-results.json: selfbleed-only(cd2.4)=LOSS 0/6 (373); bleed4-cd2.0-with-selfbleed=WIN 6/6 (383/10.6%). cd2.0 is the driver.",
+      "decisionForUser": null,
+      "revisedValue": "Keep cd 2.4->2.0 + bleed 3->4 (the load-bearing rescue). Self-bleed removal is cosmetic upside, not the fix — do not bank the rescue on it."
+    },
+    {
+      "proposalId": "Stormrage (t3-air-air-counter)",
+      "question": "A pure-control card cannot add damage (C3/C5) and cannot win a race. Does the 5-slow floor actually lift it above filler, or is it still strictly dead in a mage's hands (no rage, low INT)?",
+      "answer": "CURRENT Stormrage is strictly dead for a mage (rage-gated, mage holds no rage) AND actively costs throughput by replacing a damage card: vs doom_knight CURRENT deals 249 vs filler Spark 346; vs werewolf CURRENT 0.341 HP / ttk15000 < filler 0.399 / ttk11000. PROPOSED (5-slow floor + cd2.0) restores it to filler PARITY: vs werewolf 0.399 HP (=filler) and ttk improves to 14000; vs doom 359 dmg (>filler 346). For a pure-control card, matching a damage filler's survival IS the ceiling (C3: control is intentionally race-losing). The rescue lifts it from below-filler to at-filler. Does NOT clear doom_knight (poison mage loses 0/6 regardless) — but that is the §P1 mage-scaling problem, not Stormrage's job.",
+      "verdict": "holds",
+      "evidence": "stormrage-results.json: doom FILLER 346dmg/LOSS, CURRENT 249dmg/LOSS, PROPOSED 359dmg/LOSS (all 0/6 — mage can't close doom). werewolf FILLER 0.399HP/ttk11000, CURRENT 0.341/ttk15000 (below filler), PROPOSED 0.399/ttk14000 (restored to filler).",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "Razor Stance (t2-counter-counter)",
+      "question": "Proposal (OCS-1) claims Razor Stance LOSES doom 0/6 where a Jab WINS 6/6. Does that reproduce, or is the buff (cd2.0->1.4 + Deal3[dex]) an over-correction on a card that is already fine?",
+      "answer": "The 'loses where Jab wins' claim does NOT reproduce in a realistic shell: CURRENT Razor Stance OUT-DAMAGES the filler vs doom_knight (405 vs 387) and wins 6/6 — it is not a dead card here. But it IS thin on survival: at doom_knight HP440 stress, CURRENT survives on a 2.0% HP knife-edge. The PROPOSED buff is justified as a survival/snappiness lift, not a loss-to-win flip: it raises the stress cushion 2.0%->10.6% and pushes damage to 428 (doom) without becoming oppressive (same 11.9% HP as current at base; never trivializes the filler shell). Guardrail respected: bleed-per-hit stays 1, so Razor Cadence T3 is untouched.",
+      "verdict": "holds",
+      "evidence": "razor-stance-results.json: doom FILLER 387/20.5%, CURRENT 405/11.9% (>filler dmg, not dead), PROPOSED 428/11.9%. stress-results.json HP440: FILLER 441/19.9%, CURRENT 470/2.0% (knife-edge), PROPOSED 463/10.6% (cushion restored). All wins, 0 deaths.",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "Wrath Squall (t3-air-counter-counter)",
+      "question": "Proposal (OCS-2) calls this 'NEGATIVE marginal value, a T3 worse than a T1 Jab.' Does it reproduce, and does +4 upfront rage stay within the C5 Fury cap (12)?",
+      "answer": "The 'worse than Jab' claim does NOT reproduce: CURRENT Wrath Squall already out-damages filler vs doom (425 vs 387) via its reactive str/rage-on-hp-loss, winning 6/6. But like Razor it is survival-thin (HP440 stress: 2.0% cushion). PROPOSED (cd1.5 + Gain4[vit]rage on play) is a clean improvement: doom ttk 18100->15900 and HP 12.6%->21.2% (above filler!); stress cushion 2.0%->10.6%. C5 OK: rage Fury bonus is hard-capped at 12 in CardResolver (line 419 Math.min(rage,12)), so +4 upfront just front-loads within the cap — no overflow, not oppressive.",
+      "verdict": "holds",
+      "evidence": "wrath-squall-results.json: doom FILLER 387/20.5%, CURRENT 425/12.6%/ttk18100, PROPOSED 381/21.2%/ttk15900. stress HP440: CURRENT 442/2.0%, PROPOSED 445/10.6%. werewolf: CURRENT 192/ttk5700, PROPOSED 205/ttk5200. C5: rageStacks capped at 12 (CardResolver.ts:419).",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "Bloodlash Salvo (t3-attack-attack-counter)",
+      "question": "Does adding Pierce + raising in-combat STR gain 4->6 measurably help, or is the def-3 boss already too soft for the STR-ramp to matter (over-spec)?",
+      "answer": "CURRENT Bloodlash is NOT dead (out-damages filler 424 vs 387 vs doom) but survival-thin (3.3% cushion at base). PROPOSED (Deal9 Pierce, +6 STR max6) raises the base-shell cushion 3.3%->11.9% and kills FASTER (stress ttk 23900->22700 at equal 10.6% HP), confirming Pierce is doing work despite a lower damage-TOTAL (fewer ticks on a faster kill). The STR 4->6 / Pierce lift is justified and modest — not oppressive (doom def is only 3, so Pierce mostly helps vs armor-stackers like iron_golem, not doom). Note: proposed damage-TOTAL reads lower than current in some runs purely because of faster ttk; HP cushion + ttk are the cleaner signals and both favor the buff.",
+      "verdict": "holds",
+      "evidence": "bloodlash-salvo-results.json: doom FILLER 387/20.5%, CURRENT 424/3.3%, PROPOSED 390/11.9%. stress HP440: CURRENT 486/10.6%/ttk23900, PROPOSED 459/10.6%/ttk22700 (faster kill = Pierce working). All 6/6 wins.",
+      "decisionForUser": null,
+      "revisedValue": null
+    },
+    {
+      "proposalId": "Crimson Spiral (t3-counter-counter-counter)",
+      "question": "Is the gate-8 a true brick, does gate8->5 + cd2.4->1.8 rescue it, and is the proposed 'floor 12 Pierce' actually needed or does the gate cut alone suffice (avoid double-buffing)?",
+      "answer": "Gate-8 is a genuine brick even with TWO rage generators in the shell (Crimson Tithe + Bloodprice): CURRENT loses doom_knight 0/6 (deaths, 338dmg) where a filler Jab WINS 6/6 — a T3 strictly worse than a T1, exactly as claimed. The gate cut alone rescues it: gate5+cd1.8 (NO floor) already WINS 6/6 @ 405dmg/7.3%HP, ttk 22500->19300. The +floor-12-Pierce variant is essentially equivalent at boss (6/6 @ 399/7.9%) and adds a small lift in non-rage situations (werewolf 187 vs current 159, just above filler 176). Verdict: gate8->5 + cd2.4->1.8 is the load-bearing rescue and is sufficient; the floor is optional belt-and-suspenders (keeps it >= Jab when rage is unavailable) — both compliant and neither is oppressive (proposed wins at 7.9% HP, barely above filler's 6.6%).",
+      "verdict": "holds",
+      "evidence": "crimson-spiral-results.json (rage shell): doom FILLER 395/6.6% 6/6; CURRENT 338dmg/6 deaths/LOSS; PROP gate5(no floor) 405/7.3% 6/6; PROP gate5+floor 399/7.9% 6/6. werewolf: CURRENT 159, FILLER 176, PROP+floor 187. Gate cut alone suffices; floor optional.",
+      "decisionForUser": null,
+      "revisedValue": "Ship gate 8->5 + cd 2.4->1.8 (sufficient on its own). Treat the 12-Pierce floor as optional — it only matters in rage-starved decks; add it only if the user wants the card never to dead-draw below a Jab."
+    }
+  ],
+  "newConcerns": [
+    "Shell-dependence: Razor Stance / Wrath Squall / Bloodlash Salvo were NOT reproducible as 'loses where Jab wins' in a realistic 9-card boss1 shell (all three out-damage Jab and win 6/6). Their dead-card claims (OCS-1/OCS-2/PA-5) are likely artifacts of thinner/leaner shells. The buffs are still justified as survival/snappiness lifts (HP440 stress: current 2-3% cushion -> proposed ~10.6%), but they are LOW severity, not the 'negative-value T3' emergencies the proposal frames them as. Recommend the user prioritize Cascade & Crimson Spiral (true LOSS-where-filler-wins) over these three.",
+    "Cascade fix mis-attributed: the proposal credits the self-bleed removal, but isolation proves the cd 2.4->2.0 is the actual rescue (removing self-bleed alone still loses 0/6). Do not let the self-bleed removal be presented as the load-bearing change.",
+    "Crimson Spiral floor may be redundant: gate8->5 + cd1.8 alone already restores a clean 6/6 win; the +12-Pierce floor is a marginal safety net. Shipping both is a mild double-buff (still not oppressive).",
+    "Pure-control measurement: Stormrage can only reach FILLER PARITY, never exceed it on a race (C3). 'Lift to clearly-positive marginal value' for a control card == 'restore to >= filler survival'; it will never show positive DAMAGE marginal. Evaluate control rescues on HP/ttk parity, not damage.",
+    "damage-dealt is a noisy proxy when ttk varies: several PROPOSED variants show LOWER cumulative damage than CURRENT purely because they kill faster (fewer ticks). Use HP cushion + ttk as the primary signals for these rescues.",
+    "Slot-0 fixed-order amplifies recurring downsides: the self-bleed and short-cd effects are played far more often in slot 0 than in a realistic mid-deck slot, so the absolute magnitudes (e.g. self-bleed lethality) are upper bounds. Directional verdicts hold; exact magnitudes are slot-sensitive."
+  ]
+}

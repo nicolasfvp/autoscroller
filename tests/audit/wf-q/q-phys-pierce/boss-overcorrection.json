@@ -1,0 +1,72 @@
+{
+  "_comment": "Q(a): Does Mountain's Will (P0-4) ALONE make warrior physical beat doom_knight, or do we need P0-3 Earthcleaver too? Test one-at-a-time and both vs doom_knight (boss1: runXP520, isBoss, loopMult 1.0). Candidate cards moved to EARLY slots (fixed-order engine). 8 reps for boss claims. Patches: Earthcleaver effects[0] value14+pierce, effects[1] gate 15->10, cd 2.0. Mountain's Will effects[0] value20+pierce, cd 2.0.",
+  "matchups": [
+    {
+      "id": "MW-base",
+      "label": "BASELINE realistic balanced (MW slot9, no buffs) vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-earth-earth", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "MW-base-early",
+      "label": "BASELINE balanced, MW moved to slot1 (no buffs) vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "MW-only-early",
+      "label": "P0-4 ONLY: Mountain's Will buffed (pierce+cd2.0), slot1, vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "MW-only-realistic",
+      "label": "P0-4 ONLY: MW buffed in its REALISTIC slot9 (no reorder) vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-earth-earth", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    },
+    {
+      "id": "EC-only-early",
+      "label": "P0-3 ONLY: Earthcleaver buffed (slot1+slot9 swap from MW), vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-defense-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] }
+      }
+    },
+    {
+      "id": "BOTH-early",
+      "label": "BOTH P0-3+P0-4: Earthcleaver slot1 + Mountain's Will slot2, both buffed, vs doom_knight",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-defense-earth", "t3-attack-earth-earth", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t1-attack"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] },
+        "t3-attack-earth-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 20, "pierce_armor": true }, {} ] }
+      }
+    }
+  ]
+}

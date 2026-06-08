@@ -1,0 +1,52 @@
+{
+  "_comment": "REVISE sweep for P0-3 Earthcleaver. The proposed buff (base14 pierce, gate10, cd2.0) still LOSES 0/8 vs doom_knight where T2 Granite x4 WINS 8/8 (6% HP). Find a magnitude that restores T3>T2. C1: buff via base value and/or cd floor (1.2 min), NOT cost. Compare against the T2 Granite benchmark (380 dmg, 8/8, 6% HP). 8 reps boss. Earthcleaver effects[0]=base(scale str per2 val1), effects[1]=conditional 8 pierce gate.",
+  "matchups": [
+    {
+      "id": "REF-T2granite",
+      "label": "BENCHMARK: T2 Granite x4 (untouched) vs doom_knight",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "EC-base16-cd2.0",
+      "label": "EC base 14->16 pierce, gate10, cd2.0",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 16, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] } }
+    },
+    {
+      "id": "EC-base18-cd2.0",
+      "label": "EC base 14->18 pierce, gate10, cd2.0",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-defense-earth": { "cooldown": 2.0, "effectsPatch": [ { "value": 18, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] } }
+    },
+    {
+      "id": "EC-base14-cd1.8",
+      "label": "EC base 14 pierce, gate10, cd2.4->1.8 (C1 cd-floor route, no value lift)",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-defense-earth": { "cooldown": 1.8, "effectsPatch": [ { "value": 14, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] } }
+    },
+    {
+      "id": "EC-base16-cd1.8",
+      "label": "EC base 16 pierce, gate10, cd1.8 (value+cd combo)",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-defense-earth": { "cooldown": 1.8, "effectsPatch": [ { "value": 16, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] } }
+    },
+    {
+      "id": "EC-base18-cd1.8",
+      "label": "EC base 18 pierce, gate10, cd1.8 (strongest tested)",
+      "class": "warrior", "stage": "boss1", "archetype": "tier-ab",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"],
+      "enemy": "doom_knight", "runXP": 520, "isBoss": true, "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-attack-defense-earth": { "cooldown": 1.8, "effectsPatch": [ { "value": 18, "pierce_armor": true }, { "condition": { "self_armor_atleast": 10 } } ] } }
+    }
+  ]
+}

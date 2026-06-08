@@ -1,0 +1,103 @@
+{
+  "lane": "off-curve-sweep",
+  "method": "Marginal SWAP TESTS: a fixed host deck + stage profile + enemy battery where exactly ONE slot is varied between the candidate card and a neutral T1 filler (Jab for warrior, Spark/Mend/Quake for mage). The variant's win-rate / TTK / HP delta vs the filler baseline is the card's marginal value. 35 base decks -> 139 matchups (4 reps), plus two confirmation runs (boss1 @6 reps, razor hit-spam @5 reps).",
+  "resultsPaths": [
+    "tests/audit/wf/off-curve-sweep/results.json",
+    "tests/audit/wf/off-curve-sweep/results-boss1-confirm.json",
+    "tests/audit/wf/off-curve-sweep/results-razor-confirm.json"
+  ],
+  "decksTested": 51,
+  "matchupsRun": 171,
+  "findings": [
+    {
+      "id": "OCS-1",
+      "kind": "off_curve_weak",
+      "target": "t2-counter-counter (Razor Stance)",
+      "stage": "mid/boss1",
+      "evidence": "Razor Stance is an OPS-0 hit-engine ('for 10s, every hit applies 1 bleed'). In a 5-card hit-spam host built to maximize its trigger rate it is WORSE than a plain T1 Jab filler: mid battery razor5-mid-RAZORSTANCE ttk 11392 / hp 0.426 vs razor5-mid-FILLER ttk 11292 / hp 0.440; the T3 analog razor5-mid-RAZORCADENCE is clearly better (ttk 9724 / hp 0.489). The boss test is decisive: razor5-boss1-RAZORSTANCE__vs__doom_knight LOSES 0/5 (332 dmg, 5 deaths) while razor5-boss1-FILLER (Jab) WINS 5/5 (398 dmg) and razor5-boss1-RAZORCADENCE WINS 5/5 (400 dmg). In the generic war-mid host it also dragged TTK up (swap-war-mid-RAZORSTANCE ttk 17385 / hp 0.406 vs swap-war-mid-FILLER ttk 14575 / hp 0.456). It only ever shows value in a bleed-spam deck on a very long fight (swap-bleed-late-RAZORSTANCE dmg 254 vs FILLER 194 vs iron_golem).",
+      "severity": "med",
+      "proposedChange": "C1 rescue-by-CD-cut + add a clean immediate hit so it is not pure zero-damage setup. Cut cd 2.0s -> 1.4s and add 'Deal 3([dex])' on play (alongside the existing 10s bleed-on-hit window). Cost stays 1 stamina. This buffs a dead T2 without exceeding its T3 analog Razor Cadence (3x5 dmg + bleed) — Razor Cadence keeps the higher ceiling, so the T3>T2 ordering is preserved.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-2",
+      "kind": "off_curve_weak",
+      "target": "t3-air-counter-counter (Wrath Squall)",
+      "stage": "boss1",
+      "evidence": "Wrath Squall is an OPS-0 T3 rage/str engine ('for 8s, each time you lose HP gain 1 str (cap 5) and 3 rage'). As a T3 it should beat a T1 filler, but it does not: cwar-boss1-WRATHSQUALL__vs__doom_knight LOSES 0/6 (338 dmg, 6 deaths) while the SAME deck with a plain T1 Jab filler (cwar-boss1-FILLER) also loses but does MORE damage (370). Net marginal value vs Jab = NEGATIVE 32 dmg. The engine is inert because the host has no rage payoff to spend the generated rage. Proof it is the payoff, not Wrath Squall, that matters: cwar-boss1-WRATHSQUALL-RAGEPAYOFF (Wrath Squall + Wrath Brand) WINS 6/6 (391 dmg) but cwar-boss1-NORAGE-control (Wrath Brand + Jab filler, NO Wrath Squall) also WINS 6/6 (385 dmg) — Wrath Squall adds only +6 dmg over a plain Jab even when a payoff exists.",
+      "severity": "med",
+      "proposedChange": "C1 cut cd 2.0s -> 1.5s AND give it an immediate, self-contained payoff so it is not dead without other rage cards (tier charter: raise the T3 ceiling). Add 'Gain 4([vit])[rage]' on play (front-loaded fury, pre-STR, within the cap-12 Fury budget) on top of the existing HP-loss reactive window. Keep cost 2 stamina. This makes it a build-around that also stands alone, lifting it above any T2 rage card (Bulwark Vow / Crimson Tithe gain only 3 flat rage with no scaling window).",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-3",
+      "kind": "off_curve_strong",
+      "target": "t3-agility-attack-counter (Vein Splitter)",
+      "stage": "boss1",
+      "evidence": "Vein Splitter (isolated OPS 134) is a genuine high-impact T3 but it is NOT oppressive in full combat. In a clean 7-card warrior physical host it single-handedly flips the doom_knight result: cwar-boss1-FILLER (Jab) LOSES 0/6 (dmg 370, 6 deaths) -> cwar-boss1-VEINSPLITTER WINS 6/6 (dmg 397) — a +1.0 winRate swing, but it wins on a razor edge (hp 0.099). On normals its marginal value is healthy not warping: swap-war-mid-VEINSPLITTER avg ttk 12200 / hp 0.491 vs FILLER 14575 / 0.456 — best closer in the family, modestly ahead of T2 Reckless Strike (12835 / 0.483). It clears its stage battery at 1.0 winRate without trivializing it.",
+      "severity": "low",
+      "proposedChange": "No nerf. The full-combat data shows the isolated peakOPS 134 overstates it (it relies on building a bleed stack vs a single durable target). Leave cost 2 stamina / cd 2.4s unchanged. Flag only as confirmation that the isolated metric is not a balance verdict for this card.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-4",
+      "kind": "off_curve_strong",
+      "target": "t3-counter-fire-fire (Brine Crucible)",
+      "stage": "mid/late",
+      "evidence": "Brine Crucible has the highest isolated OPS in the catalog (158) yet is middling in full combat. In a burn-feeding mage host its marginal value vs a Spark filler is near zero on normals (swap-burn-late-BRINECRUCIBLE vs depths_horror ttk 10875 vs FILLER 10800; fire_elemental 11000 vs 11600 — within noise) and it does NOT change any normal-enemy winRate (all 1.0 both ways). Its only measurable edge is on the long iron_golem fight: dmg 169 vs FILLER 132 (mage host, both still lose 0/4) and 270 vs 248 (warrior host). The 'Next card delays 3 more seconds' tempo tax plus burn-pool dependency cancels most of its raw burst.",
+      "severity": "low",
+      "proposedChange": "No nerf — it is not oppressive in real combat despite the OPS spike. Leave cost 1s+1m / cd 2.4s unchanged. This is an OPS-model artifact (the isolated metric scores the burst but ignores the self-imposed 3s tempo penalty); record so the synthesizer does not over-correct Brine Crucible based on the isolated audit.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-5",
+      "kind": "off_curve_strong",
+      "target": "t3-agility-air-air (Gale Echo)",
+      "stage": "late",
+      "evidence": "Gale Echo (OPS 0, an engine the isolated metric cannot score) is a healthy, strong build-around — NOT off-curve weak. In a slow-control mage host it is the ONLY swap that beats iron_golem: swap-gale-late-GALEECHO__vs__iron_golem WINS 4/4 (409 dmg) while the Quake filler (swap-gale-late-FILLER) LOSES 0/4 (322 dmg) and even the high-OPS T3 payoff Cinder Squall (swap-gale-late-CINDERSQUALL) LOSES 0/4 (309 dmg). It also speeds normals (fire_elemental ttk 17800 vs filler 20500; mutated_salamander 19800 vs 25000).",
+      "severity": "low",
+      "proposedChange": "No change — Gale Echo is correctly tuned as a slow-archetype payoff once the deck supplies slow appliers. Confirms the OPS-0 engine cards must be judged by full combat, not the isolated audit.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-6",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-water-water (Tidefoot Bloom)",
+      "stage": "late/boss1",
+      "evidence": "Tidefoot Bloom (OPS 0 heal->poison engine, 'for rest of combat, each time you heal apply 1 poison') is marginal-to-negative in a heavy-heal host: it slightly REDUCES HP cushion vs a Mend filler (swap-heal-late-TIDEFOOTBLOOM vs fire_elemental hp 0.826 vs FILLER 0.92; depths_horror 0.909 vs 0.995; iron_golem 0.971 vs 1.0) for only a tiny TTK gain (iron_golem 25000 vs 27000, dmg 429 vs 416). Against doom_knight at boss scale it is strictly a downgrade on cushion: swap-heal-boss1-TIDEFOOTBLOOM hp 0.231 vs swap-heal-boss1-FILLER hp 0.306 (same ttk 17000, same dmg 438, both win). The dedicated poison-payoff swap Bog Catalyst clears faster than Tidefoot Bloom in the same slot (swap-heal-late-BOGCATALYST iron_golem ttk 22000 vs Tidefoot 25000).",
+      "severity": "low",
+      "proposedChange": "C1 cut cd 2.2s -> 1.6s and strengthen the conversion to 'each time you heal, apply 2[poison]([int])' (from 1). It is an exhaust one-shot setup card, so a snappier CD lets it land earlier and the doubled trickle gives a poison-archetype deck a real reason to slot it over a plain heal. Cost stays 1s+1m. Keeps it a niche poison build-around, not a generalist.",
+      "confidence": "med"
+    },
+    {
+      "id": "OCS-7",
+      "kind": "off_curve_strong",
+      "target": "t2-air-fire (Firestorm)",
+      "stage": "late/boss1",
+      "evidence": "Firestorm (OPS 0 volume-gated burn, 'for 4s, if you play 3+ cards apply 10 burn') is a correctly-tuned engine, NOT off-curve. In a high-volume mage-elem host it flips iron_golem from LOSS to WIN: swap-mage-late-FIRESTORM__vs__iron_golem WINS 4/4 (411 dmg) vs swap-mage-late-FILLER (Spark) LOSES 0/4 (390 dmg); also cuts mutated_salamander ttk 19700->16000. In a slower burn host the gain is smaller but positive (swap-burn-late-FIRESTORM mutated_salamander dmg 269 vs FILLER 227). Its payoff is correctly gated on card-volume decks.",
+      "severity": "low",
+      "proposedChange": "No change. Firestorm scales with deck velocity exactly as a T2 conditional/synergy hook should. Confirms it is healthy despite OPS 0.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-8",
+      "kind": "progression",
+      "target": "doom_knight (boss1, loop 10, 380 HP / def 3 / 9 dmg)",
+      "stage": "boss1",
+      "evidence": "The brief's headline check — 'the first boss should be EASY (~0.8+ winRate)' — FAILS for two of three realistic loop-10 archetypes. (1) A clean 7-card warrior PHYSICAL deck LOSES outright: cwar-boss1-FILLER 0/6 deaths, and it gets the boss to 370/380 before dying. Even a strong pure-damage T3 (Mountain's Will) loses: cwar-boss1-MOUNTAINSWILL 0/6 (377 dmg). The deck ONLY wins if it carries a high-throughput poison/bleed engine (Vein Splitter -> 6/6) or a rage-payoff line (Wrath Brand -> 6/6), and even then at razor-thin HP (6-10%). (2) The pure-BURN mage CANNOT beat it at all: cmage-burn-boss1-FILLER 0/6 (174 dmg) and even +Firestorm 0/6 (216 dmg) — burn's soft-cap throttles it well short of 380. Only the mage HEAL/poison deck wins comfortably (swap-heal-boss1 1/1, hp 0.231-0.306).",
+      "severity": "high",
+      "proposedChange": "Diagnosis: the boss is over-tuned for the clean-attacker and burn archetypes, not the engine archetypes. Two C-compliant levers (prefer the first): (A) Cut doom_knight baseHP 380 -> 330 so a clean physical/burn loop-10 deck reaches ~0.8 winRate while engine decks keep their comfortable margin (this touches the enemy, not cards, and does not violate any card constraint). (B) If cards must move instead, buff the burn closer-line ceiling (C2/tier-charter): raise the burn soft-cap detonator payoffs on the T3 burn detonators (Cinderlance/Cinder Sprint per-stack 3->4 Pierce) so burn can actually close a 380-HP target — never raise per-tick burn (C5 locked). Recommend (A): a 380-HP boss that a clean attacker loses to is a progression-curve problem, not a per-card problem.",
+      "confidence": "high"
+    },
+    {
+      "id": "OCS-9",
+      "kind": "tier_violation",
+      "target": "t2-counter-counter (Razor Stance) vs t3-agility-counter-counter (Razor Cadence)",
+      "stage": "mid/boss1",
+      "evidence": "Not a T3-too-weak violation — rather the T3 correctly dominates here, confirming the ordering should hold AFTER OCS-1's T2 buff. Razor Cadence (T3) beats Razor Stance (T2) in every test: razor5-mid ttk 9724 vs 11392 / hp 0.489 vs 0.426; razor5-boss1__vs__doom_knight Razor Cadence WINS 5/5 (400 dmg) while Razor Stance LOSES 0/5 (332 dmg). The risk is that OCS-1's Razor Stance buff (adding a 3-dmg hit + 1.4s CD) could close the gap.",
+      "severity": "low",
+      "proposedChange": "Guardrail on OCS-1: keep the Razor Stance buff to 'Deal 3([dex])' + cd 1.4s only. Razor Cadence's three 5-dmg hits + per-hit bleed + Vengeance bonus retains a >15% ceiling edge, satisfying the tier charter. Do NOT also raise Razor Stance's bleed-per-hit beyond 1, or it would invert the tier.",
+      "confidence": "med"
+    }
+  ]
+}

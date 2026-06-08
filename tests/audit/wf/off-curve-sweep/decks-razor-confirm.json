@@ -1,0 +1,61 @@
+{
+  "_comment": "Razor Stance duality confirmation. 5-card hit-spam host so the swapped slot is ALWAYS in rotation. Razor Stance ('every hit applies bleed for 10s') should pay off ONLY when the host hits frequently. Compared vs Jab filler and vs Quickstep (clean T1 multi-hit) and vs the T3 analog Razor Cadence. Tested vs the mid battery AND boss1.",
+  "decks": [
+    {
+      "id": "razor5-mid-FILLER",
+      "label": "hit5 host + FILLER(Jab)",
+      "archetype": "razor5-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t1-attack"]
+    },
+    {
+      "id": "razor5-mid-RAZORSTANCE",
+      "label": "hit5 host + Razor Stance",
+      "archetype": "razor5-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t2-counter-counter"]
+    },
+    {
+      "id": "razor5-mid-RAZORCADENCE",
+      "label": "hit5 host + Razor Cadence (T3 analog)",
+      "archetype": "razor5-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t3-agility-counter-counter"]
+    },
+    {
+      "id": "razor5-mid-RIPOSTE",
+      "label": "hit5 host + Riposte (other OPS-0 hit-engine T1)",
+      "archetype": "razor5-mid",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t1-counter"]
+    },
+    {
+      "id": "razor5-boss1-FILLER",
+      "label": "hit5 host boss1 + FILLER(Jab)",
+      "archetype": "razor5-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t2-defense-defense", "t1-attack"]
+    },
+    {
+      "id": "razor5-boss1-RAZORSTANCE",
+      "label": "hit5 host boss1 + Razor Stance",
+      "archetype": "razor5-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t2-defense-defense", "t2-counter-counter"]
+    },
+    {
+      "id": "razor5-boss1-RAZORCADENCE",
+      "label": "hit5 host boss1 + Razor Cadence",
+      "archetype": "razor5-boss1",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-agility", "t2-agility-attack", "t2-agility-counter", "t2-attack-counter", "t2-defense-defense", "t3-agility-counter-counter"]
+    }
+  ]
+}

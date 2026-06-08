@@ -1,0 +1,100 @@
+{
+  "lane": "pure-burn",
+  "resultsPath": "tests/audit/wf/pure-burn/results.json",
+  "bossConfirmPath": "tests/audit/wf/pure-burn/results-bossconfirm.json",
+  "decksTested": 29,
+  "matchupsRun": 91,
+  "summary": "Pure-burn is confirmed the weakest archetype and FAILS the headline realism check: realistic full burn decks lose 6/6 to doom_knight (the 'should-be-easy' loop-10 boss). Root cause is a defenseless, soft-capped DoT race on a 70-HP mage against a 380-HP boss that enrages (1.4x speed) at 50% HP. The build-around premise is INVERTED: banking-and-detonating is strictly WORSE than just ticking vs high-HP/armored bosses (detonating dumps one armor-taxed chunk and resets the pool, killing DPS right when the boss enrages). Only two of six detonators (Cinder Sprint, Supernova) actually win vs doom_knight in an identical 9-banker shell; Cinderlance, Venom Detonation, Tremor Detonate and even T2 Pyre all lose. Off-curve: Quench Lance (T3) under-performs the T2 baseline filler Flame Dart in-deck (tier-curve concern); Venom Detonation's 2/burn coefficient is dead weight; Firestorm (audited at OPS 0) is actually the strongest filler in-context (false-negative, no change needed).",
+  "findings": [
+    {
+      "id": "PB-1",
+      "kind": "progression",
+      "target": "doom_knight (boss1) vs pure-burn archetype",
+      "stage": "boss1",
+      "evidence": "burn-boss1__vs__doom_knight: winRate 0, 6/6 deaths, avgDamageDealt 190/380 HP (confirmed @6 repeats). burn-detonate-boss1__vs__doom_knight: winRate 0, 6/6 deaths, 222 dmg. burn-int-invest-boss1 (INT+4): winRate 0, 6/6 deaths, 236 dmg. doom_knight = 380 HP / def 3 / 9 dmg / enrage 1.4x at 50% HP. The only pure-burn decks that beat it are an artificial 9-banker+1-detonator shell (Cinder Sprint/Supernova) or a pure-tick deck that wins at 1.7% HP.",
+      "severity": "high",
+      "proposedChange": "Do NOT nerf doom_knight (other archetypes clear it). Lift the burn WIN CONDITION instead, via the detonator buffs in PB-3/PB-4 (C1: these are T3 cards, raise their ceiling/cut CD). Concretely: buff Cinderlance (PB-4) so the realistic detonate deck can close before enrage, and raise Supernova's reach (PB-5) so the premier exhaust-detonator is the reliable boss answer. Target: a realistic 12-card boss1 burn deck reaching ~0.8 winRate.",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-2",
+      "kind": "viability",
+      "target": "bank-and-cash burn (detonate) vs pure-tick",
+      "stage": "late",
+      "evidence": "INVERTED payoff. burn-tickonly-boss1__vs__doom_knight: winRate 1 (6/6), 384 dmg. burn-detonate-boss1__vs__doom_knight: winRate 0 (6/6 deaths), 222 dmg. burn-tickonly-late__vs__iron_golem: winRate 1, 413 dmg. burn-detonate-late__vs__iron_golem: winRate 0, 283 dmg. vs the late normal battery, detonator CHOICE barely moves results (det-cinderlance/cindersprint/supernova/venomdet-late all converge to avgTTK ~11.3-11.4s, avgHP% ~0.39) - detonators are NOT the differentiator vs normals, only vs bosses, where most of them LOSE.",
+      "severity": "high",
+      "proposedChange": "The detonator subsystem is the build-around identity but currently a net negative vs the targets it is meant for. Fix is two-fold and C1/C5-compliant: (1) ensure ALL listed detonators deal Pierce per-stack (PB-6) so the high-armor boss target stops taxing the payoff; (2) raise the weak coefficients (PB-3 Venom Detonation, PB-4 Cinderlance) so detonating beats ticking. No tick nerf - keep soft-cap as-is.",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-3",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-fire-water (Venom Detonation)",
+      "stage": "boss1",
+      "evidence": "Identical 9-banker shell, single detonator swap vs doom_knight: det-venomdet-boss1 winRate 0 (6/6 deaths), 327 dmg - WORSE than even the T2 Pyre swap (374 dmg) and far below the winning Cinder Sprint (380 dmg, win) and Supernova (439 dmg, win). Its coefficient is 'consume all burn and deal 2 (STR) damage per burn consumed' - the lowest per-stack of any detonator AND non-Pierce, so def-3 doom_knight taxes every point. Cost 1s+1m, cd 2.4s (a real T3 spend).",
+      "severity": "med",
+      "proposedChange": "C1/C5: raise the detonation coefficient from 2 to 4 per [burn] consumed and make it Pierce (matches Cinder Sprint's 4 and the pierce convention of the other fire detonators). It already self-applies 2 burn + 3 poison, so this stays a hybrid card, not an oppressive pure-burn nuke. Keep cost/CD unchanged (it is the conservative lever per C1).",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-4",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-fire-fire (Cinderlance)",
+      "stage": "boss1",
+      "evidence": "Identical 9-banker shell vs doom_knight: det-cinderlance-boss1 winRate 0 (6/6 deaths) at 359 dmg, while the cheaper same-tier det-cindersprint-boss1 WINS (6/6, 380 dmg) and det-supernova-boss1 WINS (6/6, 439 dmg). Cinderlance is the marquee fire-detonator (peakOPS 38.18, cost 1s+1m, cd 2.2) yet LOSES where a 1m card wins. Its '8(STR) twice' front-half is dead on a mage (STR=1 -> 16 flat) and the detonation '3 Pierce per burn' under-converts the banked pool vs the tempo cost.",
+      "severity": "med",
+      "proposedChange": "C1: cut cooldown 2.2s -> 1.8s (snappier so the front-load damage + detonation lands more often before enrage) AND raise the detonation coefficient 3 -> 4 Pierce per [burn] consumed to match Cinder Sprint's per-stack while keeping the front-loaded hit. This buffs the T3 without nerfing anything; cost stays 1s+1m.",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-5",
+      "kind": "off_curve_strong",
+      "target": "t3-fire-fire-fire (Supernova)",
+      "stage": "boss1",
+      "evidence": "Best detonator by a wide margin: det-supernova-boss1 winRate 1 (6/6), 439 dmg vs doom_knight (next best winner Cinder Sprint 380). 5(INT) Pierce per [burn], AoE, exhaust. NOT oppressive - it is exhaust (one-shot), costs 2s+1m, cd 2.8s, and the rest of the burn shell still wins/loses on its own merits (det swaps converge vs normals). Flag only as the correct power target the other detonators should be lifted toward, not for a nerf.",
+      "severity": "low",
+      "proposedChange": "NO NERF (C5 build-around ceiling is working as intended; it is the exhaust capstone). Use it as the calibration anchor: bring PB-3/PB-4 up toward this, do not pull this down.",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-6",
+      "kind": "off_curve_weak",
+      "target": "non-Pierce detonators vs armored bosses (t3-agility-fire-fire Cinder Sprint, t3-counter-fire-water Venom Detonation, t2-fire-fire Pyre)",
+      "stage": "boss1",
+      "evidence": "Pierce vs non-Pierce is decisive at the boss layer. Pierce detonators win (Supernova 5 Pierce -> 439 dmg/win; Cinderlance 3 Pierce -> 359 but loses on tempo). Non-Pierce detonators are armor-taxed: det-pyre-boss1 (3/burn non-Pierce) 374 dmg yet loses 6/6; det-venomdet (2/burn non-Pierce) 327 dmg loses. Cinder Sprint wins only because it ALSO self-applies 3 burn and is dirt cheap (1m), overcoming its non-Pierce 4/burn. doom_knight def 3 / iron_golem def 4 tax every stack twice.",
+      "severity": "med",
+      "proposedChange": "C5-consistent: make all dedicated burn detonators deal Pierce on the per-stack payoff (Cinder Sprint 4(DEX) -> 4(DEX) Pierce; Pyre's detonation 3 -> 3 Pierce). This is a wiring/keyword fix (C4 wiring-first), not a value inflation, and aligns the detonator family with Supernova/Cinderlance which already Pierce. Do not touch the soft-cap tick.",
+      "confidence": "med"
+    },
+    {
+      "id": "PB-7",
+      "kind": "tier_violation",
+      "target": "t3-fire-fire-water (Quench Lance) vs t2-agility-fire (Flame Dart)",
+      "stage": "late",
+      "evidence": "Swap test, 8 fixed strong-burn cards + 1 candidate, vs late normal battery (4 enemies): swap-quenchlance-late avgTTK 13975 ms / avgHP% 0.323 - SLOWER and squishier than the T2 baseline filler swap-baseline-late (Flame Dart) avgTTK 11869 / avgHP% 0.348. Worst case swap-quenchlance-late__vs__mutated_salamander: ttk 21500, hp% 0.101. A T3 card should beat ANY T2; here it loses to the T2 it replaces. (Twinflame Flicker t3-agility-agility-fire is similar: avgTTK 12425 > baseline 11869.) Quench Lance: apply 2[burn] + a conditional 'consume 10+ burn -> +2 INT' that rarely fires in a pure-burn shell.",
+      "severity": "med",
+      "proposedChange": "C1/T3>T2: buff the T3, never nerf Flame Dart. Cut Quench Lance cd 2.4s -> 1.6s (it is a banker/ramp card, snappy CD per C1) and raise the base application 2[burn] -> 3[burn] so it out-banks the T2 it competes with. Keep cost 1s+1m. Optionally lower the INT-gain threshold 10 -> 6 consumed so the synergy actually triggers.",
+      "confidence": "high"
+    },
+    {
+      "id": "PB-8",
+      "kind": "off_curve_strong",
+      "target": "t2-air-fire (Firestorm)",
+      "stage": "late",
+      "evidence": "False-negative correction. Audited at peakOPS 0 (isolated) but in-deck it is the BEST filler in the swap test: swap-firestorm-late avgTTK 10163 ms (faster than every other candidate incl. the Flame Dart baseline 11869) / avgHP% 0.389 / avgDmg 178. Its 'play 3+ cards in 4s -> apply 10[burn]' condition trivially fires inside a fast burn deck. Not oppressive (single-enemy, conditional, T2).",
+      "severity": "low",
+      "proposedChange": "NO CHANGE. Flag is to correct the OPS-0 audit verdict: Firestorm is healthy in its real context. Do not buff it off the isolated score.",
+      "confidence": "med"
+    },
+    {
+      "id": "PB-9",
+      "kind": "viability",
+      "target": "pure-burn late-game HP cushion (no defense win-rate-is-1-but-thin)",
+      "stage": "late",
+      "evidence": "Baseline burn-late deck wins all 4 late normals but at avgHP% 0.200 (min 0.065 vs mutated_salamander, 0.094 vs werewolf) - paper-thin, one bad RNG string from a loss, and it has NO armor/heal. Cleaner variants (burn-detonate-late, burn-tickonly-late) hold ~0.40 HP, so the thinness is partly the baseline deck's dead cards (Quench Lance, Pyre Surge, second Fire-Water) diluting tempo, not only the archetype.",
+      "severity": "low",
+      "proposedChange": "Archetype design note, not a card nerf: pure-burn is a glass-cannon race by intent (C3 says burn has no defense conversion). Fixing the dead T3 fillers (PB-7) and the detonator coefficients (PB-3/4/6) raises effective DPS, which is the correct lever to widen the HP cushion - faster kills mean fewer enemy swings. No defensive grafting (C3-compliant).",
+      "confidence": "med"
+    }
+  ]
+}

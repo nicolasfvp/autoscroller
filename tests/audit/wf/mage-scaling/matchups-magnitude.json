@@ -1,0 +1,88 @@
+{
+  "matchups": [
+    {
+      "id": "mage-fire-boss1-INT4__vs__doom_knight",
+      "label": "Mage Fire boss1 +INT1 vs BOSS doom_knight (boss1)",
+      "archetype": "fire-mage-mag",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-fire-water",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t2-water-water",
+        "t2-earth-water"
+      ],
+      "stats": {
+        "int": 1
+      },
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "mage-fire-boss1-INT5__vs__doom_knight",
+      "label": "Mage Fire boss1 +INT2 vs BOSS doom_knight (boss1)",
+      "archetype": "fire-mage-mag",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-fire-water",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t3-agility-fire-water",
+        "t1-water",
+        "t2-water-water",
+        "t2-earth-water"
+      ],
+      "stats": {
+        "int": 2
+      },
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "mage-earth-boss1-dmgfix__vs__doom_knight",
+      "label": "Mage Earth boss1 + poison damage vs BOSS doom_knight (boss1)",
+      "archetype": "earth-mage-mag",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-earth-earth-water",
+        "t2-earth-earth",
+        "t2-earth-fire",
+        "t2-water-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-fire-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    }
+  ]
+}

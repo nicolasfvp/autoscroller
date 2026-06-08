@@ -1,0 +1,70 @@
+{
+  "rate": "0.22",
+  "results": [
+    {
+      "id": "burn-baseline-noov",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 246,
+      "avgCards": 15,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-P1asproposed",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 283,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-flamedart-buff",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 289,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-heavy-det",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 316,
+      "avgCards": 16,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-heavy-det-hp350-dmg7",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 342,
+      "avgCards": 18,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 350,
+      "enemyDmg": 7
+    }
+  ]
+}

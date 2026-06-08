@@ -1,0 +1,29 @@
+{
+  "_comment": "Adversarial re-test decks for enemy-ramp. Realistic loop-10 boss1 decks (copied verbatim from the designer's decks.json/decks3.json so the only variable is the ENEMY override) plus an ER-3 lost_lizard buff probe. The actual A/B/C enemy variants live in adv-matchups.json via enemyOverride.",
+  "decks": [
+    {
+      "id": "adv-war-boss1-phys",
+      "label": "Warrior boss1 physical (designer deck, verbatim)",
+      "archetype": "boss1-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t1-attack", "t1-agility", "t2-attack-defense", "t1-defense", "t2-defense-defense", "t2-agility-earth"]
+    },
+    {
+      "id": "adv-war-boss1-phys-opt",
+      "label": "Warrior boss1 OPTIMIZED physical (designer deck, verbatim)",
+      "archetype": "boss1-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-attack-defense", "t2-defense-defense", "t1-attack", "t1-agility", "t1-defense", "t2-agility-earth"]
+    },
+    {
+      "id": "adv-mage-boss1-elem",
+      "label": "Mage boss1 elemental (designer deck, verbatim)",
+      "archetype": "boss1-elemental",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-water", "t2-fire-water", "t1-fire", "t1-fire", "t2-air-air", "t1-water", "t2-earth-water", "t1-earth"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "_comment": "ADVERSARIAL re-test batch 2: the single-enemy (iron_golem) boss claims TO-4 (Bogplate), TO-5 (Magmaplate), TO-6 (Tombrage). Fresh harness core, 8 repeats to settle the boss claim. Each pair: T2 analog vs T3 + the known-good sibling (Bedrock) as a positive control.",
+  "decks": [
+    {
+      "id": "adv2A-de-t2bramble", "label": "ADV2 A T2 Bramble Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-defense-earth", "t1-defense", "t2-defense-defense", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    },
+    {
+      "id": "adv2B-de-t3bogplate", "label": "ADV2 B T3 Bogplate", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-water", "t1-defense", "t2-defense-defense", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    },
+    {
+      "id": "adv2B-de-t3magma", "label": "ADV2 B T3 Magmaplate", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-fire", "t1-defense", "t2-defense-defense", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    },
+    {
+      "id": "adv2B-de-t3bedrock", "label": "ADV2 B T3 Bedrock Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-earth", "t1-defense", "t2-defense-defense", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    },
+
+    {
+      "id": "adv2A-ce-t2thorn", "label": "ADV2 A T2 Thornwall", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-counter-earth", "t1-defense", "t2-defense-defense", "t2-defense-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    },
+    {
+      "id": "adv2B-ce-t3tomb", "label": "ADV2 B T3 Tombrage", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-counter-earth-earth", "t1-defense", "t2-defense-defense", "t2-defense-earth", "t2-attack-defense", "t3-attack-defense-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t3-earth-earth-earth"]
+    }
+  ]
+}

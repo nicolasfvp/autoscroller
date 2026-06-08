@@ -1,0 +1,211 @@
+{
+  "matchups": [
+    {
+      "id": "cwar-boss1-FILLER__vs__doom_knight",
+      "label": "WAR boss1 + FILLER(Jab) vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-earth",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-VEINSPLITTER__vs__doom_knight",
+      "label": "WAR boss1 + Vein Splitter vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-earth",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-WRATHSQUALL__vs__doom_knight",
+      "label": "WAR boss1 + Wrath Squall vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-earth",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t3-air-counter-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-RAZORSTANCE__vs__doom_knight",
+      "label": "WAR boss1 + Razor Stance vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-earth",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t2-counter-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-MOUNTAINSWILL__vs__doom_knight",
+      "label": "WAR boss1 + Mountain's Will (strong T3 control) vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-earth",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t3-attack-earth-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-WRATHSQUALL-RAGEPAYOFF__vs__doom_knight",
+      "label": "WAR boss1 + Wrath Squall WITH rage payoff (Wrath Brand) vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1-rage",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t3-attack-counter-fire",
+        "t3-air-counter-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cwar-boss1-NORAGE-control__vs__doom_knight",
+      "label": "WAR boss1 + Wrath Brand only (rage-payoff control) vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-war-boss1-rage",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-attack-attack",
+        "t2-defense-defense",
+        "t3-attack-counter-fire",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cmage-burn-boss1-FILLER__vs__doom_knight",
+      "label": "MAGE burn boss1 + FILLER(Spark) vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-mage-burn-boss1",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "cmage-burn-boss1-FIRESTORM__vs__doom_knight",
+      "label": "MAGE burn boss1 + Firestorm vs BOSS doom_knight (boss1)",
+      "archetype": "confirm-mage-burn-boss1",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    }
+  ]
+}

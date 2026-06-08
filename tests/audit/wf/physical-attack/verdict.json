@@ -1,0 +1,57 @@
+{
+  "lane": "physical-attack",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Plan and execution are sound: decks are legal (verified ids/sizes/class), the right stages and bosses are covered, repeats are adequate (boss claims at 4-6, I re-ran at 8), and every quoted number reproduces against results.json/results-boss.json AND my independent adv-results.json. Two issues: (1) PA-1's headline 'no realistic full-physical deck beats doom_knight' is OVERSTATED — my 2nd realistic loop-10 deck (different T3 mix, no rage engine) won 8/8, and the designer's own balanced deck with a single Mountain's-Will->Cleaver's-Tax swap won 8/8 @9.3%; the real finding is 'physical-vs-doom_knight is uncomfortably tight, beatable only with a snappy/pierce T3 line at razor HP', and the proposed 3-card buff bundle risks over-correcting since ONE existing pierce T3 already flips it. (2) PA-3 (Quickstrike off-curve weak) does NOT hold at the deck level — my normal-enemy swap test shows Quickstrike and Jab-filler are byte-identical in TTK/HP/damage; the boss '324<332' is RNG-stream noise inside two 0-winrate losses, not marginal value. The tier violation PA-7 and the Mountain's Will / Bloodlash weak-T3 findings (PA-4/PA-5) reproduce robustly and are the strongest, most actionable results.",
+  "verdicts": [
+    {
+      "findingId": "PA-1",
+      "status": "revised",
+      "reason": "Reproduced EXACTLY (adv-phys-boss1-balanced 0/8, 369 dmg vs 380 HP). But the headline is overstated: adv-phys-boss1-balanced2 (2nd realistic loop-10 pure-physical deck, no rage engine, just a different T3 mix) WON 8/8 @3.3% HP, and adv-balanced-plus-cleaver (designer's balanced deck with one Mountain's-Will->Cleaver's-Tax swap) WON 8/8 @9.3% HP. So a realistic player CAN beat doom_knight, but only with a snappy/pierce T3 finisher and at razor-thin HP. The progression concern is real (too tight for a 'should-be-easy' first boss) but it is deck-construction-sensitive, not a hard wall. Fix direction (cut CD + add Pierce to the under-tuned T3 finisher line) is correct and C1/C2/C3-compliant (uses the single allowed armor->no, just Pierce on attack cards). However the proposed BUNDLE (Pierce+CD on Mountain's Will AND Concussive AND Earthcleaver) risks over-correcting: my data shows a single pierce T3 already lifts the realistic deck to a comfortable win.",
+      "revisedChange": "Narrow PA-1 to its weakest link + a light touch: buff Mountain's Will (t3-attack-earth-earth) cd 2.4->2.0s and make its base 20 a Pierce hit (this is the PA-4 fix and is sufficient on its own to bring phys-boss1-balanced to a win). Optionally cut Concussive Smash (t3-attack-attack-earth) and Earthcleaver (t3-attack-defense-earth) cd 2.4->2.0s WITHOUT also Pierce-ifying both bases in the same pass — then re-sim and confirm phys-boss1-balanced reaches winRate>=0.8 at >15% HP before adding more. Do NOT nerf the boss or any T2."
+    },
+    {
+      "findingId": "PA-2",
+      "status": "confirmed",
+      "reason": "Every physical build loses to iron_golem in results.json / results-boss.json (phys-late-balanced 0/4 354dmg, finisher 0/4 203, agility 0/4 179, snappy 0/6 304, ab-T3 0/4 152, ab-T2 0/4 178 with 43 cards = full stall). Numbers verified. Mechanically sound: iron_golem def4 taxes every non-pierce hit and pierce confirmed in CardResolver (line 419-421 skips def subtraction). One caveat: iron_golem's wall is a SHIELD-regen behavior (8 armor / 8s) layered on def4, which the evidence calls only 'def4' — the shield is the bigger long-fight problem and should be named, but it does not change the fix direction. Buff-the-T3-pierce-path proposal is C1/C2-compliant.",
+      "revisedChange": "Keep the proposal but name iron_golem's shield-regen (8/8s) as the dominant factor alongside def4, since it makes a slow non-pierce race literally unwinnable (the 43-card stall). The accessible-pierce-path buffs (Cliffwind Maul gate 12->8, Granitewrath cd 2.4->2.0) remain valid; re-sim to confirm at least one pure-attack-reachable build reaches winRate>=0.8 vs iron_golem before finalizing."
+    },
+    {
+      "findingId": "PA-3",
+      "status": "revised",
+      "reason": "The deck-level off-curve-weak claim does NOT reproduce. My adv normal-enemy swap test (Quickstrike x4 vs Jab x4 over the same base, 8 repeats vs mutated_salamander/werewolf/skeleton) returned BYTE-IDENTICAL results: TTK 8600/7600/6500ms, HP 0.523/0.536/0.55, damage 181/144/120 for BOTH decks. There is zero marginal difference between Quickstrike and a T1 Jab filler in a winnable fight. The designer's '324 < 332 dmg' is RNG-stream noise (different seed ids) inside two 0-winrate boss losses, where avgDamageDealt is just 'damage before dying', not a clean marginal-value signal. So 'Quickstrike is clearly weaker than a T1 filler' is unsupported at the deck level. The card IS economically poor on its isolated stat line (cost 2 / Deal 8 vs Jab cost 1 / Deal 9 at the same cd 1.2s), so a re-price is defensible as a per-card-audit buff, but that belongs to the OPS-audit layer, not this full-combat workflow, and it is NOT an off-curve finding this lane proved.",
+      "revisedChange": "Re-classify as low severity / low confidence. Keep the C1 re-price (Quickstrike cost 2->1, hold cd 1.2s / 'Deal 8([dex])') as an optional economy-cleanup justified ONLY by the isolated stat comparison vs Jab, and label it as such. Do not present it as a deck-level off-curve result; this lane's sims show no measurable deck-level deficit."
+    },
+    {
+      "findingId": "PA-4",
+      "status": "confirmed",
+      "reason": "Reproduced: swap-boss1-MTNWILL 0/4 366 dmg (highest of the losing swaps, still dies) vs swap-boss1-CLEAVER 1.0 @25.8% and swap-boss1-QSIGIL 1.0 @25.8% in results.json. Catalog confirms Mountain's Will = 'Deal 20([str]). If armor>=20: Deal 8 Pierce', cd 2.4s — its base 20 is non-pierce and a pure-attack deck rarely reaches 20 armor, so def3 taxes it. My adv-balanced-plus-cleaver corroborates: replacing exactly this card with a pierce T3 turns the realistic deck from 0/8 into 8/8. It is the genuine weak link. Proposal (cd 2.4->2.0, base 20 Pierce, keep cost 2) is C1+C2 compliant and buffs the T3, no T2 touched.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PA-5",
+      "status": "confirmed",
+      "reason": "Reproduced from results.json: swap-boss1-BLOODLASH 0/4 348 dmg (a loss) vs swap-boss1-BERSERKER 1.0 @13.2% and swap-boss1-CLEAVER 1.0 @25.8%. Catalog confirms Bloodlash = 'Deal 9([str]). Gain 4[str] this combat' cd 1.8s — the 9 base is taxed by def3 and the STR ramp is too slow for the ~14-20s enrage window. Proposal (STR gain 4->6, make hit Pierce, keep cost 2/cd 1.8) is C2-compliant (buffs the build-around hook) and buffs the T3 only. Med/med is appropriate given it is one of several finisher options rather than a sole gate.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PA-6",
+      "status": "confirmed",
+      "reason": "The oppressive-ceiling hypothesis is correctly refuted. results.json confirms phys-late-agility clears all late normals at 1.0 but SLOWER than balanced on every one (e.g. mutated_salamander 8100 vs 4100ms), and the agility T3s only flip boss losses into wins (swap-boss1-SKYWIRE/QSIGIL 1.0). My independent normal runs agree agility is a sidegrade vs normals. 'No nerf' is the right call and aligns with the brief (too-strong is fine unless oppressive; these are not).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PA-7",
+      "status": "confirmed",
+      "reason": "Strongest finding, reproduced ROBUSTLY at 8 repeats: adv-ab-T2-granite (4x Granite Lunge, T2) WON 8/8 @6% HP / 380 dmg / TTK 19100ms, while adv-ab-T3-earthcleaver (4x Earthcleaver, T3, identical otherwise) went 0/8, 316 dmg. A clean T3<T2 violation vs doom_knight. Catalog confirms the cause: Granite Lunge cost 1s/cd 1.4s plays far more often; Earthcleaver cost 2s/cd 2.4s with a +8 pierce gated behind armor>=15 a pure-attack deck never reaches, so only its non-pierce 14 lands into def3. Buff-the-T3 (cd->2.0, gate 15->10, base 14 Pierce), never nerf the T2, is exactly the brief's T3>T2 rule. High severity justified.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PA-8",
+      "status": "confirmed",
+      "reason": "All normal batteries are healthy in results.json (early/mid/late phys decks at winRate 1.0 with 40-83% HP cushions), corroborated by my adv normal runs (filler/quickstrike bases clear mutated_salamander/werewolf/skeleton at 1.0, 52-55% HP). The problem is strictly bosses, so confining buffs to the T3 finisher line (rather than broad attack buffs) is the correct, non-inflationary scope. Re-validation that post-buff normal TTK stays flat is the right guardrail.",
+      "revisedChange": null
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "rate": "0.22",
+  "results": [
+    {
+      "id": "direct-mage-vs-fireelem",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 110,
+      "avgCards": 7,
+      "hpOnWin": 0.673,
+      "ttkS": 9,
+      "startHP": 110,
+      "enemyHP": 102,
+      "enemyDmg": 8
+    },
+    {
+      "id": "direct-mage-vs-salamander",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 180,
+      "avgCards": 8,
+      "hpOnWin": 0.691,
+      "ttkS": 13,
+      "startHP": 110,
+      "enemyHP": 160,
+      "enemyDmg": 8
+    }
+  ]
+}

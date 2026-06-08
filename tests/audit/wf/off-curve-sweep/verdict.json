@@ -1,0 +1,80 @@
+{
+  "lane": "off-curve-sweep",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "The off-curve-sweep lane is methodologically sound and its numbers reproduce. Decks are legal (all card ids valid per the catalog, sane 5-12 sizes, class-appropriate hosts), the swap-test design isolates marginal value correctly, and stage profiles match the canonical expander. I re-read all three results files: every quoted figure reproduces exactly (the mid-battery razor means 11292/11392/9724 are correct aggregations over the 5 mid enemies; boss claims used 5-6 reps with 0 variance / deterministic flips). I INDEPENDENTLY re-ran the load-bearing claims with my own decks (adv-results.json, 6 reps): (a) OCS-8 reproduced and STRENGTHENED -- 4 different clean-attacker loop-10 warriors (7/8/9/10-card, best clean T3 attackers, armor finisher, max-OPS) ALL lose 0/6 to doom_knight, best reaching only 373/380, refuting the idea that a better clean deck would win; (b) OCS-1 reproduced -- my host: Razor Stance loses 0/6 (368) while plain Jab wins 6/6 (388) and Razor Cadence wins 6/6 (437); (c) OCS-2 reproduced -- Wrath Squall loses 0/6 with LESS damage (348) than the Jab baseline (375), confirming negative marginal value, while a properly-tuned T3 (Vein Splitter) in the same slot wins 6/6. Proposed changes are C1-C5 compliant (CD cuts stay >=1.4s above the ~1.2s floor; buffs target weak T2/T3 and never nerf a T2; the 'Deal 3([dex])' add matches the existing ([dex]) notation on T3 physical cards like Vein Splitter/Razor Cadence; the +4 rage on Wrath Squall stays within the C5 Fury cap-12 budget). The only correction: OCS-8's fix magnitude (380->330) is somewhat aggressive given clean decks already reach ~366-373; a smaller cut (~350) better hits the brief's 'beatable but not trivial (~0.8)' target without over-rewarding the engine decks that already win comfortably. OCS-6 (Tidefoot Bloom) is the thinnest-evidenced finding -- it is situationally POSITIVE on the long iron_golem fight (ttk 25000 vs 27000, dmg 429 vs 416) and only mildly negative on short fights, so 'off-curve weak' is borderline; severity low / confidence med is appropriately cautious, so I confirm it but flag the weak basis.",
+  "verdicts": [
+    {
+      "findingId": "OCS-1",
+      "status": "confirmed",
+      "reason": "Reproduced exactly. Mid-battery means: FILLER ttk 11292/hp 0.440, RAZORSTANCE ttk 11392/hp 0.426, RAZORCADENCE ttk 9724/hp 0.489 (recomputed from results-razor-confirm.json, 5 reps). Boss razor5-boss1: RAZORSTANCE 0/5 (332 dmg, 5 deaths), FILLER 5/5 (398), RAZORCADENCE 5/5 (400). Independently reproduced in my own host (adv-results.json): adv-razor-stance 0/6 (368) vs adv-razor-jab 6/6 (388) vs adv-razor-cadence 6/6 (437). Razor Stance is genuinely below a plain T1 Jab -> unused-tier weak. Proposal complies with C1 (cd 2.0->1.4s, real current cd verified in cards.json) and stays under the T3 analog; the ([dex]) damage notation matches existing physical T3 cards.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-2",
+      "status": "confirmed",
+      "reason": "Reproduced exactly (results-boss1-confirm.json, 6 reps): WRATHSQUALL 0/6 (338) vs FILLER 0/6 (370) = -32 marginal; WRATHSQUALL-RAGEPAYOFF 6/6 (391) vs NORAGE-control 6/6 (385) = only +6 even with a payoff. Independently reproduced (adv-results.json): adv-wrath-squall 0/6 (348) does LESS damage than adv-wrath-jab 0/6 (375), while adv-wrath-veinsplitter (a proper T3 in the same slot) wins 6/6. A T3 that underperforms a T1 Jab is a real bug. Proposal complies: cd 2.0->1.5s (verified current cd), +4 rage on play within the C5 Fury cap-12, buffs the T3 ceiling without touching any T2.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-3",
+      "status": "confirmed",
+      "reason": "Reproduced: cwar-boss1-VEINSPLITTER 6/6 (397, hp 0.099) vs cwar-boss1-FILLER 0/6 (370); independently adv-wrath-veinsplitter 6/6 (392, hp 0.093). Razor-edge boss flip, healthy (not warping) on the mid battery (meanTtk 12200/hp 0.491 vs Reckless 12835/0.483). The isolated OPS 134 does overstate it. No-nerf is correct and C-compliant.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-4",
+      "status": "confirmed",
+      "reason": "Reproduced: BRINECRUCIBLE vs Spark is within noise on normals (depths_horror 10875 vs 10800, fire_elemental 11000 vs 11600, no winRate change), only a small edge on the long iron_golem fight (dmg 169 vs 132 mage; 270 vs 248 warrior, both still 0/4). The 3s tempo tax genuinely cancels the OPS-158 burst in full combat. No-nerf is the correct call and avoids over-correcting off the isolated audit.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-5",
+      "status": "confirmed",
+      "reason": "Reproduced: swap-gale-late-GALEECHO 4/4 vs iron_golem (409) while FILLER(Quake) 0/4 (322) and even T3 payoff CINDERSQUALL 0/4 (309); also speeds normals (fire_elemental 17800 vs 20500, mutated_salamander 19800 vs 25000). A healthy OPS-0 build-around the isolated metric cannot score. No-change is correct.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-6",
+      "status": "confirmed",
+      "reason": "Numbers reproduce (late: TIDEFOOTBLOOM vs Mend cushion 0.826/0.909/0.971 vs 0.92/0.995/1.0; boss1 0.231 vs 0.306). But the 'weak' label is borderline: on the long iron_golem fight Tidefoot is actually FASTER and does MORE damage than the filler (ttk 25000 vs 27000, dmg 429 vs 416), i.e. positive where its heal->poison engine matters; it is only mildly negative on short fights and on the boss cushion. It is a niche payoff, not a dead card. Confirming because the proposal (cd 2.2->1.6s, double the poison trickle) is C1-compliant, low-risk, and reasonably makes the niche card more appealing -- but severity must stay low and confidence med given the thin/mixed evidence.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-7",
+      "status": "confirmed",
+      "reason": "Reproduced: swap-mage-late-FIRESTORM flips iron_golem from 0/4 (FILLER Spark, 390) to 4/4 (411) and cuts mutated_salamander ttk 19700->16000. Correctly gated on card-volume decks. No-change is correct.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "OCS-8",
+      "status": "revised",
+      "reason": "The progression FAILURE is fully confirmed and strengthened: I built 4 independent clean-attacker loop-10 warriors (designer 7-card, a stronger 10-card all-T3, a max-OPS 8-card, an armor-finisher 9-card) and ALL lose 0/6 to doom_knight, with the best reaching only 373/380. The pure-burn mage also cannot close it (0/6, 174/216). So this is genuinely a curve problem, not a host-quality artifact, and lever (A) touching the enemy (not cards) is the right kind of fix. However the SIZE 380->330 is somewhat aggressive: clean decks already reach ~366-373 dmg, so a cut to ~350 would already lift the strongest clean/burn decks to a ~0.8 win while keeping the boss non-trivial and not handing the engine decks (which already win at 380 with razor-thin margins) an over-comfortable cushion. Confirm the problem and lever (A); right-size and re-simulate the new HP rather than committing to 330 on first pass.",
+      "revisedChange": "Cut doom_knight baseHP 380 -> ~350 (not 330) as a first step, then re-run the clean-warrior + burn-mage boss1 swaps to confirm clean/burn archetypes reach ~0.8 winRate while engine decks keep a sane (not trivial) margin. If clean decks still fall short at 350, step down further toward 330. This keeps the fix on the enemy (no card constraint touched) and avoids over-correcting the curve in one jump."
+    },
+    {
+      "findingId": "OCS-9",
+      "status": "confirmed",
+      "reason": "Sound guardrail. Data shows Razor Cadence (T3) dominates Razor Stance (T2) pre-buff (boss 5/5 @400 vs 0/5; mid ttk 9724 vs 11392). The OCS-1 buff adds only a 3-dmg hit + cd 1.4s, which cannot approach Cadence's three 5-dmg hits + per-hit bleed + Vengeance, so the T3>T2 ordering is preserved. Keeping the buff to 'Deal 3' and bleed-per-hit at 1 is the correct constraint. C5/tier-charter compliant.",
+      "revisedChange": null
+    }
+  ],
+  "adversarialRetest": {
+    "specPath": "tests/audit/wf/off-curve-sweep/adv-matchups.json",
+    "resultsPath": "tests/audit/wf/off-curve-sweep/adv-results.json",
+    "reps": 6,
+    "keyResults": {
+      "adv-clean7-jab__vs__doom_knight": "0/6, 370 dmg (matches designer baseline)",
+      "adv-clean10-strong__vs__doom_knight": "0/6, 340 dmg (larger clean deck does NOT win)",
+      "adv-clean8-maxops__vs__doom_knight": "0/6, 373 dmg (best clean result, still loses)",
+      "adv-clean9-armorfinish__vs__doom_knight": "0/6, 366 dmg",
+      "adv-razor-jab__vs__doom_knight": "6/6, 388 dmg",
+      "adv-razor-stance__vs__doom_knight": "0/6, 368 dmg (Razor Stance flips win->loss vs Jab)",
+      "adv-razor-cadence__vs__doom_knight": "6/6, 437 dmg",
+      "adv-wrath-jab__vs__doom_knight": "0/6, 375 dmg",
+      "adv-wrath-squall__vs__doom_knight": "0/6, 348 dmg (negative marginal vs Jab)",
+      "adv-wrath-veinsplitter__vs__doom_knight": "6/6, 392 dmg"
+    }
+  }
+}

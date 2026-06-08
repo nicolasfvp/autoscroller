@@ -1,0 +1,170 @@
+{
+  "_comment": "Lane: slow-stun-control. Slow = pure soft control (no dmg, 8%/stk cd-throttle cap 50%); stun = pure hard control (freeze + DR window). C3: intentionally race-losing. Tests whether control buys enough time for the deck's damage to win, esp vs doom_knight (boss1) and iron_golem (late). Includes swap tests for dead control cards (Quake, Frostbind, Zephyr Cascade, Stormrage, Gale Echo) and a Tectonic Reckoning oppressiveness check.",
+  "decks": [
+    {
+      "id": "ctrl-mid",
+      "label": "Control mage (mid, air/earth)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t1-earth", "t2-air-air"]
+    },
+    {
+      "id": "ctrl-mid-dmg",
+      "label": "Control+damage mage (mid)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "mid",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t2-air-air", "t3-agility-air-air"]
+    },
+
+    {
+      "id": "ctrl-boss1-pure",
+      "label": "Pure control mage vs doom_knight (boss1)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t1-earth", "t3-air-air-earth", "t3-agility-agility-air", "t3-air-air-counter", "t3-agility-air-air", "t3-air-counter-defense", "t3-air-defense-earth"]
+    },
+    {
+      "id": "ctrl-boss1-finisher",
+      "label": "Control+finisher mage vs doom_knight (boss1)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-attack-fire", "t1-earth"]
+    },
+    {
+      "id": "ctrl-boss1-tectonic",
+      "label": "Tectonic Reckoning control vs doom_knight (boss1)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-earth", "t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t1-earth", "t2-air-air", "t3-agility-air-air"]
+    },
+
+    {
+      "id": "ctrl-late-pure",
+      "label": "Pure control mage (late, baseline rebuild)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t3-attack-attack-earth", "t3-air-air-fire", "t3-air-air-earth", "t3-air-attack-counter", "t3-agility-air-earth", "t1-earth", "t3-air-counter-earth", "t3-agility-agility-air", "t3-air-attack-water"]
+    },
+    {
+      "id": "ctrl-late-dmg",
+      "label": "Control+damage mage (late, air-tempo finishers)",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-attack-fire", "t3-air-air-attack", "t3-agility-air-attack", "t3-air-air-air", "t1-earth"]
+    },
+    {
+      "id": "ctrl-late-tectonic",
+      "label": "Tectonic Reckoning control (late) vs iron_golem",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-counter-earth", "t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-attack-fire", "t1-earth", "t2-air-air", "t3-air-air-attack"]
+    },
+
+    {
+      "id": "swap-base",
+      "label": "SWAP base (control shell + strong filler Tempest Pike)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-attack"]
+    },
+    {
+      "id": "swap-quake",
+      "label": "SWAP Quake (t1-earth) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t1-earth"]
+    },
+    {
+      "id": "swap-frostbind",
+      "label": "SWAP Frostbind (t2-water-water-stun) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t2-water-water"]
+    },
+    {
+      "id": "swap-zephyr",
+      "label": "SWAP Zephyr Cascade (t3-agility-agility-air) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-agility-agility-air"]
+    },
+    {
+      "id": "swap-stormrage",
+      "label": "SWAP Stormrage (t3-air-air-counter) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-counter"]
+    },
+    {
+      "id": "swap-galeecho",
+      "label": "SWAP Gale Echo (t3-agility-air-air) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-agility-air-air"]
+    },
+    {
+      "id": "swap-dustplague",
+      "label": "SWAP Dust Plague (t3-air-air-earth) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-earth"]
+    },
+    {
+      "id": "swap-staticskirmish",
+      "label": "SWAP Static Skirmish (t3-agility-air-counter) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-agility-air-counter"]
+    },
+    {
+      "id": "swap-sandfury",
+      "label": "SWAP Sandfury (t3-air-earth-fire, slow->dmg) for filler",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-earth-fire"]
+    },
+
+    {
+      "id": "tier-t2-stun",
+      "label": "TIER B: T2 stun (Tremor Lock + Frostbind)",
+      "archetype": "tier-ab-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-air-attack-water", "t3-air-attack-fire"]
+    },
+    {
+      "id": "tier-t3-stun",
+      "label": "TIER A: T3 stun (Concussive Smash replaces 2 T2 stuns)",
+      "archetype": "tier-ab-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-attack-attack-earth", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-air-attack-water", "t3-air-attack-fire", "t3-air-attack-fire", "t3-attack-attack-earth"]
+    },
+
+    {
+      "id": "tectonic-only-boss1",
+      "label": "Tectonic Reckoning spam shell vs doom_knight",
+      "archetype": "tectonic-check",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-earth", "t3-air-counter-earth", "t2-air-air", "t3-agility-air-air", "t3-agility-agility-air", "t2-earth-earth", "t1-earth", "t3-air-counter-defense"]
+    }
+  ]
+}

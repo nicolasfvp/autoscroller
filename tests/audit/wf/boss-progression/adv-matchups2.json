@@ -1,0 +1,40 @@
+{
+  "matchups": [
+    {
+      "id": "adv-ig-hp360",
+      "label": "PROBE iron_golem HP 400->360 base (def4 dmg10 kept)",
+      "archetype": "pure-physical", "stage": "late", "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "baseHP": 360 },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-ig-dmg8",
+      "label": "PROBE iron_golem dmg 10->8 (def4 hp400 kept)",
+      "archetype": "pure-physical", "stage": "late", "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "attack": { "damage": 8, "pattern": "fixed" } },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-ig-def3-dmg8",
+      "label": "PROBE iron_golem def3 + dmg8 (defensive lever combo, HP kept)",
+      "archetype": "pure-physical", "stage": "late", "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "baseDefense": 3, "attack": { "damage": 8, "pattern": "fixed" } },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    },
+    {
+      "id": "adv-ig-hp360-dmg8",
+      "label": "PROBE iron_golem HP360 + dmg8 (matches lizard_king-ish profile)",
+      "archetype": "pure-physical", "stage": "late", "class": "warrior",
+      "deck": ["t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-agility-attack-attack", "t2-attack-attack", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-counter"],
+      "runXP": 720, "relics": [], "enemy": "iron_golem",
+      "enemyOverride": { "baseHP": 360, "attack": { "damage": 8, "pattern": "fixed" } },
+      "loopMultiplier": 1.05, "isBoss": true, "loopCount": 18, "repeats": 5
+    }
+  ]
+}

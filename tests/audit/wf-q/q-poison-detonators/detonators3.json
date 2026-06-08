@@ -1,0 +1,60 @@
+{
+  "matchups": [
+    {
+      "id": "P3-lance-consume-full",
+      "label": "Lance: per-stack 2.5 damage (half-coeff) but consume ALL (-999). Isolates: does halving DAMAGE alone (still wiping pool) fix it? slot6.",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -999 } ] } }
+    },
+    {
+      "id": "P3-lance-consume-2",
+      "label": "Lance rework, wipe -2 (leave most ticking), slot6",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -2 } ] } }
+    },
+    {
+      "id": "P3-lance-consume-6",
+      "label": "Lance rework, wipe -6, slot6",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -6 } ] } }
+    },
+    {
+      "id": "P3-lance-fullcoeff-full",
+      "label": "Lance: per-stack 5 (full proposed coeff) + consume ALL. = naive 'just raise coeff, still wipe all'. slot6. Tests if coeff bump alone (no consume-half) fixes the trap.",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 5 }, { "value": -999 } ] } }
+    },
+    {
+      "id": "P3-lance-current-noop-cd-only",
+      "label": "Lance CURRENT effects, cd 1.8 only (consume-all, base4, perstk3). slot6. Does pure cd relief rescue the late-slot trap?",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8 } }
+    },
+
+    {
+      "id": "P3-lance-rework-iron",
+      "label": "Lance rework (per-stk 2.5, wipe -4, cd1.8) vs iron_golem (cross-boss sanity, slot6)",
+      "class": "mage", "stage": "late", "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 720, "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -4 } ] } }
+    },
+    {
+      "id": "P3-lance-current-iron",
+      "label": "Lance CURRENT vs iron_golem (slot6) - baseline cross-boss",
+      "class": "mage", "stage": "late", "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 720, "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05
+    }
+  ]
+}

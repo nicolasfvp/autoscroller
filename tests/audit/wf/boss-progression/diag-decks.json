@@ -1,0 +1,48 @@
+{
+  "_comment": "Diagnostics for boss-progression lane. (1) Can burn/control mages be rescued by adding stronger damage closers at the SAME boss1 profile (isolates card-power vs archetype-economy)? (2) Boss-tuning probe via enemyOverride: doom_knight at reduced HP/damage to find the value that makes the average loop-10 deck comfortable (~0.8 wr with real HP cushion).",
+  "decks": [
+    {
+      "id": "diag-mage-burn-detrich",
+      "label": "Burn mage w/ extra detonators+damage",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-water", "t1-fire", "t2-earth-fire", "t3-air-fire-fire", "t2-water-water", "t2-air-water"]
+    },
+    {
+      "id": "diag-mage-burn-pivot-poison",
+      "label": "Burn mage pivot to poison closers",
+      "archetype": "burn-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t3-air-fire-water", "t3-agility-water-water", "t2-earth-water", "t1-fire", "t2-fire-water", "t3-attack-fire-fire", "t2-water-water", "t2-air-water", "t2-agility-water"]
+    },
+    {
+      "id": "diag-mage-control-plus-dmg",
+      "label": "Control mage w/ damage closers",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-attack-water", "t3-agility-agility-air", "t2-agility-fire", "t2-fire-fire", "t3-air-fire-water", "t2-fire-water", "t1-water", "t2-air-water", "t2-agility-water"]
+    },
+
+    {
+      "id": "probe-dk-hp340",
+      "label": "Avg warrior physical vs doom_knight HP340",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "vsEnemies": [],
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t2-attack-counter", "t2-attack-defense", "t2-agility-counter", "t2-attack-earth", "t2-agility-earth", "t1-attack", "t2-counter-counter", "t3-attack-attack-attack", "t3-agility-attack-counter"]
+    },
+    {
+      "id": "probe-dk-burn-hp340",
+      "label": "Avg mage burn vs doom_knight HP340",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "boss1",
+      "vsEnemies": [],
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t2-earth-fire", "t2-air-fire", "t1-fire", "t2-fire-water", "t3-attack-fire-fire", "t3-agility-fire-fire", "t2-water-water", "t2-air-water", "t2-agility-water"]
+    }
+  ]
+}

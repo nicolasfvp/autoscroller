@@ -1,0 +1,41 @@
+{
+  "cluster": "q-boss-doom (P0-1 doom_knight attack damage 9->7)",
+  "specs": [
+    "tests/audit/wf-q/q-boss-doom/dmg-sweep.json",
+    "tests/audit/wf-q/q-boss-doom/stacking.json",
+    "tests/audit/wf-q/q-boss-doom/stacking2.json",
+    "tests/audit/wf-q/q-boss-doom/stacking3.json"
+  ],
+  "results": [
+    "tests/audit/wf-q/q-boss-doom/dmg-sweep-results.json",
+    "tests/audit/wf-q/q-boss-doom/stacking-results.json",
+    "tests/audit/wf-q/q-boss-doom/stacking2-results.json",
+    "tests/audit/wf-q/q-boss-doom/stacking3-results.json"
+  ],
+  "items": [
+    {
+      "proposalId": "P0-1",
+      "question": "(a) Does dmg7 OVER-correct -- does it make doom_knight trivial (no death risk, ballooned cushion) for already-strong archetypes (armor, poison, poison-block)? (b) Is 8 the better middle value than 7? (c) CRITICAL: once the P1/P2 card buffs land (pierce-T3 warrior, P1-3 burn detonators), does dmg7 + buffed decks make the boss a pushover (two fixes stacking)?",
+      "answer": "(a) NO over-correction. dmg7 lifts cushions but creates no new triviality: war-armor 27.2%->44.4%, mage-poison 14.9%->30.6%, poison-block 54.5%->81.8%. The only high-cushion deck (poison-block 81.8%) was ALREADY non-threatened at dmg9 (54.5%); the boss was never a death risk to it, so P0-1 changes nothing about its safety. No archetype flips from death-risk to free; the winners never died at any value. (b) dmg8 is too small a fix: the floor archetype (war-phys) sits at 7.3% at dmg8 -- still razor-thin, ~2 unlucky hits from death, barely above the dmg9 fumes (3.3%). dmg7 lifts the floor to a real-but-modest 13.9%. The headline charter is 'easy first boss with a margin'; 7.3% is not a margin, 13.9% is. (c) NO pushover stacking. Proven b1-mage-burn deck + P1-3 detonator buffs + dmg7 STILL dies 8/8 (232 dmg < 380) -- boss tuning + card buffs cannot even make burn win, let alone trivialize. Warrior: swapping a buffed-Pierce Mountain's Will into the proven deck at dmg7 yields only 7.9% HP (LESS than the unmodified deck's 13.9% at dmg7, because the 2-mana armor-gated T3 lowers throughput). The strongest realistic field (poison-block) caps at 81.8% and never reaches a no-risk faceroll (~95%+). The two fixes target disjoint problems and do not compound.",
+      "verdict": "holds",
+      "evidence": "dmg-sweep-results.json (8 reps each): war-phys d9=wr1/3.3% d8=wr1/7.3% d7=wr1/13.9% (dmg384, reproduces lead exactly); war-bleed d9/d8/d7 = 4.6/9.3/14.6%; war-armor 27.2/34.4/44.4%; mage-poison 14.9/23.1/30.6%; poison-block 54.5/75.2/81.8%; mage-burn die8 at ALL of 9/8/7 (dmg202); mage-control die8 at ALL (dmg213). stacking2-results.json (proven decks, 8 reps): burnW base d7 die8 (212), burnW BUFF d7 die8 (232) -- burn never wins; warW (Mountain's Will swapped in) base d7 wr1/0.7%, BUFF d7 wr1/7.9%. stacking3-results.json (8 reps): poiblock d9=54.5% d7=81.8%; lateW all-T3 buff d9 die8, buff d7 wr1/2.6% (worse than simple deck) -- no deck reaches a 0-risk regime.",
+      "decisionForUser": null,
+      "revisedValue": null
+    }
+  ],
+  "cushionTable": {
+    "_note": "avgHeroHpPctOnWin, 8 reps, boss1 runXP 520, HP380/def3 held fixed, enrage 1.4 (attack-speed) held fixed; only attack.damage swept. die = dies 8/8 at every value (boss tuning cannot rescue -- needs P1 card buffs, NOT a death-risk lever).",
+    "warrior-physical": { "dmg9": "3.3%", "dmg8": "7.3%", "dmg7": "13.9%" },
+    "warrior-bleed-rage": { "dmg9": "4.6%", "dmg8": "9.3%", "dmg7": "14.6%" },
+    "warrior-armor-bruiser": { "dmg9": "27.2%", "dmg8": "34.4%", "dmg7": "44.4%" },
+    "mage-poison": { "dmg9": "14.9%", "dmg8": "23.1%", "dmg7": "30.6%" },
+    "mage-poison-block": { "dmg9": "54.5%", "dmg8": "75.2%", "dmg7": "81.8%" },
+    "mage-burn": { "dmg9": "die8", "dmg8": "die8", "dmg7": "die8" },
+    "mage-control": { "dmg9": "die8", "dmg8": "die8", "dmg7": "die8" }
+  },
+  "recommendation": "SHIP dmg 9->7 as proposed. Keep HP 380, def 3, enrage 1.4. The floor (war-phys/bleed) lands at a healthy 13.9-14.6% margin; the strongest realistic archetype caps at 81.8% and was already non-threatened at dmg9, so no new triviality is introduced. dmg8 under-corrects (floor stays at 7.3%, near-fumes). The burn/control losses are a card-economy problem (P1), NOT a boss-curve problem -- dmg7 + P1 card buffs do not stack into a pushover (buffed burn still dies; buffed warrior stays single-digit cushion).",
+  "newConcerns": [
+    "FIXED-DECK-ORDER ARTIFACT (caveat, not a P0-1 issue): swapping a Pierce-T3 (Mountain's Will / Earthcleaver) into an EARLY slot of an otherwise-proven warrior deck LOWERS its cushion vs the unmodified deck (warW buff_d7 7.9% < b1-war-physical d7 13.9%; lateW all-T3 buff_d7 only 2.6%). The 2-mana armor-gated pierce T3s ramp slower and front-load before armor exists. This means the proposal's P0-4 claim ('swap Mountain's Will -> warrior 0/8 to 8/8') is deck-order-position-sensitive and may NOT reproduce in a different slot. The questioning agent for P0-3/P0-4 must verify the pierce-T3 buffs in a realistic ARMOR-building deck order, not just any swap. This does not affect P0-1's verdict.",
+    "poison-block at 81.8% (dmg7) is the practical cushion ceiling -- comfortable but not broken; flag only if a future buff pushes its damage output AND keeps the block, which P0-1 does not."
+  ]
+}
