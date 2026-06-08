@@ -1,7 +1,7 @@
 ﻿import { Scene } from 'phaser';
 import { LoopRunner, type LoopRunState, TILE_SIZE } from '../systems/LoopRunner';
 import { getAllPlaceableTiles, getTileConfig, type TileSlot, type TileSlotType } from '../systems/TileRegistry';
-import { TileVisual, LANDMARK_MAP } from '../ui/TileVisual';
+import { TileVisual, PlanningTileVisual, LANDMARK_MAP } from '../ui/TileVisual';
 import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
@@ -330,7 +330,7 @@ export class PlanningOverlay extends Scene {
     for (let i = 0; i < tiles.length; i++) {
       const slot = tiles[i];
       // Initial position; updateTilePositions() handles the wrap math.
-      const tv = new TileVisual(this, 0, y, slot, scale, i, true);
+      const tv = new PlanningTileVisual(this, 0, y, slot, scale, i, true);
       tv.setData('beltSlot', i);
       this.gridContainer.add(tv);
       this.tileVisuals.push(tv);
@@ -582,7 +582,7 @@ export class PlanningOverlay extends Scene {
 
       const previewSize = Math.round(FRAME * 0.65);
       const scale = previewSize / TILE_SIZE;
-      const preview = new TileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
+      const preview = new PlanningTileVisual(this, 0, 0, pseudoSlot, scale, 0, false);
       if (['rest', 'event', 'treasure', 'boss', 'terrain'].includes(pseudoSlot.type)) preview.hideFloor();
       preview.hideLandmark();
       container.add(preview);

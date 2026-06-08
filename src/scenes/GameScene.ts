@@ -5,7 +5,7 @@ import { LoopRunner, TILE_SIZE, type LoopRunState } from '../systems/LoopRunner'
 import { getDifficultyConfig } from '../systems/DifficultyScaler';
 import { LoopHUD } from '../ui/LoopHUD';
 import { LoopCelebration } from '../ui/LoopCelebration';
-import { TileVisual } from '../ui/TileVisual';
+import { TileVisual, WorldTileVisual } from '../ui/TileVisual';
 import { COLORS, LAYOUT } from '../ui/StyleConstants';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { AudioManager } from '../systems/AudioManager';
@@ -707,7 +707,7 @@ export class GameScene extends Scene {
       if (!tileSlot) continue;
 
       const worldX = gi * TILE_SIZE + 100; // +100 to match hero offset
-      const tv = new TileVisual(this, worldX + TILE_SIZE / 2, 490, tileSlot, 1, tileDataIndex);
+      const tv = new WorldTileVisual(this, worldX + TILE_SIZE / 2, 490, tileSlot, tileDataIndex);
       this.add.existing(tv);
       tv.setDepth(10);
       this.tilePool.set(gi, tv);
