@@ -19,15 +19,32 @@ const TILE_SPRITE_MAP: Record<string, string> = {
   event: 'tile_event',
   treasure: 'tile_treasure',
   boss: 'tile_boss',
-  // Subtiles (8) — keys must match TileRegistry entries.
-  subtile_ambush: 'tile_subtile_ambush',
-  subtile_magma: 'tile_subtile_magma',
-  subtile_manawell: 'tile_subtile_manawell',
-  subtile_camp: 'tile_subtile_camp',
-  subtile_burnaltar: 'tile_subtile_burnaltar',
-  subtile_bleedtotem: 'tile_subtile_bleedtotem',
-  subtile_resonance: 'tile_subtile_resonance',
-  subtile_warhorn: 'tile_subtile_warhorn',
+  // Subtiles have no ground sprite — they sit on top of the reserved tile.
+  // Their identity is shown via landmark overlay (see LANDMARK_MAP).
+};
+
+/** Maps tile keys to their landmark overlay texture key.
+ * Landmarks are rendered above the tile sprite, centered and scaled to fit. */
+export const LANDMARK_MAP: Record<string, string> = {
+  // Combat biomes
+  forest:   'landmark_forest',
+  graveyard:'landmark_graveyard',
+  swamp:    'landmark_swamp',
+  desert:   'landmark_desert',
+  lava:     'landmark_lava',
+  // Specials
+  event:    'landmark_event',
+  treasure: 'landmark_treasure',
+  boss:     'landmark_boss',
+  // Subtiles — landmark is the only visual identity on the reserved slot
+  subtile_ambush:    'landmark_subtile_ambush',
+  subtile_magma:     'landmark_subtile_magma',
+  subtile_manawell:  'landmark_subtile_manawell',
+  subtile_camp:      'landmark_subtile_camp',
+  subtile_burnaltar: 'landmark_subtile_burnaltar',
+  subtile_bleedtotem:'landmark_subtile_bleedtotem',
+  subtile_resonance: 'landmark_subtile_resonance',
+  subtile_warhorn:   'landmark_subtile_warhorn',
 };
 
 /** Get the terrain key for a tile slot.
@@ -38,10 +55,12 @@ function getTileTerrainKey(slot: TileSlot): string {
   return slot.terrain ?? slot.kind ?? slot.type;
 }
 
-/** Reserved (empty subtile slot) sprite picked from the host combat terrain. */
+/** Sprite for reserved slots (empty or occupied by a subtile), picked from host combat terrain. */
 function getReservedSpriteKey(slot: TileSlot): string | null {
-  if (slot.type !== 'basic' || !slot.reserved || !slot.hostTerrain) return null;
-  return `tile_reserved_${slot.hostTerrain}`;
+  if (!slot.hostTerrain) return null;
+  if (slot.type === 'basic' && slot.reserved) return `tile_reserved_${slot.hostTerrain}`;
+  if (slot.type === 'subtile') return `tile_reserved_${slot.hostTerrain}`;
+  return null;
 }
 
 /**
@@ -52,6 +71,7 @@ function getReservedSpriteKey(slot: TileSlot): string | null {
 export class TileVisual extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Rectangle;
   private sprite: Phaser.GameObjects.Image | null = null;
+  private landmarkSprite: Phaser.GameObjects.Image | null = null;
   private enemySprite: Phaser.GameObjects.Sprite | null = null;
   private iconText: Phaser.GameObjects.Text;
   private tileScale: number;
@@ -90,9 +110,14 @@ export class TileVisual extends Phaser.GameObjects.Container {
       ? reservedKey
       : TILE_SPRITE_MAP[key];
     if (spriteKey && scene.textures.exists(spriteKey)) {
-      this.sprite = scene.add.image(0, 0, spriteKey);
+      // y offset only applies at full scale (GameScene world view).
+      // In planning view (scale=0.5) the tile is small enough that centering at 0 is correct.
+      const spriteOffsetY = scale >= 1 ? -50 : 0;
+      this.sprite = scene.add.image(0, spriteOffsetY, spriteKey);
       this.sprite.setDisplaySize(size, size);
       this.add(this.sprite);
+      // Sprite covers the tile — hide the fallback rectangle so it doesn't bleed through
+      this.bg.setVisible(false);
     }
 
     // Icon text (only for tiles without sprites)
@@ -108,9 +133,18 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
     this.add(this.iconText);
 
+    // Landmark overlay — shown above the tile sprite for biomes, specials and subtiles.
+    // Hidden when an enemy sprite occupies the tile (enemy takes visual priority).
+    const landmarkKey = LANDMARK_MAP[key];
+    const hasEnemy = !!(tileSlot.enemyId && !tileSlot.defeatedThisLoop);
+    if (landmarkKey && scene.textures.exists(landmarkKey)) {
+      this.landmarkSprite = this._makeLandmark(scene, landmarkKey, size);
+      if (hasEnemy) this.landmarkSprite.setVisible(false);
+    }
+
     // Enemy sprite (pre-assigned combat tiles)
-    if (tileSlot.enemyId && !tileSlot.defeatedThisLoop) {
-      this.addEnemySprite(scene, tileSlot.enemyId, size);
+    if (hasEnemy) {
+      this.addEnemySprite(scene, tileSlot.enemyId!, size);
     }
 
     // Only enable hover/click in planning mode
@@ -128,6 +162,16 @@ export class TileVisual extends Phaser.GameObjects.Container {
     }
   }
 
+  private _makeLandmark(scene: Phaser.Scene, textureKey: string, tileSize: number): Phaser.GameObjects.Image {
+    const img = scene.add.image(0, this.tileScale >= 1 ? -tileSize * 0.75 : -tileSize * 0.9, textureKey);
+    // Scale landmark to fit 80% of the tile width, preserving aspect ratio
+    const src = scene.textures.get(textureKey).getSourceImage() as HTMLImageElement;
+    const scale = (tileSize * 0.8) / Math.max(src.width, src.height);
+    img.setScale(scale);
+    this.add(img);
+    return img;
+  }
+
   private addEnemySprite(scene: Phaser.Scene, enemyId: string, tileSize: number, fadeIn: boolean = false): void {
     // Phase 9 (CR-01 fix): monster texture keys are namespaced `monster_*`
     // to avoid colliding with hero spritesheets (e.g. enemy 'mage' vs hero
@@ -136,7 +180,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
     if (scene.textures.exists(textureKey)) {
       this.enemySprite = scene.add.sprite(0, 0, textureKey);
       this.enemySprite.setOrigin(0.5, 1.0);
-      this.enemySprite.y = tileSize * 0.2; // Sobe os monstros novamente para parear com a nova altura dos itens
+      this.enemySprite.y = this.tileScale >= 1 ? -71.2 : -tileSize * 0.35;
       // Bound enemy sprite to tile size regardless of source dimensions.
       // Previous setScale(tileSize / 32) assumed 32px source but the PNGs
       // are 64x64, causing a 2x "pop" (128px) on first appearance.
@@ -186,21 +230,39 @@ export class TileVisual extends Phaser.GameObjects.Container {
         this.sprite.setTexture(spriteKey);
         this.sprite.setVisible(true);
       }
+      this.bg.setVisible(false);
       this.iconText.setVisible(false);
     } else {
       if (this.sprite) this.sprite.setVisible(false);
+      this.bg.setVisible(true);
       this.iconText.setVisible(true);
     }
 
     const updateConfig = (tileSlot.type !== 'buffer') ? getTileConfig(key) : null;
     this.iconText.setText(updateConfig?.icon ?? '');
 
+    // Landmark reconcile
+    const size = TILE_SIZE * this.tileScale;
+    const newLandmarkKey = LANDMARK_MAP[key];
+    if (newLandmarkKey && this.scene.textures.exists(newLandmarkKey)) {
+      if (!this.landmarkSprite) {
+        this.landmarkSprite = this._makeLandmark(this.scene, newLandmarkKey, size);
+      } else if (this.landmarkSprite.texture.key !== newLandmarkKey) {
+        this.landmarkSprite.setTexture(newLandmarkKey);
+        const src = this.scene.textures.get(newLandmarkKey).getSourceImage() as HTMLImageElement;
+        const scale = (size * 0.8) / Math.max(src.width, src.height);
+        this.landmarkSprite.setScale(scale);
+      }
+      this.landmarkSprite.setVisible(true);
+    } else if (this.landmarkSprite) {
+      this.landmarkSprite.setVisible(false);
+    }
+
     // Enemy sprite reconcile: pool tiles change enemyId between basic and
     // boss/combat tiles as the loop advances. Without this, the only path
     // that adds an enemy sprite was the full destroy-and-reconstruct on
     // loop completion, which caused a "pop" the first time a boss tile
     // came into view via a pool reuse.
-    const size = TILE_SIZE * this.tileScale;
     const shouldHaveEnemy = !!(tileSlot.enemyId && !tileSlot.defeatedThisLoop);
     if (shouldHaveEnemy) {
       const textureKey = `monster_${tileSlot.enemyId}`;
@@ -214,6 +276,10 @@ export class TileVisual extends Phaser.GameObjects.Container {
       this.enemySprite.destroy();
       this.enemySprite = null;
     }
+    // Landmark visibility follows enemy presence: enemy takes visual priority.
+    if (this.landmarkSprite) {
+      this.landmarkSprite.setVisible(!shouldHaveEnemy);
+    }
   }
 
   /**
@@ -225,5 +291,9 @@ export class TileVisual extends Phaser.GameObjects.Container {
    */
   hideFloor(): void {
     if (this.bg) this.bg.setVisible(false);
+  }
+
+  hideLandmark(): void {
+    if (this.landmarkSprite) this.landmarkSprite.setVisible(false);
   }
 }

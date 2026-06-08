@@ -21,9 +21,23 @@ const PANEL_W = 460;
 const PANEL_MIN_H = 130;
 const PANEL_MARGIN = 18;
 
-// Pre-rendered image dimensions (1983×793 source, displayed at PANEL_W wide)
-const IMAGE_DISPLAY_W = PANEL_W;
-const IMAGE_DISPLAY_H = Math.round(PANEL_W * 793 / 1983); // ≈ 184
+// Target display width for pre-rendered step images
+const IMAGE_DISPLAY_W = Math.round(PANEL_W * 0.85);
+// Global vertical offset for image panels
+const IMAGE_OFFSET_Y = -30;
+
+// Per-step position overrides for image panels.
+// offsetY: added on top of IMAGE_OFFSET_Y.
+// anchor: 'bottom-left' | 'top-right' override the horizontal centering.
+const STEP_IMAGE_OVERRIDES: Record<string, { offsetY?: number; anchor?: 'bottom-left' | 'top-right' }> = {
+  'deck-review':    { offsetY: +30 },
+  'planning-intro': { offsetY: -20 },
+  'place-tile':     { offsetY: +30 },
+  'shop-buy-relic': { anchor: 'bottom-left' },
+  'shop-buy-elements': { anchor: 'top-right' },
+  'forge-craft':    { offsetY: +20 },
+  'boss-preview':   { offsetY: +30 },
+};
 
 export interface SpotlightRect {
   x: number;
@@ -43,6 +57,7 @@ export class TutorialOverlay {
 
   // Text-based panel (fallback)
   private panelBg: Phaser.GameObjects.Rectangle;
+  private panelBgImg: Phaser.GameObjects.Image | null = null;
   private titleText: Phaser.GameObjects.Text;
   private bodyText: Phaser.GameObjects.Text;
 
@@ -62,20 +77,24 @@ export class TutorialOverlay {
     // Image panel (hidden until a matching texture is confirmed)
     this.panelImage = scene.add.image(0, 0, '__DEFAULT')
       .setOrigin(0.5, 0)
-      .setDisplaySize(IMAGE_DISPLAY_W, IMAGE_DISPLAY_H)
       .setScrollFactor(0)
       .setVisible(false)
       .setInteractive();
     this.panelImage.on('pointerdown', () => { /* swallow */ });
     this.container.add(this.panelImage);
 
-    // Text fallback panel
-    this.panelBg = scene.add.rectangle(0, 0, PANEL_W, PANEL_MIN_H, 0x1a1a2e, 0.96)
-      .setStrokeStyle(2, 0xffd700)
+    // Text fallback panel — transparent hit rectangle; image drawn behind it
+    this.panelBg = scene.add.rectangle(0, 0, PANEL_W, PANEL_MIN_H, 0x000000, 0)
       .setOrigin(0.5, 0)
       .setInteractive();
     this.panelBg.setScrollFactor(0);
     this.panelBg.on('pointerdown', () => { /* swallow */ });
+
+    if (scene.textures.exists('tutorial_text_panel')) {
+      this.panelBgImg = scene.add.image(0, 0, 'tutorial_text_panel')
+        .setOrigin(0.5, 0).setScrollFactor(0).setVisible(false);
+      this.container.add(this.panelBgImg);
+    }
     this.container.add(this.panelBg);
 
     this.titleText = scene.add.text(0, 0, '', {
@@ -108,6 +127,15 @@ export class TutorialOverlay {
     const step = tutorialDirector.getStepForScene(this.scene.scene.key);
     if (!step) { this.hide(); return; }
     this.renderStep(step);
+  }
+
+  private syncPanelBgImg(): void {
+    if (!this.panelBgImg) return;
+    // tutorial_text_panel native: 1986 × 792. Scale to match panelBg width.
+    const sc = this.panelBg.width / 1986;
+    this.panelBgImg.setScale(sc);
+    this.panelBgImg.x = this.panelBg.x;
+    this.panelBgImg.y = this.panelBg.y;
   }
 
   private hide(): void {
@@ -184,11 +212,13 @@ export class TutorialOverlay {
     // Show image or text panel
     this.panelImage.setVisible(useImage);
     this.panelBg.setVisible(!useImage);
+    if (this.panelBgImg) this.panelBgImg.setVisible(!useImage);
     this.titleText.setVisible(!useImage);
     this.bodyText.setVisible(!useImage);
 
     if (useImage) {
-      this.panelImage.setTexture(texKey).setDisplaySize(IMAGE_DISPLAY_W, IMAGE_DISPLAY_H);
+      this.panelImage.setTexture(texKey);
+      this.panelImage.setScale(IMAGE_DISPLAY_W / this.panelImage.width);
     } else {
       this.titleText.setText(step.title);
       this.bodyText.setText(step.body);
@@ -201,8 +231,8 @@ export class TutorialOverlay {
     if (step.advance === 'click' && !step.hideNext) {
       const panelCenterX = LAYOUT.canvasWidth / 2;
       const btnY = useImage
-        ? panelTopY + IMAGE_DISPLAY_H + 12
-        : this.bodyText.y + this.bodyText.height + 18;
+        ? panelTopY + IMAGE_OFFSET_Y + this.panelImage.displayHeight + 18
+        : this.bodyText.y + this.bodyText.height + 36;
 
       const btnW = 153;
       if (this.scene.textures.exists('btn_next')) {
@@ -231,12 +261,15 @@ export class TutorialOverlay {
       if (!useImage) {
         const panelH = (btnY + (this.nextBtn.height / 2) + 14) - this.panelBg.y;
         this.panelBg.height = Math.max(PANEL_MIN_H, panelH);
+        this.syncPanelBgImg();
       }
     }
 
     // Bring panel elements above dim
     this.container.bringToTop(useImage ? this.panelImage : this.panelBg);
     if (!useImage) {
+      if (this.panelBgImg) this.container.bringToTop(this.panelBgImg);
+      this.container.bringToTop(this.panelBg);
       this.container.bringToTop(this.titleText);
       this.container.bringToTop(this.bodyText);
     }
@@ -245,6 +278,7 @@ export class TutorialOverlay {
 
   /** Lay out the panel and return the computed panelTopY. */
   private layoutPanel(step: TutorialStep, spot: SpotlightRect | null, useImage: boolean): number {
+    const imgOverride = useImage ? (STEP_IMAGE_OVERRIDES[step.id] ?? {}) : {};
     const innerPad = 14;
     const hasNextBtn = step.advance === 'click' && !step.hideNext;
 
@@ -252,8 +286,8 @@ export class TutorialOverlay {
     let panelW: number;
 
     if (useImage) {
-      panelH = IMAGE_DISPLAY_H + (hasNextBtn ? 50 : 0);
       panelW = IMAGE_DISPLAY_W;
+      panelH = this.panelImage.displayHeight + (hasNextBtn ? 50 : 0);
     } else {
       let wrapW = PANEL_W - 36;
       this.bodyText.setStyle({ wordWrap: { width: wrapW } });
@@ -300,10 +334,11 @@ export class TutorialOverlay {
       // Position objects with side-anchor center X
       if (useImage) {
         this.panelImage.x = cx;
-        this.panelImage.y = Math.max(12, panelTopY);
+        this.panelImage.y = Math.max(12, panelTopY) + IMAGE_OFFSET_Y + (imgOverride.offsetY ?? 0);
       } else {
         this.panelBg.x = cx; this.panelBg.y = Math.max(12, panelTopY);
         this.panelBg.width = panelW; this.panelBg.height = panelH;
+        this.syncPanelBgImg();
         this.titleText.x = cx; this.titleText.y = Math.max(12, panelTopY) + innerPad;
         this.titleText.setStyle({ wordWrap: { width: panelW - 32 } });
         this.bodyText.x = cx; this.bodyText.y = this.titleText.y + (this.titleText.height || 22) + 4;
@@ -318,11 +353,23 @@ export class TutorialOverlay {
     if (panelTopY + panelH > LAYOUT.canvasHeight - 12) panelTopY = LAYOUT.canvasHeight - 12 - panelH;
 
     if (useImage) {
-      this.panelImage.x = panelCenterX;
-      this.panelImage.y = panelTopY;
+      const totalOffsetY = IMAGE_OFFSET_Y + (imgOverride.offsetY ?? 0);
+      const imgH = this.panelImage.displayHeight;
+      const SIDE_PAD = 14;
+      if (imgOverride.anchor === 'bottom-left') {
+        this.panelImage.x = IMAGE_DISPLAY_W / 2 + SIDE_PAD;
+        this.panelImage.y = LAYOUT.canvasHeight - imgH - SIDE_PAD;
+      } else if (imgOverride.anchor === 'top-right') {
+        this.panelImage.x = LAYOUT.canvasWidth - IMAGE_DISPLAY_W / 2 - SIDE_PAD;
+        this.panelImage.y = SIDE_PAD;
+      } else {
+        this.panelImage.x = panelCenterX;
+        this.panelImage.y = panelTopY + totalOffsetY;
+      }
     } else {
       this.panelBg.x = panelCenterX; this.panelBg.y = panelTopY;
       this.panelBg.width = panelW; this.panelBg.height = panelH;
+      this.syncPanelBgImg();
       this.titleText.x = panelCenterX; this.titleText.y = panelTopY + innerPad;
       this.titleText.setStyle({ wordWrap: { width: panelW - 32 } });
       this.bodyText.x = panelCenterX; this.bodyText.y = this.titleText.y + (this.titleText.height || 22) + 4;

@@ -253,10 +253,10 @@ export function renderTokenText(
     return style;
   };
 
-  // Token sprites render at ~1.4× the body font size so they read clearly
-  // inline with prose. Number.parseInt strips the "px" suffix; default to 13.
+  // Token sprites render at the same size as the body font so they sit flush
+  // inline with prose without dominating the line.
   const fontPx = Number.parseInt(typeof fontSize === 'string' ? fontSize : `${fontSize}`, 10) || 13;
-  const tokenSpriteSize = Math.round(fontPx * 1.4);
+  const tokenSpriteSize = fontPx;
 
   for (const u of units) {
     let obj: Phaser.GameObjects.GameObject & { x: number; y: number; };
@@ -314,9 +314,12 @@ export function renderTokenText(
       else if (align === 'right') offsetX = wrapWidth - line.width;
     }
     for (const o of line.objects) {
-      const node = o as unknown as { x: number; y: number; };
+      const node = o as unknown as { x: number; y: number; displayHeight?: number; height?: number; };
+      const objH = node.displayHeight ?? node.height ?? 0;
       node.x += offsetX;
-      node.y = cursorY;
+      // Center each object vertically within the line so icons and text share
+      // the same visual midpoint instead of all pinning to the top.
+      node.y = cursorY + (line.height - objH) / 2;
       container.add(o);
     }
     cursorY += line.height + lineSpacing;

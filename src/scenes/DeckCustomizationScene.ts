@@ -17,7 +17,6 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
 import { FONTS, LAYOUT, COLORS } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput, createCardFace } from '../ui/CardFace';
@@ -146,8 +145,12 @@ export class DeckCustomizationScene extends Scene {
       fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    createWoodButton(this, 60, HEADER_BOTTOM / 2, '← Back', () => this.close(),
-      { width: 96, height: 32, fontSize: 13, variant: 'normal' });
+    const backImg = this.add.image(0, 0, 'btn_back_settings').setScale(130 / 1995);
+    const backCont = this.add.container(72, LAYOUT.canvasHeight - 28, [backImg])
+      .setSize(130, 51).setInteractive({ useHandCursor: true });
+    backCont.on('pointerover', () => this.tweens.add({ targets: backCont, scale: 1.05, duration: 100 }));
+    backCont.on('pointerout',  () => this.tweens.add({ targets: backCont, scale: 1,    duration: 100 }));
+    backCont.on('pointerdown', () => this.close());
 
     addGlossaryButton(this, 770, HEADER_BOTTOM / 2);
   }

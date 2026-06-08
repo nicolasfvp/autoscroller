@@ -7,7 +7,6 @@ import { bankRunRewards } from '../systems/MetaProgressionSystem';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import { LAYOUT, addBitmapText } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
 
 export class DeathScene extends Scene {
@@ -61,19 +60,22 @@ export class DeathScene extends Scene {
       .fillRect(0, 548, 800, 52);
 
     const isDaily = run.mode === 'daily';
-    const buttonLabel = isDaily ? 'Return to Menu' : 'Return to City';
     const nextScene = isDaily ? SCENE_KEYS.MAIN_MENU : SCENE_KEYS.CITY_HUB;
 
     // Wood-themed CTA. The dim bottom strip already darkens the area for
     // readability, so we just center the button on top of it.
-    const cta = createWoodButton(this, 400, 566, buttonLabel, async () => {
+    const ctaImg = this.add.image(0, 0, 'btn_resume_pause').setScale(240 / 1991);
+    const ctaCont = this.add.container(400, 566, [ctaImg])
+      .setSize(240, 95).setInteractive({ useHandCursor: true }).setDepth(2);
+    ctaCont.on('pointerover', () => this.tweens.add({ targets: ctaCont, scale: 1.05, duration: 100 }));
+    ctaCont.on('pointerout',  () => this.tweens.add({ targets: ctaCont, scale: 1,    duration: 100 }));
+    ctaCont.on('pointerdown', async () => {
       if (this.transitioning) return;
       stopAllRunScenes(this, SCENE_KEYS.DEATH);
       await saveManager.clearByMode(run.mode);
       clearRun();
       this.fadeToScene(nextScene);
-    }, { width: 240, height: 42, fontSize: 17, variant: 'primary' });
-    cta.container.setDepth(2);
+    });
 
     // ── Bank rewards (silent) ────────────────────────────────────
     const metaState = await loadMetaState();

@@ -24,25 +24,61 @@ export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility 
 
 const FF = FONTS.family;
 
-// Panel geometry
-const LP       = { x: 8,   y: 8, w: 230, h: 131 };  // Hero (left) — sized to status_panel.png
-const RP       = { x: 532, y: 8, w: 260, h: 56  };  // Enemy (right, symmetric width)
-const ICON_COL = 53;                                  // dark-slot left offset (px analysis: 52.8)
-const BAR_W    = 172;                                 // dark-slot width  (px analysis: 172.1)
-const E_BAR_W  = RP.w - 28;                          // 232px enemy bar width
+// ── Panel geometry ─────────────────────────────────────────────
+// Hero panel: combat_hero_panel.png (1435×714, aspect ≈2.01). The three stat
+// bars render BEHIND the art and show through baked-in transparent windows.
+const LP = { x: 8, y: 8, w: 250, h: 124 };
+// Bar windows (measured from the PNG alpha → normalized → screen px).
+const H_WIN_L = 0.2369;                       // window left  ÷ panelW
+const H_WIN_R = 0.8843;                       // window right ÷ panelW
+const H_BAR_X    = LP.x + H_WIN_L * LP.w;     // bar left anchor
+const H_BAR_MAXW = (H_WIN_R - H_WIN_L) * LP.w;
+const H_BAR_CX   = H_BAR_X + H_BAR_MAXW / 2;
+const H_WIN_H    = 0.150 * LP.h;              // window thickness
+const H_ROW_CY   = [0.2171, 0.4706, 0.7283].map((n) => LP.y + n * LP.h);
+
+// Enemy panel: combat_monster_panel.png (1593×564, aspect ≈2.83). One HP bar
+// behind a transparent window; the left square holds the name/portrait.
+const RP = { x: 532, y: 8, w: 260, h: 92 };
+const E_WIN_L = 0.4149;
+const E_WIN_R = 0.9228;
+const E_BAR_X    = RP.x + E_WIN_L * RP.w;
+const E_BAR_MAXW = (E_WIN_R - E_WIN_L) * RP.w;
+const E_BAR_CX   = E_BAR_X + E_BAR_MAXW / 2;
+const E_ROW_CY   = RP.y + 0.5567 * RP.h;
+const E_WIN_H    = 0.2163 * RP.h;
+// Portrait box (left square)
+const E_PORTRAIT_CX = RP.x + ((0.0126 + 0.4143) / 2) * RP.w;
+const E_PORTRAIT_CY = RP.y + RP.h / 2;
+const E_PORTRAIT_W  = (0.4143 - 0.0126) * RP.w - 10;
+// Name sits just above the HP bar, centred over the bar window
+const E_NAME_X = E_BAR_CX;
+const E_NAME_Y = RP.y + (0.5567 - 0.2163 / 2) * RP.h - 3;
+
+// Bar palette: dark troughs so the transparent windows never reveal the arena
+// background, plus the Street-Fighter "lost health" light-blue ghost colour.
+// Trough: very dark base under the entire bar window
+const TROUGH_HP   = 0x200808;
+const TROUGH_STA  = 0x181000;
+const TROUGH_MANA = 0x0e0820;
+// Ghost alpha — lost portion appears as a dim semi-transparent echo of the fill
+const GHOST_ALPHA = 0.38;
 
 // Status-chip row geometry (effect icons row under each panel)
 const CHIP_POOL_SIZE = 10;
-const CHIP_HEIGHT = 20;
+const CHIP_HEIGHT = 36;
 const CHIP_GAP = 4;
-const CHIP_ROW_GAP = 22;
-const HERO_CHIPS = { x: LP.x + 4, y: LP.y + LP.h + 22, maxWidth: LP.w - 8 };
-const ENEMY_CHIPS = { x: RP.x + 4, y: RP.y + RP.h + 6, maxWidth: RP.w - 8 };
+const CHIP_ROW_GAP = 40;
+// Slot proportions of the combat_chip_panel asset (657x254, divider at ~50%)
+const CHIP_ICON_SLOT_RATIO = 0.38; // left slot width as fraction of total
+const HERO_CHIPS  = { x: LP.x + 14, y: LP.y + LP.h + CHIP_HEIGHT / 2 - 4, maxWidth: LP.w - 8 };
+const ENEMY_CHIPS = { x: RP.x + 4, y: RP.y + RP.h + CHIP_HEIGHT / 2 - 1, maxWidth: RP.w - 8 };
 
 interface ChipDisplay {
   container: Phaser.GameObjects.Container;
   bg: Phaser.GameObjects.Rectangle;
-  icon: Phaser.GameObjects.Text;
+  bgPanel?: Phaser.GameObjects.Image;
+  icon: Phaser.GameObjects.Image;
   label: Phaser.GameObjects.Text;
   /** Current tooltip string for this slot (updated each layout pass). */
   tooltip: string;
@@ -56,26 +92,37 @@ export class CombatHUD {
   private scene: Phaser.Scene;
   private container: Phaser.GameObjects.Container;
 
-  // Hero bars
+  // Hero bars (fill = current value, ghost = lingering "lost" segment)
   private hpBar!:      Phaser.GameObjects.Rectangle;
   private staminaBar!: Phaser.GameObjects.Rectangle;
   private manaBar!:    Phaser.GameObjects.Rectangle;
+  private hpGhost!:      Phaser.GameObjects.Rectangle;
+  private staminaGhost!: Phaser.GameObjects.Rectangle;
+  private manaGhost!:    Phaser.GameObjects.Rectangle;
   private hpText!:     Phaser.GameObjects.Text;
   private staminaText!:Phaser.GameObjects.Text;
   private manaText!:   Phaser.GameObjects.Text;
 
   // Hero armor readout (below HP). Shown only when armor > 0.
-  private armorIcon!:   Phaser.GameObjects.Text;
-  private armorValue!: Phaser.GameObjects.Text;
 
   // Enemy
+  private _enemyTextureKey = '';
+  private enemyPortrait?: Phaser.GameObjects.Image;
+  private portraitMaskGfx?: Phaser.GameObjects.Graphics;
   private enemyNameText!: Phaser.GameObjects.Text;
   private enemyHpBar!:    Phaser.GameObjects.Rectangle;
+  private enemyHpGhost!:  Phaser.GameObjects.Rectangle;
   private enemyHpText!:   Phaser.GameObjects.Text;
 
-  // Cooldown arc
+  // Hourglass timer
+  private hourglassSprite?: Phaser.GameObjects.Sprite;
   private cooldownGraphics!: Phaser.GameObjects.Graphics;
   private cooldownText!:     Phaser.GameObjects.Text;
+  private hourglassFlipAngle   = 0;
+  private isFlipping           = false;
+  private _lastCardPlayCount   = 0;
+  private _onFlipChange?: (flipping: boolean) => void;
+  private _destroyed         = false;
 
   // Status effect chip pools (one row per side, pre-allocated)
   private heroChipPool: ChipDisplay[] = [];
@@ -99,9 +146,14 @@ export class CombatHUD {
   private staminaTween?: Phaser.Tweens.Tween;
   private manaTween?:    Phaser.Tweens.Tween;
   private enemyHpTween?: Phaser.Tweens.Tween;
+  private hpGhostTween?:      Phaser.Tweens.Tween;
+  private staminaGhostTween?: Phaser.Tweens.Tween;
+  private manaGhostTween?:    Phaser.Tweens.Tween;
+  private enemyHpGhostTween?: Phaser.Tweens.Tween;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, enemyTextureKey = '') {
     this.scene = scene;
+    this._enemyTextureKey = enemyTextureKey;
     this.container = scene.add.container(0, 0)
       .setScrollFactor(0)
       .setDepth(100);
@@ -162,49 +214,36 @@ export class CombatHUD {
   private buildHeroPanel(): void {
     const s = this.scene;
 
-    // status_panel.png provides the background with baked-in icons per row
-    const panelImg = s.textures.exists('status_panel')
-      ? s.add.image(LP.x + LP.w / 2, LP.y + LP.h / 2, 'status_panel').setDisplaySize(LP.w, LP.h)
+    // Stat bars sit BEHIND the panel art (trough → ghost → fill); the asset on
+    // top reveals each bar through its baked-in transparent window.
+    const makeBar = (cy: number, fillColor: number, troughColor: number, valSize: string) => {
+      const trough = s.add.rectangle(H_BAR_CX, cy, H_BAR_MAXW, H_WIN_H, troughColor).setOrigin(0.5);
+      const ghost  = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5).setAlpha(0);
+      const fill   = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5);
+      const val    = s.add.text(H_BAR_CX, cy, '', {
+        fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
+        color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+      }).setOrigin(0.5);
+      this.container.add([trough, ghost, fill]);
+      return { ghost, fill, val };
+    };
+
+    const hp  = makeBar(H_ROW_CY[0], 0x22cc44, TROUGH_HP,   '13px');
+    const sta = makeBar(H_ROW_CY[1], 0xf0a020, TROUGH_STA,  '12px');
+    const mp  = makeBar(H_ROW_CY[2], 0x9966ff, TROUGH_MANA, '12px');
+    this.hpBar = hp.fill;       this.hpGhost = hp.ghost;       this.hpText = hp.val;
+    this.staminaBar = sta.fill; this.staminaGhost = sta.ghost; this.staminaText = sta.val;
+    this.manaBar = mp.fill;     this.manaGhost = mp.ghost;     this.manaText = mp.val;
+
+    // Panel art on top of the bars
+    const panelImg = s.textures.exists('combat_hero_panel')
+      ? s.add.image(LP.x + LP.w / 2, LP.y + LP.h / 2, 'combat_hero_panel').setDisplaySize(LP.w, LP.h)
       : s.add.rectangle(LP.x + LP.w / 2, LP.y + LP.h / 2, LP.w, LP.h, 0x080810, 0.88) as unknown as Phaser.GameObjects.Image;
     this.container.add(panelImg);
 
-    // Bar slot geometry derived from the image's icon-cell width (ICON_COL)
-    const barX = LP.x + ICON_COL;
-    const padX = 0;
-    const hpY  = LP.y + 22;   // row 1 centre
-    const staY = LP.y + 60;   // row 2 centre
-    const mpY  = LP.y + 103;  // row 3 centre
+    // Value labels render above the art
+    this.container.add([hp.val, sta.val, mp.val]);
 
-    const makeBar = (y: number, fillColor: number, h: number, valSize: string) => {
-      const fill = s.add.rectangle(barX + padX, y, 0, h - 4, fillColor).setOrigin(0, 0.5);
-      const val  = s.add.text(barX + BAR_W / 2, y, '', {
-        fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
-        color: '#ffffff', stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0.5, 0.5);
-      this.container.add([fill, val]);
-      return { fill, val };
-    };
-
-    const hp  = makeBar(hpY,  0x22cc44, 24, '13px');
-    this.hpBar = hp.fill; this.hpText = hp.val;
-
-    const sta = makeBar(staY, 0xf0a020, 20, '12px');
-    this.staminaBar = sta.fill; this.staminaText = sta.val;
-
-    const mp  = makeBar(mpY,  0x9966ff, 20, '12px');
-    this.manaBar = mp.fill; this.manaText = mp.val;
-
-    // Armor readout placed just below the panel (hidden when armor = 0)
-    const armorY = LP.y + LP.h + 6;
-    this.armorIcon = s.add.text(LP.x + 10, armorY, '🛡', {
-      fontFamily: FF, fontSize: '10px', fontStyle: 'bold',
-      color: '#88ccff', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0, 0.5).setVisible(false);
-    this.armorValue = s.add.text(LP.x + 22, armorY, '0', {
-      fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
-      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0, 0.5).setVisible(false);
-    this.container.add([this.armorIcon, this.armorValue]);
   }
 
   // ── Enemy panel ────────────────────────────────────────────────
@@ -212,50 +251,122 @@ export class CombatHUD {
   private buildEnemyPanel(): void {
     const s = this.scene;
 
-    // Dark panel background + red accent strip (mirrors hero panel style)
-    const rpBg = s.add.rectangle(RP.x + RP.w / 2, RP.y + RP.h / 2, RP.w, RP.h, 0x080810, 0.88);
-    rpBg.setStrokeStyle(1.5, 0x4a2a2a);
-    this.container.add(rpBg);
-    this.container.add(s.add.rectangle(RP.x + RP.w / 2, RP.y + 3, RP.w - 4, 4, 0xdd3333, 0.9));
+    // HP bar behind the panel art (trough → ghost → fill)
+    const trough = s.add.rectangle(E_BAR_CX, E_ROW_CY, E_BAR_MAXW, E_WIN_H, TROUGH_HP).setOrigin(0.5);
+    this.enemyHpGhost = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5).setAlpha(0);
+    this.enemyHpBar   = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5);
+    this.container.add([trough, this.enemyHpGhost, this.enemyHpBar]);
 
-    // Enemy name
-    this.enemyNameText = s.add.text(RP.x + RP.w / 2, RP.y + 16, '', {
-      fontFamily: FF, fontSize: '14px', fontStyle: 'bold',
-      color: '#ff7777', stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(0.5, 0.5);
+    // Monster portrait added FIRST so the panel art renders on top (container
+    // children render in insertion order — last = frontmost).
+    const pBoxW = E_PORTRAIT_W - 6;
+    const pBoxH = RP.h - 8;
+    const portraitKey = this._enemyTextureKey.replace(/^monster_/, 'portrait_');
+    const textureKey  = s.textures.exists(portraitKey)       ? portraitKey
+                      : s.textures.exists(this._enemyTextureKey) ? this._enemyTextureKey
+                      : '';
+    if (textureKey) {
+      const pX = E_PORTRAIT_CX - 9;
+      this.enemyPortrait = s.add.image(pX, E_PORTRAIT_CY, textureKey)
+        .setDisplaySize(61, 61);
+      this.portraitMaskGfx = s.make.graphics({ x: 0, y: 0 });
+      this.portraitMaskGfx.fillStyle(0xffffff);
+      this.portraitMaskGfx.fillRect(pX - pBoxW / 2, E_PORTRAIT_CY - pBoxH / 2, pBoxW, pBoxH);
+      this.enemyPortrait.setMask(this.portraitMaskGfx.createGeometryMask());
+      this.container.add(this.enemyPortrait);
+    }
+
+    // Panel art — added AFTER portrait so it renders on top, with the portrait
+    // showing through the transparent portrait-box window in the artwork.
+    const panelImg = s.textures.exists('combat_monster_panel')
+      ? s.add.image(RP.x + RP.w / 2, RP.y + RP.h / 2, 'combat_monster_panel').setDisplaySize(RP.w, RP.h)
+      : s.add.rectangle(RP.x + RP.w / 2, RP.y + RP.h / 2, RP.w, RP.h, 0x080810, 0.88) as unknown as Phaser.GameObjects.Image;
+    this.container.add(panelImg);
+
+    // Enemy name just above the HP bar, centred over the bar window
+    this.enemyNameText = s.add.text(E_NAME_X, E_NAME_Y, '', {
+      fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
+      color: '#ffaaaa', stroke: '#000000', strokeThickness: 4,
+      align: 'center', wordWrap: { width: E_BAR_MAXW - 8 },
+    }).setOrigin(0.5, 1);
     this.container.add(this.enemyNameText);
 
-    // Enemy HP bar
-    const bx  = RP.x + 14;
-    const by  = RP.y + 38;
-    const padX = 5;
-    const trough = s.add.rectangle(bx + E_BAR_W / 2, by, E_BAR_W, 22, 0x111122, 1).setStrokeStyle(1, 0x333355);
-    this.enemyHpBar  = s.add.rectangle(bx + padX, by, 0, 14, 0xdd2222).setOrigin(0, 0.5);
-    this.enemyHpText = s.add.text(bx + E_BAR_W / 2, by, '', {
-      fontFamily: FF, fontSize: '12px', fontStyle: 'bold',
-      color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0.5, 0.5);
-
-    this.container.add([trough, this.enemyHpBar, this.enemyHpText]);
-
-    // "♥ HP" micro-label above bar
-    this.container.add(s.add.text(bx, by - 9, '♥ HP', {
-      fontFamily: FF, fontSize: '9px', color: '#aa4444', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0, 1));
+    // HP value centred inside the bar
+    this.enemyHpText = s.add.text(E_BAR_CX, E_ROW_CY, '', {
+      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(0.5);
+    this.container.add(this.enemyHpText);
   }
 
-  // ── Cooldown arc ───────────────────────────────────────────────
+  // ── Hourglass timer ────────────────────────────────────────────
 
   private buildCooldownArc(): void {
     const s = this.scene;
-    this.cooldownGraphics = s.add.graphics();
-    this.container.add(this.cooldownGraphics);
 
-    this.cooldownText = s.add.text(400, 48, '', {
-      fontFamily: FF, fontSize: '15px', fontStyle: 'bold',
-      color: '#ffffff', stroke: '#000000', strokeThickness: 3,
+    if (s.textures.exists('hourglass_timer')) {
+      this.hourglassSprite = s.add.sprite(400, 55, 'hourglass_timer', 0)
+        .setScale(110 / 952)
+        .setOrigin(0.5, 0.5)
+        .setDepth(101);
+      this.container.add(this.hourglassSprite);
+    } else {
+      this.cooldownGraphics = s.add.graphics();
+      this.container.add(this.cooldownGraphics);
+    }
+
+    // Timer panel behind the cooldown text
+    if (s.textures.exists('timer_panel')) {
+      const tp = s.add.image(400, 117, 'timer_panel').setDisplaySize(110, 30).setDepth(100);
+      this.container.add(tp);
+    }
+
+    this.cooldownText = s.add.text(400, 115, '', {
+      fontFamily: 'VT323', fontSize: '22px',
+      color: '#ffd700', stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5);
     this.container.add(this.cooldownText);
+  }
+
+  setFlipCallback(cb: (flipping: boolean) => void): void {
+    this._onFlipChange = cb;
+  }
+
+  private triggerHourglassFlip(): void {
+    if (this._destroyed || !this.hourglassSprite || this.isFlipping) return;
+    this.isFlipping = true;
+    this._onFlipChange?.(true);
+    this.hourglassFlipAngle += 360;
+    this.scene.tweens.add({
+      targets: this.hourglassSprite,
+      angle: this.hourglassFlipAngle,
+      duration: 600,
+      ease: 'Cubic.easeInOut',
+      onComplete: () => {
+        if (this._destroyed) return;
+        this.isFlipping = false;
+        this._onFlipChange?.(false);
+      },
+    });
+  }
+
+  showCooldownBurst(cooldownMs: number): void {
+    const cdSec = cooldownMs / 1000;
+    const label = Number.isInteger(cdSec) ? `+${cdSec}` : `+${cdSec.toFixed(1)}`;
+    // Appear inside the left icon slot of the timer panel (hourglass at x=400,y=55)
+    const txt = this.scene.add.text(375, 55, label, {
+      fontFamily: 'VT323', fontSize: '18px',
+      color: '#ffd700', stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(150).setScrollFactor(0);
+
+    this.scene.tweens.add({
+      targets: txt,
+      y: txt.y - 20,
+      alpha: 0,
+      duration: 600,
+      ease: 'Cubic.easeOut',
+      onComplete: () => txt.destroy(),
+    });
   }
 
   // ── Status-effect chips ────────────────────────────────────────
@@ -270,29 +381,37 @@ export class CombatHUD {
   private buildChip(): ChipDisplay {
     const s = this.scene;
     const c = s.add.container(0, 0).setVisible(false);
-    const bg = s.add.rectangle(0, 0, 50, CHIP_HEIGHT, 0x0a0a1a, 0.78)
-      .setOrigin(0, 0.5)
-      .setStrokeStyle(1, 0x4a9eff, 0.5);
-    const icon = s.add.text(4, 0, '', {
-      fontFamily: FF, fontSize: '13px',
-      color: '#ffffff',
-    }).setOrigin(0, 0.5);
-    const label = s.add.text(22, 0, '', {
-      fontFamily: FF, fontSize: '11px', fontStyle: 'bold',
+    const usePanelAsset = s.textures.exists('combat_chip_panel');
+    let bg: Phaser.GameObjects.Rectangle;
+    let bgPanel: Phaser.GameObjects.Image | undefined;
+
+    if (usePanelAsset) {
+      bgPanel = s.add.image(0, 0, 'combat_chip_panel').setOrigin(0, 0.5);
+      bg = s.add.rectangle(0, 0, 50, CHIP_HEIGHT, 0x000000, 0).setOrigin(0, 0.5);
+    } else {
+      bg = s.add.rectangle(0, 0, 50, CHIP_HEIGHT, 0x0a0a1a, 0.78)
+        .setOrigin(0, 0.5)
+        .setStrokeStyle(1, 0x4a9eff, 0.5);
+    }
+
+    const icon = s.add.image(0, 0, '__WHITE')
+      .setDisplaySize(20, 20).setOrigin(0.5, 0.5).setVisible(false);
+    const label = s.add.text(0, 0, '', {
+      fontFamily: FF, fontSize: '16px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000000', strokeThickness: 2,
-    }).setOrigin(0, 0.5);
-    c.add([bg, icon, label]);
+    }).setOrigin(0.5, 0.5);
+
+    if (bgPanel) {
+      c.add([bgPanel, bg, icon, label]);
+    } else {
+      c.add([bg, icon, label]);
+    }
     this.container.add(c);
 
-    const slot: ChipDisplay = { container: c, bg, icon, label, tooltip: '' };
+    const slot: ChipDisplay = { container: c, bg, bgPanel, icon, label, tooltip: '' };
 
-    // Hover affordance: show the chip's tooltip string (e.g. "Burn: …") near
-    // the chip. The bg's hit area is updated each layout pass when its width
-    // changes (setSize keeps Phaser's input hit-rect in sync).
     bg.setInteractive({ useHandCursor: false });
     bg.on('pointerover', () => {
-      // Chip container is at the chip's top-left x; bg origin y is centered, so
-      // the chip's visual top is container.y - CHIP_HEIGHT/2.
       this.showChipTooltip(slot.tooltip, c.x, c.y - CHIP_HEIGHT / 2);
     });
     bg.on('pointerout', () => this.hideChipTooltip());
@@ -314,16 +433,33 @@ export class CombatHUD {
       const chip = chips[i];
       if (!chip) {
         slot.container.setVisible(false);
+        slot.icon.setVisible(false);
         slot.tooltip = '';
         continue;
       }
-      slot.icon.setText(chip.icon);
+      if (this.scene.textures.exists(chip.iconKey)) {
+        slot.icon.setTexture(chip.iconKey).setDisplaySize(20, 20).setVisible(true);
+      } else {
+        slot.icon.setVisible(false);
+      }
       slot.label.setText(chip.label);
       slot.label.setColor(chip.color);
       slot.tooltip = chip.tooltip;
-      const w = Math.max(36, 22 + slot.label.width + 6);
-      // setSize (not just .width) so the Rectangle geometry updates, then keep
-      // the input hit-area Rectangle in sync with the new width.
+
+      const hasIcon = slot.icon.visible;
+      const iconSlotW = hasIcon ? Math.round(CHIP_HEIGHT * (657 / 254) * CHIP_ICON_SLOT_RATIO) : 0;
+      const textW = Math.max(28, slot.label.width + 8);
+      const w = iconSlotW + textW;
+
+      if (slot.bgPanel) {
+        slot.bgPanel.setDisplaySize(w, CHIP_HEIGHT);
+        slot.icon.setPosition(iconSlotW / 2 - 2, 0);
+        slot.label.setOrigin(0.5, 0.5).setPosition(iconSlotW + textW / 2 - 5, 0);
+      } else {
+        slot.icon.setPosition(hasIcon ? 12 : 0, 0);
+        slot.label.setPosition(hasIcon ? 26 : 4, 0);
+      }
+
       slot.bg.setSize(w, CHIP_HEIGHT);
       const hit = slot.bg.input?.hitArea as Phaser.Geom.Rectangle | undefined;
       if (hit) { hit.width = w; hit.height = CHIP_HEIGHT; }
@@ -339,7 +475,7 @@ export class CombatHUD {
 
   // ── Public update ──────────────────────────────────────────────
 
-  update(state: CombatState, heroCooldown: number, heroMaxCooldown: number): void {
+  update(state: CombatState, heroCooldown: number, heroMaxCooldown: number, _gameSpeed = 1, cardPlayCount = 0): void {
     // Hero bars. Track displayed* against the tween *target* (updated at
     // tween start) so consecutive update() ticks during an in-flight tween
     // don't restart it every frame and leave the value stuck at zero.
@@ -348,7 +484,7 @@ export class CombatHUD {
       const from = this.displayedHeroHp;
       this.targetHeroHp = newHP;
       this.tweenBar('hp', from, newHP, state.heroMaxHP,
-        this.hpBar, this.hpText,
+        this.hpBar, this.hpGhost, this.hpText,
         (r) => r > 0.5 ? 0x22cc44 : r > 0.25 ? 0xf0a020 : 0xff3333);
     }
 
@@ -357,7 +493,7 @@ export class CombatHUD {
       const from = this.displayedStamina;
       this.targetStamina = newSTA;
       this.tweenBar('stamina', from, newSTA, state.heroMaxStamina,
-        this.staminaBar, this.staminaText, () => 0xf0a020);
+        this.staminaBar, this.staminaGhost, this.staminaText, () => 0xf0a020);
     }
 
     const newMP = Math.ceil(state.heroMana);
@@ -365,15 +501,8 @@ export class CombatHUD {
       const from = this.displayedMana;
       this.targetMana = newMP;
       this.tweenBar('mana', from, newMP, state.heroMaxMana,
-        this.manaBar, this.manaText, () => 0x9966ff);
+        this.manaBar, this.manaGhost, this.manaText, () => 0x9966ff);
     }
-
-    // Armor readout: hidden when zero, shown otherwise.
-    const armor = Math.max(0, Math.floor(state.heroDefense ?? 0));
-    const armorVisible = armor > 0;
-    this.armorIcon.setVisible(armorVisible);
-    this.armorValue.setVisible(armorVisible);
-    if (armorVisible) this.armorValue.setText(String(armor));
 
     // Enemy
     this.enemyNameText.setText(state.enemyName);
@@ -382,92 +511,132 @@ export class CombatHUD {
       const from = this.displayedEnemyHp;
       this.targetEnemyHp = newEHP;
       this.tweenBar('enemyHp', from, newEHP, state.enemyMaxHP,
-        this.enemyHpBar, this.enemyHpText, () => 0xdd2222);
+        this.enemyHpBar, this.enemyHpGhost, this.enemyHpText, () => 0xdd2222);
     }
 
-    // Status effect chips (auras, stacks, triggered effects)
+    // Status effect chips
     this.layoutChips(computeHeroChips(state), this.heroChipPool, HERO_CHIPS.x, HERO_CHIPS.y, HERO_CHIPS.maxWidth);
     this.layoutChips(computeEnemyChips(state), this.enemyChipPool, ENEMY_CHIPS.x, ENEMY_CHIPS.y, ENEMY_CHIPS.maxWidth);
 
-    // Cooldown arc
-    this.cooldownGraphics.clear();
+    // Hourglass timer
     if (heroMaxCooldown > 0) {
-      const progress = Math.max(0, Math.min(1, 1 - heroCooldown / heroMaxCooldown));
-      const cx = 400; const cy = 48; const R = 30;
+      const remaining = Math.max(0, heroCooldown) / 1000;
+      this.cooldownText.setText(remaining.toFixed(1));
 
-      // Dark bg ring
-      this.cooldownGraphics.fillStyle(0x0a0a1a, 0.75);
-      this.cooldownGraphics.fillCircle(cx, cy, R + 3);
-      this.cooldownGraphics.lineStyle(1.5, 0x4a9eff, 0.4);
-      this.cooldownGraphics.strokeCircle(cx, cy, R + 3);
+      if (this.hourglassSprite) {
+        // Trigger flip when card is played (engine cooldown is now paused during flip).
+        if (cardPlayCount > this._lastCardPlayCount) {
+          this._lastCardPlayCount = cardPlayCount;
+          this.triggerHourglassFlip();
+        }
 
-      // Gray empty arc
-      this.cooldownGraphics.fillStyle(0x222233, 0.8);
-      this.cooldownGraphics.fillCircle(cx, cy, R);
-
-      // Gold filled arc
-      if (progress > 0) {
-        this.cooldownGraphics.fillStyle(0xffd700, progress >= 1 ? 1.0 : 0.85);
-        this.cooldownGraphics.slice(cx, cy, R,
-          -Math.PI / 2,
-          -Math.PI / 2 + 2 * Math.PI * progress,
-          false,
-        );
-        this.cooldownGraphics.fillPath();
+        if (this.isFlipping) {
+          // Hold at last frame (fully drained) while rotating.
+          this.hourglassSprite.setFrame(7);
+        } else {
+          // Engine cooldown is paused during flip, so progress is accurate here.
+          const progress = Math.max(0, Math.min(1, 1 - heroCooldown / heroMaxCooldown));
+          const totalFrames = heroMaxCooldown <= 500 ? 3
+            : heroMaxCooldown <= 1000 ? 5
+            : heroMaxCooldown <= 2000 ? 6
+            : 8;
+          const fi = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
+          const frameIdx = Math.round(fi * (7 / (totalFrames - 1)));
+          this.hourglassSprite.setFrame(frameIdx);
+        }
+      } else if (this.cooldownGraphics) {
+        // Fallback arc
+        this.cooldownGraphics.clear();
+        const progress = Math.max(0, Math.min(1, 1 - heroCooldown / heroMaxCooldown));
+        const cx = 400; const cy = 48; const R = 30;
+        this.cooldownGraphics.fillStyle(0x0a0a1a, 0.75);
+        this.cooldownGraphics.fillCircle(cx, cy, R + 3);
+        this.cooldownGraphics.lineStyle(1.5, 0x4a9eff, 0.4);
+        this.cooldownGraphics.strokeCircle(cx, cy, R + 3);
+        this.cooldownGraphics.fillStyle(0x222233, 0.8);
+        this.cooldownGraphics.fillCircle(cx, cy, R);
+        if (progress > 0) {
+          this.cooldownGraphics.fillStyle(0xffd700, progress >= 1 ? 1.0 : 0.85);
+          this.cooldownGraphics.slice(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + 2 * Math.PI * progress, false);
+          this.cooldownGraphics.fillPath();
+        }
+        this.cooldownGraphics.fillStyle(0x0a0a1a, 1);
+        this.cooldownGraphics.fillCircle(cx, cy, 5);
       }
-
-      // Center dot
-      this.cooldownGraphics.fillStyle(0x0a0a1a, 1);
-      this.cooldownGraphics.fillCircle(cx, cy, 5);
-
-      const remaining = Math.max(0, heroCooldown / 1000);
-      this.cooldownText.setText(remaining > 0 ? remaining.toFixed(1) : '▶');
     }
   }
 
   // ── Tween helper ───────────────────────────────────────────────
 
+  // Street-Fighter-style bar: on damage the coloured fill snaps to the new
+  // value while a light-blue "ghost" lingers at the old length then drains
+  // down to meet it. Healing grows the fill smoothly with no ghost.
   private tweenBar(
     key: 'hp' | 'stamina' | 'mana' | 'enemyHp',
     from: number, to: number, max: number,
     bar: Phaser.GameObjects.Rectangle,
+    ghost: Phaser.GameObjects.Rectangle,
     text: Phaser.GameObjects.Text,
     getColor: (ratio: number) => number,
   ): void {
-    const map: Record<string, Phaser.Tweens.Tween | undefined> = {
-      hp: this.hpTween, stamina: this.staminaTween,
-      mana: this.manaTween, enemyHp: this.enemyHpTween,
-    };
-    map[key]?.stop();
+    this.mainTween(key)?.stop();
+    this.ghostTween(key)?.stop();
 
-    const tween = this.scene.tweens.addCounter({
-      from, to, duration: 280,
-      onUpdate: (t) => {
-        const v = Math.round(t.getValue() ?? 0);
-        const r = Math.max(0, v / max);
-        const fillW = (key === 'enemyHp' ? E_BAR_W : BAR_W) - 12;
-        bar.width = Math.max(0, fillW * r);
-        bar.setFillStyle(getColor(r));
-        text.setText(`${v}/${max}`);
+    const maxW = key === 'enemyHp' ? E_BAR_MAXW : H_BAR_MAXW;
+    const clamp = (v: number) => (max > 0 ? Math.max(0, Math.min(1, v / max)) : 0);
+    const wTo = maxW * clamp(to);
 
-        if (key === 'hp') this.displayedHeroHp = v;
-        else if (key === 'stamina') this.displayedStamina = v;
-        else if (key === 'mana') this.displayedMana = v;
-        else this.displayedEnemyHp = v;
-      },
-      onComplete: () => {
-        const r = Math.max(0, to / max);
-        const fillW = (key === 'enemyHp' ? E_BAR_W : BAR_W) - 12;
-        bar.width = Math.max(0, fillW * r);
-        bar.setFillStyle(getColor(r));
-        text.setText(`${to}/${max}`);
-      },
-    });
+    text.setText(`${to}/${max}`);
+    bar.setFillStyle(getColor(clamp(to)));
 
-    if (key === 'hp')      this.hpTween = tween;
-    else if (key === 'stamina') this.staminaTween = tween;
-    else if (key === 'mana')    this.manaTween    = tween;
-    else                        this.enemyHpTween = tween;
+    if (to < from) {
+      // Damage: fill snaps to new value; ghost (semi-transparent echo of fill
+      // colour) holds the old width and drains down to meet it.
+      bar.width = wTo;
+      ghost.setFillStyle(getColor(clamp(from)));
+      ghost.width = Math.max(ghost.width, maxW * clamp(from));
+      ghost.setAlpha(GHOST_ALPHA);
+      this.setGhostTween(key, this.scene.tweens.add({
+        targets: ghost, width: wTo, delay: 180, duration: 520, ease: 'Cubic.easeIn',
+        onComplete: () => { if (ghost.width <= 1) ghost.setAlpha(0); },
+      }));
+    } else {
+      // Heal / refill: grow the fill smoothly; hide ghost.
+      const startW = bar.width;
+      this.setMainTween(key, this.scene.tweens.addCounter({
+        from: startW, to: wTo, duration: 240, ease: 'Cubic.easeOut',
+        onUpdate: (t) => { bar.width = t.getValue() ?? wTo; },
+        onComplete: () => { bar.width = wTo; },
+      }));
+      ghost.width = wTo;
+      ghost.setAlpha(0);
+    }
+
+    if (key === 'hp') this.displayedHeroHp = to;
+    else if (key === 'stamina') this.displayedStamina = to;
+    else if (key === 'mana') this.displayedMana = to;
+    else this.displayedEnemyHp = to;
+  }
+
+  private mainTween(key: string): Phaser.Tweens.Tween | undefined {
+    return key === 'hp' ? this.hpTween : key === 'stamina' ? this.staminaTween
+      : key === 'mana' ? this.manaTween : this.enemyHpTween;
+  }
+  private ghostTween(key: string): Phaser.Tweens.Tween | undefined {
+    return key === 'hp' ? this.hpGhostTween : key === 'stamina' ? this.staminaGhostTween
+      : key === 'mana' ? this.manaGhostTween : this.enemyHpGhostTween;
+  }
+  private setMainTween(key: string, t: Phaser.Tweens.Tween): void {
+    if (key === 'hp') this.hpTween = t;
+    else if (key === 'stamina') this.staminaTween = t;
+    else if (key === 'mana') this.manaTween = t;
+    else this.enemyHpTween = t;
+  }
+  private setGhostTween(key: string, t: Phaser.Tweens.Tween): void {
+    if (key === 'hp') this.hpGhostTween = t;
+    else if (key === 'stamina') this.staminaGhostTween = t;
+    else if (key === 'mana') this.manaGhostTween = t;
+    else this.enemyHpGhostTween = t;
   }
 
   destroy(): void {
@@ -478,15 +647,25 @@ export class CombatHUD {
     this.staminaTween?.stop();
     this.manaTween?.stop();
     this.enemyHpTween?.stop();
+    this.hpGhostTween?.stop();
+    this.staminaGhostTween?.stop();
+    this.manaGhostTween?.stop();
+    this.enemyHpGhostTween?.stop();
     this.hpTween = undefined;
     this.staminaTween = undefined;
     this.manaTween = undefined;
     this.enemyHpTween = undefined;
 
+    this._destroyed = true;
+    if (this.hourglassSprite) {
+      this.scene.tweens.killTweensOf(this.hourglassSprite);
+    }
+
     // Tooltip objects live on the scene (not the HUD container) so they render
     // above it — destroy them explicitly.
     this.chipTooltipBg?.destroy();
     this.chipTooltipText?.destroy();
+    this.portraitMaskGfx?.destroy();
 
     this.container.destroy(true);
   }

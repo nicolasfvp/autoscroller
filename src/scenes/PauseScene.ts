@@ -2,7 +2,6 @@
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
-import { createWoodButton } from '../ui/WoodButton';
 
 /**
  * PauseScene -- overlay with Resume, Settings, Abandon Run buttons.
@@ -32,46 +31,43 @@ export class PauseScene extends Scene {
       this.input.keyboard?.on('keydown-ESC', () => this.resume());
     });
 
-    // Overlay panel (wood texture with rounded corners)
-    const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(360, 460);
-    panel.setInteractive();
+    // Título — y=105, fontSize=42
+    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 42).setOrigin(0.5);
 
-    const shape = this.make.graphics();
-    shape.fillStyle(0xffffff);
-    shape.fillRoundedRect(220, 70, 360, 460, 16);
-    panel.setMask(shape.createGeometryMask());
-
-    // Title
-    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 48).setOrigin(0.5);
-
-    createWoodButton(this, 400, 180, 'Resume', () => this.resume(),
-      { width: 260, height: 52, fontSize: 22, variant: 'primary' });
-
-    createWoodButton(this, 400, 240, 'View Deck', () => {
+    this.makePauseBtn('btn_resume_pause',     401.6, 171.6, 204, 50, () => this.resume());
+    this.makePauseBtn('btn_view_deck_pause',  400.5, 236.8, 196, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 260, height: 52, fontSize: 22 });
-
-    createWoodButton(this, 400, 300, 'Tutorial', () => {
+    });
+    this.makePauseBtn('btn_tutorial_pause',   400,   300,   196, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
-    }, { width: 260, height: 52, fontSize: 22 });
-
-    createWoodButton(this, 400, 360, 'Settings', () => {
+    });
+    this.makePauseBtn('btn_settings_pause',   400,   365.8, 200, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.SETTINGS);
-    }, { width: 260, height: 52, fontSize: 22 });
-
-    createWoodButton(this, 400, 420, 'Abandon Run', async () => {
+    });
+    this.makePauseBtn('btn_abandon_run_pause', 402.6, 432.1, 210, 50, async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
       await saveManager.clearByMode(mode);
       clearRun();
       this.scene.start(SCENE_KEYS.MAIN_MENU);
-    }, { width: 260, height: 52, fontSize: 22, variant: 'danger' });
+    });
 
     this.events.on('shutdown', this.cleanup, this);
+  }
+
+  private makePauseBtn(key: string, x: number, y: number, w: number, _h: number, cb: () => void): void {
+    const img = this.add.image(0, 0, key);
+    const sc = w / img.width;
+    img.setScale(sc);
+    const dh = img.height * sc;
+    const cont = this.add.container(x, y, [img]).setSize(w, dh).setInteractive({ useHandCursor: true });
+    cont.on('pointerover', () => this.tweens.add({ targets: cont, scale: 1.05, duration: 100 }));
+    cont.on('pointerout',  () => this.tweens.add({ targets: cont, scale: 1,    duration: 100 }));
+    cont.on('pointerdown', cb);
   }
 
   private resume(): void {

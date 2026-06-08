@@ -1,12 +1,8 @@
 // KeywordIntroOverlay -- single-keyword "first-encounter" teaching modal.
 //
-// Shown by KeywordIntroService when the player resolves a card that
-// references a keyword they haven't learned yet. While the overlay is
-// visible the combat tick loop is paused (CombatScene.update reads
-// keywordIntro.isPaused()).
-//
-// UX: small centered panel with the keyword name (category-colored),
-// the canonical definition, and a "Got it!" button. ESC also dismisses.
+// When a baked image asset exists for the keyword (keyword_<name> texture),
+// it is shown as a simple image — same approach as TutorialOverlay.
+// Falls back to a programmatic panel for any keyword without a baked asset.
 
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
@@ -16,19 +12,19 @@ import type { KeywordDef } from './KeywordDefinitions';
 const OVERLAY_DEPTH = 12000;
 const BACKDROP_ALPHA = 0.62;
 
-const PANEL_W = 440;
-const PANEL_H = 220;
+// Baked image display width (same ratio as tutorial panels)
+const IMG_DISPLAY_W = 360;
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
-  stack: '#ff8c00',
+  stack:    '#ff8c00',
   modifier: '#ffd700',
-  stat: '#66ccff',
+  stat:     '#66ccff',
 };
 
 const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
-  stack: 'Stack',
-  modifier: 'Modifier',
-  stat: 'Stat',
+  stack:    'New Stack',
+  modifier: 'New Modifier',
+  stat:     'New Stat',
 };
 
 export function openKeywordIntroOverlay(
@@ -144,9 +140,7 @@ export function openKeywordIntroOverlay(
   };
 
   const keyHandler = (event: KeyboardEvent) => {
-    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      close();
-    }
+    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') close();
   };
   window.addEventListener('keydown', keyHandler);
 
@@ -155,18 +149,8 @@ export function openKeywordIntroOverlay(
   scene.events.once(Phaser.Scenes.Events.DESTROY, onShutdown);
 
   btn.on('pointerdown', close);
-  // Swallow clicks on the panel itself so backdrop-click-to-dismiss doesn't
-  // fire when the player clicks on the panel body. Backdrop click also
-  // dismisses (consistent with the glossary modal pattern).
   backdrop.on('pointerdown', close);
-  panelBg.on('pointerdown', () => { /* swallow */ });
 
-  // Fade-in (subtle — the player just resolved a card and is reading).
   overlay.setAlpha(0);
-  scene.tweens.add({
-    targets: overlay,
-    alpha: 1,
-    duration: 180,
-    ease: 'Sine.easeOut',
-  });
+  scene.tweens.add({ targets: overlay, alpha: 1, duration: 180, ease: 'Sine.easeOut' });
 }

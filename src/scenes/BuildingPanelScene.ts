@@ -59,14 +59,7 @@ export class BuildingPanelScene extends Scene {
     const panelY = 300;
 
     // Panel (wood texture with rounded corners)
-    let bgKey = 'wood_texture_big';
-    if (this.buildingKey === 'library') bgKey = 'library_table';
-    else if (this.buildingKey === 'workshop') bgKey = 'workshop_table';
-    else if (this.buildingKey === 'forge') bgKey = 'forge_table';
-    else if (this.buildingKey === 'shrine') bgKey = 'shrine_table';
-    else if (this.buildingKey === 'storehouse') bgKey = 'vault_table';
-
-    const panel = this.add.image(400, panelY, bgKey).setDisplaySize(500, panelHeight);
+    const panel = this.add.image(400, panelY, 'wood_texture_big').setDisplaySize(500, panelHeight);
     panel.setInteractive(); // absorb clicks
 
     const shape = this.make.graphics();

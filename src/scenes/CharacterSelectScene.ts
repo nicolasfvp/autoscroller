@@ -81,7 +81,7 @@ export class CharacterSelectScene extends Scene {
 
     const STATUS_POSITIONS = [
       { x: 281.2, y: 438.4, scale: 1.0022 },
-      { x: 521.5, y: 437.3, scale: 0.9266 },
+      { x: 521.5, y: 437.3, scale: 1.0022 },
     ] as const;
 
     CLASSES.forEach((cls, i) => {
@@ -219,7 +219,44 @@ export class CharacterSelectScene extends Scene {
 
     // list[1]: painel de status (imagem ou fallback programático)
     const statusKey = `${cls.id}_status`;
-    if (this.textures.exists(statusKey)) {
+    const panelKey  = `${cls.id}_status_panel`;
+    if (this.textures.exists(panelKey)) {
+      const statusImg = this.add.image(0, 0, panelKey).setDisplaySize(w, STATUS_H);
+      container.add(statusImg); // list[1]
+
+      const titleColor = cls.id === 'mage' ? '#cc88ff' : '#d4a84b';
+      const TOP        = -STATUS_H / 2 + 18;
+      const DESC_START = TOP + 26;
+      const DESC_GAP   = 16;
+      const DECK_Y     = STATUS_H / 2 - 55;
+
+      container.add(
+        this.add.text(0, TOP, cls.name, {
+          fontSize: '24px', color: titleColor,
+          stroke: '#000000', strokeThickness: 4,
+          fontFamily: 'VT323', resolution: 3,
+        }).setOrigin(0.5, 0),
+      );
+
+      cls.description.split('\n').forEach((line, li) => {
+        container.add(
+          this.add.text(0, DESC_START + li * DESC_GAP, line, {
+            fontSize: '16px', color: '#e0d8c0',
+            stroke: '#000000', strokeThickness: 3,
+            fontFamily: 'VT323', resolution: 3,
+          }).setOrigin(0.5, 0),
+        );
+      });
+
+      container.add(
+        this.add.text(0, DECK_Y, `Deck: ${cls.deckHint}`, {
+          fontSize: '15px', color: '#d4a84b',
+          stroke: '#000000', strokeThickness: 3,
+          fontFamily: 'VT323', resolution: 3,
+          align: 'center', wordWrap: { width: 160 },
+        }).setOrigin(0.5, 0),
+      );
+    } else if (this.textures.exists(statusKey)) {
       const statusImg = this.add.image(0, 0, statusKey).setDisplaySize(w, STATUS_H);
       container.add(statusImg); // list[1]
     } else {
@@ -302,21 +339,18 @@ export class CharacterSelectScene extends Scene {
     this.statusContainers.forEach((container, i) => {
       const base = this.statusBaseScales[i] ?? 1;
       const statusGO = container.list[1] as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
-      if (i === this.selectedIndex) {
-        container.setScale(base * 1.06);
-        if ((statusGO as Phaser.GameObjects.Image).setTint) {
-          (statusGO as Phaser.GameObjects.Image).setTint(0xfff0c0);
-        } else {
-          (statusGO as Phaser.GameObjects.Rectangle).setStrokeStyle(4, 0xffd700);
-        }
+      const isSelected = i === this.selectedIndex;
+      const scale = isSelected ? base * 1.06 : base;
+
+      container.setScale(scale);
+
+      if ((statusGO as Phaser.GameObjects.Image).setTint) {
+        if (isSelected) (statusGO as Phaser.GameObjects.Image).setTint(0xfff0c0);
+        else            (statusGO as Phaser.GameObjects.Image).clearTint();
       } else {
-        container.setScale(base);
-        if ((statusGO as Phaser.GameObjects.Image).clearTint) {
-          (statusGO as Phaser.GameObjects.Image).clearTint();
-        } else {
-          (statusGO as Phaser.GameObjects.Rectangle).setStrokeStyle(3, 0xd4a04a);
-        }
+        (statusGO as Phaser.GameObjects.Rectangle).setStrokeStyle(isSelected ? 4 : 3, isSelected ? 0xffd700 : 0xd4a04a);
       }
+
     });
   }
 

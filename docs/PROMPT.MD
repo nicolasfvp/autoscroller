@@ -28,12 +28,20 @@ Para Ícones (ex: Poção):
 ```
 A game icon of a health potion in the Studio Ghibli art style. A round glass bottle with sparkling red liquid and a cork stopper. Whimsical and magical. Hand-painted watercolor feel, clean lines, white background.
 ```
+### Prompt para cenários loop
+
 
 Para Cenários (Backgrounds):
 
 ```
 A game background of a lush green meadow with a distant wizard tower in the Studio Ghibli art style. Soft clouds, vibrant colors, hand-painted aesthetic. Whimsical and peaceful atmosphere. High detail.
 ```
+
+1. Para o Campo com Casas (Asset Isolado):
+"A 2D pixel art game asset of a grassy field with rolling hills. Features: Lush green grass, scattered bushes, and small, distant medieval cottages/houses nestled among the hills. Style: High-quality 'Pixel Art Premium', vibrant colors, soft morning lighting, matching the landscape in 'gameplay_background_clean.png'. Background: Pure green background #00FF00 (to be removed for transparency). Constraints: NO sky, NO sun, NO clouds. Only the land, hills, and the small houses. Clean top edge for easy layering."
+2. Para a Versão Panorâmica e Seamless (Sem fumaça):
+"A wide, panoramic 2D pixel art game asset of a grassy field with rolling hills and small medieval houses. Aspect Ratio: 3:1 (very wide). Features: Lush green grass, scattered bushes, and small medieval cottages nestled among the hills. Specifics: NO smoke coming from the chimneys. The houses are clean. Seamless Loop: The left edge of the image perfectly matches the right edge to allow for a seamless infinite loop in a side-scrolling game. Style: High-quality 'Pixel Art Premium', vibrant colors, soft morning lighting, matching 'gameplay_field_with_houses.png'. Background: Pure green background #00FF00 (to be removed for transparency). Constraints: NO sky, NO sun, NO clouds. Only the land, hills, and houses. Clean top edge."
+
 
 ### Prompt para monstros
 
@@ -80,6 +88,10 @@ Para garantir consistência e simplicidade em todos os tiles do seu jogo, utiliz
 A high-quality 2D pixel art game tile of a [TIPO_DE_TERRENO_PRINCIPAL]. The design is simple, clean, and not overcrowded. It features [ELEMENTOS_CHAVE_DO_TILE, ex: a few stylized evergreen trees, soft green grass, a simple dirt path]. The art style is polished indie game pixel art with clear shapes and high readability. Top-down / isometric perspective. The tile must be perfectly seamless on all sides (top, bottom, left, right) for tiling. [PALETA_DE_CORES_OU_TONS_PREDOMINANTES, ex: Vibrant but balanced colors, muted earthy tones]. No small distracting details like individual leaves or tiny mushrooms. Professional game asset.
 ```
 
+```
+"A 2D pixel art ground tile asset for a side-scrolling game, exactly matching the style and structure of 'gameplay_hud_mockup_v2.png'. Top Layer: A detailed stone path with irregular grey cobblestones, small patches of green moss, and tiny grass blades at the edge. Bottom Layer: A vertical stone wall made of dark, textured rectangular stone blocks, creating a thick platform. Seamless Loop: The left edge of the image perfectly matches the right edge to allow for a seamless infinite loop. Style: High-quality 'Pixel Art Premium', sharp details, natural stone textures, matching the bottom part of the reference mockup exactly. Background: Pure green background #00FF00 (to be removed for transparency). Constraints: NO sky, NO hills, NO characters. Only the ground platform (path + wall). Horizontal strip format."
+```
+
 ### Exemplo de Uso (Tile de Floresta):
 
 Usando a estrutura acima, o prompt para o tile de floresta que acabamos de gerar seria:
@@ -110,6 +122,28 @@ Prompt:
 ```
 A high-quality 2D pixel art background of a lush green field. The scene features rolling green hills, soft grass, and occasional small bushes or rocks. IMPORTANT: The background must have NO SKY (the top area should be empty or a solid dark color to be replaced by a separate sky asset). The image must be perfectly seamless horizontally, so the left edge matches the right edge exactly for infinite scrolling. Professional indie game background art, consistent with the mockup style. Polished pixel art, high readability. No characters or UI.
 ```
+
+---
+
+## Prompt para Battle Backgrounds
+
+Para gerar backgrounds de arena de batalha, use a seguinte estrutura:
+
+```
+A [BIOME] battle arena background in dark pixel art style. The foreground is a solid platform of [GROUND MATERIAL] where the warriors stand and fight. The background features [BACKGROUND SCENERY with appropriate elements for the biome — lava rivers, mountains, ruins, etc.] with bright glowing edges. [ATMOSPHERIC DETAILS: ash clouds, embers, mist, rain, etc.]. The [GROUND MATERIAL] is contained [IN FOREGROUND / ON THE GROUND LEVEL], NOT on the fighting surface. Dark oppressive atmosphere with high contrast between the dark [GROUND] and the bright background elements. Similar style to existing dark battle backgrounds in an indie pixel art roguelike game. Game asset suitable for side-view combat, no characters. Completely fills the entire canvas edge to edge without blank space.
+```
+
+### Exemplo (Vulcão — bg_battle_lava):
+
+```
+A volcanic lava battle arena background in dark pixel art style. The foreground is a solid platform of dark volcanic rock and cracked obsidian where the warriors stand and fight. The background features flowing red and orange lava rivers with bright glowing edges, jagged volcanic peaks in dark silhouette, ash clouds and embers floating in the air. The lava is contained in ravines and channels in the background, NOT on the ground where the fighters are. Dark oppressive atmosphere with high contrast between the dark rocky fighting surface and the bright glowing lava. Similar style to existing dark battle backgrounds in an indie pixel art roguelike game. Game asset suitable for side-view combat, no characters. Completely fills the entire canvas edge to edge without blank space.
+```
+
+**Pontos críticos:**
+- **Ground material**: especificar claramente o chão/plataforma onde os personagens ficam (ex: rochas, terra, mármore)
+- **Background scenery**: elementos perigosos/atmosféricos vão para o FUNDO ou LATERAIS, nunca no chão
+- **"NOT on the fighting surface"**: reforçar que o perigo fica longe dos pés dos personagens
+- **High contrast**: diferenciar visualmente o chão (escuro/neutro) do background (brilhante/perigoso)
 
 ---
 

@@ -8,7 +8,6 @@
 import { Scene } from 'phaser';
 import { getRun, setRun } from '../state/RunState';
 import { FONTS } from '../ui/StyleConstants';
-import { createWoodButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import {
   ELEMENTS,
@@ -122,10 +121,10 @@ export class ForgeScene extends Scene {
   private parentSceneKey: string = SCENE_KEYS.PLANNING;
   private beamPulse = 0;
   // Drag state
-  private dragGhost: Phaser.GameObjects.Image | null = null;
-  private dragId:    ElementId | null = null;
-  private onPtrMove: ((p: Phaser.Input.Pointer) => void) | null = null;
-  private onPtrUp:   ((p: Phaser.Input.Pointer) => void) | null = null;
+  private dragGhost:  Phaser.GameObjects.Image | null = null;
+  private dragId:     ElementId | null = null;
+  private onPtrMove:  ((p: Phaser.Input.Pointer) => void) | null = null;
+  private onPtrUp:    ((p: Phaser.Input.Pointer) => void) | null = null;
   private dwarfSpeakForge: ((text: string, canForge: boolean, onForge: () => void) => void) | null = null; // set by buildDwarfNPC
   // Named handlers/timers so they can be unregistered in cleanup (the scene
   // instance is reused across stop/start, so anonymous .on() listeners would
@@ -148,15 +147,30 @@ export class ForgeScene extends Scene {
       this.scene.bringToTop();
       this.buildStaticChrome();
       loadMetaState().then((m) => { this.metaState = m; }).catch(() => {});
-      this.dynLayer = this.add.container(0, 0);
-      this.beamsGfx = this.add.graphics();
+      this.dynLayer = this.add.container(0, 0).setDepth(4);
+      this.beamsGfx = this.add.graphics().setDepth(4);
       this.renderForge();
       this.beamPulse = 0;
       this.events.on('update', this.onUpdate, this);
-      createWoodButton(this, 75, CANVAS_H - 28, '← Leave', () => this.close(),
-        { width: 120, height: 34, fontSize: 13 });
-      createWoodButton(this, 215, CANVAS_H - 28, 'Recipes', () => this.openRecipeLibrary(),
-        { width: 130, height: 34, fontSize: 13 });
+      const leaveImg = this.add.image(0, 0, 'btn_forge_leave');
+      leaveImg.setScale(120 / leaveImg.width);
+      const LEAVE_X = 75;
+      const LEAVE_Y = CANVAS_H - 28;
+      const leaveCont = this.add.container(LEAVE_X, LEAVE_Y, [leaveImg])
+        .setSize(120, 34).setInteractive({ useHandCursor: true });
+      leaveCont.on('pointerover', () => this.tweens.add({ targets: leaveCont, scale: 1.05, duration: 100 }));
+      leaveCont.on('pointerout', () => this.tweens.add({ targets: leaveCont, scale: 1, duration: 100 }));
+      leaveCont.on('pointerdown', () => this.close());
+
+      const recipesImg = this.add.image(0, 0, 'btn_recipes');
+      recipesImg.setScale(130 / recipesImg.width);
+      const recipesH = Math.round(recipesImg.height * (130 / recipesImg.width));
+      const leaveH   = Math.round(leaveImg.height   * (120 / leaveImg.width));
+      const recipesCont = this.add.container(LEAVE_X, LEAVE_Y - leaveH / 2 - recipesH / 2 - 6, [recipesImg])
+        .setSize(130, recipesH).setInteractive({ useHandCursor: true });
+      recipesCont.on('pointerover', () => this.tweens.add({ targets: recipesCont, scale: 1.05, duration: 100 }));
+      recipesCont.on('pointerout', () => this.tweens.add({ targets: recipesCont, scale: 1, duration: 100 }));
+      recipesCont.on('pointerdown', () => this.openRecipeLibrary());
       this.buildDwarfNPC();
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);
@@ -169,22 +183,28 @@ export class ForgeScene extends Scene {
 
   // ── Static chrome ─────────────────────────────────────────────────────────
   private buildStaticChrome(): void {
-    // Background.
+    // Background estático (primeiro frame da forge).
     this.add.rectangle(CANVAS_W / 2, CANVAS_H / 2, CANVAS_W, CANVAS_H, 0x000000);
-    if (this.textures.exists('forge_background')) {
-      if (!this.anims.exists('forge_fire')) {
-        this.anims.create({
-          key: 'forge_fire',
-          frames: this.anims.generateFrameNumbers('forge_background', { start: 0, end: 7 }),
-          frameRate: 10, repeat: -1,
-        });
-      }
-      const bg = this.add.sprite(CANVAS_W / 2, CANVAS_H / 2, 'forge_background');
+    if (this.textures.exists('forge_frame_01')) {
+      const bg = this.add.image(CANVAS_W / 2, CANVAS_H / 2, 'forge_frame_01');
       bg.setScale(Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height)).setAlpha(0.90);
-      bg.play('forge_fire');
     } else if (this.textures.exists('forge_backdrop_v2')) {
       const bg = this.add.image(CANVAS_W / 2, CANVAS_H / 2, 'forge_backdrop_v2');
       bg.setScale(Math.max(CANVAS_W / bg.width, CANVAS_H / bg.height)).setAlpha(0.86);
+    }
+
+    // Fornalha animada — atrás da bigorna (depth -1).
+    if (this.textures.exists('forge_fire_sheet')) {
+      if (!this.anims.exists('forge_fire')) {
+        this.anims.create({
+          key: 'forge_fire',
+          frames: this.anims.generateFrameNumbers('forge_fire_sheet', { start: 0, end: 7 }),
+          frameRate: 10, repeat: -1,
+        });
+      }
+      const fire = this.add.sprite(401.1, 338.4, 'forge_fire_sheet');
+      fire.setScale(0.6815).setDepth(1);
+      fire.play('forge_fire');
     }
 
     // Shard inventory bar — forge_moldure at very top, full canvas width.
@@ -204,28 +224,41 @@ export class ForgeScene extends Scene {
     // anvilGlow is drawn behind the anvil image and pulsed when slots are active.
     this.anvilGlow = this.add.graphics();
     if (this.textures.exists('bigorna')) {
-      this.add.image(395.8, 477.9, 'bigorna').setScale(0.1508);
+      this.add.image(395.8, 477.9, 'bigorna').setScale(0.1508).setDepth(3);
     }
 
     // Arc ring — fixed scale from debug-layout (preserves aspect ratio).
     if (this.textures.exists('arco_forja')) {
-      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setScale(0.5172);
+      this.add.image(ARC_CX, ARC_CY, 'arco_forja').setScale(0.5172).setDepth(2);
     }
 
-    // Gold readout.
-    this.add.rectangle(CANVAS_W - 14, 116, 148, 26, 0x1a0a04, 0.88)
-      .setOrigin(1, 0.5).setStrokeStyle(2, 0xd4a04a);
-    this.goldText = this.add.text(CANVAS_W - 22, 116, `♦ ${getRun().economy.gold} Gold`, {
-      fontSize: '13px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
-      stroke: '#000', strokeThickness: 3,
-    }).setOrigin(1, 0.5);
+    // Gold readout — same layout as ShopScene: panel image + coin icon + text.
+    const GOLD_W = 148;
+    const goldCX = CANVAS_W - 14 - GOLD_W / 2;
+    const goldPanelY = 116;
+    const gb = this.add.container(goldCX, goldPanelY);
+    if (this.textures.exists('shop_gold_panel')) {
+      const gp = this.add.image(0, 0, 'shop_gold_panel');
+      gp.setScale(GOLD_W / gp.width);
+      gb.add(gp);
+    } else {
+      gb.add(this.add.rectangle(0, 0, GOLD_W, 26, 0x1a0a04, 0.88).setStrokeStyle(2, 0xd4a04a));
+    }
+    if (this.textures.exists('icon_coin')) {
+      gb.add(this.add.image(-GOLD_W / 2 + 18, 0, 'icon_coin').setDisplaySize(18, 18));
+    }
+    this.goldText = this.add.text(8, 0, `${getRun().economy.gold} g`, {
+      fontSize: '14px', fontStyle: 'bold', color: GOLD,
+      fontFamily: FF, stroke: '#000', strokeThickness: 2,
+    }).setOrigin(0.5);
+    gb.add(this.goldText);
   }
 
   // ── Main render ───────────────────────────────────────────────────────────
   private renderForge(): void {
     this.dynLayer.removeAll(true);
     const run = getRun();
-    this.goldText.setText(`♦ ${run.economy.gold} Gold`);
+    this.goldText.setText(`${run.economy.gold} g`);
     const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const shardInv   = (run.economy.shards ?? {}) as Record<string, number>;
@@ -288,29 +321,38 @@ export class ForgeScene extends Scene {
 
       const sz      = RING_DISPLAY_SIZES[id] ?? SLOT_ICON;
       const iconObj = this.add.image(cx, cy, texKey).setDisplaySize(sz, sz);
-      if (selected) iconObj.setTint(0xffffff);
-      if (!usable && !selected) iconObj.setAlpha(0.35);
+      const inSlotCount = slotUsage[id] ?? 0;
+      if (inSlotCount > 0 && usable)   iconObj.setTint(0xffd700); // dourado: tem na slot, ainda pode adicionar
+      else if (selected && !usable)     iconObj.setTint(0xffffff); // branco: slot cheia (todos consumidos)
+      if (!usable && !selected)         iconObj.setAlpha(0.35);
       this.dynLayer.add(iconObj);
 
-      // Drag para adicionar / clique para remover
-      if (selected) {
+      // Comportamento do ícone:
+      // - usable (ainda há shards disponíveis E slots livres): arrastar adiciona.
+      //   Se já há algum na slot (inSlotCount > 0), tap curto sem arrastar remove um.
+      // - esgotado na slot (!usable, inSlotCount > 0): clique simples remove um.
+      if (usable) {
         iconObj.setInteractive({ useHandCursor: true });
-        iconObj.on('pointerdown', () => {
-          const idx = this.forgeSlots.lastIndexOf(id);
-          if (idx >= 0) { this.forgeSlots.splice(idx, 1); this.dismissConfirmPanel(); this.renderForge(); }
-        });
-      } else if (usable) {
-        iconObj.setInteractive({ useHandCursor: true, draggable: false });
-
         iconObj.on('pointerover', () => {
           this.tweens.add({ targets: iconObj, displayWidth: sz * 1.25, displayHeight: sz * 1.25, duration: 120, ease: 'Sine.easeOut', overwrite: true });
         });
         iconObj.on('pointerout', () => {
           this.tweens.add({ targets: iconObj, displayWidth: sz, displayHeight: sz, duration: 120, ease: 'Sine.easeOut', overwrite: true });
         });
-
         iconObj.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
-          this.startDrag(id, texKey, sz, ptr);
+          // Se já está na slot: tap remove, drag adiciona mais.
+          const tapRemove = inSlotCount > 0 ? () => {
+            const idx = this.forgeSlots.lastIndexOf(id);
+            if (idx >= 0) { this.forgeSlots.splice(idx, 1); this.dismissConfirmPanel(); this.renderForge(); }
+          } : undefined;
+          this.startDrag(id, texKey, sz, ptr, tapRemove);
+        });
+      } else if (inSlotCount > 0) {
+        // Todos os disponíveis já estão na slot: clique remove um.
+        iconObj.setInteractive({ useHandCursor: true });
+        iconObj.on('pointerdown', () => {
+          const idx = this.forgeSlots.lastIndexOf(id);
+          if (idx >= 0) { this.forgeSlots.splice(idx, 1); this.dismissConfirmPanel(); this.renderForge(); }
         });
       }
     }
@@ -322,11 +364,15 @@ export class ForgeScene extends Scene {
     return { x: cam.scrollX + p.x / cam.zoom, y: cam.scrollY + p.y / cam.zoom };
   }
 
-  private startDrag(id: ElementId, texKey: string, sz: number, ptr: Phaser.Input.Pointer): void {
+  private startDrag(id: ElementId, texKey: string, sz: number, ptr: Phaser.Input.Pointer, onTapCancel?: () => void): void {
     // Cancela drag anterior se houver
     this.cancelDrag();
 
-    const wp = this.ptrToWorld(ptr);
+    const wp      = this.ptrToWorld(ptr);
+    const startX  = ptr.x;
+    const startY  = ptr.y;
+    let   hasMoved = false;
+
     this.dragId    = id;
     this.dragGhost = this.add.image(wp.x, wp.y, texKey)
       .setDisplaySize(sz * 0.85, sz * 0.85)
@@ -337,6 +383,9 @@ export class ForgeScene extends Scene {
       if (this.dragGhost) {
         const w = this.ptrToWorld(p);
         this.dragGhost.setPosition(w.x, w.y);
+        if (!hasMoved && Phaser.Math.Distance.Between(p.x, p.y, startX, startY) > 6) {
+          hasMoved = true;
+        }
       }
     };
 
@@ -361,8 +410,10 @@ export class ForgeScene extends Scene {
         this.dismissConfirmPanel();
         this.renderForge();
       } else {
-        // Drop inválido — ghost volta para origem com bounce
+        // Drop inválido — se o ponteiro mal se moveu e há callback de tap, executa-o
+        const wasTap = !hasMoved;
         this.cancelDrag();
+        if (wasTap && onTapCancel) onTapCancel();
       }
     };
 

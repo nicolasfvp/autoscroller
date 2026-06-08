@@ -31,7 +31,7 @@ export class TavernPanelScene extends Scene {
     });
 
     // Panel
-    const panel = this.add.image(400, 300, 'tavern_table').setDisplaySize(500, 420);
+    const panel = this.add.image(400, 300, 'wood_texture_big').setDisplaySize(500, 420);
     panel.setInteractive(); // absorb clicks
 
     // Máscara para bordas arredondadas
