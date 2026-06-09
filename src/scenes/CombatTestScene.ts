@@ -1,6 +1,7 @@
 /**
  * CombatTestScene — sandbox visual para testar animações e efeitos de combate.
- * Acessível via DebugOverlayScene. Não depende de RunState nem CombatEngine.
+ * Layout e constantes espelham exatamente o CombatScene (posições, escalas,
+ * FX coords, sombras). Acessível via DebugOverlayScene. Sem RunState nem engine.
  */
 
 import Phaser from 'phaser';
@@ -8,50 +9,95 @@ import { CombatEffects } from '../effects/CombatEffects';
 import { getSpritePrefix } from '../systems/hero/ClassRegistry';
 import { getRun, hasActiveRun } from '../state/RunState';
 
-const HERO_X = 200;
-const HERO_Y = 330;
-const ENEMY_X = 530;
-const ENEMY_Y = 310;
+// ── Constantes idênticas ao CombatScene ───────────────────────────────────────
+const HERO_X     = 200;
+const HERO_Y     = 330;
+const IDLE_SCALE = 0.6034;
+const SHADOW_X   = 178;
+const SHADOW_Y   = 440;
+const SHADOW_W   = 220;
+const SHADOW_H   = 50;
 
-// Painel hambúrguer — posição do botão
+const ENEMY_X    = 600;
+const ENEMY_Y    = 340;
+const ENEMY_SIZE = 250;
+const ENEMY_SHADOW_X = 600;
+const ENEMY_SHADOW_Y = 440;
+
+// FX de ataque do inimigo sobre o herói — CombatScene usa (200, 320)
+const ATTACK_FX_X = 200;
+const ATTACK_FX_Y = 320;
+
+// Floating numbers — dano no inimigo (600,320), dano no herói (200,320)
+const FLOAT_ENEMY_X = 600;
+const FLOAT_HERO_X  = 200;
+const FLOAT_Y       = 320;
+
+// Status FX — coordenadas calibradas via debug-layout (igual ao CombatScene)
+const FX_HERO_FIRE_X   = 182.2; const FX_HERO_FIRE_Y   = 499.1; const FX_HERO_FIRE_SIZE   = 219;
+const FX_HERO_BLEED_X  = 188.8; const FX_HERO_BLEED_Y  = 464.9; const FX_HERO_BLEED_SIZE  = 115;
+const FX_HERO_STUN_X   = 217.1; const FX_HERO_STUN_Y   = 300.2; const FX_HERO_STUN_SIZE   = 67;
+const FX_ENEMY_FX_X    = 612.5; const FX_ENEMY_FX_Y    = 636.3; const FX_ENEMY_FX_SIZE    = 252;
+const FX_ENEMY_STUN_X  = 612.5; const FX_ENEMY_STUN_Y  = 300.2; const FX_ENEMY_STUN_SIZE  = 67;
+const FX_ENEMY_BLEED_SIZE = 115;
+
+// Override de posição/scale por animação — igual ao CombatScene
+const ANIM_OVERRIDES: Record<string, { x: number; y: number; scale: number }> = {
+  hero_attack:  { x: 190.4, y: 301.6, scale: 0.6118 },
+  hero_channel: { x: 199.3, y: 318.8, scale: 0.6529 },
+};
+
+// Terrenos de batalha disponíveis
+const TERRAINS = ['basic', 'forest', 'desert', 'graveyard', 'swamp', 'lava', 'ruins'] as const;
+type Terrain = typeof TERRAINS[number];
+
+// ── Painel hambúrguer ─────────────────────────────────────────────────────────
 const MENU_BTN_X = 750;
 const MENU_BTN_Y = 22;
+const PANEL_X    = 10;
+const PANEL_Y    = 50;
+const PANEL_W    = 770;
+const PANEL_H    = 165;
+const BTN_H      = 28;
+const BTN_GAP    = 6;
+const ROW_H      = BTN_H + BTN_GAP;
 
-// Painel expandido — ocupa a parte superior como overlay
-const PANEL_X      = 10;
-const PANEL_Y      = 50;
-const PANEL_W      = 770;
-const PANEL_H      = 210;
-const BTN_W        = 110;
-const BTN_H        = 26;
-const BTN_GAP      = 6;
-const ROW_H        = BTN_H + BTN_GAP;
+const TAB_NAMES = ['ANIMATIONS', 'FX EFFECTS', 'STATUS', 'UTILS', 'BG'] as const;
+type TabName = typeof TAB_NAMES[number];
 
 export class CombatTestScene extends Phaser.Scene {
   private effects!: CombatEffects;
   private heroSprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
   private enemySprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  private bgImage!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
 
   private _menuOpen = false;
-  private _menuObjects: Phaser.GameObjects.GameObject[] = [];
-  private _menuObjectsOrigY: number[] = [];
   private _menuPanelBg!: Phaser.GameObjects.Rectangle;
   private _menuBtnBg!: Phaser.GameObjects.Rectangle;
   private _menuBtnText!: Phaser.GameObjects.Text;
 
+  private _activeTab: TabName = 'ANIMATIONS';
+  private _tabBgs:    Map<TabName, Phaser.GameObjects.Rectangle>        = new Map();
+  private _tabTexts:  Map<TabName, Phaser.GameObjects.Text>             = new Map();
+  private _tabGroups: Map<TabName, Phaser.GameObjects.GameObject[]>     = new Map();
+
   private _channelYOffset = 0;
   private _channelYLabel!: Phaser.GameObjects.Text;
 
-  private _fireSprite:  Phaser.GameObjects.Sprite | null = null;
-  private _bleedSprite: Phaser.GameObjects.Sprite | null = null;
-  private _stunSprite:  Phaser.GameObjects.Sprite | null = null;
-  private _auraSprite:  Phaser.GameObjects.Sprite | null = null;
-  private _leafSprite:  Phaser.GameObjects.Sprite | null = null;
+  private _fireSprite:   Phaser.GameObjects.Sprite | null = null;
+  private _bleedSprite:  Phaser.GameObjects.Sprite | null = null;
+  private _stunSprite:   Phaser.GameObjects.Sprite | null = null;
+  private _efireSprite:  Phaser.GameObjects.Sprite | null = null;
+  private _ebleedSprite: Phaser.GameObjects.Sprite | null = null;
+  private _estunSprite:  Phaser.GameObjects.Sprite | null = null;
+  private _auraSprite:   Phaser.GameObjects.Sprite | null = null;
+  private _leafSprite:   Phaser.GameObjects.Sprite | null = null;
 
   private _labelText!: Phaser.GameObjects.Text;
   private _labelTimer: Phaser.Time.TimerEvent | null = null;
 
   private currentEnemyIdx = 0;
+  private currentTerrain: Terrain = 'forest';
   private readonly ENEMY_POOL = [
     'monster_slime', 'monster_werewolf', 'monster_skeleton', 'monster_lava_golem',
     'monster_vampire', 'monster_toxic_gooze', 'monster_boss_iron_golem',
@@ -61,24 +107,27 @@ export class CombatTestScene extends Phaser.Scene {
   constructor() { super({ key: 'CombatTestScene' }); }
 
   create(): void {
-    // Background
-    if (this.textures.exists('bg_battle_forest')) {
-      this.add.image(400, 300, 'bg_battle_forest').setDisplaySize(800, 600).setDepth(0);
-    } else {
-      this.add.rectangle(400, 300, 800, 600, 0x1a1a2e).setDepth(0);
-    }
-
+    this._buildBg(this.currentTerrain);
     this.effects = new CombatEffects(this);
     this._buildHero();
     this._buildEnemy();
     this._buildHamburgerBtn();
-    this._buildMenu();         // constrói oculto
+    this._buildMenu();
     this._buildBackBtn();
 
-    // Label de feedback
-    this._labelText = this.add.text(400, 580, '', {
-      fontFamily: 'VT323, monospace', fontSize: '14px', color: '#aaffaa',
+    this._labelText = this.add.text(400, 585, '', {
+      fontFamily: 'VT323, monospace', fontSize: '13px', color: '#aaffaa',
     }).setOrigin(0.5, 1).setDepth(200);
+  }
+
+  // ── Background ────────────────────────────────────────────────────────────────
+
+  private _buildBg(terrain: Terrain): void {
+    if (this.bgImage) this.bgImage.destroy();
+    const key = `bg_battle_${terrain}`;
+    this.bgImage = this.textures.exists(key)
+      ? this.add.image(400, 300, key).setDisplaySize(800, 600).setDepth(0)
+      : this.add.rectangle(400, 300, 800, 600, 0x1a1a2e).setDepth(0);
   }
 
   // ── Hero ──────────────────────────────────────────────────────────────────────
@@ -88,56 +137,53 @@ export class CombatTestScene extends Phaser.Scene {
   }
 
   private _buildHero(): void {
-    const idleKey = `${this._prefix()}_battle_stance`;
-    const fallbackKey = `${this._prefix()}_idle`;
-    const resolvedKey = this.textures.exists(idleKey) ? idleKey : fallbackKey;
+    const p = this._prefix();
+    const stanceKey = `${p}_battle_stance`;
+    const idleKey   = `${p}_idle`;
+    const resolvedKey = this.textures.exists(stanceKey) ? stanceKey : idleKey;
+
     if (this.textures.exists(resolvedKey)) {
-      const idleKey = resolvedKey;
-      const frameTotal = this.textures.get(idleKey).frameTotal - 1;
-      const scale = frameTotal > 1 ? 0.6034 : 0.65;
-      this.heroSprite = this.add.sprite(HERO_X, HERO_Y, idleKey).setDepth(10).setScale(scale);
+      const frameTotal = this.textures.get(resolvedKey).frameTotal - 1;
+      const scale = frameTotal > 1 ? IDLE_SCALE : 0.65;
+      this.heroSprite = this.add.sprite(HERO_X, HERO_Y, resolvedKey).setDepth(10).setScale(scale);
       if (frameTotal > 1) {
         const k = 'cbt_hero_idle';
         if (!this.anims.exists(k))
-          this.anims.create({ key: k, frames: this.anims.generateFrameNumbers(idleKey, { start: 0, end: frameTotal - 1 }), frameRate: 8, repeat: -1 });
+          this.anims.create({ key: k, frames: this.anims.generateFrameNumbers(resolvedKey, { start: 0, end: frameTotal - 1 }), frameRate: 6, repeat: -1 });
         (this.heroSprite as Phaser.GameObjects.Sprite).play(k);
       }
     } else {
       this.heroSprite = this.add.sprite(HERO_X, HERO_Y, '__DEFAULT').setDisplaySize(100, 100).setDepth(10);
     }
+
     if (this.textures.exists('hero_shadow'))
-      this.add.image(HERO_X - 10, HERO_Y + 160, 'hero_shadow').setDisplaySize(190, 42).setAlpha(0.6).setDepth(9);
+      this.add.image(SHADOW_X, SHADOW_Y, 'hero_shadow').setDisplaySize(SHADOW_W, SHADOW_H).setAlpha(0.7).setDepth(9);
     else
-      this.add.ellipse(HERO_X, HERO_Y + 162, 140, 24, 0x000000, 0.4).setDepth(9);
+      this.add.ellipse(HERO_X, SHADOW_Y, 160, 28, 0x000000, 0.45).setDepth(9);
   }
 
   private _playHeroAnim(textureKey: string, animKey: string, fps: number, repeat: number, yOffset = 0): void {
-    if (!this.textures.exists(textureKey)) { this._showLabel(`Nao encontrado: ${textureKey}`); return; }
+    if (!this.textures.exists(textureKey)) { this._showLabel(`Não encontrado: ${textureKey}`); return; }
     if (!(this.heroSprite instanceof Phaser.GameObjects.Sprite)) return;
     if (!this.anims.exists(animKey)) {
       const n = this.textures.get(textureKey).frameTotal - 1;
-      this.anims.create({ key: animKey, frames: this.anims.generateFrameNumbers(textureKey, { start: 0, end: n - 1 }), frameRate: fps, repeat });
+      if (n > 0) this.anims.create({ key: animKey, frames: this.anims.generateFrameNumbers(textureKey, { start: 0, end: n - 1 }), frameRate: fps, repeat });
     }
-    // Scale e Y por animação — ajustados via debug-layout para manter pés alinhados
-    const ANIM_OVERRIDES: Record<string, { scale: number; y: number }> = {
-      hero_attack:  { scale: 0.6118, y: 301.6 },
-      hero_channel: { scale: 0.6529, y: 318.8 },
-    };
     const ov = ANIM_OVERRIDES[textureKey];
-    const scale = ov ? ov.scale : 0.6034;
+    const scale = ov ? ov.scale : IDLE_SCALE;
+    const x     = ov ? ov.x     : HERO_X;
     const y     = ov ? ov.y     : HERO_Y + yOffset;
-    this.heroSprite.setScale(scale).setY(y).play(animKey);
+    this.heroSprite.setScale(scale).setX(x).setY(y).play(animKey);
     if (repeat === 0) {
-      this.heroSprite.once('animationcomplete', () => { this._returnToIdle(); });
+      this.heroSprite.once('animationcomplete', () => this._returnToIdle());
     } else if (repeat === -1 && animKey !== 'cbt_hero_idle') {
-      this.time.delayedCall(1500, () => { this._returnToIdle(); });
+      this.time.delayedCall(1500, () => this._returnToIdle());
     }
   }
 
   private _returnToIdle(): void {
     if (!(this.heroSprite instanceof Phaser.GameObjects.Sprite)) return;
-    this.heroSprite.stop();
-    this.heroSprite.setScale(0.6034).setX(HERO_X).setY(HERO_Y);
+    this.heroSprite.stop().setScale(IDLE_SCALE).setX(HERO_X).setY(HERO_Y);
     if (this.anims.exists('cbt_hero_idle')) this.heroSprite.play('cbt_hero_idle');
     this._auraSprite?.destroy(); this._auraSprite = null;
     this._leafSprite?.destroy(); this._leafSprite = null;
@@ -147,19 +193,29 @@ export class CombatTestScene extends Phaser.Scene {
 
   private _buildEnemy(): void {
     const key = this.ENEMY_POOL[this.currentEnemyIdx];
-    this.enemySprite = this.textures.exists(key)
-      ? this.add.image(ENEMY_X, ENEMY_Y, key).setDisplaySize(190, 190).setDepth(10)
-      : this.add.rectangle(ENEMY_X, ENEMY_Y, 120, 120, 0xcc3333).setDepth(10);
+    if (this.textures.exists(key)) {
+      this.enemySprite = this.add.image(ENEMY_X, ENEMY_Y, key)
+        .setDisplaySize(ENEMY_SIZE, ENEMY_SIZE).setDepth(10);
+    } else {
+      this.enemySprite = this.add.rectangle(ENEMY_X, ENEMY_Y, 120, 120, 0xcc3333).setDepth(10);
+    }
     if (this.textures.exists('hero_shadow'))
-      this.add.image(ENEMY_X, ENEMY_Y + 95, 'hero_shadow').setDisplaySize(175, 38).setAlpha(0.5).setDepth(9);
+      this.add.image(ENEMY_SHADOW_X, ENEMY_SHADOW_Y, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+    else
+      this.add.ellipse(ENEMY_SHADOW_X, ENEMY_SHADOW_Y, 160, 28, 0x000000, 0.45).setDepth(9);
   }
 
-  private _cycleEnemy(): void {
-    this.currentEnemyIdx = (this.currentEnemyIdx + 1) % this.ENEMY_POOL.length;
-    const key = this.ENEMY_POOL[this.currentEnemyIdx];
-    if (this.enemySprite instanceof Phaser.GameObjects.Image && this.textures.exists(key))
-      this.enemySprite.setTexture(key);
-    this._showLabel(`Enemy: ${key.replace('monster_', '')}`);
+  private _selectEnemy(key: string): void {
+    if (this.textures.exists(key)) {
+      if (this.enemySprite instanceof Phaser.GameObjects.Image) {
+        this.enemySprite.setTexture(key).setDisplaySize(ENEMY_SIZE, ENEMY_SIZE);
+      } else {
+        this.enemySprite.destroy();
+        this.enemySprite = this.add.image(ENEMY_X, ENEMY_Y, key)
+          .setDisplaySize(ENEMY_SIZE, ENEMY_SIZE).setDepth(10);
+      }
+    }
+    this._showLabel(key.replace('monster_', ''));
   }
 
   // ── Feedback ──────────────────────────────────────────────────────────────────
@@ -171,17 +227,29 @@ export class CombatTestScene extends Phaser.Scene {
       this.tweens.add({ targets: this._labelText, alpha: 0, duration: 400 }));
   }
 
+  private _hitHero(): void {
+    if (!this.heroSprite) return;
+    this.heroSprite.setTint(0xff0000);
+    this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
+  }
+
+  private _hitEnemy(): void {
+    if (this.enemySprite instanceof Phaser.GameObjects.Image) {
+      this.enemySprite.setTintFill(0xffffff);
+      this.time.delayedCall(100, () => {
+        if (this.enemySprite instanceof Phaser.GameObjects.Image) this.enemySprite.clearTint();
+      });
+    }
+  }
+
   // ── Hamburger button ──────────────────────────────────────────────────────────
 
   private _buildHamburgerBtn(): void {
-    // depth=5: abaixo do herói (10) para que o DebugManager priorize o herói ao clicar nele.
-    // Visualmente o botão fica no canto superior direito, longe do herói.
     this._menuBtnBg = this.add.rectangle(MENU_BTN_X, MENU_BTN_Y, 44, 28, 0x1a1200)
       .setStrokeStyle(1, 0xaa7700).setDepth(5).setInteractive({ useHandCursor: true });
     this._menuBtnText = this.add.text(MENU_BTN_X, MENU_BTN_Y, '☰', {
       fontFamily: 'VT323, monospace', fontSize: '20px', color: '#ffd700',
     }).setOrigin(0.5).setDepth(6);
-
     this._menuBtnBg.on('pointerover', () => this._menuBtnBg.setFillStyle(0x3a2800));
     this._menuBtnBg.on('pointerout',  () => this._menuBtnBg.setFillStyle(0x1a1200));
     this._menuBtnBg.on('pointerdown', () => this._toggleMenu());
@@ -190,171 +258,246 @@ export class CombatTestScene extends Phaser.Scene {
   private _toggleMenu(): void {
     this._menuOpen = !this._menuOpen;
     this._menuBtnText.setText(this._menuOpen ? '✕' : '☰');
-    this._menuObjects.forEach((go, i) => {
-      const o = go as any;
-      o.setVisible(this._menuOpen);
-      // Mover para fora da tela quando fechado para que getBounds() não intercepte cliques na arena
-      o.setY(this._menuOpen ? this._menuObjectsOrigY[i] : -2000);
-      if (this._menuOpen) o.setInteractive?.();
-      else o.disableInteractive?.();
-    });
     this._menuPanelBg
       .setVisible(this._menuOpen)
       .setAlpha(this._menuOpen ? 0.93 : 0)
       .setY(this._menuOpen ? PANEL_Y + PANEL_H / 2 : -2000);
+    TAB_NAMES.forEach(tab => this._setTabVisible(tab, this._menuOpen && tab === this._activeTab));
+    this._tabBgs.forEach((bg, _tab) => {
+      bg.setVisible(this._menuOpen).setY(this._menuOpen ? PANEL_Y + 16 : -2000);
+      if (this._menuOpen) bg.setInteractive(); else bg.disableInteractive();
+    });
+    this._tabTexts.forEach(t => {
+      t.setVisible(this._menuOpen).setY(this._menuOpen ? PANEL_Y + 16 : -2000);
+    });
   }
 
-  // ── Menu (construído mas oculto) ──────────────────────────────────────────────
-
-  private _trackMenu(go: Phaser.GameObjects.GameObject): Phaser.GameObjects.GameObject {
-    this._menuObjects.push(go);
-    this._menuObjectsOrigY.push((go as any).y ?? 0);
-    return go;
+  private _setTabVisible(tab: TabName, visible: boolean): void {
+    (this._tabGroups.get(tab) ?? []).forEach(go => {
+      const o = go as any;
+      o.setVisible(visible);
+      o.setY(visible ? o._origY : -2000);
+      if (go instanceof Phaser.GameObjects.Rectangle) {
+        if (visible) o.setInteractive({ useHandCursor: true }); else o.disableInteractive();
+      }
+    });
+    const bg = this._tabBgs.get(tab);
+    if (bg) bg.setFillStyle(tab === this._activeTab ? 0x3a2800 : 0x1a1200);
   }
+
+  private _switchTab(tab: TabName): void {
+    TAB_NAMES.forEach(t => this._setTabVisible(t, false));
+    this._activeTab = tab;
+    this._setTabVisible(tab, true);
+  }
+
+  // ── Menu ─────────────────────────────────────────────────────────────────────
 
   private _buildMenu(): void {
-    this._menuObjects = [];
-    this._menuObjectsOrigY = [];
+    this._tabGroups.clear();
+    this._tabBgs.clear();
+    this._tabTexts.clear();
 
-    // Fundo do painel — quando fechado, alpha=0 e sem interatividade.
-    // NÃO usar depth negativo pois o DebugManager inclui objetos com depth<0.
-    this._menuPanelBg = this.add.rectangle(PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, PANEL_W, PANEL_H, 0x0d0d0d, 0.93)
-      .setStrokeStyle(1, 0x886600).setDepth(60).setAlpha(0).setVisible(false);
+    this._menuPanelBg = this.add.rectangle(
+      PANEL_X + PANEL_W / 2, PANEL_Y + PANEL_H / 2, PANEL_W, PANEL_H, 0x0d0d0d, 0.93,
+    ).setStrokeStyle(1, 0x886600).setDepth(60).setAlpha(0).setVisible(false);
 
-    let col = PANEL_X + 10;
-    const startY = PANEL_Y + 10;
+    const TAB_W = 120;
+    const TAB_H = 24;
+    TAB_NAMES.forEach((tab, i) => {
+      const tx = PANEL_X + 16 + i * (TAB_W + 4) + TAB_W / 2;
+      const bg = this.add.rectangle(tx, PANEL_Y + 16, TAB_W, TAB_H, i === 0 ? 0x3a2800 : 0x1a1200)
+        .setStrokeStyle(1, 0x886600).setDepth(63).setVisible(false).setInteractive({ useHandCursor: true });
+      const t = this.add.text(tx, PANEL_Y + 16, tab, {
+        fontFamily: 'VT323, monospace', fontSize: '12px', color: '#ffd700',
+      }).setOrigin(0.5).setDepth(64).setVisible(false);
+      bg.on('pointerover', () => { if (tab !== this._activeTab) bg.setFillStyle(0x2a1800); });
+      bg.on('pointerout',  () => { if (tab !== this._activeTab) bg.setFillStyle(0x1a1200); });
+      bg.on('pointerdown', () => this._switchTab(tab));
+      this._tabBgs.set(tab, bg);
+      this._tabTexts.set(tab, t);
+    });
 
-    const addSection = (title: string, buttons: Array<{ label: string; color: number; action: () => void }>) => {
-      const sectionW = BTN_W + 10;
-      // Título da seção
-      const t = this.add.text(col + sectionW / 2, startY, title, {
-        fontFamily: 'VT323, monospace', fontSize: '11px', color: '#886600',
-      }).setOrigin(0.5, 0).setDepth(62);
-      this._trackMenu(t);
+    const CONTENT_Y = PANEL_Y + 38;
+    const COLS      = 5;
+    const COL_W     = Math.floor(PANEL_W / COLS);
 
-      let by = startY + 14;
-      buttons.forEach(({ label, color, action }) => {
-        const bx = col + sectionW / 2;
-        const bbg = this.add.rectangle(bx, by + BTN_H / 2, BTN_W, BTN_H, color)
-          .setStrokeStyle(1, 0x886600).setDepth(61).setInteractive({ useHandCursor: true });
-        const bt = this.add.text(bx, by + BTN_H / 2, label, {
-          fontFamily: 'VT323, monospace', fontSize: '11px', color: '#ffd700',
-        }).setOrigin(0.5).setDepth(62);
-        bbg.on('pointerover', () => bbg.setFillStyle(0x3a2800));
-        bbg.on('pointerout',  () => bbg.setFillStyle(color));
-        bbg.on('pointerdown', () => { action(); this._toggleMenu(); });
-        this._trackMenu(bbg);
-        this._trackMenu(bt);
-        by += ROW_H;
-      });
-
-      col += sectionW + 6;
+    const addBtn = (
+      tab: TabName, col: number, row: number,
+      label: string, color: number, action: () => void,
+    ) => {
+      const bx = PANEL_X + col * COL_W + COL_W / 2;
+      const by = CONTENT_Y + row * ROW_H + BTN_H / 2;
+      const bbg = this.add.rectangle(bx, by, COL_W - 8, BTN_H, color)
+        .setStrokeStyle(1, 0x886600).setDepth(61).setInteractive({ useHandCursor: true });
+      const bt = this.add.text(bx, by, label, {
+        fontFamily: 'VT323, monospace', fontSize: '11px', color: '#ffd700',
+      }).setOrigin(0.5).setDepth(62);
+      bt.setInteractive(); bt.disableInteractive();
+      bbg.on('pointerover', () => bbg.setFillStyle(0x3a2800));
+      bbg.on('pointerout',  () => bbg.setFillStyle(color));
+      bbg.on('pointerdown', action);
+      (bbg as any)._origY = by; (bt as any)._origY = by;
+      const group = this._tabGroups.get(tab) ?? [];
+      group.push(bbg, bt);
+      this._tabGroups.set(tab, group);
+      bbg.setVisible(false).disableInteractive();
+      bt.setVisible(false);
     };
 
     const p = this._prefix();
 
-    // Seção ANIMATIONS
-    addSection('ANIMATIONS', [
-      { label: 'IDLE',    color: 0x1a2a1a, action: () => { this._playHeroAnim(`${p}_idle`,    'cbt_hero_idle',    8,  -1); this._showLabel('idle'); } },
-      { label: 'ATTACK',  color: 0x2a1a1a, action: () => { this._playHeroAnim(`${p}_attack`,  'cbt_hero_attack',  12,  0); this._showLabel('attack'); } },
-      { label: 'CAST',    color: 0x1a1a2a, action: () => { this._playHeroAnim(`${p}_cast`,    'cbt_hero_cast',    10,  0); this._showLabel('cast'); } },
-      { label: 'DEFEND',  color: 0x1a2020, action: () => { this._playHeroAnim(`${p}_defend`,  'cbt_hero_defend',   8, -1); this.effects.shieldEffect(HERO_X, HERO_Y); this._showLabel('defend'); } },
-      { label: 'HIT',     color: 0x2a1a00, action: () => { this._playHeroAnim(`${p}_hit`,     'cbt_hero_hit',     10,  0); this._hitHero(); this._showLabel('hit'); } },
-      { label: 'CHANNEL', color: 0x1a102a, action: () => { this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel',  6, -1, this._channelYOffset); this._showLabel(`channel  Y:${this._channelYOffset}`); } },
-    ]);
+    // ── ANIMATIONS ─────────────────────────────────────────────────────────────
+    const anims: Array<[string, number, () => void]> = [
+      ['IDLE',    0x1a2a1a, () => { this._playHeroAnim(`${p}_idle`,    'cbt_hero_idle',    8, -1); this._showLabel('idle'); }],
+      ['ATTACK',  0x2a1a1a, () => { this._playHeroAnim(`${p}_attack`,  'cbt_hero_attack', 12,  0); this._showLabel('attack'); }],
+      ['CAST',    0x1a1a2a, () => { this._playHeroAnim(`${p}_cast`,    'cbt_hero_cast',   10,  0); this._showLabel('cast'); }],
+      ['DEFEND',  0x1a2020, () => { this._playHeroAnim(`${p}_defend`,  'cbt_hero_defend',  8, -1); this.effects.shieldEffect(HERO_X, HERO_Y); this._showLabel('defend'); }],
+      ['HIT',     0x2a1a00, () => { this._playHeroAnim(`${p}_hit`,     'cbt_hero_hit',    10,  0); this._hitHero(); this._showLabel('hit'); }],
+      ['CHANNEL', 0x1a102a, () => { this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset); this._showLabel(`channel Y:${this._channelYOffset}`); }],
+    ];
+    anims.forEach(([label, color, action], i) => addBtn('ANIMATIONS', i, 0, label, color, action));
 
-    // Seção CHANNEL Y — só botões de offset, sem fechar o menu
-    const chW = BTN_W + 10;
-    const chTitle = this.add.text(col + chW / 2, startY, 'CHANNEL Y', {
-      fontFamily: 'VT323, monospace', fontSize: '11px', color: '#886600',
-    }).setOrigin(0.5, 0).setDepth(62);
-    this._trackMenu(chTitle);
-
-    // Label do offset
-    this._channelYLabel = this.add.text(col + chW / 2, startY + 16, 'offset: 0', {
+    this._channelYLabel = this.add.text(PANEL_X + PANEL_W / 2, CONTENT_Y + ROW_H + BTN_H / 2, 'channel Y: 0', {
       fontFamily: 'VT323, monospace', fontSize: '12px', color: '#ffffff',
-    }).setOrigin(0.5, 0).setDepth(62);
-    this._trackMenu(this._channelYLabel);
+    }).setOrigin(0.5).setDepth(62).setVisible(false);
+    (this._channelYLabel as any)._origY = CONTENT_Y + ROW_H + BTN_H / 2;
+    const ag = this._tabGroups.get('ANIMATIONS') ?? [];
+    ag.push(this._channelYLabel);
+    this._tabGroups.set('ANIMATIONS', ag);
 
-    const chOffsets = [{ d: -20, l: '-20' }, { d: -5, l: '-5' }, { d: +5, l: '+5' }, { d: +20, l: '+20' }];
-    let chY = startY + 34;
-    chOffsets.forEach(({ d, l }) => {
-      const bx = col + chW / 2;
-      const bbg = this.add.rectangle(bx, chY + BTN_H / 2, BTN_W, BTN_H, 0x221a33)
-        .setStrokeStyle(1, 0x886600).setDepth(61).setInteractive({ useHandCursor: true });
-      const bt = this.add.text(bx, chY + BTN_H / 2, l, {
-        fontFamily: 'VT323, monospace', fontSize: '13px', color: '#ffcc44',
-      }).setOrigin(0.5).setDepth(62);
-      bbg.on('pointerover', () => bbg.setFillStyle(0x3a2a50));
-      bbg.on('pointerout',  () => bbg.setFillStyle(0x221a33));
-      bbg.on('pointerdown', () => {
+    [{ d: -20, l: '-20' }, { d: -5, l: '-5' }, { d: +5, l: '+5' }, { d: +20, l: '+20' }]
+      .forEach(({ d, l }, i) => addBtn('ANIMATIONS', i, 2, l, 0x221a33, () => {
         this._channelYOffset += d;
-        this._channelYLabel.setText(`offset: ${this._channelYOffset}`);
+        this._channelYLabel.setText(`channel Y: ${this._channelYOffset}`);
         this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset);
-        this._showLabel(`channel Y offset: ${this._channelYOffset}`);
-        // NÃO fecha o menu — permite ajuste incremental
-      });
-      this._trackMenu(bbg);
-      this._trackMenu(bt);
-      chY += ROW_H;
-    });
-    col += chW + 6;
+        this._showLabel(`channel Y: ${this._channelYOffset}`);
+      }));
 
-    // Seção FX EFFECTS
-    addSection('FX EFFECTS', [
-      { label: 'FX SLASH',  color: 0x2a1500, action: () => { this.effects.enemyAttackEffect(HERO_X, HERO_Y, 'fx_slash'); this._hitHero(); this._showLabel('fx_slash'); } },
-      { label: 'FX STOMP',  color: 0x2a1500, action: () => { this.effects.enemyAttackEffect(HERO_X, HERO_Y, 'fx_stomp'); this._hitHero(); this._showLabel('fx_stomp'); } },
-      { label: 'FX BITE',   color: 0x2a1500, action: () => { this.effects.enemyAttackEffect(HERO_X, HERO_Y, 'fx_bite');  this._hitHero(); this._showLabel('fx_bite'); } },
-      { label: 'FLOAT DMG', color: 0x2a1500, action: () => { this.effects.floatingNumber(HERO_X, HERO_Y - 40, Math.floor(Math.random() * 80 + 10), '#ff4444', '-'); this._showLabel('floatingDmg'); } },
-      { label: 'SCREEN SHK',color: 0x2a1000, action: () => { this.effects.screenShake(5, 200); this._showLabel('screenShake'); } },
-    ]);
+    // ── FX EFFECTS ─────────────────────────────────────────────────────────────
+    const fxBtns: Array<[string, number, () => void]> = [
+      ['FX SLASH',    0x202030, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_slash');       this._hitHero(); this._showLabel('fx_slash'); }],
+      ['FX CLAW',     0x2a1500, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_claw');        this._hitHero(); this._showLabel('fx_claw'); }],
+      ['FX STOMP',    0x1a1000, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_stomp');       this._hitHero(); this._showLabel('fx_stomp'); }],
+      ['FX BITE',     0x1a2010, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_bite');        this._hitHero(); this._showLabel('fx_bite'); }],
+      ['SLASH FIRE',  0x2a1000, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_slash_fire');  this._hitHero(); this._showLabel('fx_slash_fire'); }],
+      ['SLASH WATER', 0x001a2a, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_slash_water'); this._hitHero(); this._showLabel('fx_slash_water'); }],
+      ['SLASH AIR',   0x00201a, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_slash_air');   this._hitHero(); this._showLabel('fx_slash_air'); }],
+      ['SLASH EARTH', 0x1a1200, () => { this.effects.enemyAttackEffect(ATTACK_FX_X, ATTACK_FX_Y, 'fx_slash_earth'); this._hitHero(); this._showLabel('fx_slash_earth'); }],
+      ['FLOAT DMG E', 0x2a1500, () => { this.effects.floatingNumber(FLOAT_ENEMY_X, FLOAT_Y, Math.floor(Math.random() * 80 + 10), '#ffffff', '-'); this._hitEnemy(); this._showLabel('floatDmg enemy'); }],
+      ['FLOAT DMG H', 0x2a0000, () => { this.effects.floatingNumber(FLOAT_HERO_X, FLOAT_Y, Math.floor(Math.random() * 80 + 10), '#ff4444', '-'); this._hitHero(); this._showLabel('floatDmg hero'); }],
+      ['SCREEN SHK',  0x2a1000, () => { this.effects.screenShake(5, 200); this._showLabel('screenShake'); }],
+    ];
+    fxBtns.forEach(([label, color, action], i) =>
+      addBtn('FX EFFECTS', i % COLS, Math.floor(i / COLS), label, color, action));
 
-    // Seção UTILS
-    addSection('UTILS', [
-      { label: 'CYCLE ENEMY', color: 0x1a1a1a, action: () => this._cycleEnemy() },
-      { label: 'FX FIRE',    color: 0x2a1000, action: () => {
-        if (this._fireSprite)  { this._fireSprite.destroy();  this._fireSprite  = null; this._showLabel('fx_fire OFF'); }
-        else { this._fireSprite  = this.effects.statusEffect(182.2, 499.1, 'fx_fire',  219) ?? null; this._showLabel('fx_fire ON'); }
-      }},
-      { label: 'FX BLEED',   color: 0x2a1000, action: () => {
-        if (this._bleedSprite) { this._bleedSprite.destroy(); this._bleedSprite = null; this._showLabel('fx_bleed OFF'); }
-        else { this._bleedSprite = this.effects.statusEffect(188.8, 464.9, 'fx_bleed', 115) ?? null; this._showLabel('fx_bleed ON'); }
-      }},
-      { label: 'FX STUN',    color: 0x2a1000, action: () => {
-        if (this._stunSprite)  { this._stunSprite.destroy();  this._stunSprite  = null; this._showLabel('fx_stun OFF'); }
-        else { this._stunSprite  = this.effects.statusEffect(217.1, 300.2, 'fx_stun',   67) ?? null; this._showLabel('fx_stun ON'); }
-      }},
-      { label: 'FX HEAL',    color: 0x0a2a0a, action: () => {
+    // ── STATUS ─────────────────────────────────────────────────────────────────
+    const statusBtns: Array<[string, number, () => void]> = [
+      // Herói
+      ['HERO FIRE',   0x2a1000, () => {
+        if (this._fireSprite)  { this._fireSprite.destroy();  this._fireSprite  = null; this._showLabel('hero_fire OFF'); }
+        else { this._fireSprite  = this.effects.statusEffect(FX_HERO_FIRE_X,  FX_HERO_FIRE_Y,  'fx_fire',  FX_HERO_FIRE_SIZE)  ?? null; this._showLabel('hero_fire ON'); }
+      }],
+      ['HERO BLEED',  0x2a0010, () => {
+        if (this._bleedSprite) { this._bleedSprite.destroy(); this._bleedSprite = null; this._showLabel('hero_bleed OFF'); }
+        else { this._bleedSprite = this.effects.statusEffect(FX_HERO_BLEED_X, FX_HERO_BLEED_Y, 'fx_bleed', FX_HERO_BLEED_SIZE) ?? null; this._showLabel('hero_bleed ON'); }
+      }],
+      ['HERO STUN',   0x1a1a00, () => {
+        if (this._stunSprite)  { this._stunSprite.destroy();  this._stunSprite  = null; this._showLabel('hero_stun OFF'); }
+        else { this._stunSprite  = this.effects.statusEffect(FX_HERO_STUN_X,  FX_HERO_STUN_Y,  'fx_stun',  FX_HERO_STUN_SIZE)  ?? null; this._showLabel('hero_stun ON'); }
+      }],
+      // Inimigo
+      ['ENMY FIRE',   0x2a1000, () => {
+        if (this._efireSprite)  { this._efireSprite.destroy();  this._efireSprite  = null; this._showLabel('enemy_fire OFF'); }
+        else { this._efireSprite  = this.effects.statusEffect(FX_ENEMY_FX_X, FX_ENEMY_FX_Y, 'fx_fire',  FX_ENEMY_FX_SIZE)  ?? null; this._showLabel('enemy_fire ON'); }
+      }],
+      ['ENMY BLEED',  0x2a0010, () => {
+        if (this._ebleedSprite) { this._ebleedSprite.destroy(); this._ebleedSprite = null; this._showLabel('enemy_bleed OFF'); }
+        else { this._ebleedSprite = this.effects.statusEffect(FX_ENEMY_FX_X, FX_ENEMY_FX_Y, 'fx_bleed', FX_ENEMY_BLEED_SIZE) ?? null; this._showLabel('enemy_bleed ON'); }
+      }],
+      ['ENMY STUN',   0x1a1a00, () => {
+        if (this._estunSprite)  { this._estunSprite.destroy();  this._estunSprite  = null; this._showLabel('enemy_stun OFF'); }
+        else { this._estunSprite  = this.effects.statusEffect(FX_ENEMY_STUN_X, FX_ENEMY_STUN_Y, 'fx_stun', FX_ENEMY_STUN_SIZE) ?? null; this._showLabel('enemy_stun ON'); }
+      }],
+      // Herói — heal/buff
+      ['HERO HEAL',   0x0a2a0a, () => {
         this._auraSprite?.destroy(); this._auraSprite = null;
         this._leafSprite?.destroy(); this._leafSprite = null;
         this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset);
         this._auraSprite = this.effects.auraEffect(HERO_X, HERO_Y) ?? null;
         this._leafSprite = this.effects.leafEffect(HERO_X, HERO_Y) ?? null;
         this._showLabel('fx_heal');
-      }},
-      { label: 'FX BUFF',    color: 0x0a0a2a, action: () => {
+      }],
+      ['HERO BUFF',   0x0a0a2a, () => {
         this._auraSprite?.destroy(); this._auraSprite = null;
         this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset);
         this._auraSprite = this.effects.auraEffect(HERO_X, HERO_Y, 0x4488ff, 'fx_aura_buff') ?? null;
         this._showLabel('fx_buff');
-      }},
-    ]);
+      }],
+    ];
+    statusBtns.forEach(([label, color, action], i) =>
+      addBtn('STATUS', i % COLS, Math.floor(i / COLS), label, color, action));
 
-    // Começa oculto — sem interatividade para não interferir com o DebugManager
-    this._menuObjects.forEach(go => {
-      const o = go as any;
-      o.setVisible(false);
-      o.disableInteractive?.();
+    // ── UTILS — grid de inimigos ───────────────────────────────────────────────
+    const THUMB  = 56;
+    const THUMBG = 10;
+    const THUMB_Y0 = CONTENT_Y + THUMB / 2 + 4;
+    const utilGroup: Phaser.GameObjects.GameObject[] = [];
+
+    this.ENEMY_POOL.forEach((key, i) => {
+      const col = i % 10;
+      const row = Math.floor(i / 10);
+      const tx = PANEL_X + 16 + col * (THUMB + THUMBG) + THUMB / 2;
+      const ty = THUMB_Y0 + row * (THUMB + THUMBG);
+
+      const bg = this.add.rectangle(tx, ty, THUMB, THUMB, 0x1a1a1a)
+        .setStrokeStyle(2, i === this.currentEnemyIdx ? 0xffd700 : 0x886600)
+        .setDepth(61).setInteractive({ useHandCursor: true });
+      (bg as any)._origY = ty;
+      (bg as any)._isThumbBg = true;
+
+      const img = this.textures.exists(key)
+        ? this.add.image(tx, ty, key).setDisplaySize(THUMB - 4, THUMB - 4).setDepth(62)
+        : this.add.rectangle(tx, ty, THUMB - 8, THUMB - 8, 0xcc3333).setDepth(62);
+      (img as any)._origY = ty;
+
+      const lbl = this.add.text(tx, ty + THUMB / 2 - 1, key.replace('monster_', ''), {
+        fontFamily: 'VT323, monospace', fontSize: '8px', color: '#aaaaaa',
+      }).setOrigin(0.5, 0).setDepth(63);
+      (lbl as any)._origY = ty + THUMB / 2 - 1;
+
+      bg.on('pointerover', () => bg.setFillStyle(0x3a2800));
+      bg.on('pointerout',  () => bg.setFillStyle(0x1a1a1a));
+      bg.on('pointerdown', () => {
+        this.currentEnemyIdx = i;
+        this._selectEnemy(key);
+        utilGroup.forEach(go => {
+          if ((go as any)._isThumbBg && go instanceof Phaser.GameObjects.Rectangle)
+            go.setStrokeStyle(2, 0x886600);
+        });
+        bg.setStrokeStyle(2, 0xffd700);
+      });
+
+      utilGroup.push(bg, img, lbl);
+    });
+
+    utilGroup.forEach(go => {
+      (go as any).setVisible(false);
+      if (go instanceof Phaser.GameObjects.Rectangle) go.disableInteractive();
+    });
+    this._tabGroups.set('UTILS', utilGroup);
+
+    // ── BG — seletor de terreno ────────────────────────────────────────────────
+    TERRAINS.forEach((terrain, i) => {
+      addBtn('BG', i % COLS, Math.floor(i / COLS), terrain.toUpperCase(), 0x101825, () => {
+        this.currentTerrain = terrain;
+        this._buildBg(terrain);
+        this._showLabel(`bg_battle_${terrain}`);
+      });
     });
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────────
-
-  private _hitHero(): void {
-    if (!this.heroSprite) return;
-    this.heroSprite.setTint(0xff0000);
-    this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
-  }
+  // ── Back button ───────────────────────────────────────────────────────────────
 
   private _buildBackBtn(): void {
     const bg = this.add.rectangle(46, 22, 80, 26, 0x1a1a1a)
