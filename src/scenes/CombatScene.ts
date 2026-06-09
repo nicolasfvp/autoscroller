@@ -33,18 +33,19 @@ import { getEnemyAttackCards } from '../data/EnemyAttackCards';
 import { EnemyCardQueueDisplay } from '../ui/EnemyCardQueueDisplay';
 
 /** Maps enemy id → hit effect spritesheet key.
- *  Defaults to 'fx_slash' for anything not listed. */
+ *  Defaults to 'fx_claw' for anything not listed. fx_slash = blade, fx_claw = bestial. */
 const ENEMY_ATTACK_FX: Record<string, string> = {
-  // Slash (claws / blades)
-  werewolf:          'fx_slash',
-  ancient_tree:      'fx_slash',
-  corpse_eater:      'fx_slash',
+  // Claw (bestial / natural weapons)
+  werewolf:          'fx_claw',
+  ancient_tree:      'fx_claw',
+  corpse_eater:      'fx_claw',
+  vampire:           'fx_claw',
+  bog_witch:         'fx_claw',
+  void_shade:        'fx_claw',
+  // Slash (bladed weapons)
   skeleton:          'fx_slash',
-  vampire:           'fx_slash',
   doom_knight:       'fx_slash',
-  bog_witch:         'fx_slash',
   blighted_knight:   'fx_slash',
-  void_shade:        'fx_slash',
   // Stomp (heavy / earth impact)
   lava_golem:        'fx_stomp',
   boss_iron_golem:   'fx_stomp',
@@ -151,7 +152,7 @@ export class CombatScene extends Scene {
     this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
     // Hit effect spritesheet over the hero
     if (this.combatEffects) {
-      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_slash';
+      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_claw';
       this.combatEffects.enemyAttackEffect(200, 320, fxKey);
     }
     // Visual jump toward the player
@@ -540,15 +541,17 @@ export class CombatScene extends Scene {
         } else {
           this.enemyShadow = this.add.ellipse(600, 430, 160, 28, 0x000000, 0.45).setDepth(9) as unknown as Phaser.GameObjects.Graphics;
         }
-        const key2 = `${this.enemyTextureKey}_2`;
-        if (this.textures.exists(key2)) {
-          let frame = 0;
+        const enemyFrames: string[] = [this.enemyTextureKey];
+        for (let n = 2; this.textures.exists(`${this.enemyTextureKey}_${n}`); n++)
+          enemyFrames.push(`${this.enemyTextureKey}_${n}`);
+        if (enemyFrames.length > 1) {
+          let frameIdx = 0;
           this.enemyIdleTimer = this.time.addEvent({
             delay: 500, loop: true,
             callback: () => {
               if (this.enemySprite instanceof Phaser.GameObjects.Image) {
-                frame = 1 - frame;
-                this.enemySprite.setTexture(frame === 0 ? this.enemyTextureKey : key2);
+                frameIdx = (frameIdx + 1) % enemyFrames.length;
+                this.enemySprite.setTexture(enemyFrames[frameIdx]);
               }
             },
           });

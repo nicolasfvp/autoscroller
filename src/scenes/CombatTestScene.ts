@@ -232,15 +232,18 @@ export class CombatTestScene extends Phaser.Scene {
   private _startEnemyIdle(key: string): void {
     this.enemyIdleTimer?.destroy();
     this.enemyIdleTimer = null;
-    const key2 = `${key}_2`;
-    if (!this.textures.exists(key2)) return;
-    let frame = 0;
+    // Descobrir quantos frames existem: key (frame 0), key_2, key_3, …
+    const frames: string[] = [key];
+    for (let n = 2; this.textures.exists(`${key}_${n}`); n++)
+      frames.push(`${key}_${n}`);
+    if (frames.length < 2) return;
+    let idx = 0;
     this.enemyIdleTimer = this.time.addEvent({
       delay: 500, loop: true,
       callback: () => {
         if (!(this.enemySprite instanceof Phaser.GameObjects.Image)) return;
-        frame = 1 - frame;
-        this.enemySprite.setTexture(frame === 0 ? key : key2);
+        idx = (idx + 1) % frames.length;
+        this.enemySprite.setTexture(frames[idx]);
       },
     });
   }
