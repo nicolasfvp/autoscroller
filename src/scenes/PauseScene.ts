@@ -34,20 +34,17 @@ export class PauseScene extends Scene {
     // Título — y=105, fontSize=42
     this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 42).setOrigin(0.5);
 
-    this.makePauseBtn('btn_resume_pause',     401.6, 171.6, 204, 50, () => this.resume());
-    this.makePauseBtn('btn_view_deck_pause',  400.5, 236.8, 196, 50, () => {
+    const BTN_W = 210;
+    this.makePauseBtn('btn_resume_pause',     401.6, 171.6, BTN_W, 50, () => this.resume());
+    this.makePauseBtn('btn_view_deck_pause',  400.5, 236.8, BTN_W, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
     });
-    this.makePauseBtn('btn_tutorial_pause',   400,   300,   196, 50, () => {
+    this.makePauseBtn('btn_tutorial_pause',   400,   300,   BTN_W, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
     });
-    this.makePauseBtn('btn_settings_pause',   400,   365.8, 200, 50, () => {
-      this.scene.pause();
-      this.scene.launch(SCENE_KEYS.SETTINGS);
-    });
-    this.makePauseBtn('btn_abandon_run_pause', 402.6, 432.1, 210, 50, async () => {
+    this.makePauseBtn('btn_abandon_run_pause', 402.6, 432.1, BTN_W, 50, async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);

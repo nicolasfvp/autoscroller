@@ -34,7 +34,7 @@ export class Preloader extends Scene {
     this.load.image('hero_shadow', 'assets/characters/hero/shadow.png');
     this.load.image('glossary_book_icon', 'assets/ui/glossary/book_icon.png');
     this.load.image('glossary_panel_bg', 'assets/ui/glossary/panel_bg.png');
-    this.load.image('timer_panel', 'assets/ui/timer/timer-panel.png');
+    this.load.image('timer_panel', 'assets/scenes/combat/timer-panel.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 532, frameHeight: 568 });
@@ -53,9 +53,9 @@ export class Preloader extends Scene {
     // Mage scrolling animation (10-frame run, 512×512 per frame)
     this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
 
-    this.load.image('mage_defeat_bg',    'assets/characters/mage/defeat/defeat.jpg');
+    this.load.image('mage_defeat_bg',    'assets/scenes/death/mage_defeat.jpg');
     this.load.spritesheet('hero_chibi_mage', 'assets/characters/mage/pocket/spritesheet.png', { frameWidth: 256, frameHeight: 256, endFrame: 5 });
-    this.load.image('warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
+    this.load.image('warrior_defeat_bg', 'assets/scenes/death/warrior_defeat.jpg');
 
     // Monster static images — `hasFrame2` flags entries that ship a second
     // animation frame on disk. The `_1.png` suffix in `file` auto-derives the
@@ -74,8 +74,6 @@ export class Preloader extends Scene {
       // on disk — they render the missing-texture placeholder until art is added
       // (iron_golem could reuse boss/iron_golem_*.png).
       { id: 'doom_knight',          folder: 'default',  file: 'doom_knight_1.png',          hasFrame2: true },
-      { id: 'iron_golem',           folder: 'default',  file: 'iron golem.png' },
-      { id: 'lizard_king',          folder: 'default',  file: 'lizard king.png' },
       // Desert
       { id: 'baby_dragon',          folder: 'desert',   file: 'baby dragon_1.png',          hasFrame2: true },
       { id: 'mutated_salamander',   folder: 'desert',   file: 'mutated_salamander_1.png',   hasFrame2: true },
@@ -85,10 +83,7 @@ export class Preloader extends Scene {
       // disk yet — they show the missing-texture placeholder until art is added.
       // ogre's surviving art lives under 'a melhorar/'.
       { id: 'ancient_tree',         folder: 'forest',   file: 'ancient tree_1.png',         hasFrame2: true },
-      { id: 'giant_spider_2',       folder: 'forest',   file: 'giant spider 2.png' },
-      { id: 'giant_spider',         folder: 'forest',   file: 'giant spider.png' },
       { id: 'mush',                 folder: 'forest',   file: 'mush_1.png',                 hasFrame2: true },
-      { id: 'ogre',                 folder: 'a melhorar', file: 'ogre.png' },
       // Lava — note: ids preserve the legacy `forge_slime`/`lava_golen`
       // spellings used in enemies.json; the disk files now use underscored
       // `forge_slime_*.png` / `lava_golem_*.png` after PR #12's rename.
@@ -127,24 +122,24 @@ export class Preloader extends Scene {
     }
 
     // Scene backgrounds (400x400, scaled to fill 800x600)
-    this.load.spritesheet('bg_city', 'assets/backgrounds/ui/bg_city.png', {
+    this.load.spritesheet('bg_city', 'assets/scenes/city_hub/bg_city.png', {
       frameWidth: 1280, frameHeight: 720,
     });
     // bg_run.png not yet authored — GameScene falls back to bg_desert when
     // bg_run is missing (see GameScene.ts createDesertBackgrounds).
-    this.load.image('bg_battle_basic',     'assets/backgrounds/battle/bg_battle_basic.png');
-    this.load.image('bg_battle_forest',    'assets/backgrounds/battle/bg_battle_forest.png');
-    this.load.image('bg_battle_graveyard', 'assets/backgrounds/battle/bg_battle_graveyard.png');
-    this.load.image('bg_battle_swamp',     'assets/backgrounds/battle/bg_battle_swamp.png');
-    this.load.image('bg_battle_lava',      'assets/backgrounds/battle/bg_battle_lava.png');
-    this.load.image('bg_battle_desert',    'assets/backgrounds/battle/bg_battle_desert.png');
-    this.load.image('bg_battle_ruins',     'assets/backgrounds/battle/bg_battle_ruins.png');
-    this.load.image('homepage', 'assets/backgrounds/ui/homepage.jpg');
+    this.load.image('bg_battle_basic',     'assets/scenes/combat/bg_battle_basic.png');
+    this.load.image('bg_battle_forest',    'assets/scenes/combat/bg_battle_forest.png');
+    this.load.image('bg_battle_graveyard', 'assets/scenes/combat/bg_battle_graveyard.png');
+    this.load.image('bg_battle_swamp',     'assets/scenes/combat/bg_battle_swamp.png');
+    this.load.image('bg_battle_lava',      'assets/scenes/combat/bg_battle_lava.png');
+    this.load.image('bg_battle_desert',    'assets/scenes/combat/bg_battle_desert.png');
+    this.load.image('bg_battle_ruins',     'assets/scenes/combat/bg_battle_ruins.png');
+    this.load.image('homepage', 'assets/scenes/main_menu/homepage.jpg');
 
     // Parallax backgrounds
-    this.load.image('bg_green_field', 'assets/backgrounds/loop/green_field_background.png');
-    this.load.image('bg_sky',         'assets/backgrounds/ui/sky-background.png');
-    this.load.image('bg_desert',      'assets/backgrounds/loop/desert.png');
+    this.load.image('bg_green_field', 'assets/scenes/game/green_field_background.png');
+    this.load.image('bg_sky',         'assets/scenes/game/sky-background.png');
+    this.load.image('bg_desert',      'assets/scenes/game/desert.png');
 
     // Special tile sprites (256x256, baked-in decoration).
     this.load.image('tile_event', 'assets/map/tiles/tile_event.png');
@@ -171,39 +166,44 @@ export class Preloader extends Scene {
     this.load.image('landmark_subtile_warhorn',   'assets/map/landmarks/landmark_subtile_warhorn.png');
 
     // Building panel backgrounds
-    this.load.spritesheet('forge_background', 'assets/buildings/backgrounds/forge_background.png', {
+    this.load.spritesheet('forge_background', 'assets/scenes/forge/forge_background.png', {
       frameWidth: 1168, frameHeight: 880,
     });
-    this.load.image('forge_frame_01', 'assets/buildings/backgrounds/forge_frame_01.png');
-    this.load.spritesheet('forge_fire_sheet', 'assets/buildings/backgrounds/forge_fire_sheet.png', {
+    this.load.image('forge_frame_01', 'assets/scenes/forge/forge_frame_01.png');
+    this.load.spritesheet('forge_fire_sheet', 'assets/scenes/forge/forge_fire_sheet.png', {
       frameWidth: 390, frameHeight: 590,
     });
-    this.load.image('arco_forja',     'assets/buildings/items/arco_forja.png');
-    this.load.image('bigorna',        'assets/buildings/items/bigorna.png');
-    this.load.image('forge_moldure',       'assets/buildings/items/forge_moldure.png');
-    this.load.image('forge_status_banner', 'assets/ui/forge/forge_status_banner.png');
+    this.load.image('arco_forja',     'assets/scenes/forge/arco_forja.png');
+    this.load.image('bigorna',        'assets/scenes/forge/bigorna.png');
+    this.load.image('forge_moldure',       'assets/scenes/forge/forge_moldure.png');
+    this.load.image('forge_status_banner', 'assets/scenes/forge/forge_status_banner.png');
     // Forge-specific ornate element sigils (separate from the small `icon_<id>`
     // tokens used inside card faces).
     for (const id of ['attack','defense','agility','counter','fire','water','air','earth']) {
-      this.load.image(`forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.png`);
+      this.load.image(`forge_sigil_${id}`, `assets/scenes/forge/forge-sigils/${id}.png`);
     }
 
     // UI Panels & textures
-    this.load.image('status_panel', 'assets/ui/panels/status_panel.png');
-    this.load.image('combat_hero_panel',    'assets/ui/battle/combat_hero_panel.png');
-    this.load.image('combat_monster_panel', 'assets/ui/battle/combat_monster_panel.png');
-    this.load.spritesheet('hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
-    this.load.image('combat_chip_panel', 'assets/ui/combat_chip_panel.png');
+    this.load.image('status_panel', 'assets/scenes/combat/status_panel.png');
+    this.load.image('combat_hero_panel',    'assets/scenes/combat/combat_hero_panel.png');
+    this.load.image('combat_monster_panel', 'assets/scenes/combat/combat_monster_panel.png');
+    this.load.spritesheet('hourglass_timer', 'assets/scenes/combat/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
+    this.load.image('combat_chip_panel', 'assets/scenes/combat/combat_chip_panel.png');
     this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
-    this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
-    this.load.image('bg_character_selection', 'assets/ui/backgrounds/background-character-selection.jpg');
-    this.load.spritesheet('flame_selection', 'assets/ui/backgrounds/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
-    this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
-    this.load.image('fog', 'assets/ui/effects/fog.png');
+    this.load.image('wood_texture_big', 'assets/scenes/building_panel/wood-texture-big.png');
+    this.load.image('bg_character_selection', 'assets/scenes/character_select/background-character-selection.jpg');
+    this.load.spritesheet('flame_selection', 'assets/scenes/character_select/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
+    this.load.image('icon_table', 'assets/scenes/building_panel/icon-table.png');
+    this.load.image('fog', 'assets/scenes/main_menu/fog.png');
 
     // Combat hit effects — 4-frame spritesheets
     const FX_W = 443; const FX_H = 887;
-    this.load.spritesheet('fx_slash', 'assets/effects/combat/fx_slash.png', { frameWidth: FX_W, frameHeight: FX_H });
+    this.load.spritesheet('fx_claw',  'assets/effects/combat/fx_claw.png',  { frameWidth: FX_W, frameHeight: FX_H });
+    this.load.spritesheet('fx_slash',       'assets/effects/combat/fx_slash.png',       { frameWidth: 512, frameHeight: 512, endFrame: 2 });
+    this.load.spritesheet('fx_slash_fire',  'assets/effects/combat/fx_slash_fire.png',  { frameWidth: 512, frameHeight: 512, endFrame: 2 });
+    this.load.spritesheet('fx_slash_water', 'assets/effects/combat/fx_slash_water.png', { frameWidth: 512, frameHeight: 512, endFrame: 2 });
+    this.load.spritesheet('fx_slash_air',   'assets/effects/combat/fx_slash_air.png',   { frameWidth: 512, frameHeight: 512, endFrame: 2 });
+    this.load.spritesheet('fx_slash_earth', 'assets/effects/combat/fx_slash_earth.png', { frameWidth: 512, frameHeight: 512, endFrame: 2 });
     this.load.spritesheet('fx_shield_fade', 'assets/effects/combat/fx_shield_fade.png', { frameWidth: 1024, frameHeight: 1024 });
     this.load.spritesheet('fx_aura_heal',   'assets/effects/combat/fx_aura_heal.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
     this.load.spritesheet('fx_aura_buff',   'assets/effects/combat/fx_aura_buff.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
@@ -222,59 +222,52 @@ export class Preloader extends Scene {
       'forge_intro', 'forge_craft', 'boss_preview', 'complete',
     ];
     for (const s of tutorialSteps) {
-      this.load.image(`tutorial_text_${s}`, `assets/ui/text/tutorial/tutorial_${s}.png`);
+      this.load.image(`tutorial_text_${s}`, `assets/scenes/tutorial/tutorial_${s}.png`);
     }
-    this.load.image('tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
-    this.load.image('tile_inventory_panel', 'assets/ui/panels/tile_inventory_panel.png');
-    this.load.image('panel_keyword_frame_v2', 'assets/ui/panels/panel_keyword_frame_v2.png');
+    this.load.image('tile_selection_board', 'assets/scenes/planning/tile-selection-board.png');
+    this.load.image('tile_inventory_panel', 'assets/scenes/planning/tile_inventory_panel.png');
+    this.load.image('panel_keyword_frame_v2', 'assets/scenes/combat/panel_keyword_frame_v2.png');
     // Keyword intro panels (baked image per keyword)
     for (const kw of ['brace', 'exhaust', 'haste', 'vengeance']) {
-      this.load.image(`keyword_${kw}`, `assets/ui/text/keyword/keyword_${kw}.png`);
+      this.load.image(`keyword_${kw}`, `assets/scenes/combat/keyword_${kw}.png`);
     }
-    this.load.image('tutorial_text_panel',    'assets/ui/panels/tutorial_text_panel.png');
-    this.load.spritesheet('belt_pillar', 'assets/ui/panels/pilar/spritesheet.png', {
+    this.load.image('tutorial_text_panel',    'assets/scenes/tutorial/tutorial_text_panel.png');
+    this.load.spritesheet('belt_pillar', 'assets/scenes/planning/belt_pillar_spritesheet.png', {
       frameWidth: 512, frameHeight: 512,
     });
-    this.load.image('tile_frame', 'assets/ui/frames/tile-frame.png');
+    this.load.image('tile_frame', 'assets/scenes/planning/tile-frame.png');
     this.load.image('card_mold_v2', 'assets/ui/frames/card_mold_v2.png');
     this.load.image('deck_frame', 'assets/ui/frames/deck-frame.png');
-    this.load.image('bg_tile_selection', 'assets/ui/backgrounds/background-tile-selection.png');
-    this.load.image('bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
-    // v2 (2026-05-26) Grok-generated alchemist-merchant interior. ShopScene
-    // prefers this when present and falls back to bg_shop_scene.
-    this.load.image('bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
-    // Shop-specific ornate chrome (Grok-generated 2026-05-26).
-    this.load.image('shop_item_frame',    'assets/ui/frames/shop_item_frame.png');
-    this.load.image('shop_remove_seal',   'assets/ui/panels/shop_remove_seal.png');
-    this.load.image('shop_panel_list',    'assets/ui/shop/big_panel.png');
-    this.load.image('shop_panel_detail',  'assets/ui/shop/asset description.png');
-    this.load.image('shop_tab',           'assets/ui/shop/shop-section.png');
-    this.load.image('shop_row_selected',  'assets/ui/shop/item_selection.png');
-    this.load.image('shop_btn_buy',       'assets/ui/shop/buy-button.png');
-    this.load.image('shop_btn_sell',      'assets/ui/shop/sell-button.png');
-    this.load.image('shop_gold_panel',    'assets/ui/shop/gold_panel.png');
-    this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
-    this.load.image('confirm_panel',        'assets/ui/panels/confirm_panel.png');
+    this.load.image('bg_tile_selection', 'assets/scenes/planning/background-tile-selection.png');
+    this.load.image('bg_shop_scene', 'assets/scenes/shop/shop.png');
+    this.load.image('shop_panel_list',    'assets/scenes/shop/big_panel.png');
+    this.load.image('shop_panel_detail',  'assets/scenes/shop/asset description.png');
+    this.load.image('shop_tab',           'assets/scenes/shop/shop-section.png');
+    this.load.image('shop_row_selected',  'assets/scenes/shop/item_selection.png');
+    this.load.image('shop_btn_buy',       'assets/scenes/shop/buy-button.png');
+    this.load.image('shop_btn_sell',      'assets/scenes/shop/sell-button.png');
+    this.load.image('shop_gold_panel',    'assets/scenes/shop/gold_panel.png');
+    this.load.image('confirm_panel',        'assets/scenes/shop_remove_card/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
-    this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
-    this.load.image('bg_deck_editor_v2', 'assets/ui/backgrounds/deck-editor-v2.png');
-    this.load.image('bg_relic_vault',  'assets/ui/backgrounds/bg_relic_vault.png');
-    this.load.image('bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
-    // Visual-upgrade pass (audit2): wooden buttons + painted Settings backdrop.
-    this.load.image('panel_wood_button',      'assets/ui/panels/panel_wood_button.png');
-    this.load.image('warrior_status',         'assets/ui/panels/warrior_status.png');
-    this.load.image('mage_status',            'assets/ui/panels/mage_status.png');
+    this.load.image('bg_deck_builder', 'assets/scenes/deck_customization/bg_deck_builder.png');
+    this.load.image('bg_deck_editor_v2', 'assets/scenes/deck_customization/deck-editor-v2.png');
+    this.load.image('bg_relic_vault',  'assets/scenes/relic_viewer/bg_relic_vault.png');
+    this.load.image('bg_card_library', 'assets/scenes/card_library/bg_card_library.png');
+    this.load.image('warrior_status',         'assets/scenes/character_select/warrior_status.png');
+    this.load.image('mage_status',            'assets/scenes/character_select/mage_status.png');
+    // *_status_panel = painel "rico": a arte é só o fundo e o texto (nome/
+    // descrição/deck) é renderizado por cima pelo Phaser em CharacterSelectScene.
+    // Tem prioridade sobre *_status (fallback só-imagem) via textures.exists().
+    this.load.image('warrior_status_panel',   'assets/scenes/character_select/warrior_status_panel.png');
+    this.load.image('mage_status_panel',      'assets/scenes/character_select/mage_status_panel.png');
     // Forge dwarf NPC
-    this.load.image('dwarf_talking',          'assets/characters/npc/forge-dwarf/dwarf_talking.png');
-    this.load.image('dwarf_hands_on_hips',    'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
-    this.load.image('dwarf_thumbs_up',        'assets/characters/npc/forge-dwarf/dwarf_thumbs_up.png');
-    this.load.image('panel_keyword_frame',    'assets/ui/panels/panel_keyword_frame.png');
-    this.load.image('panel_hover_frame',      'assets/ui/panels/panel_hover_frame.png');
+    this.load.image('dwarf_talking',          'assets/scenes/forge/dwarf_talking.png');
+    this.load.image('dwarf_hands_on_hips',    'assets/scenes/forge/dwarf_hands_on_hips.png');
+    this.load.image('panel_keyword_frame',    'assets/scenes/combat/panel_keyword_frame.png');
+    this.load.image('panel_hover_frame',      'assets/scenes/combat/panel_hover_frame.png');
     this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
-    this.load.image('panel_card_grid_v2',     'assets/ui/panels/panel_card_grid_v2.png');
-    this.load.image('healthbar', 'assets/ui/panels/healthbar.png');
-    this.load.image('deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
+    this.load.image('deck_relic_table', 'assets/scenes/planning/deck-relic-table.png');
     this.load.image('achievements_bg', 'assets/ui/panels/achievments.png');
 
     // Bitmap fonts (custom game alphabet)
@@ -288,22 +281,22 @@ export class Preloader extends Scene {
 
     this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
-    this.load.image('hud_panel_left',     'assets/ui/panels/hud_panel_left.png');
-    this.load.image('hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
-    this.load.image('loop_summary_panel', 'assets/ui/panels/loopcomplete.png');
+    this.load.image('hud_panel_left',     'assets/scenes/game/hud_panel_left.png');
+    this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
+    this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)
     const tileTooltips = ['forest','graveyard','swamp','desert','lava','event','treasure',
       'ambush','magma','manawell','camp','burnaltar','bleedtotem','resonance','warhorn'];
     for (const t of tileTooltips) {
-      this.load.image(`tile_tooltip_${t}`, `assets/ui/text/tiles/tile_tooltip_${t}.png`);
+      this.load.image(`tile_tooltip_${t}`, `assets/scenes/planning/tile_tooltip_${t}.png`);
     }
     this.load.image('panel_hover', 'assets/ui/panels/panel_hover.png');
 
     // UI Buttons — pre-rendered dark/gold style
-    this.load.image('btn_continue_run',    'assets/ui/buttons/continue-run.png');
-    this.load.image('btn_new_game',        'assets/ui/buttons/new-game.png');
-    this.load.image('btn_daily_run',       'assets/ui/buttons/daily-run.png');
+    this.load.image('btn_continue_run',    'assets/scenes/main_menu/continue-run.png');
+    this.load.image('btn_new_game',        'assets/scenes/main_menu/new-game.png');
+    this.load.image('btn_daily_run',       'assets/scenes/main_menu/daily-run.png');
     this.load.image('btn_keep_my_run',     'assets/ui/buttons/btn_keep_my_run.png');
     this.load.image('btn_yes_delete',      'assets/ui/buttons/btn_yes_delete.png');
     this.load.image('btn_resume',          'assets/ui/buttons/btn_resume.png');
@@ -311,69 +304,68 @@ export class Preloader extends Scene {
     this.load.image('btn_settings',        'assets/ui/buttons/btn_settings.png');
     this.load.image('btn_tutorial',        'assets/ui/buttons/btn_tutorial.png');
     // Building buttons (city hub)
-    this.load.image('btn_forge',         'assets/ui/buttons/btn_forge.png');
-    this.load.image('btn_library',       'assets/ui/buttons/btn_library.png');
-    this.load.image('btn_workshop',      'assets/ui/buttons/btn_workshop.png');
-    this.load.image('btn_oracle',        'assets/ui/buttons/btn_oracle.png');
-    this.load.image('btn_vault',         'assets/ui/buttons/btn_vault.png');
-    this.load.image('btn_melhorar',          'assets/ui/buttons/btn_melhorar.png');
-    this.load.image('btn_start_run_hub',     'assets/ui/buttons/btn_start_run_hub.png');
-    this.load.image('label_requer',          'assets/ui/labels/label_requer.png');
+    this.load.image('btn_forge',         'assets/scenes/city_hub/btn_forge.png');
+    this.load.image('btn_library',       'assets/scenes/city_hub/btn_library.png');
+    this.load.image('btn_workshop',      'assets/scenes/city_hub/btn_workshop.png');
+    this.load.image('btn_oracle',        'assets/scenes/city_hub/btn_oracle.png');
+    this.load.image('btn_vault',         'assets/scenes/city_hub/btn_vault.png');
+    this.load.image('btn_melhorar',          'assets/scenes/city_hub/btn_melhorar.png');
+    this.load.image('btn_start_run_hub',     'assets/scenes/city_hub/btn_start_run_hub.png');
+    this.load.image('label_requer',          'assets/scenes/city_hub/label_requer.png');
     // Building upgrade text panels (one per level per building)
     const buildingPanels: [string, number][] = [
       ['forge', 6], ['library', 3], ['workshop', 3], ['oracle', 4], ['vault', 8],
     ];
     for (const [name, max] of buildingPanels) {
       for (let l = 1; l <= max; l++) {
-        this.load.image(`building_${name}_l${l}`, `assets/ui/text/buildings/building_${name}_l${l}.png`);
+        this.load.image(`building_${name}_l${l}`, `assets/scenes/building_panel/building_${name}_l${l}.png`);
       }
     }
 this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     this.load.image('btn_back',            'assets/ui/buttons/btn_back.png');
-    this.load.image('btn_leave',           'assets/ui/buttons/btn_leave.png');
+    this.load.image('btn_leave',           'assets/scenes/shop/btn_leave.png');
     this.load.image('btn_close',           'assets/ui/buttons/btn_close.png');
     this.load.image('btn_cancel',          'assets/ui/buttons/btn_cancel.png');
     this.load.image('btn_return_to_menu',  'assets/ui/buttons/btn_return_to_menu.png');
     this.load.image('btn_change_hero',     'assets/ui/buttons/btn_change_hero.png');
-    this.load.image('btn_start_game',      'assets/ui/buttons/btn_start_game.png');
-    this.load.image('btn_visit_shop',      'assets/ui/buttons/btn_visit_shop.png');
+    this.load.image('btn_start_game',      'assets/scenes/tutorial/btn_start_game.png');
+    this.load.image('btn_visit_shop',      'assets/scenes/relic_viewer/btn_visit_shop.png');
     this.load.image('btn_abandon_run',     'assets/ui/buttons/btn_abandon_run.png');
     this.load.image('btn_banish',          'assets/ui/buttons/btn_banish.png');
     this.load.image('btn_keep',            'assets/ui/buttons/btn_keep.png');
     this.load.image('btn_delete_run',      'assets/ui/buttons/btn_delete_run.png');
-    this.load.image('btn_forge_action',    'assets/ui/buttons/btn_forge_action.png');
-    this.load.image('btn_dismiss',         'assets/ui/buttons/btn_dismiss.png');
+    this.load.image('btn_forge_action',    'assets/scenes/forge/btn_forge_action.png');
+    this.load.image('btn_dismiss',         'assets/scenes/forge/btn_dismiss.png');
     this.load.image('btn_got_it',          'assets/ui/buttons/btn_got_it.png');
-    this.load.image('btn_continue_loop',   'assets/ui/buttons/btn_continue_loop.png');
+    this.load.image('btn_continue_loop',   'assets/scenes/loop_summary/btn_continue_loop.png');
     // New wood-style buttons (generated 2026-06-06)
-    this.load.image('btn_forge_leave',      'assets/ui/buttons/btn_forge_leave.png');
-    this.load.image('btn_recipes',          'assets/ui/buttons/btn_recipes.png');
-    this.load.image('btn_resume_pause',     'assets/ui/buttons/btn_resume_pause.png');
-    this.load.image('btn_view_deck_pause',  'assets/ui/buttons/btn_view_deck_pause.png');
-    this.load.image('btn_tutorial_pause',   'assets/ui/buttons/btn_tutorial_pause.png');
-    this.load.image('btn_settings_pause',   'assets/ui/buttons/btn_settings_pause.png');
-    this.load.image('btn_abandon_run_pause','assets/ui/buttons/btn_abandon_run_pause.png');
-    this.load.image('btn_back_settings',    'assets/ui/buttons/btn_back_settings.png');
-    this.load.image('btn_cancel_remove',    'assets/ui/buttons/btn_cancel_remove.png');
-    this.load.image('btn_banish_remove',    'assets/ui/buttons/btn_banish_remove.png');
-    this.load.image('btn_keep_remove',      'assets/ui/buttons/btn_keep_remove.png');
-    this.load.image('btn_start_run_deck',   'assets/ui/buttons/btn_start_run_deck.png');
+    this.load.image('btn_forge_leave',      'assets/scenes/forge/btn_forge_leave.png');
+    this.load.image('btn_recipes',          'assets/scenes/forge/btn_recipes.png');
+    this.load.image('btn_resume_pause',     'assets/scenes/pause/btn_resume_pause.png');
+    this.load.image('btn_view_deck_pause',  'assets/scenes/pause/btn_view_deck_pause.png');
+    this.load.image('btn_tutorial_pause',   'assets/scenes/pause/btn_tutorial_pause.png');
+    this.load.image('btn_abandon_run_pause','assets/scenes/pause/btn_abandon_run_pause.png');
+    this.load.image('btn_back_settings',    'assets/scenes/deck_customization/btn_back_settings.png');
+    this.load.image('btn_cancel_remove',    'assets/scenes/shop_remove_card/btn_cancel_remove.png');
+    this.load.image('btn_banish_remove',    'assets/scenes/shop_remove_card/btn_banish_remove.png');
+    this.load.image('btn_keep_remove',      'assets/scenes/shop_remove_card/btn_keep_remove.png');
+    this.load.image('btn_start_run_deck',   'assets/scenes/starting_deck/btn_start_run_deck.png');
     // Landing-page delete-run dialog assets
-    this.load.image('lp_delete_run',       'assets/ui/text/landing-page/delete-run.png');
-    this.load.image('lp_keep',             'assets/ui/text/landing-page/keep.png');
-    this.load.image('lp_permanent_erase',  'assets/ui/text/landing-page/permanente-erase.png');
+    this.load.image('lp_delete_run',       'assets/scenes/main_menu/delete-run.png');
+    this.load.image('lp_keep',             'assets/scenes/main_menu/keep.png');
+    this.load.image('lp_permanent_erase',  'assets/scenes/main_menu/permanente-erase.png');
     this.load.image('btn_reset_progress',  'assets/ui/buttons/btn_reset_progress.png');
     this.load.image('btn_next',            'assets/ui/buttons/btn_next.png');
     this.load.image('btn_start_loop', 'assets/ui/buttons/start-loop.png');
-    this.load.image('btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
-    this.load.image('skip_loop_panel', 'assets/ui/panels/skip-loop.png');
-    this.load.image('remove_tiles_panel', 'assets/ui/panels/remove_tiles.png');
-    this.load.image('btn_skip_1',  'assets/ui/buttons/1.png');
-    this.load.image('btn_skip_5',  'assets/ui/buttons/5.png');
-    this.load.image('btn_skip_10', 'assets/ui/buttons/10.png');
-    this.load.image('btn_skip_25', 'assets/ui/buttons/25.png');
-    this.load.image('shop_icon', 'assets/icons/shop.png');
-    this.load.image('forge_icon', 'assets/icons/forge.png');
+    this.load.image('btn_start_loop_scene', 'assets/scenes/planning/start-loop-loop-scene.png');
+    this.load.image('skip_loop_panel', 'assets/scenes/planning/skip-loop.png');
+    this.load.image('remove_tiles_panel', 'assets/scenes/planning/remove_tiles.png');
+    this.load.image('btn_skip_1',  'assets/scenes/planning/1.png');
+    this.load.image('btn_skip_5',  'assets/scenes/planning/5.png');
+    this.load.image('btn_skip_10', 'assets/scenes/planning/10.png');
+    this.load.image('btn_skip_25', 'assets/scenes/planning/25.png');
+    this.load.image('shop_icon', 'assets/scenes/planning/shop.png');
+    this.load.image('forge_icon', 'assets/scenes/planning/forge.png');
     // Material Icons
     this.load.image('mat_iron', 'assets/icons/iron.png');
     this.load.image('mat_crystal', 'assets/icons/crystal.png');
