@@ -1,0 +1,69 @@
+{
+  "lane": "pure-poison",
+  "decksTested": 35,
+  "matchupsRun": 57,
+  "resultsPath": "tests/audit/wf/pure-poison/results.json (+ results2.json, results3.json)",
+  "summary": "Pure-poison is viable and ramps fast enough to clear all early/mid/late normal batteries at winRate 1.0, and beats both bosses (doom_knight 380HP, iron_golem 409HP) — quadratic DoT bypasses enemy defense, so poison is the game's premier boss-killer. Two real problems: (1) doom_knight, the supposed-easy first boss, is on a knife-edge for a REALISTIC loop-10 poison deck (pure-applier deck wins but at 6.6% HP; the 7-card baseline shell and any deck carrying a poison detonator DIES 5/5). (2) The poison-detonator line (Drowning Lance, Marsh Squall) is strictly NEGATIVE inside the archetype it belongs to — consuming the quadratic pool collapses output; identical shells with a plain applier win comfortably while the detonator version loses 5/5 to doom_knight and loses ~5s TTK + half the HP cushion vs iron_golem. Bog Catalyst doubling and Slipvenom are strong but NOT oppressive. Several defensive-poison T3s (Stagnant Bulwark, Bogwrath, Tidefoot Bloom) are off-curve weak.",
+  "findings": [
+    {
+      "id": "PP-1",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-water-water (Drowning Lance) and t3-air-earth-water (Marsh Squall) — poison detonators",
+      "stage": "boss1 + late",
+      "evidence": "Single-card swap in an identical 9-card poison shell. doom_knight (380HP): b1-engine-no-detonator wr=1 (5/5), hp%=0.207, avgDmg=417 vs b1-engine-with-detonator (only diff = Drowning Lance) wr=0 (5/5 DEATHS), avgDmg=357. Also poison-boss1-detonator (Lance+Marsh) wr=0, 4 deaths, avgDmg=268. iron_golem (409HP) isolation (results3): det-base-applier(Boilstep) ttk=15000 hp%=0.254 vs det-drowning-lance ttk=20000 hp%=0.109 vs det-marsh-squall ttk=18000 hp%=0.181 — same shell, detonator swap. Both detonators cost MORE (Lance 2s+1m, Marsh 2s+2m) yet deliver negative value because consuming the poison pool destroys the n(n+1) ramp.",
+      "severity": "high",
+      "proposedChange": "C4 wiring/design fix, not a cost change: poison detonators should NOT zero out the stack. Make Drowning Lance (t3-attack-water-water) and Marsh Squall (t3-air-earth-water) consume only HALF the poison stacks (round up) for the burst, leaving the rest to keep ticking — so they become a real burst-vs-ramp choice instead of a trap. Pair with C1 CD relief: cut Drowning Lance cd 2.4s->1.8s and Marsh Squall cd 2.4s->2.0s so the burst can re-arm. Leaves T2 untouched.",
+      "confidence": "high"
+    },
+    {
+      "id": "PP-2",
+      "kind": "progression",
+      "target": "doom_knight (first boss, should-be-easy at loop 10)",
+      "stage": "boss1",
+      "evidence": "Realistic loop-10 pure-poison decks sit right at the failure edge. b1-appliers-pure (no engine, no detonator) wins 5/5 but at hp%=0.066 (6.6% HP) — avgDmg=408 vs 380HP boss. The 7-card baseline shell swap-base-filler DIES 5/5 (avgDmg=340). Only decks carrying the premium engine cards get a healthy cushion: b1-engine-no-detonator hp%=0.207, b1-engine-defmix hp%=0.372, b1-engine-12card hp%=0.339. doom_knight enrages at 50% HP (x1.4 attack speed) which punishes the squishy low-INT mage during poison's slow ramp. WORKFLOW target for first boss = winRate >=0.8 with SOME HP cost; the realistic non-premium poison deck barely clears at 6.6%, below a comfortable cushion.",
+      "severity": "med",
+      "proposedChange": "Do NOT nerf doom_knight broadly (premium decks are fine). The realistic gap is poison's slow early ramp vs the enrage timer. Fix via the cheap T1/T2 poison floor + the dead-card buffs below (PP-3/PP-4) so a non-premium poison deck reaches a ~20% cushion. Specifically, buff the cheap baseline applier reach: Mire Bloom stays T2-untouched; instead give the low-tier poison entry more on-curve T3 alternatives (see PP-3). If still short after PP-1/PP-3 land, soften doom_knight enrage threshold 0.5 -> 0.4 (delays the speed spike) rather than cutting HP/damage.",
+      "confidence": "med"
+    },
+    {
+      "id": "PP-3",
+      "kind": "off_curve_weak",
+      "target": "t3-defense-defense-water (Stagnant Bulwark)",
+      "stage": "late + boss1",
+      "evidence": "peakOPS 6.67 (lowest non-zero poison T3). Swap value is near-nil: swap2-stagnant vs mutated_salamander ttk=14000 hp%=0.42 avgDmg=218 vs swap2-base-filler (Spark filler) ttk=13000 hp%=0.384 avgDmg=207 — barely distinguishable from a T1 filler. At the boss (swap-stagnant-bulwark vs doom_knight) it does win (hp%=0.157) but only because ANY extra body wins; it trails the real engine cards (swap-slipvenom hp%=0.058 faster kill, swap-bogcatalyst hp%=0.165). Its 'apply 1 poison every 2s for 12s' = 6 poison over 12s is too slow to feed the quadratic curve, and it costs 1s+1m.",
+      "severity": "med",
+      "proposedChange": "C1 + ceiling buff (T3 must beat any T2 poison). Stagnant Bulwark: keep cost 1s+1m, cut cd 2.4s->1.6s; raise the engine to 'every 2 seconds apply 2[poison]([int])' (12 poison over 12s) and keep the 10 armor. This pushes its assembled ceiling above Mire Bloom (T2) without touching any T2.",
+      "confidence": "med"
+    },
+    {
+      "id": "PP-4",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-earth-water (Bogwrath) and t3-counter-water-water (Tidefoot Bloom)",
+      "stage": "late + boss1",
+      "evidence": "Bogwrath peakOPS 6.67: swap-bogwrath vs doom_knight wins but at hp%=0.05 (worst of all the 'add a T3' swaps) and swap2-bogwrath vs mutated_salamander ttk=13500 hp%=0.42 avgDmg=208 = filler-tier marginal value. Its payoff is Brace-gated (apply 4 poison + 3 rage) which never fires for a mage with no rage build. Tidefoot Bloom peakOPS 0 [exhaust]: 'each time you heal, apply 1 poison' is dead in a deck with little/no healing — it produced zero measurable contribution and is structurally unplayable in pure-poison.",
+      "severity": "med",
+      "proposedChange": "C1/C4. Bogwrath: cut cd 2.4s->1.6s and make the poison unconditional ('Gain 10[armor]. Apply 4[poison]([int]).') dropping the dead Brace/rage gate so it is a real defensive applier. Tidefoot Bloom: remove [exhaust] and re-base to a guaranteed up-front 'Apply 4[poison]([int]), then for the rest of combat each time you heal apply 1[poison]([int])' so it has a floor even without heal synergy. Both are T3-only changes; no T2 nerf.",
+      "confidence": "med"
+    },
+    {
+      "id": "PP-5",
+      "kind": "tier_violation",
+      "target": "t3-earth-fire-water (Alchemic Drain) vs t2-earth-water (Mire Bloom)",
+      "stage": "boss1",
+      "evidence": "Alchemic Drain (T3, peakOPS 8, cost 1m, cd 2.4s, 'Apply 3 poison. Heal 6') performs WORSE at the boss than the T2 Mire Bloom shell: swap-alchemic-drain vs doom_knight wr=0 (4 DEATHS, avgDmg=349), whereas the T2 baseline tierab-t2-mirebloom wins 5/5 (avgDmg, hp%=0.041) and every other T3 poison swap wins. A T3 losing where the analogous T2 wins is a direct T3>T2 violation — Alchemic Drain's 3 poison + small heal on a 2.4s cd is below the curve.",
+      "severity": "high",
+      "proposedChange": "Buff the T3 (never nerf Mire Bloom T2). Alchemic Drain: cut cd 2.4s->1.6s (C1 snappy floor) and raise to 'Apply 4[poison]([int]). Heal 6([spi]).' so its assembled poison-per-second clears the T2 baseline while keeping the sustain identity.",
+      "confidence": "high"
+    },
+    {
+      "id": "PP-6",
+      "kind": "viability",
+      "target": "pure-poison archetype (ramp speed + chunk-cap 60)",
+      "stage": "early/mid/late/boss1",
+      "evidence": "Archetype clears every normal battery at winRate 1.0: early (lost_lizard/giant_spider/corpse_eater/pocket_cat all 5/5), mid-engine ttk 8000-10000 hp%~0.5, late-engine 5/5 vs all four normals. Quadratic ramp is strong enough that the chunk-cap 60 does NOT throttle it to failure even at 380-409 HP bosses: b1-slipvenom-spam vs doom_knight ttk=10000 hp%=0.355; poison-late-engine vs iron_golem wr=1 ttk=20000 hp%=0.109; b1-catalyst-spam avgDmg=434 vs 380HP. Poison is the best boss DoT in the set (vs baseline pure-burn which DIES to iron_golem, wr=0). Bog Catalyst doubling is strong but self-limited (b1-catalyst-spam has the THINNEST cushion hp%=0.033 because doubling a small early pool is wasteful) — NOT oppressive. Slipvenom is the top engine card (fastest, healthiest) but still costs HP and ~10s; not oppressive.",
+      "severity": "low",
+      "proposedChange": "No nerf to Slipvenom/Bog Catalyst — they are strong-but-fair and are exactly what makes the boss fights healthy. Keep chunk-cap 60 as-is; it does not block clears at current boss HP. The only archetype risk is the thin doom_knight cushion for NON-premium decks, addressed by PP-1/PP-3/PP-4/PP-5 (raising the floor of the cheaper/dead poison cards) rather than buffing the already-strong engine.",
+      "confidence": "high"
+    }
+  ]
+}

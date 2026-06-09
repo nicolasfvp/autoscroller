@@ -1,0 +1,65 @@
+{
+  "_comment": "ADVERSARIAL re-test of slow-stun-control. Re-runs the load-bearing claims with HIGHER repeats (brief: >=5 for boss claims). Reproduces designer decks EXACTLY so numbers are comparable. Targets: SSC-6 (boss1 pure-wins / finisher-dies inversion), SSC-3 (Stormrage dead T3, severity high), SSC-1 (Quake), SSC-2 (Frostbind), SSC-4 (Dust Plague lone iron_golem winner).",
+  "decks": [
+    {
+      "id": "adv-boss1-pure",
+      "label": "ADV re-run: pure control vs doom_knight",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t1-earth", "t3-air-air-earth", "t3-agility-agility-air", "t3-air-air-counter", "t3-agility-air-air", "t3-air-counter-defense", "t3-air-defense-earth"],
+      "vsBoss": true,
+      "vsEnemies": []
+    },
+    {
+      "id": "adv-boss1-finisher",
+      "label": "ADV re-run: control+finisher vs doom_knight",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-earth", "t2-water-water", "t2-air-earth", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-attack-fire", "t1-earth"],
+      "vsBoss": true,
+      "vsEnemies": []
+    },
+    {
+      "id": "adv-swap-base",
+      "label": "ADV re-run: swap base (Tempest Pike filler)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-attack"]
+    },
+    {
+      "id": "adv-swap-stormrage",
+      "label": "ADV re-run: swap Stormrage (t3-air-air-counter)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-counter"]
+    },
+    {
+      "id": "adv-swap-quake",
+      "label": "ADV re-run: swap Quake (t1-earth)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t1-earth"]
+    },
+    {
+      "id": "adv-swap-frostbind",
+      "label": "ADV re-run: swap Frostbind (t2-water-water)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t2-water-water"]
+    },
+    {
+      "id": "adv-swap-dustplague",
+      "label": "ADV re-run: swap Dust Plague (t3-air-air-earth)",
+      "archetype": "swap-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-earth-earth", "t2-water-water", "t3-air-air-fire", "t3-agility-air-earth", "t3-air-attack-counter", "t3-attack-attack-earth", "t3-air-attack-water", "t3-air-air-earth"]
+    }
+  ]
+}

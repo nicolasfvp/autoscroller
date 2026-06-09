@@ -1,0 +1,92 @@
+{
+  "matchups": [
+    {
+      "id": "bloodlash-FILLER-doom",
+      "label": "Bloodlash BASELINE filler Jab slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "bloodlash-CURRENT-doom",
+      "label": "Bloodlash CURRENT (Deal9 no pierce, +4str max4) slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "bloodlash-PROPOSED-doom",
+      "label": "Bloodlash PROPOSED (Deal9 Pierce, +6str max6) slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-attack-counter": {
+          "effectsPatch": [
+            { "pierce_armor": true },
+            { "value": 6, "max_per_combat": 6 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bloodlash-FILLER-werewolf",
+      "label": "Bloodlash BASELINE filler Jab slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "bloodlash-CURRENT-werewolf",
+      "label": "Bloodlash CURRENT slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "bloodlash-PROPOSED-werewolf",
+      "label": "Bloodlash PROPOSED slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-attack-counter": {
+          "effectsPatch": [
+            { "pierce_armor": true },
+            { "value": 6, "max_per_combat": 6 }
+          ]
+        }
+      }
+    }
+  ]
+}

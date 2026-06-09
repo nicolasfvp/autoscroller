@@ -6,7 +6,7 @@ import {
 
 // TOKEN_GLOSSARY is the player-facing reference for the new combat vocabulary
 // (the colored stack/stat tokens). It is intentionally separate from
-// KEYWORD_DEFINITIONS (the four detected modifier keywords).
+// KEYWORD_DEFINITIONS (the five detected modifier keywords).
 
 describe('TOKEN_GLOSSARY', () => {
   it('contains all 7 stacks', () => {

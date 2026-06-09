@@ -1,0 +1,79 @@
+{
+  "lane": "enemy-ramp",
+  "summary": "Normal-enemy ramp is mostly winnable but has clear curve breaks at the extremes. lost_lizard (68HP/2dmg/3.5s cd) is a non-threat pushover (hero ends 83-86% HP across every deck). depths_horror (109HP/5dmg) and fire_elemental (117HP/9dmg) are trivial for the loop-11+ decks they gate (4-6s kills with full T3 decks). The mid spike mutated_salamander (160HP/8dmg) is the tightest normal but still fair (35-48% HP). The headline failure is the boss1 ramp: the 'should-be-easy' doom_knight (380HP/3def/9dmg, enrages 1.4x at 50%) is NOT easy - warriors win only at 3-12% HP and TWO realistic mage archetypes (elemental, control) flat-out LOSE; only poison mages win (3% HP). A tier A/B test showed mage-accessible T3 fire detonators (Cinder Sprint, Cinderlance) are equal-or-worse than T2 Flame Dart / T2 Pyre.",
+  "decksTested": 31,
+  "matchupsRun": 99,
+  "resultsPath": "tests/audit/wf/enemy-ramp/results.json",
+  "findings": [
+    {
+      "id": "ER-1",
+      "kind": "progression",
+      "target": "doom_knight",
+      "stage": "boss1",
+      "evidence": "doom_knight (380HP/3def/9dmg/2.5s cd, enrage x1.4 at 50% HP). Realistic loop-10 decks vs doom_knight (runXP 520): war-boss1-phys__vs__doom_knight wr=1 but avgHeroHpPctOnWin=0.04; war-boss1-bleed wr=1 hp=0.12; war-boss1-phys-opt (optimized, results3) wr=1 hp=0.03 ttk=23.7s. mage-boss1-elem__vs__doom_knight wr=0 deaths=4; mage-boss1-control wr=0 deaths=4; mage-boss1-elem-pierce (results2) wr=0 deaths=5 avgDamageDealt=220<380; mage-boss1-control2 wr=0 deaths=5. Only mage-boss1-poison wins (wr=1 hp=0.03). Brief target for first boss = wr>=0.8 with SOME hp cost; actual = scrape-win at 3% or death.",
+      "severity": "high",
+      "proposedChange": "Reduce doom_knight burst so the first boss is beatable at a comfortable margin without nerfing later bosses. Concrete: lower doom_knight baseDamage 9->7 and soften the enrage attackSpeedMultiplier 1.4->1.25 (keep 380HP/3def). This raises warrior win-margin from ~3-12% toward the ~40-60% band and gives flat-damage mages a fighting chance, while iron_golem (loop20) and later bosses are untouched. (C1-C5 compliant: this is an enemy tuning change, not a card change.)",
+      "confidence": "high"
+    },
+    {
+      "id": "ER-2",
+      "kind": "progression",
+      "target": "mage (elemental/control archetypes) vs boss1",
+      "stage": "boss1",
+      "evidence": "At loop 10 INT is ~3 so magic elemMult ~1.3, leaving mages on flat values. vs doom_knight: mage-boss1-elem wr=0 (4 deaths), mage-boss1-control wr=0 (4 deaths), mage-boss1-elem-pierce wr=0 dmg=220, mage-boss1-control2 wr=0 dmg=264 - none reach 380 dmg before dying. Only the poison archetype (quadratic DoT, INT-independent) clears it (mage-boss1-poison wr=1). So 2 of 3 mage win-conditions cannot beat the easy first boss.",
+      "severity": "high",
+      "proposedChange": "Pairs with ER-1 (boss softening). Additionally, per C2, the magic damage path needs ceiling help that is class-stat driven: the mage's INT-scaled flat-damage T3 elemental nukes are too low-throughput vs 380HP. Buff the headline mage single-target nuke line by cutting CD (C1 rescue lever): e.g. Pyre (t2-fire-fire) is fine, but the T3 detonators that mages reach should drop cd 2.2-2.4s -> 1.6-1.8s so flat-value mages can out-pace the enrage. This is a CD cut (rescue weak long-CD cards), never a STR-mult removal.",
+      "confidence": "med"
+    },
+    {
+      "id": "ER-3",
+      "kind": "off_curve_weak",
+      "target": "lost_lizard",
+      "stage": "early",
+      "evidence": "lost_lizard (68HP/0def/2dmg/3500ms cd). Across EVERY early deck the hero finishes near-full: war-early-phys hp=0.84, war-early-phys2 hp=0.84, mage-early-elem hp=0.86, mage-early-burn hp=0.86, and an optimized probe lizard-probe-strong hp=0.83 ttk=7.7s. 2 damage on a 3.5s cooldown means it deals ~1-2 hits the entire fight; it cannot threaten any deck. It is a pure pushover relative to its early-battery peers (corpse_eater drops the same decks to 12-44% HP).",
+      "severity": "low",
+      "proposedChange": "Give lost_lizard minimal teeth so it is a real (if gentle) early fight: baseHP 68->85 and damage 2->4, attackCooldown 3500->3000. This keeps it the weakest of the early battery but stops it being a free 8s pushover. Pure enemy tuning, C1-C5 N/A.",
+      "confidence": "high"
+    },
+    {
+      "id": "ER-4",
+      "kind": "off_curve_weak",
+      "target": "depths_horror, fire_elemental",
+      "stage": "late",
+      "evidence": "Late battery is gated behind loop 11+ (enemy mult 1.15) yet is trivially soft. With full late T3 decks: war-late-phys__vs__depths_horror ttk=6.0s, war-late-bleed__vs__depths_horror ttk=4.5s, war-late-bleed__vs__fire_elemental ttk=4.5s, war-late-phys__vs__fire_elemental ttk=6.2s. Swap tests confirm a floor effect: swap-late-base/-supernova/-tripleslash all kill depths_horror in 4.1-5.9s and fire_elemental in 4.1s regardless of which T3 is slotted - the enemies die before card value matters. depths_horror=109HP/5dmg, fire_elemental=117HP/9dmg after 1.15x. These are ~2-3s real kills (brief's 'trivial 2s kill' failure).",
+      "severity": "med",
+      "proposedChange": "Raise late-battery HP so the 1.15x stage gate is meaningful and card-value differences are observable: depths_horror baseHP 95->150, fire_elemental baseHP 102->150 (post-mult ~172/172, comparable to werewolf 155 and salamander 184). Leave their damage alone (5/8) so they stay 'soft' enemies that test damage throughput, not survival. Pure enemy tuning.",
+      "confidence": "high"
+    },
+    {
+      "id": "ER-5",
+      "kind": "tier_violation",
+      "target": "t3-agility-fire-fire (Cinder Sprint) and t3-attack-fire-fire (Cinderlance)",
+      "stage": "mid",
+      "evidence": "Tier A/B, decks identical except one slot. Baseline T2 Flame Dart (t2-agility-fire, 1m/1.2s) vs T3 fire detonators on a mage: tierAB2-t2-flamedart__vs__mutated_salamander ttk=16.0s hp=0.35; swapping in T3 Cinder Sprint (tierAB2-t3-cindersprint) ttk=19.0s hp=0.28 (STRICTLY WORSE - slower and more HP lost). T3 Boilstep ties (15.0s/0.35). Separately, T2 Pyre (tierAB-t2-pyre) vs salamander ttk=15.0s hp=0.35 vs T3 Cinderlance (tierAB-t3-cinderlance) ttk=20.0s hp=0.28, and vs lava_golen T2 12.7s/0.46 vs T3 16.0s/0.34. The reachable T3 fire detonators are <= the strong T2 fire cards for a mage.",
+      "severity": "med",
+      "proposedChange": "Per the T3>T2 rule, BUFF the T3 detonators (never nerf Flame Dart/Pyre). C1 rescue: cut Cinder Sprint (t3-agility-fire-fire) cd 1.6s is already snappy, so raise its ceiling instead - bump det payoff 'deal 4(dex) per burn' -> 'deal 5(dex) per burn'. Cinderlance (t3-attack-fire-fire) cd 2.2s->1.8s AND its consume payoff 3->4 Pierce per burn so its assembled ceiling clears the T2 by ~15-25%. Keep costs flat (no cost hike).",
+      "confidence": "med"
+    },
+    {
+      "id": "ER-6",
+      "kind": "off_curve_weak",
+      "target": "slow-stun-control (archetype) at mid stage",
+      "stage": "mid",
+      "evidence": "mage-mid-control clears the mid battery but is the slowest, grindiest archetype with the thinnest cushions: vs mutated_salamander ttk=30.0s hp=0.14 (cards=20), vs lava_golen ttk=26.0s hp=0.26, vs werewolf 24.0s hp=0.32. Compare same-stage mage-mid-elem: salamander 16.0s/0.37, lava_golen 15.0s/0.44. Control wins only because slow/stun is pure soft/hard control (C5) with NO damage, so it must grind out kills with filler damage while taking far more hits. It is viable but well below the pack - borderline 'unused-tier' for normal fights.",
+      "severity": "low",
+      "proposedChange": "Do NOT add damage to slow/stun (C3/C5 forbid control->damage). Instead make control buy time more efficiently so the secondary win condition lands: cut CD on the entry control T2s to raise uptime - Tremor Lock (t2-earth-earth) cd 2.0s->1.6s and Frostbind (t2-water-water) cd 2.0s->1.6s (C1: rescue weak long-CD control via CD cut, cost unchanged). This shortens the grind without violating control's race-losing identity.",
+      "confidence": "med"
+    },
+    {
+      "id": "ER-7",
+      "kind": "viability",
+      "target": "mid + late normal ramp (overall)",
+      "stage": "mid",
+      "evidence": "Excluding the extremes above, the normal ramp is healthy. Mid: all archetypes wr=1 with 35-60% cushions (war-mid-phys salamander 43%, mage-mid-elem werewolf 50%, war-mid-bleed skeleton 59%). Late normals (apart from the too-soft depths/fire): werewolf and mutated_salamander give fair fights (war-late-phys werewolf 7.2s/49%, salamander 8.6s/47%; mage-late-poison werewolf 7.0s/41%, salamander 9.0s/43%). mutated_salamander (160->184HP/8-9dmg) is the correct mid/late tension anchor - the lowest cushions of any normal without being unfair.",
+      "severity": "low",
+      "proposedChange": "No change to the core mid/late normal tuning. Keep mutated_salamander as the difficulty anchor. The only normal-enemy edits needed are ER-3 (buff trivial lost_lizard) and ER-4 (HP-up trivial depths_horror/fire_elemental); the middle of the curve is well tuned.",
+      "confidence": "high"
+    }
+  ]
+}

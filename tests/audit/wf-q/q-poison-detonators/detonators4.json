@@ -1,0 +1,50 @@
+{
+  "matchups": [
+    {
+      "id": "P4-comparator-mireglide-slot6",
+      "label": "FAIR same-slot comparator: Mireglide (plain poison T3) in slot 6 - the non-detonator the rework must not blow past",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-agility-earth-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0
+    },
+    {
+      "id": "P4-lance-rework-half-slot6",
+      "label": "Lance rework (consume-half model, per-stk 2.5, wipe -4, base6, cd1.8) slot6 - vs comparator above",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 2.5 }, { "value": -4 } ] } }
+    },
+    {
+      "id": "P4-marsh-rework-half-slot6",
+      "label": "Marsh rework (per-stk 3 = 6 on half pool, wipe -4, cost 2s, cd2.0, keep exhaust) slot6",
+      "class": "mage", "stage": "boss1", "repeats": 8,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-air-earth-water","t1-water","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0,
+      "cardOverrides": { "t3-air-earth-water": { "cooldown": 2.0, "cost": { "stamina": 2 }, "effectsPatch": [ {}, { "value": 3 }, { "value": -4 } ] } }
+    },
+    {
+      "id": "P4-marsh-current-iron",
+      "label": "Marsh CURRENT vs iron_golem slot6 - confirm current Marsh isn't a death-trap at the 2nd boss",
+      "class": "mage", "stage": "late", "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-air-earth-water","t1-water","t1-agility"],
+      "runXP": 720, "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05
+    },
+    {
+      "id": "P4-marsh-rework-iron",
+      "label": "Marsh rework vs iron_golem slot6",
+      "class": "mage", "stage": "late", "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-air-earth-water","t1-water","t1-agility"],
+      "runXP": 720, "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05,
+      "cardOverrides": { "t3-air-earth-water": { "cooldown": 2.0, "cost": { "stamina": 2 }, "effectsPatch": [ {}, { "value": 3 }, { "value": -4 } ] } }
+    },
+    {
+      "id": "P4-lance-fullcoeff-full-iron",
+      "label": "Over-correction probe at iron_golem: Lance per-stk 5 + consume-all (the snappy one-shot variant) - is it oppressive on the armor boss?",
+      "class": "mage", "stage": "late", "repeats": 6,
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-agility-fire-water","t2-earth-water","t2-earth-water","t3-attack-water-water","t1-water","t1-agility"],
+      "runXP": 720, "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05,
+      "cardOverrides": { "t3-attack-water-water": { "cooldown": 1.8, "effectsPatch": [ { "value": 6 }, { "value": 5 }, { "value": -999 } ] } }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "matchups": [
+    {
+      "id": "warrior-phys-baseline-dmg9",
+      "label": "SANITY warrior physical vs DK HP380 dmg9 (lead claimed ~3.3% HP win)",
+      "class": "warrior", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-attack-attack","t2-attack-earth","t2-agility-earth","t1-defense","t3-attack-attack-attack","t2-attack-counter","t3-air-attack-attack","t2-attack-fire","t1-attack","t3-attack-attack-earth","t2-counter-earth","t2-attack-attack"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "burn-P1-hp380-dmg9-full",
+      "label": "P1 burn vs DK HP380 dmg9 (full HP)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-hp380-dmg7-full",
+      "label": "P1 burn vs DK HP380 dmg7 (full HP, P0-1)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "attack": { "damage": 7, "pattern": "fixed" } },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-hp350-dmg9-full",
+      "label": "P1 burn vs DK HP350 dmg9 (full HP, HP trim only)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "baseHP": 350 },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-hp350-dmg7-full",
+      "label": "P1 burn vs DK HP350 dmg7 (full HP, P0-1 + HP trim)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "baseHP": 350, "attack": { "damage": 7, "pattern": "fixed" } },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-hp320-dmg7-full",
+      "label": "P1 burn vs DK HP320 dmg7 (full HP, deeper trim)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "baseHP": 320, "attack": { "damage": 7, "pattern": "fixed" } },
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    }
+  ]
+}

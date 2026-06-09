@@ -1,0 +1,48 @@
+{
+  "matchups": [
+    {
+      "id": "burn-P1-basemana",
+      "label": "P1 burn DK380 dmg9, base mana 60",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-bigmana",
+      "label": "P1 burn DK380 dmg9, +200 maxMana (isolate mana ceiling)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "stats": { "maxMana": 200 },
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    },
+    {
+      "id": "burn-P1-bigmana-bighp",
+      "label": "P1 burn DK380 dmg9, +200 maxMana +100 maxHP (mana+survival)",
+      "class": "mage", "stage": "boss1", "runXP": 520,
+      "stats": { "maxMana": 200, "maxHP": 100 },
+      "deck": ["t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-fire-fire","t2-fire-water","t3-attack-fire-fire","t2-air-fire","t3-agility-fire-water","t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire"],
+      "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "cardOverrides": {
+        "t2-fire-water": { "effectsPatch": [ { "value": 6 } ] },
+        "t1-fire": { "cooldown": 1.2, "effects": [ { "type": "dot", "value": 3, "target": "enemy", "stack": "burn" }, { "type": "damage", "value": 2, "target": "enemy" } ] },
+        "t3-attack-fire-fire": { "cooldown": 1.8, "effectsPatch": [ {}, { "value": 4, "pierce_armor": true } ] },
+        "t3-agility-fire-fire": { "effectsPatch": [ {}, { "value": 5, "pierce_armor": true } ] },
+        "t3-fire-fire-fire": { "cooldown": 2.2 }
+      }
+    }
+  ]
+}

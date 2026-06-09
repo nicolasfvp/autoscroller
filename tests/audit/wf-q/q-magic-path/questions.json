@@ -1,0 +1,61 @@
+{
+  "cluster": "THE BIG ONE — P1-1 elemMult 0.15->0.22, P1-2 flat staples, P1-3 burn detonators, P1-4 Quench Lance",
+  "harness_caveat_discovered": {
+    "title": "CRITICAL harness artifact — combat starts at BASE maxHP, not leveled maxHP",
+    "detail": "deck-battle-sim.test.ts makeRun sets hero.currentHP = base.maxHP (70 mage / 100 warrior); createCombatState clamps heroHP = min(currentHP, resolved.maxHP). At runXP 520 a mage resolves maxHP=121 but ENTERS COMBAT AT 70 HP (58%). This systematically understates survival. The proposal's headline 'mage direct LOSS 0/5-0/6' and 'burn LOSS even at HP320' rest on this artifact. All numbers below labeled 'full HP' were produced by tests/audit/wf-q/q-magic-path/fullhp-batch.mjs which sets currentHP = resolveHeroStats(run).maxHP (the true in-game condition: hero arrives at the boss at full leveled HP). Numbers labeled 'harness' use the as-shipped 70-HP-start (reproduces the proposal's evidence base).",
+    "evidence": "diag: resolved.maxHP=121 but combatState heroHP=70. Warrior sanity at full HP wins 6/6 @50.3% cushion (151 start) vs lead's claimed 3.3% on the 100-HP-clamped harness."
+  },
+  "items": [
+    {
+      "proposalId": "P1-1 elemMult 0.15->0.22",
+      "question": "(a) Does ANY SIM_ELEM_RATE make a realistic INT3 fire/air mage beat doom_knight, and does that rate keep elemMult < same-level strMult at INT4 (the C2 conflict)? Or is the whole elemMult dial a red herring?",
+      "answer": "elemMult is a near-NO-OP on outcomes. C2 table (elemMult(N)=1+(N-1)*r vs strMult(N)=1+(N-1)*0.25): r0.22 is C2-SAFE at every value (N3 1.44<1.50, N4 1.66<1.75, N5 1.88<2.00); r0.26 VIOLATES at every value (1.52>1.50, 1.78>1.75, 2.04>2.00). So 0.22 is the max C2-safe round rate. BUT the empirical sweep shows the rate barely matters: at FULL HP the direct fire/air mage WINS doom_knight 6/6 at r0.15 (418 dmg, 34.7% cushion), r0.22 (423, 34.7%), AND r0.26 (423, 34.7%) — identical. Doubling the rate (0.15->0.30) moved damage only +1-2% because mage damage is dominated by flat values + DEX-scaled Flame Dart, not INT-scaled hits. On normals same story (fire_elem 67.3% cushion at both 0.15 and 0.22). The 'INT3 must reach elemMult 1.55-1.60' premise in the proposal is false — it was derived from the 70-HP-clamped harness where the mage died early.",
+      "verdict": "revise",
+      "revisedValue": "Keep elemMult 0.15 (production) OR raise to 0.22 — either is fine and C2-safe, but it is NOT a boss-clear lever and should not be sold as one. If shipped at all, ship 0.22 as a small thematic INT buff (never 0.26+, which breaks C2). Do NOT gate the boss fix on this dial. P1-1 as a 'magic damage path fix' = CUT the rationale; the magnitude 0.22 itself HOLDS as C2-safe.",
+      "evidence": "elem-sweep-full-0.15/0.22/0.26.json: fire-air-mage-vs-dk winRate 1.0 / 423 dmg / 34.7% cushion at every rate, HP380 dmg9. elem-sweep-0.15..0.30.json (harness 70HP): flat 313->321 dmg across rates, all 0/6 (the artifact). C2 table computed from formulas: 0.22 OK at N=3,4,5; 0.26 VIOL at N=3,4,5. Spec: tests/audit/wf-q/q-magic-path/elem-sweep.json + elem-normals.json.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P1-2 flat staples (Steam Surge Deal4->6, Spark +Deal2/cd1.4->1.2)",
+      "question": "Do the flat staple lifts measurably move a realistic mage toward a doom_knight win, or are they cosmetic? And do they over-correct (make the direct mage trivialize the boss)?",
+      "answer": "Measurable but modest, and NOT over-correcting. On the pure burn deck P1-2+P1-3 lifted boss damage 246->283 (+15%, full HP). On the burn+sustain hybrid, P1-2+P1-3 raised the win cushion 25.6%->36.4% — a clean buff, boss still costs ~64% HP. The direct mage already wins at baseline (34.7% cushion); P1-2 nudges it to 24-38% (RNG band) without trivializing (no <15% TTK blowout). Steam Surge 4->6 and Spark +Deal2 are def-3-appropriate flat lifts. No oppression observed.",
+      "verdict": "holds",
+      "revisedValue": null,
+      "evidence": "p1-combined-fullhp.json: burn-baseline 246 -> burn-P1 283 dmg. burn-survival-out.json: hybrid baseline win 6/6 @25.6% -> hybrid-P1 win 6/6 @36.4%. Direct mage P1 win 6/6 @24-38%. Spec: p1-combined.json, burn-survival.json.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P1-3 burn detonators (Cinderlance/Cinder Sprint/Venom Detonation/Tremor Detonate/Supernova)",
+      "question": "(b) With P1-2+P1-3 applied, can a REALISTIC 12-card PURE burn deck actually reach a doom_knight WIN — or do the detonator buffs fail to close the gap (the draft's 353<380 warning)?",
+      "answer": "A PURE all-fire burn deck CANNOT win, even with P1-3 (+ Flame Dart buff + heavier detonators + boss nerfs). Full-HP ceiling: P1-as-proposed 283; +Flame Dart 289; heavy detonators 316; kitchen sink (heavy det + P0-1 dmg7 + HP350) only 342 — STILL < 350, still 0/6. The pure burn deck dies (~25-30s) before its bank-and-cash ramp pays off; it has zero sustain. BUT a REALISTIC burn deck (any sustain splash — Phoenix Aura + Mend) WINS doom_knight 6/6 at HP380 dmg9 at BASELINE (381 dmg, 25.6% cushion) and at 36.4% with P1. So P1-3's detonator coefficient buffs are a healthy cushion improvement, but they do NOT and need not rescue the zero-sustain pure-burn build — that build's failure is deck construction, not card balance.",
+      "verdict": "holds",
+      "revisedValue": "Ship P1-3 detonator cd-cuts/pierce as a cushion buff (it works: 246->283 pure, +sustain hybrid 25.6%->36.4%). Do NOT chase a pure-no-sustain-burn win with ever-bigger detonator coefficients — even a kitchen-sink build caps at 342<350. The win condition for burn is sustain + ramp time, already satisfied by realistic decks. C1/C5 honored (cd-cuts not cost hikes; tick untouched).",
+      "evidence": "burn-fix-probe-out.json (full HP): burn-P1asproposed 283, +flamedart 289, heavy-det 316, kitchen-sink(HP350,dmg7) 342 — ALL 0/6. burn-survival-out.json: hybrid baseline 6/6 @25.6% (381), hybrid-P1 6/6 @36.4% (423). Specs: burn-fix-probe.json, burn-survival.json.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P1-4 Quench Lance (cd 2.4->1.3, base 2->4 burn, INT-gate 10->6)",
+      "question": "Is Quench Lance's rework justified, and is cd 2.4->1.3 a T3-appropriate buff that keeps it ahead of Steam Surge (T3>T2) without becoming oppressive?",
+      "answer": "Not directly contested in this cluster's sims (the boss outcome is governed by survival+volume, and Quench Lance is a fringe burn-ramp card). Its premise (T3 Quench Lance < T2 Steam Surge) was established by lanes TO-3/PB-7 in the prior pass and is plausible: baseline Quench Lance is OPS 8.33 vs Steam Surge 19.23, an outright T3<T2. The proposed cd 2.4->1.3 to match Steam Surge + base burn 2->4 + INT-gate 10->6 is a C1-compliant cd-cut buff to the T3 (Steam Surge untouched). cd 1.3 respects the ~1.2s floor. No oppression risk (it is a slow ramp card). I did not find counter-evidence; flagging as not-re-verified-here rather than asserting a number I did not run.",
+      "verdict": "holds",
+      "revisedValue": null,
+      "evidence": "Not independently re-simmed in q-magic-path (out of the boss-survival critical path). Relies on prior TO-3/PB-7 (Quench Lance OPS 8.33 < Steam Surge 19.23) + C1/T3>T2 charter. cd 1.3 >= 1.2s floor; buff-the-T3-only honored.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "P0-1 / conditional HP trim 380->350 (question c)",
+      "question": "(c) DEFINITIVE: is the conditional doom_knight HP trim 380->350 actually REQUIRED for the burn/direct-mage archetypes?",
+      "answer": "NO — the HP trim 380->350 is NOT required and does NOT rescue the archetype it was proposed for. (1) The direct fire/air mage already WINS at HP380 dmg9 at full HP and at production elemMult (34.7% cushion) — no boss change needed. (2) A realistic burn+sustain mage WINS at HP380 dmg9 baseline (25.6% cushion) — no boss change needed. (3) The ONLY thing the HP trim was meant to save — the zero-sustain pure-burn deck — STILL loses at HP350 dmg7 (342<350, 0/6) and even at HP320 dmg7 (0/6). So the trim is simultaneously UNNECESSARY for viable mage decks and INSUFFICIENT for the broken pure-burn deck. It would only shave the boss's intended difficulty for everyone. The proposal's claim that the trim 'becomes MANDATORY' for these archetypes is an artifact of the 70-HP-start harness bug.",
+      "verdict": "cut",
+      "revisedValue": "Do NOT trim doom_knight HP 380->350 for the magic path. Keep HP 380. (P0-1 damage 9->7 is a separate boss-cushion question owned by another cluster; within the magic path it is neither necessary — mages win at dmg9 — nor sufficient for pure-burn. It helps cushion a little: direct-mage cushion ~unchanged, burn-hybrid 36.4%->38%.) The headline open question resolves: the first boss is already beatable by realistic mage decks; the burn 'failure' was a harness artifact + a zero-sustain deck-construction trap, not a boss-tuning or card-coefficient deficit.",
+      "evidence": "hp-trim-full-out.json: burn-P1 HP380/dmg9 0/6 (283), HP380/dmg7 0/6 (303), HP350/dmg7 0/6 (303), HP320/dmg7 0/6 (303) — pure burn never wins. burn-survival-out.json: hybrid wins 6/6 at HP380 dmg9 baseline. elem-sweep-full-*.json: direct mage 6/6 at HP380 dmg9. Specs: hp-trim-full.json, burn-survival.json, elem-sweep.json.",
+      "decisionForUser": "Pure-burn (zero-sustain) at boss1: ACCEPT it as a non-viable degenerate build that needs a sustain splash (recommended — realistic burn decks win), OR commit to a dedicated burn survival/ramp tool (e.g. a fire defensive card that also banks burn). The HP trim is NOT a valid third option — it doesn't fix pure-burn (caps 342<350) and weakens the boss for everyone."
+    }
+  ],
+  "newConcerns": [
+    "HARNESS BUG (high impact, affects ALL agents): deck-battle-sim starts combat at base maxHP (70 mage/100 warrior), not the runXP-leveled maxHP (121 mage/151 warrior). Every survival/cushion/winRate number in the proposal's evidence base understates survival by ~40% of maxHP. Re-run the full proposal's acceptance gates with currentHP = resolveHeroStats(run).maxHP before locking ANY boss-HP/damage change. Fix: in makeRun, set currentHP after computing resolved maxHP (or have createCombatState seed full HP on first combat).",
+    "The entire P1 'magic damage path' rationale is built on a false premise (mages lose the boss). At correct HP, mages WIN. P1-1..P1-4 should be re-scoped from 'make mages able to clear the boss' to 'modest QoL buffs to under-used fire cards' — much lower stakes, and the C2 elemMult agonizing is moot.",
+    "elemMult rate (C2) has almost no effect on real combat outcomes because magic damage is dominated by flat + DEX-scaled values (Flame Dart) and armor-taxed direct hits, not INT-scaled portions. If the user WANTS INT to feel impactful, that is a deeper scaling redesign (more cards scaling off INT), not a rate tweak — surface this as a design question.",
+    "Pure single-element decks with no sustain are a general trap (the burn case). Consider whether the forge/draft should nudge players toward a sustain splash, or whether mono-element should be made viable — but that is downstream of fixing the harness and re-baselining."
+  ]
+}

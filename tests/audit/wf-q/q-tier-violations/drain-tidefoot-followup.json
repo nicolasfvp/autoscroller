@@ -1,0 +1,52 @@
+{
+  "matchups": [
+    {
+      "id": "AD2-A-mire-armorshell-boss",
+      "label": "A T2 Mire Bloom in armor+poison mage shell vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t3-defense-water-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "AD2-B-drain-cur-armorshell-boss",
+      "label": "B T3 Alchemic Drain CURRENT in armor+poison mage shell vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t3-defense-water-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "AD2-C-drain-prop-armorshell-boss",
+      "label": "C T3 Alchemic Drain PROPOSED cd1.6 poison4 in armor+poison shell vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t3-defense-water-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-earth-fire-water": { "cooldown": 1.6, "effectsPatch": [ { "value": 4 }, {} ] } }
+    },
+
+    {
+      "id": "TFB2-B-tidefoot-cur-kobra",
+      "label": "B T3 Tidefoot CURRENT (slot0) vs venomous_kobra (normal)",
+      "archetype": "armor-warrior", "stage": "mid", "class": "warrior",
+      "deck": ["t3-counter-water-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 350, "enemy": "venomous_kobra", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    },
+    {
+      "id": "TFB2-C-tidefoot-prop-kobra",
+      "label": "C T3 Tidefoot PROPOSED (slot0) vs venomous_kobra (normal)",
+      "archetype": "armor-warrior", "stage": "mid", "class": "warrior",
+      "deck": ["t3-counter-water-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 350, "enemy": "venomous_kobra", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5,
+      "cardOverrides": { "t3-counter-water-water": { "cooldown": 1.6, "exhaust": false, "effects": [
+        {"type":"dot","stack":"poison","value":4,"target":"enemy"},
+        {"type":"aura","value":0,"target":"self","ttl_ms":9999999,"event_counter":{"event":"heal_received","threshold":1,"repeat":true},"then":{"type":"dot","stack":"poison","value":1,"target":"enemy","scale":{"stat":"int","per":3,"value":1}}}
+      ] } }
+    },
+    {
+      "id": "TFB2-FILLER-jab-kobra",
+      "label": "FILLER baseline Jab (slot0) vs venomous_kobra (normal)",
+      "archetype": "armor-warrior", "stage": "mid", "class": "warrior",
+      "deck": ["t1-attack","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 350, "enemy": "venomous_kobra", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    }
+  ]
+}

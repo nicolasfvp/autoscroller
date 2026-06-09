@@ -122,9 +122,13 @@ function simulateCombat(engine: CombatEngine, maxMs: number = 120000, tickSize: 
 
 // Post-element-rewrite, the 5-card warrior starter has lower raw DPS than
 // the old 10-card deck (no heavy-hit/fireball burst), so fight durations
-// shift longer. Use a coarse [10s, 90s] band sized to whichever proxy
+// shift longer. Use a coarse [8s, 90s] band sized to whichever proxy
 // starter (attack-light vs tank-light) we're running.
-const MIN_FIGHT_MS = 10_000;
+// Rebalance: the rage "Fury" passive (rage now adds flat hero damage instead
+// of being spent) ramps attack decks — Reckless Strike grants 3 rage/cast, so
+// the attack-light starter now kills the Goblin in ~9.3s. Floor lowered to 8s
+// to track the intended DPS shift; still guards against instant-kills.
+const MIN_FIGHT_MS = 8_000;
 const MAX_FIGHT_MS = 90_000;
 
 describe('Combat Balance Validation', () => {

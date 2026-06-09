@@ -1,0 +1,70 @@
+{
+  "lane": "enemy-ramp",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Strong, well-grounded lane. PLAN: representative stages (early/mid/boss1/late), correct enemy batteries + bosses, boss1=doom_knight covered, all three mage win-conditions (elem/control/poison) probed, no cherry-picking. EXECUTION: results.json/results2/results3 all exist, non-empty, 0 errors; EVERY quoted number reproduces exactly against the result files; all deck card ids valid and class-appropriate; >=4 repeats everywhere, 5 for boss/tierAB claims; 31 decks / 99 matchups confirmed. I independently re-ran the most load-bearing claim (doom_knight A/B/C with enemyOverride, 6 repeats) in adv-results.json. OUTPUT: the diagnoses are mostly supported, but two proposals have problems that an adversary must catch: (1) ER-1's enrage 1.4->1.25 component is INERT (my re-test: 4.0%->4.0% HP, identical; independently corroborated by the boss-progression lane's probe-war-enrage125 which was also unchanged) and its claimed '40-60%' post-fix margin is overstated (actual ~15% at DMG7). The damage 9->7 half IS confirmed (4.0%->15.2%). (2) ER-2's claim that softening doom_knight 'gives flat-damage mages a fighting chance' is REFUTED: mage elemental stays 6/6 deaths at DMG7 (dmg 278) and at full ER-1 (dmg 320 < 380HP) -- it is a card-economy problem, not a boss problem (matches boss-progression BP-2). (3) ER-3 lost_lizard is a real pushover but its proposed buff under-corrects (my re-test: hero 83.8%->82.1% HP, essentially unchanged). ER-4/ER-5/ER-6/ER-7 hold up.",
+  "independentRetest": {
+    "spec": "tests/audit/wf/enemy-ramp/adv-matchups.json",
+    "results": "tests/audit/wf/enemy-ramp/adv-results.json",
+    "keyNumbers": {
+      "war-phys vs doom_knight BASE": "wr=1 hpWin=0.040 (reproduces designer 0.04)",
+      "war-phys vs doom_knight DMG7": "wr=1 hpWin=0.152 (damage cut WORKS)",
+      "war-phys vs doom_knight ENRAGE125-only": "wr=1 hpWin=0.040 (ZERO effect; matches boss-progression probe-war-enrage125)",
+      "war-phys vs doom_knight DMG7+ENRAGE125": "wr=1 hpWin=0.152 (enrage adds nothing on top of DMG7)",
+      "war-opt vs doom_knight DMG8": "wr=1 hpWin=0.093 (gentler option)",
+      "mage-elem vs doom_knight BASE": "wr=0 deaths=6 dmg=240",
+      "mage-elem vs doom_knight DMG7": "wr=0 deaths=6 dmg=278 (still loses)",
+      "mage-elem vs doom_knight DMG7+ENRAGE125": "wr=0 deaths=6 dmg=320<380 (boss softening does NOT rescue mage)",
+      "lost_lizard BASE warrior": "hpWin=0.838",
+      "lost_lizard ER3BUFF(85/4/3000) warrior": "hpWin=0.821 (buff barely changes the pushover)",
+      "lost_lizard ER3BUFF mage": "hpWin=0.874",
+      "depths_horror ER4BUFF baseHP150->172 warrior": "wr=1 hpWin=0.54 ttk=7.45s (soft but no longer 2-3s trivial)",
+      "fire_elemental ER4BUFF baseHP150->172 warrior": "wr=1 hpWin=0.446 ttk=7.2s"
+    }
+  },
+  "verdicts": [
+    {
+      "findingId": "ER-1",
+      "status": "revised",
+      "reason": "Problem CONFIRMED and reproduced: doom_knight is not a should-be-easy first boss (warrior 4% HP, 2/3 mage archetypes die). My independent re-test confirms the damage cut 9->7 lifts warrior 4.0%->15.2% HP (corroborated by boss-progression BP-1 13.9%). BUT the proposed enrage 1.4->1.25 softening is INERT: my re-test shows 4.0%->4.0% (zero change), and full ER-1 (DMG7+ENRAGE125)=15.2%=DMG7-alone, so enrage contributes nothing. The boss-progression lane's probe-war-enrage125 found the same. Also the proposal overstates the result ('40-60%' band) -- actual is ~15% at DMG7 (~9% at DMG8). The fix is real but the change must be corrected.",
+      "revisedChange": "doom_knight baseDamage 9->7 ONLY (keep 380HP/def3 and the enrage 1.4 UNCHANGED -- softening enrage is proven inert). This yields ~15% warrior cushion. If a comfier ~40-60% band is truly the target, a damage cut alone is insufficient and a small HP reduction (e.g. 380->340, boss-progression probe-poison-hp340 reached 21.5%) would be needed -- but pair any HP cut with the iron_golem smoothing (boss-progression BP-4) so the curve stays monotone."
+    },
+    {
+      "findingId": "ER-2",
+      "status": "revised",
+      "reason": "The framing that boss softening (ER-1) 'gives flat-damage mages a fighting chance' is REFUTED by my re-test: mage elemental stays 0 winRate / 6 deaths at DMG7 (dmg 278) and at full ER-1 (dmg 320, still < 380HP). The mage simply cannot output 380 before dying regardless of incoming damage -- this is a card-throughput/economy problem (matches boss-progression BP-2/BP-5, which also showed burn dies even at doom_knight 320HP). The actionable half (cut mage-reachable T3 elemental detonator CDs 2.2-2.4s->1.6-1.8s, C1-compliant) is directionally correct but was NOT simulated by the designer, so confidence must drop.",
+      "revisedChange": "Decouple from ER-1 (boss tuning will NOT fix mage). Treat as a card-economy fix: cut CD on the mage-reachable T3 single-target/detonator fire line (e.g. Cinderlance 2.2->1.8, Supernova 2.8->2.2 per the sibling lanes) AND raise their per-burn payoff ceiling (T3>T2, costs flat). Re-simulate the boss1 mage-elem deck before/after to confirm it clears 380 -- do not assert a fix without that sim. Lower confidence to low until simulated."
+    },
+    {
+      "findingId": "ER-3",
+      "status": "revised",
+      "reason": "Pushover CONFIRMED (hero ends 82-87% HP across every early deck; reproduced). But the proposed buff (85HP/4dmg/cd3000) UNDER-corrects: my re-test shows warrior 83.8%->82.1% and mage 86.2%->87.4% -- essentially no change to the cushion. If the intent is to make lost_lizard a 'real (if gentle) early fight', these numbers are too timid. Severity is correctly low (a too-weak early-tutorial enemy is benign), so this is a tuning-magnitude correction, not a reject.",
+      "revisedChange": "Either accept lost_lizard as an intentional gentle intro and DROP the buff, or buff harder to actually register: damage 2->5 and attackCooldown 3500->2800 (HP increase is irrelevant to the cushion -- the cooldown/damage are what matter). Even then keep it the softest early-battery member. Re-sim to land near ~70-75% hero HP if a real-fight feel is wanted."
+    },
+    {
+      "findingId": "ER-4",
+      "status": "confirmed",
+      "reason": "Trivial-soft CONFIRMED: full T3 decks kill depths_horror/fire_elemental in 4-6s, and the swap tests show a floor effect (card identity doesn't matter). The HP-up proposal lands as claimed in my re-test: depths baseHP 95->150 (172 post-1.15x) gives wr=1, 54% HP, ttk 7.45s; fire 102->150 gives 44.6% HP, ttk 7.2s -- still soft throughput-test enemies (damage left at 5/8) but no longer 2-3s trivial. Comparable to werewolf 155 / salamander 184 as stated. C1-C5 N/A (enemy tuning).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "ER-5",
+      "status": "confirmed",
+      "reason": "Tier violation CONFIRMED on two independent axes: (a) the designer's tierAB sims (T3 Cinder Sprint 19s/0.28 vs T2 Flame Dart 16s/0.35; T3 Cinderlance 20s/0.28 vs T2 Pyre 15s/0.35) all reproduce in results2/results3; (b) the isolated catalog peakOPS independently shows reachable T3 fire detonators (Cinder Sprint 32.5, Cinderlance 38.18) BELOW T2 Flame Dart (57.5) and around/under T2 Pyre (36.43). The proposed fix correctly BUFFS the T3 (Cinderlance cd 2.2->1.8 + pierce 3->4; Cinder Sprint det 4->5/burn) and never nerfs the T2, complying with the T3>T2 rule and C1 (costs flat). Caveat: Flame Dart's 57.5 OPS is itself an off-curve-strong outlier, so the buff may need to be larger than proposed to clear it by 15-25% -- re-sim the assembled-T3 ceiling after the change.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "ER-6",
+      "status": "confirmed",
+      "reason": "Control-under-the-pack CONFIRMED: mage-mid-control grinds (salamander 30s/14% HP/20 cards) vs mage-mid-elem (16s/37%); reproduced. Correctly does NOT add damage to control (C3/C5) and instead cuts CD on entry control T2s for more uptime (C1 rescue lever, cost unchanged). Cross-corroborated by the slow-stun-control lane, which independently flags Frostbind (t2-water-water) as a dead/underperforming card. Severity low / confidence med are appropriate -- control is intentionally race-losing, so this is a quality-of-life uptime nudge, not a power fix.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "ER-7",
+      "status": "confirmed",
+      "reason": "Healthy-middle CONFIRMED: mid all archetypes wr=1 at 35-60% cushions; late werewolf/salamander give fair fights (war-late-phys werewolf 7.2s/49%, salamander 8.6s/47%); mutated_salamander (160->184HP) is the tightest-but-fair anchor. All numbers reproduce. 'No change to core mid/late tuning, only ER-3/ER-4 edits needed' is the correct conclusion. Low severity, high confidence justified.",
+      "revisedChange": null
+    }
+  ]
+}

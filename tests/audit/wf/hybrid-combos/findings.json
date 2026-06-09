@@ -1,0 +1,89 @@
+{
+  "lane": "hybrid-combos",
+  "decksTested": 35,
+  "matchupsRun": 115,
+  "resultsPath": "tests/audit/wf/hybrid-combos/results.json",
+  "summary": "Hybrid two-archetype decks split sharply by their DEFENSIVE half. poison+block and burn+block are the strongest hybrids in the game: they clear every stage and BEAT doom_knight comfortably (poison+block hp 0.769, burn+block hp 0.388) because the block half buys time for the DoT win condition exactly as C3 intends. The AGGRESSIVE hybrids (poison+burn, bleed+poison, tremor-detonate, brine-crucible) all LOSE doom_knight (deaths=4) and several lose iron_golem — not because the boss is over-tuned (pure-poison and pure-physical both WIN doom_knight) but because (a) the cross-archetype DETONATORS are off-curve weak and (b) the pure-burn parent is non-viable vs bosses. SWAP and BANK-shell probes prove Tremor Detonate, Drowning Lance, Marsh Squall and Venom Detonation deliver ~0 net damage over a non-detonator filler while SLOWING the kill ~6s and gutting the HP cushion — they consume the DoT pool for less than the DoT would have ticked. Brine Crucible's 158 peakOPS is an ISOLATED-METRIC ARTIFACT: in real combat its deck loses doom_knight and iron_golem (not oppressive). Bog Catalyst (double-poison, non-detonator, peakOPS 45.8) outperforms every detonator and is the real poison-hybrid powerhouse.",
+  "findings": [
+    {
+      "id": "HC-1",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-fire-water (Tremor Detonate)",
+      "stage": "boss1/late",
+      "evidence": "BANK-shell probe vs doom_knight (5 reps): det-bank-tremor dmg=396 ttk=22000 hp%=0.083 vs identical-shell det-bank-nodet (Bog Catalyst) dmg=380 ttk=15900 hp%=0.405. Tremor adds +16 dmg but costs +6100ms TTK and crashes the HP cushion 0.405->0.083. As a deck core: hy-tremor-boss1 LOSES doom_knight (wr=0, D=4, only 251 dmg, the worst of all aggressive hybrids). SWAP test (5 reps): swap-tremor-late is byte-identical to swap-base-late across all 5 late enemies (hp% 0.452 vs base 0.452, same ttk/dmg). It is an exhaust 2-stamina T3 that nets zero marginal value.",
+      "severity": "high",
+      "proposedChange": "C1 + tier-charter buff (build-around ceiling). Raise per-stack payoff from 3 to 5 (Str-scaled) Pierce per stack consumed AND remove [exhaust] so it is repeatable. Keep cost 2 stamina, keep cd 2.4s. This gives the tri-stack detonator a real ceiling (consume 12 stacks -> ~60 Pierce) that beats just letting DoT tick, without raising cost/CD (T3 edge = higher ceiling when assembled, not bigger cost).",
+      "confidence": "high"
+    },
+    {
+      "id": "HC-2",
+      "kind": "off_curve_weak",
+      "target": "t3-attack-water-water (Drowning Lance)",
+      "stage": "boss1/late",
+      "evidence": "BANK-shell probe vs doom_knight (5 reps): det-bank-drown dmg=381 ttk=22000 hp%=0.083 vs det-bank-nodet (Bog Catalyst) dmg=380 ttk=15900 hp%=0.405 — +1 dmg, +6100ms slower, HP cushion 5x worse. SWAP (5 reps): swap-drownlance-late identical to swap-base-late on all 5 late enemies (hp% 0.464 vs 0.452, same ttk/dmg). Costs 2 stamina + 1 mana for 'Deal 4 Pierce. Consume all poison, deal 3 Pierce per poison consumed' — emptying a 10-stack poison pool for ~30 Pierce is less than the ~n(n+1) the pool would have ticked.",
+      "severity": "high",
+      "proposedChange": "C1 buff: raise to 'Deal 6 Pierce. Consume all [poison] and deal 5 Pierce per [poison] consumed' and cut cooldown 2.4s -> 1.8s (C1 rescue-weak-via-CD; it is not exhaust so it must be spammable to function as a poison finisher). Cost stays 2s+1m. Do NOT touch any T2.",
+      "confidence": "high"
+    },
+    {
+      "id": "HC-3",
+      "kind": "off_curve_weak",
+      "target": "t3-air-earth-water (Marsh Squall)",
+      "stage": "boss1/late",
+      "evidence": "BANK-shell probe vs doom_knight (5 reps): det-bank-marsh dmg=387 ttk=22000 hp%=0.083 vs det-bank-nodet dmg=380 ttk=15900 hp%=0.405. SWAP (5 reps): swap-marshsquall-late identical to base on all 5 late enemies. It is an EXHAUST card costing 2 stamina + 2 mana (the most expensive detonator in the lane) for AoE poison detonation that, single-target, nets +7 dmg while slowing the kill 6s. Worst cost-to-impact ratio in the lane.",
+      "severity": "med",
+      "proposedChange": "C1 buff: raise per-stack to 'Deal 6 Pierce per [poison] consumed to all enemies' (from 4) and DROP the mana half of the cost 2s+2m -> 2s (it is exhaust + AoE, the premium is already paid by exhaust). Keeps it a niche AoE poison nuke without bigger cost. No T2 change.",
+      "confidence": "med"
+    },
+    {
+      "id": "HC-4",
+      "kind": "off_curve_weak",
+      "target": "t3-counter-fire-water (Venom Detonation)",
+      "stage": "late",
+      "evidence": "Brief flags this as a possibly-dead bridge card; confirmed weak-but-least-bad. BANK-shell vs doom_knight (5 reps): det-bank-venom dmg=389 hp%=0.298 (better than other detonators because it RE-APPLIES 3 poison + 2 burn so it does not empty the engine). SWAP (5 reps): swap-venomdet-late hp% 0.471 vs base 0.452 — a tiny positive delta, within noise. As a deck core hy-venomdet-late clears all late normals + iron_golem (wr=1 everywhere) but adds nothing a plain poison applier would not. Its 'consume all burn, deal 2(str) per burn' clause is dead in a poison shell that banks ~0 burn.",
+      "severity": "med",
+      "proposedChange": "C1/wiring buff: make the detonation pull from BOTH pools — 'Apply 2[burn]. Apply 3[poison]. Consume all [burn] AND all [poison] and deal 2([str]) per stack consumed.' This rewards the dual-DoT hybrid it is named for instead of a near-empty burn pool. Cost/CD unchanged (1s+1m, 2.4s).",
+      "confidence": "med"
+    },
+    {
+      "id": "HC-5",
+      "kind": "off_curve_strong",
+      "target": "t3-counter-fire-fire (Brine Crucible) — peakOPS 158 artifact check",
+      "stage": "late/boss1",
+      "evidence": "Brief asks whether the 158 peakOPS is oppressive in real combat: it is NOT. The Brine Crucible warrior deck (hy-brinecrucible) wins all 4 late normals (hp 0.38-0.51) but LOSES doom_knight (wr=0, D=4, 375 dmg < 380 HP) and LOSES iron_golem (wr=0, D=4, 407 dmg vs 409 HP) — razor-close race losses with no boss kills. The 158 OPS is an isolated-metric artifact of 'consume all burn -> 2 bleed per burn' assuming a pre-banked burn pool the deck never actually sustains. In full combat it is a strong-but-fair normal-clearer, not a trivializer.",
+      "severity": "low",
+      "proposedChange": "No nerf. C1/C5-compliant: leave Brine Crucible as-is (it is balanced in real combat). Optionally fix the OPS triage model so 'consume all X' detonators are not credited a full pre-banked pool, to stop false peakOPS spikes — tooling note, not a card change.",
+      "confidence": "high"
+    },
+    {
+      "id": "HC-6",
+      "kind": "viability",
+      "target": "pure-burn archetype (Spark/Pyre/Cinderlance/Supernova line) feeding burn-hybrids",
+      "stage": "boss1",
+      "evidence": "cmp-pureburn-boss1 vs doom_knight (5 reps): wr=0, D=5, dmg=96 — by FAR the lowest boss damage of any archetype (pure-poison 397, pure-physical 418, pure-bleed 336). doom_knight is NOT over-tuned (poison & physical both win it). Burn's soft-cap (CombatEngine.ts L483: dmg = stacks<=8 ? stacks : 8+floor((stacks-8)/2), chunk-cap 60) plus repeated detonator consumption means a 380-HP boss cannot be raced. This drags the poison+burn HYBRID down too: hy-pburn-boss1 LOSES doom_knight (wr=0, D=4, 310 dmg).",
+      "severity": "high",
+      "proposedChange": "C5-compliant burn throughput buff (the locked status verbs stay): keep bank-and-cash + soft-cap, but raise the soft-cap knee from 8 to 12 and the over-knee slope from /2 to /1.5 (dmg = stacks<=12 ? stacks : 12+floor((stacks-12)/1.5)). This lifts high-stack burn ceilings without merging stacks or changing the verb. Pairs with HC-1 (Tremor) so burn-hybrid detonation finally races a boss. Affects the burn DoT model, not any single T2.",
+      "confidence": "med"
+    },
+    {
+      "id": "HC-7",
+      "kind": "progression",
+      "target": "aggressive DoT hybrids vs doom_knight (poison+burn, bleed+poison)",
+      "stage": "boss1",
+      "evidence": "Headline realism check: of 5 boss1 hybrids, only the two with a BLOCK half beat doom_knight — hy-pblock-boss1 (wr=1, hp 0.769) and hy-burnblock-boss1 (wr=1, hp 0.388). Every aggressive hybrid loses: hy-pburn-boss1 (D=4, 310 dmg), hy-bleedpoison-boss1 (D=4, 304 dmg), hy-tremor-boss1 (D=4, 251 dmg). Pure parents that win (pure-poison 397, pure-physical 418) deal MORE damage in less time, so the hybrids lose throughput by splitting two ramp engines that each need setup time. The boss is correctly tuned (~0.8 win for the survival builds); the gap is the detonator/burn cards (HC-1..HC-6), not the boss.",
+      "severity": "med",
+      "proposedChange": "Do NOT touch doom_knight (380 HP / def 3 / 9 dmg is correct: it is beatable by every survival or single-engine build, just not by under-tuned split-DoT cores). Fixing HC-1 (Tremor ceiling + no exhaust), HC-4 (Venom dual-pool detonation) and HC-6 (burn soft-cap knee) is the right lever — it gives aggressive hybrids the closing burst to race the boss without nerfing the block hybrids or the boss.",
+      "confidence": "high"
+    },
+    {
+      "id": "HC-8",
+      "kind": "off_curve_strong",
+      "target": "t3-earth-earth-water (Bog Catalyst) as the poison-hybrid powerhouse (reference, not a nerf)",
+      "stage": "all",
+      "evidence": "Bog Catalyst ('Apply 2 poison. Double the poison on enemy', non-detonator, peakOPS 45.8) is the single best poison-shell payoff in every test: det-bank-nodet (Bog Catalyst core) BEATS doom_knight at dmg=380 ttk=15900 hp%=0.405 — faster kill and 5x more HP than any detonator-core shell. It is the realistic comparison baseline that proves the detonators are weak (HC-1..HC-4).",
+      "severity": "low",
+      "proposedChange": "No change — Bog Catalyst is correctly strong and is the intended T3 build-around. It is the reference target the detonator buffs (HC-1..HC-4) should be brought UP toward. Documented here so the synthesizer does not mistake the detonator gap for a Bog Catalyst over-tune.",
+      "confidence": "high"
+    }
+  ]
+}

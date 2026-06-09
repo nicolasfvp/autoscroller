@@ -1,0 +1,207 @@
+{
+  "_comment": "TIER A/B lane. Each PAIR (A=T2, B=T3) is identical except ONE slot: a T2 card swapped for its analogous T3 (same elements/role). The T3 version MUST win/TTK at least as well. Harness cores are realistic archetype decks so the swapped card is actually exercised. Stages: mid + late + boss1 (vs doom_knight).",
+
+  "decks": [
+
+    {
+      "_pair": "DEF-DD (defense/defense): t2-defense-defense -> t3-defense-defense-defense (Aegis of Returning Wrath)",
+      "id": "abA-dd-defdef", "label": "A T2 Bulwark Vow", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-dd-defdefdef", "label": "B T3 Aegis", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "DEF-DD-water: t2-defense-defense -> t3-defense-defense-water (Stagnant Bulwark, OPS 6.67)",
+      "id": "abB-dd-defdefwater", "label": "B T3 Stagnant Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-defense-water", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "_pair": "DEF-DD-fire: t2-defense-defense -> t3-defense-defense-fire (Pyric Bulwark, OPS 7.33)",
+      "id": "abB-dd-defdeffire", "label": "B T3 Pyric Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-defense-fire", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "_pair": "DEF-DD-earth: t2-defense-defense -> t3-defense-defense-earth (Stoneward Reprisal, OPS 6.0)",
+      "id": "abB-dd-defdefearth", "label": "B T3 Stoneward Reprisal", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-defense-earth", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "DEF-earth: t2-defense-earth (Bramble Bulwark) -> t3-defense-earth-earth (Bedrock Bulwark)",
+      "id": "abA-de-defearth", "label": "A T2 Bramble Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-defense-earth", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-de-defeartheart", "label": "B T3 Bedrock Bulwark", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-earth", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "_pair": "DEF-earth-water: t2-defense-earth -> t3-defense-earth-water (Bogplate, OPS 9.67)",
+      "id": "abB-de-defearthwater", "label": "B T3 Bogplate", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-water", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "_pair": "DEF-earth-fire: t2-defense-earth -> t3-defense-earth-fire (Magmaplate, OPS 8.67)",
+      "id": "abB-de-defearthfire", "label": "B T3 Magmaplate", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-earth-fire", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "DEF-water: t2-defense-water (Vow of the Tide) -> t3-defense-water-water (Brineward)",
+      "id": "abA-dw-defwater", "label": "A T2 Vow of the Tide", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-defense-water", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-dw-defwaterwater", "label": "B T3 Brineward", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-defense-water-water", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "DEF-fire: t2-defense-fire (Forge Spike Ward) -> t3-defense-defense-fire (Pyric Bulwark)",
+      "id": "abA-df-deffire", "label": "A T2 Forge Spike Ward", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-defense-fire", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "AIR-DEF: t2-air-defense (Cyclone Ward) -> t3-air-air-defense (Galeward) / t3-air-defense-defense (Stormgate)",
+      "id": "abA-ad-airdef", "label": "A T2 Cyclone Ward", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-air-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-ad-airairdef", "label": "B T3 Galeward", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-air-air-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-ad-airdefdef", "label": "B T3 Stormgate", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-air-defense-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "AGI-DEF: t2-agility-defense (Parrying Stance) -> t3-agility-agility-defense (Veil of Steps) / t3-agility-defense-defense (Phalanx Drift)",
+      "id": "abA-gd-agidef", "label": "A T2 Parrying Stance", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-agility-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-gd-agiagidef", "label": "B T3 Veil of Steps", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-agility-agility-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-gd-agidefdef", "label": "B T3 Phalanx Drift", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-agility-defense-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "CNT-DEF: t2-counter-defense (Iron Reckoning) -> t3-counter-defense-defense (Reforge Vow)",
+      "id": "abA-cd-cntdef", "label": "A T2 Iron Reckoning", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-counter-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-cd-cntdefdef", "label": "B T3 Reforge Vow", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-counter-defense-defense", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "CNT-EARTH: t2-counter-earth (Thornwall) -> t3-counter-earth-earth (Tombrage)",
+      "id": "abA-ce-cntearth", "label": "A T2 Thornwall", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t2-counter-earth", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-defense-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-ce-cnteartheart", "label": "B T3 Tombrage", "archetype": "tier-ab-armor", "class": "warrior", "stage": "late",
+      "deck": ["t3-counter-earth-earth", "t1-defense", "t2-defense-defense", "t2-attack-earth", "t2-defense-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "WATER-STUN/HEAL mage: t2-water-water (Frostbind) -> t3-water-water-water (Tidesong Aura)",
+      "id": "abA-ww-waterwater", "label": "A T2 Frostbind", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t2-water-water", "t1-water", "t2-earth-water", "t3-earth-earth-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t2-fire-water", "t1-fire", "t3-defense-water-water", "t3-earth-fire-water", "t2-earth-earth"]
+    },
+    {
+      "id": "abB-ww-waterwaterwater", "label": "B T3 Tidesong Aura", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-water-water-water", "t1-water", "t2-earth-water", "t3-earth-earth-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t2-fire-water", "t1-fire", "t3-defense-water-water", "t3-earth-fire-water", "t2-earth-earth"]
+    },
+
+    {
+      "_pair": "T1-WATER heal -> t3-water-water-water (Tidesong) : T1->T3 ceiling check on heal line",
+      "id": "abA-w1-mend", "label": "A T1 Mend", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t1-water", "t2-water-water", "t2-earth-water", "t3-earth-earth-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t2-fire-water", "t1-fire", "t3-defense-water-water", "t3-earth-fire-water", "t2-earth-earth"]
+    },
+
+    {
+      "_pair": "EARTH-WATER mage poison: t2-earth-water (Mire Bloom) -> t3-earth-water-water (Brine Bedrock, OPS 7.5) / t3-earth-earth-water (Bog Catalyst)",
+      "id": "abA-ew-earthwater", "label": "A T2 Mire Bloom", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t2-earth-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-agility-earth-water", "t3-defense-earth-water", "t1-fire", "t2-fire-water", "t2-earth-earth"]
+    },
+    {
+      "id": "abB-ew-eartheartwater", "label": "B T3 Bog Catalyst", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-earth-earth-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-agility-earth-water", "t3-defense-earth-water", "t1-fire", "t2-fire-water", "t2-earth-earth"]
+    },
+    {
+      "id": "abB-ew-earthwaterwater", "label": "B T3 Brine Bedrock", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-earth-water-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-agility-earth-water", "t3-defense-earth-water", "t1-fire", "t2-fire-water", "t2-earth-earth"]
+    },
+
+    {
+      "_pair": "FIRE-WATER mage: t2-fire-water (Steam Surge) -> t3-fire-water-water (Phoenix Aura) / t3-fire-fire-water (Quench Lance)",
+      "id": "abA-fw-firewater", "label": "A T2 Steam Surge", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t2-fire-water", "t1-fire", "t2-fire-fire", "t2-agility-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t2-earth-fire", "t1-water", "t3-earth-fire-fire", "t2-air-fire"]
+    },
+    {
+      "id": "abB-fw-firewaterwater", "label": "B T3 Phoenix Aura", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-fire-water-water", "t1-fire", "t2-fire-fire", "t2-agility-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t2-earth-fire", "t1-water", "t3-earth-fire-fire", "t2-air-fire"]
+    },
+    {
+      "id": "abB-fw-firefirewater", "label": "B T3 Quench Lance", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-fire-fire-water", "t1-fire", "t2-fire-fire", "t2-agility-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t2-earth-fire", "t1-water", "t3-earth-fire-fire", "t2-air-fire"]
+    },
+
+    {
+      "_pair": "AIR-WATER mage heal/utility: t2-air-water (Misting Veil) -> t3-air-water-water (Misted Cadence) / t3-air-air-water (Squall Aura)",
+      "id": "abA-aw-airwater", "label": "A T2 Misting Veil", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t2-air-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-earth-earth-water", "t3-earth-fire-water", "t1-fire", "t2-earth-water", "t2-earth-earth"]
+    },
+    {
+      "id": "abB-aw-airwaterwater", "label": "B T3 Misted Cadence", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-air-water-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-earth-earth-water", "t3-earth-fire-water", "t1-fire", "t2-earth-water", "t2-earth-earth"]
+    },
+    {
+      "id": "abB-aw-airairwater", "label": "B T3 Squall Aura", "archetype": "tier-ab-mage", "class": "mage", "stage": "late",
+      "deck": ["t3-air-air-water", "t1-water", "t2-water-water", "t3-air-fire-water", "t3-agility-water-water", "t3-agility-air-water", "t3-defense-water-water", "t3-earth-earth-water", "t3-earth-fire-water", "t1-fire", "t2-earth-water", "t2-earth-earth"]
+    },
+
+    {
+      "_pair": "BOSS1 armor harness: T2 vs T3 defense swap vs doom_knight (survival matters most here)",
+      "id": "abA-boss-defdef", "label": "A T2 Bulwark Vow (boss1)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "boss1",
+      "deck": ["t2-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-boss-defdefdef", "label": "B T3 Aegis (boss1)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "boss1",
+      "deck": ["t3-defense-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-boss-defdefwater", "label": "B T3 Stagnant Bulwark (boss1)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "boss1",
+      "deck": ["t3-defense-defense-water", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-boss-defdefearth", "label": "B T3 Stoneward Reprisal (boss1)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "boss1",
+      "deck": ["t3-defense-defense-earth", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t3-attack-defense-defense", "t3-earth-earth-earth", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+
+    {
+      "_pair": "MID stage armor harness (lower HP/stats) - defense swaps at mid",
+      "id": "abA-mid-defdef", "label": "A T2 Bulwark Vow (mid)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "mid",
+      "deck": ["t2-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-mid-defdefdef", "label": "B T3 Aegis (mid)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "mid",
+      "deck": ["t3-defense-defense-defense", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    },
+    {
+      "id": "abB-mid-defdefwater", "label": "B T3 Stagnant Bulwark (mid)", "archetype": "tier-ab-armor", "class": "warrior", "stage": "mid",
+      "deck": ["t3-defense-defense-water", "t1-defense", "t2-defense-earth", "t2-attack-earth", "t2-counter-earth", "t2-attack-defense", "t2-attack-attack", "t1-attack", "t2-agility-attack", "t2-counter-counter"]
+    }
+
+  ]
+}

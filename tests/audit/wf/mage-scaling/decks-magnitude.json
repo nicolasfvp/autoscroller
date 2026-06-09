@@ -1,0 +1,32 @@
+{
+  "_note": "Magnitude test: how much extra INT does the fire mage need to clear doom_knight? Probes +1 and +2 INT to bracket the minimum fix. Baseline (int 0 delta, realistic int 3) = wr 0; +3 = wr 1.",
+  "decks": [
+    {
+      "id": "mage-fire-boss1-INT4",
+      "label": "Mage Fire boss1 +INT1",
+      "archetype": "fire-mage-mag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 1 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "id": "mage-fire-boss1-INT5",
+      "label": "Mage Fire boss1 +INT2",
+      "archetype": "fire-mage-mag",
+      "class": "mage",
+      "stage": "boss1",
+      "stats": { "int": 2 },
+      "deck": ["t1-fire", "t2-agility-fire", "t2-fire-fire", "t2-fire-water", "t2-earth-fire", "t2-air-fire", "t3-agility-fire-water", "t1-water", "t2-water-water", "t2-earth-water"]
+    },
+    {
+      "_note": "Earth-mage with a real damage win-condition added (swap pure-control Quake for a magic damage T3 Bog Catalyst poison + keep Steaming Plague) to test if earth fails for lack of damage rather than scaling.",
+      "id": "mage-earth-boss1-dmgfix",
+      "label": "Mage Earth boss1 + poison damage",
+      "archetype": "earth-mage-mag",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t3-earth-earth-water", "t2-earth-earth", "t2-earth-fire", "t2-water-water", "t1-fire", "t2-agility-fire", "t1-water", "t3-air-fire-water", "t2-earth-water", "t2-fire-fire"]
+    }
+  ]
+}

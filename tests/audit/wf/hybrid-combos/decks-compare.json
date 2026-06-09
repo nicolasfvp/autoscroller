@@ -1,0 +1,39 @@
+{
+  "_comment": "Comparison decks: pure parents at boss1 (to isolate hybrid vs parent), swap tests for bridge cards, and Tier A/B (T2-only vs T3-bridge) controls. Used to diagnose whether aggressive hybrids lose doom_knight because of the boss or because of weak bridge cards.",
+  "decks": [
+
+    { "id": "cmp-pureburn-boss1", "label": "Pure burn parent (boss1)", "archetype": "pure-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"] },
+
+    { "id": "cmp-purepoison-boss1", "label": "Pure poison parent (boss1)", "archetype": "pure-poison", "class": "mage", "stage": "boss1",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-earth-fire-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water"] },
+
+    { "id": "cmp-purephys-boss1", "label": "Pure physical parent (boss1)", "archetype": "pure-physical", "class": "warrior", "stage": "boss1",
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t2-attack-defense"] },
+
+    { "id": "cmp-purebleed-boss1", "label": "Pure bleed parent (boss1)", "archetype": "bleed-rage", "class": "warrior", "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t3-agility-attack-counter", "t3-agility-counter-counter", "t3-attack-attack-attack", "t3-counter-counter-counter", "t2-agility-counter", "t3-agility-agility-counter", "t2-counter-counter", "t3-attack-counter-fire"] },
+
+    { "id": "swap-base-late", "label": "SWAP baseline: poison shell + filler Jab-ish (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t2-fire-fire"] },
+
+    { "id": "swap-venomdet-late", "label": "SWAP: +Venom Detonation (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-counter-fire-water"] },
+
+    { "id": "swap-drownlance-late", "label": "SWAP: +Drowning Lance (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-attack-water-water"] },
+
+    { "id": "swap-marshsquall-late", "label": "SWAP: +Marsh Squall (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-air-earth-water"] },
+
+    { "id": "swap-tremor-late", "label": "SWAP: +Tremor Detonate (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-attack-fire-water"] },
+
+    { "id": "swap-boilstep-late", "label": "SWAP: +Boilstep (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-agility-fire-water"] },
+
+    { "id": "swap-soaking-late", "label": "SWAP: +Soaking Blade (poison T3 control) (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t3-defense-earth-water", "t1-fire", "t3-attack-attack-water"] }
+
+  ]
+}

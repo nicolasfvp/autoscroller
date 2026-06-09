@@ -4,15 +4,17 @@ import {
   detectKeywords,
 } from '../../src/ui/KeywordDefinitions';
 
-// Post-audit (CARD_AUDIT.md §11.E): the glossary now ships exactly four
+// Post-audit (CARD_AUDIT.md §11.E): the glossary ships five modifier
 // keywords. All former stack/stat keywords and most modifier keywords were
 // dropped — their mechanics are rendered as prose or icon tokens directly
-// in card text now. The tests below pin that contract.
+// in card text now. Pierce is kept because CardText still emits the
+// armor-bypassing "Pierce" damage word, which needs a definition. The tests
+// below pin that contract.
 
 describe('KeywordDefinitions', () => {
   describe('KEYWORD_DEFINITIONS', () => {
-    it('ships exactly the 4 kept keywords (Brace, Vengeance, Haste, Exhaust)', () => {
-      const expected = ['Brace', 'Exhaust', 'Haste', 'Vengeance'];
+    it('ships exactly the 5 kept keywords (Brace, Exhaust, Haste, Pierce, Vengeance)', () => {
+      const expected = ['Brace', 'Exhaust', 'Haste', 'Pierce', 'Vengeance'];
       const keywords = KEYWORD_DEFINITIONS.map((d) => d.keyword).sort();
       expect(keywords).toEqual(expected);
       // No duplicates in the source of truth
@@ -69,12 +71,18 @@ describe('KeywordDefinitions', () => {
       expect(count).toBe(1);
     });
 
+    it('detects Pierce as a standalone word (and not inside "Pierced")', () => {
+      expect(detectKeywords('Deal 18 Pierce.').map((h) => h.keyword)).toContain('Pierce');
+      expect(detectKeywords('Lose 4[HP] (Pierce).').map((h) => h.keyword)).toContain('Pierce');
+      expect(detectKeywords('The Pierced shield.').map((h) => h.keyword)).not.toContain('Pierce');
+    });
+
     it('orders results alphabetically within the modifier category', () => {
       // All kept entries are modifiers, so ordering reduces to alphabetical.
-      const desc = 'Vengeance: Brace. Then Haste. Finally Exhaust.';
+      const desc = 'Vengeance: Brace. Then Haste and Pierce. Finally Exhaust.';
       const hits = detectKeywords(desc);
       const keywords = hits.map((h) => h.keyword);
-      expect(keywords).toEqual(['Brace', 'Exhaust', 'Haste', 'Vengeance']);
+      expect(keywords).toEqual(['Brace', 'Exhaust', 'Haste', 'Pierce', 'Vengeance']);
     });
 
     it('returns empty array when no keywords present', () => {

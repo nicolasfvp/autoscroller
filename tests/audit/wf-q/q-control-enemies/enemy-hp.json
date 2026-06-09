@@ -1,0 +1,118 @@
+{
+  "_comment": "Q(b): is depths_horror/fire_elemental baseHP 95/102->150 the right magnitude? All matchups at LATE mult 1.15 (canonical late profile). enemyOverride.baseHP is BASE; sim then scales by 1.15. So base95->109 scaled, base130->149, base150->172. werewolf(base135->155) and salamander(base160->184) are the CEILING refs the proposal says NOT to spike past. Two realistic late decks: warrior physical + burn mage. TTK at base 95/102 should be the 'trivial 4-6s' problem; we want non-trivial WITHOUT exceeding werewolf's TTK.",
+  "matchups": [
+    {
+      "id": "hp-war-depths95",
+      "label": "WAR vs depths_horror base95 (current)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "depths_horror", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-depths130",
+      "label": "WAR vs depths_horror base130",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "depths_horror", "enemyOverride": { "baseHP": 130 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-depths150",
+      "label": "WAR vs depths_horror base150 (proposed)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "depths_horror", "enemyOverride": { "baseHP": 150 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-fire102",
+      "label": "WAR vs fire_elemental base102 (current)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "fire_elemental", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-fire130",
+      "label": "WAR vs fire_elemental base130",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "fire_elemental", "enemyOverride": { "baseHP": 130 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-fire150",
+      "label": "WAR vs fire_elemental base150 (proposed)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "fire_elemental", "enemyOverride": { "baseHP": 150 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-werewolf-ref",
+      "label": "WAR vs werewolf (CEILING ref, base135)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "werewolf", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-war-salamander-ref",
+      "label": "WAR vs mutated_salamander (CEILING ref, base160)",
+      "class": "warrior", "stage": "late", "runXP": 720, "stats": { "str": 3, "dex": 2, "vit": 3 },
+      "deck": ["t2-attack-attack", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-attack-attack-fire", "t3-air-attack-attack", "t3-agility-attack-counter", "t3-attack-attack-earth", "t2-attack-counter", "t2-agility-attack", "t3-air-attack-defense", "t2-attack-defense", "t2-counter-counter"],
+      "enemy": "mutated_salamander", "loopMultiplier": 1.15, "repeats": 5
+    },
+
+    {
+      "id": "hp-burn-depths95",
+      "label": "BURN vs depths_horror base95 (current)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "depths_horror", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-depths130",
+      "label": "BURN vs depths_horror base130",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "depths_horror", "enemyOverride": { "baseHP": 130 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-depths150",
+      "label": "BURN vs depths_horror base150 (proposed)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "depths_horror", "enemyOverride": { "baseHP": 150 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-fire102",
+      "label": "BURN vs fire_elemental base102 (current)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "fire_elemental", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-fire130",
+      "label": "BURN vs fire_elemental base130",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "fire_elemental", "enemyOverride": { "baseHP": 130 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-fire150",
+      "label": "BURN vs fire_elemental base150 (proposed)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "fire_elemental", "enemyOverride": { "baseHP": 150 }, "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-werewolf-ref",
+      "label": "BURN vs werewolf (CEILING ref, base135)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "werewolf", "loopMultiplier": 1.15, "repeats": 5
+    },
+    {
+      "id": "hp-burn-salamander-ref",
+      "label": "BURN vs mutated_salamander (CEILING ref, base160)",
+      "class": "mage", "stage": "late", "runXP": 720, "stats": { "int": 3, "dex": 2, "vit": 2 },
+      "deck": ["t2-fire-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-air-fire-fire", "t3-fire-fire-water", "t1-fire", "t3-earth-fire-fire", "t2-fire-water"],
+      "enemy": "mutated_salamander", "loopMultiplier": 1.15, "repeats": 5
+    }
+  ]
+}

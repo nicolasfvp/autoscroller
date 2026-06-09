@@ -1,0 +1,35 @@
+{
+  "matchups": [
+    {
+      "id": "BOGM-A-bulwarkvow-boss",
+      "label": "A T2 Bulwark Vow (slot0) vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-defense-defense","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 8
+    },
+    {
+      "id": "BOGM-C4-bogwrath-poison4-boss",
+      "label": "C T3 Bogwrath uncond 4 poison cd1.6 vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-earth-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-counter-earth-water": { "cooldown": 1.6, "effects": [
+        {"type":"armor","value":10,"target":"self","scale":{"stat":"vit","per":2,"value":2}},
+        {"type":"dot","value":4,"target":"enemy","stack":"poison"},
+        {"type":"aura","value":0,"target":"self","ttl_ms":12000,"trigger":"on_armor_break","then":{"type":"stack","value":3,"target":"self","stack":"rage"}}
+      ] } }
+    },
+    {
+      "id": "BOGM-C3-bogwrath-poison3-boss",
+      "label": "C T3 Bogwrath uncond 3 poison cd1.6 vs doom_knight",
+      "archetype": "armor-warrior", "stage": "boss1", "class": "warrior",
+      "deck": ["t3-counter-earth-water","t1-defense","t2-defense-earth","t2-attack-earth","t2-counter-earth","t2-attack-defense","t3-attack-defense-defense","t3-earth-earth-earth","t2-attack-attack","t1-attack","t2-agility-attack","t2-counter-counter"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 8,
+      "cardOverrides": { "t3-counter-earth-water": { "cooldown": 1.6, "effects": [
+        {"type":"armor","value":10,"target":"self","scale":{"stat":"vit","per":2,"value":2}},
+        {"type":"dot","value":3,"target":"enemy","stack":"poison"},
+        {"type":"aura","value":0,"target":"self","ttl_ms":12000,"trigger":"on_armor_break","then":{"type":"stack","value":3,"target":"self","stack":"rage"}}
+      ] } }
+    }
+  ]
+}

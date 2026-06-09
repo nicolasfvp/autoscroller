@@ -1,0 +1,96 @@
+{
+  "matchups": [
+    {
+      "id": "wrath-FILLER-doom",
+      "label": "Wrath Squall BASELINE filler Jab slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "wrath-CURRENT-doom",
+      "label": "Wrath Squall CURRENT (exhaust, cd2.0, reactive only) slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "wrath-PROPOSED-doom",
+      "label": "Wrath Squall PROPOSED (cd1.5, +Gain4[vit]rage on play) slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-counter-counter": {
+          "cooldown": 1.5,
+          "effects": [
+            { "type": "stack", "stack": "rage", "value": 4, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stat_gain", "stat": "str", "value": 1, "max_per_combat": 5, "target": "self" } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stack", "stack": "rage", "value": 3, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wrath-FILLER-werewolf",
+      "label": "Wrath Squall BASELINE filler Jab slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "wrath-CURRENT-werewolf",
+      "label": "Wrath Squall CURRENT slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "wrath-PROPOSED-werewolf",
+      "label": "Wrath Squall PROPOSED slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-counter-counter": {
+          "cooldown": 1.5,
+          "effects": [
+            { "type": "stack", "stack": "rage", "value": 4, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stat_gain", "stat": "str", "value": 1, "max_per_combat": 5, "target": "self" } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stack", "stack": "rage", "value": 3, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } } }
+          ]
+        }
+      }
+    }
+  ]
+}

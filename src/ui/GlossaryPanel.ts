@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { KEYWORD_DEFINITIONS, TOKEN_GLOSSARY, type KeywordDef } from './KeywordDefinitions';
+import { renderTokenText } from './IconTokens';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
 
 const OVERLAY_DEPTH = 11000;
@@ -157,12 +158,18 @@ export function openGlossary(scene: Phaser.Scene, onClose?: () => void): Glossar
 
       cursorY += nameText.height + KW_DEF_GAP;
 
-      const defText = scene.add.text(CONTENT_X, cursorY, kw.definition, {
-        fontSize: `${DEF_FONT}px`, color: COLORS.textPrimary, fontFamily: FONTS.body,
-        wordWrap: { width: CONTENT_W }, lineSpacing: 2,
-      }).setOrigin(0, 0);
-      contentContainer.add(defText);
-      cursorY += defText.height + ENTRY_GAP;
+      // renderTokenText so bracketed tokens in the definition (e.g. [armor],
+      // [HP]) render as their colored icons instead of literal "[armor]" text.
+      const defBlock = renderTokenText(scene, CONTENT_X, cursorY, kw.definition, {
+        fontSize: `${DEF_FONT}px`,
+        color: COLORS.textPrimary,
+        fontFamily: FONTS.body,
+        wrapWidth: CONTENT_W,
+        lineSpacing: 2,
+      });
+      contentContainer.add(defBlock);
+      const defHeight = (defBlock.getData('tokenTextHeight') as number | undefined) ?? 0;
+      cursorY += defHeight + ENTRY_GAP;
     }
   }
 

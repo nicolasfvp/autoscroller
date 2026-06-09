@@ -1,0 +1,89 @@
+{
+  "lane": "tier-ordering",
+  "method": "Tier A/B swap tests. Each A deck holds a T2 card in a fixed 10-12 card armor/mage harness; each B deck is identical except that slot holds the analogous T3 (same elements/role). 4 repeats per matchup. T3 MUST win/TTK >= T2; all proposed fixes BUFF the T3 (C1: cut CD toward 1.2s floor / raise ceiling), never nerf the T2.",
+  "resultsPath": "tests/audit/wf/tier-ordering/results.json",
+  "decksTested": 41,
+  "matchupsRun": 189,
+  "findings": [
+    {
+      "id": "TO-1",
+      "kind": "tier_violation",
+      "target": "t3-defense-defense-water (Stagnant Bulwark)",
+      "stage": "late+boss1",
+      "evidence": "vs t2-defense-defense (Bulwark Vow) in identical armor harness, T3 is SLOWER on all 5 late enemies: depths 9500>8875, fire_elemental 13500>12700, werewolf 13500>10300, mutated_salamander 17100>15100, iron_golem 53900>49900 (abB-dd-defdefwater vs abA-dd-defdef, 4/4 wins each). Boss1 vs doom_knight: T3 ttk 61100 @ hp 0.04 vs T2 ttk 47900 @ hp 0.219 (abB-boss-defdefwater vs abA-boss-defdef). T3 is strictly worse on TTK and HP.",
+      "severity": "high",
+      "proposedChange": "C1: cut cd 2.4s -> 1.6s (matches its T2 analog's snappiness; cost stays 1s+1m). Floor of poison drip is too slow to matter; faster recast lets the 1[poison]/2s aura actually accrue. Optionally raise the drip from 1[poison] every 2s to 2[poison] every 2s to give it a real ceiling over Bulwark Vow.",
+      "confidence": "high"
+    },
+    {
+      "id": "TO-2",
+      "kind": "tier_violation",
+      "target": "t3-defense-defense-earth (Stoneward Reprisal)",
+      "stage": "late+boss1",
+      "evidence": "vs t2-defense-defense (Bulwark Vow), identical harness, T3 SLOWER on all 5 late enemies: depths 9675>8875, fire_elemental 13500>12700, werewolf 13500>10300, mutated_salamander 18300>15100, iron_golem 53900>49900 (abB-dd-defdefearth vs abA-dd-defdef, 4/4). Boss1 vs doom_knight: T3 ttk 53900 @ hp 0.159 vs T2 ttk 47900 @ hp 0.219 (abB-boss-defdefearth). Slower kill AND lower HP cushion than the T2 it must beat.",
+      "severity": "high",
+      "proposedChange": "C1: cut cd 2.4s -> 1.6s (cost stays 1s). The Brace:Apply 2[stun] payoff is real control but the 2.4s recast strands it; a snappier stun keeps the enemy frozen long enough to convert to a TTK/HP edge over Bulwark Vow.",
+      "confidence": "high"
+    },
+    {
+      "id": "TO-3",
+      "kind": "tier_violation",
+      "target": "t3-fire-fire-water (Quench Lance)",
+      "stage": "late",
+      "evidence": "vs t2-fire-water (Steam Surge) in identical burn-mage harness. T3 LOSES fights the T2 WINS: fire_elemental T3 wr=0 deaths=4 vs T2 wr=1 ttk=15000 (abB-fw-firefirewater vs abA-fw-firewater); mutated_salamander T3 wr=0 deaths=4 vs T2 wr=1 ttk=25000. Both 4/4 deterministic. vs iron_golem T3 avgDamage 177 < T2 229. The T3 is a dead build-around (apply 2[burn]; conditional gain 2 INT if consume 10+ burn) that on flat play does less than the T2.",
+      "severity": "high",
+      "proposedChange": "C1: cut cd 2.4s -> 1.4s (match its T2 analog) AND raise the flat floor from 2[burn] to 4[burn] so it does meaningful work before the conditional INT scaling ever triggers. Keep cost 1s+1m. This raises the ceiling without touching Steam Surge.",
+      "confidence": "high"
+    },
+    {
+      "id": "TO-4",
+      "kind": "tier_violation",
+      "target": "t3-defense-earth-water (Bogplate)",
+      "stage": "late",
+      "evidence": "vs t2-defense-earth (Bramble Bulwark) identical harness. T3 is faster on normals but FAILS the boss check: vs iron_golem T3 ttk 51100 > T2 49900 (abB-de-defearthwater__vs__iron_golem vs abA-de-defearth__vs__iron_golem, both 4/4 @ hp 0.595). The sibling t3-defense-earth-earth (Bedrock Bulwark) beats the T2 vs golem at ttk 34100, proving the family CAN clear the bar — Bogplate cannot.",
+      "severity": "med",
+      "proposedChange": "C1: cut cd 2.4s -> 1.8s. Bogplate's Vengeance:Apply 3[poison] rider rarely fires against the slow-attacking golem, so its only reliable output is 14 armor on a long CD; a shorter recast lets the armor/poison cycle out-pace Bramble Bulwark on the boss too. Cost stays 1s+1m.",
+      "confidence": "med"
+    },
+    {
+      "id": "TO-5",
+      "kind": "tier_violation",
+      "target": "t3-defense-earth-fire (Magmaplate)",
+      "stage": "late",
+      "evidence": "vs t2-defense-earth (Bramble Bulwark) identical harness. Faster on normals but FAILS the boss: vs iron_golem T3 ttk 51100 > T2 49900 (abB-de-defearthfire__vs__iron_golem vs abA-de-defearth, both 4/4 @ hp 0.595). Same family's Bedrock Bulwark clears it at 34100, so the bar is reachable.",
+      "severity": "med",
+      "proposedChange": "C1: cut cd 2.4s -> 1.8s (cost stays 2s). Brace:Deal 14 + apply 2[burn] is a strong payoff but only lands when the enemy is about to hit; a snappier recast lets the Brace window come up more often and converts to a boss TTK edge over Bramble Bulwark.",
+      "confidence": "med"
+    },
+    {
+      "id": "TO-6",
+      "kind": "tier_violation",
+      "target": "t3-counter-earth-earth (Tombrage)",
+      "stage": "late",
+      "evidence": "vs t2-counter-earth (Thornwall) identical harness. T3 SLOWER on 4 of 5: depths 9275>8700, werewolf 10700>10300, mutated_salamander 15500>15100, iron_golem 51100>49900 (abB-ce-cnteartheart vs abA-ce-cntearth, all 4/4 @ hp 0.595). Only beats T2 on fire_elemental (10700<12700). Thornwall already deals 5 + Brace:6, so Tombrage's pure 12 armor + low-HP rage rider is a net downgrade on output.",
+      "severity": "med",
+      "proposedChange": "C1: cut cd 2.4s -> 1.6s (Thornwall is 2.0s; cost stays 2s). Tombrage's rage payoff only fires under 40% HP; pair the CD cut with a small ceiling bump (gain 8[rage] -> also Deal 6 Pierce on the trigger) so when assembled it clearly out-damages Thornwall. CD cut alone is the minimum fix.",
+      "confidence": "med"
+    },
+    {
+      "id": "TO-7",
+      "kind": "tier_violation",
+      "target": "t3-water-water-water (Tidesong Aura)",
+      "stage": "late",
+      "evidence": "vs t2-water-water (Frostbind) identical mage harness. T3 is a SLOWER pure-heal on all 5: depths 12000>11000, fire_elemental 13000>12000, werewolf 13900>13000, mutated_salamander 15000>14000, iron_golem 21000>20000 (abB-ww-waterwaterwater vs abA-ww-waterwater, 4/4), buying only ~+0.01-0.02 HP. It also DROPS Frostbind's stun (control). The T2 harness row is identical to the T1-Mend harness row (abA-w1-mend), i.e. Frostbind's value here is its heal floor and Tidesong fails to beat even that meaningfully.",
+      "severity": "low",
+      "proposedChange": "C1: cut cd 2.4s -> 1.8s and raise heal 18 -> 22 ([spi]) so the T3 pure-sustain line clearly out-heals Frostbind's incidental 4 armor + heal, justifying the lost control. Cost stays 2m. (C3-safe: heal-only, no armor->damage conversion.)",
+      "confidence": "med"
+    }
+  ],
+  "healthyT3s_noViolation": [
+    "t3-defense-defense-defense (Aegis): beats T2 Bulwark Vow vs iron_golem 32500<49900, boss1 hp 0.371>0.219.",
+    "t3-agility-agility-defense (Veil of Steps) & t3-agility-defense-defense (Phalanx Drift): far faster than T2 Parrying Stance (boss 26900/29700 vs 49400).",
+    "t3-counter-defense-defense (Reforge Vow): boss 30100 vs T2 Iron Reckoning 50300.",
+    "t3-air-air-defense (Galeward) & t3-air-defense-defense (Stormgate): boss 27000/28300 vs T2 Cyclone Ward 46300.",
+    "t3-defense-water-water (Brineward): boss hp 0.81 vs T2 Vow of the Tide 0.649 (C3 survival edge).",
+    "t3-air-water-water (Misted Cadence) & t3-air-air-water (Squall Aura): higher HP cushion than T2 Misting Veil everywhere.",
+    "t3-defense-defense-fire (Pyric Bulwark): faster than T2 Forge Spike Ward incl boss 32500<50900.",
+    "t3-defense-earth-earth (Bedrock Bulwark): beats T2 Bramble Bulwark vs golem 34100<49900."
+  ]
+}

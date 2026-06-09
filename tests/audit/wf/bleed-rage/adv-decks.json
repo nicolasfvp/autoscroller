@@ -1,0 +1,235 @@
+{
+  "decks": [
+    {
+      "id": "adv-base-earlyjab",
+      "label": "ADV base: test slot=Jab at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-base",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-crimson-spiral-early",
+      "label": "ADV: Crimson Spiral at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-counter-counter-counter",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-cleavers-tax-early",
+      "label": "ADV: Cleaver's Tax at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-counter-counter",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-wrath-brand-early",
+      "label": "ADV: Wrath Brand at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-counter-fire",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-berserker-ledger-early",
+      "label": "ADV: Berserker's Ledger (no rage gate) at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-crimson-cascade-early",
+      "label": "ADV: Crimson Cascade (T3 bleed) at EARLY pos2, fed rage (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-counter-counter-water",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-thinrage-base-earlyjab",
+      "label": "ADV thin-rage base: Jab at pos2 (boss1)",
+      "archetype": "adv-base",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t1-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-agility"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-thinrage-crimson-spiral-early",
+      "label": "ADV thin-rage: Crimson Spiral at pos2 (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-counter-counter-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-agility"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-thinrage-cleavers-tax-early",
+      "label": "ADV thin-rage: Cleaver's Tax at pos2 (boss1)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-counter-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-agility"
+      ],
+      "runXP": 520,
+      "vsBoss": true
+    },
+    {
+      "id": "adv-crimson-cascade-vs-jab-normals",
+      "label": "ADV: Crimson Cascade pos2 vs late normal battery (kill-chain check)",
+      "archetype": "adv-test",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t3-counter-counter-water",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 720,
+      "vsBoss": false
+    },
+    {
+      "id": "adv-jab-vs-jab-normals",
+      "label": "ADV base: Jab pos2 vs late normal battery",
+      "archetype": "adv-base",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack"
+      ],
+      "runXP": 720,
+      "vsBoss": false
+    }
+  ]
+}

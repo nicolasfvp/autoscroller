@@ -1,0 +1,123 @@
+{
+  "matchups": [
+    {
+      "id": "stress-FILLER-doomHP440",
+      "label": "STRESS lean shell filler Jab slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stress-razor-CURRENT-doomHP440",
+      "label": "STRESS Razor Stance CURRENT slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-counter-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stress-razor-PROPOSED-doomHP440",
+      "label": "STRESS Razor Stance PROPOSED (cd1.4,+Deal3) slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-counter-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4,
+          "effects": [
+            { "type": "damage", "value": 3, "target": "enemy", "scale": { "stat": "dex", "per": 2, "value": 1 } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 10000, "trigger": "on_hit_dealt", "then": { "type": "dot", "value": 1, "target": "enemy", "stack": "bleed", "scale": { "stat": "dex", "per": 3, "value": 1 } } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 4000, "trigger": "on_hit_dealt", "then": { "type": "dot", "value": 1, "target": "enemy", "stack": "bleed", "scale": { "stat": "dex", "per": 3, "value": 1 } }, "condition": { "took_damage_within_ms": 2000 } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stress-wrath-CURRENT-doomHP440",
+      "label": "STRESS Wrath Squall CURRENT slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stress-wrath-PROPOSED-doomHP440",
+      "label": "STRESS Wrath Squall PROPOSED (cd1.5,+4rage) slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-air-counter-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-counter-counter": {
+          "cooldown": 1.5,
+          "effects": [
+            { "type": "stack", "stack": "rage", "value": 4, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stat_gain", "stat": "str", "value": 1, "max_per_combat": 5, "target": "self" } },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 8000, "event_counter": { "event": "hp_lost", "threshold": 1, "repeat": true }, "then": { "type": "stack", "stack": "rage", "value": 3, "target": "self", "scale": { "stat": "vit", "per": 3, "value": 1 } } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "stress-bloodlash-CURRENT-doomHP440",
+      "label": "STRESS Bloodlash CURRENT slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "stress-bloodlash-PROPOSED-doomHP440",
+      "label": "STRESS Bloodlash PROPOSED (Pierce,+6str) slot0 vs doom_knight HP440",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-attack-attack-counter","t2-attack-attack","t2-agility-counter","t1-agility","t2-defense-defense","t1-defense","t1-attack"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "enemyOverride": { "baseHP": 440 },
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-attack-attack-counter": {
+          "effectsPatch": [
+            { "pierce_armor": true },
+            { "value": 6, "max_per_combat": 6 }
+          ]
+        }
+      }
+    }
+  ]
+}

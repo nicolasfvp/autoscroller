@@ -1,0 +1,74 @@
+{
+  "cluster": "Tier-violation buffs (defensive/poison/heal T3s vs T2 comparators)",
+  "method": "A/B/C single-card-in-EARLY-slot-0 specs, identical filler, baseline + current + proposed via cardOverrides, >=6 reps for boss claims. Fixed-deck-order engine honored (candidate always slot 0).",
+  "specs": [
+    "tests/audit/wf-q/q-tier-violations/alchemic-drain.json",
+    "tests/audit/wf-q/q-tier-violations/defensive-bulwark.json",
+    "tests/audit/wf-q/q-tier-violations/tidesong-aura.json",
+    "tests/audit/wf-q/q-tier-violations/drain-tidefoot-followup.json",
+    "tests/audit/wf-q/q-tier-violations/tidefoot-magehome.json",
+    "tests/audit/wf-q/q-tier-violations/bogwrath-magnitude.json"
+  ],
+  "items": [
+    {
+      "proposalId": "Alchemic Drain (t3-earth-fire-water): cd 2.4->1.6, poison 3->4, Heal6[spi]",
+      "question": "Is the 'T3 Drain loses 0/6 to T2 Mire Bloom 6/6' a poison-output gap (which the buff fixes) or just Mire's armor providing survival the bare poison shell lacks? Does the proposed buff actually flip the head-to-head without overshoot?",
+      "answer": "It is mostly a SURVIVAL-shell artifact, not a poison-output gap. In the bare poison shell vs doom_knight: Mire WINS 6/6 @2.5% HP, Drain-current LOSES 0/6 (271 dmg), Drain-proposed STILL LOSES 0/6 (372 dmg) -- the buff did NOT flip the boss. But once a shared armor card is in the shell (fair isolation), ALL THREE win: Mire 20.7% HP/387 dmg, Drain-current 17.4%/399 dmg, Drain-proposed 17.4%/380 dmg with FASTER ttk (24s->21s). Current Drain already out-damages Mire (399>387) when survival is provided; the loss came from Mire's armor 4, not its poison. On salamander the proposed (45.5% HP) beats current (38.2%) and matches Mire (47.3%).",
+      "verdict": "holds",
+      "evidence": "alchemic-drain-results: AD-A-mire-boss win1 @2.5%/391dmg; AD-B-drain-cur-boss LOSS 0/6 271dmg; AD-C-drain-prop-boss LOSS 0/6 372dmg; AD-C-drain-prop-sal 45.5%HP/196dmg vs AD-B 38.2%/189. drain-tidefoot-followup-results: AD2-A-mire-armorshell 20.7%/387, AD2-B-drain-cur 17.4%/399, AD2-C-drain-prop 17.4%/380 ttk21000.",
+      "revisedValue": "Keep cd2.4->1.6 + poison3->4 (safe, no overshoot: proposed stays at 17.4% HP, only ttk improves). But the 'T3<T2' urgency is overstated -- it is a survival-shell artifact; Drain already matches Mire on output. The buff is a tempo polish, fine to ship, not a critical flip.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "Stagnant Bulwark (t3-defense-defense-water): cd 2.4->1.6, aura poison 1->2 per 2s",
+      "question": "Does cd1.6 + aura poison 1->2 flip Stagnant Bulwark to match/beat T2 Bulwark Vow in an identical armor shell vs the boss, and does it overshoot the T2?",
+      "answer": "YES, clean flip, no overshoot. Current Stagnant Bulwark WINS the boss but on fumes (4.0% HP cushion, slow 61.1s ttk) -- a genuine T3<T2 violation vs Bulwark Vow (21.9% HP, 47.9s). Proposed lifts it to 20.5% HP / 44.5s ttk -- essentially PARITY with the T2 (slightly lower HP 20.5 vs 21.9 but FASTER kill 44.5 vs 47.9s and fewer cards 27 vs 29). Lands right at the T2 line, does not dominate.",
+      "verdict": "holds",
+      "evidence": "defensive-bulwark-results (6 reps): BV-A-bulwarkvow 21.9%HP/47900ms/29cards; SGB-B-stagnant-cur 4.0%HP/61100ms/35cards; SGB-C-stagnant-prop 20.5%HP/44500ms/27cards.",
+      "revisedValue": null,
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "Stoneward Reprisal (t3-defense-defense-earth): cd 2.4->1.6",
+      "question": "Is a pure cd-cut (2.4->1.6) enough to lift Stoneward Reprisal above T2 Bulwark Vow, or does it under-correct (its payoff is stun-on-armor-break, which may never trigger)?",
+      "answer": "YES, the cd-cut alone is sufficient and lands a proper T3 edge. Current Stoneward 15.9% HP < Bulwark Vow 21.9% (violation confirmed). Proposed cd1.6 lifts it to 24.5% HP -- now ABOVE the T2 (24.5 > 21.9), a clean ~+12% T3 edge without overshoot. The cd-cut means more armor uptime -> more armor-break triggers, so the payoff is not dead.",
+      "verdict": "holds",
+      "evidence": "defensive-bulwark-results (6 reps): BV-A-bulwarkvow 21.9%HP/362-377dmg; STR-B-stoneward-cur 15.9%HP/362dmg/53900ms; STR-C-stoneward-prop 24.5%HP/363dmg/51500ms.",
+      "revisedValue": null,
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "Tidesong Aura (t3-water-water-water): cd 2.4->1.8, heal 18->22[spi]",
+      "question": "Is the Tidesong<Frostbind violation even real, and does the proposed buff overshoot (cd1.8 + heal22 on a pure-sustain card could make a mage unkillable)?",
+      "answer": "The violation is MARGINAL-to-nonexistent in this sim: current Tidesong already TIES Frostbind on the boss (both 32.2% HP) and BEATS it on salamander (58.2% vs 53.6%). The proposed buff gives a modest, safe T3 edge: boss 35.5% (vs Frostbind 32.2%), salamander 69.1% (vs 53.6%). No overshoot -- it does not flip any loss (deck already wins) and the HP gain is incremental, not unkillable. Honors C2 (heal is spi-scaled, no STR touch) and C3 (pure sustain, no heal->damage).",
+      "verdict": "holds",
+      "evidence": "tidesong-aura-results (6/5 reps): TS-A-frostbind-boss 32.2%HP; TS-B-tidesong-cur-boss 32.2%HP; TS-C-tidesong-prop-boss 35.5%HP. TS-A-frostbind-sal 53.6%; TS-B-cur 58.2%; TS-C-prop 69.1%.",
+      "revisedValue": "Buff holds as-is. Note the underlying 'T3<T2' premise (lane TO-7) does not reproduce in full combat -- Tidesong was already >= Frostbind. Treat this as a polish (modest sustain edge) rather than a violation fix; could be deprioritized.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "Bogwrath (t3-counter-earth-water): drop Brace/armor-break gate -> unconditional 4 poison, cd 2.4->1.6",
+      "question": "Does ungating Bogwrath to unconditional 4-poison + cd1.6 over-correct past the +15-25% T3 charter band (it keeps the rage-on-armor-break aura on top of guaranteed poison)?",
+      "answer": "It flips correctly but the poison-4 magnitude sits at the HIGH end of the band. Current Bogwrath 18.5% HP < Bulwark Vow 21.9% (under the T2). Proposed (uncond 4 poison, cd1.6) = 29.1% HP @8 reps -> +33% over the T2 (above the +15-25% charter ceiling). Dropping the poison to 3 instead of 4 lands at 26.5% HP = +21%, squarely inside the band, while still clearly beating the T2 and out-damaging it (387 vs 377). Not oppressive either way (it is a cushion, not a trivializer), but poison3 is the cleaner charter fit.",
+      "verdict": "revise",
+      "evidence": "defensive-bulwark-results (6 reps): BOG-B-bogwrath-cur 18.5%HP; BOG-C-bogwrath-prop(poison4) 29.1%HP/42000ms. bogwrath-magnitude-results (8 reps): BOGM-A-bulwarkvow 21.9%; BOGM-C4-poison4 29.1% (+33%); BOGM-C3-poison3 26.5% (+21%, in band) 387dmg.",
+      "revisedValue": "Ungate to UNCONDITIONAL poison + cd2.4->1.6 as proposed, but set the unconditional poison to 3 (not 4): yields +21% T3 edge (26.5% vs T2 21.9%), inside the +15-25% charter band. poison4 (+33%) is acceptable but hot.",
+      "decisionForUser": null
+    },
+    {
+      "proposalId": "Tidefoot Bloom (t3-counter-water-water): remove exhaust, up-front 4-poison floor, cd 2.2->1.6",
+      "question": "Does the proposed buff actually lift Tidefoot above T1-filler value (the dead-card rescue goal), or does it under-correct and leave a T3 worth no more than a Jab?",
+      "answer": "UNDER-CORRECTS in dmg, but its real value is TTK in its home shell. In a warrior shell it is essentially a T1 Jab (proposed 142 dmg / 19.8s ttk vs Jab 141 dmg / 18.4s -- actually marginally slower) -- the int-scaled heal-poison does nothing for a warrior. In its REAL home (mage + heal shell vs salamander) the proposed buff gives a clear identity: 14s ttk vs Mend-filler 22s and current Tidefoot 18s -- a ~36% faster kill -- but dmg (185) only matches Mend (206) and HP cushion (41%) trails Mend (49%). A slightly stronger floor (4->6 up-front, per-heal tick 1->2) reaches Mend's HP cushion (48% vs 49%) at the FASTEST ttk (12s) and 194 dmg -- a real T3-ceiling card. The proposed magnitude rescues it from dead but lands only at filler-parity; floor6/per-heal2 makes it a genuine T3.",
+      "verdict": "revise",
+      "evidence": "drain-tidefoot-followup-results: TFB2-B-cur-kobra 146dmg/23820ms, TFB2-C-prop-kobra 142dmg/19760ms, TFB2-FILLER-jab 141dmg/18380ms (proposed ~= Jab in warrior shell). tidefoot-magehome-results: FILLER-mend 206dmg/22000ms/49%; B-cur 194/18000/32%; C-prop(floor4,perheal1) 185/14000/41%; D-strong(floor6,perheal2) 194/12000/48%.",
+      "revisedValue": "Keep remove-exhaust + cd2.2->1.6, but bump the up-front poison floor 4->6 and the per-heal tick 1->2 (the 'D' variant): reaches Mend-filler HP cushion at the fastest ttk (12s) and gives Tidefoot a true T3 ceiling instead of T1-Jab parity. Note: Tidefoot is mis-slotted as a warrior counter card -- its payoff is INT/heal-driven, so it only matters in a mage+heal deck; ensure it is evaluated there.",
+      "decisionForUser": null
+    }
+  ],
+  "newConcerns": [
+    "Single-card-in-bare-shell boss tests are confounded by survival: a T3 that provides poison/heal but no armor will 'lose' a razor-thin doom_knight matchup that a T2 with armor 'wins', even when the T3 out-damages it. The Alchemic Drain 0/6-vs-6/6 lane finding (PP-5) is largely this artifact -- with shared armor in the shell, current Drain already matches Mire. Re-validate any 'T3 loses to T2' boss claim with a shared-survival shell before treating it as a true tier violation.",
+    "Tidefoot Bloom (and likely the other heal/INT-scaled water counter cards) are mis-categorized as warrior 'counter' cards: their payoffs scale on INT and trigger on heal_received, so they contribute ~0 in a warrior shell (INT~0, no heals). Their viability MUST be judged in a mage+heal deck. The warrior-shell A/B used in some lanes will systematically under-read them.",
+    "Bogwrath at unconditional poison-4 + cd1.6 + the retained rage-on-armor-break aura reaches +33% HP edge over the T2 -- above the +15-25% charter band. poison-3 keeps it inside the band. If the synthesizer ships several ungated counter-water T3s at once, watch cumulative armor-shell power.",
+    "Tidesong Aura's underlying 'T3<T2 vs Frostbind' premise does not reproduce in full combat (Tidesong already >= Frostbind). The buff is harmless polish, but flag that the lane that flagged it (TO-7, ttk-at-fixed-poison-rate) may be measuring a control/throttle artifact rather than a real deck-level loss."
+  ]
+}

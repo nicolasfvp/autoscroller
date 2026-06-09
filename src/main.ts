@@ -31,6 +31,13 @@ import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 import { DebugOverlayScene } from './scenes/DebugOverlayScene'
 import { CombatTestScene } from './scenes/CombatTestScene'
 import { SCENE_KEYS } from './state/SceneKeys'
+import { initConsoleLogger } from './debug/ConsoleLogger'
+
+// Capture all console output to logs/console.log (dev-only; tree-shaken from
+// production). Installed first so it sees the earliest boot logs.
+if (import.meta.env.DEV) {
+    initConsoleLogger()
+}
 
 // Responsive scaling: the game is authored in 800×600 game-space (where every
 // hardcoded HUD/sprite/tile coordinate lives). We render into a supersampled

@@ -1,0 +1,45 @@
+{
+  "lane": "pure-poison",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Strong, well-grounded lane. PLAN: decks are realistic (correct stage profiles via the canonical expander, mage class, low-INT, right enemy batteries; doom_knight at mult 1.0 / 380HP and iron_golem at 1.05 / 409HP). Boss claims use >=4-5 repeats; detonator/floor claims use 5. EXECUTION: all three results files (results/results2/results3) exist, are non-empty, matchup ids match decks, and every quoted number reproduces against the JSON. I independently re-ran the two most load-bearing claims at 6 repeats (adv-results.json) and they reproduce: (a) detonators are strictly net-negative vs the same shell (doom_knight: Mireglide-applier wr=1 hp%=0.207 vs Drowning Lance wr=0 6/6 deaths vs Marsh Squall wr=1 hp%=0.033; iron_golem: applier hp%=0.319 vs Lance 0.109 vs Marsh 0.181, detonators also slower TTK); (b) a TRUE single-slot A/B (only slot5 differs, which the designer's own PP-5 test did NOT control for) confirms the tier violation even more cleanly: Alchemic Drain (T3) wr=0 6/6 deaths vs Mire Bloom (T2) wr=1 6/6 and Mireglide (T3) wr=1. OUTPUT: conclusions are supported and proposals are C1/C4/T3-buff compliant. Card descriptions, costs, CDs, and mechanics (Bogwrath on_armor_break gate, Stagnant Bulwark 1-poison/2s aura, detonator full-pool consume) were verified in cards.json / CardResolver.ts. Net: confirm 5, revise 1 (PP-2 framing — the realistic deck WINS at winRate 1.0, just at a thin 6.6% cushion; it is not a loss, so a boss nerf must remain a last resort).",
+  "verdicts": [
+    {
+      "findingId": "PP-1",
+      "status": "confirmed",
+      "reason": "Reproduced independently at 6 repeats. doom_knight same-shell swap: plain applier (Mireglide) wr=1 hp%=0.207 vs Drowning Lance wr=0 6/6 DEATHS vs Marsh Squall wr=1 but hp%=0.033 (vs 0.207). iron_golem: applier ttk=15000 hp%=0.319 vs Lance ttk=20000 hp%=0.109 vs Marsh ttk=18000 hp%=0.181 — both detonators slower AND lower cushion. Conclusion is robust across two different baseline appliers (Boilstep in designer's results3, Mireglide in mine). Detonators cost MORE (Lance 2s+1m, Marsh 2s+2m; verified in cards.json) yet deliver less because consuming the full quadratic pool kills the n(n+1) ramp. The engine (CardResolver.ts: consume_stack_value, Drowning Lance named) supports a partial-consume rewire, so the C4 'consume only half (round up)' + C1 CD relief (Lance 2.4->1.8, Marsh 2.4->2.0) is implementable and compliant; no T2 touched. High severity is right: a whole T3 line is a strict trap.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PP-2",
+      "status": "revised",
+      "reason": "Numbers reproduce (adv-b1-appliers-pure wr=1 hp%=0.066 at 6 repeats; premium engine decks 0.207-0.372). But the headline framing overstates the problem: by the WORKFLOW bar (first boss winRate >= ~0.8 with some HP cost) doom_knight is already PASSING for the realistic 10-card pure-applier deck — it WINS 6/6 at winRate 1.0, just at a thin 6.6% cushion. The '5/5 DIES' cases are the 7-card under-sized shell and the detonator/trap decks, which are not the realistic loop-10 deck. So this is a 'thin cushion', not a 'can't beat first boss', and severity med is fair-to-slightly-high.",
+      "revisedChange": "Keep the order of operations: do NOT nerf doom_knight. Land PP-1/PP-3/PP-4/PP-5 first (they raise the non-premium poison floor by making the cheap/dead T3s real appliers and removing the detonator trap). Re-simulate the realistic 10-card applier deck afterward; only if it is still below ~15-20% cushion at >=5 repeats should the doom_knight enrage threshold be softened 0.5 -> 0.4 (delay the speed spike), never an HP/damage cut. Treat the boss change as conditional and gated on a post-buff re-test."
+    },
+    {
+      "findingId": "PP-3",
+      "status": "confirmed",
+      "reason": "Supported by the swap data: swap2-stagnant vs mutated_salamander hp%=0.42 dmg=218 is barely above the T1 Spark filler baseline (swap2-base-filler hp%=0.384 dmg=207) and BELOW the T2 Mire Bloom swap (swap2-mirebloom hp%=0.442 dmg=218) — a T3 trailing a T2 on marginal value. Card verified: Stagnant Bulwark t3-defense-defense-water, cost 1s+1m, cd 2.4s, aura applies 1 poison/2s for 12s (~6 poison) = too slow to feed the quadratic curve. Proposal is T3-only (keep cost, cut cd 2.4->1.6, raise aura to 2 poison/2s, keep 10 armor): C1-compliant CD cut + ceiling buff that lifts it above the T2 baseline without touching any T2. Med severity correct (weak-but-functional defensive card, not a hard loss).",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PP-4",
+      "status": "confirmed",
+      "reason": "Bogwrath (t3-counter-earth-water): verified in cards.json its poison fires via trigger 'on_armor_break' (Brace) — a low-armor mage rarely triggers it, so the 4-poison payoff is mostly dead; swap evidence swap-bogwrath vs doom_knight hp%=0.05 (worst of the add-a-T3 swaps) and swap2-bogwrath hp%=0.42 dmg=208 = filler-tier. Tidefoot Bloom (t3-counter-water-water) is peakOPS 0, [exhaust], heal-gated 'each time you heal apply 1 poison' — structurally dead in a low-heal poison deck. Proposals are T3-only reworks (drop the Brace gate -> unconditional 4 poison + cd 2.4->1.6; remove [exhaust], give Tidefoot a guaranteed up-front floor): C1/C4-compliant, no T2 nerf. Confidence med is appropriate since Tidefoot was reasoned structurally rather than from a dedicated swap, but its peakOPS 0 makes the dead-card call safe.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PP-5",
+      "status": "confirmed",
+      "reason": "STRENGTHENED on re-test. The designer's original PP-5 compared two non-identical shells (the Alchemic Drain swap shell had Boilstep+Steaming Plague+2 Mire; the T2 baseline had 3 Mire), a methodological weakness. I built a TRUE single-slot A/B (identical shell, only slot5 changes) and the violation holds 6/6: Alchemic Drain (T3) wr=0 6/6 DEATHS dmg=343; Mire Bloom (T2) wr=1 6/6 hp%=0.041; Mireglide (T3 control) wr=1 hp%=0.083. A T3 losing where the analogous T2 wins is a textbook T3>T2 violation. Card verified: Alchemic Drain t3-earth-fire-water cost 1m cd 2.4s 'Apply 3 poison. Heal 6' — below curve. Proposal buffs the T3 only (cd 2.4->1.6, 3->4 poison): C1-compliant, never nerfs Mire Bloom. High severity correct.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "PP-6",
+      "status": "confirmed",
+      "reason": "Viability claim is well-supported and correctly restrained. Archetype clears every early/mid/late normal battery at winRate 1.0 (verified in results.json), and beats both bosses (poison-late-engine vs iron_golem wr=1 hp%=0.109; engine decks vs doom_knight up to hp%=0.372). Slipvenom (peakOPS 68.75) and Bog Catalyst (45.83) are the strongest cards but the data shows they are not oppressive: b1-catalyst-spam has the THINNEST cushion (hp%=0.033) and b1-slipvenom-spam still costs HP/time (hp%=0.355, ttk=10000). Per the WORKFLOW, strong-but-fair needs no nerf; declining to nerf them and keeping chunk-cap 60 is the right call. Low severity correct.",
+      "revisedChange": null
+    }
+  ]
+}

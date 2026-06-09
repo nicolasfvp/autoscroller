@@ -1,0 +1,45 @@
+{
+  "lane": "mage-scaling",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "overallAssessment": "Strong, well-instrumented lane. The headline (direct-damage mages fail the 'should-be-easy' first boss while the warrior clears it even T1/T2-only, and the cause is the scaling axis not deck quality) fully reproduces in my independent re-test (adv-results.json, 5 repeats): fire wr0/dmg331, air wr0/dmg322, earth wr0/dmg242, water wr1/dmg382/hp0.198, warrior wr1/dmg380/hp0.119 -- every number matches the designer's to the integer. The controlled INT magnitude bracket also reproduces exactly (+INT1 elemMult1.45 wr0/dmg360; +INT2 elemMult1.60 wr1/dmg382/hp0.025). I verified the engine arithmetic independently: runXP 520 -> level 6 -> mage INT 3 -> elemMult 1.30 (0.15/pt), warrior STR 4 -> strMult 1.75; the diag 'int:3' delta is correctly INT 6 -> elemMult 1.75. CardResolver.ts:411 confirms the category=='magic' && scale.stat!=='str' gate. Decks are legal (no expander warnings), class-appropriate, and the realistic stage profiles match the brief. Two weaknesses: (a) MS-4 mis-targets -- its named example Cinderlance is STR-scaled, so the proposed gate (scale.stat!=='str') would NOT fix it; my added test shows the DEX-scaled attack card Cinder Sprint actually out-damages even the magic finisher (287 vs 247), so the dropped-gate fix helps a subset that isn't actually broken. (b) MS-3's Flame Dart buff targets an already-top-OPS (57.5) DEX-scaled T2 and risks a T3>T2 violation vs the analogous DEX T3 Boilstep (also Deal 6, shorter CD); and MS-2's own proposed 0.22/pt curve only reaches boss1 elemMult 1.44, BELOW the 1.45 that still LOST in sim, so MS-1's wr0->0.8 target is not met by the proposed magnitudes alone (acknowledged by the designer but under-corrects).",
+  "verdicts": [
+    {
+      "findingId": "MS-1",
+      "status": "confirmed",
+      "reason": "Reproduced independently with a fresh run + 5 repeats (adv-results.json): fire/air/earth direct-damage mages wr=0 (5/5 deaths) vs doom_knight; water/poison mage wr=1.0 (hp 0.198); warrior wr=1.0 (hp 0.119). Designer's results.json (4 repeats) and results-swap.json (noT3 warrior wr=1.0, 5/5, dmg 388) corroborate. The progression failure is real and high severity: a direct-damage mage cannot clear the realism-anchor first boss while a warrior clears it without any T3. Proposed change correctly refuses to nerf doom_knight or STR and defers to MS-2/MS-3.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "MS-2",
+      "status": "revised",
+      "reason": "Diagnosis CONFIRMED: the scaling axis is the cause. Independently verified the curve math (boss1 mage INT 3 -> elemMult 1.30; +INT2 -> 1.60 wins, +INT1 -> 1.45 loses) and that +STR3 also flips it (results-swap dmg 401, wr1). C2-compliant (raises the sanctioned INT/DEX/SPI per-point lever, never touches STR; 0.22/pt stays under strMult at every stage). BUT the proposed magnitude under-corrects: 0.22/pt yields boss1 elemMult 1.44, which is BELOW the 1.45 that STILL LOST in my sim, so this lever alone does not move fire/air mage to the MS-1 target of ~0.8 wr. Revise: raise the per-point coefficient enough that the boss1 mage reaches at least the empirically-observed win threshold (elemMult ~1.55-1.60 at INT 3), i.e. ~0.28-0.30/pt, OR pair a smaller curve bump with a faster mage INT cadence (offense axis every level instead of every 2). Keep it under strMult at all stages.",
+      "revisedChange": "C2 (never touches STR): raise magic per-point multiplier to ~0.28/pt (elemMult = 1 + (elemStat-1)*0.28) -> boss1 INT3 = 1.56 (at/above the observed 1.60 win line with MS-3 chip), late INT4 = 1.84, still under strMult 1.75/2.0... NOTE 1.84>1.75 at boss1-tier STR: cap the coefficient so elemMult stays strictly below the same-level strMult, e.g. 0.26/pt (boss1 1.52, late 1.78 vs warrior 2.0) and combine with the revised MS-3 (Steam Surge + Spark only) to clear. Re-sim to confirm wr>=0.8 before locking the constant."
+    },
+    {
+      "findingId": "MS-3",
+      "status": "revised",
+      "reason": "Steam Surge (Deal 4->6) and Spark (add token Deal 2) portions are defensible C2/C5 flat-value lifts that help low-INT volume past def 3, and the def-vs-small-hit math is real (Steam Surge 4*1.30=5.2 - def3 = ~2 landed). BUT the Flame Dart buff (Deal 5->6) is unjustified and risks a tier violation: Flame Dart is already the highest-OPS fire T2 (peakOPS 57.5), scales off DEX (not INT, so it does NOT serve the low-INT thesis), CD 1.2s. The analogous DEX-scaled T3 Boilstep is also Deal 6 but on a longer 1.8s CD -- a Deal-6 Flame Dart would out-DPS the T3, violating T3>T2. Drop the Flame Dart change.",
+      "revisedChange": "C2/C5 flat-value lift on low-value INT staples only: t2-fire-water Steam Surge Deal 4 -> 6; t1-fire Spark add a token Deal 2 alongside its burn. DO NOT buff Flame Dart (already top-OPS, DEX-scaled, off-thesis, and risks beating its T3 Boilstep). Keep costs/CDs as-is."
+    },
+    {
+      "findingId": "MS-4",
+      "status": "revised",
+      "reason": "The mechanism is real (CardResolver.ts:411 gates elemMult on category=='magic', so a STR-1 mage gets strMult 1.0 = no scaling on attack-category cards) and the cited sim numbers reproduce (Cinderlance finisher dmg 157 vs Steaming Plague 247). BUT the finding mis-targets: its named example Cinderlance scales off [str], so the proposed fix (gate on scale.stat!=='str') would STILL exclude it -- the fix does not fix the example. My added test shows the DEX-scaled attack card Cinder Sprint (t3-agility-fire-fire) actually out-damages the magic finisher (287 vs 247) WITHOUT the fix, because at boss1 DEX is 1 so elemMult would be ~1.0 anyway and its burn-consume payoff is strong. So the proposed dropped-gate change benefits a subset (dex/int attack cards) that is not demonstrably broken, while the genuinely dead-weight cards for mages are the STR-scaled ones that are arguably warrior cards by design. Severity should be low, not med.",
+      "revisedChange": "Reframe as a low-severity wiring nicety, not a mage-rescue. If desired, drop the category=='magic' gate so DEX/INT-scaled attack cards (Cinder Sprint, Galecinder, Cinderquake, Supernova) also get elemMult for mages -- but this is NOT the boss1 fix and does NOT touch the STR-scaled 'fire' attack T3s (Cinderlance/Slag Maul/Galebrand), which are intentionally warrior cards. Do not rely on this for MS-1's target. Re-sim any dex/int attack card after the change to ensure it doesn't overshoot the analogous magic T3 (Cinder Sprint already out-damages Steaming Plague)."
+    },
+    {
+      "findingId": "MS-5",
+      "status": "confirmed",
+      "reason": "Spark is genuinely the weakest fire filler: raw effect is a single dot value 3 burn, no direct damage, peakOPS 8.57 (lowest), and the swap test (5 repeats x 5 enemies) shows +Spark avgTTK 18468ms is the slowest flex pick. The C1 prescription (cut CD 1.4->1.2, snappy, no cost change) and the token Deal 2 are C1/C5-compliant and keep it a clean T1 single-effect. Low severity is correct (filler, not a blocker). Verified the Pyre-slower-TTK caveat is a fair detonator-timing note, not a Pyre claim.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "MS-6",
+      "status": "confirmed",
+      "reason": "Earth-control mage is the worst boss1 performer (adv-earth-boss1 wr0, dmg 242 -- lowest, reproduced). Diagnostics show it stays wr0 even at +INT3 (results-swap dmg 263) AND with a poison-damage win-condition bolted on (results-magnitude dmgfix dmg 278), so the problem is the archetype lacking any throughput/closer, compounded by the mage 0.8 defenseMultiplier preventing it from out-surviving to a second win condition (consistent with C3: control may be race-losing IF it buys time for a closer -- earth has none). Appropriately flagged low confidence as an archetype pass, not a single off-curve card. The concrete Quake change (add token Deal 2([int])) is C2/C5-clean and keeps it a T1 single-effect opener.",
+      "revisedChange": null
+    }
+  ]
+}

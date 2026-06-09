@@ -1,0 +1,52 @@
+{
+  "lane": "tier-ordering",
+  "reviewer": "adversarial",
+  "planValid": true,
+  "executionValid": true,
+  "summary": "PLAN sound: paired A/B swap harness (T2 vs analogous T3, identical otherwise) across late battery + iron_golem + doom_knight boss1, 4 repeats, all card ids legal, results.json present with 189 entries matching matchup ids. EXECUTION verified: every quoted number reproduces exactly from results.json. I independently re-tested the load-bearing claims with FRESH harness cores at 6-8 repeats (adv-results.json, adv-results2.json). TO-1, TO-2, TO-3, TO-7 reproduce robustly (10-20% TTK gaps, HP regressions, or an outright T3 loss). TO-4, TO-5, TO-6 are marginal (1-3%) harness-sensitive deltas that REVERSE direction in my harness (T3 net faster on 3/5), and the designer's 'Bedrock clears golem at 34100' anchor is a deck-specific artifact (Bedrock=42900 in my harness, identical to Bogplate/Magmaplate) — they do not robustly reproduce, so I DECLINE them.",
+  "verdicts": [
+    {
+      "findingId": "TO-1",
+      "status": "confirmed",
+      "reason": "Reproduces exactly in results.json and in my independent re-test. Late: T3 Stagnant Bulwark slower on all 5 (my harness: 9350>8900, 12900>12500, 14500>13700, 15700>14900, 45700>41700) with equal-or-lower HP. Boss1 my re-test (6 reps): T2 Vow ttk 39700 @hp 0.351 vs T3 Stagnant ttk 49300 @hp 0.139 — slower AND a real HP regression. Control Aegis correctly beats T2 (40100 @hp 0.49), validating the harness can show healthy T3>T2. Proposal (cd 2.4->1.6 to match the T2 analog, optional 2[poison]/2s ceiling) is C1/C5-compliant and buffs only the T3.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "TO-2",
+      "status": "confirmed",
+      "reason": "Reproduces. results.json: slower on all 5 late + boss1 hp 0.159<0.219. My re-test (6 reps boss1): T3 Stoneward ttk 60100 @hp 0.106 vs T2 Vow 39700 @hp 0.351 — dramatically slower and far lower HP cushion, the largest boss1 regression of the set. cd 2.4->1.6 (cost stays 1s) is C1-compliant, T3-only buff.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "TO-3",
+      "status": "confirmed",
+      "reason": "Headline claim, robustly reproduces. results.json: Quench Lance (T3) wr=0 deaths=4 on fire_elemental AND mutated_salamander, both fights Steam Surge (T2) wins 4/4 — deterministic. My fresh-harness re-test (6 reps) reproduces the core violation: T3 Quench LOSES mutated_salamander 6/6 deaths while T2 Steam Surge WINS 6/6 (ttk 21900). An outright T3<T2 loss is the strongest possible tier violation. NOTE: minor inaccuracy in the proposal text — it says 'cut cd 2.4->1.4 (match its T2)' but Steam Surge's actual cd is 1.3, not 1.4; immaterial to the fix. Floor raise 2[burn]->4[burn] + CD cut are C1/C5-compliant, T3-only buffs.",
+      "revisedChange": "C1: cut cd 2.4s -> 1.3s (actually match the Steam Surge analog) AND raise flat floor 2[burn] -> 4[burn] so it does real work before the conditional INT scaling triggers. Cost stays 1s+1m. (Designer wrote 1.4s 'to match T2' but the T2 is 1.3s.)"
+    },
+    {
+      "findingId": "TO-4",
+      "status": "declined",
+      "reason": "Does NOT robustly reproduce. The designer's golem number (T3 51100 > T2 49900) is real in their results.json but the gap is ~2.4% and harness-specific. In my independent harness (8 reps) Bogplate is FASTER than Bramble on depths/fire/werewolf and only ~3% slower on the golem (42900 vs 41700) — net faster on 3/5 enemies. Crucially the designer's load-bearing anchor 'sibling Bedrock clears golem at 34100, proving the bar is reachable' is a deck-composition artifact: in my harness Bedrock=42900 vs golem, IDENTICAL to Bogplate, so the 'bar' Bogplate supposedly fails is illusory. A 1-3% TTK delta dominated by filler damage cards is not evidence of a tier violation. The proposed CD cut is harmless/C1-compliant but is not justified by robust data.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "TO-5",
+      "status": "declined",
+      "reason": "Same defect as TO-4. Designer's golem 51100>49900 is real but ~2.4% and harness-specific. My harness (8 reps): Magmaplate net FASTER on 3/5 (depths/fire/werewolf), only ~3% slower on golem (42900 vs 41700), Bedrock control also 42900 (not the cited 34100). Magmaplate already carries the strongest Brace payoff of the family (Deal 14 + 2[burn]). The single-enemy golem 'failure' is noise; not a robust tier violation.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "TO-6",
+      "status": "declined",
+      "reason": "Does NOT reproduce. Designer claimed Tombrage SLOWER on 4/5 incl golem (51100>49900). My independent harness (8 reps) shows Tombrage net slower on only 3/5 and FASTER on the boss golem (40900 < Thornwall 41700) and werewolf (12900<13700); the 3 'slower' fights are all <3% gaps. The conclusion flips direction with filler composition, so the violation is not robust. The proposed ceiling bump (rage trigger -> also Deal 6 Pierce) is a NEW payoff that risks over-correcting a card that is roughly at parity; decline pending stronger evidence.",
+      "revisedChange": null
+    },
+    {
+      "findingId": "TO-7",
+      "status": "confirmed",
+      "reason": "Reproduces (correctly flagged low severity). results.json + my re-test agree: Tidesong (T3) is a slower pure-heal vs Frostbind (T2) on ~4/5 enemies. CAVEAT: the designer understated Tidesong's upside — in my harness Tidesong buys a real HP-cushion edge on all 5 (e.g. golem 0.63>0.58, depths 0.727>0.676), more than the '~+0.01-0.02 HP' they cited, so 'fails to beat even the heal floor meaningfully' is slightly overstated. Still, it loses Frostbind's stun (control) for a slower clock, so a modest T3-only buff is warranted. Proposal (cd 2.4->1.8, heal 18->22) is C1/C3-safe (heal-only, no armor->damage). Confirmed at low severity.",
+      "revisedChange": null
+    }
+  ],
+  "overallAssessment": "4 of 7 confirmed (TO-1, TO-2, TO-3, TO-7), 3 declined (TO-4, TO-5, TO-6 are within harness noise / non-reproducing). The confirmed findings are the real T3>T2 violations: two armor T3s (Stagnant Bulwark, Stoneward Reprisal) that are strictly slower AND lower-HP than the cheaper T2 Bulwark Vow at boss1, one mage T3 (Quench Lance) that OUTRIGHT LOSES fights its T2 wins, and one minor heal T3 (Tidesong). All confirmed fixes BUFF the T3 only and comply with C1/C3/C5. The declined three illustrate the core risk of TTK-swap tests on the slow iron_golem: a 1-3% delta is dominated by the deck's filler damage and is not a stable signal; the designer over-relied on a single deck-specific Bedrock=34100 anchor that does not generalize."
+}

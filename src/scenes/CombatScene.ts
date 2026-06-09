@@ -437,7 +437,7 @@ export class CombatScene extends Scene {
         };
 
         const LOOP_ANIMS = new Set([`${sp}_defend`]);
-        const playCardAnimation = (animKey: string, lunge: boolean) => {
+        const playCardAnimation = (animKey: string, _lunge: boolean) => {
           if (!this.heroSprite || isAttacking) return;
           isAttacking = true;
           const shouldLoop = LOOP_ANIMS.has(animKey);

@@ -1,0 +1,28 @@
+{
+  "_comment": "ADVERSARIAL re-test of pure-burn findings. (R) reproduce core inversion @8 repeats. (S) strawman check: a BETTER-built realistic 12-card detonate boss1 deck (banker-heavy, mirrors the winning 9-banker shell but legal/realistic with Cinder Sprint + Supernova as wincons) to test whether PB-1 'realistic burn loses 6/6' is deck-quality or archetype. (Q) Quench Lance tier-violation re-test @8 repeats with the SAME swap shell. (T) tick-vs-detonate inversion @8 repeats vs iron_golem too. All ids verified against catalog.",
+  "decks": [
+    { "id": "adv-burn-tickonly-boss1", "label": "ADV repro PURE-TICK vs doom_knight", "archetype": "pure-burn-tick", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-agility-agility-fire", "t1-fire", "t2-earth-fire", "t3-fire-fire-water", "t2-agility-fire", "t1-fire", "t3-earth-fire-fire", "t2-air-fire"] },
+
+    { "id": "adv-burn-detonate-boss1", "label": "ADV repro DETONATE-heavy vs doom_knight", "archetype": "pure-burn-detonate", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t3-earth-fire-fire", "t2-air-fire", "t3-air-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t3-agility-agility-fire", "t2-earth-fire", "t1-fire"] },
+
+    { "id": "adv-burn-realistic-boss1", "label": "ADV WELL-BUILT realistic burn vs doom_knight (banker-heavy + good wincons)", "archetype": "pure-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t3-attack-fire-fire", "t3-counter-fire-water"] },
+
+    { "id": "adv-burn-sprintnova-boss1", "label": "ADV best-case realistic 12c: Cinder Sprint + Supernova both", "archetype": "pure-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire", "t1-fire", "t2-agility-fire", "t2-agility-fire", "t2-earth-fire", "t2-air-fire", "t3-earth-fire-fire", "t3-earth-fire-fire", "t3-agility-agility-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire"] },
+
+    { "id": "adv-swap-baseline-boss1", "label": "ADV swap baseline = Flame Dart vs doom_knight", "archetype": "swap-test", "class": "mage", "stage": "boss1",
+      "deck": ["t2-agility-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"] },
+
+    { "id": "adv-swap-quenchlance-boss1", "label": "ADV swap = Quench Lance vs doom_knight", "archetype": "swap-test", "class": "mage", "stage": "boss1",
+      "deck": ["t3-fire-fire-water", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"] },
+
+    { "id": "adv-swap-baseline-late", "label": "ADV swap baseline = Flame Dart (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t2-agility-fire", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false },
+
+    { "id": "adv-swap-quenchlance-late", "label": "ADV swap = Quench Lance (late)", "archetype": "swap-test", "class": "mage", "stage": "late",
+      "deck": ["t3-fire-fire-water", "t1-fire", "t2-earth-fire", "t3-earth-fire-fire", "t3-attack-fire-fire", "t3-agility-fire-fire", "t3-fire-fire-fire", "t2-fire-fire", "t2-agility-fire"], "vsBoss": false }
+  ]
+}

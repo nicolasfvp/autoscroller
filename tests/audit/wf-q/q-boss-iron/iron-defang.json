@@ -1,0 +1,122 @@
+{
+  "_comment": "P0-2 QUESTIONING: defang iron_golem defense-affinity ratchet. Strong late-physical deck (late-war-physical-strong from boss-progression lane, runXP 720) held FIXED across every matchup; only the enemy/enemyOverride changes. ALL bosses at loopMultiplier 1.0 so we compare intrinsic boss designs (base stats), not loop-scaling noise. 6 repeats (boss claims). The affinity ratchet (defense) = +6 armor/attack cap 60 (EnemyAffinity.ts 3*m, m=2 boss); the shield behavior (+8/8s) is SEPARATE and survives affinity:null. Groups: (1) iron_golem baseline confirm the loss; (2) affinity null/attack alone; (3) +shield trim; (4) +HP trims 360/380/400 over-correction check; (5) monotonicity vs lizard_king/bog_witch baseline; (6) iron_golem fixed vs the curve; (7) side-effects desert_golem + boss_iron_golem baseline vs affinity-defanged.",
+  "matchups": [
+    {
+      "id": "IG-baseline",
+      "label": "iron_golem BASELINE (affinity defense, HP400 def4 dmg10, shield+8/8s)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "IG-affNull",
+      "label": "iron_golem affinity:null (ratchet OFF, everything else stock)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null }
+    },
+    {
+      "id": "IG-affAttack",
+      "label": "iron_golem affinity:attack (proposal alt; ratchet OFF)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": "attack" }
+    },
+    {
+      "id": "IG-affNull-shield4",
+      "label": "iron_golem affinity:null + shield +4/8s (proposal shield trim)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null, "behaviors": [{ "type": "shield", "interval": 8000, "shieldAmount": 4 }] }
+    },
+    {
+      "id": "IG-affNull-hp360",
+      "label": "iron_golem affinity:null + HP360 (over-correction check)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null, "baseHP": 360 }
+    },
+    {
+      "id": "IG-affNull-hp380",
+      "label": "iron_golem affinity:null + HP380",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null, "baseHP": 380 }
+    },
+    {
+      "id": "IG-affNull-hp400",
+      "label": "iron_golem affinity:null + HP400 (HP unchanged, ratchet-only fix)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null, "baseHP": 400 }
+    },
+    {
+      "id": "IG-affNull-shield4-hp360",
+      "label": "iron_golem FULL proposal: affinity:null + shield+4 + HP360",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null, "baseHP": 360, "behaviors": [{ "type": "shield", "interval": 8000, "shieldAmount": 4 }] }
+    },
+    {
+      "id": "IG-affEarth-ratchetGain3cap24",
+      "label": "iron_golem affinity:earth (NOTE: earth = lighter sprout +2/hit cap40, separate code path; alt to affinity:null)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": "earth" }
+    },
+
+    {
+      "id": "MONO-lizard_king-baseline",
+      "label": "lizard_king BASELINE (affinity attack, HP370 def3 dmg10, enrage1.5@30% + 2x0.6)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "lizard_king", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "MONO-bog_witch-baseline",
+      "label": "bog_witch BASELINE (affinity water, HP410 def2 dmg7, drain15% + 2x0.6)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "bog_witch", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+
+    {
+      "id": "SIDE-desert_golem-baseline",
+      "label": "desert_golem BASELINE (affinity earth sprout, HP450 def4 dmg10, shield+10/7s)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "desert_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "SIDE-desert_golem-affNull",
+      "label": "desert_golem affinity:null (earth sprout OFF; rest stock)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "desert_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null }
+    },
+    {
+      "id": "SIDE-boss_iron_golem-baseline",
+      "label": "boss_iron_golem BASELINE (affinity defense ratchet, HP470 def4 dmg12, shield+12/7s, enrage1.4@35%)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "boss_iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6
+    },
+    {
+      "id": "SIDE-boss_iron_golem-affNull",
+      "label": "boss_iron_golem affinity:null (ratchet OFF; rest stock — late-endgame boss, should stay HARD)",
+      "class": "warrior", "stage": "late", "runXP": 720,
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"],
+      "enemy": "boss_iron_golem", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6,
+      "enemyOverride": { "affinity": null }
+    }
+  ]
+}

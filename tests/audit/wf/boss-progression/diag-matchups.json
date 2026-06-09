@@ -1,0 +1,495 @@
+{
+  "matchups": [
+    {
+      "id": "diag-mage-burn-detrich__vs__doom_knight",
+      "label": "Burn mage w/ extra detonators+damage vs BOSS doom_knight (boss1)",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-fire-water",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-air-fire-fire",
+        "t2-water-water",
+        "t2-air-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "diag-mage-burn-pivot-poison__vs__doom_knight",
+      "label": "Burn mage pivot to poison closers vs BOSS doom_knight (boss1)",
+      "archetype": "burn-poison",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-air-fire-water",
+        "t3-agility-water-water",
+        "t2-earth-water",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "diag-mage-control-plus-dmg__vs__doom_knight",
+      "label": "Control mage w/ damage closers vs BOSS doom_knight (boss1)",
+      "archetype": "slow-stun-control",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-earth-earth",
+        "t2-water-water",
+        "t3-air-attack-water",
+        "t3-agility-agility-air",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-air-fire-water",
+        "t2-fire-water",
+        "t1-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-base",
+      "label": "PROBE war-base",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-base",
+      "label": "PROBE burn-base",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-hp340",
+      "label": "PROBE war-hp340",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 340
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-hp320",
+      "label": "PROBE war-hp320",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 320
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-hp340",
+      "label": "PROBE burn-hp340",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 340
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-hp320",
+      "label": "PROBE burn-hp320",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 320
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-dmg7",
+      "label": "PROBE war-dmg7",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "attack": {
+          "damage": 7,
+          "pattern": "fixed"
+        }
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-dmg7",
+      "label": "PROBE burn-dmg7",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "attack": {
+          "damage": 7,
+          "pattern": "fixed"
+        }
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-hp350-dmg8",
+      "label": "PROBE war-hp350-dmg8",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 350,
+        "attack": {
+          "damage": 8,
+          "pattern": "fixed"
+        }
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-hp350-dmg8",
+      "label": "PROBE burn-hp350-dmg8",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 350,
+        "attack": {
+          "damage": 8,
+          "pattern": "fixed"
+        }
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-war-enrage125",
+      "label": "PROBE war-enrage125",
+      "archetype": "pure-physical",
+      "stage": "boss1",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t2-attack-defense",
+        "t2-agility-counter",
+        "t2-attack-earth",
+        "t2-agility-earth",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-attack-attack-attack",
+        "t3-agility-attack-counter"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "behaviors": [
+          {
+            "type": "enrage",
+            "hpThreshold": 0.5,
+            "attackSpeedMultiplier": 1.25
+          }
+        ]
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-burn-enrage125",
+      "label": "PROBE burn-enrage125",
+      "archetype": "pure-burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-attack-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-water-water",
+        "t2-air-water",
+        "t2-agility-water"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "behaviors": [
+          {
+            "type": "enrage",
+            "hpThreshold": 0.5,
+            "attackSpeedMultiplier": 1.25
+          }
+        ]
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    },
+    {
+      "id": "probe-poison-hp340",
+      "label": "PROBE poison-hp340",
+      "archetype": "pure-poison",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-earth-water",
+        "t1-water",
+        "t2-water-water",
+        "t2-agility-water",
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t2-fire-water",
+        "t3-air-fire-water",
+        "t2-air-water",
+        "t3-agility-earth-water",
+        "t2-agility-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "enemyOverride": {
+        "baseHP": 340
+      },
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 5
+    }
+  ]
+}

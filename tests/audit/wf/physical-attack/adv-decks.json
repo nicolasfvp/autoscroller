@@ -1,0 +1,65 @@
+{
+  "_comment": "ADVERSARIAL re-test. Reproduce PA-1 (boss wall) with high repeats + a 2nd realistic loop-10 deck; PA-3 (Quickstrike) swap vs a NORMAL enemy where TTK/HP marginal value is observable, not buried in a 0-winrate loss; PA-7 tier A/B at high repeats; plus a control: does adding ONE pierce T3 (Cleaver's Tax) actually rescue the realistic balanced deck.",
+  "decks": [
+    {
+      "id": "adv-phys-boss1-balanced",
+      "label": "REPRO realistic loop-10 balanced (boss1)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-earth-earth", "t1-attack"]
+    },
+    {
+      "id": "adv-phys-boss1-balanced2",
+      "label": "REPRO 2nd realistic loop-10 deck (different T3 mix, still no rage engine)",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-attack-earth", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-earth", "t3-attack-earth-earth", "t3-air-attack-attack", "t1-attack"]
+    },
+    {
+      "id": "adv-swap-NORMAL-FILLER",
+      "label": "SWAP base + filler Jab vs NORMAL (observable TTK/HP)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "vsEnemies": ["mutated_salamander", "werewolf", "skeleton"],
+      "vsBoss": false,
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-attack-earth", "t2-agility-counter", "t1-attack", "t1-attack", "t1-attack", "t1-attack", "t1-attack"]
+    },
+    {
+      "id": "adv-swap-NORMAL-QUICKSTRIKE",
+      "label": "SWAP +Quickstrike vs NORMAL (observable TTK/HP)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "vsEnemies": ["mutated_salamander", "werewolf", "skeleton"],
+      "vsBoss": false,
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-attack-earth", "t2-agility-counter", "t1-attack", "t2-agility-attack", "t2-agility-attack", "t2-agility-attack", "t2-agility-attack"]
+    },
+    {
+      "id": "adv-ab-T2-granite",
+      "label": "A/B T2 Granite Lunge x4 (boss1) REPRO",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth", "t2-attack-earth"]
+    },
+    {
+      "id": "adv-ab-T3-earthcleaver",
+      "label": "A/B T3 Earthcleaver x4 (boss1) REPRO",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t2-agility-counter", "t1-attack", "t1-attack", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth", "t3-attack-defense-earth"]
+    },
+    {
+      "id": "adv-balanced-plus-cleaver",
+      "label": "Realistic balanced but swap the non-pierce Mountain's Will for pierce Cleaver's Tax",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t2-agility-attack", "t2-air-attack", "t2-attack-defense", "t3-attack-attack-attack", "t3-attack-attack-counter", "t3-air-attack-attack", "t3-attack-counter-counter", "t1-attack"]
+    }
+  ]
+}

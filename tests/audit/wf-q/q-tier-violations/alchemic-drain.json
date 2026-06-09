@@ -1,0 +1,49 @@
+{
+  "matchups": [
+    {
+      "id": "AD-A-mire-boss",
+      "label": "A T2 Mire Bloom (slot0) vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "AD-B-drain-cur-boss",
+      "label": "B T3 Alchemic Drain CURRENT (slot0) vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "AD-C-drain-prop-boss",
+      "label": "C T3 Alchemic Drain PROPOSED cd1.6 poison4 (slot0) vs doom_knight",
+      "archetype": "poison-mage", "stage": "boss1", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 520, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 10, "repeats": 6,
+      "cardOverrides": { "t3-earth-fire-water": { "cooldown": 1.6, "effectsPatch": [ { "value": 4 }, {} ] } }
+    },
+
+    {
+      "id": "AD-A-mire-sal",
+      "label": "A T2 Mire Bloom (slot0) vs salamander",
+      "archetype": "poison-mage", "stage": "mid", "class": "mage",
+      "deck": ["t2-earth-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    },
+    {
+      "id": "AD-B-drain-cur-sal",
+      "label": "B T3 Alchemic Drain CURRENT (slot0) vs salamander",
+      "archetype": "poison-mage", "stage": "mid", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5
+    },
+    {
+      "id": "AD-C-drain-prop-sal",
+      "label": "C T3 Alchemic Drain PROPOSED (slot0) vs salamander",
+      "archetype": "poison-mage", "stage": "mid", "class": "mage",
+      "deck": ["t3-earth-fire-water","t3-agility-fire-water","t3-air-fire-water","t2-earth-water","t1-water","t1-fire","t1-agility"],
+      "runXP": 350, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "loopCount": 6, "repeats": 5,
+      "cardOverrides": { "t3-earth-fire-water": { "cooldown": 1.6, "effectsPatch": [ { "value": 4 }, {} ] } }
+    }
+  ]
+}

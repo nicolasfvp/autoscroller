@@ -1,0 +1,338 @@
+{
+  "decks": [
+    {
+      "id": "br-mid-core",
+      "label": "Bleed+Rage core (mid)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "mid",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense"
+      ]
+    },
+    {
+      "id": "br-late-core",
+      "label": "Bleed+Rage core (late)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t3-attack-counter-water",
+        "t3-counter-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-counter-fire"
+      ]
+    },
+    {
+      "id": "br-boss1-core",
+      "label": "Bleed+Rage core (boss1 doom_knight)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t3-attack-counter-water",
+        "t3-counter-counter-counter",
+        "t2-defense-defense",
+        "t1-defense"
+      ]
+    },
+    {
+      "id": "br-boss1-ragegate",
+      "label": "Bleed+Rage gate-payoff heavy (boss1 doom_knight)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-water",
+        "t1-attack",
+        "t1-agility",
+        "t3-counter-counter-counter",
+        "t3-attack-counter-counter",
+        "t3-attack-counter-fire",
+        "t3-counter-counter-defense",
+        "t2-defense-defense",
+        "t1-defense"
+      ]
+    },
+    {
+      "id": "br-boss1-bleedheavy",
+      "label": "Bleed+Rage bleed-stacking (boss1 doom_knight)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-agility-counter",
+        "t2-attack-attack",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t3-attack-counter-water",
+        "t3-agility-agility-counter",
+        "t1-agility",
+        "t1-attack",
+        "t2-counter-counter",
+        "t2-defense-defense",
+        "t1-defense"
+      ]
+    },
+    {
+      "id": "br-late-bleedheavy",
+      "label": "Bleed+Rage bleed-stacking (late)",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-agility-counter",
+        "t2-attack-attack",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t3-attack-counter-water",
+        "t3-agility-agility-counter",
+        "t1-agility",
+        "t1-attack",
+        "t2-counter-counter",
+        "t3-counter-counter-water",
+        "t2-defense-defense",
+        "t1-defense"
+      ]
+    },
+
+    {
+      "id": "swap-base-noslot",
+      "label": "SWAP base: filler Jab in test slot (boss1)",
+      "archetype": "swap-base",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-berserker-ledger",
+      "label": "SWAP test slot: Berserker's Ledger (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-attack-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-bloodprice",
+      "label": "SWAP test slot: Bloodprice Strike (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t2-attack-counter",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-crimson-spiral",
+      "label": "SWAP test slot: Crimson Spiral (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-counter-counter-counter",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-cleavers-tax",
+      "label": "SWAP test slot: Cleaver's Tax (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-counter-counter",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-wrath-brand",
+      "label": "SWAP test slot: Wrath Brand (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-attack-counter-fire",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "swap-reckless-strike",
+      "label": "SWAP test slot: Reckless Strike (boss1)",
+      "archetype": "swap-test",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t2-attack-attack",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "tierab-T2-rage",
+      "label": "Tier A/B: T2 rage gen (Bloodprice) baseline (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t2-attack-counter",
+        "t2-attack-counter",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "tierab-T3-ragegate",
+      "label": "Tier A/B: T3 rage-gate payoff (Crimson Spiral) (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t3-counter-counter-counter",
+        "t3-attack-counter-counter",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "tierab-T2-bleed",
+      "label": "Tier A/B: T2 bleed (Sidestep&Slash) baseline (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t1-agility",
+        "t2-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "tierab-T3-bleed",
+      "label": "Tier A/B: T3 bleed (Vein Splitter+Razor Cadence) (late)",
+      "archetype": "tier-ab",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t2-attack-attack",
+        "t3-agility-attack-counter",
+        "t3-agility-counter-counter",
+        "t1-attack",
+        "t1-agility",
+        "t2-counter-counter",
+        "t2-defense-defense",
+        "t1-defense",
+        "t1-attack",
+        "t1-agility"
+      ]
+    }
+  ]
+}

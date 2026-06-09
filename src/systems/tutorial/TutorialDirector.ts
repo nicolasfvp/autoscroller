@@ -121,7 +121,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     body:
       "Cards in your deck play themselves on cooldown, top to bottom.\n\n" +
       "Light cards cycle fast and chip damage. Heavy cards hit hard but recharge slowly.\n\n" +
-      "When a card uses a new KEYWORD (Vengeance, Brace, Haste, Exhaust), the game pauses on its own to teach it.\n\n" +
+      "When a card uses a new KEYWORD (Vengeance, Brace, Haste, Pierce, Exhaust), the game pauses on its own to teach it.\n\n" +
       "Sit back — your deck handles the rest.",
     advance: 'click',
     panelAnchor: 'top',

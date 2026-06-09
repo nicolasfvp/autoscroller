@@ -1,0 +1,188 @@
+{
+  "decks": [
+    {
+      "id": "adv-det-applier",
+      "label": "ADV detonator isolation: 9-card shell, slot7 = Mireglide applier",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "adv-det-lance",
+      "label": "ADV detonator isolation: same shell, slot7 = Drowning Lance",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "adv-det-marsh",
+      "label": "ADV detonator isolation: same shell, slot7 = Marsh Squall",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-air-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "adv-det-applier-late",
+      "label": "ADV detonator iron_golem isolation: slot7 = Mireglide applier",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+    {
+      "id": "adv-det-lance-late",
+      "label": "ADV detonator iron_golem isolation: slot7 = Drowning Lance",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-attack-water-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+    {
+      "id": "adv-det-marsh-late",
+      "label": "ADV detonator iron_golem isolation: slot7 = Marsh Squall",
+      "archetype": "swap-test",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t3-agility-water-water",
+        "t3-earth-earth-water",
+        "t3-air-fire-water",
+        "t3-agility-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-air-earth-water",
+        "t1-water",
+        "t1-agility"
+      ],
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+
+    {
+      "id": "adv-tierab-alchemic",
+      "label": "ADV TRUE A/B: identical shell, slot5 = Alchemic Drain (T3)",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-earth-fire-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "adv-tierab-mirebloom",
+      "label": "ADV TRUE A/B: identical shell, slot5 = Mire Bloom (T2)",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "adv-tierab-mireglide",
+      "label": "ADV TRUE A/B: identical shell, slot5 = Mireglide (T3 ceiling sanity)",
+      "archetype": "tier-ab",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-earth-water",
+        "t1-water",
+        "t1-agility"
+      ]
+    },
+
+    {
+      "id": "adv-b1-appliers-pure",
+      "label": "ADV realistic loop-10 pure appliers (PP-2 floor re-test)",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-air-fire-water",
+        "t3-agility-earth-water",
+        "t3-agility-air-water",
+        "t3-earth-fire-water",
+        "t1-water",
+        "t1-fire",
+        "t1-agility"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "_comment": "Detonator-ceiling probe. A heavy poison/burn BANK shell tested with the detonator slot vs a strong non-detonator T3 filler (Bog Catalyst doubles poison). Run vs high-HP targets (iron_golem, doom_knight) where banking has time to matter. Isolates whether cross-archetype detonators deliver the T3 build-around ceiling.",
+  "decks": [
+    { "id": "det-bank-nodet", "label": "Bank shell + Bog Catalyst (no detonator)", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "det-bank-drown", "label": "Bank shell + Drowning Lance", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-attack-water-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "det-bank-marsh", "label": "Bank shell + Marsh Squall", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-air-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "det-bank-tremor", "label": "Bank shell + Tremor Detonate", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-attack-fire-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] },
+
+    { "id": "det-bank-venom", "label": "Bank shell + Venom Detonation", "archetype": "det-probe", "class": "mage", "stage": "boss1",
+      "deck": ["t3-counter-fire-water", "t3-agility-water-water", "t3-air-fire-water", "t2-earth-water", "t3-agility-air-water", "t3-agility-earth-water", "t1-water", "t2-water-water", "t3-defense-water-water", "t2-fire-fire", "t1-fire"] }
+  ]
+}

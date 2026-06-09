@@ -14,9 +14,10 @@ import { getMetaStateSync } from '../systems/MetaPersistence';
 import { ELEMENTS, resolveIconKey, type ElementId } from '../systems/ElementSystem';
 import { formatCardDescription } from '../systems/cards/CardText';
 import { getTokenStyle, renderTokenText } from './IconTokens';
+import { activateCardIconSubtitle } from './CardIconSubtitle';
 import { getRun } from '../state/RunState';
 import { getEffectiveStats, isShiftHeld, subscribeCardDynamic } from './CardDynamic';
-import type { CardCost, CardDefinition, CardEffect } from '../data/types';
+import type { CardCost, CardDefinition } from '../data/types';
 
 // ── Color palette (pixel art dark wood + gold ornamental) ────────────────
 const COLOR = {
@@ -49,9 +50,9 @@ const ART_H = 0.36;
 const ART_GAP_BELOW = 0.015;
 const NAME_H = 0.085;
 const NAME_GAP_BELOW = 0.015;
-const ELEM_H = 0.075;
-const ELEM_GAP_BELOW = 0.015;
-// Description fills the rest down to PAD bottom margin.
+// The element gems now live in the header (center slot) rather than in a row
+// between the name and the body, so the description fills everything from just
+// below the name banner down to the PAD bottom margin.
 
 const HEADER_TOP_PCT = PAD;
 const HEADER_BOTTOM_PCT = HEADER_TOP_PCT + HEADER_H;
@@ -59,18 +60,16 @@ const ART_TOP_PCT = HEADER_BOTTOM_PCT + HEADER_GAP_BELOW;
 const ART_BOTTOM_PCT = ART_TOP_PCT + ART_H;
 const NAME_TOP_PCT = ART_BOTTOM_PCT + ART_GAP_BELOW;
 const NAME_BOTTOM_PCT = NAME_TOP_PCT + NAME_H;
-const ELEM_TOP_PCT = NAME_BOTTOM_PCT + NAME_GAP_BELOW;
-const ELEM_BOTTOM_PCT = ELEM_TOP_PCT + ELEM_H;
-const DESC_TOP_PCT = ELEM_BOTTOM_PCT + ELEM_GAP_BELOW;
+const DESC_TOP_PCT = NAME_BOTTOM_PCT + NAME_GAP_BELOW;
 const DESC_BOTTOM_PCT = 1 - PAD;
 
 const SIDE_PAD_PCT = PAD;     // horizontal slot inset
 
-// Header sub-slot widths (primary / secondary / cooldown) in % of card width.
+// Header sub-slot widths (primary cost / elements / cooldown) in % of card width.
 const PRIMARY_LEFT_PCT = SIDE_PAD_PCT;
 const PRIMARY_RIGHT_PCT = 0.24;
-const SECONDARY_LEFT_PCT = 0.27;
-const SECONDARY_RIGHT_PCT = 0.73;
+const ELEM_LEFT_PCT = 0.27;
+const ELEM_RIGHT_PCT = 0.73;
 const COOLDOWN_LEFT_PCT = 0.76;
 const COOLDOWN_RIGHT_PCT = 1 - SIDE_PAD_PCT;
 
@@ -175,9 +174,9 @@ function renderCardFace(
     cy: pctY((tP + bP) / 2),
   });
 
-  const primarySlot   = slot(PRIMARY_LEFT_PCT,   HEADER_TOP_PCT, PRIMARY_RIGHT_PCT,   HEADER_BOTTOM_PCT);
-  const secondarySlot = slot(SECONDARY_LEFT_PCT, HEADER_TOP_PCT, SECONDARY_RIGHT_PCT, HEADER_BOTTOM_PCT);
-  const cooldownSlot  = slot(COOLDOWN_LEFT_PCT,  HEADER_TOP_PCT, COOLDOWN_RIGHT_PCT,  HEADER_BOTTOM_PCT);
+  const primarySlot  = slot(PRIMARY_LEFT_PCT,  HEADER_TOP_PCT, PRIMARY_RIGHT_PCT,  HEADER_BOTTOM_PCT);
+  const elementSlot  = slot(ELEM_LEFT_PCT,      HEADER_TOP_PCT, ELEM_RIGHT_PCT,     HEADER_BOTTOM_PCT);
+  const cooldownSlot = slot(COOLDOWN_LEFT_PCT,  HEADER_TOP_PCT, COOLDOWN_RIGHT_PCT, HEADER_BOTTOM_PCT);
 
   // Layout choice is baseSize-driven (not per-card measure). Mixing per-card
   // fit checks gave inconsistent silhouettes — long-desc cards (Pyre) stayed
@@ -192,35 +191,32 @@ function renderCardFace(
 
   let artSlot: SlotBox;
   let nameSlot: SlotBox;
-  let elemSlot: SlotBox;
   let descSlot: SlotBox | null;
 
   if (descFits) {
     artSlot  = slot(SIDE_PAD_PCT, ART_TOP_PCT,  1 - SIDE_PAD_PCT, ART_BOTTOM_PCT);
     nameSlot = slot(SIDE_PAD_PCT, NAME_TOP_PCT, 1 - SIDE_PAD_PCT, NAME_BOTTOM_PCT);
-    elemSlot = slot(SIDE_PAD_PCT, ELEM_TOP_PCT, 1 - SIDE_PAD_PCT, ELEM_BOTTOM_PCT);
     descSlot = trialDescSlot;
   } else {
-    // Bottom-anchor name + elem; art swallows everything between header and name.
-    const elemBottomPct = 1 - PAD;
-    const elemTopPct    = elemBottomPct - ELEM_H;
-    const nameBottomPct = elemTopPct - ELEM_GAP_BELOW;
+    // Bottom-anchor the name; art swallows everything between header and name.
+    const nameBottomPct = 1 - PAD;
     const nameTopPct    = nameBottomPct - NAME_H;
     const artBottomPct  = nameTopPct - NAME_GAP_BELOW;
     artSlot  = slot(SIDE_PAD_PCT, ART_TOP_PCT, 1 - SIDE_PAD_PCT, artBottomPct);
     nameSlot = slot(SIDE_PAD_PCT, nameTopPct,  1 - SIDE_PAD_PCT, nameBottomPct);
-    elemSlot = slot(SIDE_PAD_PCT, elemTopPct,  1 - SIDE_PAD_PCT, elemBottomPct);
     descSlot = null;
   }
 
   // ─── 1. Paint the mold (body, header band, slot outlines, banner, panel) ───
   paintMold(scene, container, w, h, finalScale, {
-    primarySlot, secondarySlot, cooldownSlot, artSlot, nameSlot, elemSlot, descSlot,
+    primarySlot, elementSlot, cooldownSlot, artSlot, nameSlot, descSlot,
   });
 
   // ─── 2. Overlays — same coords as the painted slots ──────────────────────
   drawPrimaryCost(scene, container, card, isUpgraded, primarySlot);
-  drawSecondaryCosts(scene, container, card, isUpgraded, secondarySlot);
+  // Element gems sit in the header center slot (where stack-cost icons used to
+  // be). Consumed-stack / armor costs now read explicitly in the description.
+  drawElements(scene, container, card, elementSlot);
   drawCooldown(scene, container, card, isUpgraded, cooldownSlot);
   // Cover-fit center crop for every size. The small in-hand slot is nearly
   // 1:1 so the square source is shown almost in full; the wider popup slot
@@ -228,9 +224,12 @@ function renderCardFace(
   // generated art is composed with the action dead-center).
   drawArt(scene, container, card, artSlot, 'cover', options.artKey);
   drawName(scene, container, card, isUpgraded, nameSlot);
-  const hasSecondaryCosts = buildSecondaryCostRows(card, options.upgraded ?? resolveUpgradeFlag(cardId)).length > 0;
-  drawElements(scene, container, card, hasSecondaryCosts ? elemSlot : secondarySlot);
-  if (descSlot) drawDescription(scene, container, card, isUpgraded, descSlot, finalScale);
+  if (descSlot) {
+    drawDescription(scene, container, card, isUpgraded, descSlot, finalScale);
+    // Full card (with description) → drive the rotating bottom-of-screen icon
+    // subtitle. Small in-hand thumbnails (no descSlot) never trigger it.
+    activateCardIconSubtitle(scene, card, isUpgraded, container);
+  }
 
   // ─── 3. Interactivity ────────────────────────────────────────────────────
   // Container is sized w × h with hard-coded originX/Y = 0.5 (see Phaser's
@@ -266,8 +265,8 @@ function renderCardFace(
 // ── Mold painter ─────────────────────────────────────────────────────────
 
 interface MoldSlots {
-  primarySlot: SlotBox; secondarySlot: SlotBox; cooldownSlot: SlotBox;
-  artSlot: SlotBox; nameSlot: SlotBox; elemSlot: SlotBox; descSlot: SlotBox | null;
+  primarySlot: SlotBox; elementSlot: SlotBox; cooldownSlot: SlotBox;
+  artSlot: SlotBox; nameSlot: SlotBox; descSlot: SlotBox | null;
 }
 
 // Cache of RenderTexture backing-stores for our rasterized molds. Keyed by
@@ -362,7 +361,7 @@ function rasterizeMold(
   g.lineBetween(divX0, divY - 1, divX1, divY - 1);
 
   // ── Header sub-slot outlines ───────────────────────────────────────────
-  for (const s of [slots.primarySlot, slots.secondarySlot, slots.cooldownSlot]) {
+  for (const s of [slots.primarySlot, slots.elementSlot, slots.cooldownSlot]) {
     g.fillStyle(COLOR.SLOT_FILL_DARK, 1);
     g.fillRoundedRect(s.x, s.y, s.w, s.h, sr);
     g.lineStyle(Math.max(1.5, 1.5 * scale), COLOR.BORDER_INNER, 1);
@@ -438,33 +437,6 @@ function drawPrimaryCost(
   if (!token) return;
 
   drawCostCell(scene, parent, slot, String(qty), token, Math.min(slot.w, slot.h) * 0.8);
-}
-
-function drawSecondaryCosts(
-  scene: Phaser.Scene,
-  parent: Phaser.GameObjects.Container,
-  card: CardDefinition,
-  isUpgraded: boolean,
-  slot: SlotBox,
-): void {
-  const rows = buildSecondaryCostRows(card, isUpgraded);
-  if (rows.length === 0) return;
-
-  // Size icons so the full row always fits within slot.w.
-  const maxByH = slot.h * 0.85;
-  const n = rows.length;
-  // Solve: n*iconSize + (n-1)*gap = slot.w  where gap = max(2, iconSize*0.08)
-  // Approximate: iconSize ≈ slot.w / (n + (n-1)*0.08)
-  const fitWidth = slot.w / (n + (n - 1) * 0.08);
-  const iconSize = Math.min(maxByH, fitWidth);
-  const gap = Math.max(2, iconSize * 0.08);
-  const totalW = n * iconSize + (n - 1) * gap;
-  let cx = slot.cx - totalW / 2 + iconSize / 2;
-  for (const row of rows) {
-    const sub: SlotBox = { x: 0, y: 0, w: iconSize, h: iconSize, cx, cy: slot.cy };
-    drawCostCell(scene, parent, sub, row.qty, row.token, iconSize);
-    cx += iconSize + gap;
-  }
 }
 
 function drawCooldown(
@@ -582,8 +554,14 @@ function drawElements(
 ): void {
   const elems = ((card.elements ?? []) as ElementId[]).filter((e) => !!ELEMENTS[e]);
   if (elems.length === 0) return;
-  const elemSize = slot.h * 0.9;
-  const gap = elemSize * 0.45;
+  // Shrink-to-fit: the header center slot is narrow, so size gems by both slot
+  // height and width (a tier-3 card carries 3 elements). gapRatio is a fraction
+  // of the gem size so the row stays balanced as it scales.
+  const gapRatio = 0.18;
+  const maxByH = slot.h * 0.9;
+  const fitByW = (slot.w * 0.96) / (elems.length + (elems.length - 1) * gapRatio);
+  const elemSize = Math.max(4, Math.min(maxByH, fitByW));
+  const gap = elemSize * gapRatio;
   const totalW = elems.length * elemSize + (elems.length - 1) * gap;
   let cx = slot.cx - totalW / 2 + elemSize / 2;
   for (const e of elems) {
@@ -720,57 +698,6 @@ function drawCostCell(
       }).setOrigin(0.5),
     );
   }
-}
-
-// ── Secondary cost extraction ────────────────────────────────────────────
-
-interface SecondaryRow { token: string; qty: string }
-
-function collectStackCosts(effects: CardEffect[], rows: SecondaryRow[]): void {
-  for (const fx of effects) {
-    if (fx.type !== 'stack' || !fx.consume_stack || !fx.stack) continue;
-    const amount = Math.abs(fx.value);
-    rows.push({ token: fx.stack, qty: amount >= 99 ? 'X' : String(amount) });
-  }
-}
-
-function collectConvertStackCosts(effects: CardEffect[], rows: SecondaryRow[]): void {
-  for (const fx of effects) {
-    if (fx.type !== 'convert_stack' || !fx.from) continue;
-    if (rows.some(r => r.token === fx.from)) continue;
-    const v = fx.value ?? 0;
-    rows.push({ token: fx.from, qty: v >= 99 ? 'X' : String(v) });
-  }
-}
-
-function collectPyreCost(effects: CardEffect[], rows: SecondaryRow[]): void {
-  const isPyreCard = effects.some(fx =>
-    fx.type === 'damage'
-    && fx.condition?.enemy_has_stack === 'burn'
-    && fx.condition?.per_stack === true,
-  );
-  if (isPyreCard && !rows.some(r => r.token === 'burn')) {
-    rows.push({ token: 'burn', qty: 'X' });
-  }
-}
-
-function buildSecondaryCostRows(card: CardDefinition, isUpgraded: boolean): SecondaryRow[] {
-  const rows: SecondaryRow[] = [];
-  const effects = isUpgraded && card.upgraded?.effects ? card.upgraded.effects : card.effects;
-
-  if (effects) {
-    collectStackCosts(effects, rows);
-    collectConvertStackCosts(effects, rows);
-    collectPyreCost(effects, rows);
-  }
-
-  if (card.spend_armor !== undefined) {
-    rows.push({ token: 'armor', qty: card.spend_armor === 'all' ? 'X' : String(card.spend_armor) });
-  }
-  if (card.exhaust) {
-    rows.push({ token: 'exhaust', qty: '' });
-  }
-  return rows;
 }
 
 // ── Hover animation ──────────────────────────────────────────────────────

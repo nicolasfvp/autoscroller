@@ -1,0 +1,94 @@
+{
+  "matchups": [
+    {
+      "id": "aegis-FILLER-doom",
+      "label": "Aegis BASELINE filler Jab slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "aegis-CURRENT-doom",
+      "label": "Aegis CURRENT (Brace gate) slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-defense-defense-defense","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6
+    },
+    {
+      "id": "aegis-PROPOSED-doom",
+      "label": "Aegis PROPOSED unconditional armor-scaling slot0 vs doom_knight",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t3-defense-defense-defense","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 520,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1.0,
+      "isBoss": true,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-defense-defense-defense": {
+          "cooldown": 2.0,
+          "effects": [
+            { "type": "armor", "value": 22, "target": "self", "scale": { "stat": "vit", "per": 2, "value": 4 } },
+            { "type": "damage", "value": 6, "target": "enemy", "pierce_armor": true, "scale": { "stat": "vit", "per": 4, "value": 1, "source": "armor" } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "aegis-FILLER-werewolf",
+      "label": "Aegis BASELINE filler Jab slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t1-attack","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "aegis-CURRENT-werewolf",
+      "label": "Aegis CURRENT slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-defense-defense-defense","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "aegis-PROPOSED-werewolf",
+      "label": "Aegis PROPOSED slot0 vs werewolf late",
+      "class": "warrior",
+      "stage": "late",
+      "deck": ["t3-defense-defense-defense","t2-attack-attack","t2-agility-counter","t1-attack","t1-agility","t2-defense-defense","t1-defense","t1-attack","t1-agility"],
+      "runXP": 720,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-defense-defense-defense": {
+          "cooldown": 2.0,
+          "effects": [
+            { "type": "armor", "value": 22, "target": "self", "scale": { "stat": "vit", "per": 2, "value": 4 } },
+            { "type": "damage", "value": 6, "target": "enemy", "pierce_armor": true, "scale": { "stat": "vit", "per": 4, "value": 1, "source": "armor" } }
+          ]
+        }
+      }
+    }
+  ]
+}

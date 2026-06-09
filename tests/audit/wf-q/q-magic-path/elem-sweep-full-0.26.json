@@ -1,0 +1,31 @@
+{
+  "rate": "0.26",
+  "results": [
+    {
+      "id": "fire-air-mage-vs-dk",
+      "winRate": 1,
+      "deaths": 0,
+      "timeouts": 0,
+      "avgDmg": 423,
+      "avgCards": 15,
+      "hpOnWin": 0.347,
+      "ttkS": 22.8,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    },
+    {
+      "id": "burn-deck-vs-dk",
+      "winRate": 0,
+      "deaths": 6,
+      "timeouts": 0,
+      "avgDmg": 246,
+      "avgCards": 15,
+      "hpOnWin": null,
+      "ttkS": null,
+      "startHP": 121,
+      "enemyHP": 380,
+      "enemyDmg": 9
+    }
+  ]
+}
