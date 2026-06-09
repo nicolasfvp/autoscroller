@@ -57,7 +57,7 @@ const MENU_BTN_Y = 22;
 const PANEL_X    = 10;
 const PANEL_Y    = 50;
 const PANEL_W    = 770;
-const PANEL_H    = 165;
+const PANEL_H    = 200;
 const BTN_H      = 28;
 const BTN_GAP    = 6;
 const ROW_H      = BTN_H + BTN_GAP;
@@ -69,6 +69,7 @@ export class CombatTestScene extends Phaser.Scene {
   private effects!: CombatEffects;
   private heroSprite!: Phaser.GameObjects.Sprite | Phaser.GameObjects.Image;
   private enemySprite!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
+  private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private bgImage!: Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle;
 
   private _menuOpen = false;
@@ -118,6 +119,11 @@ export class CombatTestScene extends Phaser.Scene {
     this._labelText = this.add.text(400, 585, '', {
       fontFamily: 'VT323, monospace', fontSize: '13px', color: '#aaffaa',
     }).setOrigin(0.5, 1).setDepth(200);
+
+    this.events.on('shutdown', () => {
+      this.enemyIdleTimer?.destroy();
+      this.enemyIdleTimer = null;
+    });
   }
 
   // ── Background ────────────────────────────────────────────────────────────────
@@ -203,9 +209,28 @@ export class CombatTestScene extends Phaser.Scene {
       this.add.image(ENEMY_SHADOW_X, ENEMY_SHADOW_Y, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
     else
       this.add.ellipse(ENEMY_SHADOW_X, ENEMY_SHADOW_Y, 160, 28, 0x000000, 0.45).setDepth(9);
+    this._startEnemyIdle(key);
+  }
+
+  private _startEnemyIdle(key: string): void {
+    this.enemyIdleTimer?.destroy();
+    this.enemyIdleTimer = null;
+    const key2 = `${key}_2`;
+    if (!this.textures.exists(key2)) return;
+    let frame = 0;
+    this.enemyIdleTimer = this.time.addEvent({
+      delay: 500, loop: true,
+      callback: () => {
+        if (!(this.enemySprite instanceof Phaser.GameObjects.Image)) return;
+        frame = 1 - frame;
+        this.enemySprite.setTexture(frame === 0 ? key : key2);
+      },
+    });
   }
 
   private _selectEnemy(key: string): void {
+    this.enemyIdleTimer?.destroy();
+    this.enemyIdleTimer = null;
     if (this.textures.exists(key)) {
       if (this.enemySprite instanceof Phaser.GameObjects.Image) {
         this.enemySprite.setTexture(key).setDisplaySize(ENEMY_SIZE, ENEMY_SIZE);
@@ -215,6 +240,7 @@ export class CombatTestScene extends Phaser.Scene {
           .setDisplaySize(ENEMY_SIZE, ENEMY_SIZE).setDepth(10);
       }
     }
+    this._startEnemyIdle(key);
     this._showLabel(key.replace('monster_', ''));
   }
 
@@ -347,27 +373,28 @@ export class CombatTestScene extends Phaser.Scene {
 
     const p = this._prefix();
 
-    // ── ANIMATIONS ─────────────────────────────────────────────────────────────
-    const anims: Array<[string, number, () => void]> = [
-      ['IDLE',    0x1a2a1a, () => { this._playHeroAnim(`${p}_idle`,    'cbt_hero_idle',    8, -1); this._showLabel('idle'); }],
-      ['ATTACK',  0x2a1a1a, () => { this._playHeroAnim(`${p}_attack`,  'cbt_hero_attack', 12,  0); this._showLabel('attack'); }],
-      ['CAST',    0x1a1a2a, () => { this._playHeroAnim(`${p}_cast`,    'cbt_hero_cast',   10,  0); this._showLabel('cast'); }],
-      ['DEFEND',  0x1a2020, () => { this._playHeroAnim(`${p}_defend`,  'cbt_hero_defend',  8, -1); this.effects.shieldEffect(HERO_X, HERO_Y); this._showLabel('defend'); }],
-      ['HIT',     0x2a1a00, () => { this._playHeroAnim(`${p}_hit`,     'cbt_hero_hit',    10,  0); this._hitHero(); this._showLabel('hit'); }],
-      ['CHANNEL', 0x1a102a, () => { this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset); this._showLabel(`channel Y:${this._channelYOffset}`); }],
+    // ── ANIMATIONS — 5 na linha 0, CHANNEL na linha 1 col 0 ───────────────────
+    const animRow0: Array<[string, number, () => void]> = [
+      ['IDLE',   0x1a2a1a, () => { this._playHeroAnim(`${p}_idle`,   'cbt_hero_idle',    8, -1); this._showLabel('idle'); }],
+      ['ATTACK', 0x2a1a1a, () => { this._playHeroAnim(`${p}_attack`, 'cbt_hero_attack', 12,  0); this._showLabel('attack'); }],
+      ['CAST',   0x1a1a2a, () => { this._playHeroAnim(`${p}_cast`,   'cbt_hero_cast',   10,  0); this._showLabel('cast'); }],
+      ['DEFEND', 0x1a2020, () => { this._playHeroAnim(`${p}_defend`, 'cbt_hero_defend',  8, -1); this.effects.shieldEffect(HERO_X, HERO_Y); this._showLabel('defend'); }],
+      ['HIT',    0x2a1a00, () => { this._playHeroAnim(`${p}_hit`,    'cbt_hero_hit',    10,  0); this._hitHero(); this._showLabel('hit'); }],
     ];
-    anims.forEach(([label, color, action], i) => addBtn('ANIMATIONS', i, 0, label, color, action));
+    animRow0.forEach(([label, color, action], i) => addBtn('ANIMATIONS', i, 0, label, color, action));
+    addBtn('ANIMATIONS', 0, 1, 'CHANNEL', 0x1a102a, () => { this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset); this._showLabel(`channel Y:${this._channelYOffset}`); });
 
-    this._channelYLabel = this.add.text(PANEL_X + PANEL_W / 2, CONTENT_Y + ROW_H + BTN_H / 2, 'channel Y: 0', {
+    // Label e offsets de channel — linha 2 (abaixo do CHANNEL btn na linha 1)
+    this._channelYLabel = this.add.text(PANEL_X + PANEL_W / 2, CONTENT_Y + 2 * ROW_H + BTN_H / 2, 'channel Y: 0', {
       fontFamily: 'VT323, monospace', fontSize: '12px', color: '#ffffff',
     }).setOrigin(0.5).setDepth(62).setVisible(false);
-    (this._channelYLabel as any)._origY = CONTENT_Y + ROW_H + BTN_H / 2;
+    (this._channelYLabel as any)._origY = CONTENT_Y + 2 * ROW_H + BTN_H / 2;
     const ag = this._tabGroups.get('ANIMATIONS') ?? [];
     ag.push(this._channelYLabel);
     this._tabGroups.set('ANIMATIONS', ag);
 
     [{ d: -20, l: '-20' }, { d: -5, l: '-5' }, { d: +5, l: '+5' }, { d: +20, l: '+20' }]
-      .forEach(({ d, l }, i) => addBtn('ANIMATIONS', i, 2, l, 0x221a33, () => {
+      .forEach(({ d, l }, i) => addBtn('ANIMATIONS', i, 3, l, 0x221a33, () => {
         this._channelYOffset += d;
         this._channelYLabel.setText(`channel Y: ${this._channelYOffset}`);
         this._playHeroAnim(`${p}_channel`, 'cbt_hero_channel', 6, -1, this._channelYOffset);
