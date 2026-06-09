@@ -262,8 +262,8 @@ export class Preloader extends Scene {
     this.load.image('warrior_status_panel',   'assets/scenes/character_select/warrior_status_panel.png');
     this.load.image('mage_status_panel',      'assets/scenes/character_select/mage_status_panel.png');
     // Forge dwarf NPC
-    this.load.image('dwarf_talking',          'assets/scenes/forge/dwarf_talking.png');
-    this.load.image('dwarf_hands_on_hips',    'assets/scenes/forge/dwarf_hands_on_hips.png');
+    this.load.image('dwarf_talking',          'assets/characters/npc/forge-dwarf/dwarf_talking.png');
+    this.load.image('dwarf_hands_on_hips',    'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
     this.load.image('panel_keyword_frame',    'assets/scenes/combat/panel_keyword_frame.png');
     this.load.image('panel_hover_frame',      'assets/scenes/combat/panel_hover_frame.png');
     this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
