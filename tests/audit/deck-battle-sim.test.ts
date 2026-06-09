@@ -245,7 +245,6 @@ function simulateOnce(m: Matchup): { won: boolean; timeout: boolean; ttkMs: numb
   setRun(run);
   const enemy = makeEnemy(m);
   const state = createCombatState(run, enemy);
-  const enemyMaxHP = state.enemyMaxHP;
   const heroMaxHP = state.heroMaxHP;
   const engine = new CombatEngine(state);
 

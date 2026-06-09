@@ -29,6 +29,42 @@ import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { getEnemyAttackCards } from '../data/EnemyAttackCards';
+import { EnemyCardQueueDisplay } from '../ui/EnemyCardQueueDisplay';
+
+/** Maps enemy id → hit effect spritesheet key.
+ *  Defaults to 'fx_slash' for anything not listed. */
+const ENEMY_ATTACK_FX: Record<string, string> = {
+  // Slash (claws / blades)
+  werewolf:          'fx_slash',
+  ancient_tree:      'fx_slash',
+  corpse_eater:      'fx_slash',
+  skeleton:          'fx_slash',
+  vampire:           'fx_slash',
+  doom_knight:       'fx_slash',
+  bog_witch:         'fx_slash',
+  blighted_knight:   'fx_slash',
+  void_shade:        'fx_slash',
+  // Stomp (heavy / earth impact)
+  lava_golem:        'fx_stomp',
+  boss_iron_golem:   'fx_stomp',
+  earth_dragon:      'fx_stomp',
+  iron_golem:        'fx_stomp',
+  desert_golem:      'fx_stomp',
+  infernal_dragon:   'fx_stomp',
+  drowned_king:      'fx_stomp',
+  // Bite / Venom (slime / poison / acid)
+  slime:             'fx_bite',
+  red_slime:         'fx_bite',
+  toxic_gooze:       'fx_bite',
+  venomous_kobra:    'fx_bite',
+  depths_horror:     'fx_bite',
+  forge_slime:       'fx_bite',
+  giant_spider:      'fx_bite',
+  drowned_soldier:   'fx_bite',
+  necromancer:       'fx_bite',
+  // Remaining use slash as default
+};
 
 export class CombatScene extends Scene {
   private engine!: CombatEngine;
@@ -46,6 +82,18 @@ export class CombatScene extends Scene {
   private _glossaryOpen = false;
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
+
+  // Status effect sprites — herói e inimigo separados
+  private _fxHeroFire:   Phaser.GameObjects.Sprite | null = null;
+  private _fxHeroBleed:  Phaser.GameObjects.Sprite | null = null;
+  private _fxHeroStun:   Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyFire:  Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyBleed: Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyStun:  Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyPoison: Phaser.GameObjects.Sprite | null = null;
+
+  // Enemy attack-card queue — right-side mirror of the hero's card queue
+  private enemyCardQueue?: EnemyCardQueueDisplay;
 
   private onCardPlayed = (data: GameEvents['combat:card-played']) => {
     if (this.cardQueue) this.cardQueue.onCardPlayed(0);
@@ -70,7 +118,7 @@ export class CombatScene extends Scene {
       const isFireball = data.cardId.toLowerCase().includes('fireball');
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
       const heroAttackKey = `${sp}_attack`;
-      const heroIdleKey = `${sp}_idle`;
+      const heroIdleKey = this.textures.exists(`${sp}_battle_stance`) ? `${sp}_battle_stance` : `${sp}_idle`;
       if (this.anims.exists(heroAttackKey)) {
         this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
         this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
@@ -96,12 +144,17 @@ export class CombatScene extends Scene {
   private onDeckReshuffled = () => this.cardQueue?.onDeckReshuffled();
 
   private onEnemyAttack = (data: GameEvents['combat:enemy-attack']) => {
+    this.enemyCardQueue?.onAttack();
     if (data.damage > 0) AudioManager.playSFX(this, 'sfx_hurt', 0.6);
     if (this.combatEffects) { this.combatEffects.floatingNumber(200, 320, data.damage, '#ff0000', '-'); this.combatEffects.screenShake(3, 150); }
     this.heroSprite.setTint(0xff0000);
     this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
-    // Enemy no longer plays an attack animation
-    // Just a small visual jump toward the player if it's an image/sprite
+    // Hit effect spritesheet over the hero
+    if (this.combatEffects) {
+      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_slash';
+      this.combatEffects.enemyAttackEffect(200, 320, fxKey);
+    }
+    // Visual jump toward the player
     if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
       this.tweens.add({
         targets: this.enemySprite,
@@ -316,13 +369,25 @@ export class CombatScene extends Scene {
       this.pushLiveStats();
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
-      const heroIdleKey = `${sp}_idle`;
+      const heroIdleKey = this.textures.exists(`${sp}_battle_stance`) ? `${sp}_battle_stance` : `${sp}_idle`;
       const heroAttackKey = `${sp}_attack`;
 
       if (this.textures.exists(heroIdleKey)) {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
-        this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? 0.495 : 0.7);
+
+        const IDLE_SCALE = 0.6034;
+        const ORIGIN_X = 200;
+        const ORIGIN_Y = 330;
+        const idleFrameH = this.textures.get(heroIdleKey).get(0).realHeight;
+
+        // Y compensado pela diferença de frameH: mantém pés no mesmo ponto em tela
+        const yForAnim = (key: string) => {
+          const fh = this.textures.exists(key) ? this.textures.get(key).get(0).realHeight : idleFrameH;
+          return ORIGIN_Y + (idleFrameH - fh) / 2 * IDLE_SCALE;
+        };
+
+        this.heroSprite = this.add.sprite(ORIGIN_X, yForAnim(heroIdleKey), heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? IDLE_SCALE : 0.7);
         if (this.textures.exists('hero_shadow')) {
           this.add.image(178, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
         } else {
@@ -340,7 +405,7 @@ export class CombatScene extends Scene {
             this.anims.create({
               key: idleAnimKey,
               frames: this.anims.generateFrameNumbers(heroIdleKey, { start: 0, end: idleFrameCount - 1 }),
-              frameRate: 8,
+              frameRate: 6,
               repeat: -1,
             });
           }
@@ -356,42 +421,73 @@ export class CombatScene extends Scene {
           });
         }
 
-        const playAttackAnimation = () => {
+        // Posição e scale por animação, ajustados via debug-layout
+        const ANIM_OVERRIDES: Record<string, { x: number; y: number; scale: number }> = {
+          hero_attack:  { x: 190.4, y: 301.6, scale: 0.6118 },
+          hero_channel: { x: 199.3, y: 318.8, scale: 0.6529 },
+        };
+
+        const ensureAnim = (key: string, frameRate: number, repeat = 0) => {
+          if (this.anims.exists(key) || !this.textures.exists(key)) return;
+          const count = this.textures.get(key).frameTotal - 1;
+          if (count > 0) this.anims.create({ key, frames: this.anims.generateFrameNumbers(key, { start: 0, end: count - 1 }), frameRate, repeat });
+        };
+
+        const returnToIdle = () => {
+          if (!this.heroSprite) return;
+          if (idleIsSpritesheet) {
+            this.heroSprite.setX(ORIGIN_X);
+            this.heroSprite.setY(ORIGIN_Y);
+            this.heroSprite.setScale(IDLE_SCALE);
+            this.heroSprite.play(`${heroIdleKey}_loop`);
+          } else {
+            this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
+          }
+        };
+
+        const LOOP_ANIMS = new Set([`${sp}_defend`]);
+        const playCardAnimation = (animKey: string, _lunge: boolean) => {
           if (!this.heroSprite || isAttacking) return;
           isAttacking = true;
-          if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
-            const attackFrameCount = this.textures.get(heroAttackKey).frameTotal - 1;
-            if (attackFrameCount > 0) {
-              this.anims.create({
-                key: heroAttackKey,
-                frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: attackFrameCount - 1 }),
-                frameRate: 12,
-                repeat: 0,
+          const shouldLoop = LOOP_ANIMS.has(animKey);
+          ensureAnim(animKey, 12, shouldLoop ? -1 : 0);
+          if (this.anims.exists(animKey)) {
+            const ov = ANIM_OVERRIDES[animKey];
+            this.heroSprite.setX(ov ? ov.x : ORIGIN_X);
+            this.heroSprite.setY(ov ? ov.y : yForAnim(animKey));
+            this.heroSprite.setScale(ov ? ov.scale : IDLE_SCALE);
+            this.heroSprite.play({ key: animKey, timeScale: this.gameSpeed });
+            if (shouldLoop) {
+              // Loop anims don't fire animationcomplete — stop after 1.5s
+              const loopDuration = Math.round(1500 / this.gameSpeed);
+              this.time.delayedCall(loopDuration, () => {
+                isAttacking = false;
+                if (!this.heroSprite) return;
+                this.heroSprite.stop();
+                returnToIdle();
+              });
+            } else {
+              this.heroSprite.once('animationcomplete', () => {
+                isAttacking = false;
+                if (!this.heroSprite) return;
+                returnToIdle();
               });
             }
-          }
-          if (this.anims.exists(heroAttackKey)) {
-            if (idleIsSpritesheet) {
-              this.heroSprite.setX(this.heroSprite.x + 18);
-              this.heroSprite.setY(this.heroSprite.y + 8);
-              this.heroSprite.setScale(this.heroSprite.scaleX * (268 / 278));
-            }
-            this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
-            this.heroSprite.once('animationcomplete', () => {
-              isAttacking = false;
-              if (!this.heroSprite) return;
-              if (idleIsSpritesheet) {
-                this.heroSprite.setX(this.heroSprite.x - 18);
-                this.heroSprite.setY(this.heroSprite.y - 8);
-                this.heroSprite.setScale(0.495);
-                this.heroSprite.play(`${heroIdleKey}_loop`);
-              } else {
-                this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
-              }
-            });
           } else {
             isAttacking = false;
           }
+        };
+
+        const getCardAnimKey = (cardId: string): { key: string; lunge: boolean } => {
+          const def = getCardById(cardId);
+          if (!def) return { key: heroAttackKey, lunge: true };
+          const defendKey = `${sp}_defend`;
+          const channelKey = `${sp}_channel`;
+          const hasDamage = def.effects.some(e => e.type === 'damage');
+          const hasArmor  = def.effects.some(e => e.type === 'armor');
+          if (hasArmor && this.textures.exists(defendKey)) return { key: defendKey, lunge: false };
+          if (!hasDamage && this.textures.exists(channelKey)) return { key: channelKey, lunge: false };
+          return { key: heroAttackKey, lunge: true };
         };
 
         const origOnCardPlayed = this.onCardPlayed;
@@ -407,7 +503,11 @@ export class CombatScene extends Scene {
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText);
           }
-          playAttackAnimation();
+          const { key: animKey, lunge } = getCardAnimKey(data.cardId);
+          playCardAnimation(animKey, lunge);
+          if (animKey === `${sp}_defend` && this.combatEffects) {
+            this.combatEffects.shieldEffect(ORIGIN_X, ORIGIN_Y);
+          }
           if (data.damage > 0) {
             const isFireballInline = data.cardId.toLowerCase().includes('fireball');
             const inlineDelay = isFireballInline ? 0 : Math.round(250 / this.gameSpeed);
@@ -460,9 +560,13 @@ export class CombatScene extends Scene {
       this.hud = new CombatHUD(this, this.enemyTextureKey);
       this.hud.setFlipCallback((flipping) => this.engine.setHourglassFlipping(flipping));
       this.cardQueue = new CardQueueDisplay(this);
+      // Enemy attack-card queue — right-side mirror of the hero queue. Fed the
+      // generic attacks this enemy can use (claw, smash, fire_breath, …).
+      this.enemyCardQueue = new EnemyCardQueueDisplay(this);
+      this.enemyCardQueue.setAttacks(getEnemyAttackCards(enemyDef.id));
       this.combatEffects = new CombatEffects(this);
       // Initialize HUD and Queue with initial state
-      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
+      this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
       this.cardQueue.update(this.engine.getState(), this.engine.getDeckPointer());
 
       // Keyword glossary book icon — bottom-right corner. Pauses combat while open.
@@ -505,7 +609,7 @@ export class CombatScene extends Scene {
       // up so the player can read the explanation without enemies still
       // ticking down in the background.
       if (keywordIntro.isPaused() || tutorialDirector.shouldPauseScene(SCENE_KEYS.COMBAT) || this._glossaryOpen) {
-        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount());
+        if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), this.gameSpeed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
         return;
       }
       // Re-read combatSpeed every tick: the persistent SpeedPanelScene writes
@@ -516,11 +620,56 @@ export class CombatScene extends Scene {
       const inBackground = typeof document !== 'undefined' && document.hidden;
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
-      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount());
+      const state = this.engine.getState();
+      if (this.hud) this.hud.update(state, this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
+      this._updateStatusFX(state);
       // Feed live effective stats so card headline numbers track status changes
       // (buffs, auras, stat_gain) in real time.
       this.pushLiveStats();
     }
+  }
+
+  private _updateStatusFX(s: ReturnType<CombatEngine['getState']>): void {
+    if (!this.combatEffects) return;
+    const fx = this.combatEffects;
+
+    // --- HERÓI (x≈200) ---
+    if (s.heroBurnStacks > 0 && !this._fxHeroFire)
+      this._fxHeroFire  = fx.statusEffect(182.2, 499.1, 'fx_fire',  219);
+    else if (s.heroBurnStacks === 0 && this._fxHeroFire)
+      { this._fxHeroFire.destroy();  this._fxHeroFire  = null; }
+
+    if (s.heroBleedStacks > 0 && !this._fxHeroBleed)
+      this._fxHeroBleed = fx.statusEffect(188.8, 464.9, 'fx_bleed', 115);
+    else if (s.heroBleedStacks === 0 && this._fxHeroBleed)
+      { this._fxHeroBleed.destroy(); this._fxHeroBleed = null; }
+
+    const heroStunActive = (s.heroStunStacks ?? 0) > 0 || s.heroStunned;
+    if (heroStunActive && !this._fxHeroStun)
+      this._fxHeroStun = fx.statusEffect(217.1, 300.2, 'fx_stun', 67);
+    else if (!heroStunActive && this._fxHeroStun)
+      { this._fxHeroStun.destroy(); this._fxHeroStun = null; }
+
+    // --- INIMIGO (calibrado via debug-layout) ---
+    if (s.burnStacks > 0 && !this._fxEnemyFire)
+      this._fxEnemyFire  = fx.statusEffect(612.5, 636.3, 'fx_fire',  252);
+    else if (s.burnStacks === 0 && this._fxEnemyFire)
+      { this._fxEnemyFire.destroy();  this._fxEnemyFire  = null; }
+
+    if (s.bleedStacks > 0 && !this._fxEnemyBleed)
+      this._fxEnemyBleed = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+    else if (s.bleedStacks === 0 && this._fxEnemyBleed)
+      { this._fxEnemyBleed.destroy(); this._fxEnemyBleed = null; }
+
+    if (s.stunStacks > 0 && !this._fxEnemyStun)
+      this._fxEnemyStun  = fx.statusEffect(612.5, 300.2, 'fx_stun',   67);
+    else if (s.stunStacks === 0 && this._fxEnemyStun)
+      { this._fxEnemyStun.destroy();  this._fxEnemyStun  = null; }
+
+    if (s.poisonStacks > 0 && !this._fxEnemyPoison)
+      this._fxEnemyPoison = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+    else if (s.poisonStacks === 0 && this._fxEnemyPoison)
+      { this._fxEnemyPoison.destroy(); this._fxEnemyPoison = null; }
   }
 
   /** Push the hero's current effective stats to CardDynamic so every visible
@@ -546,6 +695,14 @@ export class CombatScene extends Scene {
     eventBus.off('combat:enemy-attack', this.onEnemyAttack);
     eventBus.off('combat:end', this.onCombatEnd);
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
+    if (this.enemyCardQueue) { this.enemyCardQueue.destroy(); this.enemyCardQueue = undefined; }
+    this._fxHeroFire?.destroy();    this._fxHeroFire    = null;
+    this._fxHeroBleed?.destroy();   this._fxHeroBleed   = null;
+    this._fxHeroStun?.destroy();    this._fxHeroStun    = null;
+    this._fxEnemyFire?.destroy();   this._fxEnemyFire   = null;
+    this._fxEnemyBleed?.destroy();  this._fxEnemyBleed  = null;
+    this._fxEnemyStun?.destroy();   this._fxEnemyStun   = null;
+    this._fxEnemyPoison?.destroy(); this._fxEnemyPoison = null;
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
     // Out of combat, card headline numbers fall back to the run's resolved stats.

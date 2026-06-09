@@ -12,8 +12,9 @@ import type { KeywordDef } from './KeywordDefinitions';
 const OVERLAY_DEPTH = 12000;
 const BACKDROP_ALPHA = 0.62;
 
-// Baked image display width (same ratio as tutorial panels)
-const IMG_DISPLAY_W = 360;
+// Inner panel dimensions (portrait frame, same ratio as tutorial panels)
+const PANEL_W = 360;
+const PANEL_H = 440;
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
   stack:    '#ff8c00',

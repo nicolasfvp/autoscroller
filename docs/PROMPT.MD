@@ -147,6 +147,127 @@ A volcanic lava battle arena background in dark pixel art style. The foreground 
 
 ---
 
+---
+
+## Regras Globais para Sprites de Personagem (Herói)
+
+Aplicar **obrigatoriamente** em todo prompt de geração de sprite do herói (qualquer animação):
+
+1. **Virado para a direita:** o personagem deve estar em three-quarter right view, corpo levemente voltado para a direita — como em um jogo de combat side-scrolling. Nunca de frente ou virado para a esquerda.
+   - Frase a incluir no prompt: `body facing slightly to the right (three-quarter right view, as in a side-scrolling combat game)`
+
+2. **Ground line consistente:** os pés devem sempre estar à mesma distância da borda inferior do canvas, com espaço vazio abaixo deles. Isso garante que todos os frames fiquem alinhados ao mesmo "chão" quando montados em spritesheet.
+   - Frase a incluir no prompt: `The feet must be positioned at a consistent fixed distance from the bottom edge of the canvas, with clear empty space below them`
+   - **Para animações estáticas (idle, channel, defend):** o corpo não se desloca verticalmente entre frames — apenas elementos secundários se movem (capa, cabelo, aura). Usar o script `scripts/_align_frame.py` para corrigir desvios após a geração.
+
+3. **Personagem completo sem cortes:** padding generoso em todos os lados — nenhuma parte do corpo, capa, espada ou pés deve ser cortada.
+   - Frase a incluir no prompt: `The character must be fully visible with generous padding on all sides — no part of the body, cape, or sword tip should be cropped`
+
+---
+
+## Manual de Arte de Cartas: Guia de Prompt Engineering (Pixel Art Premium)
+
+Este documento estabelece as diretrizes para a geração de artes de cartas no estilo **Pixel Art Premium**, garantindo consistência visual, profundidade e alinhamento com a estética geral do jogo (inspirada em *Sea of Stars* e *Studio Ghibli*).
+
+### Princípios Fundamentais:
+1.  **Consistência de Personagem:** Sempre utilize o asset do personagem do jogo como `reference_image` para manter proporções, design e expressão facial. O prompt deve focar na pose e nos efeitos.
+2.  **Iluminação Dinâmica:** A luz deve interagir com os elementos da cena, especialmente com a armadura e os efeitos mágicos, criando reflexos e sombras que dão profundidade.
+3.  **Estilo Dark/Gold Premium:** A paleta de cores e os detalhes (como fundos de pedra escura e partículas douradas) devem reforçar a atmosfera rica e fantástica do jogo.
+4.  **Clareza e Impacto:** A pose e os efeitos devem ser imediatamente compreensíveis e visualmente impactantes, comunicando a função da carta.
+
+### Sistema de Cores por Shard/Elemento:
+Cada tipo de shard possui uma cor associada que DEVE aparecer nos efeitos visuais da carta e influenciar a iluminação e os reflexos:
+
+| Shard       | Cores Primárias                 | Descrição                                         |
+|-------------|---------------------------------|---------------------------------------------------|
+| **Attack**  | Vermelho-Alaranjado (#D63D2D, #FF6B35) | Aura avermelhada, impacto quente, reflexos ígneos |
+| **Defense** | Azul Ciano (#2BA3D4, #1E90FF)   | Aura azul protetora, escudo brilhante, reflexos aquáticos |
+| **Counter** | Roxo (#7B2CBF, #C77DFF)         | Vórtice roxo, energia de contra-ataque, reflexos violeta na armadura |
+| **Agility** | Verde Brilhante (#3EBE61, #06D6A0) | Aura verde, movimento rápido, reflexos esmeralda |
+| **Fire**    | Vermelho-Laranja Intenso (#FF4500, #FFD700) | Chamas, glow quente, partículas de fogo, reflexos laranja |
+| **Water**   | Azul Profundo (#0077BE, #00D4FF) | Água, gotículas, aura azul aquática, reflexos azulados |
+| **Air**     | Verde-Ciano (#00C9A7, #56CCF2)   | Tornado, vento espiral, aura etérea, reflexos esverdeados |
+| **Earth**   | Marrom-Dourado (#8B6F47, #D4A574) | Terra, rochas, aura terrosa, reflexos terrosos |
+
+### Estrutura Base do Prompt (Versão Mestre):
+
+```
+A high-quality 2D pixel art character portrait for a game card, featuring [DESCRIÇÃO_DO_PERSONAGEM_COM_CARACTERÍSTICAS_CHAVE] in a dynamic '[NOME_DA_CARTA]' stance. [POSE_ESPECÍFICA_E_DETALHADA]. [EFEITO_VISUAL_COM_COR_DO_SHARD_E_PARTÍCULAS]. Style: 'Pixel Art Premium', high-detail cel-shading, bold black outlines, inspired by Sea of Stars and Studio Ghibli. Lighting: [ILUMINAÇÃO_DINÂMICA_E_REFLEXOS_DA_COR_DO_SHARD]. Background: [CENÁRIO_DARK_STONE_COM_DETALHES_ATMOSFÉRICOS]. Composition: [TIPO_DE_COMPOSIÇÃO_EX: Dynamic mid-shot, powerful and ready]. Consistent with the knight character in 'gameplay_hud_mockup_v2.png'.
+```
+
+### Regras Críticas para Geração de Prompts:
+
+*   **`reference_image` Essencial:** SEMPRE inclua o asset do personagem do jogo como `reference_image` para garantir a fidelidade do design do personagem.
+*   **Iluminação e Reflexos:** Descreva a interação da luz com o personagem e os efeitos. Use termos como `rim lighting`, `vibrant reflections`, `glowing aura`.
+*   **Cores do Shard Obrigatórias:** A cor primária do shard DEVE ser proeminente nos efeitos visuais e na iluminação da cena.
+*   **Cartas Compostas (ex: agility-counter):** Para cartas que combinam DOIS shards, use uma **cor intermediária/blend** explícita entre as duas cores. Definir a paleta com DOIS nomes de cores. Exemplo: agility-counter = verde (agility #3EBE61) + roxo (counter #7B2CBF) → **"bold teal-purple palette"** ou **"vivid emerald-violet color scheme"**. Descrever como "swirling teal-purple energy" ou "emerald-violet vortex" para representar a fusão.
+   - **agility-attack** = verde + vermelho-alaranjado → **"bold lime-orange palette"** 
+   - **agility-air** = verde + verde-ciano → **"bold cyan-green palette"**
+   - **agility-counter** = verde + roxo → **"bold teal-purple palette"**
+*   **Estilo Consistente:** Reforce `Pixel Art Premium`, `cel-shading`, `bold black outlines`, e as referências a `Sea of Stars` e `Studio Ghibli`.
+*   **Fundo Atmosférico:** Utilize `Dark stone background` com detalhes como `subtle golden dust motes` ou `ethereal particles` para criar profundidade e atmosfera.
+*   **Composição Clara:** Especifique o tipo de enquadramento (ex: `mid-shot`, `full body`) e a sensação que a imagem deve transmitir (`powerful`, `ready`, `defensive`). **O personagem NÃO deve ocupar mais de 40-50% do espaço da imagem** — o foco é a CENA e os efeitos mágicos ao redor, não um close facial. Usar termos como "character occupies center third" ou "figure surrounded by expansive effects" para reforçar a composição cênica.
+*   **Sem Elementos de UI:** O prompt deve gerar APENAS a arte da carta. Não inclua bordas, frames, texto ou elementos de UI da carta.
+*   **Proporções Preservadas:** Mantenha a menção a `preserved proportions` para garantir que o personagem não seja distorcido.
+
+### Exemplos de Prompts (Versão Mestre):
+
+**Counter (Roxo - #7B2CBF):**
+```
+A high-quality 2D pixel art character portrait for a game card, featuring the young knight with brown hair and silver armor in a dynamic 'Counter' stance. The knight is in a low, coiled defensive pose, holding his sword horizontally in a perfect block. Intense, swirling purple magical energy and ethereal vortex particles spiral around the blade. Style: 'Pixel Art Premium', high-detail cel-shading, bold black outlines, inspired by Sea of Stars and Studio Ghibli. Lighting: Dramatic rim lighting from the purple energy, casting vibrant violet reflections on the polished silver armor. Background: Dark, atmospheric stone chamber with subtle golden dust motes. Composition: Dynamic mid-shot, powerful and ready. Consistent with the knight character in 'gameplay_hud_mockup_v2.png'.
+```
+
+**Defense (Azul Ciano - #2BA3D4):**
+```
+A high-quality 2D pixel art character portrait for a game card, featuring the young knight with brown hair and silver armor in a dynamic 'Defense' stance. The knight stands firm, shield held high in a protective stance. A radiant cyan-blue glowing shield aura emanates from the shield, forming a protective barrier. Style: 'Pixel Art Premium', high-detail cel-shading, bold black outlines, inspired by Sea of Stars and Studio Ghibli. Lighting: Soft, ethereal blue light from the shield aura illuminates the knight's front, casting subtle blue reflections on the silver armor. Background: Dark, ancient stone ruins with faint moonlight. Composition: Static, grounded, and resolute full-body shot. Consistent with the knight character in 'gameplay_hud_mockup_v2.png'.
+```
+
+**Attack (Vermelho-Alaranjado - #D63D2D):**
+```
+A high-quality 2D pixel art character portrait for a game card, featuring the young knight with brown hair and silver armor in a dynamic 'Attack' stance. The knight lunges forward with a powerful sword swing, leaving a trail of fiery red-orange energy. Explosive red-orange energy burst and embers erupt from the sword's impact point. Style: 'Pixel Art Premium', high-detail cel-shading, bold black outlines, inspired by Sea of Stars and Studio Ghibli. Lighting: Intense, warm red-orange glow from the attack illuminates the knight and casts dramatic shadows. Background: Dark, chaotic battlefield with faint glowing runes. Composition: Dynamic, action-oriented mid-shot. Consistent with the knight character in 'gameplay_hud_mockup_v2.png'.
+```
+
+___________________________________________
+
+## Cartas de Ataque de Inimigo (Enemy Attack Cards)
+
+Ataques genéricos reutilizados por vários inimigos (claw, bite, smash, fire_breath, etc).
+São **ilustrações soltas do efeito do ataque** — SEM moldura, SEM texto, SEM ícone.
+
+### Regras críticas (aprendidas na prática):
+
+1. **Workflow:** usar `generate-image` (node `OpenAIGPTImageNodeV2` SEM `model.images.image_1`).
+   - NUNCA usar `ui_button`/`ui_button_no_ref`: eles tendem a gerar MOLDURA + ÍCONE + TEXTO do nome da carta.
+   - `image-reference-to-image` também funciona se passar `reference_image`, mas `generate-image` é o padrão (sem referência).
+
+2. **Cor natural, NÃO cor de shard:** ao contrário das cartas de herói, ataques de inimigo NÃO seguem a tabela de cores por shard. Cada ataque usa a cor da sua natureza física:
+   - bite → marfim/osso com sangue vermelho sutil
+   - claw → vermelho-laranja (garras flamejantes)
+   - pierce → marrom quitina + veneno verde
+   - bone_throw → branco/cinza osso neutro
+   - drain → roxo/magenta (sugação de almas)
+   - spit → verde-amarelo ácido
+   - slash → prata/aço
+   - slam → roxo-azul orgânico
+   - thorn_spike → marrom madeira + verde folha
+   - curse → violeta + verde fantasmagórico
+   - water_surge → azul/ciano + espuma branca
+
+3. **Fundo neutro atmosférico:** `muted dark grey gradient, slightly desaturated` — NUNCA "dark stone surface"/"stone tiles" (gera blocos de pedra literais no chão).
+
+4. **Negativos obrigatórios:** `no scenery, no ground, no stone tiles. Absolutely no card frame, no border, no UI, no text, no labels, no icons.`
+
+### Template:
+
+```
+A high-quality 2D pixel art illustration of a [ATAQUE] attack effect, raw illustration art with no card frame. [DESCRIÇÃO_DO_EFEITO]. Style: high-detail pixel art, cel-shading, bold black outlines, inspired by Sea of Stars and Studio Ghibli. Color palette: [CORES_NATURAIS], NOT orange, NOT fire. Lighting: [ILUMINAÇÃO]. Background: muted dark grey gradient, slightly desaturated, no scenery, no ground, no stone tiles. Composition: single centered effect filling the frame. Absolutely no card frame, no border, no UI, no text, no labels, no icons.
+```
+
+Assets salvos em: `public/assets/cards/enemy/enemy_<ataque>.png` (1024×1024).
+
+___________________________________________
+
+
 Texto do prompt para a tela de shoppinhg
 
 ```

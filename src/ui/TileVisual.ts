@@ -64,17 +64,36 @@ function getReservedSpriteKey(slot: TileSlot): string | null {
 }
 
 /**
- * TileVisual -- reusable Phaser Container for rendering a single tile.
- * Used in both the world view (scale=1, TILE_SIZE px) and planning view
- * (scale=0.5, half size). Source PNGs are 256x256; Phaser downscales.
+ * TileVisual -- base Phaser Container for rendering a single tile.
+ *
+ * Não instancie esta classe diretamente. Use as subclasses concretas, que
+ * representam contextos distintos com posicionamento próprio:
+ *   - `WorldTileVisual`    — tela de scrolling (GameScene), tile em tamanho cheio.
+ *   - `PlanningTileVisual` — tela de seleção de tiles (PlanningOverlay), reduzido.
+ *
+ * Os offsets verticais que diferem entre as duas telas (sprite, landmark,
+ * inimigo) ficam em métodos `protected` sobrescritos por cada subclasse, em vez
+ * de ramificações `scale >= 1` espalhadas — assim um ajuste numa tela nunca
+ * vaza para a outra. Source PNGs são 256x256; o Phaser faz o downscale.
  */
-export class TileVisual extends Phaser.GameObjects.Container {
+export abstract class TileVisual extends Phaser.GameObjects.Container {
   private bg: Phaser.GameObjects.Rectangle;
   private sprite: Phaser.GameObjects.Image | null = null;
   private landmarkSprite: Phaser.GameObjects.Image | null = null;
   private enemySprite: Phaser.GameObjects.Sprite | null = null;
   private iconText: Phaser.GameObjects.Text;
-  private tileScale: number;
+  protected tileScale: number;
+
+  // ── View-specific vertical offsets ─────────────────────────────────────────
+  // O mesmo layout de tile é usado em duas telas com escalas e enquadramentos
+  // diferentes. Em vez de ramificar em `tileScale >= 1`, cada subclasse
+  // (WorldTileVisual / PlanningTileVisual) define seus próprios offsets.
+  /** Deslocamento vertical do sprite principal do tile. */
+  protected abstract spriteOffsetY(): number;
+  /** Deslocamento vertical do landmark (tesouro, biomas, subtiles). */
+  protected abstract landmarkOffsetY(tileSize: number): number;
+  /** Deslocamento vertical do sprite de inimigo. */
+  protected abstract enemyOffsetY(tileSize: number): number;
 
   constructor(
     scene: Phaser.Scene,
@@ -110,10 +129,8 @@ export class TileVisual extends Phaser.GameObjects.Container {
       ? reservedKey
       : TILE_SPRITE_MAP[key];
     if (spriteKey && scene.textures.exists(spriteKey)) {
-      // y offset only applies at full scale (GameScene world view).
-      // In planning view (scale=0.5) the tile is small enough that centering at 0 is correct.
-      const spriteOffsetY = scale >= 1 ? -50 : 0;
-      this.sprite = scene.add.image(0, spriteOffsetY, spriteKey);
+      // y offset is view-specific (see WorldTileVisual / PlanningTileVisual).
+      this.sprite = scene.add.image(0, this.spriteOffsetY(), spriteKey);
       this.sprite.setDisplaySize(size, size);
       this.add(this.sprite);
       // Sprite covers the tile — hide the fallback rectangle so it doesn't bleed through
@@ -163,7 +180,8 @@ export class TileVisual extends Phaser.GameObjects.Container {
   }
 
   private _makeLandmark(scene: Phaser.Scene, textureKey: string, tileSize: number): Phaser.GameObjects.Image {
-    const img = scene.add.image(0, this.tileScale >= 1 ? -tileSize * 0.75 : -tileSize * 0.9, textureKey);
+    // A altura do landmark é view-specific (ver WorldTileVisual / PlanningTileVisual).
+    const img = scene.add.image(0, this.landmarkOffsetY(tileSize), textureKey);
     // Scale landmark to fit 80% of the tile width, preserving aspect ratio
     const src = scene.textures.get(textureKey).getSourceImage() as HTMLImageElement;
     const scale = (tileSize * 0.8) / Math.max(src.width, src.height);
@@ -180,7 +198,7 @@ export class TileVisual extends Phaser.GameObjects.Container {
     if (scene.textures.exists(textureKey)) {
       this.enemySprite = scene.add.sprite(0, 0, textureKey);
       this.enemySprite.setOrigin(0.5, 1.0);
-      this.enemySprite.y = this.tileScale >= 1 ? -71.2 : -tileSize * 0.35;
+      this.enemySprite.y = this.enemyOffsetY(tileSize);
       // Bound enemy sprite to tile size regardless of source dimensions.
       // Previous setScale(tileSize / 32) assumed 32px source but the PNGs
       // are 64x64, causing a 2x "pop" (128px) on first appearance.
@@ -296,4 +314,48 @@ export class TileVisual extends Phaser.GameObjects.Container {
   hideLandmark(): void {
     if (this.landmarkSprite) this.landmarkSprite.setVisible(false);
   }
+}
+
+/**
+ * Tile da tela de scroller (GameScene) — escala cheia (1.0), enquadramento
+ * "de mundo". Sprite e landmarks sobem 50px para não afundarem no chão; o
+ * inimigo fica preso ao chão do tile.
+ */
+export class WorldTileVisual extends TileVisual {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    tileSlot: TileSlot,
+    index: number = 0,
+  ) {
+    super(scene, x, y, tileSlot, 1, index, false);
+  }
+
+  protected spriteOffsetY(): number { return -50; }
+  protected landmarkOffsetY(tileSize: number): number { return -tileSize * 0.75 - 50; }
+  protected enemyOffsetY(_tileSize: number): number { return -71.2; }
+}
+
+/**
+ * Tile da tela de planejamento (PlanningOverlay) — escala reduzida (~0.5),
+ * enquadramento "de carta". Aqui a posição relativa já está correta, então
+ * NÃO se aplica o offset de mundo; os elementos ficam centrados no tile.
+ */
+export class PlanningTileVisual extends TileVisual {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    tileSlot: TileSlot,
+    scale: number = 0.5,
+    index: number = 0,
+    interactive: boolean = false,
+  ) {
+    super(scene, x, y, tileSlot, scale, index, interactive);
+  }
+
+  protected spriteOffsetY(): number { return 0; }
+  protected landmarkOffsetY(tileSize: number): number { return -tileSize * 0.9; }
+  protected enemyOffsetY(tileSize: number): number { return -tileSize * 0.35; }
 }

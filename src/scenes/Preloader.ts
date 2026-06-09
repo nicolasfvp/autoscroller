@@ -37,7 +37,10 @@ export class Preloader extends Scene {
     this.load.image('timer_panel', 'assets/ui/timer/timer-panel.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 532, frameHeight: 568 });
+    this.load.spritesheet('hero_channel', 'assets/characters/hero/cast_debuff/cast_debuff_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_battle_stance', 'assets/characters/hero/battle_stance/battle_stance_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_defend', 'assets/characters/hero/defend/defend_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
@@ -65,7 +68,7 @@ export class Preloader extends Scene {
       { id: 'skeleton',             folder: 'cemetery', file: 'skeleton_1.png',             hasFrame2: true },
       { id: 'vampire',              folder: 'cemetery', file: 'vampire_1.png',              hasFrame2: true },
       { id: 'werewolf',             folder: 'cemetery', file: 'werewolf_1.png',             hasFrame2: true },
-      { id: 'zombie',               folder: 'a melhorar', file: 'zombie.png' },
+      { id: 'zombie',               folder: 'cemetery', file: 'zombie.png' },
       // Default-terrain bosses. doom_knight has art (default/doom_knight_*.png).
       // iron_golem and lizard_king are live in enemies.json but have NO sprite
       // on disk — they render the missing-texture placeholder until art is added
@@ -139,9 +142,9 @@ export class Preloader extends Scene {
     this.load.image('homepage', 'assets/backgrounds/ui/homepage.jpg');
 
     // Parallax backgrounds
-    this.load.image('bg_green_field', 'assets/backgrounds/green_field_background.png');
-    this.load.image('bg_sky',         'assets/backgrounds/sky-background.jpg');
-    this.load.image('bg_desert', 'assets/backgrounds/desert.png');
+    this.load.image('bg_green_field', 'assets/backgrounds/loop/green_field_background.png');
+    this.load.image('bg_sky',         'assets/backgrounds/ui/sky-background.png');
+    this.load.image('bg_desert',      'assets/backgrounds/loop/desert.png');
 
     // Special tile sprites (256x256, baked-in decoration).
     this.load.image('tile_event', 'assets/map/tiles/tile_event.png');
@@ -171,6 +174,10 @@ export class Preloader extends Scene {
     this.load.spritesheet('forge_background', 'assets/buildings/backgrounds/forge_background.png', {
       frameWidth: 1168, frameHeight: 880,
     });
+    this.load.image('forge_frame_01', 'assets/buildings/backgrounds/forge_frame_01.png');
+    this.load.spritesheet('forge_fire_sheet', 'assets/buildings/backgrounds/forge_fire_sheet.png', {
+      frameWidth: 390, frameHeight: 590,
+    });
     this.load.image('arco_forja',     'assets/buildings/items/arco_forja.png');
     this.load.image('bigorna',        'assets/buildings/items/bigorna.png');
     this.load.image('forge_moldure',       'assets/buildings/items/forge_moldure.png');
@@ -185,7 +192,7 @@ export class Preloader extends Scene {
     this.load.image('status_panel', 'assets/ui/panels/status_panel.png');
     this.load.image('combat_hero_panel',    'assets/ui/battle/combat_hero_panel.png');
     this.load.image('combat_monster_panel', 'assets/ui/battle/combat_monster_panel.png');
-    this.load.spritesheet('hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 480, frameHeight: 952 });
+    this.load.spritesheet('hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
     this.load.image('combat_chip_panel', 'assets/ui/combat_chip_panel.png');
     this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
     this.load.image('wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
@@ -193,6 +200,19 @@ export class Preloader extends Scene {
     this.load.spritesheet('flame_selection', 'assets/ui/backgrounds/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
     this.load.image('icon_table', 'assets/ui/panels/icon-table.png');
     this.load.image('fog', 'assets/ui/effects/fog.png');
+
+    // Combat hit effects — 4-frame spritesheets
+    const FX_W = 443; const FX_H = 887;
+    this.load.spritesheet('fx_slash', 'assets/effects/combat/fx_slash.png', { frameWidth: FX_W, frameHeight: FX_H });
+    this.load.spritesheet('fx_shield_fade', 'assets/effects/combat/fx_shield_fade.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_aura_heal',   'assets/effects/combat/fx_aura_heal.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
+    this.load.spritesheet('fx_aura_buff',   'assets/effects/combat/fx_aura_buff.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
+    this.load.spritesheet('fx_leaf_fall',   'assets/effects/combat/fx_leaf_fall.png',   { frameWidth: 512, frameHeight: 512, endFrame: 5 });
+    this.load.spritesheet('fx_stomp', 'assets/effects/combat/fx_stomp.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_bite',  'assets/effects/combat/fx_bite.png',  { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_fire',  'assets/effects/combat/fx_fire.png',  { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_bleed', 'assets/effects/combat/fx_bleed.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_stun',  'assets/effects/combat/fx_stun.png',  { frameWidth: 1024, frameHeight: 1024 });
 
     // Tutorial step text-box images (pre-rendered via ComfyUI)
     const tutorialSteps = [
@@ -231,8 +251,10 @@ export class Preloader extends Scene {
     this.load.image('shop_tab',           'assets/ui/shop/shop-section.png');
     this.load.image('shop_row_selected',  'assets/ui/shop/item_selection.png');
     this.load.image('shop_btn_buy',       'assets/ui/shop/buy-button.png');
+    this.load.image('shop_btn_sell',      'assets/ui/shop/sell-button.png');
+    this.load.image('shop_gold_panel',    'assets/ui/shop/gold_panel.png');
     this.load.image('banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
-    this.load.image('confirm_panel',        'assets/ui/confirm_panel.png');
+    this.load.image('confirm_panel',        'assets/ui/panels/confirm_panel.png');
     // Grok-generated painted backdrops for previously-bare scenes. See
     // docs/UI_AUDIT.md for the prompts and re-generation recipe.
     this.load.image('bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
@@ -289,14 +311,13 @@ export class Preloader extends Scene {
     this.load.image('btn_settings',        'assets/ui/buttons/btn_settings.png');
     this.load.image('btn_tutorial',        'assets/ui/buttons/btn_tutorial.png');
     // Building buttons (city hub)
-    this.load.image('btn_forge',         'assets/ui/btn_forge.png');
-    this.load.image('btn_library',       'assets/ui/btn_library.png');
-    this.load.image('btn_workshop',      'assets/ui/btn_workshop.png');
-    this.load.image('btn_oracle',        'assets/ui/btn_oracle.png');
-    this.load.image('btn_vault',         'assets/ui/btn_vault.png');
-    this.load.image('upgrade_panel',     'assets/ui/upgrade_panel.png');
-    this.load.image('btn_melhorar',          'assets/ui/btn_melhorar.png');
-    this.load.image('btn_start_run_hub',     'assets/ui/btn_start_run_hub.png');
+    this.load.image('btn_forge',         'assets/ui/buttons/btn_forge.png');
+    this.load.image('btn_library',       'assets/ui/buttons/btn_library.png');
+    this.load.image('btn_workshop',      'assets/ui/buttons/btn_workshop.png');
+    this.load.image('btn_oracle',        'assets/ui/buttons/btn_oracle.png');
+    this.load.image('btn_vault',         'assets/ui/buttons/btn_vault.png');
+    this.load.image('btn_melhorar',          'assets/ui/buttons/btn_melhorar.png');
+    this.load.image('btn_start_run_hub',     'assets/ui/buttons/btn_start_run_hub.png');
     this.load.image('label_requer',          'assets/ui/labels/label_requer.png');
     // Building upgrade text panels (one per level per building)
     const buildingPanels: [string, number][] = [
@@ -493,6 +514,16 @@ this.load.image('btn_start_run',       'assets/ui/buttons/btn_start_run.png');
     ];
     for (const id of newCardIds) {
       this.load.image(`card_${id}`, `assets/cards/${id}.png`);
+    }
+
+    // Enemy attack cards (generic attacks shared across many enemies)
+    const enemyAttackIds = [
+      'claw', 'bite', 'slash', 'smash', 'slam', 'pierce', 'bone_throw',
+      'spit', 'thorn_spike', 'fire_breath', 'water_surge', 'poison',
+      'drain', 'curse',
+    ];
+    for (const id of enemyAttackIds) {
+      this.load.image(`enemy/enemy_${id}`, `assets/cards/enemy/enemy_${id}.png`);
     }
 
 

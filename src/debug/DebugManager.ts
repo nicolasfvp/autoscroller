@@ -201,6 +201,7 @@ class DebugManagerSingleton {
 
       const scenePausedFresh = scene.scene.isPaused();
       const fresh = this.collectObjects(scene.children.list).filter(o => !this.isBackground(o));
+
       fresh.forEach(obj => {
         if (!this._allDraggable.includes(obj)) {
           this._setupObj(obj, scenePausedFresh);

@@ -61,8 +61,12 @@ const E_NAME_Y = RP.y + (0.5567 - 0.2163 / 2) * RP.h - 3;
 const TROUGH_HP   = 0x200808;
 const TROUGH_STA  = 0x181000;
 const TROUGH_MANA = 0x0e0820;
-// Ghost alpha — lost portion appears as a dim semi-transparent echo of the fill
-const GHOST_ALPHA = 0.38;
+// Ghost colours — contrasting with each bar so lost health is clearly visible
+const GHOST_HP   = 0xff8800; // HP verde  → ghost laranja
+const GHOST_STA  = 0xffee44; // STA laranja → ghost amarelo claro
+const GHOST_MANA = 0x44ddff; // Mana roxa  → ghost ciano
+const GHOST_ENEMY_HP = 0xff8800; // HP vermelho → ghost laranja
+const GHOST_ALPHA = 0.80;
 
 // Status-chip row geometry (effect icons row under each panel)
 const CHIP_POOL_SIZE = 10;
@@ -116,10 +120,15 @@ export class CombatHUD {
 
   // Hourglass timer
   private hourglassSprite?: Phaser.GameObjects.Sprite;
+  private enemyHourglassSprite?: Phaser.GameObjects.Sprite;
   private cooldownGraphics!: Phaser.GameObjects.Graphics;
   private cooldownText!:     Phaser.GameObjects.Text;
+  private enemyCooldownText!: Phaser.GameObjects.Text;
   private hourglassFlipAngle   = 0;
   private isFlipping           = false;
+  private _hgTopFrame          = 6;  // índice do último frame válido do spritesheet (derivado no build)
+  private _lastHgFrame         = 0;  // último frame exibido do hourglass do herói
+  private _hgResetHold         = 0;  // ticks segurando o frame drenado à espera do giro
   private _lastCardPlayCount   = 0;
   private _onFlipChange?: (flipping: boolean) => void;
   private _destroyed         = false;
@@ -216,9 +225,9 @@ export class CombatHUD {
 
     // Stat bars sit BEHIND the panel art (trough → ghost → fill); the asset on
     // top reveals each bar through its baked-in transparent window.
-    const makeBar = (cy: number, fillColor: number, troughColor: number, valSize: string) => {
+    const makeBar = (cy: number, fillColor: number, troughColor: number, valSize: string, ghostColor: number) => {
       const trough = s.add.rectangle(H_BAR_CX, cy, H_BAR_MAXW, H_WIN_H, troughColor).setOrigin(0.5);
-      const ghost  = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5).setAlpha(0);
+      const ghost  = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, ghostColor).setOrigin(0, 0.5).setAlpha(0);
       const fill   = s.add.rectangle(H_BAR_X, cy, 0, H_WIN_H, fillColor).setOrigin(0, 0.5);
       const val    = s.add.text(H_BAR_CX, cy, '', {
         fontFamily: FF, fontSize: valSize, fontStyle: 'bold',
@@ -228,9 +237,9 @@ export class CombatHUD {
       return { ghost, fill, val };
     };
 
-    const hp  = makeBar(H_ROW_CY[0], 0x22cc44, TROUGH_HP,   '13px');
-    const sta = makeBar(H_ROW_CY[1], 0xf0a020, TROUGH_STA,  '12px');
-    const mp  = makeBar(H_ROW_CY[2], 0x9966ff, TROUGH_MANA, '12px');
+    const hp  = makeBar(H_ROW_CY[0], 0x22cc44, TROUGH_HP,   '13px', GHOST_HP);
+    const sta = makeBar(H_ROW_CY[1], 0xf0a020, TROUGH_STA,  '12px', GHOST_STA);
+    const mp  = makeBar(H_ROW_CY[2], 0x9966ff, TROUGH_MANA, '12px', GHOST_MANA);
     this.hpBar = hp.fill;       this.hpGhost = hp.ghost;       this.hpText = hp.val;
     this.staminaBar = sta.fill; this.staminaGhost = sta.ghost; this.staminaText = sta.val;
     this.manaBar = mp.fill;     this.manaGhost = mp.ghost;     this.manaText = mp.val;
@@ -253,7 +262,7 @@ export class CombatHUD {
 
     // HP bar behind the panel art (trough → ghost → fill)
     const trough = s.add.rectangle(E_BAR_CX, E_ROW_CY, E_BAR_MAXW, E_WIN_H, TROUGH_HP).setOrigin(0.5);
-    this.enemyHpGhost = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5).setAlpha(0);
+    this.enemyHpGhost = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, GHOST_ENEMY_HP).setOrigin(0, 0.5).setAlpha(0);
     this.enemyHpBar   = s.add.rectangle(E_BAR_X, E_ROW_CY, 0, E_WIN_H, 0xdd2222).setOrigin(0, 0.5);
     this.container.add([trough, this.enemyHpGhost, this.enemyHpBar]);
 
@@ -303,29 +312,59 @@ export class CombatHUD {
 
   private buildCooldownArc(): void {
     const s = this.scene;
+    const HG_SCALE  = (110 / 496) * 0.7;   // 30% menor
+    const HG_H      = 496 * HG_SCALE;
+    const HERO_X    = 369;
+    const ENEMY_X   = 471;
+    const HG_Y      = 490;
+    const PANEL_Y   = HG_Y + HG_H / 2 + 18;
+    const PANEL_W   = 77;
+    const PANEL_H   = 21;
 
     if (s.textures.exists('hourglass_timer')) {
-      this.hourglassSprite = s.add.sprite(400, 55, 'hourglass_timer', 0)
-        .setScale(110 / 952)
+      // frameTotal inclui o __BASE, então o último índice de frame real é frameTotal - 2.
+      this._hgTopFrame = Math.max(0, s.textures.get('hourglass_timer').frameTotal - 2);
+
+      // Herói — esquerda
+      this.hourglassSprite = s.add.sprite(HERO_X, HG_Y, 'hourglass_timer', 0)
+        .setScale(HG_SCALE)
         .setOrigin(0.5, 0.5)
         .setDepth(101);
       this.container.add(this.hourglassSprite);
+
+      // Inimigo — direita, filtro vermelho
+      this.enemyHourglassSprite = s.add.sprite(ENEMY_X, HG_Y, 'hourglass_timer', 0)
+        .setScale(HG_SCALE)
+        .setOrigin(0.5, 0.5)
+        .setDepth(101)
+        .setTint(0xff4444);
+      this.container.add(this.enemyHourglassSprite);
     } else {
       this.cooldownGraphics = s.add.graphics();
       this.container.add(this.cooldownGraphics);
     }
 
-    // Timer panel behind the cooldown text
+    // Painel herói
     if (s.textures.exists('timer_panel')) {
-      const tp = s.add.image(400, 117, 'timer_panel').setDisplaySize(110, 30).setDepth(100);
+      const tp = s.add.image(HERO_X, PANEL_Y, 'timer_panel').setDisplaySize(PANEL_W, PANEL_H).setDepth(100);
       this.container.add(tp);
     }
-
-    this.cooldownText = s.add.text(400, 115, '', {
-      fontFamily: 'VT323', fontSize: '22px',
+    this.cooldownText = s.add.text(HERO_X, PANEL_Y, '', {
+      fontFamily: 'VT323', fontSize: '16px',
       color: '#ffd700', stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5);
     this.container.add(this.cooldownText);
+
+    // Painel inimigo
+    if (s.textures.exists('timer_panel')) {
+      const tp2 = s.add.image(ENEMY_X, PANEL_Y, 'timer_panel').setDisplaySize(PANEL_W, PANEL_H).setDepth(100).setTint(0xff6666);
+      this.container.add(tp2);
+    }
+    this.enemyCooldownText = s.add.text(ENEMY_X, PANEL_Y, '', {
+      fontFamily: 'VT323', fontSize: '16px',
+      color: '#ff9999', stroke: '#000000', strokeThickness: 3,
+    }).setOrigin(0.5);
+    this.container.add(this.enemyCooldownText);
   }
 
   setFlipCallback(cb: (flipping: boolean) => void): void {
@@ -334,6 +373,8 @@ export class CombatHUD {
 
   private triggerHourglassFlip(): void {
     if (this._destroyed || !this.hourglassSprite || this.isFlipping) return;
+    this.hourglassSprite.setFrame(this._hgTopFrame); // trava no último frame; só sai dele após o giro
+    this._lastHgFrame = this._hgTopFrame;
     this.isFlipping = true;
     this._onFlipChange?.(true);
     this.hourglassFlipAngle += 360;
@@ -344,6 +385,10 @@ export class CombatHUD {
       ease: 'Cubic.easeInOut',
       onComplete: () => {
         if (this._destroyed) return;
+        // O giro terminou: agora sim o frame volta ao primeiro sprite.
+        this.hourglassSprite?.setFrame(0);
+        this._lastHgFrame = 0;
+        this._hgResetHold = 0;
         this.isFlipping = false;
         this._onFlipChange?.(false);
       },
@@ -475,7 +520,7 @@ export class CombatHUD {
 
   // ── Public update ──────────────────────────────────────────────
 
-  update(state: CombatState, heroCooldown: number, heroMaxCooldown: number, _gameSpeed = 1, cardPlayCount = 0): void {
+  update(state: CombatState, heroCooldown: number, heroMaxCooldown: number, _gameSpeed = 1, cardPlayCount = 0, enemyCooldown = 0, enemyMaxCooldown = 0): void {
     // Hero bars. Track displayed* against the tween *target* (updated at
     // tween start) so consecutive update() ticks during an in-flight tween
     // don't restart it every frame and leave the value stuck at zero.
@@ -531,18 +576,34 @@ export class CombatHUD {
         }
 
         if (this.isFlipping) {
-          // Hold at last frame (fully drained) while rotating.
-          this.hourglassSprite.setFrame(7);
+          // Frame gerenciado por triggerHourglassFlip — não sobrescrever.
         } else {
-          // Engine cooldown is paused during flip, so progress is accurate here.
+          const top = this._hgTopFrame;
           const progress = Math.max(0, Math.min(1, 1 - heroCooldown / heroMaxCooldown));
           const totalFrames = heroMaxCooldown <= 500 ? 3
             : heroMaxCooldown <= 1000 ? 5
             : heroMaxCooldown <= 2000 ? 6
             : 8;
           const fi = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
-          const frameIdx = Math.round(fi * (7 / (totalFrames - 1)));
-          this.hourglassSprite.setFrame(frameIdx);
+          const frameIdx = Math.round(fi * (top / (totalFrames - 1)));
+
+          // Latch: o frame só pode cair de "drenado" (top) para "cheio" (0) como
+          // parte do giro. Quando o cooldown reseta (frame alto -> baixo) sem
+          // que um giro tenha começado, seguramos no frame drenado por alguns
+          // ticks à espera do flip. Se nenhum giro vier (skip/retry por stun,
+          // carta sem custo, deck vazio), liberamos para não travar para sempre.
+          const wasDrained = this._lastHgFrame >= top;
+          const isResetDrop = wasDrained && frameIdx <= 1;
+
+          if (frameIdx >= top) this._hgResetHold = 4;
+
+          if (isResetDrop && this._hgResetHold > 0) {
+            this._hgResetHold--;
+            this.hourglassSprite.setFrame(top); // segura drenado; o giro fará o top->0
+          } else {
+            this._lastHgFrame = frameIdx;
+            this.hourglassSprite.setFrame(frameIdx);
+          }
         }
       } else if (this.cooldownGraphics) {
         // Fallback arc
@@ -563,6 +624,20 @@ export class CombatHUD {
         this.cooldownGraphics.fillStyle(0x0a0a1a, 1);
         this.cooldownGraphics.fillCircle(cx, cy, 5);
       }
+    }
+
+    // Enemy hourglass timer
+    if (this.enemyHourglassSprite && enemyMaxCooldown > 0) {
+      const remaining = Math.max(0, enemyCooldown) / 1000;
+      this.enemyCooldownText.setText(remaining.toFixed(1));
+      const progress = Math.max(0, Math.min(1, 1 - enemyCooldown / enemyMaxCooldown));
+      const totalFrames = enemyMaxCooldown <= 500 ? 3
+        : enemyMaxCooldown <= 1000 ? 5
+        : enemyMaxCooldown <= 2000 ? 6
+        : 8;
+      const fi = Math.min(totalFrames - 1, Math.floor(progress * totalFrames));
+      const frameIdx = Math.round(fi * (this._hgTopFrame / (totalFrames - 1)));
+      this.enemyHourglassSprite.setFrame(frameIdx);
     }
   }
 
@@ -593,7 +668,6 @@ export class CombatHUD {
       // Damage: fill snaps to new value; ghost (semi-transparent echo of fill
       // colour) holds the old width and drains down to meet it.
       bar.width = wTo;
-      ghost.setFillStyle(getColor(clamp(from)));
       ghost.width = Math.max(ghost.width, maxW * clamp(from));
       ghost.setAlpha(GHOST_ALPHA);
       this.setGhostTween(key, this.scene.tweens.add({

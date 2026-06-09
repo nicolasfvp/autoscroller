@@ -161,7 +161,7 @@ export function openGlossary(scene: Phaser.Scene, onClose?: () => void): Glossar
       // renderTokenText so bracketed tokens in the definition (e.g. [armor],
       // [HP]) render as their colored icons instead of literal "[armor]" text.
       const defBlock = renderTokenText(scene, CONTENT_X, cursorY, kw.definition, {
-        fontSize: `${DEFINITION_FONT}px`,
+        fontSize: `${DEF_FONT}px`,
         color: COLORS.textPrimary,
         fontFamily: FONTS.body,
         wrapWidth: CONTENT_W,

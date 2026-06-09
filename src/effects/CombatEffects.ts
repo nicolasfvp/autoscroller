@@ -154,6 +154,122 @@ export class CombatEffects {
             ease: 'Sine.easeInOut'
         });
     }
+
+    /** Play a looping status effect spritesheet anchored at (x, y) bottom-center.
+     *  Returns the sprite so the caller can destroy it when the status ends.
+     *  key: 'fx_fire' */
+    statusEffect(x: number, y: number, key: string, displayW: number = 200): Phaser.GameObjects.Sprite | null {
+        if (!this.scene.textures.exists(key)) return null;
+        const animKey = `__fx_status_${key}`;
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+        }
+        const src = this.scene.textures.get(key).getSourceImage() as HTMLImageElement;
+        const sc = displayW / (src.width / 4);
+        const sprite = this.scene.add.sprite(x, y, key)
+            .setScale(sc)
+            .setDepth(15)
+            .setAlpha(0.85)
+            .setOrigin(0.5, 1);
+        sprite.play(animKey);
+        return sprite;
+    }
+
+    /** Play a 4-frame hit effect spritesheet centered on (x, y).
+     *  key: 'fx_slash' | 'fx_stomp' | 'fx_bite' */
+    enemyAttackEffect(x: number, y: number, key: string): void {
+        if (!this.scene.textures.exists(key)) return;
+        const animKey = `__fx_anim_${key}`;
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 3 }),
+                frameRate: 14,
+                repeat: 0,
+            });
+        }
+        // Display at 50% of native height so it fits over the hero area without dominating
+        const DISPLAY_H = 220;
+        const src = this.scene.textures.get(key).getSourceImage() as HTMLImageElement;
+        const frameW = src.width / 4;
+        const sc = DISPLAY_H / src.height;
+        const sprite = this.scene.add.sprite(x, y, key).setScale(sc).setDepth(20).setAlpha(0.92);
+        sprite.play(animKey);
+        sprite.once('animationcomplete', () => {
+            this.scene.tweens.add({ targets: sprite, alpha: 0, duration: 80, onComplete: () => sprite.destroy() });
+        });
+        // Unused — keeps TypeScript happy about frameW
+        void frameW;
+    }
+
+    auraEffect(x: number, y: number, tint: number = 0xffffff, key: string = 'fx_aura_heal'): Phaser.GameObjects.Sprite | null {
+        if (!this.scene.textures.exists(key)) return null;
+        const animKey = `__fx_anim_${key}`;
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 5 }),
+                frameRate: 8,
+                repeat: -1,
+            });
+        }
+        const sprite = this.scene.add.sprite(x + 2, y + 111, key)
+            .setScale(0.1691, 0.1691 * 0.8)
+            .setDepth(9)
+            .setAlpha(0.85)
+            .setOrigin(0.5, 0.5)
+            .setTint(tint);
+        sprite.play(animKey);
+        return sprite;
+    }
+
+    leafEffect(x: number, y: number): Phaser.GameObjects.Sprite | null {
+        const key = 'fx_leaf_fall';
+        if (!this.scene.textures.exists(key)) return null;
+        const animKey = '__fx_anim_leaf_fall';
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 5 }),
+                frameRate: 6,
+                repeat: -1,
+            });
+        }
+        const sprite = this.scene.add.sprite(x, y - 30, key)
+            .setScale(0.55)
+            .setDepth(11)
+            .setAlpha(0.75)
+            .setOrigin(0.5, 0.5);
+        sprite.play(animKey);
+        return sprite;
+    }
+
+    shieldEffect(x: number, y: number): void {
+        const key = 'fx_shield_fade';
+        if (!this.scene.textures.exists(key)) return;
+        const animKey = '__fx_anim_shield_fade';
+        if (!this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this.scene.anims.generateFrameNumbers(key, { start: 0, end: 5 }),
+                frameRate: 12, // 6 frames / 500ms = mesma duração que defend (4 frames a 8fps)
+                repeat: 0,
+            });
+        }
+        const sprite = this.scene.add.sprite(x + 75, y - 8.1, key).setScale(0.1968).setDepth(15).setAlpha(0.9);
+        sprite.play(animKey);
+        sprite.once('animationcomplete', () => {
+            // Mantém visível pelo restante da animação de defend, depois fade-out
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.tweens.add({ targets: sprite, alpha: 0, duration: 300, onComplete: () => sprite.destroy() });
+            });
+        });
+    }
 }
 
 export function createCombatEffects(scene: Scene): CombatEffects {

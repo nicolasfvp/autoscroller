@@ -36,6 +36,7 @@ export const SCENE_KEYS = {
   STARTING_DECK: 'StartingDeckScene',
   LIBRARY: 'CardLibraryScene',
   DEBUG_OVERLAY: 'DebugOverlayScene',
+  COMBAT_TEST: 'CombatTestScene',
 } as const;
 
 export type SceneKey = typeof SCENE_KEYS[keyof typeof SCENE_KEYS];
