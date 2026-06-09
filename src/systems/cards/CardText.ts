@@ -360,12 +360,14 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
       ? `[armor] ${armorRef}`
       : `${per}[armor] ${armorRef}`;
     if (v === 0) {
-      // "Deal damage equal to your [armor]" / "Deal 2 Pierce per [armor] consumed".
-      if (per === 1 && inc === 1 && !pierce && !spendingArmor) {
+      // Batch C: the literal armor hit (Shield Bash) lands a number equal to
+      // current armor whether or not it pierces, so keep the clean "equal to
+      // your [armor]" wording even though it now carries pierce_armor.
+      if (per === 1 && inc === 1 && !spendingArmor) {
         return `Deal damage equal to your [armor]`;
       }
+      // "Deal 2 Pierce per [armor] consumed" etc.
       if (pierce) {
-        if (per === 1 && inc === 1 && !spendingArmor) return `Deal Pierce per 1[armor] you have${aoe}`;
         return `Deal ${inc}${statS} Pierce per ${perArmor}${aoe}`;
       }
       return `Deal ${inc}${statS} damage per ${perArmor}${aoe}`;
@@ -494,7 +496,7 @@ function stackBody(fx: CardEffect, gate: CondGate | null): string {
   // Ungated consumes are stated by the leading "Consume N [stack]" clause
   // (skipped upstream by isPureConsumeStack). A GATED consume reaches here so
   // it folds into its condition sentence ("...and consume N [rage]").
-  if (fx.consume_stack) return `consume ${consumeAmount(fx.value)} ${stk}`;
+  if (fx.consume_stack) return `consume ${consumeAmountFx(fx)} ${stk}`;
 
   // Cross-stack source ("value 0 + scale.source: self_stack").
   if (v === 0 && fx.scale?.source === 'self_stack' && fx.scale.stack) {
@@ -951,6 +953,16 @@ function consumeAmount(value: number): string {
   return Math.abs(value) >= 99 ? 'all' : String(Math.abs(value));
 }
 
+/** Consume-amount label for a consume effect, honoring `consume_fraction`
+ *  (partial-consume detonators): 0.5 → "half", other fractions → "NN%", else
+ *  falls back to the value-based label ("all" / "N"). */
+function consumeAmountFx(fx: { value?: number; consume_fraction?: number }): string {
+  if (fx.consume_fraction != null) {
+    return fx.consume_fraction === 0.5 ? 'half' : `${Math.round(fx.consume_fraction * 100)}%`;
+  }
+  return consumeAmount(fx.value ?? 0);
+}
+
 /** Trailing phrase for a `consume_stack_value` scaler. "consumed" when the card
  *  truly consumes the pool the snapshot reads; otherwise it just reads the live
  *  count ("on enemy" / "on yourself", per the snapshot side). */
@@ -998,7 +1010,7 @@ function buildConsumeClauses(card: CardDescPick): string[] {
       // ALSO hoist a leading "Consume all [X]".
       if (fx.stack && detonatorFold.has(fx.stack)) continue;
       if (fx.stack && multiDetonator && multiDetonator.stacks.includes(fx.stack)) continue;
-      add(consumeAmount(fx.value), stackTok(fx.stack));
+      add(consumeAmountFx(fx), stackTok(fx.stack));
     } else if (fx.type === 'convert_stack' && fx.from) {
       // Brine fold states the convert's consume inline on the production clause.
       if (brineFold) continue;
@@ -1087,7 +1099,7 @@ export function formatCardDescription(card: CardDescPick, options?: CardDescOpti
     for (const fx of csvDamage) {
       const stk = fx.consume_stack_value!;
       const consume = fxs.find((o) => o.type === 'stack' && o.consume_stack && o.stack === stk && o.value < 0);
-      detonatorFold.set(stk, consume ? consumeAmount(consume.value) : 'all');
+      detonatorFold.set(stk, consume ? consumeAmountFx(consume) : 'all');
     }
   }
   brineFold = false;

@@ -26,6 +26,10 @@ export interface ResolveResult {
   armorGained: number;
   /** v3: Overload — extra seconds to add to this card's next cooldown. */
   cooldownDebtSec?: number;
+  /** Batch C: Vengeful Pyre — when true, the engine should exhaust the next
+   *  card in play order for the rest of combat. Consumed by CombatEngine after
+   *  resolve (the resolver has no deck-pointer visibility). */
+  exhaustNext?: boolean;
 }
 
 /** v3: stack pool snapshot taken at the start of every card resolution. Used
@@ -54,6 +58,30 @@ export function snapshotStacks(state: CombatState): PreConsumeSnapshot {
  *  is exported so other modules can use it during trigger payload resolution. */
 export function getStackCount(state: CombatState, which: StackId, side: 'enemy' | 'self'): number {
   return readStackCount(state, which, side);
+}
+
+/** Batch C: read a named stack's count from the pre-cast snapshot. Mirrors
+ *  readStackCount's side mapping (self: rage/burn/bleed live on hero pools).
+ *  Used by `condition.pre_consume` gates so a stack this same card applied
+ *  earlier in the cast cannot self-satisfy the gate. */
+function preCastStackCount(snap: PreConsumeSnapshot, which: StackId, side: 'self' | 'enemy'): number {
+  if (side === 'self') {
+    switch (which) {
+      case 'rage': return snap.rage ?? 0;
+      case 'burn': return snap.hero_burn ?? 0;
+      case 'bleed': return snap.hero_bleed ?? 0;
+      default: return 0;
+    }
+  }
+  switch (which) {
+    case 'poison': return snap.poison ?? 0;
+    case 'bleed': return snap.bleed ?? 0;
+    case 'burn': return snap.burn ?? 0;
+    case 'stun': return snap.stun ?? 0;
+    case 'slow': return snap.slow ?? 0;
+    case 'rage': return snap.rage ?? 0;
+    default: return 0;
+  }
 }
 
 export class CardResolver {
@@ -204,22 +232,29 @@ export class CardResolver {
     let effectiveValue = effect.value;
 
     if (cond) {
+      // Batch C: with cond.pre_consume, GATE predicates read the pre-cast
+      // snapshot so a stack this same card applies earlier in the cast can't
+      // self-satisfy the gate (Steaming Plague, Vein Splitter). The per_stack
+      // MULTIPLIER path always reads LIVE so Pyre detonators keep self-fueling.
+      const gateStack = (which: StackId, side: 'enemy' | 'self'): number =>
+        (cond.pre_consume && preConsume)
+          ? preCastStackCount(preConsume, which, side)
+          : readStackCount(state, which, side);
       if (cond.enemy_has_stack !== undefined) {
-        const stacks = readStackCount(state, cond.enemy_has_stack, 'enemy');
         if (!cond.per_stack) {
-          if (stacks <= 0) return;
+          if (gateStack(cond.enemy_has_stack, 'enemy') <= 0) return;
         } else {
+          const stacks = readStackCount(state, cond.enemy_has_stack, 'enemy');
           if (stacks <= 0) return;
           effectiveValue *= stacks;
         }
       }
       if (cond.self_has_stack !== undefined) {
-        const stacks = readStackCount(state, cond.self_has_stack, 'self');
-        if (stacks <= 0) return;
+        if (gateStack(cond.self_has_stack, 'self') <= 0) return;
         if (cond.per_stack) {
           // C5 — Berserker Ring: Berserk bonuses (per-Rage-stack self-conditions) double.
           const berserkerMult = (cond.self_has_stack === 'rage' && state.activeRelicIds.includes('berserker_ring')) ? 2 : 1;
-          effectiveValue *= stacks * berserkerMult;
+          effectiveValue *= readStackCount(state, cond.self_has_stack, 'self') * berserkerMult;
         }
       }
       if (cond.hero_hp_pct_below !== undefined) {
@@ -239,12 +274,10 @@ export class CardResolver {
         if (stunned !== cond.enemy_stunned) return;
       }
       if (cond.enemy_stack_atleast) {
-        const c = readStackCount(state, cond.enemy_stack_atleast.stack, 'enemy');
-        if (c < cond.enemy_stack_atleast.value) return;
+        if (gateStack(cond.enemy_stack_atleast.stack, 'enemy') < cond.enemy_stack_atleast.value) return;
       }
       if (cond.self_stack_atleast) {
-        const c = readStackCount(state, cond.self_stack_atleast.stack, 'self');
-        if (c < cond.self_stack_atleast.value) return;
+        if (gateStack(cond.self_stack_atleast.stack, 'self') < cond.self_stack_atleast.value) return;
       }
       if (cond.devour_succeeded === true) {
         // v3 (Wave 3): chained payoff effects fire only if an earlier
@@ -283,7 +316,13 @@ export class CardResolver {
         suppressScale = true;
       }
       const snap = preConsume[effect.consume_stack_value] ?? 0;
-      effectiveValue *= snap;
+      // Partial-consume detonator: scale damage by only the consumed FRACTION of
+      // the pre-cast pool (ceil), so "skim half" pays on the half it skims while
+      // the rest keeps ticking. Omitted = consume-all (full snapshot).
+      const consumedForDmg = effect.consume_fraction != null
+        ? Math.ceil(snap * effect.consume_fraction)
+        : snap;
+      effectiveValue *= consumedForDmg;
     }
 
     this.applyEffect(
@@ -425,7 +464,14 @@ export class CardResolver {
           const elemStatVal = readStat(state, scale.stat);
           elemMult = 1 + Math.max(0, elemStatVal - 1) * ELEM_RATE;
         }
-        const baseDmg = (resolvedValue + hitBonus + rageBonus) * strMult * damageMultiplier * buffMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult * elemMult;
+        // Batch C: literal_damage hits land as the raw resolved value, skipping
+        // STR, banked Rage, hit-bonus, and every outgoing multiplier. Shield Bash
+        // ("Deal damage equal to your [armor]") uses this with pierce_armor so the
+        // number truly equals current armor (resolvedValue is read from armor).
+        const literal = rawEffect?.literal_damage === true;
+        const baseDmg = literal
+          ? resolvedValue
+          : (resolvedValue + hitBonus + rageBonus) * strMult * damageMultiplier * buffMult * dealtMult * cinderkeepMult * glassCannonMult * resonanceMult * elemMult;
         // Enemy defense is the base value plus any timed 'def' aura modifiers
         // (negative values for debuffs — e.g. Crushing Blow's -2 aura).
         const effectiveEnemyDef = Math.max(0, state.enemyDefense + sumModifier(state.enemyAuras, 'def'));
@@ -578,12 +624,16 @@ export class CardResolver {
         const which: StackId = stack ?? 'rage';
         if (rawEffect?.consume_stack && resolvedValue < 0) {
           const wantConsume = -resolvedValue;
+          // Partial-consume detonator: when `consume_fraction` is set, remove
+          // ceil(current*fraction) (leave the rest ticking) instead of up to
+          // |value|. Keeps the quadratic poison/bleed ramp alive post-detonation.
+          const frac = rawEffect?.consume_fraction;
           // Track actual consumed amount (clamped to current pool) so the
           // `stack_consumed` event reports a truthful magnitude to any
           // event_counter aura listening (e.g. Quench Lance min_amount:10).
           let consumed = 0;
           const consumeFrom = (cur: number) => {
-            const take = Math.min(cur, wantConsume);
+            const take = frac != null ? Math.ceil(cur * frac) : Math.min(cur, wantConsume);
             consumed = Math.max(consumed, take);
             return Math.max(0, cur - take);
           };
@@ -690,8 +740,31 @@ export class CardResolver {
         // can attribute their stat_gain payload back to the originating card
         // for cap tracking across repeated plays / copies.
         const aura = createAura(rawEffect, card?.id);
-        if (target === 'enemy') state.enemyAuras.push(aura);
-        else state.heroAuras.push(aura);
+        const auraList = target === 'enemy' ? state.enemyAuras : state.heroAuras;
+        // Batch C: extend_aura — instead of arming a second concurrent aura,
+        // find an existing aura on this side with the same trigger and an
+        // identical `then` body and ADD this aura's lifetime to its remaining
+        // duration. Razor Stance's Vengeance clause uses this so "+4 seconds"
+        // extends the bleed-on-hit window rather than stacking a second aura
+        // (which would double bleed per hit while overlapping). Falls back to a
+        // normal push when no matching aura exists.
+        if (rawEffect.extend_aura && Number.isFinite(aura.remainingMs)) {
+          const thenKey = JSON.stringify(aura.then ?? null);
+          // Match only auras from the SAME source card (plus same trigger and
+          // identical then-body), so a recast extends its own aura and can never
+          // accidentally merge with a different card's look-alike aura.
+          const match = auraList.find(a =>
+            a.trigger === aura.trigger &&
+            a.sourceCardId === aura.sourceCardId &&
+            Number.isFinite(a.remainingMs) &&
+            JSON.stringify(a.then ?? null) === thenKey,
+          );
+          if (match) {
+            match.remainingMs += aura.remainingMs;
+            break;
+          }
+        }
+        auraList.push(aura);
         break;
       }
 
@@ -780,6 +853,15 @@ export class CardResolver {
         break;
       }
       case 'devour': {
+        // Batch C: Vengeful Pyre — `exhaust_next` exhausts the NEXT card in play
+        // order for the rest of combat. The resolver has no deck-pointer
+        // visibility, so it flags the intent on the result; CombatEngine marks
+        // the next slot devoured after resolve (advanceDeckPointer then skips it).
+        if (rawEffect?.devour?.exhaust_next) {
+          result.exhaustNext = true;
+          (result as ResolveResult & { _devourSucceeded?: boolean })._devourSucceeded = true;
+          break;
+        }
         // v3: Vengeful Pyre — consume a random deck slot matching rarity for
         // the remainder of this combat. The mark is read by
         // CombatEngine.advanceDeckPointer to skip the slot.
@@ -851,7 +933,10 @@ function checkSelfStackThreshold(state: CombatState, which: StackId): void {
   for (const e of fired) applyTriggeredPayload(state, e);
 }
 
-function checkEnemyStackThreshold(state: CombatState, which: StackId): void {
+/** Batch C: exported so CombatEngine can re-check enemy stack thresholds after
+ *  applying periodic aura-tick payloads (e.g. Dust Plague's slow ticks must be
+ *  able to cross the on_enemy_stack_threshold that arms its stun). */
+export function checkEnemyStackThreshold(state: CombatState, which: StackId): void {
   if (!state.heroAuras || state.heroAuras.length === 0) return;
   const cur = readStackCount(state, which, 'enemy');
   const fired: CardEffect[] = [];

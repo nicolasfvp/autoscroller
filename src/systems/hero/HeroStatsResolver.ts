@@ -173,6 +173,14 @@ const IN_RUN_MAXHP_PER_LEVEL = 6;
 const IN_RUN_VIT_EVERY = 2;
 const IN_RUN_OFFENSE_EVERY = 2;
 const IN_RUN_DEX_EVERY = 4;
+// Rebalance (2026-06-09): in-run scaling DIMINISHES past the early game so DECKS
+// matter more than raw stats at depth. Validation found leveling outscaled enemy
+// growth, letting even random/bad decks brute-force deep bosses (no mastery gate).
+// Levels up to EARLY_CAP keep the original generous rate (early game stays clearable
+// by ANY build); past it, offense & VIT grow at 1/4 rate and maxHP at half rate.
+const IN_RUN_EARLY_CAP_LEVEL = 7;
+const IN_RUN_DEEP_MAXHP_PER_LEVEL = 3;
+const IN_RUN_DEEP_EVERY = 4; // offense/VIT: +1 per 4 deep levels (vs every 2 early)
 
 export interface InRunLevelBonus {
   maxHP: number;
@@ -190,15 +198,18 @@ export interface InRunLevelBonus {
  */
 export function getInRunLevelBonus(runXP: number, className: string): InRunLevelBonus {
   const level = getLevel(Math.max(0, runXP));
+  // Split into early (full-rate, accessible) and deep (diminished) levels.
+  const earlyL = Math.min(level, IN_RUN_EARLY_CAP_LEVEL);
+  const deepL = Math.max(0, level - IN_RUN_EARLY_CAP_LEVEL);
+  const offense = Math.floor(earlyL / IN_RUN_OFFENSE_EVERY) + Math.floor(deepL / IN_RUN_DEEP_EVERY);
   const bonus: InRunLevelBonus = {
-    maxHP: level * IN_RUN_MAXHP_PER_LEVEL,
+    maxHP: earlyL * IN_RUN_MAXHP_PER_LEVEL + deepL * IN_RUN_DEEP_MAXHP_PER_LEVEL,
     strength: 0,
-    vitality: Math.floor(level / IN_RUN_VIT_EVERY),
+    vitality: Math.floor(earlyL / IN_RUN_VIT_EVERY) + Math.floor(deepL / IN_RUN_DEEP_EVERY),
     dexterity: Math.floor(level / IN_RUN_DEX_EVERY),
     intellect: 0,
     spirit: 0,
   };
-  const offense = Math.floor(level / IN_RUN_OFFENSE_EVERY);
   if (className === 'mage') bonus.intellect += offense;
   else bonus.strength += offense;
   return bonus;

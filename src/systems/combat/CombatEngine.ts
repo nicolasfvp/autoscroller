@@ -6,7 +6,7 @@ import { getCardById } from '../../data/DataLoader';
 import type { CardDefinition } from '../../data/types';
 import type { CombatState } from './CombatState';
 import { createEmptyCombatStats, type CombatStats } from './CombatStats';
-import { CardResolver } from './CardResolver';
+import { CardResolver, checkEnemyStackThreshold } from './CardResolver';
 import { EnemyAI, applyHeroDamage } from './EnemyAI';
 // v4: SynergySystem removed — card-pair synergies were never populated.
 // Card-played relics and class passives still cover combo-style effects.
@@ -131,6 +131,16 @@ export class CombatEngine {
     for (const e of heroTickEffects) applyTriggeredPayload(this.state, e);
     const enemyTickEffects = collectAuraTicks(this.state.enemyAuras);
     for (const e of enemyTickEffects) applyTriggeredPayload(this.state, e);
+    // Batch C: stacks applied to the enemy via a periodic tick (Dust Plague's
+    // slow) must be able to cross on_enemy_stack_threshold auras (its stun at
+    // 5 slow). applyTriggeredPayload mutates the pool but can't fire the
+    // threshold without a CardResolver import cycle, so re-check here for each
+    // enemy-side stack a tick just applied.
+    for (const e of [...heroTickEffects, ...enemyTickEffects]) {
+      if ((e.type === 'dot' || e.type === 'stack') && (e.target === 'enemy' || e.target === 'aoe')) {
+        checkEnemyStackThreshold(this.state, e.stack ?? 'poison');
+      }
+    }
 
     // v3: Echo TTL countdown. When the window expires, any leftover charges
     // evaporate so the player can't bank Echos forever between casts.
@@ -394,8 +404,27 @@ export class CombatEngine {
       armorGained: result.armorGained,
     });
 
+    // Batch C: Vengeful Pyre — exhaust the next card in play order for the rest
+    // of combat. Mark it devoured BEFORE advancing so advanceDeckPointer skips
+    // it on the very next step.
+    if (result.exhaustNext) this.markNextSlotExhausted();
+
     // Update tracking
     this.advanceDeckPointer();
+  }
+
+  /** Batch C: mark the next non-devoured, non-self slot in play order as
+   *  devoured (= exhausted for the rest of combat). Used by Vengeful Pyre's
+   *  exhaust_next. No-op on a single-card deck. */
+  private markNextSlotExhausted(): void {
+    const n = this.state.deckOrder.length;
+    if (n <= 1) return;
+    let idx = (this.deckPointer + 1) % n;
+    let guard = n;
+    while (guard-- > 0 && (this.state.devouredSlots.has(idx) || idx === this.deckPointer)) {
+      idx = (idx + 1) % n;
+    }
+    if (idx !== this.deckPointer) this.state.devouredSlots.add(idx);
   }
 
   /**

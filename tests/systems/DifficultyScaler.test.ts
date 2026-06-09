@@ -58,7 +58,7 @@ describe('DifficultyScaler', () => {
 
   it('getDifficultyConfig returns full config', () => {
     const cfg = getDifficultyConfig();
-    expect(cfg.percentPerBossKill).toBe(0.10);
+    expect(cfg.percentPerBossKill).toBe(0.15);
     expect(cfg.bossMultiplier).toBe(1.0);
     expect(cfg.bossEveryNLoops).toBe(10);
     expect(cfg.baseLoopLength).toBe(15);

@@ -84,6 +84,9 @@ for (const d of decks) {
 
   const enemyList = d.vsEnemies ?? stage.enemies;
   const enemyMult = stage.enemyLoopMultiplier ?? stage.loopMultiplier;
+  const extra = {};
+  if (d.cardOverrides) extra.cardOverrides = d.cardOverrides;
+  if (d.enemyOverride) extra.enemyOverride = d.enemyOverride;
   for (const enemy of enemyList) {
     matchups.push({
       id: `${d.id}__vs__${enemy}`,
@@ -91,7 +94,7 @@ for (const d of decks) {
       archetype: d.archetype, stage: d.stage, class: d.class,
       deck: d.deck, upgraded: d.upgraded, stats, runXP, relics,
       enemy, loopMultiplier: enemyMult, isBoss: false,
-      loopCount: stage.loopCount, repeats,
+      loopCount: stage.loopCount, repeats, ...extra,
     });
   }
   // Boss matchup (stage default or explicit vsBoss)
@@ -103,7 +106,7 @@ for (const d of decks) {
       archetype: d.archetype, stage: d.stage, class: d.class,
       deck: d.deck, upgraded: d.upgraded, stats, runXP, relics,
       enemy: boss.id, loopMultiplier: boss.loopMultiplier, isBoss: true,
-      loopCount: stage.loopCount, repeats,
+      loopCount: stage.loopCount, repeats, ...extra,
     });
   }
 }

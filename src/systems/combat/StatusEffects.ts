@@ -389,13 +389,22 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect, so
     case 'dot':
     case 'stack': {
       const which: StackId = effect.stack ?? 'poison';
+      // Batch C: stack gains from trigger/tick/Brace/low-HP payloads honor the
+      // same combat-long stack_gain_mult auras as directly-played gains, so
+      // Vengeful Pyre doubles ALL rage (not only directly-played rage).
+      const sgm = sumStackGainMult(state.heroAuras, which);
+      const gain = value > 0 && sgm !== 0 ? Math.floor(value * (1 + sgm)) : value;
       switch (which) {
-        case 'poison': state.poisonStacks += value; break;
-        case 'bleed': state.bleedStacks += value; break;
-        case 'burn': state.burnStacks += value; break;
-        case 'stun': state.stunStacks += value; break;
-        case 'slow': state.slowStacks += value; break;
-        case 'rage': state.rageStacks += value; break;
+        case 'poison': state.poisonStacks += gain; break;
+        case 'bleed': state.bleedStacks += gain; break;
+        case 'burn': state.burnStacks += gain; break;
+        // Batch C: stun applied via a trigger payload (Dust Plague threshold,
+        // Stoneward Reprisal) respects the stun diminishing-returns immunity
+        // window — matching CardResolver's direct stun path — so threshold
+        // payloads can't perma-chain stun.
+        case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0)) state.stunStacks += gain; break;
+        case 'slow': state.slowStacks += gain; break;
+        case 'rage': state.rageStacks += gain; break;
       }
       break;
     }
@@ -404,7 +413,12 @@ export function applyTriggeredPayload(state: CombatState, effect: CardEffect, so
       break;
     }
     case 'heal': {
-      state.heroHP = Math.min(state.heroMaxHP, state.heroHP + value);
+      // Batch C: aura/triggered heals (Brace heals e.g. Standing Stone, periodic
+      // heal auras e.g. Crimson Regen Mantle) get the same universal +15%/pt SPI
+      // heal multiplier every direct heal receives in CardResolver, so SPI is
+      // consistent across direct and triggered healing.
+      const spiBonus = Math.floor(value * (state.heroSpirit * 0.15));
+      state.heroHP = Math.min(state.heroMaxHP, state.heroHP + value + spiBonus);
       break;
     }
     case 'stat_gain': {

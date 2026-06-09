@@ -371,7 +371,7 @@
     "baseHP": 380,
     "baseDefense": 3,
     "attack": {
-      "damage": 9,
+      "damage": 6,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -414,6 +414,11 @@
         "type": "shield",
         "interval": 8000,
         "shieldAmount": 8
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
       }
     ],
     "goldReward": {
@@ -429,17 +434,17 @@
       }
     },
     "color": 8421504,
-    "affinity": "defense"
+    "affinity": "attack"
   },
   {
     "id": "lizard_king",
     "name": "Lizard King",
     "type": "boss",
     "bossType": "dragon",
-    "baseHP": 370,
+    "baseHP": 440,
     "baseDefense": 3,
     "attack": {
-      "damage": 10,
+      "damage": 13,
       "pattern": "fixed"
     },
     "attackCooldown": 2500,
@@ -605,17 +610,17 @@
     "name": "Bog Witch",
     "type": "boss",
     "bossType": "witch",
-    "baseHP": 410,
+    "baseHP": 470,
     "baseDefense": 2,
     "attack": {
-      "damage": 7,
+      "damage": 10,
       "pattern": "fixed"
     },
     "attackCooldown": 2300,
     "behaviors": [
       {
         "type": "drain",
-        "healPercent": 15
+        "healPercent": 25
       },
       {
         "type": "multi_hit",
@@ -655,6 +660,11 @@
         "type": "shield",
         "interval": 7000,
         "shieldAmount": 10
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
       }
     ],
     "goldReward": {
@@ -733,6 +743,11 @@
         "type": "enrage",
         "hpThreshold": 0.35,
         "attackSpeedMultiplier": 1.4
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
       }
     ],
     "goldReward": {

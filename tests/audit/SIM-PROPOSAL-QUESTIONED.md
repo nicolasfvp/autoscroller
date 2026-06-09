@@ -237,3 +237,61 @@ gain (survival); by kill-speed the revised T3 wins. Recommendation: judge T3>T2 
 blended kill-speed+cushion basis, and if strict cushion-parity is required, Earthcleaver
 needs a larger buff than base18 (or accept faster-kill as the T3's edge). Re-validate any
 further bump on the fixed harness.
+
+---
+
+## 9. IMPLEMENTED (user decisions 1–4, on the fixed harness)
+
+User resolved the four genuine decisions; these are now shipped + verified. All
+207 cards/combat tests pass; card-integrity (stored desc == formatter) green.
+
+1. **doom_knight damage 9 → 6** (`enemies.json`). User chose 6 (forgiving "easy
+   first boss"). Verified all 8 archetypes now win: warrior physical 53%, armor 91%,
+   mage poison 70–82%, control 24%, burn 1.7% (squeaks). HP 380 / def 3 / enrage 1.4
+   unchanged.
+2. **Poison detonators → consume-HALF + ramp tail** (decision: option A). New engine
+   feature `consume_fraction` on `CardEffect` (CardResolver: damage scales by
+   `ceil(snapshot*frac)`, removal takes `ceil(current*frac)`); CardText renders it as
+   "Consume half [X]"; descriptions regenerated. Cards:
+   - **Drowning Lance** `t3-attack-water-water`: base 4→6 Pierce, per-stack 3→5 Pierce,
+     consume_fraction 0.5, cd 2.4→1.8. Verified: was 0/5 deaths → now wins, deals 468 vs
+     the plain deck's 380 (contributes, no over-correction).
+   - **Marsh Squall** `t3-air-earth-water`: per-stack 4→6, consume_fraction 0.5, cost
+     2s+2m→2s, cd 2.4→2.0 (exhaust kept).
+3. **Pure zero-sustain burn → accepted as non-viable** (no code; realistic burn+sustain
+   is fine, and the dmg6 boss now lets even pure-burn squeak a first-boss win).
+4. **iron_golem → drop the defense ratchet** (`enemies.json`): `affinity` "defense"→
+   "attack", shield 8→4, HP 400 kept. Verified: strong physical 0/5 LOSS → 57.7% win;
+   curve now monotone (iron 57.7% ≈ lizard_king 54.8% < bog_witch 61.3%).
+
+Files: `src/data/json/enemies.json`, `src/data/json/cards.json`,
+`src/systems/combat/CardResolver.ts`, `src/systems/cards/CardText.ts`,
+`src/data/types.ts`. (Pre-existing unrelated `validate-data` warning: green_field
+terrain not in tiles.json — not touched here.)
+
+## 10. IMPLEMENTED — card-side batch (verified, 746 tests pass)
+
+Applied via `scripts/apply-sim-balance-batch.mjs` (+ description regen). All buff the
+card; no T2 nerfs. Verified: Earthcleaver T3 cushion 9.9%→43% and now kills FASTER than
+Granite T2 (18.5s<22.5s; cushion trails only because Granite gains armor — different
+roles); control deck now closes doom_knight (21.5%); no over-correction (Earthcleaver
+clears a normal in 9.7s, not trivial).
+
+- **Aegis of Returning Wrath** `t3-defense-defense-defense`: dead on_armor_break payoff →
+  unconditional "Deal 6 Pierce, +1 per 4[armor]"; cd 2.4→2.0.
+- **Stagnant Bulwark** `t3-defense-defense-water`: aura poison 1→2 per 2s; cd 2.4→1.6.
+- **Stoneward Reprisal** `t3-defense-defense-earth`: cd 2.4→1.6.
+- **Earthcleaver** `t3-attack-defense-earth`: base 14→18 + Pierce; armor gate 15→10; cd 2.4→1.8.
+- **Crimson Spiral** `t3-counter-counter-counter`: rage gate 8→5; cd 2.4→1.8 (no floor).
+- **Control CD-cuts** (pure control, no damage added): Frostbind 2→1.4, Quake 2→1.4,
+  Thunderstrike Catalyst 2.4→2.0, Static Skirmish 1.8→1.6.
+- **Steam Surge** `t2-fire-water`: base Deal 4→6. **Spark** `t1-fire`: +Deal 2, cd 1.4→1.2.
+
+Deliberately NOT applied (per decisions / questioning): elemMult rate (near-no-op, left
+0.15); burn detonator coefficient buffs (burn accepted as-is); the low-sev "polish"
+whose weak-premise didn't reproduce (Razor Stance, Wrath Squall, Bloodlash); Tidesong/
+Bogwrath/Tidefoot Bloom/Alchemic Drain/Quench Lance (queued, low priority); enemy-HP
+bumps depths_horror/fire_elemental→130; lost_lizard. Available on request.
+
+Pre-existing unrelated test issues (NOT from this work): `validate-data` green_field
+terrain; `StyleConstants.test.ts` expects font "Inter" (repo migrated to VT323).
