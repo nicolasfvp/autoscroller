@@ -46,9 +46,10 @@ describe('CollectionRegistry', () => {
     it('returns bosses total matching boss-type enemies in data', () => {
       const state = createDefaultMetaState();
       const status = getCollectionStatus(state);
-      // enemies.json bosses: doom_knight, iron_golem, lizard_king,
-      // bog_witch, desert_golem, infernal_dragon, boss_iron_golem
-      expect(status.bosses.total).toBe(7);
+      // enemies.json bosses: doom_knight, iron_golem, bog_witch,
+      // desert_golem, infernal_dragon, boss_iron_golem
+      // (lizard_king removed in the tilevisual/world-planning refactor, PR #17)
+      expect(status.bosses.total).toBe(6);
     });
 
     it('returns tiles with base tiles unlocked and unlockable tiles locked', () => {

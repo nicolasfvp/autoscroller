@@ -87,21 +87,22 @@ describe('LootGenerator', () => {
   });
 
   describe('getEnemyPoolForTerrain', () => {
-    it('forest base pool has mush and giant_spider', () => {
+    // Roster pruned in PR #17 (tilevisual/world-planning): giant_spider and
+    // giant_spider_2 removed from both enemies.json and the forest pool.
+    it('forest base pool has mush', () => {
       const pool = getEnemyPoolForTerrain('forest', 1);
-      expect(pool).toEqual(['mush', 'giant_spider']);
+      expect(pool).toEqual(['mush']);
     });
 
-    it('forest pool expands at loop 5 with giant_spider_2', () => {
+    it('forest pool is unchanged before loop 10', () => {
       const pool = getEnemyPoolForTerrain('forest', 5);
-      expect(pool).toContain('giant_spider_2');
-      expect(pool).toHaveLength(3);
+      expect(pool).toEqual(['mush']);
     });
 
     it('forest pool expands at loop 10 with ancient_tree', () => {
       const pool = getEnemyPoolForTerrain('forest', 10);
       expect(pool).toContain('ancient_tree');
-      expect(pool).toHaveLength(4);
+      expect(pool).toHaveLength(2);
     });
 
     it('basic terrain has only lost_lizard', () => {
