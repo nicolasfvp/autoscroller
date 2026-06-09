@@ -1,0 +1,81 @@
+{
+  "decks": [
+    {
+      "id": "loser-cs-cd",
+      "label": "loser CinderSprint cd1.2",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "vsEnemies": []
+    },
+    {
+      "id": "loser-cs-det6",
+      "label": "loser CinderSprint det6",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "vsEnemies": []
+    },
+    {
+      "id": "loser-cs-cd-det5",
+      "label": "loser CinderSprint cd1.2 det5",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "vsEnemies": []
+    },
+    {
+      "id": "winner-pyrebuff",
+      "label": "winner + Pyre det4",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "vsEnemies": []
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "decks": [
+    {
+      "id": "mage-poison-block-boss2-1",
+      "label": "Brineward Outlast (boss2)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": [
+        "t3-agility-earth-water",
+        "t3-agility-defense-water",
+        "t2-earth-water",
+        "t3-earth-earth-water",
+        "t3-defense-defense-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-earth-water-water",
+        "t3-air-defense-water"
+      ],
+      "notes": "Open Mireglide (1m armor+poison+haste) and Tidefoot Guard (1m 12armor+poison) to survive iron_golem's 10dmg/2.5s while seeding poison; Mire Bloom (1m) is cheap filler poison; Bog Catalyst (1s+1m) doubles the stack to the cap; Stagnant Bulwark (1s+1m) lays a poison-over-time field behind 10 armor; Brineward (2m 14armor+heal12+poison) is the outlast anchor; Drowning Lance detonates half the pool for big pierce; Brine Bedrock & Mistplate top up armor/heal/poison. Cheap 1m cards front-loaded so the deck always opens; only two 2m cards and they sit late so mana has regenerated."
+    },
+    {
+      "id": "mage-poison-block-boss2-2",
+      "label": "Mistplate Slow-Wall (boss2)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": [
+        "t3-agility-earth-water",
+        "t2-earth-water",
+        "t3-agility-air-water",
+        "t3-earth-earth-water",
+        "t3-air-defense-water",
+        "t3-air-earth-water",
+        "t3-defense-earth-water",
+        "t3-defense-water-water"
+      ],
+      "notes": "Variant that adds slow throttle to the armor wall. Stormsplash (1m poison+slow+burn) and Mistplate (2m armor+poison+slow) cut the golem's attack cadence while poison ticks; Bog Catalyst doubles; Marsh Squall is the AoE poison detonator; Bogplate (1s+1m vengeance poison) and Brineward backstop armor+heal. Order keeps all the 1m appliers up front before the 2m anchors."
+    },
+    {
+      "id": "mage-poison-block-boss3-1",
+      "label": "Bog Catalyst Stackwall (boss3)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss3",
+      "deck": [
+        "t3-agility-earth-water",
+        "t3-agility-defense-water",
+        "t2-earth-water",
+        "t3-earth-fire-water",
+        "t3-earth-earth-water",
+        "t3-defense-defense-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-earth-water-water",
+        "t3-air-defense-water",
+        "t3-defense-earth-water"
+      ],
+      "notes": "Vs lizard_king (enrages <30% HP, multi-hit) the plan is to race poison to the cap fast and detonate before enrage. Mireglide + Tidefoot Guard open armor+poison; Alchemic Drain (1m poison+heal6) is cheap sustain; Bog Catalyst doubles the stack; Stagnant Bulwark drips poison behind armor; Drowning Lance is the big detonator; Brineward/Brine Bedrock/Mistplate/Bogplate keep the wall up. Detonating poison (pierce) bypasses the dragon's def 3 and ends the fight before enrage scaling matters."
+    },
+    {
+      "id": "mage-poison-block-boss3-2",
+      "label": "Steam Bulwark Brace (boss3)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss3",
+      "deck": [
+        "t3-agility-earth-water",
+        "t2-earth-water",
+        "t3-earth-earth-water",
+        "t3-agility-fire-water",
+        "t3-earth-fire-water",
+        "t3-defense-fire-water",
+        "t3-defense-water-water",
+        "t3-air-defense-water",
+        "t3-attack-water-water",
+        "t3-defense-earth-water"
+      ],
+      "notes": "Poison+burn+block hybrid. Boilstep (1m burn+poison) and Steam Bulwark (2m armor + brace poison+burn) add a burn layer on top of poison so both DoTs tick; Bog Catalyst doubles poison; Drowning Lance detonates. Cheap 1m appliers lead; the two 2m walls (Brineward, Steam Bulwark) and Bogplate sit after mana has banked."
+    },
+    {
+      "id": "mage-poison-block-boss4-1",
+      "label": "Drain Wall vs Bog Witch (boss4)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss4",
+      "deck": [
+        "t3-agility-earth-water",
+        "t3-agility-defense-water",
+        "t2-earth-water",
+        "t3-earth-earth-water",
+        "t3-earth-fire-water",
+        "t3-defense-defense-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-earth-water-water",
+        "t3-air-defense-water",
+        "t3-defense-earth-water",
+        "t3-air-earth-water"
+      ],
+      "notes": "Bog_witch drains 15% and only hits for 7, so the danger is the timeout, not death. Poison ignores armor AND can't be drained back, so this maxes poison throughput: Mireglide/Tidefoot open, Alchemic Drain cheap sustain, Bog Catalyst doubles, Stagnant Bulwark drips, then Drowning Lance + Marsh Squall give TWO detonators so the chunk-capped pool converts to burst pierce and actually closes the fight. Brineward/Brine Bedrock heal through the witch's chip damage."
+    },
+    {
+      "id": "mage-poison-block-boss4-2",
+      "label": "Twin-Detonator Race (boss4)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss4",
+      "deck": [
+        "t3-agility-earth-water",
+        "t2-earth-water",
+        "t3-agility-agility-water",
+        "t3-earth-earth-water",
+        "t3-agility-counter-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-air-earth-water",
+        "t3-defense-earth-water",
+        "t3-defense-defense-water"
+      ],
+      "notes": "Leaner, more aggressive poison build to beat the witch's heal-race. Slipstream (1m pierce+poison) and Venom Dance (1s 3/+5 poison on vengeance) ramp the stack fast; Bog Catalyst doubles; Drowning Lance + Marsh Squall are the two detonators; Stagnant Bulwark and Brineward provide the only armor/heal so it must close quickly. Front-loaded 1m/1s appliers keep tempo high."
+    },
+    {
+      "id": "mage-poison-block-boss5-1",
+      "label": "Endgame Poison Fortress (boss5)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss5",
+      "deck": [
+        "t3-agility-earth-water",
+        "t3-agility-defense-water",
+        "t2-earth-water",
+        "t3-earth-earth-water",
+        "t3-earth-fire-water",
+        "t3-defense-defense-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-earth-water-water",
+        "t3-air-defense-water",
+        "t3-defense-earth-water",
+        "t3-air-earth-water",
+        "t3-agility-water-water"
+      ],
+      "notes": "Tuned vs desert_golem (450 HP, def 4, 10dmg/2.7s, +10 shield/7s). Two openers of cheap armor+poison (Mireglide, Tidefoot Guard), Alchemic Drain sustain, Bog Catalyst + Slipvenom Tempo to spike and re-spike the stack past 10, Stagnant Bulwark drip, then Drowning Lance + Marsh Squall detonators to punch through the golem's def/shield with pierce. Brineward/Brine Bedrock heal the long fight. Order keeps all 1m appliers ahead of the 2m walls."
+    },
+    {
+      "id": "mage-poison-block-boss5-2",
+      "label": "Shield-Pierce Poison (boss5)",
+      "archetype": "poison+block",
+      "class": "mage",
+      "stage": "boss5",
+      "deck": [
+        "t3-agility-earth-water",
+        "t2-earth-water",
+        "t3-agility-fire-water",
+        "t3-earth-earth-water",
+        "t3-agility-water-water",
+        "t3-earth-fire-water",
+        "t3-defense-water-water",
+        "t3-attack-water-water",
+        "t3-air-earth-water",
+        "t3-defense-earth-water",
+        "t3-defense-defense-water",
+        "t3-air-defense-water"
+      ],
+      "notes": "Maximizes pierce-detonation against desert_golem's def 4 + periodic shield, which blunts ordinary armor-based damage. Slipvenom Tempo big poison spike, Bog Catalyst doubler, then Drowning Lance + Marsh Squall convert the capped pool to pierce that ignores def/shield. Magma Welling and Stagnant Bulwark/Brineward/Mistplate hold the wall. 1m appliers lead, 2m anchors trail."
+    }
+  ]
+}

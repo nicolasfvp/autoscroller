@@ -1,0 +1,64 @@
+{
+  "decks": [
+    {
+      "id": "pd_base_jab",
+      "label": "pure_damage baseline (Jab slot1)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "mid",
+      "runXP": 350,
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "vsEnemies": ["mutated_salamander", "werewolf", "skeleton"]
+    },
+    {
+      "id": "pd_storm_cur",
+      "label": "pure_damage Stormstrike slot1 (current 6dmg)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "mid",
+      "runXP": 350,
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "vsEnemies": ["mutated_salamander", "werewolf", "skeleton"]
+    },
+    {
+      "id": "pd_storm_buff8",
+      "label": "pure_damage Stormstrike slot1 (buffed 8dmg)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "mid",
+      "runXP": 350,
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "vsEnemies": ["mutated_salamander", "werewolf", "skeleton"],
+      "cardOverrides": {
+        "t2-air-attack": { "effectsPatch": [ { "value": 8 } ] }
+      }
+    }
+  ]
+}

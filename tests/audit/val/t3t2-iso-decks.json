@@ -1,0 +1,54 @@
+{
+  "decks": [
+    {
+      "id": "iso-pyre-T2",
+      "label": "ISO fire: Spark feeders + Pyre (T2)",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-fire-fire","t1-fire","t1-fire","t1-fire"]
+    },
+    {
+      "id": "iso-supernova-T3-current",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust)",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-fire-fire-fire","t1-fire","t1-fire","t1-fire"]
+    },
+    {
+      "id": "iso-supernova-T3-buff",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost)",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-fire-fire-fire","t1-fire","t1-fire","t1-fire"],
+      "cardOverrides": { "t3-fire-fire-fire": { "cooldown": 1.8, "exhaust": false, "cost": {"mana": 1} } }
+    },
+    {
+      "id": "iso-tailwind-T2",
+      "label": "ISO air: Tailwind (T2) carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t2-air-air","t1-air","t1-air"]
+    },
+    {
+      "id": "iso-tempest-T3-current",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t1-air"]
+    },
+    {
+      "id": "iso-tempest-T3-buff",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t1-air"],
+      "cardOverrides": { "t3-air-air-air": { "cooldown": 1.6 } }
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "matchups": [
+    {
+      "id": "burn-loser-base__vs__BOSS_doom_knight",
+      "label": "Loser deck (boss1-2) baseline vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8
+    },
+    {
+      "id": "burn-loser-detonbuff__vs__BOSS_doom_knight",
+      "label": "Loser deck + PROPOSED Cinderlance/Venom buff (cards NOT in deck) vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            {
+              "value": 4,
+              "pierce_armor": true
+            }
+          ]
+        },
+        "t3-attack-fire-fire": {
+          "cooldown": 1.8,
+          "effectsPatch": [
+            {},
+            {
+              "value": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "burn-winner-base__vs__BOSS_doom_knight",
+      "label": "Winner deck (boss1-1) baseline vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8
+    },
+    {
+      "id": "burn-winner-cinderbuff__vs__BOSS_doom_knight",
+      "label": "Winner deck + PROPOSED Cinderlance buff vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-fire-fire": {
+          "cooldown": 1.8,
+          "effectsPatch": [
+            {},
+            {
+              "value": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "burn-loser-pyrebuff__vs__BOSS_doom_knight",
+      "label": "Loser deck + HONEST fix: Pyre detonate 3->4 (card actually in deck) vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t2-fire-fire": {
+          "effectsPatch": [
+            {},
+            {
+              "value": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "burn-loser-cindersprintbuff__vs__BOSS_doom_knight",
+      "label": "Loser deck + Cinder Sprint detonate 4->5 (card in deck, the real T3 detonator) vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-agility-fire-fire": {
+          "effectsPatch": [
+            {},
+            {
+              "value": 5
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

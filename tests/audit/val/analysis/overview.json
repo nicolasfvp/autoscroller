@@ -1,0 +1,113 @@
+{
+  "nResults": 2045,
+  "nDecks": 443,
+  "nEnemiesCovered": 26,
+  "enemiesNotCovered": [],
+  "cardsUncovered": [],
+  "nCardsUncovered": 0,
+  "hardestEnemies": [
+    {
+      "enemy": "boss_iron_golem",
+      "isBoss": true,
+      "meanWinRate": 0.581,
+      "cushion": 0.43,
+      "deathRate": 0.419,
+      "timeoutRate": 0
+    },
+    {
+      "enemy": "infernal_dragon",
+      "isBoss": true,
+      "meanWinRate": 0.632,
+      "cushion": 0.429,
+      "deathRate": 0.368,
+      "timeoutRate": 0
+    },
+    {
+      "enemy": "iron_golem",
+      "isBoss": true,
+      "meanWinRate": 0.814,
+      "cushion": 0.662,
+      "deathRate": 0.153,
+      "timeoutRate": 0.034
+    },
+    {
+      "enemy": "bog_witch",
+      "isBoss": true,
+      "meanWinRate": 0.84,
+      "cushion": 0.635,
+      "deathRate": 0.12,
+      "timeoutRate": 0.04
+    },
+    {
+      "enemy": "desert_golem",
+      "isBoss": true,
+      "meanWinRate": 0.844,
+      "cushion": 0.672,
+      "deathRate": 0.156,
+      "timeoutRate": 0
+    },
+    {
+      "enemy": "mush",
+      "isBoss": false,
+      "meanWinRate": 0.864,
+      "cushion": 0.935,
+      "deathRate": 0.091,
+      "timeoutRate": 0.045
+    },
+    {
+      "enemy": "lizard_king",
+      "isBoss": true,
+      "meanWinRate": 0.914,
+      "cushion": 0.536,
+      "deathRate": 0.086,
+      "timeoutRate": 0
+    },
+    {
+      "enemy": "giant_spider",
+      "isBoss": false,
+      "meanWinRate": 0.955,
+      "cushion": 0.931,
+      "deathRate": 0,
+      "timeoutRate": 0.045
+    }
+  ],
+  "easiestNormals": [
+    {
+      "enemy": "ancient_tree",
+      "meanWinRate": 1,
+      "cushion": 0.928,
+      "ttk": 14026
+    },
+    {
+      "enemy": "skeleton",
+      "meanWinRate": 1,
+      "cushion": 0.933,
+      "ttk": 12595
+    },
+    {
+      "enemy": "depths_horror",
+      "meanWinRate": 1,
+      "cushion": 0.941,
+      "ttk": 10931
+    },
+    {
+      "enemy": "forge_slime",
+      "meanWinRate": 1,
+      "cushion": 0.942,
+      "ttk": 18745
+    },
+    {
+      "enemy": "giant_spider_2",
+      "meanWinRate": 1,
+      "cushion": 0.964,
+      "ttk": 16223
+    },
+    {
+      "enemy": "lost_lizard",
+      "meanWinRate": 1,
+      "cushion": 0.988,
+      "ttk": 9973
+    }
+  ],
+  "doomKnightVerdict": "MOSTLY PASS (<=10% loss)"
+}

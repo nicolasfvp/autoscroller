@@ -1,0 +1,996 @@
+{
+  "matchups": [
+    {
+      "id": "swap-burn-baseline__vs__skeleton",
+      "label": "Burn baseline (Flame Dart filler in slot1) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-baseline__vs__werewolf",
+      "label": "Burn baseline (Flame Dart filler in slot1) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-baseline__vs__depths_horror",
+      "label": "Burn baseline (Flame Dart filler in slot1) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-baseline__vs__doom_knight",
+      "label": "Burn baseline (Flame Dart filler in slot1) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-firestorm__vs__skeleton",
+      "label": "Burn w/ Firestorm in slot1 (replaces Flame Dart) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-firestorm__vs__werewolf",
+      "label": "Burn w/ Firestorm in slot1 (replaces Flame Dart) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-firestorm__vs__depths_horror",
+      "label": "Burn w/ Firestorm in slot1 (replaces Flame Dart) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-firestorm__vs__doom_knight",
+      "label": "Burn w/ Firestorm in slot1 (replaces Flame Dart) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-burn-firestorm-cdcut__vs__skeleton",
+      "label": "Burn w/ Firestorm CD 1.2 + value buff (proposed) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-fire": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "dot",
+              "value": 6,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            },
+            {
+              "type": "dot",
+              "value": 4,
+              "stack": "burn",
+              "target": "enemy",
+              "condition": {
+                "cards_played_within": {
+                  "count": 3,
+                  "ms": 4000
+                }
+              },
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "swap-burn-firestorm-cdcut__vs__werewolf",
+      "label": "Burn w/ Firestorm CD 1.2 + value buff (proposed) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-fire": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "dot",
+              "value": 6,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            },
+            {
+              "type": "dot",
+              "value": 4,
+              "stack": "burn",
+              "target": "enemy",
+              "condition": {
+                "cards_played_within": {
+                  "count": 3,
+                  "ms": 4000
+                }
+              },
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "swap-burn-firestorm-cdcut__vs__depths_horror",
+      "label": "Burn w/ Firestorm CD 1.2 + value buff (proposed) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-fire": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "dot",
+              "value": 6,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            },
+            {
+              "type": "dot",
+              "value": 4,
+              "stack": "burn",
+              "target": "enemy",
+              "condition": {
+                "cards_played_within": {
+                  "count": 3,
+                  "ms": 4000
+                }
+              },
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "swap-burn-firestorm-cdcut__vs__doom_knight",
+      "label": "Burn w/ Firestorm CD 1.2 + value buff (proposed) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-fire": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "dot",
+              "value": 6,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            },
+            {
+              "type": "dot",
+              "value": 4,
+              "stack": "burn",
+              "target": "enemy",
+              "condition": {
+                "cards_played_within": {
+                  "count": 3,
+                  "ms": 4000
+                }
+              },
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tier-fire-pyre-T2__vs__skeleton",
+      "label": "Fire deck anchored by Pyre (T2) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-pyre-T2__vs__werewolf",
+      "label": "Fire deck anchored by Pyre (T2) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-pyre-T2__vs__depths_horror",
+      "label": "Fire deck anchored by Pyre (T2) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-pyre-T2__vs__doom_knight",
+      "label": "Fire deck anchored by Pyre (T2) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-quench-T3__vs__skeleton",
+      "label": "Fire deck anchored by Quench Lance (T3) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-quench-T3__vs__werewolf",
+      "label": "Fire deck anchored by Quench Lance (T3) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-quench-T3__vs__depths_horror",
+      "label": "Fire deck anchored by Quench Lance (T3) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-quench-T3__vs__doom_knight",
+      "label": "Fire deck anchored by Quench Lance (T3) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "tier-fire-quench-T3-buffed__vs__skeleton",
+      "label": "Quench Lance buffed (proposed: detonate + lower threshold) vs skeleton (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 4,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              },
+              "condition": {
+                "enemy_has_stack": "burn",
+                "per_stack": true
+              }
+            },
+            {
+              "type": "dot",
+              "value": 3,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tier-fire-quench-T3-buffed__vs__werewolf",
+      "label": "Quench Lance buffed (proposed: detonate + lower threshold) vs werewolf (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 4,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              },
+              "condition": {
+                "enemy_has_stack": "burn",
+                "per_stack": true
+              }
+            },
+            {
+              "type": "dot",
+              "value": 3,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tier-fire-quench-T3-buffed__vs__depths_horror",
+      "label": "Quench Lance buffed (proposed: detonate + lower threshold) vs depths_horror (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 4,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              },
+              "condition": {
+                "enemy_has_stack": "burn",
+                "per_stack": true
+              }
+            },
+            {
+              "type": "dot",
+              "value": 3,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tier-fire-quench-T3-buffed__vs__doom_knight",
+      "label": "Quench Lance buffed (proposed: detonate + lower threshold) vs BOSS doom_knight (boss1)",
+      "archetype": "burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 4,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              },
+              "condition": {
+                "enemy_has_stack": "burn",
+                "per_stack": true
+              }
+            },
+            {
+              "type": "dot",
+              "value": 3,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "swap-slow-baseline__vs__skeleton",
+      "label": "Slow control baseline (Sandfury filler in slot1) vs skeleton (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-air-earth-fire",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-baseline__vs__werewolf",
+      "label": "Slow control baseline (Sandfury filler in slot1) vs werewolf (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-air-earth-fire",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-baseline__vs__depths_horror",
+      "label": "Slow control baseline (Sandfury filler in slot1) vs depths_horror (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-air-earth-fire",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-baseline__vs__doom_knight",
+      "label": "Slow control baseline (Sandfury filler in slot1) vs BOSS doom_knight (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-air-earth-fire",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-galeecho__vs__skeleton",
+      "label": "Slow w/ Gale Echo in slot1 (replaces Sandfury) vs skeleton (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-galeecho__vs__werewolf",
+      "label": "Slow w/ Gale Echo in slot1 (replaces Sandfury) vs werewolf (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-galeecho__vs__depths_horror",
+      "label": "Slow w/ Gale Echo in slot1 (replaces Sandfury) vs depths_horror (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "swap-slow-galeecho__vs__doom_knight",
+      "label": "Slow w/ Gale Echo in slot1 (replaces Sandfury) vs BOSS doom_knight (boss1)",
+      "archetype": "slow",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "runXP": 520,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    }
+  ]
+}

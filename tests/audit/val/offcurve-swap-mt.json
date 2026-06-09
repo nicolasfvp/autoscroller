@@ -1,0 +1,392 @@
+{
+  "matchups": [
+    {
+      "id": "riposte-early__vs__lost_lizard",
+      "label": "Riposte slot vs lost_lizard (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "riposte-early__vs__giant_spider",
+      "label": "Riposte slot vs giant_spider (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "giant_spider",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "riposte-early__vs__corpse_eater",
+      "label": "Riposte slot vs corpse_eater (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "riposte-early__vs__pocket_cat",
+      "label": "Riposte slot vs pocket_cat (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "pocket_cat",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "jabfiller-early__vs__lost_lizard",
+      "label": "Jab filler baseline vs lost_lizard (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "jabfiller-early__vs__giant_spider",
+      "label": "Jab filler baseline vs giant_spider (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "giant_spider",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "jabfiller-early__vs__corpse_eater",
+      "label": "Jab filler baseline vs corpse_eater (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "jabfiller-early__vs__pocket_cat",
+      "label": "Jab filler baseline vs pocket_cat (early)",
+      "archetype": "pure_damage",
+      "stage": "early",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-attack",
+        "t1-attack",
+        "t1-agility",
+        "t1-defense"
+      ],
+      "runXP": 120,
+      "relics": [],
+      "enemy": "pocket_cat",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 5
+    },
+    {
+      "id": "razor-mid__vs__mutated_salamander",
+      "label": "Razor Stance slot vs mutated_salamander (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor-mid__vs__venomous_kobra",
+      "label": "Razor Stance slot vs venomous_kobra (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor-mid__vs__lava_golen",
+      "label": "Razor Stance slot vs lava_golen (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor-mid__vs__skeleton",
+      "label": "Razor Stance slot vs skeleton (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "razor-mid__vs__werewolf",
+      "label": "Razor Stance slot vs werewolf (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "recklessfiller-mid__vs__mutated_salamander",
+      "label": "Reckless filler baseline vs mutated_salamander (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "recklessfiller-mid__vs__venomous_kobra",
+      "label": "Reckless filler baseline vs venomous_kobra (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "recklessfiller-mid__vs__lava_golen",
+      "label": "Reckless filler baseline vs lava_golen (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "recklessfiller-mid__vs__skeleton",
+      "label": "Reckless filler baseline vs skeleton (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    },
+    {
+      "id": "recklessfiller-mid__vs__werewolf",
+      "label": "Reckless filler baseline vs werewolf (mid)",
+      "archetype": "bleed",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-attack",
+        "t1-attack",
+        "t1-agility",
+        "t2-agility-counter",
+        "t1-defense"
+      ],
+      "runXP": 350,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 6,
+      "repeats": 5
+    }
+  ]
+}

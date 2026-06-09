@@ -1,0 +1,66 @@
+{
+  "matchups": [
+    {
+      "id": "ctrl__vs__lizard_king",
+      "label": "CONTROL t1-fire slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t1-fire","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10
+    },
+    {
+      "id": "pyre-T2__vs__lizard_king",
+      "label": "Pyre T2 sibling slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-fire-fire","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10
+    },
+    {
+      "id": "supernova-current__vs__lizard_king",
+      "label": "Supernova CURRENT slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t3-fire-fire-fire","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10
+    },
+    {
+      "id": "supernova-BUFF__vs__lizard_king",
+      "label": "Supernova BUFF (no exhaust, cd2.2, 7/burn) slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t3-fire-fire-fire","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10,
+      "cardOverrides": {
+        "t3-fire-fire-fire": { "cooldown": 2.2, "exhaust": false, "effectsPatch": [ { "value": 7 }, {} ] }
+      }
+    },
+    {
+      "id": "steamsurge-T2__vs__lizard_king",
+      "label": "Steam Surge T2 sibling slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-fire-water","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10
+    },
+    {
+      "id": "quench-current__vs__lizard_king",
+      "label": "Quench Lance CURRENT slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t3-fire-fire-water","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10
+    },
+    {
+      "id": "quench-BUFF__vs__lizard_king",
+      "label": "Quench Lance BUFF (cd1.6, 4burn, +6 flat dmg, int thr6) slot6",
+      "archetype": "swaptest", "stage": "boss3", "class": "mage",
+      "deck": ["t2-agility-fire","t2-attack-fire","t2-earth-fire","t2-agility-fire","t2-attack-fire","t2-earth-fire","t3-fire-fire-water","t2-agility-fire","t2-attack-fire","t2-agility-fire"],
+      "runXP": 1700, "relics": [], "isBoss": true, "enemy": "lizard_king", "loopMultiplier": 1.2, "loopCount": 30, "repeats": 10,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "cooldown": 1.6,
+          "effects": [
+            { "type": "dot", "stack": "burn", "value": 4, "target": "enemy", "scale": {"stat":"int","per":3,"value":1} },
+            { "type": "damage", "value": 6, "target": "enemy", "scale": {"stat":"int","per":3,"value":1} },
+            { "type": "aura", "value": 0, "target": "self", "ttl_ms": 6000, "event_counter": {"event":"stack_consumed","filter":{"stack":"burn","min_amount":6},"threshold":1}, "then": {"type":"stat_gain","stat":"int","value":2,"max_per_combat":4,"target":"self"} }
+          ]
+        }
+      }
+    }
+  ]
+}

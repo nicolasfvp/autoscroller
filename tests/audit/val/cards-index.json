@@ -1,0 +1,4498 @@
+[
+  {
+    "id": "t1-attack",
+    "name": "Jab",
+    "tier": 1,
+    "category": "attack",
+    "elements": [
+      "attack"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 9.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 24.17,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t1-defense",
+    "name": "Guard",
+    "tier": 1,
+    "category": "defense",
+    "elements": [
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 12[armor].",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 6,
+    "effectTypes": [
+      "armor"
+    ]
+  },
+  {
+    "id": "t1-agility",
+    "name": "Quickstep",
+    "tier": 1,
+    "category": "attack",
+    "elements": [
+      "agility"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 4 twice.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 26.67,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t1-counter",
+    "name": "Riposte",
+    "tier": 1,
+    "category": "attack",
+    "elements": [
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "For 6 seconds, every time you hit an enemy, deal 3.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t1-fire",
+    "name": "Spark",
+    "tier": 1,
+    "category": "magic",
+    "elements": [
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Apply 3[burn]. Deal 2.",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 8.57,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  },
+  {
+    "id": "t1-water",
+    "name": "Mend",
+    "tier": 1,
+    "category": "magic",
+    "elements": [
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Heal 9.",
+    "archetypes": [
+      "heal"
+    ],
+    "peakOPS": 5.4,
+    "effectTypes": [
+      "heal"
+    ]
+  },
+  {
+    "id": "t1-air",
+    "name": "Gust",
+    "tier": 1,
+    "category": "magic",
+    "elements": [
+      "air"
+    ],
+    "cost": null,
+    "costStr": "free",
+    "resource": "free",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Haste 20% for 5 seconds.",
+    "archetypes": [],
+    "peakOPS": null,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t1-earth",
+    "name": "Quake",
+    "tier": 1,
+    "category": "magic",
+    "elements": [
+      "earth"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Apply 4[slow].",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 4,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-attack-attack",
+    "name": "Reckless Strike",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 9([str]). Gain 3[rage]. Apply 1[bleed] to yourself.",
+    "archetypes": [
+      "bleed",
+      "rage"
+    ],
+    "peakOPS": 55.83,
+    "effectTypes": [
+      "damage",
+      "stack",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-defense-defense",
+    "name": "Bulwark Vow",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 7[armor]([vit]). Brace: Gain 3[rage].",
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "peakOPS": 13.5,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-agility-agility",
+    "name": "Flurry Step",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 4. Deal 4([dex]).",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 29.17,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t2-counter-counter",
+    "name": "Razor Stance",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "counter",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "For 10 seconds, every time you hit an enemy, apply 1[bleed]([dex]). Vengeance: +4 seconds.",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-fire-fire",
+    "name": "Pyre",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Deal 4([int]). Consume all [burn] and deal 3 damage per [burn] consumed. Apply 3[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 36.43,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-water-water",
+    "name": "Frostbind",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Apply 1[stun]([int]). Vengeance: apply 1 more [stun]([int]). Gain 4[armor]([vit]).",
+    "archetypes": [
+      "stun",
+      "armor"
+    ],
+    "peakOPS": 10.6,
+    "effectTypes": [
+      "dot",
+      "armor"
+    ]
+  },
+  {
+    "id": "t2-air-air",
+    "name": "Tailwind",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "air",
+      "air"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 4([dex]). Haste 20% for 5 seconds. Gain 1[mana].",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 56.67,
+    "effectTypes": [
+      "damage",
+      "aura",
+      "mana"
+    ]
+  },
+  {
+    "id": "t2-earth-earth",
+    "name": "Tremor Lock",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "If enemy is [stun]: Deal 5([int]). Apply 1[stun]([int]). Apply 4[slow]([int]).",
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "peakOPS": 16,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-agility-attack",
+    "name": "Quickstrike",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 8([dex]).",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 48.33,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t2-agility-counter",
+    "name": "Sidestep & Slash",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 5([dex]). Vengeance: deal 3 more. Apply 2[bleed]. Gain 1[stam].",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 25.42,
+    "effectTypes": [
+      "damage",
+      "dot",
+      "stamina"
+    ]
+  },
+  {
+    "id": "t2-agility-defense",
+    "name": "Parrying Stance",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.3,
+    "exhaust": false,
+    "description": "Gain 5[armor]([vit]). Gain 1[stam]. Brace: Deal 4.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 6.15,
+    "effectTypes": [
+      "armor",
+      "stamina",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-agility-fire",
+    "name": "Flame Dart",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 5([dex]). Apply 2[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 57.5,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-agility-water",
+    "name": "Mist Step",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.3,
+    "exhaust": false,
+    "description": "Heal 3([spi]). Gain 1[stam]. Apply 1[slow]. For 6 seconds, +1[dex].",
+    "archetypes": [
+      "slow",
+      "heal"
+    ],
+    "peakOPS": 4.31,
+    "effectTypes": [
+      "heal",
+      "stamina",
+      "aura",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-agility-air",
+    "name": "Gale Cut",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "air"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.2,
+    "exhaust": false,
+    "description": "Deal 3([dex]). Haste 15% for 4 seconds. Gain 1[stam].",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 37.5,
+    "effectTypes": [
+      "damage",
+      "aura",
+      "stamina"
+    ]
+  },
+  {
+    "id": "t2-agility-earth",
+    "name": "Tremor Dash",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 7([dex]). Gain 6[armor]([vit]).",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 27.37,
+    "effectTypes": [
+      "damage",
+      "armor"
+    ]
+  },
+  {
+    "id": "t2-attack-counter",
+    "name": "Bloodprice Strike",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Lose 4[HP], ignoring your [armor]. Deal 12([str]). Gain 2([str])[rage]. Gain 1[stam].",
+    "archetypes": [
+      "rage"
+    ],
+    "peakOPS": 48.13,
+    "effectTypes": [
+      "damage",
+      "stack",
+      "stamina"
+    ]
+  },
+  {
+    "id": "t2-attack-defense",
+    "name": "Shield Bash",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal damage equal to your [armor].",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 18.75,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t2-attack-fire",
+    "name": "Kindle Strike",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.5,
+    "exhaust": false,
+    "description": "Apply 3[burn]([int]). If enemy has [bleed]: apply 3 more [burn]([int]).",
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "peakOPS": 16,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-attack-water",
+    "name": "Crimson Tithe",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 1[stam]([spi]) and 1[mana]([spi]). Gain 3[rage].",
+    "archetypes": [
+      "rage"
+    ],
+    "peakOPS": 3.75,
+    "effectTypes": [
+      "stamina",
+      "mana",
+      "stack"
+    ]
+  },
+  {
+    "id": "t2-air-attack",
+    "name": "Stormstrike",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Deal 6([str]). Haste 20% for 5 seconds.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 20.71,
+    "effectTypes": [
+      "damage",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-attack-earth",
+    "name": "Granite Lunge",
+    "tier": 2,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Gain 6[armor]([vit]). Deal 4, +1 damage per 4[armor] you have.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 15.57,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t2-counter-defense",
+    "name": "Iron Reckoning",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 4[armor]([vit]). For 8 seconds, every attack deals 1 more damage per [rage].",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 7,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-counter-fire",
+    "name": "Cinderscar",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "counter",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Apply 2[burn]([int]). Vengeance: Apply 1[bleed] per [burn] on enemy.",
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "peakOPS": 14.29,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-counter-water",
+    "name": "Bloodtide Mend",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "counter",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.5,
+    "exhaust": false,
+    "description": "Heal 5([spi]). Apply 2[bleed] to yourself. Vengeance: Gain 1[spi] this combat (max 4 per combat).",
+    "archetypes": [
+      "bleed",
+      "heal",
+      "scaling"
+    ],
+    "peakOPS": 4,
+    "effectTypes": [
+      "heal",
+      "dot",
+      "stat_gain"
+    ]
+  },
+  {
+    "id": "t2-air-counter",
+    "name": "Hollow Echo",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "air",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.3,
+    "exhaust": false,
+    "description": "Deal 5([str]). Vengeance: deal 3 more. Haste 15% for 4 seconds.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 24.62,
+    "effectTypes": [
+      "damage",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-counter-earth",
+    "name": "Thornwall",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). Deal 5. Brace: Deal 6.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 11.7,
+    "effectTypes": [
+      "armor",
+      "damage",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-defense-fire",
+    "name": "Forge Spike Ward",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Gain 5[armor]([vit]). For 6 seconds, if you gain at least 12[armor], gain 1[vit] this combat (max 3 per combat).",
+    "archetypes": [
+      "armor",
+      "scaling"
+    ],
+    "peakOPS": 4.44,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-defense-water",
+    "name": "Vow of the Tide",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 5[armor]([vit]). Heal 3. Gain 1[stam]. For 6 seconds, +1[spi].",
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 4.75,
+    "effectTypes": [
+      "armor",
+      "heal",
+      "stamina",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-air-defense",
+    "name": "Cyclone Ward",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "air",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Gain 5[armor]([vit]). Haste 15% for 4 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 4.57,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-defense-earth",
+    "name": "Bramble Bulwark",
+    "tier": 2,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). If [armor] is at least 10: Deal 6 Pierce.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 10,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t2-fire-water",
+    "name": "Steam Surge",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.3,
+    "exhaust": false,
+    "description": "Deal 6([int]). If enemy has [burn]: +4 damage. Heal 4. Gain 1[stam].",
+    "archetypes": [
+      "burn",
+      "heal"
+    ],
+    "peakOPS": 19.23,
+    "effectTypes": [
+      "damage",
+      "heal",
+      "stamina"
+    ]
+  },
+  {
+    "id": "t2-air-fire",
+    "name": "Firestorm",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "air",
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "For 4 seconds, if you play 3 or more cards, apply 10[burn]([int]).",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t2-earth-fire",
+    "name": "Magma Vein",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.3,
+    "exhaust": false,
+    "description": "Gain 7[armor]. Deal 6([int]). Apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 16.78,
+    "effectTypes": [
+      "armor",
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-air-water",
+    "name": "Misting Veil",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "air",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Heal 3([spi]). Haste 15% for 5 seconds. Gain 1[mana]. For 6 seconds, +1[int].",
+    "archetypes": [
+      "heal"
+    ],
+    "peakOPS": 2.57,
+    "effectTypes": [
+      "heal",
+      "aura",
+      "mana"
+    ]
+  },
+  {
+    "id": "t2-earth-water",
+    "name": "Mire Bloom",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Gain 4[armor]([vit]). Heal 3([spi]). Deal 3([int]). Apply 2[poison]([int]).",
+    "archetypes": [
+      "poison",
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 28.44,
+    "effectTypes": [
+      "armor",
+      "heal",
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t2-air-earth",
+    "name": "Bedrock Snare",
+    "tier": 2,
+    "category": "magic",
+    "elements": [
+      "air",
+      "earth"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "If enemy is [stun]: Deal 4([dex]). If enemy has 4 or more [slow]: Apply 1[stun]([int]). Apply 2[slow]([int]).",
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "peakOPS": 6.25,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-attack",
+    "name": "Berserker's Ledger",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 8([str]) three times. Apply 2[bleed] to yourself.",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 52.5,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-defense-defense-defense",
+    "name": "Aegis of Returning Wrath",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Gain 22[armor]([vit]). Deal 6 Pierce, +1 damage per 4[armor] you have.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 14,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-agility",
+    "name": "Quickstep Sigil",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "agility"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 5([dex]) three times. Haste 30% for 6 seconds.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 53.33,
+    "effectTypes": [
+      "damage",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-counter-counter",
+    "name": "Crimson Spiral",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "counter",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "If you have 5 or more [rage]: Deal 24([str]) Pierce and apply 4[bleed]([dex]).",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 21.25,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-defense",
+    "name": "Bulwark Salvo",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 6 twice, +1 damage per 2[armor] you have.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 17.5,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-attack",
+    "name": "Triple Slash",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 6([dex]) three times to all enemies.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 54.38,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-counter",
+    "name": "Bloodlash Salvo",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 9([str]). Gain 4[str] this combat.",
+    "archetypes": [
+      "pure_damage",
+      "scaling"
+    ],
+    "peakOPS": 33.89,
+    "effectTypes": [
+      "damage",
+      "stat_gain"
+    ]
+  },
+  {
+    "id": "t3-attack-defense-defense",
+    "name": "Body Slam Vow",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "attack",
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 2 Pierce, +1 damage per [armor] you have. Gain 6[armor]([vit]).",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 15.33,
+    "effectTypes": [
+      "damage",
+      "armor"
+    ]
+  },
+  {
+    "id": "t3-agility-defense-defense",
+    "name": "Phalanx Drift",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 22[armor]([vit]). Haste 10% for 8 seconds. Brace: Deal 10.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 12.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-defense-defense",
+    "name": "Reforge Vow",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "For 12 seconds, every [armor] you gain is +50%. Gain 8[armor]([vit]).",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 9,
+    "effectTypes": [
+      "aura",
+      "armor"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-attack",
+    "name": "Pinprick Volley",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.5,
+    "exhaust": false,
+    "description": "Deal 5([dex]) Pierce three times to all enemies.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 52,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-defense",
+    "name": "Veil of Steps",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "agility",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Haste 20% for 6 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 9.5,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-counter",
+    "name": "Quicksilver Bleed",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Apply 3[bleed]([dex]). For 6 seconds, if you apply [bleed] 3+ times, gain 2[dex] this combat (max 4 per combat).",
+    "archetypes": [
+      "bleed",
+      "scaling"
+    ],
+    "peakOPS": 17.5,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-attack-counter-counter",
+    "name": "Cleaver's Tax",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 12([str]) Pierce. If you have 5 or more [rage]: deal 20([str]) more Pierce and this card delays 4 more seconds next time.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 28,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-counter-counter-defense",
+    "name": "Wrathshell Vow",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "counter",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": true,
+    "description": "Exhaust. Gain 6([str])[rage]. For 15 seconds, every 2 seconds, gain 1[rage].",
+    "archetypes": [
+      "rage"
+    ],
+    "peakOPS": 9,
+    "effectTypes": [
+      "stack",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-counter-counter",
+    "name": "Razor Cadence",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "counter",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 5([dex]) three times. Each hit applies 1[bleed]([dex]). Vengeance: deal 5([dex]) more and apply 1 more [bleed]([dex]).",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 72.75,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-defense",
+    "name": "Flowstrike",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 10([str]). Gain 10[armor]. Haste 15% for 6 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 25,
+    "effectTypes": [
+      "damage",
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-attack-counter-defense",
+    "name": "Last Stand Bulwark",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). If you have less than 50%[HP]: gain 10 more [armor]([vit]) and deal 12([str]) Pierce.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 11.67,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-counter",
+    "name": "Vein Splitter",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 4([dex]) three times. Each hit applies 1[bleed]([dex]). If enemy has [bleed]: each hit applies 1 more [bleed]([dex]).",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 134.38,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-counter-defense",
+    "name": "Bramble Step",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "counter",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). Brace: Apply 3[bleed].",
+    "archetypes": [
+      "bleed",
+      "armor"
+    ],
+    "peakOPS": 5.45,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-fire-fire-fire",
+    "name": "Supernova",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "fire",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2,
+      "mana": 1
+    },
+    "costStr": "2s+1m",
+    "resource": "both",
+    "cooldown": 2.8,
+    "exhaust": true,
+    "description": "Exhaust. Consume all [burn]. Deal 5([int]) Pierce per [burn] consumed to all enemies.",
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "peakOPS": 28.57,
+    "effectTypes": [
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-water-water-water",
+    "name": "Tidesong Aura",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "water",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Heal 18([spi]). Gain 2[spi] this combat (max 4 per combat). Gain 3[mana].",
+    "archetypes": [
+      "heal",
+      "scaling"
+    ],
+    "peakOPS": 9,
+    "effectTypes": [
+      "heal",
+      "stat_gain",
+      "mana"
+    ]
+  },
+  {
+    "id": "t3-air-air-air",
+    "name": "Tempest Cadence",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "air",
+      "air"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 8([dex]) to all enemies. Haste 30% for 10 seconds.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 24.17,
+    "effectTypes": [
+      "damage",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-earth-earth-earth",
+    "name": "Mountain's Answer",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "earth",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 26[armor]([vit]). If [armor] is at least 32: Deal 22 Pierce to all enemies.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 29.67,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-fire-fire-water",
+    "name": "Quench Lance",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "fire",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 2[burn]([int]). For 6 seconds, if you consume 10+ [burn], gain 2[int] this combat (max 4 per combat).",
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "peakOPS": 8.33,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-fire-fire",
+    "name": "Pyre Surge",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Double the [burn] on enemy. For 8 seconds, enemy takes +2 from [burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 13.33,
+    "effectTypes": [
+      "stack_boost",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-earth-fire-fire",
+    "name": "Magma Welling",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "earth",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Apply 8[burn]([int]).",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 21.33,
+    "effectTypes": [
+      "armor",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-fire-water-water",
+    "name": "Phoenix Aura",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "fire",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds, if you have less than 50%[HP], gain 18[armor].",
+    "archetypes": [
+      "burn",
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 12.5,
+    "effectTypes": [
+      "heal",
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-water-water",
+    "name": "Misted Cadence",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Heal 14([spi]). Haste 25% for 8 seconds. Gain 3[mana].",
+    "archetypes": [
+      "heal"
+    ],
+    "peakOPS": 7,
+    "effectTypes": [
+      "heal",
+      "aura",
+      "mana"
+    ]
+  },
+  {
+    "id": "t3-earth-water-water",
+    "name": "Brine Bedrock",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Heal 15([spi]). Vengeance: Apply 3[poison].",
+    "archetypes": [
+      "poison",
+      "heal"
+    ],
+    "peakOPS": 7.5,
+    "effectTypes": [
+      "heal",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-air-fire",
+    "name": "Cinder Squall",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "air",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 3[slow]([int]) to all enemies. If enemy has 5 or more [slow]: Apply 1[stun]([int]) to all enemies. Deal 2([int]) damage per [slow] on enemy to all enemies.",
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "peakOPS": 19.58,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-air-air-water",
+    "name": "Squall Aura",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "air",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Heal 9([spi]). Haste 25% for 8 seconds. Gain 4[mana].",
+    "archetypes": [
+      "heal"
+    ],
+    "peakOPS": 4.5,
+    "effectTypes": [
+      "heal",
+      "aura",
+      "mana"
+    ]
+  },
+  {
+    "id": "t3-air-air-earth",
+    "name": "Dust Plague",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "air",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 2
+    },
+    "costStr": "1s+2m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). For 12 seconds, every 2.5 seconds, apply 1[slow]([int]) to all enemies. If enemy has 5 or more [slow]: apply 1[stun]([int]).",
+    "archetypes": [
+      "slow",
+      "stun",
+      "armor"
+    ],
+    "peakOPS": 4.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-earth-earth-fire",
+    "name": "Magma Vow",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "earth",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Vengeance: Deal 14 Pierce.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 10.5,
+    "effectTypes": [
+      "armor",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-earth-earth-water",
+    "name": "Bog Catalyst",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 2[poison]([int]). Double the [poison] on enemy.",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 45.83,
+    "effectTypes": [
+      "dot",
+      "multiply_stack"
+    ]
+  },
+  {
+    "id": "t3-air-earth-earth",
+    "name": "Standing Stone",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 16[armor]([vit]). Brace: Heal 8. Haste 10% for 8 seconds.",
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 8.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-fire-water",
+    "name": "Steaming Plague",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 3[poison]([int]) to all enemies. If enemy has [poison]: apply 2 more [poison]([int]).",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 45.83,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-earth-fire-water",
+    "name": "Alchemic Drain",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "earth",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 3[poison]. Heal 6([spi]).",
+    "archetypes": [
+      "poison",
+      "heal"
+    ],
+    "peakOPS": 8,
+    "effectTypes": [
+      "dot",
+      "heal"
+    ]
+  },
+  {
+    "id": "t3-air-earth-fire",
+    "name": "Sandfury",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 8([str]) twice. Deal 2 Pierce per [slow] on enemy.",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 35,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-air-earth-water",
+    "name": "Marsh Squall",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": true,
+    "description": "Exhaust. Consume half [poison]. Apply 2[poison]([int]). Deal 6 Pierce per [poison] consumed to all enemies.",
+    "archetypes": [
+      "poison",
+      "detonators"
+    ],
+    "peakOPS": 8.33,
+    "effectTypes": [
+      "dot",
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-fire",
+    "name": "Cinder Thrust",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 7([str]) twice. Apply 2[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 47.78,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-water",
+    "name": "Soaking Blade",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "water"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 12([str]). Apply 2[poison]. Deal 7.",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 41.5,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-attack-attack",
+    "name": "Galekick",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 7([str]) twice. Apply 2[slow].",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 51.25,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-attack-earth",
+    "name": "Concussive Smash",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "attack",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 14([str]). Apply 2[stun]([int]). Apply 3[slow].",
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "peakOPS": 40,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-defense-defense-fire",
+    "name": "Pyric Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). For 14 seconds, every time you gain at least 4[armor], apply 1[burn]([int]).",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 7.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-defense-defense-water",
+    "name": "Stagnant Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). For 12 seconds, every 2 seconds, apply 2[poison]([int]).",
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "peakOPS": 6.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-defense-defense",
+    "name": "Stormgate",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "defense",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Haste 15% for 10 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 8,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-defense-defense-earth",
+    "name": "Stoneward Reprisal",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). Brace: Apply 2[stun].",
+    "archetypes": [
+      "stun",
+      "armor"
+    ],
+    "peakOPS": 6,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-fire",
+    "name": "Twinflame Flicker",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Apply 4[burn]. For 8 seconds, if you apply [burn] 4+ times, gain 2[int] this combat (max 4 per combat).",
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "peakOPS": 10,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-water",
+    "name": "Slipstream",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 6([dex]) Pierce. Apply 2[poison]. Haste 15% for 6 seconds.",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 21.88,
+    "effectTypes": [
+      "damage",
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-air",
+    "name": "Zephyr Cascade",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "agility",
+      "air"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.4,
+    "exhaust": false,
+    "description": "Apply 3[slow]([int]). Apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "peakOPS": 14.29,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-agility-earth",
+    "name": "Footwork Stone",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "agility",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). Haste 25% for 6 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 9.78,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-counter-fire",
+    "name": "Vengeful Pyre",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "counter",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.8,
+    "exhaust": true,
+    "description": "Exhaust. Gain 3[rage]. Exhaust the next card in order. For the rest of combat, double all [rage] gained.",
+    "archetypes": [
+      "rage"
+    ],
+    "peakOPS": 2.14,
+    "effectTypes": [
+      "stack",
+      "devour",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-counter-water",
+    "name": "Crimson Cascade",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "counter",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 3[bleed]([spi]). Apply 1[bleed] to yourself. For 15 seconds, every time you kill an enemy with [bleed], apply 4[bleed]([spi]) to the nearest enemy.",
+    "archetypes": [
+      "bleed"
+    ],
+    "peakOPS": 13.13,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-counter-counter",
+    "name": "Wrath Squall",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "counter",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": true,
+    "description": "Exhaust. For 8 seconds, each time you lose [HP], gain 1[str] this combat (max 5 per combat) and gain 3([vit])[rage].",
+    "archetypes": [
+      "rage",
+      "scaling"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-counter-earth",
+    "name": "Stonewrath",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "counter",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 50%[HP], gain 6[rage].",
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "peakOPS": 7.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-attack-defense-fire",
+    "name": "Forge Strike",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 12([str]). Gain 8[armor]. Apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 28.92,
+    "effectTypes": [
+      "damage",
+      "armor",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-defense-water",
+    "name": "Mire Cleave",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 10([str]). Gain 8[armor]. Apply 2[poison].",
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "peakOPS": 25.17,
+    "effectTypes": [
+      "damage",
+      "armor",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-attack-defense",
+    "name": "Stormhilt",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Deal 6([str]) twice. Gain 6[armor].",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 34,
+    "effectTypes": [
+      "damage",
+      "armor"
+    ]
+  },
+  {
+    "id": "t3-attack-defense-earth",
+    "name": "Earthcleaver",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 18([str]) Pierce. If [armor] is at least 10: deal 8 more Pierce.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 25.42,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-fire",
+    "name": "Wickfencer",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 6([str]) twice. Apply 2[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 39,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-water",
+    "name": "Drowner's Dart",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 8([dex]) Pierce. Apply 2[poison].",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 25.63,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-air-attack",
+    "name": "Skywire",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "air",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2,
+      "mana": 1
+    },
+    "costStr": "2s+1m",
+    "resource": "both",
+    "cooldown": 1.5,
+    "exhaust": false,
+    "description": "Deal 5([dex]) three times. Apply 2[slow].",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 54.67,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-attack-earth",
+    "name": "Quarry Dance",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "attack",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 10([dex]). If [armor] is at least 10: deal 8 more.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 24,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-attack-counter-fire",
+    "name": "Wrath Brand",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "If you have [rage]: Deal 12([str]) twice and apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "rage"
+    ],
+    "peakOPS": 23.33,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-counter-water",
+    "name": "Necrotic Festering",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter",
+      "water"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Apply 3[bleed]([dex]). Apply 1[poison]([int]) per [bleed] on enemy. Deal 2([str]) Pierce per [bleed] on enemy.",
+    "archetypes": [
+      "poison",
+      "bleed"
+    ],
+    "peakOPS": 55.23,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-air-attack-counter",
+    "name": "Thunderstrike Catalyst",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 6([str]). Consume all [slow] and deal 6([int]) Pierce per [slow] consumed.",
+    "archetypes": [
+      "slow",
+      "detonators"
+    ],
+    "peakOPS": 15,
+    "effectTypes": [
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-attack-counter-earth",
+    "name": "Granitewrath",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "counter",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 14([str]). Vengeance: Deal 10 Pierce.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 25.42,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-defense-fire",
+    "name": "Ember Vault",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). Brace: Apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 5,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-defense-water",
+    "name": "Tidefoot Guard",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). Apply 2[poison]([int]). Haste 15% for 6 seconds.",
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "peakOPS": 16.5,
+    "effectTypes": [
+      "armor",
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-air-defense",
+    "name": "Galeguard",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "air",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). Haste 25% for 8 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 5,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-defense-earth",
+    "name": "Quickstone",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). For 15 seconds, if you have less than 60%[HP], haste 30% for 6 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 6.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-defense-fire",
+    "name": "Ashen Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). Brace: Deal 12 and apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 7.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-defense-water",
+    "name": "Crimson Regen Mantle",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). For 12 seconds, take 20% less damage and every 1 second, if you have less than 50%[HP], heal 3([spi]).",
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 6,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-counter-defense",
+    "name": "Glacial Pact",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "counter",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 4[slow]([int]). Gain 8[armor]([vit]). Vengeance: apply 3 more [slow] and haste 20% for 5 seconds.",
+    "archetypes": [
+      "slow",
+      "armor"
+    ],
+    "peakOPS": 9.33,
+    "effectTypes": [
+      "dot",
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-defense-earth",
+    "name": "Tombplate",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 18[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 10[armor] and 4[rage].",
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "peakOPS": 12.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-counter-fire",
+    "name": "Searing Razor",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "counter",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Apply 3[burn]([dex]). For 8 seconds, if you lose [HP] 4+ times, gain 2[dex] this combat (max 4 per combat).",
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "peakOPS": 10.91,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-counter-water",
+    "name": "Venom Dance",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "counter",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Apply 3[poison]([int]). Vengeance: apply 5 more [poison].",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 40,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-air-counter",
+    "name": "Static Skirmish",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "air",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Apply 3[slow]. Deal 3([dex]) Pierce per [slow] on enemy.",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 25,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-agility-counter-earth",
+    "name": "Quickearth Rite",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "counter",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). For 6 seconds, if you lose [HP] 2+ times, gain 2[vit] this combat (max 4 per combat).",
+    "archetypes": [
+      "armor",
+      "scaling"
+    ],
+    "peakOPS": 4.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-attack-fire-fire",
+    "name": "Cinderlance",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Deal 8([str]) twice. Consume all [burn] and deal 3 Pierce per [burn] consumed.",
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "peakOPS": 38.18,
+    "effectTypes": [
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-attack-water-water",
+    "name": "Drowning Lance",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "attack",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "stamina": 2,
+      "mana": 1
+    },
+    "costStr": "2s+1m",
+    "resource": "both",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 6 Pierce. Consume half [poison] and deal 5 Pierce per [poison] consumed.",
+    "archetypes": [
+      "poison",
+      "detonators"
+    ],
+    "peakOPS": 11.67,
+    "effectTypes": [
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-air-air-attack",
+    "name": "Tempest Pike",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "air",
+      "attack"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.2,
+    "exhaust": false,
+    "description": "Deal 6([str]) twice. Apply 2[slow].",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 33.64,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-earth-earth",
+    "name": "Mountain's Will",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 20([str]). If [armor] is at least 20: Deal 8 Pierce.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 40.42,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-attack-fire-water",
+    "name": "Tremor Detonate",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "attack",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": true,
+    "description": "Exhaust. Deal 6([str]) Pierce. Consume all [poison], [bleed] and [burn] and deal 3([str]) Pierce per stack consumed.",
+    "archetypes": [
+      "poison",
+      "bleed",
+      "burn",
+      "detonators"
+    ],
+    "peakOPS": 22.5,
+    "effectTypes": [
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-air-attack-fire",
+    "name": "Galebrand",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 8([str]). Apply 3[slow]. Apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "peakOPS": 24.5,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-earth-fire",
+    "name": "Slag Maul",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "attack",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 16([str]). Apply 2[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 31.67,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-attack-water",
+    "name": "Galetide",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "attack",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 10([str]) Pierce. Apply 2[poison]. Apply 2[slow].",
+    "archetypes": [
+      "poison",
+      "slow"
+    ],
+    "peakOPS": 26,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-attack-earth-water",
+    "name": "Mirebreaker",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "attack",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 14([str]). If enemy has [poison]: Deal 6 Pierce.",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 25.42,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-air-attack-earth",
+    "name": "Cliffwind Maul",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "air",
+      "attack",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 12([str]). If [armor] is at least 12: Deal 10 Pierce.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 29.58,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-defense-fire-fire",
+    "name": "Citadel Inferno",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2,
+      "mana": 1
+    },
+    "costStr": "2s+1m",
+    "resource": "both",
+    "cooldown": 2.8,
+    "exhaust": true,
+    "description": "Exhaust. Consume all [armor]. If [armor] is at least 10: Deal 2 Pierce per [armor] consumed to all enemies.",
+    "archetypes": [
+      "pure_damage"
+    ],
+    "peakOPS": 21.43,
+    "effectTypes": [
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-defense-water-water",
+    "name": "Brineward",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Heal 12([spi]). Apply 2[poison]([int]).",
+    "archetypes": [
+      "poison",
+      "armor",
+      "heal"
+    ],
+    "peakOPS": 17.17,
+    "effectTypes": [
+      "armor",
+      "heal",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-air-defense",
+    "name": "Galeward",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "air",
+      "defense"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 16[armor]([vit]). Haste 20% for 10 seconds.",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 8.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-defense-earth-earth",
+    "name": "Bedrock Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 16[armor]([vit]). Brace: Gain 6[armor]([vit]).",
+    "archetypes": [
+      "armor"
+    ],
+    "peakOPS": 10.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-defense-fire-water",
+    "name": "Steam Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Brace: Apply 3[poison] and 2[burn].",
+    "archetypes": [
+      "poison",
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 8,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-defense-fire",
+    "name": "Ember Aegis Gust",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "defense",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Consume all [burn]. Gain 1[armor]([vit]) per [burn] consumed (max 20). Haste 15% for 6 seconds.",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 3.33,
+    "effectTypes": [
+      "convert_stack",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-defense-earth-fire",
+    "name": "Magmaplate",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 16[armor]([vit]). Brace: Deal 14 and apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 8.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-defense-water",
+    "name": "Mistplate",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "defense",
+      "water"
+    ],
+    "cost": {
+      "mana": 2
+    },
+    "costStr": "2m",
+    "resource": "mana",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). Apply 2[poison]. Apply 2[slow].",
+    "archetypes": [
+      "poison",
+      "slow",
+      "armor"
+    ],
+    "peakOPS": 9.83,
+    "effectTypes": [
+      "armor",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-defense-earth-water",
+    "name": "Bogplate",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "defense",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 14[armor]([vit]). Vengeance: Apply 3[poison].",
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "peakOPS": 9.67,
+    "effectTypes": [
+      "armor",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-air-defense-earth",
+    "name": "Dustward",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "defense",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 16[armor]([vit]). Haste 10% for 12 seconds. Brace: Apply 4[slow].",
+    "archetypes": [
+      "slow",
+      "armor"
+    ],
+    "peakOPS": 8.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-fire-fire",
+    "name": "Cinder Sprint",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Apply 3[burn]. Consume all [burn] and deal 4([dex]) damage per [burn] consumed.",
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "peakOPS": 32.5,
+    "effectTypes": [
+      "dot",
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-agility-water-water",
+    "name": "Slipvenom Tempo",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Apply 5[poison]([int]). If enemy has 10 or more [poison]: apply 5 more [poison]([int]). Haste 15% for 6 seconds.",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 68.75,
+    "effectTypes": [
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-air-air",
+    "name": "Gale Echo",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "air",
+      "air"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "For 12 seconds, every time you apply [slow], apply 1[slow]([int]). Haste 15% for 6 seconds.",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-earth-earth",
+    "name": "Stonepacer",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "agility",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 2.8,
+    "exhaust": true,
+    "description": "Exhaust. Gain 3[vit] this combat. Haste 30% for 12 seconds.",
+    "archetypes": [
+      "scaling"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "stat_gain",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-fire-water",
+    "name": "Boilstep",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 6([dex]) Pierce. Apply 2[burn]. Apply 2[poison].",
+    "archetypes": [
+      "poison",
+      "burn"
+    ],
+    "peakOPS": 45.56,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-air-fire",
+    "name": "Galecinder",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "air",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Deal 5([dex]) twice. Apply 2[burn]. Apply 2[slow].",
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "peakOPS": 40,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-earth-fire",
+    "name": "Cinderquake",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Deal 10([dex]). If [armor] is at least 10: Deal 4 Pierce and apply 2[burn].",
+    "archetypes": [
+      "burn"
+    ],
+    "peakOPS": 24,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-air-water",
+    "name": "Stormsplash",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "air",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.6,
+    "exhaust": false,
+    "description": "Apply 2[poison]([int]). Apply 3[slow]. Apply 2[burn].",
+    "archetypes": [
+      "poison",
+      "burn",
+      "slow"
+    ],
+    "peakOPS": 27.5,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-agility-earth-water",
+    "name": "Mireglide",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "agility",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 2,
+    "exhaust": false,
+    "description": "Gain 8[armor]([vit]). Apply 3[poison]. Haste 15% for 6 seconds.",
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "peakOPS": 11.2,
+    "effectTypes": [
+      "armor",
+      "dot",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-agility-air-earth",
+    "name": "Stormstone Tempo",
+    "tier": 3,
+    "category": "attack",
+    "elements": [
+      "agility",
+      "air",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Deal 6([dex]) three times. Each hit applies 1[slow]. If enemy is [stun]: each hit also deals 4([dex]) Pierce.",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 38.75,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-counter-fire-fire",
+    "name": "Brine Crucible",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "fire",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Consume all [burn] and apply 2[bleed]([dex]) per [burn] consumed, plus 2[bleed]([dex]). Next card delays 3 more seconds.",
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "peakOPS": 158.13,
+    "effectTypes": [
+      "convert_stack",
+      "dot",
+      "cd_debt"
+    ]
+  },
+  {
+    "id": "t3-counter-water-water",
+    "name": "Tidefoot Bloom",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "counter",
+      "water",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.2,
+    "exhaust": true,
+    "description": "Exhaust. For the rest of combat, each time you heal, apply 1[poison]([int]).",
+    "archetypes": [
+      "poison"
+    ],
+    "peakOPS": 0,
+    "effectTypes": [
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-air-counter",
+    "name": "Stormrage",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "air",
+      "counter"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "If you have [rage]: Apply 8[slow]([int]).",
+    "archetypes": [
+      "slow",
+      "rage"
+    ],
+    "peakOPS": 6.67,
+    "effectTypes": [
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-counter-earth-earth",
+    "name": "Tombrage",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "earth",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 8[rage].",
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "peakOPS": 7.33,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-counter-fire-water",
+    "name": "Venom Detonation",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "counter",
+      "fire",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Apply 2[burn]. Apply 3[poison]. Consume all [burn] and deal 2([str]) damage per [burn] consumed.",
+    "archetypes": [
+      "poison",
+      "burn",
+      "detonators"
+    ],
+    "peakOPS": 17.08,
+    "effectTypes": [
+      "dot",
+      "damage",
+      "stack"
+    ]
+  },
+  {
+    "id": "t3-air-counter-fire",
+    "name": "Static Bleed",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "air",
+      "counter",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 1
+    },
+    "costStr": "1s",
+    "resource": "stamina",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Apply 4[slow]. Deal 3([dex]).",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 15,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  },
+  {
+    "id": "t3-counter-earth-fire",
+    "name": "Magmavow",
+    "tier": 3,
+    "category": "defense",
+    "elements": [
+      "counter",
+      "earth",
+      "fire"
+    ],
+    "cost": {
+      "stamina": 2
+    },
+    "costStr": "2s",
+    "resource": "stamina",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). Brace: Deal 16 Pierce and apply 2[burn].",
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "peakOPS": 6.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-counter-water",
+    "name": "Tempestbleed",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "counter",
+      "water"
+    ],
+    "cost": {
+      "mana": 1
+    },
+    "costStr": "1m",
+    "resource": "mana",
+    "cooldown": 1.8,
+    "exhaust": false,
+    "description": "Deal 6([spi]). Apply 2[slow].",
+    "archetypes": [
+      "slow"
+    ],
+    "peakOPS": 14.44,
+    "effectTypes": [
+      "damage",
+      "dot"
+    ]
+  },
+  {
+    "id": "t3-counter-earth-water",
+    "name": "Bogwrath",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "counter",
+      "earth",
+      "water"
+    ],
+    "cost": {
+      "stamina": 1,
+      "mana": 1
+    },
+    "costStr": "1s+1m",
+    "resource": "both",
+    "cooldown": 2.4,
+    "exhaust": false,
+    "description": "Gain 10[armor]([vit]). Brace: Apply 4[poison] and gain 3[rage].",
+    "archetypes": [
+      "poison",
+      "rage",
+      "armor"
+    ],
+    "peakOPS": 6.67,
+    "effectTypes": [
+      "armor",
+      "aura"
+    ]
+  },
+  {
+    "id": "t3-air-counter-earth",
+    "name": "Tectonic Reckoning",
+    "tier": 3,
+    "category": "magic",
+    "elements": [
+      "air",
+      "counter",
+      "earth"
+    ],
+    "cost": {
+      "stamina": 3,
+      "mana": 2
+    },
+    "costStr": "3s+2m",
+    "resource": "both",
+    "cooldown": 2.8,
+    "exhaust": true,
+    "description": "Exhaust. To all enemies: apply 3[stun]([int]) and deal 50([str]) Pierce.",
+    "archetypes": [
+      "stun"
+    ],
+    "peakOPS": 70,
+    "effectTypes": [
+      "dot",
+      "damage"
+    ]
+  }
+]

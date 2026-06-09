@@ -1,0 +1,69 @@
+{
+  "_comment": "deep-endgame lane: tuned T3 builds vs boss6 infernal_dragon (loop60) and boss7 boss_iron_golem (loop70). Both classes.",
+  "decks": [
+    {
+      "id": "deep-endgame-boss6-mage-poison",
+      "label": "Boss6 Mage Poison Engine",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss6",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t3-agility-earth-water", "t3-counter-fire-water", "t3-agility-air-water", "t3-attack-earth-water", "t3-defense-water-water", "t3-air-defense-water", "t2-earth-water", "t3-agility-counter-water", "t1-water", "t3-defense-earth-water"]
+    },
+    {
+      "id": "deep-endgame-boss6-mage-burn",
+      "label": "Boss6 Mage Burn-Survival",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "boss6",
+      "deck": ["t2-agility-fire", "t2-fire-fire", "t3-earth-fire-fire", "t2-fire-water", "t3-agility-fire-fire", "t3-attack-fire-fire", "t3-fire-water-water", "t3-air-fire-fire", "t3-fire-fire-fire", "t2-earth-fire", "t1-fire", "t2-air-fire", "t3-attack-attack-fire"]
+    },
+    {
+      "id": "deep-endgame-boss6-war-bleed",
+      "label": "Boss6 Warrior Bleed/Rage",
+      "archetype": "bleed-rage",
+      "class": "warrior",
+      "stage": "boss6",
+      "deck": ["t2-attack-attack", "t2-attack-counter", "t3-agility-attack-counter", "t3-attack-counter-water", "t3-agility-counter-counter", "t2-agility-counter", "t3-counter-counter-counter", "t3-agility-agility-counter", "t2-counter-counter", "t3-attack-attack-attack", "t3-attack-counter-fire", "t2-defense-defense", "t3-agility-counter-water"]
+    },
+    {
+      "id": "deep-endgame-boss6-war-physical",
+      "label": "Boss6 Warrior Physical Burst",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss6",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t3-attack-attack-counter", "t3-agility-attack-attack", "t3-attack-attack-attack", "t3-air-attack-attack", "t2-attack-counter", "t3-attack-earth-earth", "t3-agility-attack-earth", "t3-attack-counter-earth", "t2-counter-counter", "t2-attack-defense", "t3-attack-attack-earth"]
+    },
+    {
+      "id": "deep-endgame-boss7-mage-poison",
+      "label": "Boss7 Mage Poison Engine",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss7",
+      "deck": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t3-agility-earth-water", "t3-counter-fire-water", "t3-agility-air-water", "t3-attack-earth-water", "t3-air-defense-water", "t3-defense-water-water", "t2-earth-water", "t3-agility-counter-water", "t1-water", "t3-defense-earth-water"]
+    },
+    {
+      "id": "deep-endgame-boss7-mage-control",
+      "label": "Boss7 Mage Slow/Stun Control",
+      "archetype": "slow-stun-control",
+      "class": "mage",
+      "stage": "boss7",
+      "deck": ["t2-earth-earth", "t1-earth", "t3-air-air-fire", "t3-agility-agility-air", "t3-air-air-earth", "t3-air-attack-counter", "t3-agility-air-earth", "t3-air-counter-earth", "t2-air-earth", "t3-attack-attack-earth", "t2-water-water", "t3-air-attack-water", "t3-agility-air-water"]
+    },
+    {
+      "id": "deep-endgame-boss7-war-physical",
+      "label": "Boss7 Warrior Armor-Pierce Physical",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": ["t2-attack-attack", "t2-agility-attack", "t3-agility-attack-attack", "t3-attack-attack-counter", "t3-attack-earth-earth", "t3-attack-counter-earth", "t3-air-attack-earth", "t3-attack-attack-attack", "t3-agility-attack-earth", "t2-attack-counter", "t3-earth-earth-earth", "t2-attack-defense", "t3-air-attack-attack"]
+    },
+    {
+      "id": "deep-endgame-boss7-war-armor",
+      "label": "Boss7 Warrior Armor Finisher",
+      "archetype": "armor-finisher",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": ["t2-defense-defense", "t2-defense-earth", "t1-defense", "t3-defense-defense-defense", "t3-earth-earth-earth", "t3-attack-defense-defense", "t2-attack-earth", "t3-attack-earth-earth", "t3-defense-earth-earth", "t2-counter-earth", "t3-attack-counter-defense", "t3-counter-defense-defense", "t3-attack-attack-earth"]
+    }
+  ]
+}

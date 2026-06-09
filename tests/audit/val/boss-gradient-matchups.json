@@ -1,0 +1,101 @@
+{
+  "matchups": [
+    {
+      "id": "doom_base__naive",
+      "label": "naive loop10 vs doom_knight BASE (380hp/6dmg)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "doom_hp475__naive",
+      "label": "naive loop10 vs doom_knight +25% HP (475hp)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 475 }
+    },
+    {
+      "id": "doom_hp570_dmg9__naive",
+      "label": "naive loop10 vs doom_knight +50% HP (570hp) +50% dmg (9)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 570, "attack": {"damage":9,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_base__random",
+      "label": "random-chaotic loop10 vs doom_knight BASE",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-defense","t1-counter","t2-defense-defense","t2-agility-water","t1-defense","t2-counter-defense","t2-defense-water","t1-counter"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "doom_hp475_dmg8__random",
+      "label": "random-chaotic loop10 vs doom_knight +25% HP +33% dmg",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-defense","t1-counter","t2-defense-defense","t2-agility-water","t1-defense","t2-counter-defense","t2-defense-water","t1-counter"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 475, "attack": {"damage":8,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp570_dmg9__optimized",
+      "label": "optimized loop10 vs doom_knight +50% HP +50% dmg (must stay comfy)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack","t3-attack-attack-attack","t2-agility-attack","t1-attack","t3-agility-attack-attack","t2-attack-counter","t1-attack","t3-attack-attack-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 570, "attack": {"damage":9,"pattern":"fixed"} }
+    },
+
+    {
+      "id": "igolem_base_shield__naive",
+      "label": "naive vs iron_golem BASE (shield 4/8s)",
+      "archetype": "boss-reverify", "stage": "boss2", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 1150, "relics": [], "isBoss": true,
+      "enemy": "iron_golem", "loopMultiplier": 1.0, "loopCount": 20, "repeats": 6
+    },
+    {
+      "id": "igolem_noshield__naive",
+      "label": "naive vs iron_golem SHIELD REMOVED (affinity null)",
+      "archetype": "boss-reverify", "stage": "boss2", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 1150, "relics": [], "isBoss": true,
+      "enemy": "iron_golem", "loopMultiplier": 1.0, "loopCount": 20, "repeats": 6,
+      "enemyOverride": { "affinity": null }
+    },
+    {
+      "id": "igolem_shield20__naive",
+      "label": "naive vs iron_golem SHIELD x5 (20/8s) — is shield ever a threat?",
+      "archetype": "boss-reverify", "stage": "boss2", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 1150, "relics": [], "isBoss": true,
+      "enemy": "iron_golem", "loopMultiplier": 1.0, "loopCount": 20, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"shield","interval":4000,"shieldAmount":20} ] }
+    },
+
+    {
+      "id": "bog_base_drain__naive",
+      "label": "naive vs bog_witch BASE (drain 15% + multi_hit)",
+      "archetype": "boss-reverify", "stage": "boss4", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2300, "relics": [], "isBoss": true,
+      "enemy": "bog_witch", "loopMultiplier": 1.0, "loopCount": 40, "repeats": 6
+    },
+    {
+      "id": "bog_drain50__naive",
+      "label": "naive vs bog_witch DRAIN x3 (45%) — is drain a real race?",
+      "archetype": "boss-reverify", "stage": "boss4", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2300, "relics": [], "isBoss": true,
+      "enemy": "bog_witch", "loopMultiplier": 1.0, "loopCount": 40, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"drain","healPercent":45}, {"type":"multi_hit","hitCount":2,"damageMultiplier":0.6} ] }
+    }
+  ]
+}

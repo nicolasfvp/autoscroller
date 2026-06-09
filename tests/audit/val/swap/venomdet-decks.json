@@ -1,0 +1,44 @@
+{
+  "decks": [
+    {
+      "id": "venomdet-baseline",
+      "label": "poison+burn detonator mage (Venom Detonation early)",
+      "archetype": "poison_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "vsEnemies": ["skeleton", "fire_elemental"],
+      "notes": "Venom Detonation in slot 2 (early). t1-water Mend for a sustain splash so the shell is not the non-viable zero-sustain trap."
+    },
+    {
+      "id": "venomdet-swap-cindersprint",
+      "label": "same shell, Venom Detonation -> Cinder Sprint (sibling)",
+      "archetype": "poison_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-agility-fire-fire"
+      ],
+      "vsEnemies": ["skeleton", "fire_elemental"],
+      "notes": "Both Venom Detonation copies replaced by Cinder Sprint (1m, coeff 4 DEX, self-applies 3 burn)."
+    }
+  ]
+}

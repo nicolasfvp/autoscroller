@@ -1,0 +1,61 @@
+{
+  "_comment": "Sim-runnable version of cover-decks: maps loop15->late-with-overrides and boss2->late-with-iron_golem so the expander (early|mid|boss1|late) can attach a grounded profile. Deck lists identical to cover-decks.json.",
+  "decks": [
+    {
+      "id": "cover-0-1",
+      "label": "Earth/Fire Brace Bulwark (warrior)",
+      "archetype": "armor-burn-brace",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-defense", "t1-attack", "t2-defense-defense", "t2-attack-earth", "t3-agility-earth-earth", "t3-attack-earth-fire", "t3-counter-earth-fire", "t2-defense-earth", "t3-earth-earth-earth", "t2-attack-attack", "t2-counter-earth"]
+    },
+    {
+      "id": "cover-0-2",
+      "label": "Earth/Fire Bulwark vs loop15",
+      "archetype": "armor-burn-brace",
+      "class": "warrior",
+      "stage": "late",
+      "runXP": 900,
+      "vsEnemies": ["mutated_salamander", "werewolf", "depths_horror"],
+      "vsBoss": false,
+      "deck": ["t1-defense", "t2-defense-defense", "t2-attack-earth", "t3-agility-earth-earth", "t3-counter-earth-fire", "t3-attack-earth-fire", "t2-defense-earth", "t3-earth-earth-earth", "t1-attack", "t2-attack-attack"]
+    },
+    {
+      "id": "cover-0-3",
+      "label": "Reactive Bleed/Rage Wall (warrior)",
+      "archetype": "counter-bleed-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack", "t2-attack-attack", "t2-agility-counter", "t3-agility-counter-defense", "t2-counter-water", "t3-counter-counter-fire", "t2-counter-counter", "t3-agility-attack-counter", "t2-defense-defense", "t1-defense", "t2-attack-counter"]
+    },
+    {
+      "id": "cover-0-4",
+      "label": "Reactive Bleed Wall vs loop15",
+      "archetype": "counter-bleed-rage",
+      "class": "warrior",
+      "stage": "late",
+      "runXP": 900,
+      "vsEnemies": ["mutated_salamander", "werewolf", "depths_horror"],
+      "vsBoss": false,
+      "deck": ["t1-attack", "t2-attack-attack", "t2-agility-counter", "t3-agility-counter-defense", "t2-counter-water", "t2-counter-counter", "t3-agility-attack-counter", "t2-attack-counter", "t2-defense-defense", "t1-defense"]
+    },
+    {
+      "id": "cover-0-5",
+      "label": "Elemental Armor-Control Hybrid (mage)",
+      "archetype": "armor-burn-poison-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t1-water", "t2-agility-fire", "t3-defense-defense-fire", "t3-agility-defense-earth", "t3-agility-counter-fire", "t3-agility-attack-water", "t2-fire-fire", "t1-attack", "t3-counter-water-water"]
+    },
+    {
+      "id": "cover-0-6",
+      "label": "Elemental Hybrid vs boss2 (iron_golem)",
+      "archetype": "armor-burn-poison-control",
+      "class": "mage",
+      "stage": "late",
+      "runXP": 1150,
+      "vsEnemies": [],
+      "deck": ["t1-fire", "t1-water", "t2-agility-fire", "t3-agility-attack-water", "t3-defense-defense-fire", "t3-agility-defense-earth", "t3-agility-counter-fire", "t3-counter-water-water", "t2-fire-fire", "t1-attack", "t2-water-water"]
+    }
+  ]
+}

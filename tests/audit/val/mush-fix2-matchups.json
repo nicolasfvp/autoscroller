@@ -1,0 +1,52 @@
+{
+  "matchups": [
+    {
+      "id": "HP95_pure-physical__vs__mush",
+      "label": "HP95 earth-kept pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 95 }
+    },
+    {
+      "id": "HP95_haste__vs__mush",
+      "label": "HP95 earth-kept haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 95 }
+    },
+    {
+      "id": "HP85_pure-physical__vs__mush",
+      "label": "HP85 earth-kept pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 85 }
+    },
+    {
+      "id": "HP85_haste__vs__mush",
+      "label": "HP85 earth-kept haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 85 }
+    },
+    {
+      "id": "HP95_pure-physical__vs__mush_winners",
+      "label": "HP95 earth-kept winning starter vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-defense", "t1-counter", "t2-attack-attack"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 95 }
+    },
+    {
+      "id": "HP95_mage_starter__vs__mush",
+      "label": "HP95 earth-kept mage starter vs mush",
+      "class": "mage",
+      "deck": ["t1-fire", "t1-air", "t1-earth", "t1-water", "t2-fire-fire"],
+      "runXP": 120, "enemy": "mush", "loopMultiplier": 1, "isBoss": false, "loopCount": 2, "repeats": 8,
+      "enemyOverride": { "baseHP": 95 }
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "matchups": [
+    {
+      "id": "det-boss7__vs__bossig_BASE",
+      "label": "detonator boss7 vs boss_iron_golem BASELINE",
+      "archetype": "detonator-control", "stage": "boss7", "class": "mage",
+      "deck": ["t3-agility-air-water","t1-fire","t3-agility-fire-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-counter-fire-water","t3-earth-earth-water","t3-air-earth-water","t3-air-air-fire","t3-agility-air-air","t3-air-air-earth","t3-air-attack-counter","t3-attack-fire-water"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8
+    },
+    {
+      "id": "det-boss7__vs__bossig_MULTIHIT",
+      "label": "detonator boss7 vs boss_iron_golem +multi_hit 3x0.5",
+      "archetype": "detonator-control", "stage": "boss7", "class": "mage",
+      "deck": ["t3-agility-air-water","t1-fire","t3-agility-fire-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-counter-fire-water","t3-earth-earth-water","t3-air-earth-water","t3-air-air-fire","t3-agility-air-air","t3-air-air-earth","t3-air-attack-counter","t3-attack-fire-water"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8,
+      "enemyOverride": {
+        "behaviors": [
+          { "type": "multi_hit", "hitCount": 3, "damageMultiplier": 0.5 },
+          { "type": "shield", "interval": 7000, "shieldAmount": 12 },
+          { "type": "enrage", "hpThreshold": 0.35, "attackSpeedMultiplier": 1.4 }
+        ]
+      }
+    },
+    {
+      "id": "mixed-boss7__vs__bossig_BASE",
+      "label": "mixed-elemental boss7 vs boss_iron_golem BASELINE",
+      "archetype": "mixed-elemental-toolbox", "stage": "boss7", "class": "mage",
+      "deck": ["t3-agility-air-water","t1-fire","t3-agility-fire-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-counter-fire-water","t3-air-earth-water","t3-air-air-fire","t3-agility-air-air","t3-air-air-earth","t3-air-attack-counter","t3-attack-fire-water","t1-earth"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8
+    },
+    {
+      "id": "mixed-boss7__vs__bossig_MULTIHIT",
+      "label": "mixed-elemental boss7 vs boss_iron_golem +multi_hit 3x0.5",
+      "archetype": "mixed-elemental-toolbox", "stage": "boss7", "class": "mage",
+      "deck": ["t3-agility-air-water","t1-fire","t3-agility-fire-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-counter-fire-water","t3-air-earth-water","t3-air-air-fire","t3-agility-air-air","t3-air-air-earth","t3-air-attack-counter","t3-attack-fire-water","t1-earth"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8,
+      "enemyOverride": {
+        "behaviors": [
+          { "type": "multi_hit", "hitCount": 3, "damageMultiplier": 0.5 },
+          { "type": "shield", "interval": 7000, "shieldAmount": 12 },
+          { "type": "enrage", "hpThreshold": 0.35, "attackSpeedMultiplier": 1.4 }
+        ]
+      }
+    },
+    {
+      "id": "wararmor-boss7__vs__bossig_BASE",
+      "label": "armor-finisher warrior boss7 vs boss_iron_golem BASELINE",
+      "archetype": "armor-finisher", "stage": "boss7", "class": "warrior",
+      "deck": ["t2-defense-defense","t2-defense-earth","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-earth-earth","t3-defense-earth-earth","t2-counter-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-attack-attack-earth"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8
+    },
+    {
+      "id": "wararmor-boss7__vs__bossig_MULTIHIT",
+      "label": "armor-finisher warrior boss7 vs boss_iron_golem +multi_hit 3x0.5",
+      "archetype": "armor-finisher", "stage": "boss7", "class": "warrior",
+      "deck": ["t2-defense-defense","t2-defense-earth","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-earth-earth","t3-defense-earth-earth","t2-counter-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-attack-attack-earth"],
+      "relics": [], "runXP": 4400,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 8,
+      "enemyOverride": {
+        "behaviors": [
+          { "type": "multi_hit", "hitCount": 3, "damageMultiplier": 0.5 },
+          { "type": "shield", "interval": 7000, "shieldAmount": 12 },
+          { "type": "enrage", "hpThreshold": 0.35, "attackSpeedMultiplier": 1.4 }
+        ]
+      }
+    }
+  ]
+}

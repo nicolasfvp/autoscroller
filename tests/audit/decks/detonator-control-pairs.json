@@ -1,0 +1,156 @@
+{
+  "decks": [
+    {
+      "id": "mage-detonator-control-boss1-N",
+      "label": "Detonator/Control boss1 NAIVE",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 560,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t1-earth", "t2-agility-fire", "t2-fire-fire",
+        "t2-earth-water", "t1-water", "t2-water-water",
+        "t3-agility-agility-water", "t1-air", "t2-earth-earth"
+      ]
+    },
+    {
+      "id": "mage-detonator-control-boss1-O",
+      "label": "Detonator/Control boss1 OPTIMIZED",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss1",
+      "runXP": 560,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t2-agility-fire", "t1-earth", "t3-agility-counter-water",
+        "t2-earth-water", "t3-earth-earth-water", "t3-air-earth-water",
+        "t3-agility-water-water", "t3-air-fire-fire", "t3-fire-fire-fire"
+      ]
+    },
+
+    {
+      "id": "mage-detonator-control-boss2-N",
+      "label": "Detonator/Control boss2 NAIVE",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss2",
+      "runXP": 1150,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t1-earth", "t2-agility-fire", "t2-fire-fire",
+        "t2-earth-water", "t3-agility-agility-water", "t3-agility-counter-water",
+        "t1-water", "t2-earth-earth", "t2-water-water",
+        "t3-air-fire-water", "t1-air"
+      ]
+    },
+    {
+      "id": "mage-detonator-control-boss2-O",
+      "label": "Detonator/Control boss2 OPTIMIZED",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss2",
+      "runXP": 1150,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t2-agility-fire", "t3-agility-counter-water", "t1-earth",
+        "t3-air-fire-water", "t3-earth-earth-water", "t3-agility-water-water",
+        "t3-air-earth-water", "t3-air-fire-fire", "t3-fire-fire-fire",
+        "t3-air-attack-counter", "t2-water-water"
+      ]
+    },
+
+    {
+      "id": "mage-detonator-control-boss3-N",
+      "label": "Detonator/Control boss3 NAIVE",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss3",
+      "runXP": 1700,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t1-earth", "t2-agility-fire", "t2-fire-fire",
+        "t2-earth-water", "t3-agility-agility-water", "t3-agility-counter-water",
+        "t3-air-fire-water", "t1-water", "t2-earth-earth",
+        "t2-water-water", "t1-air", "t3-earth-fire-water"
+      ]
+    },
+    {
+      "id": "mage-detonator-control-boss3-O",
+      "label": "Detonator/Control boss3 OPTIMIZED",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss3",
+      "runXP": 1700,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t2-agility-fire", "t1-earth", "t3-agility-counter-water",
+        "t3-air-fire-water", "t3-agility-water-water", "t3-earth-earth-water",
+        "t3-air-earth-water", "t3-air-fire-fire", "t3-fire-fire-fire",
+        "t3-air-attack-counter", "t2-water-water", "t3-air-air-fire"
+      ]
+    },
+
+    {
+      "id": "mage-detonator-control-boss5-N",
+      "label": "Detonator/Control boss5 NAIVE",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss5",
+      "runXP": 2900,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t1-earth", "t2-agility-fire", "t2-fire-fire",
+        "t2-earth-water", "t3-agility-agility-water", "t3-agility-counter-water",
+        "t3-air-fire-water", "t3-earth-fire-fire", "t1-water",
+        "t2-earth-earth", "t2-water-water", "t1-air", "t3-agility-earth-water"
+      ]
+    },
+    {
+      "id": "mage-detonator-control-boss5-O",
+      "label": "Detonator/Control boss5 OPTIMIZED",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss5",
+      "runXP": 2900,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t2-agility-fire", "t3-agility-counter-water", "t1-earth",
+        "t3-air-fire-water", "t3-agility-water-water", "t3-earth-earth-water",
+        "t3-air-earth-water", "t3-earth-fire-fire", "t3-air-fire-fire",
+        "t3-fire-fire-fire", "t3-air-attack-counter", "t2-water-water", "t3-air-air-fire"
+      ]
+    },
+
+    {
+      "id": "mage-detonator-control-boss7-N",
+      "label": "Detonator/Control boss7 NAIVE",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss7",
+      "runXP": 4400,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t1-earth", "t2-agility-fire", "t2-fire-fire",
+        "t2-earth-water", "t3-agility-agility-water", "t3-agility-counter-water",
+        "t3-air-fire-water", "t3-earth-fire-fire", "t3-agility-earth-water",
+        "t1-water", "t2-earth-earth", "t2-water-water", "t1-air"
+      ]
+    },
+    {
+      "id": "mage-detonator-control-boss7-O",
+      "label": "Detonator/Control boss7 OPTIMIZED",
+      "archetype": "slow/poison/burn detonators + control",
+      "class": "mage",
+      "stage": "boss7",
+      "runXP": 4400,
+      "vsBoss": true,
+      "deck": [
+        "t1-fire", "t2-agility-fire", "t3-agility-counter-water", "t1-earth",
+        "t3-air-fire-water", "t3-agility-water-water", "t3-earth-earth-water",
+        "t3-air-earth-water", "t3-earth-fire-fire", "t3-air-fire-fire",
+        "t3-fire-fire-fire", "t3-air-attack-counter", "t3-air-air-fire", "t2-water-water"
+      ]
+    }
+  ]
+}

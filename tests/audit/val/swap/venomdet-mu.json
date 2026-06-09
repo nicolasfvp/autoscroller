@@ -1,0 +1,256 @@
+{
+  "matchups": [
+    {
+      "id": "venomdet-baseline__vs__skeleton",
+      "label": "poison+burn detonator mage (Venom Detonation early) vs skeleton (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-baseline__vs__fire_elemental",
+      "label": "poison+burn detonator mage (Venom Detonation early) vs fire_elemental (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-baseline__vs__BOSS_doom_knight",
+      "label": "poison+burn detonator mage (Venom Detonation early) vs BOSS doom_knight (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-swap-cindersprint__vs__skeleton",
+      "label": "same shell, Venom Detonation -> Cinder Sprint (sibling) vs skeleton (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-agility-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-swap-cindersprint__vs__fire_elemental",
+      "label": "same shell, Venom Detonation -> Cinder Sprint (sibling) vs fire_elemental (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-agility-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-swap-cindersprint__vs__BOSS_doom_knight",
+      "label": "same shell, Venom Detonation -> Cinder Sprint (sibling) vs BOSS doom_knight (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-agility-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6
+    },
+    {
+      "id": "venomdet-buffed__vs__skeleton",
+      "label": "PROPOSED Venom Detonation (coeff 2->4 + Pierce) vs skeleton (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            { "value": 4, "pierce_armor": true }
+          ]
+        }
+      }
+    },
+    {
+      "id": "venomdet-buffed__vs__fire_elemental",
+      "label": "PROPOSED Venom Detonation (coeff 2->4 + Pierce) vs fire_elemental (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            { "value": 4, "pierce_armor": true }
+          ]
+        }
+      }
+    },
+    {
+      "id": "venomdet-buffed__vs__BOSS_doom_knight",
+      "label": "PROPOSED Venom Detonation (coeff 2->4 + Pierce) vs BOSS doom_knight (boss1)",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t3-counter-fire-water",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-water",
+        "t3-agility-fire-water",
+        "t2-fire-water",
+        "t3-counter-fire-water"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            { "value": 4, "pierce_armor": true }
+          ]
+        }
+      }
+    }
+  ]
+}

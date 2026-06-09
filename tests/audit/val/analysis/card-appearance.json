@@ -1,0 +1,3199 @@
+[
+  {
+    "id": "t1-attack",
+    "name": "Jab",
+    "tier": 1,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.2,
+    "peakOPS": 24.17,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 122,
+    "nNormalMatchups": 495,
+    "meanNormalWinRate": 0.992,
+    "meanNormalCushion": 0.886,
+    "meanBossWinRate": 0.787,
+    "covered": true
+  },
+  {
+    "id": "t1-defense",
+    "name": "Guard",
+    "tier": 1,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 6,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 88,
+    "nNormalMatchups": 358,
+    "meanNormalWinRate": 0.994,
+    "meanNormalCushion": 0.932,
+    "meanBossWinRate": 0.767,
+    "covered": true
+  },
+  {
+    "id": "t1-agility",
+    "name": "Quickstep",
+    "tier": 1,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.2,
+    "peakOPS": 26.67,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 66,
+    "nNormalMatchups": 291,
+    "meanNormalWinRate": 0.99,
+    "meanNormalCushion": 0.863,
+    "meanBossWinRate": 0.775,
+    "covered": true
+  },
+  {
+    "id": "t1-counter",
+    "name": "Riposte",
+    "tier": 1,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2,
+    "peakOPS": 0,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 28,
+    "nNormalMatchups": 120,
+    "meanNormalWinRate": 0.983,
+    "meanNormalCushion": 0.865,
+    "meanBossWinRate": 0.625,
+    "covered": true
+  },
+  {
+    "id": "t1-fire",
+    "name": "Spark",
+    "tier": 1,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.2,
+    "peakOPS": 8.57,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 143,
+    "nNormalMatchups": 559,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.856,
+    "meanBossWinRate": 0.897,
+    "covered": true
+  },
+  {
+    "id": "t1-water",
+    "name": "Mend",
+    "tier": 1,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2,
+    "peakOPS": 5.4,
+    "archetypes": [
+      "heal"
+    ],
+    "nDecks": 126,
+    "nNormalMatchups": 500,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.876,
+    "meanBossWinRate": 0.946,
+    "covered": true
+  },
+  {
+    "id": "t1-air",
+    "name": "Gust",
+    "tier": 1,
+    "category": "magic",
+    "resource": "free",
+    "cost": "free",
+    "cooldown": 1.2,
+    "peakOPS": null,
+    "archetypes": [],
+    "nDecks": 84,
+    "nNormalMatchups": 379,
+    "meanNormalWinRate": 0.989,
+    "meanNormalCushion": 0.873,
+    "meanBossWinRate": 0.956,
+    "covered": true
+  },
+  {
+    "id": "t1-earth",
+    "name": "Quake",
+    "tier": 1,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.4,
+    "peakOPS": 4,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 110,
+    "nNormalMatchups": 416,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.873,
+    "meanBossWinRate": 0.872,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-attack",
+    "name": "Reckless Strike",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.2,
+    "peakOPS": 55.83,
+    "archetypes": [
+      "bleed",
+      "rage"
+    ],
+    "nDecks": 104,
+    "nNormalMatchups": 429,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.878,
+    "meanBossWinRate": 0.831,
+    "covered": true
+  },
+  {
+    "id": "t2-defense-defense",
+    "name": "Bulwark Vow",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 13.5,
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "nDecks": 65,
+    "nNormalMatchups": 245,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.922,
+    "meanBossWinRate": 0.882,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-agility",
+    "name": "Flurry Step",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.2,
+    "peakOPS": 29.17,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 41,
+    "nNormalMatchups": 188,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.848,
+    "meanBossWinRate": 0.632,
+    "covered": true
+  },
+  {
+    "id": "t2-counter-counter",
+    "name": "Razor Stance",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2,
+    "peakOPS": 0,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 41,
+    "nNormalMatchups": 165,
+    "meanNormalWinRate": 0.994,
+    "meanNormalCushion": 0.85,
+    "meanBossWinRate": 0.759,
+    "covered": true
+  },
+  {
+    "id": "t2-fire-fire",
+    "name": "Pyre",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.4,
+    "peakOPS": 36.43,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 83,
+    "nNormalMatchups": 329,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.847,
+    "meanBossWinRate": 0.78,
+    "covered": true
+  },
+  {
+    "id": "t2-water-water",
+    "name": "Frostbind",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.4,
+    "peakOPS": 10.6,
+    "archetypes": [
+      "stun",
+      "armor"
+    ],
+    "nDecks": 65,
+    "nNormalMatchups": 242,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.898,
+    "meanBossWinRate": 0.957,
+    "covered": true
+  },
+  {
+    "id": "t2-air-air",
+    "name": "Tailwind",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.2,
+    "peakOPS": 56.67,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 35,
+    "nNormalMatchups": 135,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.867,
+    "meanBossWinRate": 0.739,
+    "covered": true
+  },
+  {
+    "id": "t2-earth-earth",
+    "name": "Tremor Lock",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2,
+    "peakOPS": 16,
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "nDecks": 51,
+    "nNormalMatchups": 188,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.884,
+    "meanBossWinRate": 0.881,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-attack",
+    "name": "Quickstrike",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.2,
+    "peakOPS": 48.33,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 71,
+    "nNormalMatchups": 268,
+    "meanNormalWinRate": 0.993,
+    "meanNormalCushion": 0.86,
+    "meanBossWinRate": 0.643,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-counter",
+    "name": "Sidestep & Slash",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.2,
+    "peakOPS": 25.42,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 54,
+    "nNormalMatchups": 225,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.859,
+    "meanBossWinRate": 0.844,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-defense",
+    "name": "Parrying Stance",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.3,
+    "peakOPS": 6.15,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 45,
+    "nNormalMatchups": 164,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.972,
+    "meanBossWinRate": 0.838,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-fire",
+    "name": "Flame Dart",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.2,
+    "peakOPS": 57.5,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 120,
+    "nNormalMatchups": 473,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.843,
+    "meanBossWinRate": 0.8,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-water",
+    "name": "Mist Step",
+    "tier": 2,
+    "category": "magic",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.3,
+    "peakOPS": 4.31,
+    "archetypes": [
+      "slow",
+      "heal"
+    ],
+    "nDecks": 29,
+    "nNormalMatchups": 109,
+    "meanNormalWinRate": 0.991,
+    "meanNormalCushion": 0.887,
+    "meanBossWinRate": 0.833,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-air",
+    "name": "Gale Cut",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.2,
+    "peakOPS": 37.5,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 27,
+    "nNormalMatchups": 102,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.9,
+    "meanBossWinRate": 0.889,
+    "covered": true
+  },
+  {
+    "id": "t2-agility-earth",
+    "name": "Tremor Dash",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 27.37,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 26,
+    "nNormalMatchups": 97,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.947,
+    "meanBossWinRate": 0.65,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-counter",
+    "name": "Bloodprice Strike",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 48.13,
+    "archetypes": [
+      "rage"
+    ],
+    "nDecks": 86,
+    "nNormalMatchups": 335,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.851,
+    "meanBossWinRate": 0.781,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-defense",
+    "name": "Shield Bash",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 18.75,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 67,
+    "nNormalMatchups": 251,
+    "meanNormalWinRate": 0.996,
+    "meanNormalCushion": 0.905,
+    "meanBossWinRate": 0.66,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-fire",
+    "name": "Kindle Strike",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.5,
+    "peakOPS": 16,
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "nDecks": 38,
+    "nNormalMatchups": 154,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.861,
+    "meanBossWinRate": 0.808,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-water",
+    "name": "Crimson Tithe",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 3.75,
+    "archetypes": [
+      "rage"
+    ],
+    "nDecks": 21,
+    "nNormalMatchups": 89,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.881,
+    "meanBossWinRate": 0.833,
+    "covered": true
+  },
+  {
+    "id": "t2-air-attack",
+    "name": "Stormstrike",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.4,
+    "peakOPS": 20.71,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 25,
+    "nNormalMatchups": 100,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.876,
+    "meanBossWinRate": 0.688,
+    "covered": true
+  },
+  {
+    "id": "t2-attack-earth",
+    "name": "Granite Lunge",
+    "tier": 2,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.4,
+    "peakOPS": 15.57,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 43,
+    "nNormalMatchups": 156,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.962,
+    "meanBossWinRate": 0.857,
+    "covered": true
+  },
+  {
+    "id": "t2-counter-defense",
+    "name": "Iron Reckoning",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 7,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 25,
+    "nNormalMatchups": 99,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.898,
+    "meanBossWinRate": 0.778,
+    "covered": true
+  },
+  {
+    "id": "t2-counter-fire",
+    "name": "Cinderscar",
+    "tier": 2,
+    "category": "magic",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.4,
+    "peakOPS": 14.29,
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "nDecks": 18,
+    "nNormalMatchups": 74,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.897,
+    "meanBossWinRate": 0.818,
+    "covered": true
+  },
+  {
+    "id": "t2-counter-water",
+    "name": "Bloodtide Mend",
+    "tier": 2,
+    "category": "magic",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.5,
+    "peakOPS": 4,
+    "archetypes": [
+      "bleed",
+      "heal",
+      "scaling"
+    ],
+    "nDecks": 22,
+    "nNormalMatchups": 86,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.9,
+    "meanBossWinRate": 0.923,
+    "covered": true
+  },
+  {
+    "id": "t2-air-counter",
+    "name": "Hollow Echo",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.3,
+    "peakOPS": 24.62,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 21,
+    "nNormalMatchups": 82,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.874,
+    "meanBossWinRate": 0.688,
+    "covered": true
+  },
+  {
+    "id": "t2-counter-earth",
+    "name": "Thornwall",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2,
+    "peakOPS": 11.7,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 35,
+    "nNormalMatchups": 124,
+    "meanNormalWinRate": 0.992,
+    "meanNormalCushion": 0.952,
+    "meanBossWinRate": 0.793,
+    "covered": true
+  },
+  {
+    "id": "t2-defense-fire",
+    "name": "Forge Spike Ward",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.8,
+    "peakOPS": 4.44,
+    "archetypes": [
+      "armor",
+      "scaling"
+    ],
+    "nDecks": 21,
+    "nNormalMatchups": 84,
+    "meanNormalWinRate": 0.964,
+    "meanNormalCushion": 0.875,
+    "meanBossWinRate": 0.643,
+    "covered": true
+  },
+  {
+    "id": "t2-defense-water",
+    "name": "Vow of the Tide",
+    "tier": 2,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.6,
+    "peakOPS": 4.75,
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "nDecks": 23,
+    "nNormalMatchups": 94,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.843,
+    "meanBossWinRate": 0.867,
+    "covered": true
+  },
+  {
+    "id": "t2-air-defense",
+    "name": "Cyclone Ward",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.4,
+    "peakOPS": 4.57,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 22,
+    "nNormalMatchups": 89,
+    "meanNormalWinRate": 0.978,
+    "meanNormalCushion": 0.952,
+    "meanBossWinRate": 0.643,
+    "covered": true
+  },
+  {
+    "id": "t2-defense-earth",
+    "name": "Bramble Bulwark",
+    "tier": 2,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2,
+    "peakOPS": 10,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 34,
+    "nNormalMatchups": 131,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.956,
+    "meanBossWinRate": 0.917,
+    "covered": true
+  },
+  {
+    "id": "t2-fire-water",
+    "name": "Steam Surge",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.3,
+    "peakOPS": 19.23,
+    "archetypes": [
+      "burn",
+      "heal"
+    ],
+    "nDecks": 51,
+    "nNormalMatchups": 213,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.87,
+    "meanBossWinRate": 0.903,
+    "covered": true
+  },
+  {
+    "id": "t2-air-fire",
+    "name": "Firestorm",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.8,
+    "peakOPS": 0,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 54,
+    "nNormalMatchups": 213,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.845,
+    "meanBossWinRate": 0.722,
+    "covered": true
+  },
+  {
+    "id": "t2-earth-fire",
+    "name": "Magma Vein",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.3,
+    "peakOPS": 16.78,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 24,
+    "nNormalMatchups": 99,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.864,
+    "meanBossWinRate": 0.538,
+    "covered": true
+  },
+  {
+    "id": "t2-air-water",
+    "name": "Misting Veil",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.4,
+    "peakOPS": 2.57,
+    "archetypes": [
+      "heal"
+    ],
+    "nDecks": 32,
+    "nNormalMatchups": 121,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.937,
+    "meanBossWinRate": 0.958,
+    "covered": true
+  },
+  {
+    "id": "t2-earth-water",
+    "name": "Mire Bloom",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.8,
+    "peakOPS": 28.44,
+    "archetypes": [
+      "poison",
+      "armor",
+      "heal"
+    ],
+    "nDecks": 116,
+    "nNormalMatchups": 419,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.895,
+    "meanBossWinRate": 0.969,
+    "covered": true
+  },
+  {
+    "id": "t2-air-earth",
+    "name": "Bedrock Snare",
+    "tier": 2,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.6,
+    "peakOPS": 6.25,
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "nDecks": 39,
+    "nNormalMatchups": 155,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.872,
+    "meanBossWinRate": 0.885,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-attack",
+    "name": "Berserker's Ledger",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 52.5,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 35,
+    "nNormalMatchups": 118,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.865,
+    "meanBossWinRate": 0.781,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-defense-defense",
+    "name": "Aegis of Returning Wrath",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 14,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 19,
+    "nNormalMatchups": 62,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 1,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-agility",
+    "name": "Quickstep Sigil",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.8,
+    "peakOPS": 53.33,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 7,
+    "nNormalMatchups": 24,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.845,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-counter-counter",
+    "name": "Crimson Spiral",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.8,
+    "peakOPS": 21.25,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 23,
+    "nNormalMatchups": 76,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.863,
+    "meanBossWinRate": 0.857,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-defense",
+    "name": "Bulwark Salvo",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 17.5,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 15,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.966,
+    "meanBossWinRate": 0.6,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-attack",
+    "name": "Triple Slash",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.6,
+    "peakOPS": 54.38,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 24,
+    "nNormalMatchups": 81,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.862,
+    "meanBossWinRate": 0.476,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-counter",
+    "name": "Bloodlash Salvo",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.8,
+    "peakOPS": 33.89,
+    "archetypes": [
+      "pure_damage",
+      "scaling"
+    ],
+    "nDecks": 31,
+    "nNormalMatchups": 111,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.862,
+    "meanBossWinRate": 0.654,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-defense-defense",
+    "name": "Body Slam Vow",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2.4,
+    "peakOPS": 15.33,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 25,
+    "nNormalMatchups": 82,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.973,
+    "meanBossWinRate": 0.917,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-defense-defense",
+    "name": "Phalanx Drift",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2.4,
+    "peakOPS": 12.33,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 12,
+    "nNormalMatchups": 39,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.982,
+    "meanBossWinRate": 0.6,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-defense-defense",
+    "name": "Reforge Vow",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 9,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 15,
+    "nNormalMatchups": 45,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.992,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-attack",
+    "name": "Pinprick Volley",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.5,
+    "peakOPS": 52,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 60,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.842,
+    "meanBossWinRate": 0.727,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-defense",
+    "name": "Veil of Steps",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 9.5,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 34,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.984,
+    "meanBossWinRate": 0.714,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-counter",
+    "name": "Quicksilver Bleed",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.8,
+    "peakOPS": 17.5,
+    "archetypes": [
+      "bleed",
+      "scaling"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 20,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.847,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-counter-counter",
+    "name": "Cleaver's Tax",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 28,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 23,
+    "nNormalMatchups": 77,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.858,
+    "meanBossWinRate": 0.857,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-counter-defense",
+    "name": "Wrathshell Vow",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 9,
+    "archetypes": [
+      "rage"
+    ],
+    "nDecks": 13,
+    "nNormalMatchups": 42,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.841,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-counter-counter",
+    "name": "Razor Cadence",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 72.75,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 20,
+    "nNormalMatchups": 64,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.869,
+    "meanBossWinRate": 0.842,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-defense",
+    "name": "Flowstrike",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 25,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 25,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.916,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-counter-defense",
+    "name": "Last Stand Bulwark",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 11.67,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 24,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.964,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-counter",
+    "name": "Vein Splitter",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 134.38,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 36,
+    "nNormalMatchups": 124,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.863,
+    "meanBossWinRate": 0.871,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-counter-defense",
+    "name": "Bramble Step",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2.2,
+    "peakOPS": 5.45,
+    "archetypes": [
+      "bleed",
+      "armor"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 18,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.865,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-fire-fire-fire",
+    "name": "Supernova",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "2s+1m",
+    "cooldown": 2.8,
+    "peakOPS": 28.57,
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "nDecks": 38,
+    "nNormalMatchups": 126,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.815,
+    "meanBossWinRate": 0.676,
+    "covered": true
+  },
+  {
+    "id": "t3-water-water-water",
+    "name": "Tidesong Aura",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 9,
+    "archetypes": [
+      "heal",
+      "scaling"
+    ],
+    "nDecks": 20,
+    "nNormalMatchups": 68,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.906,
+    "meanBossWinRate": 0.944,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-air",
+    "name": "Tempest Cadence",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 24.17,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 16,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.882,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-earth-earth",
+    "name": "Mountain's Answer",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 29.67,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 26,
+    "nNormalMatchups": 89,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.987,
+    "meanBossWinRate": 0.909,
+    "covered": true
+  },
+  {
+    "id": "t3-fire-fire-water",
+    "name": "Quench Lance",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 8.33,
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "nDecks": 22,
+    "nNormalMatchups": 71,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.829,
+    "meanBossWinRate": 0.789,
+    "covered": true
+  },
+  {
+    "id": "t3-air-fire-fire",
+    "name": "Pyre Surge",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 13.33,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 43,
+    "nNormalMatchups": 140,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.808,
+    "meanBossWinRate": 0.725,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-fire-fire",
+    "name": "Magma Welling",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 21.33,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 13,
+    "nNormalMatchups": 39,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.821,
+    "meanBossWinRate": 0.769,
+    "covered": true
+  },
+  {
+    "id": "t3-fire-water-water",
+    "name": "Phoenix Aura",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 12.5,
+    "archetypes": [
+      "burn",
+      "armor",
+      "heal"
+    ],
+    "nDecks": 28,
+    "nNormalMatchups": 88,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.866,
+    "meanBossWinRate": 0.889,
+    "covered": true
+  },
+  {
+    "id": "t3-air-water-water",
+    "name": "Misted Cadence",
+    "tier": 3,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 7,
+    "archetypes": [
+      "heal"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 52,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.901,
+    "meanBossWinRate": 0.933,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-water-water",
+    "name": "Brine Bedrock",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 7.5,
+    "archetypes": [
+      "poison",
+      "heal"
+    ],
+    "nDecks": 46,
+    "nNormalMatchups": 150,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.933,
+    "meanBossWinRate": 0.952,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-fire",
+    "name": "Cinder Squall",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 19.58,
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "nDecks": 49,
+    "nNormalMatchups": 160,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.845,
+    "meanBossWinRate": 0.911,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-water",
+    "name": "Squall Aura",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 4.5,
+    "archetypes": [
+      "heal"
+    ],
+    "nDecks": 11,
+    "nNormalMatchups": 35,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.865,
+    "meanBossWinRate": 0.909,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-earth",
+    "name": "Dust Plague",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+2m",
+    "cooldown": 2.4,
+    "peakOPS": 4.33,
+    "archetypes": [
+      "slow",
+      "stun",
+      "armor"
+    ],
+    "nDecks": 31,
+    "nNormalMatchups": 103,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.884,
+    "meanBossWinRate": 0.889,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-earth-fire",
+    "name": "Magma Vow",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 10.5,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 7,
+    "nNormalMatchups": 24,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.914,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-earth-water",
+    "name": "Bog Catalyst",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 45.83,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 90,
+    "nNormalMatchups": 301,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.872,
+    "meanBossWinRate": 0.951,
+    "covered": true
+  },
+  {
+    "id": "t3-air-earth-earth",
+    "name": "Standing Stone",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 8.67,
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 20,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.922,
+    "meanBossWinRate": 0.8,
+    "covered": true
+  },
+  {
+    "id": "t3-air-fire-water",
+    "name": "Steaming Plague",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 45.83,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 75,
+    "nNormalMatchups": 253,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.866,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-earth-fire-water",
+    "name": "Alchemic Drain",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2.4,
+    "peakOPS": 8,
+    "archetypes": [
+      "poison",
+      "heal"
+    ],
+    "nDecks": 72,
+    "nNormalMatchups": 255,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.9,
+    "meanBossWinRate": 0.983,
+    "covered": true
+  },
+  {
+    "id": "t3-air-earth-fire",
+    "name": "Sandfury",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 35,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 19,
+    "nNormalMatchups": 63,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.88,
+    "meanBossWinRate": 0.875,
+    "covered": true
+  },
+  {
+    "id": "t3-air-earth-water",
+    "name": "Marsh Squall",
+    "tier": 3,
+    "category": "magic",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 8.33,
+    "archetypes": [
+      "poison",
+      "detonators"
+    ],
+    "nDecks": 46,
+    "nNormalMatchups": 149,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.873,
+    "meanBossWinRate": 0.977,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-fire",
+    "name": "Cinder Thrust",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.8,
+    "peakOPS": 47.78,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 24,
+    "nNormalMatchups": 84,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.861,
+    "meanBossWinRate": 0.81,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-water",
+    "name": "Soaking Blade",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 41.5,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 13,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.919,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-attack",
+    "name": "Galekick",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.6,
+    "peakOPS": 51.25,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 52,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.892,
+    "meanBossWinRate": 0.4,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-attack-earth",
+    "name": "Concussive Smash",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 40,
+    "archetypes": [
+      "slow",
+      "stun"
+    ],
+    "nDecks": 34,
+    "nNormalMatchups": 111,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.932,
+    "meanBossWinRate": 0.677,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-defense-fire",
+    "name": "Pyric Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 7.33,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 22,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.893,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-defense-water",
+    "name": "Stagnant Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 1.6,
+    "peakOPS": 6.67,
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "nDecks": 20,
+    "nNormalMatchups": 65,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.978,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-air-defense-defense",
+    "name": "Stormgate",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 8,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 18,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.975,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-defense-earth",
+    "name": "Stoneward Reprisal",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 6,
+    "archetypes": [
+      "stun",
+      "armor"
+    ],
+    "nDecks": 12,
+    "nNormalMatchups": 38,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.964,
+    "meanBossWinRate": 0.727,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-fire",
+    "name": "Twinflame Flicker",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.6,
+    "peakOPS": 10,
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "nDecks": 14,
+    "nNormalMatchups": 50,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.849,
+    "meanBossWinRate": 0.636,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-water",
+    "name": "Slipstream",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.6,
+    "peakOPS": 21.88,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 28,
+    "nNormalMatchups": 97,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.871,
+    "meanBossWinRate": 0.917,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-air",
+    "name": "Zephyr Cascade",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.4,
+    "peakOPS": 14.29,
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 31,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.887,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-agility-earth",
+    "name": "Footwork Stone",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.8,
+    "peakOPS": 9.78,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 21,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.932,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-counter-fire",
+    "name": "Vengeful Pyre",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.8,
+    "peakOPS": 2.14,
+    "archetypes": [
+      "rage"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 19,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.82,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-counter-water",
+    "name": "Crimson Cascade",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 13.13,
+    "archetypes": [
+      "bleed"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 48,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.842,
+    "meanBossWinRate": 0.563,
+    "covered": true
+  },
+  {
+    "id": "t3-air-counter-counter",
+    "name": "Wrath Squall",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 0,
+    "archetypes": [
+      "rage",
+      "scaling"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 20,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.864,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-counter-earth",
+    "name": "Stonewrath",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 7.33,
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 15,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.964,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-defense-fire",
+    "name": "Forge Strike",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 28.92,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 27,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.863,
+    "meanBossWinRate": 0.571,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-defense-water",
+    "name": "Mire Cleave",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 25.17,
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 52,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.907,
+    "meanBossWinRate": 0.714,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-defense",
+    "name": "Stormhilt",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.2,
+    "peakOPS": 34,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 18,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.767,
+    "meanBossWinRate": 0.5,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-defense-earth",
+    "name": "Earthcleaver",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 1.8,
+    "peakOPS": 25.42,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 12,
+    "nNormalMatchups": 45,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.842,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-fire",
+    "name": "Wickfencer",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 39,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 11,
+    "nNormalMatchups": 36,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.848,
+    "meanBossWinRate": 0.9,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-water",
+    "name": "Drowner's Dart",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 1.6,
+    "peakOPS": 25.63,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 7,
+    "nNormalMatchups": 22,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.908,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-attack",
+    "name": "Skywire",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "2s+1m",
+    "cooldown": 1.5,
+    "peakOPS": 54.67,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 20,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.805,
+    "meanBossWinRate": 0.333,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-attack-earth",
+    "name": "Quarry Dance",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 24,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 29,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.825,
+    "meanBossWinRate": 0.4,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-counter-fire",
+    "name": "Wrath Brand",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 23.33,
+    "archetypes": [
+      "burn",
+      "rage"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 30,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.848,
+    "meanBossWinRate": 0.778,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-counter-water",
+    "name": "Necrotic Festering",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.2,
+    "peakOPS": 55.23,
+    "archetypes": [
+      "poison",
+      "bleed"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 12,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.884,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-counter",
+    "name": "Thunderstrike Catalyst",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2,
+    "peakOPS": 15,
+    "archetypes": [
+      "slow",
+      "detonators"
+    ],
+    "nDecks": 28,
+    "nNormalMatchups": 88,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.859,
+    "meanBossWinRate": 0.889,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-counter-earth",
+    "name": "Granitewrath",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 25.42,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 25,
+    "nNormalMatchups": 81,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.87,
+    "meanBossWinRate": 0.565,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-defense-fire",
+    "name": "Ember Vault",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 5,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 26,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.905,
+    "meanBossWinRate": 0.857,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-defense-water",
+    "name": "Tidefoot Guard",
+    "tier": 3,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2.4,
+    "peakOPS": 16.5,
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "nDecks": 25,
+    "nNormalMatchups": 79,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.969,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-defense",
+    "name": "Galeguard",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2.4,
+    "peakOPS": 5,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 31,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.944,
+    "meanBossWinRate": 0.875,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-defense-earth",
+    "name": "Quickstone",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 6.33,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 35,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.888,
+    "meanBossWinRate": 0.889,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-defense-fire",
+    "name": "Ashen Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 7.33,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 19,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.947,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-defense-water",
+    "name": "Crimson Regen Mantle",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 6,
+    "archetypes": [
+      "armor",
+      "heal"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 18,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.85,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-air-counter-defense",
+    "name": "Glacial Pact",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 9.33,
+    "archetypes": [
+      "slow",
+      "armor"
+    ],
+    "nDecks": 11,
+    "nNormalMatchups": 34,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.879,
+    "meanBossWinRate": 0.727,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-defense-earth",
+    "name": "Tombplate",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 12.67,
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 12,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.924,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-counter-fire",
+    "name": "Searing Razor",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.2,
+    "peakOPS": 10.91,
+    "archetypes": [
+      "burn",
+      "scaling"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 30,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.848,
+    "meanBossWinRate": 0.5,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-counter-water",
+    "name": "Venom Dance",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.8,
+    "peakOPS": 40,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 51,
+    "nNormalMatchups": 164,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.856,
+    "meanBossWinRate": 0.98,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-counter",
+    "name": "Static Skirmish",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 1.6,
+    "peakOPS": 25,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 15,
+    "nNormalMatchups": 50,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.867,
+    "meanBossWinRate": 0.846,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-counter-earth",
+    "name": "Quickearth Rite",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 4.33,
+    "archetypes": [
+      "armor",
+      "scaling"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 31,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.886,
+    "meanBossWinRate": 0.7,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-fire-fire",
+    "name": "Cinderlance",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.2,
+    "peakOPS": 38.18,
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "nDecks": 31,
+    "nNormalMatchups": 99,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.817,
+    "meanBossWinRate": 0.536,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-water-water",
+    "name": "Drowning Lance",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "2s+1m",
+    "cooldown": 1.8,
+    "peakOPS": 11.67,
+    "archetypes": [
+      "poison",
+      "detonators"
+    ],
+    "nDecks": 39,
+    "nNormalMatchups": 125,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.895,
+    "meanBossWinRate": 0.892,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-attack",
+    "name": "Tempest Pike",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.2,
+    "peakOPS": 33.64,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 18,
+    "nNormalMatchups": 58,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.915,
+    "meanBossWinRate": 0.471,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-earth-earth",
+    "name": "Mountain's Will",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 40.42,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 45,
+    "nNormalMatchups": 143,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.896,
+    "meanBossWinRate": 0.628,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-fire-water",
+    "name": "Tremor Detonate",
+    "tier": 3,
+    "category": "magic",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 22.5,
+    "archetypes": [
+      "poison",
+      "bleed",
+      "burn",
+      "detonators"
+    ],
+    "nDecks": 13,
+    "nNormalMatchups": 40,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.841,
+    "meanBossWinRate": 0.846,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-fire",
+    "name": "Galebrand",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2,
+    "peakOPS": 24.5,
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 31,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.883,
+    "meanBossWinRate": 0.833,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-earth-fire",
+    "name": "Slag Maul",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 31.67,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 16,
+    "nNormalMatchups": 53,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.888,
+    "meanBossWinRate": 0.786,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-water",
+    "name": "Galetide",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2,
+    "peakOPS": 26,
+    "archetypes": [
+      "poison",
+      "slow"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 27,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.886,
+    "meanBossWinRate": 0.778,
+    "covered": true
+  },
+  {
+    "id": "t3-attack-earth-water",
+    "name": "Mirebreaker",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 25.42,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 24,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.836,
+    "meanBossWinRate": 0.875,
+    "covered": true
+  },
+  {
+    "id": "t3-air-attack-earth",
+    "name": "Cliffwind Maul",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 29.58,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 5,
+    "nNormalMatchups": 15,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.959,
+    "meanBossWinRate": 0.6,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-fire-fire",
+    "name": "Citadel Inferno",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "2s+1m",
+    "cooldown": 2.8,
+    "peakOPS": 21.43,
+    "archetypes": [
+      "pure_damage"
+    ],
+    "nDecks": 13,
+    "nNormalMatchups": 39,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.871,
+    "meanBossWinRate": 0.833,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-water-water",
+    "name": "Brineward",
+    "tier": 3,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 17.17,
+    "archetypes": [
+      "poison",
+      "armor",
+      "heal"
+    ],
+    "nDecks": 49,
+    "nNormalMatchups": 155,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.942,
+    "meanBossWinRate": 0.978,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-defense",
+    "name": "Galeward",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 8.67,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 34,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.977,
+    "meanBossWinRate": 0.778,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-earth-earth",
+    "name": "Bedrock Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 10.33,
+    "archetypes": [
+      "armor"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 32,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.93,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-fire-water",
+    "name": "Steam Bulwark",
+    "tier": 3,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 8,
+    "archetypes": [
+      "poison",
+      "burn",
+      "armor"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 25,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.857,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-air-defense-fire",
+    "name": "Ember Aegis Gust",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 3.33,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 10,
+    "nNormalMatchups": 32,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.841,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-earth-fire",
+    "name": "Magmaplate",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 8.67,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 20,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.94,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-air-defense-water",
+    "name": "Mistplate",
+    "tier": 3,
+    "category": "defense",
+    "resource": "mana",
+    "cost": "2m",
+    "cooldown": 2.4,
+    "peakOPS": 9.83,
+    "archetypes": [
+      "poison",
+      "slow",
+      "armor"
+    ],
+    "nDecks": 31,
+    "nNormalMatchups": 97,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.949,
+    "meanBossWinRate": 0.933,
+    "covered": true
+  },
+  {
+    "id": "t3-defense-earth-water",
+    "name": "Bogplate",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 9.67,
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "nDecks": 27,
+    "nNormalMatchups": 84,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.964,
+    "meanBossWinRate": 0.96,
+    "covered": true
+  },
+  {
+    "id": "t3-air-defense-earth",
+    "name": "Dustward",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 8.67,
+    "archetypes": [
+      "slow",
+      "armor"
+    ],
+    "nDecks": 19,
+    "nNormalMatchups": 60,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.936,
+    "meanBossWinRate": 0.875,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-fire-fire",
+    "name": "Cinder Sprint",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.6,
+    "peakOPS": 32.5,
+    "archetypes": [
+      "burn",
+      "detonators"
+    ],
+    "nDecks": 23,
+    "nNormalMatchups": 78,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.814,
+    "meanBossWinRate": 0.5,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-water-water",
+    "name": "Slipvenom Tempo",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 1.6,
+    "peakOPS": 68.75,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 57,
+    "nNormalMatchups": 182,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.867,
+    "meanBossWinRate": 0.944,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-air",
+    "name": "Gale Echo",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 0,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 23,
+    "nNormalMatchups": 71,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.823,
+    "meanBossWinRate": 0.739,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-earth-earth",
+    "name": "Stonepacer",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 2.8,
+    "peakOPS": 0,
+    "archetypes": [
+      "scaling"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 17,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.98,
+    "meanBossWinRate": 1,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-fire-water",
+    "name": "Boilstep",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.8,
+    "peakOPS": 45.56,
+    "archetypes": [
+      "poison",
+      "burn"
+    ],
+    "nDecks": 44,
+    "nNormalMatchups": 150,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.856,
+    "meanBossWinRate": 0.974,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-fire",
+    "name": "Galecinder",
+    "tier": 3,
+    "category": "attack",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 1.6,
+    "peakOPS": 40,
+    "archetypes": [
+      "burn",
+      "slow"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 31,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.824,
+    "meanBossWinRate": 0.714,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-earth-fire",
+    "name": "Cinderquake",
+    "tier": 3,
+    "category": "attack",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2,
+    "peakOPS": 24,
+    "archetypes": [
+      "burn"
+    ],
+    "nDecks": 3,
+    "nNormalMatchups": 9,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.956,
+    "meanBossWinRate": 0.5,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-water",
+    "name": "Stormsplash",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.6,
+    "peakOPS": 27.5,
+    "archetypes": [
+      "poison",
+      "burn",
+      "slow"
+    ],
+    "nDecks": 61,
+    "nNormalMatchups": 194,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.86,
+    "meanBossWinRate": 0.931,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-earth-water",
+    "name": "Mireglide",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 2,
+    "peakOPS": 11.2,
+    "archetypes": [
+      "poison",
+      "armor"
+    ],
+    "nDecks": 60,
+    "nNormalMatchups": 191,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.921,
+    "meanBossWinRate": 0.966,
+    "covered": true
+  },
+  {
+    "id": "t3-agility-air-earth",
+    "name": "Stormstone Tempo",
+    "tier": 3,
+    "category": "attack",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 38.75,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 13,
+    "nNormalMatchups": 40,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.89,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-fire-fire",
+    "name": "Brine Crucible",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 158.13,
+    "archetypes": [
+      "bleed",
+      "burn"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 29,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.878,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-water-water",
+    "name": "Tidefoot Bloom",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.2,
+    "peakOPS": 0,
+    "archetypes": [
+      "poison"
+    ],
+    "nDecks": 8,
+    "nNormalMatchups": 25,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.815,
+    "meanBossWinRate": 0.625,
+    "covered": true
+  },
+  {
+    "id": "t3-air-air-counter",
+    "name": "Stormrage",
+    "tier": 3,
+    "category": "defense",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 6.67,
+    "archetypes": [
+      "slow",
+      "rage"
+    ],
+    "nDecks": 14,
+    "nNormalMatchups": 48,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.857,
+    "meanBossWinRate": 0.273,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-earth-earth",
+    "name": "Tombrage",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 7.33,
+    "archetypes": [
+      "rage",
+      "armor"
+    ],
+    "nDecks": 4,
+    "nNormalMatchups": 13,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.949,
+    "meanBossWinRate": 0.75,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-fire-water",
+    "name": "Venom Detonation",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 17.08,
+    "archetypes": [
+      "poison",
+      "burn",
+      "detonators"
+    ],
+    "nDecks": 19,
+    "nNormalMatchups": 62,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.77,
+    "meanBossWinRate": 0.556,
+    "covered": true
+  },
+  {
+    "id": "t3-air-counter-fire",
+    "name": "Static Bleed",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "1s",
+    "cooldown": 1.8,
+    "peakOPS": 15,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 14,
+    "nNormalMatchups": 45,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.875,
+    "meanBossWinRate": 0.714,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-earth-fire",
+    "name": "Magmavow",
+    "tier": 3,
+    "category": "defense",
+    "resource": "stamina",
+    "cost": "2s",
+    "cooldown": 2.4,
+    "peakOPS": 6.67,
+    "archetypes": [
+      "burn",
+      "armor"
+    ],
+    "nDecks": 6,
+    "nNormalMatchups": 23,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.938,
+    "meanBossWinRate": 0.333,
+    "covered": true
+  },
+  {
+    "id": "t3-air-counter-water",
+    "name": "Tempestbleed",
+    "tier": 3,
+    "category": "magic",
+    "resource": "mana",
+    "cost": "1m",
+    "cooldown": 1.8,
+    "peakOPS": 14.44,
+    "archetypes": [
+      "slow"
+    ],
+    "nDecks": 14,
+    "nNormalMatchups": 48,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.873,
+    "meanBossWinRate": 0.667,
+    "covered": true
+  },
+  {
+    "id": "t3-counter-earth-water",
+    "name": "Bogwrath",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "1s+1m",
+    "cooldown": 2.4,
+    "peakOPS": 6.67,
+    "archetypes": [
+      "poison",
+      "rage",
+      "armor"
+    ],
+    "nDecks": 9,
+    "nNormalMatchups": 29,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.892,
+    "meanBossWinRate": 0.857,
+    "covered": true
+  },
+  {
+    "id": "t3-air-counter-earth",
+    "name": "Tectonic Reckoning",
+    "tier": 3,
+    "category": "magic",
+    "resource": "both",
+    "cost": "3s+2m",
+    "cooldown": 2.8,
+    "peakOPS": 70,
+    "archetypes": [
+      "stun"
+    ],
+    "nDecks": 21,
+    "nNormalMatchups": 65,
+    "meanNormalWinRate": 1,
+    "meanNormalCushion": 0.91,
+    "meanBossWinRate": 0.895,
+    "covered": true
+  }
+]

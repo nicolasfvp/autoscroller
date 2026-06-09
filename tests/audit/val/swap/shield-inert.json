@@ -1,0 +1,128 @@
+{
+  "matchups": [
+    {
+      "id": "IG-armorfin-A-current-shield",
+      "label": "iron_golem armor-finisher | CURRENT shield (+4/8s)",
+      "class": "warrior", "stage": "boss2", "archetype": "armor_finisher",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+    {
+      "id": "IG-armorfin-B-no-shield",
+      "label": "iron_golem armor-finisher | NO shield (behaviors [])",
+      "class": "warrior", "stage": "boss2", "archetype": "armor_finisher",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [] },
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+    {
+      "id": "IG-armorfin-C-buffed-shield",
+      "label": "iron_golem armor-finisher | BUFFED shield (+8/5s)",
+      "class": "warrior", "stage": "boss2", "archetype": "armor_finisher",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [ { "type": "shield", "interval": 5000, "shieldAmount": 8 } ] },
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+
+    {
+      "id": "IG-physical-A-current-shield",
+      "label": "iron_golem pure-physical | CURRENT shield (+4/8s)",
+      "class": "warrior", "stage": "boss2", "archetype": "pure_physical",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    },
+    {
+      "id": "IG-physical-B-no-shield",
+      "label": "iron_golem pure-physical | NO shield",
+      "class": "warrior", "stage": "boss2", "archetype": "pure_physical",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [] },
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    },
+    {
+      "id": "IG-physical-C-buffed-shield",
+      "label": "iron_golem pure-physical | BUFFED shield (+8/5s)",
+      "class": "warrior", "stage": "boss2", "archetype": "pure_physical",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [ { "type": "shield", "interval": 5000, "shieldAmount": 8 } ] },
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    },
+
+    {
+      "id": "IG-poison-A-current-shield",
+      "label": "iron_golem pure-poison (DoT) | CURRENT shield (+4/8s)",
+      "class": "mage", "stage": "boss2", "archetype": "pure_poison",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t2-earth-water","t3-agility-air-water","t3-defense-water-water","t3-earth-fire-water","t3-agility-earth-water","t3-defense-earth-water","t3-defense-defense-water","t1-water","t2-water-water"]
+    },
+    {
+      "id": "IG-poison-B-no-shield",
+      "label": "iron_golem pure-poison (DoT) | NO shield",
+      "class": "mage", "stage": "boss2", "archetype": "pure_poison",
+      "runXP": 1150, "loopMultiplier": 1.1, "isBoss": true, "repeats": 8,
+      "enemy": "iron_golem",
+      "enemyOverride": { "behaviors": [] },
+      "deck": ["t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t2-earth-water","t3-agility-air-water","t3-defense-water-water","t3-earth-fire-water","t3-agility-earth-water","t3-defense-earth-water","t3-defense-defense-water","t1-water","t2-water-water"]
+    },
+
+    {
+      "id": "DG-armorfin-A-current-shield",
+      "label": "desert_golem armor-finisher | CURRENT shield (+10/7s)",
+      "class": "warrior", "stage": "boss5", "archetype": "armor_finisher",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+    {
+      "id": "DG-armorfin-B-no-shield",
+      "label": "desert_golem armor-finisher | NO shield",
+      "class": "warrior", "stage": "boss5", "archetype": "armor_finisher",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "enemyOverride": { "behaviors": [] },
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+    {
+      "id": "DG-armorfin-C-buffed-shield",
+      "label": "desert_golem armor-finisher | BUFFED shield (+16/5s)",
+      "class": "warrior", "stage": "boss5", "archetype": "armor_finisher",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "enemyOverride": { "behaviors": [ { "type": "shield", "interval": 5000, "shieldAmount": 16 } ] },
+      "deck": ["t2-defense-defense","t2-defense-earth","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-counter-defense","t3-counter-defense-defense","t3-defense-earth-earth","t2-counter-earth","t1-defense","t3-attack-defense-fire"]
+    },
+    {
+      "id": "DG-physical-A-current-shield",
+      "label": "desert_golem pure-physical | CURRENT shield (+10/7s)",
+      "class": "warrior", "stage": "boss5", "archetype": "pure_physical",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    },
+    {
+      "id": "DG-physical-B-no-shield",
+      "label": "desert_golem pure-physical | NO shield",
+      "class": "warrior", "stage": "boss5", "archetype": "pure_physical",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "enemyOverride": { "behaviors": [] },
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    },
+    {
+      "id": "DG-physical-C-buffed-shield",
+      "label": "desert_golem pure-physical | BUFFED shield (+16/5s)",
+      "class": "warrior", "stage": "boss5", "archetype": "pure_physical",
+      "runXP": 2900, "loopMultiplier": 1.4, "isBoss": true, "repeats": 8,
+      "enemy": "desert_golem",
+      "enemyOverride": { "behaviors": [ { "type": "shield", "interval": 5000, "shieldAmount": 16 } ] },
+      "deck": ["t3-attack-attack-attack","t3-attack-attack-counter","t3-attack-attack-fire","t3-air-attack-attack","t3-agility-attack-counter","t3-attack-attack-earth","t3-attack-earth-earth","t3-agility-attack-attack","t2-attack-attack","t2-agility-attack","t3-air-attack-defense","t2-attack-counter"]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "decks": [
+    {
+      "id": "cl-slot10",
+      "label": "Cinderlance LAST slot (prior analyst shell) vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t3-earth-fire-fire",
+        "t3-agility-agility-fire",
+        "t2-air-fire",
+        "t2-earth-fire",
+        "t3-attack-fire-fire"
+      ]
+    },
+    {
+      "id": "cl-slot1",
+      "label": "Cinderlance FIRST slot (same 10 cards) vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-attack-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t3-earth-fire-fire",
+        "t3-agility-agility-fire",
+        "t2-air-fire",
+        "t2-earth-fire"
+      ]
+    },
+    {
+      "id": "cs-slot10",
+      "label": "Cinder Sprint LAST slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t3-earth-fire-fire",
+        "t3-agility-agility-fire",
+        "t2-air-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire"
+      ]
+    },
+    {
+      "id": "cs-slot1",
+      "label": "Cinder Sprint FIRST slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t3-earth-fire-fire",
+        "t3-agility-agility-fire",
+        "t2-air-fire",
+        "t2-earth-fire"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "matchups": [
+    {
+      "id": "CONTROL__vs__doom_knight",
+      "label": "CONTROL vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-air",
+        "t1-air",
+        "t1-fire",
+        "t1-water",
+        "t1-air"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-air-air-air__vs__doom_knight",
+      "label": "CAND_t3-air-air-air vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-fire",
+        "t1-water",
+        "t1-air"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-agility-air-air__vs__doom_knight",
+      "label": "CAND_t3-agility-air-air vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-air",
+        "t1-fire",
+        "t1-water",
+        "t1-air"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-air-air__vs__doom_knight",
+      "label": "CAND_t2-air-air vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-fire",
+        "t1-water",
+        "t1-air"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-agility-air__vs__doom_knight",
+      "label": "CAND_t2-agility-air vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t2-agility-air",
+        "t1-air",
+        "t1-fire",
+        "t1-water",
+        "t1-air"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    }
+  ]
+}

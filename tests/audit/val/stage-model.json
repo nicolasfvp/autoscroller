@@ -1,0 +1,134 @@
+{
+  "_notes": "normalMult applies to normal enemies at that loop band; bossMult is the half-rate boss scaling. runXP grounded in the in-run leveling curve. [approxLevel recomputed = getLevel(runXP); sim is driven by runXP, not this label] [normalMult recomputed for percentPerBossKill=0.15 (2026-06-09 rebalance)]",
+  "stages": [
+    {
+      "stage": "loop2",
+      "loopCount": 2,
+      "bossKills": 0,
+      "runXP": 120,
+      "approxLevel": 2,
+      "normalMult": 1,
+      "boss": null,
+      "bossMult": 1
+    },
+    {
+      "stage": "loop5",
+      "loopCount": 5,
+      "bossKills": 0,
+      "runXP": 336,
+      "approxLevel": 5,
+      "normalMult": 1,
+      "boss": null,
+      "bossMult": 1
+    },
+    {
+      "stage": "loop8",
+      "loopCount": 8,
+      "bossKills": 0,
+      "runXP": 480,
+      "approxLevel": 6,
+      "normalMult": 1,
+      "boss": null,
+      "bossMult": 1
+    },
+    {
+      "stage": "boss1",
+      "loopCount": 10,
+      "bossKills": 0,
+      "runXP": 560,
+      "approxLevel": 7,
+      "normalMult": 1,
+      "boss": "doom_knight",
+      "bossMult": 1
+    },
+    {
+      "stage": "loop15",
+      "loopCount": 15,
+      "bossKills": 1,
+      "runXP": 900,
+      "approxLevel": 9,
+      "normalMult": 1.15,
+      "boss": null,
+      "bossMult": 1.075
+    },
+    {
+      "stage": "boss2",
+      "loopCount": 20,
+      "bossKills": 1,
+      "runXP": 1150,
+      "approxLevel": 10,
+      "normalMult": 1.15,
+      "boss": "iron_golem",
+      "bossMult": 1.075
+    },
+    {
+      "stage": "loop25",
+      "loopCount": 25,
+      "bossKills": 2,
+      "runXP": 1450,
+      "approxLevel": 12,
+      "normalMult": 1.3,
+      "boss": null,
+      "bossMult": 1.15
+    },
+    {
+      "stage": "boss3",
+      "loopCount": 30,
+      "bossKills": 2,
+      "runXP": 1700,
+      "approxLevel": 12,
+      "normalMult": 1.3,
+      "boss": "lizard_king",
+      "bossMult": 1.15
+    },
+    {
+      "stage": "boss4",
+      "loopCount": 40,
+      "bossKills": 3,
+      "runXP": 2300,
+      "approxLevel": 14,
+      "normalMult": 1.45,
+      "boss": "bog_witch",
+      "bossMult": 1.225
+    },
+    {
+      "stage": "boss5",
+      "loopCount": 50,
+      "bossKills": 4,
+      "runXP": 2900,
+      "approxLevel": 16,
+      "normalMult": 1.6,
+      "boss": "desert_golem",
+      "bossMult": 1.3
+    },
+    {
+      "stage": "boss6",
+      "loopCount": 60,
+      "bossKills": 5,
+      "runXP": 3600,
+      "approxLevel": 17,
+      "normalMult": 1.75,
+      "boss": "infernal_dragon",
+      "bossMult": 1.375
+    },
+    {
+      "stage": "boss7",
+      "loopCount": 70,
+      "bossKills": 6,
+      "runXP": 4400,
+      "approxLevel": 18,
+      "normalMult": 1.9,
+      "boss": "boss_iron_golem",
+      "bossMult": 1.45
+    }
+  ],
+  "bossRotation": [
+    "doom_knight",
+    "iron_golem",
+    "lizard_king",
+    "bog_witch",
+    "desert_golem",
+    "infernal_dragon",
+    "boss_iron_golem"
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "_comment": "Coverage-gap decks: every assigned card centered in at least one coherent deck. Stages use canonical expander names (boss1/late). 'late' = loop11-30 band (runXP720, 1.15x normals + iron_golem). Class chosen by dominant resource pool.",
+  "decks": [
+    {
+      "id": "cover-1-1",
+      "label": "Stamina armor bulwark (fire/earth/counter walls)",
+      "archetype": "armor-bulwark",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-defense",
+        "t2-defense-fire",
+        "t2-defense-defense",
+        "t3-counter-defense-fire",
+        "t3-air-defense-defense",
+        "t3-counter-counter-earth",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t3-defense-defense-defense",
+        "t3-earth-earth-earth"
+      ],
+      "notes": "Pure-stamina armor wall. t2-defense-fire builds vit; Stormgate/Stonewrath/Ashen-Bulwark are the assigned T3 walls; Aegis + Mountain's Answer are the armor->damage finisher line."
+    },
+    {
+      "id": "cover-1-2",
+      "label": "Stamina armor bulwark vs late normals + iron_golem",
+      "archetype": "armor-bulwark",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-defense",
+        "t2-defense-fire",
+        "t2-defense-defense",
+        "t3-counter-defense-fire",
+        "t3-air-defense-defense",
+        "t3-counter-counter-earth",
+        "t2-attack-defense",
+        "t2-attack-earth",
+        "t3-defense-defense-defense",
+        "t3-earth-earth-earth"
+      ],
+      "notes": "Same wall deck one band harder (1.15x normals + iron_golem boss) to see the armor cards at >1 difficulty."
+    },
+    {
+      "id": "cover-1-3",
+      "label": "Agility-air slow tempo (both-resource, stamina-lean)",
+      "archetype": "slow-tempo",
+      "class": "warrior",
+      "stage": "late",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t3-agility-air-attack",
+        "t3-agility-air-fire",
+        "t3-agility-air-counter",
+        "t3-air-air-counter",
+        "t2-agility-counter",
+        "t3-agility-agility-attack",
+        "t2-attack-attack",
+        "t2-agility-air"
+      ],
+      "notes": "Skywire/Galecinder/Static-Skirmish are the assigned slow+damage tempo T3s; Stormrage is the rage-gated slow. Mostly stamina with a little mana for the both-cost cards. Stormrage needs rage in play (gated) - flag if it whiffs."
+    },
+    {
+      "id": "cover-1-4",
+      "label": "Agility-air slow tempo vs doom_knight",
+      "archetype": "slow-tempo",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-agility",
+        "t2-agility-attack",
+        "t3-agility-air-attack",
+        "t3-agility-air-fire",
+        "t3-agility-air-counter",
+        "t3-air-air-counter",
+        "t2-agility-counter",
+        "t3-agility-agility-attack",
+        "t2-attack-attack",
+        "t2-agility-air"
+      ],
+      "notes": "Same tempo deck vs the easy first boss to gauge slow control + chip damage closing power."
+    },
+    {
+      "id": "cover-1-5",
+      "label": "Mage air tempo / control (mana)",
+      "archetype": "air-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-air",
+        "t2-air-air",
+        "t3-air-counter-water",
+        "t3-air-air-air",
+        "t3-air-air-defense",
+        "t2-agility-air",
+        "t3-air-air-fire",
+        "t1-fire",
+        "t2-air-defense",
+        "t3-air-air-earth"
+      ],
+      "notes": "Tempest Cadence is the AoE air win-con; Tempestbleed (spi) and Galeward (armor+haste) round it out. Air slow/stun control. Mage INT is low at loop10 so this leans on flat air damage + haste volume."
+    },
+    {
+      "id": "cover-1-6",
+      "label": "Mage air tempo / control vs late normals + iron_golem",
+      "archetype": "air-control",
+      "class": "mage",
+      "stage": "late",
+      "deck": [
+        "t1-air",
+        "t2-air-air",
+        "t3-air-counter-water",
+        "t3-air-air-air",
+        "t3-air-air-defense",
+        "t2-agility-air",
+        "t3-air-air-fire",
+        "t1-fire",
+        "t2-air-defense",
+        "t3-air-air-earth"
+      ],
+      "notes": "Same air mage deck one band harder to see Tempest Cadence / Tempestbleed at >1 difficulty."
+    }
+  ]
+}

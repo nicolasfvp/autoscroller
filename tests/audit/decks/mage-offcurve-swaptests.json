@@ -1,0 +1,244 @@
+{
+  "decks": [
+    {
+      "id": "swap-burn-baseline",
+      "label": "Burn baseline (Flame Dart filler in slot1)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ],
+      "notes": "Baseline burn: Flame Dart in the lead, then Spark/Pyre rotation. No Firestorm."
+    },
+    {
+      "id": "swap-burn-firestorm",
+      "label": "Burn w/ Firestorm in slot1 (replaces Flame Dart)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "notes": "Swap test: Firestorm (T2 burn, 0 peakOPS) replaces the lead Flame Dart. Everything else identical.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "swap-burn-firestorm-cdcut",
+      "label": "Burn w/ Firestorm CD 1.2 + value buff (proposed)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-air-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "cardOverrides": {
+        "t2-air-fire": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "dot",
+              "value": 6,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            },
+            {
+              "type": "dot",
+              "value": 4,
+              "stack": "burn",
+              "target": "enemy",
+              "condition": {
+                "cards_played_within": {
+                  "count": 3,
+                  "ms": 4000
+                }
+              },
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      },
+      "notes": "Proposed Firestorm: split into an unconditional 6 burn (snappy 1.2 CD) plus a +4 burn rider if 3 cards played in 4s. Tests whether the rework restores it to the burn curve.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "tier-fire-pyre-T2",
+      "label": "Fire deck anchored by Pyre (T2)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "notes": "Tier baseline: Pyre (T2 detonator, 36.43 peakOPS) leads. Compare TTK/cushion to Quench Lance T3 variant.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "tier-fire-quench-T3",
+      "label": "Fire deck anchored by Quench Lance (T3)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "notes": "Tier test: Quench Lance (T3, 8.33 peakOPS, INT-scaling buff) in the slots Pyre held. If T3 TTK/cushion is WORSE than the Pyre T2 deck, it is a tier violation.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "tier-fire-quench-T3-buffed",
+      "label": "Quench Lance buffed (proposed: detonate + lower threshold)",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire"
+      ],
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 4,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              },
+              "condition": {
+                "enemy_has_stack": "burn",
+                "per_stack": true
+              }
+            },
+            {
+              "type": "dot",
+              "value": 3,
+              "stack": "burn",
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      },
+      "notes": "Proposed Quench Lance rework: turn it into a real T3 burn detonator (deal 4 per burn consumed, then re-apply 3 burn). Keeps same cost/CD; raises the assembled ceiling above Pyre.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "swap-slow-baseline",
+      "label": "Slow control baseline (Sandfury filler in slot1)",
+      "archetype": "slow",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-air-earth-fire",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "notes": "Slow baseline: Sandfury (slow magic, STR-scaled, 35 peakOPS) + Quake + Cinder Squall. No Gale Echo.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    },
+    {
+      "id": "swap-slow-galeecho",
+      "label": "Slow w/ Gale Echo in slot1 (replaces Sandfury)",
+      "archetype": "slow",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t3-agility-air-air",
+        "t1-earth",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-air-earth-fire",
+        "t1-earth"
+      ],
+      "notes": "Swap test: Gale Echo (T3 slow aura, 0 peakOPS) replaces the lead Sandfury. Measures Gale Echo's marginal closing power.",
+      "vsEnemies": [
+        "skeleton",
+        "werewolf",
+        "depths_horror"
+      ]
+    }
+  ]
+}

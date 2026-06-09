@@ -1,0 +1,10 @@
+{
+  "class": "mage",
+  "stage": "boss6",
+  "baseline": ["t1-air", "t1-air", "t1-fire", "t2-air-fire", "t1-air"],
+  "slot": 0,
+  "filler": "t1-air",
+  "candidates": ["t3-air-air-air", "t3-agility-air-air", "t2-air-air", "t2-agility-air"],
+  "enemies": ["infernal_dragon"],
+  "repeats": 12
+}

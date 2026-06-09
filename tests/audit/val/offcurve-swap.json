@@ -1,0 +1,10 @@
+{ "decks": [
+  { "id":"riposte-early","label":"Riposte slot","archetype":"pure_damage","class":"warrior","stage":"early",
+    "deck":["t1-counter","t1-attack","t1-attack","t1-agility","t1-defense"] },
+  { "id":"jabfiller-early","label":"Jab filler baseline","archetype":"pure_damage","class":"warrior","stage":"early",
+    "deck":["t1-attack","t1-attack","t1-attack","t1-agility","t1-defense"] },
+  { "id":"razor-mid","label":"Razor Stance slot","archetype":"bleed","class":"warrior","stage":"mid",
+    "deck":["t2-counter-counter","t2-attack-attack","t1-attack","t1-agility","t2-agility-counter","t1-defense"] },
+  { "id":"recklessfiller-mid","label":"Reckless filler baseline","archetype":"bleed","class":"warrior","stage":"mid",
+    "deck":["t2-attack-attack","t2-attack-attack","t1-attack","t1-agility","t2-agility-counter","t1-defense"] }
+]}

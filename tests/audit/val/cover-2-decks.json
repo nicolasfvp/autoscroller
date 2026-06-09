@@ -1,0 +1,105 @@
+{
+  "_comment": "Coverage-gap wave 2. Each deck centers on assigned uncovered T3 cards (plus t2-air-defense). Supporting cards are realistic cheap openers / win-conditions from the catalog. Stages map to the loop-based enum: boss1=doom_knight L10, loop15, boss2=iron_golem L20, boss3=lizard_king L30.",
+  "decks": [
+    {
+      "id": "cover-2-1",
+      "label": "Warrior fire-bulwark (Forge Strike / Tombrage)",
+      "archetype": "armor-fire-bulwark",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-air-defense",
+        "t2-attack-fire",
+        "t3-attack-defense-fire",
+        "t3-counter-earth-earth",
+        "t2-defense-defense",
+        "t3-attack-attack-fire",
+        "t2-agility-attack",
+        "t1-defense"
+      ],
+      "notes": "Centers t3-attack-defense-fire (Forge Strike: 12 dmg+8 armor+2 burn) and t3-counter-earth-earth (Tombrage: 12 armor + low-HP rage). t2-air-defense (Cyclone Ward) is the cheap armor/haste filler. Cheap physical openers front-loaded; burn is a side payoff via Kindle/Cinder Thrust. Warrior 50 stamina."
+    },
+    {
+      "id": "cover-2-2",
+      "label": "Warrior burn-tempo + burn->armor convert",
+      "archetype": "burn-armor-convert",
+      "class": "warrior",
+      "stage": "loop15",
+      "deck": [
+        "t1-attack",
+        "t3-agility-agility-fire",
+        "t2-attack-fire",
+        "t2-air-defense",
+        "t3-attack-attack-fire",
+        "t3-air-defense-fire",
+        "t2-attack-attack",
+        "t3-attack-defense-fire",
+        "t2-agility-agility",
+        "t1-defense"
+      ],
+      "notes": "Centers t3-agility-agility-fire (Twinflame Flicker: cheap 1s 4-burn applier, INT scaling) feeding t3-air-defense-fire (Ember Aegis Gust: consume burn -> armor). Burn engine = Twinflame + Kindle + Cinder Thrust; converter banks it into armor. t2-air-defense rounds out armor. Stamina-leaning so warrior."
+    },
+    {
+      "id": "cover-2-3",
+      "label": "Mage earth-fire armor/vengeance",
+      "archetype": "earth-fire-armor-vengeance",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": [
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-earth-fire",
+        "t3-earth-earth-fire",
+        "t2-agility-fire",
+        "t3-attack-fire-fire",
+        "t1-earth",
+        "t2-air-fire",
+        "t3-fire-fire-fire"
+      ],
+      "notes": "Centers t3-earth-earth-fire (Magma Vow: 2m, 14 armor + Vengeance 14 Pierce) and t3-agility-earth-fire (Cinderquake: 1m, 10 dmg, armor>=10 rider). Magma Vein/Magma Vow build the armor that arms Cinderquake's pierce+burn rider; burn payoffs close. Mana-funded -> mage 60 mana."
+    },
+    {
+      "id": "cover-2-4",
+      "label": "Reactive armor-control bulwark (both-resource)",
+      "archetype": "reactive-armor-control",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": [
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-air-defense",
+        "t3-agility-counter-earth",
+        "t3-counter-defense-water",
+        "t2-agility-attack",
+        "t3-agility-defense-fire",
+        "t2-defense-defense",
+        "t2-attack-fire",
+        "t1-defense"
+      ],
+      "notes": "Centers three 1s+1m 'both' armor/control T3s: t3-agility-counter-earth (Quickearth Rite, VIT scaling), t3-counter-defense-water (Crimson Regen Mantle, 20% DR + low-HP regen), t3-agility-defense-fire (Ember Vault, armor + Brace burn). Warrior funds the stamina half from the 50 pool; mana regen (+1/4.5s) covers the 1-mana halves spread across the fight. Cheap physical openers carry damage."
+    },
+    {
+      "id": "cover-2-5",
+      "label": "Poison-rage bulwark (Bogwrath)",
+      "archetype": "poison-rage-bulwark",
+      "class": "mage",
+      "stage": "loop15",
+      "deck": [
+        "t1-fire",
+        "t2-earth-water",
+        "t3-counter-earth-water",
+        "t3-earth-earth-water",
+        "t2-fire-fire",
+        "t3-air-fire-water",
+        "t2-agility-fire",
+        "t3-earth-fire-water",
+        "t1-water",
+        "t3-agility-agility-fire"
+      ],
+      "notes": "Centers t3-counter-earth-water (Bogwrath: 10 armor, Brace -> 4 poison + 3 rage) as a defensive poison seed, fed by a poison engine (Mire Bloom, Bog Catalyst doubler, Steaming Plague, Alchemic Drain). t3-agility-agility-fire (Twinflame) and t1-fire add a burn off-axis. Mana-funded poison core -> mage."
+    }
+  ]
+}

@@ -1,0 +1,5464 @@
+[
+  {
+    "archetype": "starter-physical-haste",
+    "stage": "loop2",
+    "class": "warrior",
+    "nNormal": 7,
+    "nBoss": 0,
+    "normalMeanWinRate": 0.857,
+    "normalMeanCushion": 0.95,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "loop2",
+    "class": "warrior",
+    "nNormal": 14,
+    "nBoss": 0,
+    "normalMeanWinRate": 0.929,
+    "normalMeanCushion": 0.867,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop2",
+    "class": "warrior",
+    "nNormal": 42,
+    "nBoss": 0,
+    "normalMeanWinRate": 0.952,
+    "normalMeanCushion": 0.941,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 30,
+    "nBoss": 0,
+    "normalMeanWinRate": 0.967,
+    "normalMeanCushion": 0.798,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop2",
+    "class": "mage",
+    "nNormal": 42,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.934,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 30,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.823,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop8",
+    "class": "warrior",
+    "nNormal": 24,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.908,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop8",
+    "class": "mage",
+    "nNormal": 24,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.914,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 24,
+    "nBoss": 6,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.937,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.686,
+    "bossMatchups": [
+      {
+        "id": "rand-boss1-warrior-0__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.968,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-warrior-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.745,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-warrior-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.637,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-warrior-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.529,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-warrior-4__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.35,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-warrior-5__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.885,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.967,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.968,
+    "bossMatchups": [
+      {
+        "id": "rand-boss1-warrior-0c__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.968,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 24,
+    "nBoss": 6,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.897,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.635,
+    "bossMatchups": [
+      {
+        "id": "rand-boss1-mage-0__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.827,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-mage-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.835,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-mage-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.26,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-mage-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.638,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-mage-4__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.646,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss1-mage-5__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.606,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.822,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "rand-boss1-mage-0c__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 20,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.942,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 20,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.899,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.88,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.669,
+    "bossMatchups": [
+      {
+        "id": "rand-boss2-warrior-0__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.675,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-warrior-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-warrior-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.663,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-warrior-3__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.968,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.789,
+    "bossMatchups": [
+      {
+        "id": "rand-boss2-warrior-0c__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.789,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.935,
+    "bossMeanWinRate": 0.75,
+    "bossMeanCushion": 0.936,
+    "bossMatchups": [
+      {
+        "id": "rand-boss2-mage-0__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-mage-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-mage-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.809,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss2-mage-3__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.794,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "rand-boss2-mage-0c__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "loop25",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.894,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "loop25",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.931,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "random",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.925,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.49,
+    "bossMatchups": [
+      {
+        "id": "rand-boss3-warrior-0__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.48,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-warrior-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.718,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-warrior-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.367,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-warrior-3__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.395,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.732,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.147,
+    "bossMatchups": [
+      {
+        "id": "rand-boss3-warrior-0c__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.147,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.836,
+    "bossMeanWinRate": 0.75,
+    "bossMeanCushion": 0.553,
+    "bossMatchups": [
+      {
+        "id": "rand-boss3-mage-0__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.891,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-mage-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-mage-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.429,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss3-mage-3__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.34,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.939,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.381,
+    "bossMatchups": [
+      {
+        "id": "rand-boss3-mage-0c__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.381,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss4",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.842,
+    "bossMeanWinRate": 0.75,
+    "bossMeanCushion": 0.402,
+    "bossMatchups": [
+      {
+        "id": "rand-boss4-warrior-0__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.53,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-warrior-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-warrior-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.464,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-warrior-3__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.213,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss4",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.916,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.754,
+    "bossMatchups": [
+      {
+        "id": "rand-boss4-warrior-0c__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.754,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.82,
+    "bossMeanWinRate": 0.75,
+    "bossMeanCushion": 0.49,
+    "bossMatchups": [
+      {
+        "id": "rand-boss4-mage-0__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.444,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-mage-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.542,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-mage-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.484,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss4-mage-3__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 0,
+        "timeouts": 4
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.869,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.327,
+    "bossMatchups": [
+      {
+        "id": "rand-boss4-mage-0c__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.327,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.938,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.616,
+    "bossMatchups": [
+      {
+        "id": "rand-boss5-warrior-0__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.742,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-warrior-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.49,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-warrior-2__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-warrior-3__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.983,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.964,
+    "bossMatchups": [
+      {
+        "id": "rand-boss5-warrior-0c__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.964,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.83,
+    "bossMeanWinRate": 0.75,
+    "bossMeanCushion": 0.614,
+    "bossMatchups": [
+      {
+        "id": "rand-boss5-mage-0__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.598,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-mage-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.659,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-mage-2__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.585,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss5-mage-3__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.758,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.122,
+    "bossMatchups": [
+      {
+        "id": "rand-boss5-mage-0c__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.122,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss6",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.835,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.548,
+    "bossMatchups": [
+      {
+        "id": "rand-boss6-warrior-0__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.645,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-warrior-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.376,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-warrior-2__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.893,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-warrior-3__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.279,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss6",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.897,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "rand-boss6-warrior-0c__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.723,
+    "bossMeanWinRate": 0.25,
+    "bossMeanCushion": 0.479,
+    "bossMatchups": [
+      {
+        "id": "rand-boss6-mage-0__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-mage-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-mage-2__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.479,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss6-mage-3__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.9,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.078,
+    "bossMatchups": [
+      {
+        "id": "rand-boss6-mage-0c__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.078,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.876,
+    "bossMeanWinRate": 0.25,
+    "bossMeanCushion": 0.12,
+    "bossMatchups": [
+      {
+        "id": "rand-boss7-warrior-0__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-warrior-1__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.12,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-warrior-2__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-warrior-3__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.953,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "rand-boss7-warrior-0c__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.903,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.268,
+    "bossMatchups": [
+      {
+        "id": "rand-boss7-mage-0__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.071,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-mage-1__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-mage-2__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.465,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "rand-boss7-mage-3__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "random-chaotic",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.71,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "rand-boss7-mage-0c__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure physical (attack/agility/counter direct damage)",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.844,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.363,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.325,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.401,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure physical (attack/agility/counter direct damage)",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.837,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.229,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.229,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure physical (attack/agility/counter direct damage)",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.822,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.161,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.158,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.164,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure physical (attack/agility/counter direct damage)",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.847,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure physical (attack/agility/counter direct damage)",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.804,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed_rage",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.895,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.601,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.49,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.713,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed_rage",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.889,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.608,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.608,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed_rage",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.859,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.317,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.209,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.424,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed_rage",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.884,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.364,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.041,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.686,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed_rage",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.819,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.27,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.27,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor stacking into armor->damage finisher",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.991,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.952,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.904,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor stacking into armor->damage finisher",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor stacking into armor->damage finisher",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor stacking into armor->damage finisher",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor stacking into armor->damage finisher",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.71,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.71,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed physical + burn/bleed splash",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.867,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.577,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.567,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.586,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed physical + burn/bleed splash",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.857,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.361,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.349,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.373,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed physical + burn/bleed splash",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.814,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.31,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.282,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.339,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed physical + burn/bleed splash",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.839,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.528,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.588,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.469,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed physical + burn/bleed splash",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.805,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air/earth slow+stun control + physical",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.924,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.382,
+    "bossMatchups": [
+      {
+        "id": "war-slow-stun-physical-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.274,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-slow-stun-physical-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.49,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air/earth slow+stun control + physical",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.905,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "war-slow-stun-physical-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-slow-stun-physical-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air/earth slow+stun control + physical",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.881,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.096,
+    "bossMatchups": [
+      {
+        "id": "war-slow-stun-physical-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-slow-stun-physical-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.096,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air/earth slow+stun control + physical",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.919,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.278,
+    "bossMatchups": [
+      {
+        "id": "war-slow-stun-physical-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-slow-stun-physical-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.278,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air/earth slow+stun control + physical",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.883,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "war-slow-stun-physical-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "war-slow-stun-physical-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.937,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.807,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.811,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.803,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.94,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.842,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.684,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.925,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.636,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.673,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.599,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.926,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.802,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.915,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.689,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 9,
+    "nBoss": 3,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.868,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.494,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.576,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.441,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "deep-endgame-boss7-mage-poison__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.465,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn bank-and-cash + detonators",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.875,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.366,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.362,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.37,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn bank-and-cash + detonators",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.865,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.412,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.794,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.029,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn bank-and-cash + detonators",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.823,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.456,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.456,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn bank-and-cash + detonators",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.844,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.314,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.567,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.061,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn bank-and-cash + detonators",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.758,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.082,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.082,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-burn-hybrid",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.878,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.595,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.622,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.567,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-burn-hybrid",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.864,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.618,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.64,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.596,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-burn-hybrid",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.83,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.398,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.306,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.49,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-burn-hybrid",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.849,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.607,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.61,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.604,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-burn-hybrid",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.809,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.285,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.247,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.324,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.855,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.496,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.622,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.37,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.939,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.669,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.338,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.937,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.789,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.578,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.949,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.872,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.744,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 9,
+    "nBoss": 3,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.905,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.521,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.435,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "deep-endgame-boss7-mage-control__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.129,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal/SPI sustain + DoT/control splash",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.918,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.839,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.961,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.717,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal/SPI sustain + DoT/control splash",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.876,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.846,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.949,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.743,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal/SPI sustain + DoT/control splash",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.885,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.68,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.673,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.687,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal/SPI sustain + DoT/control splash",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.905,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.875,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.963,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.787,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal/SPI sustain + DoT/control splash",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.849,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.42,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.747,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.094,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "defensive poison (armor + poison outlast)",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "defensive poison (armor + poison outlast)",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.996,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "defensive poison (armor + poison outlast)",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.994,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.935,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.918,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.952,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "defensive poison (armor + poison outlast)",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.998,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "defensive poison (armor + poison outlast)",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.962,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.85,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.847,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.853,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow/poison/burn detonators + control",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.903,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.543,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.496,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.591,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow/poison/burn detonators + control",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.842,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.493,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.426,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.559,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow/poison/burn detonators + control",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.781,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.456,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.347,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.565,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow/poison/burn detonators + control",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.818,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.668,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.677,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.659,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow/poison/burn detonators + control",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.766,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.221,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.041,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.4,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 16,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.867,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.492,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss1-N__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.48,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss1-O__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.402,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.457,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.63,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 9,
+    "nBoss": 3,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.851,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.476,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss2-N__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.471,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss2-O__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.309,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.647,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.794,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.17,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss3-N__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.306,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss3-O__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.034,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 4,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.839,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.604,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss5-N__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.543,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss5-O__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.482,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.713,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss5-2__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.677,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 9,
+    "nBoss": 3,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.788,
+    "bossMeanWinRate": 0.667,
+    "bossMeanCushion": 0.291,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss7-N__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.141,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss7-O__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-mixed-elemental-boss7-1__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.441,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed-rage",
+    "stage": "loop2",
+    "class": "warrior",
+    "nNormal": 14,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.827,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "burn",
+    "stage": "loop2",
+    "class": "mage",
+    "nNormal": 14,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.876,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "bleed-rage",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 18,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.806,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "burn",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.795,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "bleed-rage",
+    "stage": "loop8",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.833,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "burn",
+    "stage": "loop8",
+    "class": "mage",
+    "nNormal": 24,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.829,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.752,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "loop8",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.854,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.874,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.452,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.452,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.452,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.848,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_physical",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.814,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.158,
+    "bossMatchups": [
+      {
+        "id": "war-pure-physical-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.158,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-pure-physical-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.158,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed+rage",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.896,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.656,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.643,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.669,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed+rage",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.873,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "bleed+rage",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.866,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.653,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.59,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.717,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed+rage",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.818,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.539,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.514,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.565,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed+rage",
+    "stage": "boss4",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.805,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.503,
+    "bossMatchups": [
+      {
+        "id": "war-bleed-rage-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.492,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-bleed-rage-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.514,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor_finisher",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.653,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.306,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor_finisher",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 0,
+        "timeouts": 4
+      }
+    ]
+  },
+  {
+    "archetype": "armor_finisher",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.847,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.695,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor_finisher",
+    "stage": "boss4",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor_finisher",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "war-armor-finisher-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-finisher-boss5-2__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor+control",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "armor+control",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.855,
+    "bossMatchups": [
+      {
+        "id": "war-armor-control-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.855,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-control-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 0,
+        "timeouts": 4
+      }
+    ]
+  },
+  {
+    "archetype": "armor+control",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.978,
+    "bossMatchups": [
+      {
+        "id": "war-armor-control-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-control-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.955,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor+control",
+    "stage": "boss4",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.997,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.792,
+    "bossMatchups": [
+      {
+        "id": "war-armor-control-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.585,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-armor-control-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.859,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "loop8",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.862,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.903,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.536,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.51,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-mixed-bruiser-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.561,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.879,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.887,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.428,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.428,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.851,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.339,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.339,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "boss5",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.912,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.464,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.464,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-bruiser",
+    "stage": "boss6",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.849,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.162,
+    "bossMatchups": [
+      {
+        "id": "war-mixed-bruiser-boss6-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.162,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "starter-physical-weak",
+    "stage": "loop8",
+    "class": "warrior",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.849,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "starter-physical-weak",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.892,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.574,
+    "bossMatchups": [
+      {
+        "id": "war-starter-weak-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.478,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "war-starter-weak-boss1-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.669,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-heavy-weak",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.957,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.809,
+    "bossMatchups": [
+      {
+        "id": "war-starter-weak-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.809,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_poison",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.948,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.843,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.843,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.843,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_poison",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.917,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_poison",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.928,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.772,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.794,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.75,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_poison",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.885,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.653,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.707,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.599,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_poison",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.884,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.765,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-poison-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.68,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-poison-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.85,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_burn",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.856,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.15,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.165,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.134,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_burn",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.817,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure_burn",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.817,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.1,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.081,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.118,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_burn",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.757,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.082,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.082,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure_burn",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.804,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "mage-pure-burn-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-pure-burn-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "loop8",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.861,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.861,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.26,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.252,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-burn-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.268,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.797,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.811,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.346,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.346,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.753,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.279,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.279,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison_burn",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.786,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.524,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-burn-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.524,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.899,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.551,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.402,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-slow-stun-control-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.701,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.841,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.914,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.449,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.449,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.884,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.361,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.361,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.898,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.752,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.752,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.906,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.78,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.78,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow_stun_control",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.948,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.593,
+    "bossMatchups": [
+      {
+        "id": "mage-slow-stun-control-boss6-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.593,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal-sustain",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 8,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.97,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.855,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.748,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.961,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal-sustain",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 10,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.964,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "heal-sustain",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.873,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.956,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.912,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal-sustain",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.907,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.895,
+    "bossMatchups": [
+      {
+        "id": "mage-heal-sustain-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.789,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-heal-sustain-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison+block",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.99,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.96,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.978,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.941,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison+block",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.966,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.785,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.85,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.721,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison+block",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.983,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.82,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.856,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.784,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison+block",
+    "stage": "boss5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.984,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.929,
+    "bossMatchups": [
+      {
+        "id": "mage-poison-block-boss5-1__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.957,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-poison-block-boss5-2__vs__BOSS_desert_golem",
+        "enemy": "desert_golem",
+        "winRate": 1,
+        "cushion": 0.902,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "detonator-control",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.865,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.621,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss2-1__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.713,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss2-2__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.529,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "detonator-control",
+    "stage": "boss3",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.701,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.347,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss3-1__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss3-2__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.347,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "detonator-control",
+    "stage": "boss4",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.822,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.529,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss4-1__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.359,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss4-2__vs__BOSS_bog_witch",
+        "enemy": "bog_witch",
+        "winRate": 1,
+        "cushion": 0.699,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "detonator-control",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.627,
+    "bossMeanWinRate": 0.5,
+    "bossMeanCushion": 0.401,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss6-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.401,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss6-2__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "detonator-control",
+    "stage": "boss7",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 2,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.824,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.471,
+    "bossMatchups": [
+      {
+        "id": "mage-detonator-control-boss7-1__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.294,
+        "deaths": 0,
+        "timeouts": 0
+      },
+      {
+        "id": "mage-detonator-control-boss7-2__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.647,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow",
+    "stage": "loop8",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.946,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "burn",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.867,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.449,
+    "bossMatchups": [
+      {
+        "id": "mage-starter-weak-boss1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.449,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "heal",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.913,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.575,
+    "bossMatchups": [
+      {
+        "id": "mage-starter-weak-boss1-2__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.575,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.896,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.291,
+    "bossMatchups": [
+      {
+        "id": "mage-starter-weak-boss1-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.291,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.882,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "loop8",
+    "class": "mage",
+    "nNormal": 12,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.854,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.872,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "mixed-elemental-toolbox",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.778,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.323,
+    "bossMatchups": [
+      {
+        "id": "mage-mixed-elemental-boss6-1__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.323,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "starter-physical",
+    "stage": "loop2",
+    "class": "warrior",
+    "nNormal": 7,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.963,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure-physical",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.817,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "armor-tempo",
+    "stage": "loop5",
+    "class": "warrior",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.894,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "starter-elemental",
+    "stage": "loop2",
+    "class": "mage",
+    "nNormal": 7,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.946,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "starter-burn",
+    "stage": "loop2",
+    "class": "mage",
+    "nNormal": 7,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.931,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure-burn",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.809,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "slow-stun-control",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.811,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "starter-elemental-hybrid",
+    "stage": "loop5",
+    "class": "mage",
+    "nNormal": 6,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.862,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "pure-poison",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.814,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.347,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss6-mage-poison__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.347,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-burn",
+    "stage": "boss6",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.864,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss6-mage-burn__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "bleed-rage",
+    "stage": "boss6",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.892,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.569,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss6-war-bleed__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 1,
+        "cushion": 0.569,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-physical",
+    "stage": "boss6",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.87,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss6-war-physical__vs__BOSS_infernal_dragon",
+        "enemy": "infernal_dragon",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "pure-physical",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.867,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss7-war-physical__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-finisher",
+    "stage": "boss7",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.915,
+    "bossMatchups": [
+      {
+        "id": "deep-endgame-boss7-war-armor__vs__BOSS_boss_iron_golem",
+        "enemy": "boss_iron_golem",
+        "winRate": 1,
+        "cushion": 0.915,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-burn-brace",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.994,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "cover-0-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-burn-brace",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "counter-bleed-rage",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.839,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.401,
+    "bossMatchups": [
+      {
+        "id": "cover-0-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.401,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "counter-bleed-rage",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.865,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "armor-burn-poison-control",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.86,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.425,
+    "bossMatchups": [
+      {
+        "id": "cover-0-5__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.425,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-burn-poison-control",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.806,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.309,
+    "bossMatchups": [
+      {
+        "id": "cover-0-6__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.309,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-bulwark",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 1,
+    "bossMatchups": [
+      {
+        "id": "cover-1-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 1,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-bulwark",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 1,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "slow-tempo",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.816,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "slow-tempo",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.847,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.42,
+    "bossMatchups": [
+      {
+        "id": "cover-1-4__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.42,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air-control",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.939,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.921,
+    "bossMatchups": [
+      {
+        "id": "cover-1-5__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.921,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "air-control",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.932,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "armor-fire-bulwark",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.952,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.822,
+    "bossMatchups": [
+      {
+        "id": "cover-2-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.822,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn-armor-convert",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.915,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "earth-fire-armor-vengeance",
+    "stage": "boss2",
+    "class": "mage",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.89,
+    "bossMeanWinRate": 0,
+    "bossMeanCushion": null,
+    "bossMatchups": [
+      {
+        "id": "cover-2-3__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 0,
+        "cushion": null,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "reactive-armor-control",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.959,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.968,
+    "bossMatchups": [
+      {
+        "id": "cover-2-4__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.968,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-rage-bulwark",
+    "stage": "loop15",
+    "class": "mage",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.902,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "armor-tempo",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.965,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.962,
+    "bossMatchups": [
+      {
+        "id": "cover-3-1__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.962,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "armor-tempo",
+    "stage": "loop15",
+    "class": "warrior",
+    "nNormal": 5,
+    "nBoss": 0,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.969,
+    "bossMeanWinRate": null,
+    "bossMeanCushion": null,
+    "bossMatchups": []
+  },
+  {
+    "archetype": "poison-armor-bruiser",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.922,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.796,
+    "bossMatchups": [
+      {
+        "id": "cover-3-3__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.796,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "poison-armor-bruiser",
+    "stage": "boss2",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.92,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.578,
+    "bossMatchups": [
+      {
+        "id": "cover-3-4__vs__BOSS_iron_golem",
+        "enemy": "iron_golem",
+        "winRate": 1,
+        "cushion": 0.578,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-control",
+    "stage": "boss1",
+    "class": "warrior",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.946,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.822,
+    "bossMatchups": [
+      {
+        "id": "cover-3-5__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.822,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "slow-control",
+    "stage": "boss3",
+    "class": "warrior",
+    "nNormal": 3,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.949,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.904,
+    "bossMatchups": [
+      {
+        "id": "cover-3-6__vs__BOSS_lizard_king",
+        "enemy": "lizard_king",
+        "winRate": 1,
+        "cushion": 0.904,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  },
+  {
+    "archetype": "burn-bleed-detonator",
+    "stage": "boss1",
+    "class": "mage",
+    "nNormal": 4,
+    "nBoss": 1,
+    "normalMeanWinRate": 1,
+    "normalMeanCushion": 0.819,
+    "bossMeanWinRate": 1,
+    "bossMeanCushion": 0.528,
+    "bossMatchups": [
+      {
+        "id": "cover-3-7__vs__BOSS_doom_knight",
+        "enemy": "doom_knight",
+        "winRate": 1,
+        "cushion": 0.528,
+        "deaths": 0,
+        "timeouts": 0
+      }
+    ]
+  }
+]

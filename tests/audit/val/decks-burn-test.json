@@ -1,0 +1,5 @@
+{ "decks": [
+  { "id": "burn-A-nodet", "label": "dying deck (weak detonators)", "archetype": "burn-test", "class": "mage", "stage": "boss1", "vsEnemies": [], "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t2-agility-fire"] },
+  { "id": "burn-B-cinderlance", "label": "+Cinderlance", "archetype": "burn-test", "class": "mage", "stage": "boss1", "vsEnemies": [], "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t3-attack-fire-fire"] },
+  { "id": "burn-C-supernova", "label": "+Cinderlance+Supernova", "archetype": "burn-test", "class": "mage", "stage": "boss1", "vsEnemies": [], "deck": ["t1-fire","t2-agility-fire","t2-fire-fire","t2-agility-fire","t2-earth-fire","t2-fire-fire","t3-agility-fire-fire","t3-attack-fire-fire","t3-fire-fire-fire"] }
+] }

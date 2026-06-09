@@ -1,0 +1,8 @@
+{
+  "matchups": [
+    { "id": "granite-T2-x4-vs-dk", "class": "warrior", "stage": "boss1", "runXP": 520, "deck": ["t2-attack-attack","t2-attack-earth","t2-attack-earth","t2-attack-earth","t2-attack-earth","t2-agility-attack","t2-attack-counter","t1-attack","t2-counter-counter","t2-attack-defense","t2-agility-counter"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 8 },
+    { "id": "earthcleaver-T3-x4-baked-vs-dk", "class": "warrior", "stage": "boss1", "runXP": 520, "deck": ["t2-attack-attack","t3-attack-defense-earth","t3-attack-defense-earth","t3-attack-defense-earth","t3-attack-defense-earth","t2-agility-attack","t2-attack-counter","t1-attack","t2-counter-counter","t2-attack-defense","t2-agility-counter"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 8 },
+    { "id": "earthcleaver-T3-x4-vs-normal", "class": "warrior", "stage": "mid", "runXP": 350, "deck": ["t2-attack-attack","t3-attack-defense-earth","t3-attack-defense-earth","t3-attack-defense-earth","t3-attack-defense-earth","t2-agility-attack","t2-attack-counter","t1-attack"], "enemy": "mutated_salamander", "loopMultiplier": 1.0, "repeats": 6 },
+    { "id": "control-deck-baked-vs-dk", "class": "mage", "stage": "boss1", "runXP": 520, "deck": ["t2-earth-earth","t2-water-water","t2-air-earth","t3-attack-attack-earth","t3-air-air-fire","t3-air-attack-counter","t3-agility-air-earth","t1-earth","t3-agility-air-counter","t3-agility-agility-air","t3-air-attack-water"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 8 }
+  ]
+}

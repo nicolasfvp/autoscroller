@@ -1,0 +1,585 @@
+[
+  {
+    "finding": {
+      "kind": "enemy_too_hard",
+      "target": "mush",
+      "stage": "loop2 (early battery)",
+      "severity": "high",
+      "title": "mush is the ONLY broken normal: earth affinity armor-ratchet + stamina drain shuts out low-damage stamina warriors (33% deathRate)",
+      "evidence": "enemy-summary: mush meanWinRate 0.667, deathRate 0.333, nLossesMatchups 2/6. Two loop2 warrior decks die 4/4: war-pure-physical-loop2-1__vs__mush (deck t1-attack/t1-agility/t1-attack/t1-agility/t1-defense -> wins 0, deaths 4, avgDamageDealt 116 vs mush 122 HP, avgReshuffles 193) and the haste deck early-starters-loop2-2 (t1-attack/t1-air/t1-agility/t1-defense/t1-counter -> wins 0, deaths 4, avgDamageDealt only 92, avgReshuffles 169). The huge reshuffle/cardsPlayed counts (193/169) prove a stamina-starved grind, not a burst loss. Same decks WIN every other loop2 enemy (pocket_cat, lost_lizard, giant_spider at 0.83-0.99 cushion). A/B run mush-ab-results.json: removing the earth armor-sprout (enemyOverride affinity:attack, HP kept at 122) flips BOTH to winRate 1.0 / 8 wins, cushion 0.949 & 0.974, reshuffles collapse 193->2 and 169->4. Just lowering HP to 100 with earth KEPT still 'wins' but with 90-108s TTK and reshuffles 95-131 (cushion 0.282 for haste) -> proving the armor ratchet, not HP, is the driver.",
+      "diagnosis": "EnemyAffinity.ts earth case (lines 98-108) does TWO things per hit on a non-boss: drain 2 stamina AND sprout +1 enemyDefense up to cap 15. mush starts at baseDefense 0 / 122 HP / 3 dmg / cd 2052ms. Against a 1-stamina 1.2cd physical deck regenerating only +1 stamina/4.5s, the 2-stamina/2s drain makes the deck stamina-negative, while the armor ratchet climbs toward 15 and eats almost all of a 4-damage Quickstep (and most of a 9 Jab). The fight stalls 6 HP short (dmg 116 vs 122) and mush grinds the hero out at 3 dmg/hit. The other earth normal (ancient_tree, 101 HP) escapes this only because its lower HP lets decks close before the armor fully ratchets. mush has the 2nd-highest HP of the trivial loop2 battery (122), giving the ratchet time to lock the fight. This is the single genuine normal-enemy outlier; corpse_eater (0.753 cushion, intended-hardest) and all others sit at WR 1.0.",
+      "proposed_change": "Primary (lowest blast radius, sim-validated): tame the earth affinity's armor sprout for NORMAL enemies. In EnemyAffinity.ts earth case, lower the non-boss armor cap from 15 to ~6 (or skip the sprout entirely when the enemy's base defense is 0), keeping the 2-stamina drain as flavor. The NOARMOR A/B (HP 122 retained) already proves clean 8/8 wins at 0.95 cushion with this ratchet neutralized, and desert_golem (earth boss, m=2, cushion 0.895) is untouched by a normal-only cap. Secondary safety net (pure enemy stat, no shared mechanic): reduce mush baseHP 122->95 so even low-damage decks close before the ratchet maxes. C1-compliant: this is an enemy HP/affinity nerf, not a card cost/CD change, and does not touch any T2/T3 relationship.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "enemy-normals"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "depths_horror",
+      "stage": "loop8 / late battery",
+      "severity": "low",
+      "title": "depths_horror is the softest enemy in the roster (95 baseHP, 0 def) yet sits in the LATE battery — slightly under-threatening for its stage",
+      "evidence": "enemies.json: depths_horror baseHP 95 (lowest in the entire roster), baseDefense 0, attack 5, air affinity. enemy-summary: meanWinRate 1.0 across 77 matchups, cushion 0.958, ttk 9177ms (one of the fastest clears), deathRate/timeoutRate 0. It is part of the canonical 'late' battery (loop8, normalMult ~1.15) alongside fire_elemental (102 HP) and werewolf (148 HP). At loop8 the hero is ~L6 with a 15-card deck, so a 95 HP enemy is dispatched in ~9s with near-full HP — softer and faster than several EARLY enemies (e.g. giant_spider 144 HP).",
+      "diagnosis": "Not broken (no losses, no timeouts), but its raw stat block reads like an early/filler enemy while it is slotted into the late progression band. Its air affinity (1 mana drain + 15% stun) is the gentlest of the punishing affinities, so it adds almost no pressure on top of low HP. This is a mild curve dip, not a failure — flagging only so the synthesizer can decide whether the late battery wants a tougher floor.",
+      "proposed_change": "Optional low-priority bump: raise depths_horror baseHP 95->~120 to match its loop8 placement (still below the 135-160 mid/late front-liners), keeping air affinity and 5 dmg. This is a pure enemy-HP tweak (C1: no card cost/CD touched, no tier relationship affected). Leave it alone if the late battery is intentionally seeded with one fast-clear 'breather' enemy.",
+      "confidence": "med"
+    },
+    "verdict": null,
+    "lane": "enemy-normals"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "earth affinity (shared mechanic) vs corpse_eater/counter affinity",
+      "stage": "all normals",
+      "severity": "low",
+      "title": "Affinity threat is well-spread EXCEPT earth: counter (corpse_eater, hardest) is clean incremental damage and is correctly tuned; earth is the only affinity that can lock a winnable fight",
+      "evidence": "Affinity threat ranking from enemy-summary cushions: counter corpse_eater 0.753 (intended hardest, WR 1.0, 0 deaths over 25 matchups) > water/air/fire normals 0.82-0.92 (all WR 1.0). EnemyAffinity.ts shows counter = +2 flat bleed/hit (pure damage, no stall), agility = temporary cd shave (no damage), water = enemy heal 4/hit, air = 1 mana drain + 15% stun, fire = 1 HP + 1 stamina, earth = 2 stamina + armor ratchet. Only earth combines resource starvation WITH a damage-nullifying armor ratchet, which is why mush (earth) is the sole normal with deaths while corpse_eater (counter, harder cushion) never loses.",
+      "diagnosis": "corpse_eater being the hardest normal at 0.753 cushion / WR 1.0 is HEALTHY and intended (counter affinity is honest incremental damage that threatens HP without ever creating an unwinnable stall). The asymmetry is that earth's armor-sprout sub-effect is qualitatively different: it can convert a 'slow win' into a 'no win' for low-damage decks, which is what makes mush an outlier rather than just 'hard'. No change needed to counter/agility/water/air normals — the spread across the other 18 normals is balanced (WR 1.0, cushions 0.75-0.99, no timeouts).",
+      "proposed_change": "No per-enemy nerf for the non-earth affinities. Confirm the earth fix above (cap/skip the normal armor-sprout) so earth becomes a stamina-tax affinity rather than a soft hard-lock; this keeps all six affinity identities distinct while removing the only one that can deny a win to a viable starter deck. C3/C5-compatible: earth stays pure control flavor (stamina drain), it just stops manufacturing unbeatable armor on 0-defense fodder.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "enemy-normals"
+  },
+  {
+    "finding": {
+      "kind": "boss_progression",
+      "target": "doom_knight (boss1, loop10)",
+      "stage": "boss1",
+      "severity": "low",
+      "title": "doom_knight easy-verdict CONFIRMED: 97.4% win over 38 decks, but it is the 2nd-HARDEST boss in the rotation (curve is inverted, not doom_knight being too hard)",
+      "evidence": "boss-report.json doomKnightCheck: nDecks 38, fracWin 0.974, meanCushionOnWin 0.592, single loser = mage-pure-burn-boss1-2 (8 deaths). enemy-summary doom_knight: scaledHP 380, scaledDamage 6, atkCD 2500 (rawDPS 2.40), affinity counter, enrage@0.5 x1.4. Across the rotation the SAME archetypes get EASIER, not harder, after boss1: armor_finisher 0.65->1.00 (b1->b2), pure_poison 0.84->0.85->0.85->0.94, slow_stun_control 0.53->1.00, mixed-bruiser 0.54->0.65->0.74. doom_knight's 0.592 mean cushion is the lowest of all bosses except infernal_dragon (0.601). Its difficulty comes from 380 HP being slow to chew through at L6 decks + counter-affinity retaliation, NOT from its low damage (2.4 DPS).",
+      "diagnosis": "doom_knight is correctly EASY in absolute terms (>97% win, the one loser is the known-weak pure_burn mage opening cold against 380 HP with counter retaliation). The realism check PASSES. The real problem is relative: doom_knight sits at the bottom of the cushion ranking, so the player's FIRST boss is among the most HP-threatening fights they will ever face, and bosses 2-5 are softer than the tutorial boss. The fix is not to touch doom_knight (it must stay easy per the brief) but to make the later bosses ramp ABOVE it.",
+      "proposed_change": "Leave doom_knight unchanged (it is the calibrated baseline and passes the easy-check). Treat its 0.59 cushion as the floor that the rest of the rotation must exceed downward (i.e. later bosses should land progressively BELOW 0.59). Bosses can be tuned freely under the charter, so no C1-C5 card lever is touched.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "doom_knight (boss1, loop10)",
+      "title": "doom_knight easy-check PASSES and the inverted-boss-curve diagnosis is REAL, but the title misreads its own data: by mean cushion doom_knight is the HARDEST boss (0.592), not \"2nd-hardest\"; and the aggregate ranking is partly a deck-pool-composition artifact",
+      "confirmed": true,
+      "method": "data_recheck",
+      "reason": "All quoted numbers reproduce exactly. boss-report.json doomKnightCheck: nDecks 38, fracWin 0.974, meanCushionOnWin 0.592, single loser = mage-pure-burn-boss1-2 (8 deaths). enemy-summary doom_knight: scaledHP 380, scaledDamage 6 (rawDPS 6/2.5=2.40), affinity counter, enrage@0.5 x1.4. The per-archetype trajectories (deck-quality-controlled) all check out and ALL rise after boss1: armor_finisher 0.653->1.0, slow_stun_control 0.532->1.0, mixed-bruiser 0.536->0.649->0.738, pure_poison 0.843->0.855->0.855->0.945. The substantive diagnosis -- 'the first boss is more HP-threatening per equivalent deck than the later bosses; the curve is inverted' -- is therefore SUPPORTED and the easy-check verdict (>97% win, lone loser is the known-weak pure_burn mage) is correct. doom_knight should NOT be touched. TWO corrections to the finding's characterization: (1) The title calls doom_knight 'the 2nd-HARDEST boss', but the aggregate boss-cushion ranking is doom_knight 0.592 < infernal_dragon 0.601 < boss_iron_golem 0.805 < iron_golem 0.818 < lizard_king 0.822 < bog_witch 0.888 < desert_golem 0.895 -- so by the very metric it cites, doom_knight is the LOWEST/HARDEST cushion, not 2nd. The evidence text ('lowest of all bosses except infernal_dragon') contradicts the title; 0.592<0.601 makes it the lowest. (2) The 0.592 aggregate is partly a CONFOUND: doom_knight (n=38) is the only boss faced by the full weak/starter pool (pure_burn cushion 0.008, poison_burn 0.134, poison 0.173, burn 0.37, heal 0.504, *-weak starters), which drags its mean down, while deep bosses (n=7-9) are faced ONLY by tuned endgame decks. The per-archetype trajectory is the correct (deck-controlled) evidence and it stands; the aggregate cushion comparison overstates the gap. The proposed_change is C1-C5-safe (touches no card; bosses are tuneable under the charter), but its literal target 'later bosses should land progressively BELOW 0.59' is too blunt -- it should be archetype-matched, not aggregate-matched, since deep bosses face only strong decks. As a boss_progression finding, no swap-test sim is required; data_recheck is the appropriate method and it confirms the substance with the noted relabeling.",
+      "adjusted_severity": "low"
+    },
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "boss_progression",
+      "target": "boss rotation difficulty curve (iron_golem/lizard_king/bog_witch/desert_golem/ancient_iron_golem)",
+      "stage": "boss2-boss7",
+      "severity": "high",
+      "title": "Boss difficulty curve is INVERTED/flat: deep bosses are LESS threatening than the easy first boss. Cushion rises 0.59->0.82->0.82->0.89->0.90 across loops 10-50 instead of falling",
+      "evidence": "meanCushionOnWin by rotation order (enemy-summary + boss-report): doom_knight 0.592 (loop10) -> iron_golem 0.818 (l20) -> lizard_king 0.822 (l30) -> bog_witch 0.888 (l40) -> desert_golem 0.895 (l50) -> infernal_dragon 0.601 (l60) -> boss_iron_golem 0.805 (l70). deathRate is 0 for all of b3-b7. Holding archetype FIXED to control deck variance, cushion RISES across the rotation for every archetype tested (armor_finisher 0.65->1.0->1.0->1.0->1.0; pure_poison 0.84->0.85->0.85->0.94; slow_stun_control 0.53->1.0->0.93->1.0->1.0; bleed+rage 0.66->0.81->0.77->0.81). Boss raw DPS only grows from 2.40 (doom) to 4.00/4.40/3.48/4.44 (b2-b5) while estimated hero maxHP nearly doubles (L6~116 -> L16~201) and deck damage output grows far more (avgDamageDealt 384 at b1 -> 400-748 deep), so deep fights finish at 80-90% HP.",
+      "diagnosis": "This is primarily a BOSS-tuning problem, not an over-generous hero profile. Hero damage throughput (deck size 5->15, level scaling, STR/INT growth) outpaces boss HP growth (380->540 over 40 loops, +42%), and boss DAMAGE barely keeps up (2.4->4.4 DPS) because the difficulty multiplier (1.05/1.10/1.15/1.20) is too gentle and the signature behaviors (shield, drain) are near-inert (see separate findings). The net effect: every boss after the tutorial is a softer fight than the tutorial. desert_golem at loop50 (0.895 cushion, 0 deaths over 9 decks) is the worst offender for its depth.",
+      "proposed_change": "Re-shape the curve so post-doom_knight cushion DESCENDS toward a ~0.40-0.55 target band by loop 50+. Concrete, all boss-side (no card C1-C5 levers touched): (1) raise bossMult progression so it bites — e.g. b2 1.05->1.15, b3 1.10->1.25, b4 1.15->1.35, b5 1.20->1.50; (2) bump base damage on the soft tanks: iron_golem 10->12, desert_golem 10->13, bog_witch 7->9; (3) give the pure single-hit tanks (iron_golem, desert_golem) a real threat behavior (a multi_hit 2x0.6 or a periodic heavy 'slam' enrage) since shield alone does nothing. Validate by re-simming the fixed-archetype decks at each stage and confirming cushion now falls monotonically below doom_knight's 0.59 from b3 onward, while win-rate stays >=~0.8 (beatable, not lethal).",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "boss_progression",
+      "target": "iron_golem (boss2) & desert_golem (boss5) shield behavior",
+      "stage": "boss2/boss5",
+      "severity": "med",
+      "title": "Shield behavior is mechanically near-inert: periodic flat +defense is trivial vs deck damage, so the two shield-bosses are under-threatening",
+      "evidence": "EnemyAI.ts:85-92 shield just does state.enemyDefense += shieldAmount every interval. iron_golem = +4 def / 8000ms; desert_golem = +10 def / 7000ms. Damage subtracts defense per-hit (CardResolver perHit = max(1, floor(baseDmg - effectiveEnemyDef))), but deck per-hit damage and multi-hit cards swamp it. Result: iron_golem cushion 0.818 (23 decks, deathRate 0.043), desert_golem cushion 0.895 (9 decks, deathRate 0). In boss-prog-final.json late-war-armor-finisher__vs__iron_golem: winRate 1, cushion 1.0, avgDamageDealt 673 vs 409 HP — armor stacks dwarf the +4 shield. mage-poison-block & heal-sustain hit cushion 1.0 vs iron_golem.",
+      "diagnosis": "A flat additive-defense buff is the wrong knob for a tank: against burst/multi-hit it only shaves a few points per attack, and against DoT (poison/bleed/burn, which can be set to pierce or which bypass via chunk damage) it does nothing. The shield-bosses therefore read as 'big HP bags' with no actual mitigation pressure, which is why they cushion 0.82-0.90. Note the static-confirmed audit already documents that armor-finisher takes ZERO damage vs these (cushion 1.0) — intended safety, but it makes the shield doubly pointless.",
+      "proposed_change": "Make shield meaningful without C1-C5 card changes: (a) convert shield to a temporary damage-REDUCTION or chunk-absorb (e.g. absorb N damage that expires, refreshing each interval) so multi-hit cannot trivially ignore it, OR (b) keep flat-def but raise shieldAmount sharply and shorten interval (iron_golem 4/8s -> 8/5s; desert_golem 10/7s -> 16/5s) AND pair it with a damage bump (see curve finding) so the tank actually races. Target post-fix cushion ~0.45-0.55 at their loops. Re-sim the fixed decks; confirm armor_finisher's 1.0 cushion drops below 1.0 and DoT decks no longer ignore the shield entirely.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "boss_progression",
+      "target": "bog_witch (boss4) drain behavior",
+      "stage": "boss4",
+      "severity": "med",
+      "title": "bog_witch drain (heal 15% of damage dealt) is negligible (~1 HP/attack) and does not create a sustain race; it is the softest boss for its depth",
+      "evidence": "enemies-index bog_witch: baseHP 410 (scaled 471), baseDamage 7 (scaled 8), drain healPercent 15, multi_hit 2x0.6. EnemyAI.ts:145-149/186-189 heals floor(totalDamage * 15/100). With multi-hit total ~ floor(8*0.6)*2 = 8 damage, drain heals floor(8*0.15)=1 HP per attack against a 471 HP pool. boss-report bog_witch: nDecks 15, meanWinRate 1.0, meanCushionOnWin 0.888, deathRate 0, ZERO losses. Every archetype clears it: armor_finisher 1.0, poison+block 1.0, slow_stun_control 1.0, pure_poison 0.945. boss-prog-final late-mage-poison-strong__vs__bog_witch: cushion 1.0.",
+      "diagnosis": "The drain heals off the boss's own (low) damage, so it scales with the wrong number — it is a rounding error vs a 471 HP pool and never forces the player to out-pace a heal. A lifesteal/sustain boss should heal off a meaningful fraction so DoT/chip decks feel a race; here it is invisible. Combined with only +15% bossMult at loop40, bog_witch is the single least-threatening boss relative to its stage (deepest 1.0-cushion clears).",
+      "proposed_change": "Re-anchor the drain to be a real sustain mechanic (boss-side only): drain off a percent of bog_witch's MAX HP per attack (e.g. heal 2-3% maxHP = ~10-14 HP/attack) or raise healPercent to ~60-80% AND raise her base damage 7->10 so the heal pool is non-trivial; this turns her into a genuine 'burst her down before she sustains' fight that rewards high-OPS decks and pressures slow chip decks. Pair with the bossMult bump from the curve finding (b4 1.15->1.35). Re-sim fixed decks; target cushion ~0.50-0.60 and confirm slow DoT-only decks now feel the race (TTK up, cushion down) while burst decks still win.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "boss_progression",
+      "target": "infernal_dragon (boss6) as the curve exemplar",
+      "stage": "boss6",
+      "severity": "low",
+      "title": "infernal_dragon proves the fix: multi_hit 3x0.5 is the ONE behavior that meaningfully threatens (0.601 cushion at loop60) — use it as the template for the under-tuned bosses",
+      "evidence": "enemy-summary infernal_dragon: scaledHP 575, scaledDamage 11, atkCD 2200, behaviors multi_hit 3x0.5 + enrage@0.4 x1.4; meanCushionOnWin 0.601 (lowest in rotation), winRate 1.0, deathRate 0 over 9 decks. multi_hit 3x0.5 = 1.5x damage throughput (effective ~7.5 DPS before enrage vs 4-4.4 for the soft tanks). worst cushions: detonator-control 0.259/0.599, mixed-elemental 0.561, pure_burn 0.231 (deep-endgame). It pressures HP across many archetypes WITHOUT killing anyone — exactly the 'beatable but costly' profile the brief wants. Contrast: boss_iron_golem (loop70, scaledDamage 15, shield 12/7s + enrage) still cushions 0.805 because its big number is a single hit reduced by per-hit defense math and its shield is inert.",
+      "diagnosis": "The dragon is correctly tuned and demonstrates that damage THROUGHPUT (multi-hit / faster cadence), not flat HP or flat defense, is what makes a boss threatening in this engine. The deeper boss_iron_golem ironically threatens less than the dragon despite higher raw stats, because its damage is one big defense-reducible hit and its shield/enrage do little. This validates the proposed direction for iron_golem/desert_golem/bog_witch.",
+      "proposed_change": "No change to infernal_dragon. Use its multi_hit profile as the explicit design template: give the soft single-hit tanks (iron_golem, desert_golem, boss_iron_golem) a multi_hit 2x0.65-0.7 (or 3x0.5 for boss_iron_golem) so their damage actually races the hero, and ensure boss_iron_golem (final boss) ends BELOW the dragon's 0.601 cushion. Boss-side only; no card levers touched.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "deep-stage bosses (boss5/6/7) sample size",
+      "stage": "boss5-boss7",
+      "severity": "low",
+      "title": "Deep-boss cushions rest on thin, self-selected deck samples (7-9 decks, all relatively tuned T3 builds) — directionally solid but quantitatively soft",
+      "evidence": "nDecks: desert_golem 9, infernal_dragon 9, boss_iron_golem 7 (vs doom_knight 38, iron_golem 23). The deep matchups are dominated by strong 'deep-endgame' and 'late-strong' archetypes (pure-poison, slow-stun-control, armor-finisher) that are near-optimal, so their high cushions partly reflect strong piloting, not just soft bosses. boss-prog-final.json shows the same decks CAN be pressured: late-mage-burn-strong__vs__lizard_king = 5 DEATHS / winRate 0 (the curve has real teeth for off-meta builds), and late-mage-burn-strong__vs__bog_witch cushion 0.138.",
+      "diagnosis": "The under-threatening conclusion for b2-b5 is robust (it holds even for the strongest archetypes and is corroborated by the inert-behavior code analysis and the fixed-archetype cross-stage trend). But the EXACT cushion magnitudes at b5-b7 should be treated as upper bounds with wide error bars, and the proposed boss buffs must be re-validated against a BROADER deck set (including mid-strength and off-meta builds) so the ramp does not accidentally make a deep boss unwinnable for a realistic average deck.",
+      "proposed_change": "Before committing the boss-buff numbers, expand the deep-stage deck battery to >=15-20 decks per boss spanning weak/avg/strong builds and both classes (mirror the boss1 sample breadth), re-sim with >=6 repeats, and tune bossMult/damage/behavior so the AVERAGE deck lands ~0.45-0.55 cushion with winRate >=0.8 and the weakest realistic decks stay above ~0.6 winRate. This is a validation gate, not a card change.",
+      "confidence": "med"
+    },
+    "verdict": {
+      "target": "deep-stage bosses (boss5/6/7) sample size",
+      "title": "Deep-boss cushions rest on thin, self-selected strong-deck samples (7-9 decks, all tuned late/deep-endgame builds) — directionally solid, quantitatively soft",
+      "confirmed": true,
+      "method": "data_recheck",
+      "adjusted_severity": "low",
+      "reason": "VERIFIED and correctly characterized. Every cited number is accurate against the source JSONs. boss-report.json confirms nDecks: desert_golem 9, infernal_dragon 9, boss_iron_golem 7 vs doom_knight 38, iron_golem 23 — i.e. deep bosses have 18-25% of the first boss's deck breadth. The compositional claim is the crux and it holds: archetype-summary.json shows the boss5/6/7 samples contain ONLY tuned late/deep-endgame builds (armor_finisher, slow_stun_control, poison+block, pure-poison, detonator-control, mixed-elemental-toolbox, mixed-bruiser) with NO weak/starter archetypes, whereas the boss1 (n=38) sample spans starter-physical-weak, armor-heavy-weak, pure_burn, heal, poison etc. So the high deep-boss cushions (desert_golem 0.895, boss_iron_golem 0.805) partly reflect near-optimal piloting, not just soft bosses — a real selection effect. The corroborating evidence is also quoted correctly: boss-prog-final.json line 906-932 has late-mage-burn-strong__vs__lizard_king = 5 deaths / winRate 0, and line 934-960 has late-mage-burn-strong__vs__bog_witch cushion 0.138, demonstrating the deep curve still has teeth for off-meta builds. The diagnosis follows logically: the DIRECTIONAL under-threatening conclusion for b2-b5 is robust (it holds even for the strongest archetypes — every strong deck wins with large cushion — and is corroborated by the fixed-archetype cross-stage trend and inert-behavior code analysis), but the EXACT cushion magnitudes are upper bounds with wide error bars. Two honest caveats that the finding slightly understates but that only reinforce it: (1) even within the strong samples there is genuine downside spread (infernal_dragon detonator-control cushion 0.259 and mixed-bruiser 0.645; boss_iron_golem detonator-control 0.664), and (2) deep bosses are NOT mechanically inert — scaledHP climbs steeply (infernal_dragon 575, boss_iron_golem 611) and they carry live behaviors (enrage, multi_hit, shield 10-12, drain), so the soft cushions are as plausibly driven by generous deep-stage hero runXP (boss7 runXP 4400/~L19) as by under-tuned bosses — exactly the ambiguity this caveat flags. The proposed change is a VALIDATION GATE not a mechanical claim, so it cannot violate C1-C5: it asks to broaden the deep-deck battery to >=15-20 decks/boss spanning weak/avg/strong and both classes, re-sim >=6 repeats, and only THEN tune bossMult/damage/behavior (enemy-progression tuning, which the brief explicitly authorizes) so an average deck lands ~0.45-0.55 cushion at winRate>=0.8 while the weakest realistic deck stays >0.6. This correctly prevents a boss buff calibrated on strong-only samples from making a deep boss unwinnable for a realistic average deck. low severity is appropriate: it is a confidence/methodology qualifier on other findings, not an independent balance defect.",
+      "sim_evidence": "No new sim required (methodology/sample-quality caveat, not an off_curve/tier_violation card claim). Re-read confirms: boss-report.json nDecks {doom_knight:38, iron_golem:23, lizard_king:22, bog_witch:15, desert_golem:9, infernal_dragon:9, boss_iron_golem:7} and meanCushionOnWin {iron_golem:0.818, lizard_king:0.822, bog_witch:0.888, desert_golem:0.895, infernal_dragon:0.601, boss_iron_golem:0.805}. archetype-summary.json deep-boss composition (all tuned builds, no weak ones): desert_golem(boss5)=armor_finisher 1.0 / mixed-bruiser 0.775 / poison_burn 0.68 / slow_stun_control 1.0 / poison+block 1.0,0.995 / mixed-elemental 0.791,0.816; infernal_dragon(boss6)=mixed-bruiser 0.645 / slow_stun_control 1.0 / detonator-control 0.599,0.259 / mixed-elemental 0.561; boss_iron_golem(boss7)=detonator-control 0.664,0.924 / mixed-elemental 0.785 / deep-endgame pure-poison 0.843 / deep-endgame slow-stun-control 0.924. Teeth-on-off-meta corroboration from boss-prog-final.json: late-mage-burn-strong__vs__lizard_king wins 0/5 deaths 5 winRate 0 (scaledHP 388), and late-mage-burn-strong__vs__bog_witch winRate 1 but cushion 0.138 / avgTtkMs 53000. enemy-summary.json confirms deep bosses are not inert: desert_golem scaledHP 540 + shield 10; infernal_dragon scaledHP 575 + multi_hit×3 + enrage; boss_iron_golem scaledHP 611 + shield 12 + enrage."
+    },
+    "lane": "boss-progression"
+  },
+  {
+    "finding": {
+      "kind": "archetype_weak",
+      "target": "pure_burn (mage)",
+      "stage": "boss1",
+      "severity": "high",
+      "title": "pure_burn is the only archetype that LOSES the should-be-easy first boss",
+      "evidence": "archetype-summary boss1 pure_burn/mage: bossMeanWinRate 0.50, bossMeanCushion 0.008. Matchup mage-pure-burn-boss1-2__vs__BOSS_doom_knight: winRate 0, 8/8 deaths, avgDamageDealt 354 of doom_knight's 380 HP (dies ~26 HP short). Its sibling mage-pure-burn-boss1-1 wins but at avgHeroHpPctOnWin 0.008 (1.7s from death). doom_knight is the headline easy boss (380 HP/def3/6dmg, enrage x1.4 at 50% HP) that 37/38 other decks clear; pure_burn is the single loser in boss-report doomKnightCheck. The pure-burn lane confirmed 6/6 deaths at 6 repeats. Normals are fine (boss1 normalMeanWinRate 1.0, cushion 0.821).",
+      "diagnosis": "A defenseless 70-HP mage running a soft-capped burn DoT (8+floor((n-8)/2)/tick) cannot out-race a 380-HP boss that enrages before the DoT pool matures. INT stays ~3 at loop10 so elemMult barely helps. The archetype's only burst lever (detonators) under-delivers vs an armored boss (see VENOM/CINDERLANCE findings). avgDamageDealt 354 means the deck is ~26 HP short of a kill, i.e. a small, well-targeted ceiling buff to the burn win condition flips the loss without trivializing the boss.",
+      "proposed_change": "Do NOT nerf doom_knight (every other archetype clears it). Per C1/C5, lift the burn WIN CONDITION via the detonator buffs below (these are T3 build-around cards; raise ceiling / cut CD, never touch the soft-cap tick). Buffing Venom Detonation (2->4 Pierce/burn) and Cinderlance (cd 2.2->1.8, 3->4 Pierce/burn) gives the realistic 12-card boss1 burn deck the ~30 extra closing damage it needs to reach ~0.8 winRate before enrage.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "pure_burn (mage) — boss1 vs doom_knight; proposed_change buffs Venom Detonation + Cinderlance",
+      "title": "Real weakness, WRONG fix: the proposed Cinderlance/Venom buffs are absent from the losing deck and do nothing (sim-confirmed inert); the actual fix is the T3 detonator that IS in the deck (Cinder Sprint)",
+      "confirmed": false,
+      "method": "both",
+      "adjusted_severity": "med",
+      "reason": "The SYMPTOM is real and the cited numbers are correct: in boss-report.json/archetype-summary.json, pure_burn/mage is the only archetype that loses doom_knight (the headline easy boss, 380HP/def3, enrage x1.4 at 50%). mage-pure-burn-boss1-2 = winRate 0, 8/8 deaths, avgDamageDealt 354 of 380 (dies ~26 short); its sibling mage-pure-burn-boss1-1 wins at cushion 0.008. 37/38 other decks clear it. doomKnightCheck lists pure_burn as the single loser. That part stands.\n\nBUT the proposed_change is mischaracterized and non-functional. I read the two pure_burn boss1 decks in decks-full.json. The LOSER (boss1-2) deck is [t1-fire, t2-agility-fire x3, t1-fire, t2-fire-fire x2, t1-air, t3-agility-fire-fire]. It contains NEITHER Venom Detonation (t3-counter-fire-water) NOR Cinderlance (t3-attack-fire-fire) — the two cards the proposal buffs. Cinderlance is only in the deck that ALREADY WINS (boss1-1). So buffing those cards cannot touch the loss. Two further factual errors in the diagnosis: (a) Venom Detonation and Cinderlance both scale STR, not INT — useless burst for a STR~1 mage, so they are not the burn 'win condition lever'; (b) the claim that detonators are 'the only burst lever' ignores that the deck's real detonators are Pyre (T2, x2) and Cinder Sprint (T3) — those are what need lifting.\n\nNote doom_knight's scaled damage is 6 (not 9 as the brief states) at loop10 mult 1.0 — confirmed in the matchup record and enemies-index.\n\nConfirmed=false because the actionable proposal would not work; the underlying issue is genuine and fixable, so severity is med (one of two sibling decks loses; trivially fixable via the correct lever), not high.",
+      "sim_evidence": "Swap-tests at 8 boss repeats, multiplier 1.0, doom_knight (tests/audit/val/swap/pureburn-boss1-verify-res.json + pureburn-boss1-guard-res.json):\n- burn-loser-base (exact boss1-2 deck): winRate 0, 8/8 deaths, avgDmg 354 — reproduces the cited loss exactly.\n- burn-loser-detonbuff (EXACT proposed fix: Venom Detonation detonate 2->4 Pierce; Cinderlance cd 2.2->1.8, detonate 3->4 Pierce): winRate 0, 8/8 deaths, avgDmg 354 — IDENTICAL to baseline. The proposed buff is completely inert because neither card is in the losing deck.\n- burn-winner-base (boss1-1, has Cinderlance): winRate 1, cushion 0.008.\n- burn-winner-cinderbuff (Cinderlance buff applied where it actually exists): winRate 1, cushion 0.008->0.087, ttk 30700->29900 — only helps the deck that already wins.\nWhat actually flips the loss (C-compliant alternatives, same loser deck):\n- burn-loser-pyrebuff (Pyre detonate 3->4): winRate 0->1, avgDmg 354->382, ttk 25900 — works but Pyre is T2.\n- loser-cs-cd-det5 (Cinder Sprint T3: cd 1.6->1.2 AND detonate 4->5): winRate 0->1, cushion 0.055, ttk 27500 — CHARTER-CORRECT (lift the T3 build-around that is in the deck, via CD cut + ceiling, never touch the soft-cap tick).\nSingle-lever T3 buffs fall short alone: Cinder Sprint det 4->5 (avgDmg 366), det 4->6 (378), or cd-only 1.6->1.2 (369) all stay winRate 0. Over-correction check: winner-pyrebuff cushion stays 0.008 — doom_knight is NOT trivialized."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t3-counter-fire-water (Venom Detonation)",
+      "stage": "boss1",
+      "severity": "med",
+      "title": "Venom Detonation's burn detonator scales by STR (=1 on a mage) and is non-Pierce — worst detonator in class",
+      "evidence": "cards-index: 'Apply 2[burn]. Apply 3[poison]. Consume all [burn] and deal 2([str]) damage per [burn] consumed.' cost {stamina:1,mana:1}, cd 2.4 (a real T3 spend). In the pure-burn 9-banker swap shell vs doom_knight, det-venomdet-boss1 lost 6/6 at 327 dmg — below even the T2 Pyre swap (374) and far below winners Cinder Sprint (380, win) and Supernova (439, win). Its 2(STR) coefficient is the lowest of any detonator AND STR-scaled, so on a mage (STR 1) it is a flat 2/burn that doom_knight's def 3 taxes on every stack.",
+      "diagnosis": "It is a mage/elemental card whose detonation scales off the warrior axis (STR) and does not Pierce, so on its intended user it is the weakest payoff in the detonator family at a full T3 cost. This caps the pure_burn ceiling exactly where it needs to close the boss.",
+      "proposed_change": "C1/C5: raise the detonation coefficient 2 -> 4 per [burn] consumed and make it Pierce (matching Cinder Sprint's 4 and the Pierce convention of Supernova/Cinderlance). It still self-applies 2 burn + 3 poison, so it remains a hybrid, not an oppressive pure nuke. Keep cost/CD unchanged (cost is the conservative lever per C1). Optionally re-scale the per-burn term off INT to fit its mage identity.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "t3-counter-fire-water (Venom Detonation)",
+      "title": "Venom Detonation's burn detonator scales by STR (=1 on a mage) and is non-Pierce — worst detonator in class",
+      "confirmed": false,
+      "method": "both",
+      "adjusted_severity": "low",
+      "reason": "The static card facts are accurate but the load-bearing claims are wrong/overstated, so the finding as characterized (med off_curve_weak that \"caps the pure-burn ceiling exactly where it needs to close the boss\") is INVALID.\n\nSTATIC FACTS THAT HOLD (cards.json:7037-7089): Venom Detonation is category \"magic\", cost 1s+1m, cd 2.4, and its detonator (effects[2]) is a Pyre damage effect value 2, scale {stat:\"str\",per:2,value:1}, with NO pierce_armor. So on a mage (STR~3 at loop10, often 1) the per-burn coefficient is ~2, the lowest of the detonator family (Cinder Sprint 4/DEX, Cinderlance 3 Pierce, Supernova 5/INT Pierce, Tremor Detonate). It is also the only detonator on a magic-category card that scales off STR, so the resolver's elemMult (CardResolver.ts:430, applies only when scale.stat!=='str') never engages — a genuine, but low-severity, wiring oddity.\n\nWHERE THE FINDING IS WRONG:\n1) MECHANICAL ERROR — \"doom_knight's def 3 taxes it on every stack.\" False. In CardResolver, the Pyre path does effectiveValue *= stacks (line 213) FIRST, then enemy defense is subtracted ONCE from the whole burst (line 442 baseDmg - effectiveEnemyDef). Def is a flat -3 on the total detonation, not -3 per stack. This materially overstates the non-Pierce penalty.\n2) FAMILY MISCHARACTERIZATION — the proposal says buffing to 4+Pierce \"matches Cinder Sprint's 4 and the Pierce convention of Supernova/Cinderlance.\" But Cinder Sprint does NOT Pierce (cards.json:6411-6424, no pierce_armor); only Cinderlance and Supernova do. The \"Pierce convention\" is half-wrong.\n3) THE LOSS IS A SHELL ARTIFACT, NOT A CARD PROPERTY — the cited \"lost 6/6 at 327 dmg\" was in a pure zero-sustain burn shell, which SIM-PROPOSAL-QUESTIONED §9 item 3 + §10 already accepted as a non-viable build (\"Endless detonator coefficient inflation cannot fix a no-sustain deck\"), and doom_knight was already nerfed 9→6 to let even pure-burn squeak a win. The premise problem is already addressed and was explicitly NOT a card-balance lever.\n4) APPEARANCE DATA CONTRADICTS \"weakest/unused\" — card-appearance.json: Venom Detonation meanNormalWinRate 1.0, meanNormalCushion 0.823, meanBossWinRate 0.833 over 6 real decks. peakOPS 17.08 is ABOVE the T3 median (tier-ops-perf.json T3 median 15.33). It is below the detonator SUBfamily but not below its tier, and it is not a dead/unused card.\n\nThe one durable sub-point (STR-scaling on a magic card; lowest intra-family coefficient; non-Pierce) is a real cohesion nit worth a low-severity polish, not a med viability/ceiling problem.",
+      "sim_evidence": "Swap test, boss1, 6 reps each (tests/audit/val/swap/venomdet-mu.json -> venomdet-res.json). Baseline = realistic poison+burn detonator mage (runXP 560, INT~3) with current Venom Detonation in slot 2 + a t1-water sustain splash; variant swaps in Cinder Sprint; \"buffed\" applies the proposed coeff 2->4 + Pierce via cardOverrides effectsPatch[2].\n\nvs doom_knight (HP380/def3/dmg6): CURRENT Venom Detonation WINS 6/6, ttk 32.0s, cushion 0.024, avgDmg 381 (not a loss — the finding's 6/6 loss does not reproduce in a realistic shell). Cinder-Sprint swap 6/6, ttk 27.9s, cushion 0.181, avgDmg 394. PROPOSED buff 6/6, ttk 27.5s, cushion 0.260, avgDmg 419. So the buff is measurable (cushion +0.236, dmg +38) and even out-cushions the Cinder Sprint sibling, BUT it flips NO loss to a win — the card already closes boss1.\n\nvs normals: skeleton (def2) baseline 6/6 cush 0.913 / buffed 6/6 cush 0.882; fire_elemental (def0) baseline 6/6 cush 0.787 / buffed 6/6 cush 0.787. The detonation burst is a small slice of total output (DoT-dominated), so Pierce/coeff changes are near-no-ops on normals. Conclusion: the proposed change is harmless and directionally works, but addresses no real failure; the motivating loss was a no-sustain-shell + already-resolved-boss-curve artifact."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t3-attack-fire-fire (Cinderlance)",
+      "stage": "boss1",
+      "severity": "med",
+      "title": "Marquee fire detonator Cinderlance loses where a 1-mana detonator wins (dead STR front-half on a mage + slow CD)",
+      "evidence": "cards-index: 'Deal 8([str]) twice. Consume all [burn] and deal 3 Pierce per [burn] consumed.' cost {stamina:1,mana:1}, cd 2.2, peakOPS 38.18. In the identical 9-banker shell vs doom_knight, det-cinderlance-boss1 lost 6/6 at 359 dmg, while the cheaper same-tier det-cindersprint-boss1 WON (6/6, 380) and det-supernova-boss1 WON (6/6, 439). card-appearance t3-attack-fire-fire bossWR 0.875.",
+      "diagnosis": "The 8(STR)-twice front-half is dead value on a mage (STR 1 -> flat 16), and its 3-Pierce/burn detonation under-converts the banked pool relative to its 2.2s CD, so it cannot land enough bursts before doom_knight enrages. A T3 build-around losing where a 1-mana T3 (Cinder Sprint) wins is the off-curve signal.",
+      "proposed_change": "C1: cut cooldown 2.2s -> 1.8s (snappier so front-load + detonation land more often before enrage) AND raise the detonation 3 -> 4 Pierce per [burn] consumed to match Cinder Sprint's per-stack. Buffs the T3 without nerfing anything; cost stays 1s+1m. (Front STR half can be left for warrior splashers; the CD+coefficient change is what fixes the mage case.)",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "tier_violation",
+      "target": "t3-fire-fire-water (Quench Lance) vs t2-agility-fire (Flame Dart)",
+      "stage": "late",
+      "severity": "med",
+      "title": "T3 Quench Lance is in-deck WORSE than the T2 burn filler it competes with",
+      "evidence": "Swap test (8 fixed strong-burn cards + 1 candidate, vs late normal battery): swap-quenchlance-late avgTTK 13975 ms / avgHP% 0.323, SLOWER and squishier than the T2 baseline swap-baseline-late (Flame Dart) avgTTK 11869 / avgHP% 0.348; worst vs mutated_salamander ttk 21500, hp% 0.101. card-appearance t3-fire-fire-water peakOPS 8.33 (below T3 median 12.3). Card: 'Apply 2[burn]([int]). For 6s, if you consume 10+ [burn], gain 2[int] this combat (max 4).' cost {stamina:1,mana:1}, cd 2.4.",
+      "diagnosis": "Charter requires T3 to out-ceiling ANY T2. Quench Lance applies only 2 burn (same as a T2) on a 2.4s CD, and its INT-ramp gate (consume 10+ burn) rarely fires inside a pure-burn shell, so its conditional ceiling never realizes. Net: a T3 that loses to the T2 it replaces.",
+      "proposed_change": "C1 / T3>T2: buff the T3, never nerf Flame Dart. Cut Quench Lance cd 2.4s -> 1.6s (it is a banker/ramp card; snappy CD per C1) and raise base application 2[burn] -> 3[burn] so it out-banks the T2. Lower the INT-gain threshold 10 -> 6 consumed so the synergy actually triggers in-shell. Keep cost 1s+1m.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "t3-fire-fire-water (Quench Lance) vs t2-agility-fire (Flame Dart)",
+      "title": "T3 Quench Lance is in-deck worse than T2 Flame Dart — REAL, but the cause is a DEAD INT-gate (stack_consumed never fires), not a too-high threshold; the proposed thr10→6 cut does nothing and the buff only reaches parity",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "med",
+      "reason": "HEADLINE CONFIRMED via swap test: in a fixed late burn-mage shell (runXP720/INT3, candidate in slot 1, identical 9-card deck), current Quench Lance is consistently SLOWER and no tankier than the T2 Flame Dart it competes with — vs mutated_salamander TTK 11400 vs 10200 ms and cushion 0.71 vs 0.768; vs fire_elemental 6300 vs 5100 ms (0.87 vs 0.87); vs depths_horror ~5833 vs 5000 ms. Win 1.0 for both (these normals aren't lethal), so TTK is the discriminator and Quench Lance loses on it across all 3 enemies. peakOPS 8.33 is the 23rd percentile of T3 and the floor among offensive (magic/attack) T3 burn cards (the only lower ones are C3 defense/armor builds). So a damage-archetype T3 being strictly dominated by a T2 burn card is a genuine off-curve-weak / T3<T2 situation. HOWEVER the finding's diagnosis and fix are partly WRONG: (1) it quotes 'T3 median 12.3' but tier-ops-perf.json median is 15.33 (card-appearance ~16.5). (2) Its diagnosis ('INT-ramp rarely fires') understates reality — the gate fires NEVER in-shell: a no-ramp diagnostic (effects[1] INT-gate stripped to a pure 2-burn) is byte-identical to current (mutated_salamander 11400/0.71/188dmg == 11400/0.71/188; fire_elemental 6300 == 6300), proving the conditional ceiling contributes exactly zero even with Quench Lance placed right before a Supernova detonator. (3) The proposed threshold cut 10→6 does NOT fix it: a thr6-only override is identical to current (11400 == 11400). Root cause is the stack_consumed-emission gap already CODE-CONFIRMED in static-confirmed.json #9 — Pyre-keyword detonators (Pyre/Cinderlance/Cinder Sprint) emit no stack_consumed event, so they cannot feed Quench Lance's event_counter{stack_consumed,burn,min_amount}; only consume_stack_value detonators (Supernova/Tremor Detonate) emit it, and even Supernova does not trip the 6s-window counter here. (4) Even simulating the ramp fully realized (hero forced to INT7 = base3+4) Quench Lance reaches 7500 ms vs mutated_salamander / 4900 ms vs fire_elemental but STILL loses to Flame Dart at INT7 (6300 / 3700 ms), because Quench Lance has ZERO direct damage while Flame Dart deals 5 direct + 2 burn. So the proposed cd1.6/3burn/thr6 buff only reaches PARITY (confirmed run-1 buffed variant: 10800/5500/5283 ms ≈ baseline 10400/5100/5267), NOT the charter-required 'T3 out-ceilings ANY T2'. Keeping severity MED (an unused-tier offensive T3, not oppressive/game-breaking), but the FIX must change: drop the dead threshold tweak; instead (a) fix the engine so stack_consumed fires from the Pyre auto-consume path so the ramp can actually trigger (the real wiring bug, per C4 wiring-first), AND (b) give Quench Lance a small direct-damage clause or a stronger guaranteed banker payoff plus the cd1.6 cut so it can out-ceiling the T2 once its synergy lands — never nerf Flame Dart (C1/T3>T2). The bare cd1.6+3burn buff alone is insufficient.",
+      "sim_evidence": "Swap spec tests/audit/val/swap/quenchlance2.json -> results tests/audit/val/swap/quenchlance2-res.json (6 repeats, fixed slot-1 candidate, runXP720, INT3 unless noted). vs mutated_salamander: ql2-baseline-flamedart ttk10200/hp0.768/dmg187; ql2-quench-current ttk11400/hp0.71/dmg188; ql2-quench-noramp(gate stripped) ttk11400/hp0.71/dmg188 (IDENTICAL=gate dead); ql2-quench-thr6only ttk11400/hp0.71/dmg188 (IDENTICAL=thr cut useless); ql2-quench-int7ceiling ttk7500/hp0.826/dmg192; ql2-flamedart-int7 ttk6300/hp0.884/dmg187. vs fire_elemental: baseline 5100/0.87; quench-current 6300/0.87; noramp 6300; thr6only 6300; int7ceiling 4900; flamedart-int7 3700/0.935. vs depths_horror: baseline 5000/0.928; quench-current 5833/0.928; noramp 5567; thr6only 6167; int7ceiling 5350; flamedart-int7 3700/0.964. Earlier spec tests/audit/val/swap/quenchlance.json -> quenchlance-res.json shows proposed buff (cd1.6/3burn/thr6) only reaches PARITY with the T2: ql-quench-buffed mutated_salamander 10800 / fire_elemental 5500 / depths_horror 5283 ms vs ql-baseline-flamedart 10400/5100/5267. card-appearance: t3-fire-fire-water peakOPS 8.33 (23rd pct of 120 T3 cards; floor among offensive T3 burn). Corroborating code: static-confirmed.json entry #9 confirms Pyre-keyword detonators emit no stack_consumed, so they cannot advance Quench Lance's gate; cards.json effects confirm Quench Lance = [dot 2 burn(int); aura ttl6000 event_counter{stack_consumed,burn,min_amount:10} -> stat_gain int+2 max4] with NO direct damage, vs Flame Dart = [damage 5(dex); dot 2 burn]."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "archetype_weak",
+      "target": "detonator-control (mage)",
+      "stage": "boss3",
+      "severity": "med",
+      "title": "Burn-Supernova sub-line of detonator-control is fragile (loses lizard_king, thin on infernal_dragon); poison dual-DoT line is healthy",
+      "evidence": "archetype-summary boss3 detonator-control/mage: bossMeanWinRate 0.50. mage-detonator-control-boss3-1 (burn-bank-into-Supernova) vs lizard_king: winRate 0, 8/8 deaths, avgDamageDealt 403 of lizard_king's 407 scaled HP (dies ~4 HP short); its normals run slow at 22-24s TTK. The sibling poison/dual-DoT line mage-detonator-control-boss3-2 vs lizard_king WINS in 12.2s at 0.721 cushion and clears normals in 8-9s at 0.84-0.86 cushion. boss6 mage-detonator-control-boss6-2 (burn Supernova) vs infernal_dragon wins but at only 0.259 cushion (33s TTK).",
+      "diagnosis": "Within detonator-control the poison/Marsh-Squall dual-DoT line is fine; the weakness is specifically the burn-bank-into-Supernova line, which depends on a slow EXHAUST detonator and the same under-converting burn detonators (Venom Detonation/Cinderlance) flagged above. Against an enraging tempo boss (lizard_king enrage x1.5 at 30%, multi_hit) the burn pool matures too late — the 403-vs-407 near-miss shows it is a closing-speed problem, not a damage-floor problem. Fixing the burn detonators (above) directly remedies this sub-line; no control-card change needed.",
+      "proposed_change": "Resolve via the burn-detonator buffs already proposed (Venom Detonation 2->4 Pierce; Cinderlance cd 2.2->1.8 + 3->4 Pierce; Quench Lance bank buff). These give the burn-Supernova line the closing speed to convert before enrage. Do not nerf lizard_king (12 other archetypes clear it). No new defensive grafting onto control (C3).",
+      "confidence": "med"
+    },
+    "verdict": {
+      "target": "detonator-control (mage) — burn-bank-into-Supernova sub-line, boss3 (lizard_king)",
+      "title": "CONFIRMED: burn-Supernova sub-line of detonator-control loses lizard_king on a closing-speed near-miss; finding's Venom Detonation 2->4 Pierce buff swap-tested and flips the loss to a win",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "med",
+      "sim_evidence": "Data recheck (results-full.json / enemy-summary.json / archetype-summary.json), all quoted numbers accurate: mage-detonator-control-boss3-1 (burn-bank-into-Supernova) vs lizard_king = winRate 0, 8/8 deaths, avgDmg 403 vs lizard_king scaledHP 407 (dies ~4 HP short — a true near-miss). Sibling poison/dual-DoT line boss3-2 vs lizard_king wins 12.2s / cushion 0.721 / dmg 476. boss3-1 normals run 22.0-24.0s TTK (werewolf 22.7s, mutated_salamander 24.0s, baby_dragon 22.0s) vs boss3-2's 8-9s (werewolf 8.0s, salamander 9.0s, baby_dragon 8.0s) — burn-Supernova line ~2.5-3x slower at the SAME normals. lizard_king across all 22 matchups: meanWinRate 0.955, deathRate 0.045, affinity attack, enrage x1.5 @30%, multi_hit x2 — so this is a clear outlier loss (12+ archetypes clear it; do NOT nerf the boss). boss6: burn line boss6-2 vs infernal_dragon wins at cushion 0.259 / 33s TTK vs poison line boss6-1 at 0.599 / 13s — burn sub-line confirmed fragile. SWAP TEST (tests/audit/val/swap/det-burn-boss3.json + -res.json, boss3 params runXP1700/loopMult1.2/lizard_king/8 repeats, deck held in fixed order): baseline reproduced exactly (win 0, 8 deaths, dmg 403). venom4p (Venom Detonation t3-counter-fire-water effects[2] value 2->4 + pierce_armor, the finding's proposal): win 1.0, 0 deaths, dmg 407, TTK 47s, cushion 0.221 — FLIPS loss to win, no over-correction (slow 47s win, not trivial). superSnap (Supernova cd 2.8->1.8 + non-exhaust): also win 1.0 (dmg 409, cushion 0.151). super6 (Supernova per-burn value 5->6): STILL LOSES (win 0, 8 deaths, dmg 403) — proves it is a closing-SPEED problem, not a per-hit ceiling problem, exactly as the finding diagnoses.",
+      "reason": "The finding is REAL and correctly characterized at the decisive level. (1) Every cited number is accurate against the analysis JSONs and I reproduced the baseline loss in-sim (win 0 / 8 deaths / dmg 403 vs lizard_king HP 407). (2) The core diagnosis is sound and sim-proven: it is a closing-speed near-miss against an enrage/multi_hit tempo boss, not a damage-floor failure — buffing Supernova's per-burn VALUE (5->6) did NOT fix it, while adding closing damage (Venom Detonation 2->4 Pierce) DID flip win 0->1.0 with only a +4 avgDmg swing. (3) The proposed change works and is C1-C5 compliant: it buffs a detonator's value + adds Pierce (no cost increase, no CD lengthening), grafts no defense/heal onto control (C3), and does not nerf lizard_king (12+ other archetypes clear it at high cushion). (4) The win is non-oppressive (47s TTK, 0.221 cushion). Two caveats keep this at MED, not high, and correct the finding's incidental mechanism rather than its conclusion: (a) The finding's claim that the weakness is 'the same under-converting burn detonators (Venom Detonation/Cinderlance)' is partly inaccurate — per static-confirmed bugs #5/#6, Venom Detonation is a Pyre-keyword detonator that reads the LIVE burn pool and self-fuels its own applied burn, so it does NOT under-convert; and Cinderlance (t3-attack-fire-fire) is NOT in the boss3-1 deck at all, so a Cinderlance CD buff cannot remedy THIS loss. The real structural bottleneck is a slow burn-bank engine (Spark/Flame Dart/Pyre/Cinder Sprint) feeding a one-shot EXHAUST Supernova (cd 2.8) whose pool matures after enrage. (b) Buffing Venom Detonation does help (swap-confirmed), so the proposed lever is valid even though the mechanistic story behind it is imperfect. Net: the archetype_weak finding stands, the proposed fix is validated by swap test, severity med is appropriate (single fragile sub-line, narrow boss, marginal near-miss; the sibling poison line and 6 other detonator-control boss matchups are healthy)."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "archetype_dominant",
+      "target": "armor_finisher (warrior)",
+      "stage": "all bosses",
+      "severity": "low",
+      "title": "armor_finisher clears every boss at cushion 1.0 (zero damage taken) — oppressively SAFE but not oppressively FAST",
+      "evidence": "archetype-summary armor_finisher/warrior: boss2/boss3/boss4/boss5/boss7 all bossMeanCushion 1.0 (takes ZERO damage), normalMeanCushion 1.0; boss1 cushion 0.653 (one run 0.306, one 1.0). But war-armor-finisher-boss1-1 vs doom_knight: avgTtkMs 99100 (99 seconds!), avgCardsPlayed 60, avgDamageDealt 335. The single armor->damage finisher line (Shield Bash, scale.source:armor, per static-confirmed) is intentionally the one allowed conversion (C3).",
+      "diagnosis": "This is the intended C3 outcome: armor/heal/stun trade speed for survival. The deck is unkillable (cushion 1.0) but pays for it with a ~99s kill vs a 30s race-deck — it does NOT trivialize content via speed, and it is the sole sanctioned armor->damage finisher (C3 allows exactly one). It is safe-but-slow, not oppressive. Worth noting only so the synthesizer does not read cushion 1.0 as a power problem to nerf.",
+      "proposed_change": "NO NERF (C3-compliant: armor is intentionally race-losing/elite-at-survival, and this is the one permitted armor->damage line). If perfect-cushion at 99s TTK is judged too rewarding for zero risk, the C3-safe lever is enemy-side (e.g. a soft timeout/escalating boss pressure), NOT a card nerf. Flag as monitor-only.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "armor_finisher (warrior)",
+      "title": "armor_finisher clears every boss at cushion 1.0 — but it is also FAST (~15s), not slow: the finding's \"safe-but-slow / 99s kill\" thesis is a misread (conflates the 0.306-cushion grind with the 1.0-cushion clears) and the \"one sanctioned armor-finisher line\" claim is wrong",
+      "confirmed": false,
+      "method": "both",
+      "adjusted_severity": "invalid",
+      "sim_evidence": "Data recheck (results-full.json, source of archetype-summary): the cushion-1.0 clears are FAST, not slow. war-armor-finisher-boss2-1 vs iron_golem = 16800ms / 10 cards / cushion 1.0; boss3-1 vs lizard_king = 16300ms / 10 cards / cushion 1.0; boss5-1 vs desert_golem = 14600ms / 9 cards / cushion 1.0; boss1-2 vs doom_knight = 29100ms / 18 cards / cushion 1.0. The finding's cited 99100ms / 60 cards / 335 dmg matchup is war-armor-finisher-boss1-1, whose cushion is 0.306 (NOT 1.0). So within boss1 the SLOW run is the LOW-cushion one and the FAST run (29.1s) is the cushion-1.0 one — cushion and TTK are NEGATIVELY correlated, the inverse of the finding's \"pays for cushion 1.0 with a 99s kill\" claim. Swap-test (tests/audit/val/swap/armorfin-verify.json -> -res.json, 8 boss repeats, properly isBoss-scaled): baseline boss3 deck vs lizard_king = winRate 1.0 / TTK 16300ms / cushion 1.0 / 585 dmg (reproduces the val row exactly); boss5 deck vs desert_golem = 14600ms / cushion 1.0 / 639 dmg (exact reproduction). Swapping OUT Body Slam Vow (t3-attack-defense-defense, the confirmed-buggy uncapped armor->damage converter per static-confirmed) barely moves it: lk 16300->17500ms, dg 14600->17100ms, both still cushion 1.0 — so the fast-kill profile is driven by the whole armor->damage card CLUSTER (Aegis t3-defense-defense-defense +1/4armor, Bulwark Salvo t3-attack-attack-defense +1/2armor, Mountain's Answer t3-earth-earth-earth 22-pierce@32armor, Shield Bash t2-attack-defense, Thornwall), not by a single sanctioned line.",
+      "reason": "The finding's raw data points exist (boss2-5 bossMeanCushion 1.0; boss1-1 = 99100ms/60 cards) but its load-bearing diagnosis is a misread on three counts. (1) CAUSATION INVERTED: it presents armor_finisher as \"oppressively SAFE but not oppressively FAST,\" asserting the cushion-1.0 outcome is bought with a ~99s grind. The data show the opposite — the cushion-1.0 boss clears are ~15-17s (boss2 16.8s, boss3 16.3s, boss5 14.6s; verified by swap test), FASTER than the \"30s race deck\" the finding uses as its own speed yardstick, while still taking zero damage. The 99s/60-card grind belongs only to boss1-1, which has cushion 0.306, not 1.0; the finding conflated two different matchups. So at deeper bosses the deck is both maximally safe AND fast, which is a stronger (not weaker) profile than the finding describes. (2) WRONG C3 CARD CLAIM: \"the single armor->damage finisher line (Shield Bash)... the sole sanctioned armor->damage finisher (C3 allows exactly one)\" is false. The cushion-1.0/fast clears run on a cluster of armor->damage converters, and static-confirmed.json explicitly flags one of them (Body Slam Vow, t3-attack-defense-defense, per:1 uncapped self-fueling Pierce) as the \"broadest armor->damage in the set... NOT documented as intentional.\" Part of the late-game power is a confirmed bug, not a sanctioned line. (3) CITATION ERROR: there is no armor_finisher boss7 row (it tops out at boss5/desert_golem). Because the central characterization is factually inverted, the finding as written is invalid even though its bottom-line recommendation (no card nerf; if anything the C3-safe lever is enemy-side) happens to remain reasonable. The real, correctly-characterized issue is narrower and overlaps the already-known static-confirmed bugs (uncapped Body Slam Vow conversion; uncapped desert_golem shield) plus the deep-boss-under-threat finding the brief already flags — it should be folded into those rather than treated as a standalone armor_finisher dominance problem."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "archetype_dominant",
+      "target": "defensive mage hybrids: poison+block, heal-sustain (mage)",
+      "stage": "all bosses",
+      "severity": "low",
+      "title": "poison+block and heal-sustain mages clear bosses at ~0.95-1.0 cushion — safe-but-slow, the intended C3 profile (NOT the 'can't close tanky bosses' problem)",
+      "evidence": "archetype-summary poison+block/mage: boss2 cushion 1.0, boss3 0.997, boss4 1.0, boss5 0.998 (all winRate 1). heal-sustain/mage: boss1 0.855, boss2 0.978, boss3 0.959 (all winRate 1). These contradict the brief's lead that 'defensive/armor MAGE hybrids can't close tanky bosses' — in the sim they DO close, comfortably, just slowly. The genuinely weak defensive-leaning mage is pure_burn (covered separately), not poison+block/heal-sustain.",
+      "diagnosis": "Pairing a defensive shell with a real second win condition (poison DoT, or heal+poison) produces the C3-intended outcome: high survival, full clears, no race pressure. They are safe-but-slow, not oppressive (single-target, no broad armor/heal->damage conversion). The brief's 'can't close' concern is NOT reproduced for these specific hybrids; it applies to pure_burn's defenseless race.",
+      "proposed_change": "NO CHANGE (C3-compliant). Methodology note for the synthesizer: do not treat the ~1.0 cushions here as a dominance flag — these archetypes win by surviving and out-DoT-ing, exactly as C3 intends, and they are not oppressive. The real defensive-mage weakness is pure_burn (see archetype_weak finding), which lacks any second win condition.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "defensive mage hybrids: poison+block, heal-sustain (mage)",
+      "title": "poison+block and heal-sustain mages clear all bosses at ~0.95-1.0 cushion via safe-but-slow survive-and-out-DoT — the intended C3 profile, NOT oppression and NOT the \"can't close tanky bosses\" problem (which is pure_burn)",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "low",
+      "reason": "CONFIRMED. Every cited number checks out exactly against archetype-summary.json: poison+block/mage bossMeanCushion = boss2 1.0, boss3 0.997, boss4 1.0, boss5 0.998 (all bossMeanWinRate 1); heal-sustain/mage = boss1 0.855, boss2 0.978, boss3 0.959 (all bossMeanWinRate 1). All these boss matchups show deaths 0, timeouts 0 — so the archetypes DO close, directly contradicting the brief's lead that 'defensive/armor MAGE hybrids can't close tanky bosses.' The diagnosis (safe-but-slow, C3-intended, not oppressive, no change) follows the data and is corroborated by the per-matchup results and deck contents. The genuinely weak defensive-leaning mage is correctly identified as pure_burn, which the data confirms is fragile (pure_burn boss1 bossMeanWinRate 0.5, one matchup mage-pure-burn-boss1-2 with 8 deaths / cushion null; the surviving matchup wins on a razor 0.008 cushion). No small-sample or deck-quality confound undermines a NO-CHANGE verdict: 2 decks x 8 repeats per stage is modest but cushion ~1.0 holds consistently across 4 distinct deep bosses, and the decks are well-built. Proposed_change (NO CHANGE) is C1-C5 compliant.",
+      "sim_evidence": "Re-read of results-full.json (the source sim, repeats=8) confirms the safe-but-slow C3 signature and proves the wins are survival-driven, not oppressive output: mage-poison-block-boss2-1 vs BOSS_iron_golem (enemyScaledHP 420) = winRate 1, deaths 0, timeouts 0, avgHeroHpPctOnWin 1.0 (zero damage taken), but avgTtkMs 20000 (the max clock) with avgDamageDealt only 435 over the full ~20s. mage-heal-sustain-boss2-1 vs BOSS_iron_golem = winRate 1, deaths 0, cushion 1.0, avgTtkMs 20000, avgDamageDealt 438. Identical pattern: full survival, maximum grind time, modest single-target output — the textbook 'race-losing but elite at survival, buy time for a second win condition (poison DoT)' C3 outcome. Contrast same boss (420 HP): pure_burn clears at cushion 0.281, pure_poison at 0.871 — i.e. the defensive hybrids trade ALL of their speed for total safety rather than dominating with power. Deck inspection (decks-full.json) confirms compliance: mage-poison-block-boss2-1 'Brineward Outlast' is water(poison)+defense(block) T3s; mage-heal-sustain-boss1-1 mixes water poison + heal cards. The heal source t3-water-water-water 'Tidesong Aura' is heal+stat_gain+mana with NO heal->damage conversion, so there is no forbidden broad armor/heal->damage line. The pure_burn contrast is verified in archetype-summary.json: pure_burn/mage boss1 bossMeanWinRate 0.5, bossMeanCushion 0.008, with matchup mage-pure-burn-boss1-2 vs doom_knight at winRate 0 / deaths 8."
+    },
+    "lane": "archetype-viability"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t1-counter (Riposte)",
+      "stage": "early",
+      "severity": "high",
+      "title": "Riposte is a negative-value attack slot — slower and lower-cushion than the basic T1 Jab it competes with",
+      "evidence": "card-appearance: t1-counter peakOPS 0 vs the rest of the T1 stamina-ATTACK pack (Jab 24.17, Quickstep 26.67; pack median 24.17). Swap test (5 reps/enemy, early stage, fixed-order deck): replacing one Jab with Riposte made the deck STRICTLY worse on all 4 early enemies — lost_lizard avgTTK 10500ms vs 8900ms, giant_spider 32100 vs 26900, corpse_eater 24900ms/cushion 0.282 vs 19300ms/cushion 0.521 (Riposte loses HALF the HP cushion), pocket_cat 30900ms/0.692 vs 22900ms/0.795. Card is 'For 6 seconds, every time you hit, deal 3' at 1 stamina / cd 2.0.",
+      "diagnosis": "Riposte is a 6s on-hit '+3 flat' aura (no STR scaling, no DEX scaling) on a 2.0s cooldown. The flat 3 is dwarfed by Jab's scaling hit, and the slow 2.0s cd means casting it costs a turn that a real Jab would have spent dealing damage — so its marginal value is NEGATIVE versus the deck's own filler. peakOPS reads 0 because in isolation it never lands a hit to ride. As the lone T1 'counter' attack, a player who picks it is strictly punished; it is unused-tier per the brief's priority concern.",
+      "proposed_change": "C1 rescue: cut cooldown to the 1.2s floor (matching Jab/Quickstep) AND give the on-hit bonus a DEX scaler so it tracks the hero (e.g. 'deal 3([dex])'). The card stays a clean T1 single-effect rider but at least breaks even as a deck slot. Do NOT raise its cost. If still under-pack after the CD/scaler fix, lengthen the aura window from 6s to 8s so more hits ride it. Re-run the same Jab-swap to confirm TTK/cushion reach parity, not exceed it (T1 ceiling).",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "t1-counter (Riposte)",
+      "title": "Riposte is the weakest T1 stamina-attack — a real CD-driven efficiency gap, but NOT a negative-value/unused card; severity overstated",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "low",
+      "sim_evidence": "Swap test, fixed-order early warrior deck (runXP 120 / loop2 / mult 1.0), Jab(t1-attack) vs Riposte(t1-counter) in slot 1, 6 reps/enemy. Spec tests/audit/val/swap/riposte-swap.json, results tests/audit/val/swap/riposte-swap-res.json. Per-enemy (Jab / Riposte): lost_lizard TTK 4900/5700, cushion 0.974/0.974; giant_spider TTK 12100/13700, cushion 0.855/0.829; corpse_eater TTK 9700/12500, cushion 0.650/0.479; pocket_cat TTK 12100/13700, cushion 0.726/0.675. Aggregate (4 enemies): Jab meanWR 1.000 / TTK 9700 / cushion 0.801; Riposte meanWR 1.000 / TTK 11400 (+18%) / cushion 0.739 (-0.062). winRate stays 1.0 with ZERO deaths/timeouts everywhere — Riposte never loses a fight, it just wins slower with slightly less cushion. Buffed variant (cd 2.0->1.2 + DEX scaler '3([dex])'): meanWR 1.000 / TTK 10000 / cushion 0.780 — matches Jab on 3/4 enemies (lost_lizard/giant_spider/pocket_cat TTK identical to Jab) and improves corpse_eater (TTK 10900<12500, cushion 0.564>0.479) WITHOUT exceeding Jab (10000>=9700, 0.780<=0.801), so it reaches parity, not over-correction (respects T1 ceiling). Note: at runXP 120 the warrior has DEX 0 (XPSystem getLevel(120)=L2, HeroStatsResolver floor(L/4)=0), so the DEX scaler contributed nothing here — the entire parity fix came from the CD cut alone; warrior DEX only reaches 1 at L5-7 and 2 at L8, so the scaler is a minor late add. Real multi-deck appearance data (card-appearance.json) over 8 decks/44 matchups: Riposte meanNormalWinRate 0.977, meanNormalCushion 0.877, meanBossWinRate 1.0 — statistically indistinguishable from Jab (0.993/0.898, 63 decks) and Quickstep (0.987/0.870, 30 decks). peakOPS 0 is an isolation artifact (an on_hit_dealt aura measured alone never lands a hit to ride), which the finding itself acknowledges.",
+      "reason": "The finding's DIRECTION is real and I reproduced it: Riposte is strictly dominated by Jab as a T1 stamina-attack deck slot — slower TTK and slightly lower cushion on every one of 4 early enemies, never better. Root cause is correct: the 2.0s cooldown (vs Jab/Quickstep 1.2s) and a flat unscaled 3-per-hit aura make casting it cost a turn that a real attack would have spent. The proposed C1 rescue (cut CD to the 1.2 floor, no cost increase, no T2/T3 nerf) WORKS and is C1-compliant — my buffed variant reaches Jab parity without over-shooting the T1 ceiling. So the card is genuinely the off-curve weakling of its pack and the fix is sound. HOWEVER the finding is mis-characterized on severity and specifics, so I downgrade high->low: (1) 'negative-value slot' / 'unused-tier' / 'high severity' is wrong — winRate is 1.0 with zero deaths/timeouts in every matchup, and across 8 real library decks Riposte's winRate 0.977 / cushion 0.877 / bossWR 1.0 are indistinguishable from Jab and Quickstep. It costs speed/cushion, not wins; it is a minor efficiency gap, not a dead/unused card. (2) 'loses HALF the HP cushion' is an exaggeration sourced from a weaker deck — the finding's quoted corpse_eater 0.521/0.282 and TTKs 2-3x larger than mine indicate a low-power baseline (deck-quality confound); in a fair fixed-runXP swap the worst case is 0.650->0.479 (~26% relative) and the aggregate drop is only ~8% (0.801->0.739). (3) the DEX-scaler half of the proposed buff is near-useless at the stage tested (DEX 0 at loop2) — the CD cut is the load-bearing fix; the scaler is harmless but over-credited. Net: a legitimate low-severity off-curve-weak / parity issue with a correct, C1-compliant CD-cut fix; confirmed but not high."
+    },
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t2-counter-counter (Razor Stance)",
+      "stage": "mid",
+      "severity": "med",
+      "title": "Razor Stance is the weakest T2 attack — slower than the Reckless Strike it replaces and standalone-dead (peakOPS 0)",
+      "evidence": "card-appearance: t2-counter-counter peakOPS 0, the bottom of the T2 stamina-ATTACK pack (median 25.42, max 55.83). Swap test (5 reps/enemy, mid stage): swapping Reckless Strike -> Razor Stance was SLOWER on all 5 mid enemies — mutated_salamander 12900ms vs 8900ms, venomous_kobra 12660 vs 7880, lava_golen 12900 vs 8900, skeleton 11700 vs 7700, werewolf 11700 vs 7700 (≈+4000-5000ms each) — and lower cushion on 4 of 5. Card: 'For 10s, every hit applies 1[bleed]([dex]). Vengeance: +4s' at 1 stamina / cd 2.0.",
+      "diagnosis": "Razor Stance is a bleed-on-hit aura with a 2.0s cooldown and no direct damage; peakOPS 0 reflects that it does nothing on cast without other attacks landing. Its bleed-per-hit needs many cheap hits to pay off, but its own 2.0s cd burns a turn that Reckless Strike (cd 1.2, +9 dmg, +3 rage, self-bleed) would have spent attacking, so in fixed-order play it loses ~4-5s of TTK. It is a legitimate enabler but is mis-priced on the snappiness lever, not the cost lever. NOTE: per static-confirmed, its 'Vengeance: +4 seconds' clause is actually a SECOND concurrent bleed aura (double-bleed for 4s), not a duration extension — that desc bug is out-of-scope here but means its real in-deck value is slightly higher than the text implies.",
+      "proposed_change": "C1 rescue: cut cooldown 2.0 -> 1.4 so arming the aura no longer sacrifices a full attack turn (this is the primary cause of the ~4s TTK loss). Keep cost at 1 stamina and keep the bleed-per-hit body. This brings it toward the T2 attack pack without touching Reckless Strike. Re-run the Reckless-swap at mid; target TTK within ~1s of Reckless, not faster (T2 ceiling).",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "t2-counter-counter (Razor Stance)",
+      "title": "Razor Stance is the weakest T2 attack — slower than the Reckless Strike it replaces and standalone-dead (peakOPS 0)",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "med",
+      "reason": "CONFIRMED, med. Data recheck: card-appearance confirms t2-counter-counter peakOPS 0, the bottom of the T2 stamina-ATTACK pack. I recomputed the pack (n=12) and reproduced the finding's exact figures — median peakOPS 25.42, max 55.83 (Reckless Strike); Razor Stance is dead last at 0 (next-lowest Crimson Tithe 3.75). Card def matches the finding: cost 1 stamina, cd 2.0, two on_hit_dealt bleed auras and ZERO direct damage. The static-confirmed \"Vengeance +4s = second concurrent bleed aura, gated on took_damage_within_ms:2000\" is real and correctly flagged as out-of-scope (and it does NOT arm on an opening cast, since the hero hasn't been hit yet — part of why standalone OPS is 0). Swap-test sim (my own, 6 reps/enemy, realistic attack-heavy mid bleed deck, candidate in slot 0, 5 mid enemies): swapping Reckless Strike -> Razor Stance is SLOWER on all 5 with lower cushion on all 5 — mutated_salamander 9100->13500ms (cush .793->.657), venomous_kobra 8217->12033, lava_golen 9100->12000, skeleton 6500->10000, werewolf 7700->11900 (mean +3763ms). Direction and conclusion match the finding (it cited +4-5s; my realistic deck shows +2.9-4.4s — same conclusion, slightly smaller magnitude). Extra rigor (additive test vs a FREE T1 jab in slot 0 with the attack body unchanged): Razor cd2.0 is tied-or-slower than a basic T1 jab on all 3 enemies (salamander 11500 vs 13100; kobra 9317 vs 10733; werewolf 9100 vs 9000) — a T2 that cannot out-TTK a T1 filler is genuinely below-curve. Severity stays MED not high because win rate is 1.0 with no deaths/timeouts everywhere (in-deck card-appearance: win 1.0, cushion 0.876, boss 1.0 over 12 decks); this is an unused-tier/snappiness problem, not a loss-causing one. CAVEAT on the proposal: it is C1-compliant (cut CD on the snappiness lever, keep 1 stamina, do NOT touch Reckless) and directionally validated — cd 2.0->1.4 recovers a mean 1760ms (47% of the gap closed) and lifts cushion on 4/5 — but its stated TARGET (\"TTK within ~1s of Reckless\") is NOT met by the CD cut alone: Razor stays ~+2003ms (mean) slower than Reckless and only reaches rough parity with a T1 jab. cd1.4 does not overcorrect (never faster than Reckless, win still 1.0, not oppressive). Recommend accepting the cd cut as the C1 rescue but noting it lands Razor at the bottom-mid of the T2 pack, not at its ceiling; the finding's \"within ~1s\" claim is optimistic. Sim artifacts: tests/audit/val/swap/razor-mid.json (+ -res.json) and tests/audit/val/swap/razor-additive.json (+ -res.json).",
+      "sim_evidence": "Swap test, 6 reps/enemy, mid (runXP 350, mult 1.0), attack-heavy bleed warrior, candidate slot 0. BASELINE Reckless -> CURRENT Razor cd2.0 -> FIX Razor cd1.4 (avgTtkMs / cushion): mutated_salamander 9100/.793 -> 13500/.657 -> 12300/.714; venomous_kobra 8217/.840 -> 12033/.801 -> 10633/.793; lava_golen 9100/.814 -> 12000/.743 -> 10700/.757; skeleton 6500/.879 -> 10000/.843 -> 8000/.843; werewolf 7700/.814 -> 11900/.757 -> 9000/.821. Win 1.00, 0 deaths, 0 timeouts in ALL 15 matchups. Mean TTK gap vs Reckless: current +3763ms, fix14 +2003ms; cd1.4 recovers 1760ms (47% of gap). ADDITIVE test (Razor vs a free T1 jab in slot 0, body unchanged): salamander jab 11500 vs Razor cd2.0 13100 / cd1.4 11900; kobra 9317 vs 10733 / 10167; werewolf 9100 vs 9000 / 8000 — Razor is tied-or-slower than a T1 filler. Pack recheck: T2 stamina-attack peakOPS median 25.42, max 55.83 (Reckless), Razor Stance 0 (last)."
+    },
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t2-air-attack (Stormstrike)",
+      "stage": "mid",
+      "severity": "low",
+      "title": "Stormstrike sits low in the T2 attack pack — a single 6-damage hit + 5s haste for the same 1 stamina that buys far more elsewhere",
+      "evidence": "card-appearance: t2-air-attack peakOPS 20.71, below the T2 stamina-ATTACK median (25.42) and far under peers at the same 1-stamina cost (t2-attack-attack Reckless 55.83, t2-attack-counter Bloodprice 48.13, t2-agility-counter 25.42). Card: 'Deal 6([str]). Haste 20% for 5 seconds' at 1 stamina / cd 1.4. nDecks 8, cushion 0.858.",
+      "diagnosis": "Stormstrike's only output is a 6-STR hit; the 20% haste for 5s is a soft self-buff whose value the isolated-OPS metric undercounts, but even crediting the haste it lands below the T2 attack pack. It is not broken (in-deck WR 1.0) but it is the dimmest single-target T2 attack on the curve, risking unused-tier status. This is a mild case — flagging at low severity because the haste rider has real (uncaptured) value in a fast pure_damage shell.",
+      "proposed_change": "C1 light buff: bump the base hit 6 -> 8 (still a clean T2 single-effect attack, keeps cost 1 / cd 1.4) so it reaches the lower-middle of the T2 attack pack. Alternatively extend the haste window 5s -> 7s. Cost stays 1 stamina. Do not exceed the ~25 OPS pack median.",
+      "confidence": "med"
+    },
+    "verdict": {
+      "target": "t2-air-attack (Stormstrike)",
+      "title": "Stormstrike is NOT off-curve weak — swap test shows it beats a clean T1 filler on TTK and cushion; the proposed 6->8 buff is a full-combat no-op",
+      "confirmed": false,
+      "method": "both",
+      "adjusted_severity": "invalid",
+      "reason": "The finding's quoted numbers are accurate (peakOPS 20.71 vs T2 stamina-attack median 25.42; card is 'Deal 6([str]). Haste 20% for 5s' at 1 stamina / cd 1.4; nDecks 8, cushion 0.858, in-deck WR 1.0). But the conclusion does not follow, for three reasons. (1) peakOPS structurally undercounts the haste aura, which is a cd_reduction modifier (verified in CardResolver/StatusEffects getCdReductionFactor) that speeds up EVERY subsequent card play for 5s — a whole-deck accelerator invisible to single-card OPS. The finding admits this then discounts it; the sim shows it dominates. (2) The cited 'peers' are not clean comparisons: Reckless Strike (55.83) adds 3 rage + self-bleed, Bloodprice (48.13) adds rage + stamina refund + self-damage — riders that inflate isolated OPS. Among genuinely clean T2 single-target stamina attacks, Granite Lunge (15.57), Kindle Strike (16.00), and Shield Bash (18.75) all sit BELOW Stormstrike's 20.71, so it is mid-pack, not 'far under.' (3) Swap-test sim (gold standard) flips the verdict: Stormstrike in an early slot OUTPERFORMS a clean T1 filler (Jab, peakOPS 24.17). It is not at risk of unused-tier status. Critically, the proposed primary change (base 6->8) produces ZERO improvement in full combat — identical TTK and cushion to current on all 6 matchups — because the deck is haste-paced, not damage-starved; the extra damage is absorbed as overkill. A buff that does nothing should not ship. No change warranted.",
+      "sim_evidence": "Swap test: pure_damage warrior, runXP 350, candidate in slot 1, 6-8 repeats, vs baseline = same deck with Jab (clean T1, peakOPS 24.17) in slot 1. specs: tests/audit/val/swap/stormstrike-swap-mu.json + stormstrike-swap2-mu.json; results: *-res.json. Current Stormstrike(6) vs Jab baseline — mutated_salamander: TTK 10300 vs 11300 (-1000ms), cushion 0.736 vs 0.679 (+0.057); werewolf: TTK 8700 vs 9700 (-1000ms), cushion 0.814 vs 0.764 (+0.050); skeleton: TTK 8700 vs 9700 (-1000ms), cushion 0.836 = 0.836; corpse_eater (counter/def2): TTK 8700 vs 9700 (-1000ms), cushion 0.679 = 0.679; doom_knight BOSS (runXP560/loop10/mult1, longest fight): TTK 18900 vs 20900 (-2000ms), cushion 0.427 vs 0.363 (+0.064). Stormstrike WINS the swap on every enemy (faster kill, equal-or-better cushion) despite slightly lower raw avgDamageDealt — the haste aura accelerates the whole deck. Proposed buff 6->8 (cardOverride effectsPatch value:8): TTK and cushion IDENTICAL to current on all 6 matchups (e.g. doom_knight 18900/0.427, salamander 10300/0.736) — a true no-op; only avgDamageDealt rises (overkill). Alternative haste 5s->7s (effectsPatch ttl_ms:7000) was the only lever that moved the needle: TTK 9900/8300/8300/8300/18100 — a further ~400-800ms — but the card already beats a clean filler, so even this is unnecessary. WR was 1.0 in all cells; no deaths/timeouts."
+    },
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t3-air-attack-counter (Thunderstrike Catalyst)",
+      "stage": "late",
+      "severity": "med",
+      "title": "Thunderstrike Catalyst is near the floor of the T3 attack pack — a slow-detonator whose fuel (slow stacks) is hard to bank in a warrior shell",
+      "evidence": "card-appearance: t3-air-attack-counter peakOPS 15.0 — third-lowest of the 33 T3 stamina-ATTACK cards (pack median 33.64, mean 37.5, max 134.38) and well below sibling T3 detonators (Thunderstrike Catalyst 15 vs Concussive Smash 40, Tempest Pike 33.64). Card: 'Deal 6([str]). Consume all [slow] and deal 6([int]) Pierce per [slow] consumed' at 2 stamina / cd 2.0. nDecks 9, cushion 0.916.",
+      "diagnosis": "The detonation half scales on [slow] stacks AND on INT (6([int]) per slow consumed). On a warrior shell INT stays low (~baseline), and slow is a control element a stamina-attack deck rarely stacks high before firing, so in practice the card resolves as a ~6-damage hit plus a thin burst — a 2-stamina T3 delivering T1-tier output. It is a build-around with no reliable build to around it on the physical side, so it sits at the bottom of the T3 attack curve and risks unused-tier. T3 must out-ceiling T2; at 15 OPS it is below several T2 attacks (Reckless 55.83, Bloodprice 48.13), a soft tier inversion in practice.",
+      "proposed_change": "C1: cut cooldown 2.0 -> 1.6 so the detonator can fire more often once slow is stacked, and change the per-slow scaler from [int] to [str] (6([str]) per [slow]) so it tracks the warrior's actual offense axis per C2 (STR is the universal multiplier; the card lives in stamina/attack space). Keep cost 2 stamina. This lifts the realized ceiling for the player who actually banks slow, restoring T3>T2, without buffing any T2.",
+      "confidence": "med"
+    },
+    "verdict": null,
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "t3-attack-counter-counter (Cleaver's Tax)",
+      "stage": "late",
+      "severity": "low",
+      "title": "Cleaver's Tax reads as 'stronger than its text' (dead CD downside) but is NOT off-curve-strong by output — do not nerf it",
+      "evidence": "static-confirmed: overload_lockout_ms:4000 is unwired, so the '...delays 4 more seconds next time' drawback never fires (sim cooldownDebtSec=0 even at rage>=5 firing 42 dmg). Yet card-appearance peakOPS for t3-attack-counter-counter is only 28.0 — BELOW the T3 stamina-attack median (33.64) and far under top T3 attacks (Vein Splitter 134.38, Razor Cadence 72.75). In-deck cushion 0.896, WR 1.0, nDecks 12 — unremarkable.",
+      "diagnosis": "The missing downside makes Cleaver's Tax mechanically stronger than its printed text, but in full-combat output it is still only a mid-pack T3 attack, not oppressive. The right fix is the WIRING fix flagged in static-confirmed (route overload_lockout_ms into cooldownDebtSec OR drop the clause from the text) — a correctness fix, not a balance nerf. I am explicitly NOT recommending a cost/CD nerf: raising its cost would push a merely-average T3 below pack and create a new off-curve-weak card. Logging this so the synthesizer does not double-count the static bug as a balance over-strong finding.",
+      "proposed_change": "No balance change. Defer to static-confirmed's correctness fix (wire overload_lockout_ms via cd_debt or remove the clause). If the downside is wired, re-measure: if peakOPS drops materially below the T3 pack afterward, compensate by cutting its CD 2.0 -> 1.8 (C1) rather than touching cost.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "t3-attack-counter-counter (Cleaver's Tax)",
+      "title": "Cleaver's Tax reads 'stronger than its text' (dead overload_lockout downside) but is NOT off-curve-strong by full-combat output — defer to the static wiring fix, no balance nerf",
+      "confirmed": true,
+      "method": "both",
+      "adjusted_severity": "low",
+      "sim_evidence": "SWAP TEST (tests/audit/val/swap/cleavers-tax-verify.json -> -mu.json -> -res.json, boss2 band runXP 1150, warrior rage/attack deck, candidate in slot 3 after two rage-builders so the rage>=5 gate is met; 6 repeats; vs werewolf, ancient_tree, fire_elemental, iron_golem boss).\n\n(A) Marginal value vs a T2 filler (Reckless Strike) baseline — confirms a REAL upgrade but NOT oppressive: ancient_tree (high def) avgDamageDealt 123 (filler) -> 197 (Cleaver's Tax), a +74 single-cast Pierce burst (the rage>=5 bonus + STR scale firing); fire_elemental 127 -> 199; werewolf ttk 4100ms/4 cards -> 2900ms/3 cards. But baseline ALREADY wins every matchup at WR 1.0, so the card trivializes nothing new; on the iron_golem boss it barely moves the needle: WR 1.0 both, cushion 0.70 (filler) -> 0.73 (Cleaver's Tax), ttk 11700 -> 11300ms.\n\n(B) Current vs downside-WIRED (replaced effects[] to add a cd_debt +4s gated on the same self_stack_atleast rage:5): IDENTICAL across all four enemies — WR 1.00/1.00, ttk 2900/2900 (normals) & 11300/11300 (boss), cushion 0.94/0.94 & 0.73/0.73, dmg 197/197 (normals) & 443/443 (boss). Even in the one fight long enough for a 'next time +4s' lockout to bite (iron_golem, 9-card/~11s), wiring the dead downside changes nothing measurable. This empirically confirms the correct static fix needs NO balance compensation.",
+      "reason": "The finding is real and correctly characterized on every load-bearing claim. (1) STATIC BUG CONFIRMED: overload_lockout_ms:4000 (cards.json:2402) is read nowhere in the engine — cooldownDebtSec is produced ONLY by the cd_debt effect type (CardResolver.ts:786-790), and Cleaver's Tax has no cd_debt effect, so the '...delays 4 more seconds next time' clause is purely cosmetic and the card is mechanically stronger than its text. Three independent static-confirmed entries agree. (2) ALL OPS NUMBERS VERIFIED, none invented: peakOPS 28.0, cushion 0.896, WR 1.0, meanBossWinRate 1.0, nDecks 12 (card-appearance.json:1102-1118); the cited 'T3 stamina-attack median 33.64' is exactly reproducible (I computed it from card-appearance: 33 T3 stamina attacks, median 33.64, mean 37.54, and Cleaver's Tax ranks 12/33 — below both median and mean, with 11 T3 attacks scoring lower); Vein Splitter peakOPS 134.38 and Razor Cadence 72.75 confirmed exactly. So Cleaver's Tax is genuinely a mid-pack-to-below-median T3 attack, not off-curve-strong. (3) SWAP TEST CONFIRMS NOT OPPRESSIVE and confirms the dead downside is immaterial (current == downside-wired byte-for-byte). The finding's recommendation — no balance change, defer to the static wiring fix, and explicitly do NOT raise cost (C1: that would push a below-median card further below pack and create a new off-curve-weak card) — is correct and C1-C5-compliant. The only nuance: the finding's contingency 'if peakOPS drops materially after wiring, cut CD 2.0->1.8' is supported by my sim, which shows wiring the downside does NOT materially change output, so even that compensatory CD cut is unlikely to be needed. Severity low is right: this is a correctness/clarity issue (already captured by static-confirmed), not a balance lever, and the caveat's real purpose — preventing the synthesizer from double-counting the static bug as an over-strong balance finding — is valid."
+    },
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "physical defense cards (T1-T3, category=defense, stamina) — low peakOPS is by design, not off-curve",
+      "stage": "all",
+      "severity": "low",
+      "title": "Defense-category cards' low peakOPS must NOT be read as off-curve-weak (C3: armor/heal are intentionally race-losing)",
+      "evidence": "The physical defense pack reads far below attack OPS (e.g. t1-defense Guard 6, t2-agility-defense 6.15, t3-defense-defense-defense Aegis 14, many T3 defenses 5-10), while in-deck cushion is uniformly high (0.93-1.0, e.g. Guard cushion 0.935, Aegis 1.0, Thornwall 0.999, Bramble Bulwark 1.0). tier-ops-perf medians (T2 15.57 / T3 15.33) are pulled down precisely by these defense cards.",
+      "diagnosis": "peakOPS is isolated DAMAGE-per-second, so a card that outputs armor/heal/stun scores low by construction — exactly what C3 mandates (defense is elite at survival, race-losing on damage). Comparing a defense card's OPS against the attack pack would mis-flag the entire defensive suite as 'weak'. The honest read is: defense cards must be judged on cushion/survival contribution (where they are saturated at ~1.0) and on defense-vs-defense OPS, not against attacks. No defense card in scope shows an off-curve cushion deficit. This caveat also explains why the headline winRate/cushion fields in card-appearance barely discriminate physical cards (fixed-order decks nearly all win) — TTK swap-tests, not those saturated fields, are the discriminating signal used above.",
+      "proposed_change": "No card change. Methodological note for the synthesizer: do not treat low-OPS defense cards as off-curve-weak; off-curve detection for physical cards should rest on (a) attack-vs-attack peakOPS pack position and (b) marginal TTK/cushion in swap tests, both of which were used for the weak findings above.",
+      "confidence": "high"
+    },
+    "verdict": {
+      "target": "physical defense cards (T1-T3, category=defense, stamina) — low peakOPS is by design, not off-curve",
+      "title": "Defense-category cards' low peakOPS must NOT be read as off-curve-weak (C3: armor/heal/stun are intentionally race-losing)",
+      "confirmed": true,
+      "method": "data_recheck",
+      "adjusted_severity": "low",
+      "reason": "CONFIRMED as a valid methodology caveat. Verified directly against card-appearance.json and tier-ops-perf.json; no swap-test needed because the finding proposes NO card change — it is about how to interpret OPS for an entire category, which I checked against the data. (1) peakOPS is isolated DAMAGE-per-second, so armor/heal/stun cards score low by construction — exactly what WORKFLOW-BRIEF C3 mandates ('armor/heal/stun are INTENTIONALLY race-losing'). (2) The attack-vs-defense OPS gap is large and consistent at every tier (recomputed medians: T1 attack 24.17 vs defense 6; T2 attack 25.42 vs defense 7; T3 attack 28.92 vs defense 8.67), so comparing defense OPS against attack OPS would mis-flag the whole defensive suite as weak. (3) Defense cards are saturated on their actual charter (survival): meanNormalCushion 0.878-1.0 for the 19 defense cards with nDecks>=5, NONE below 0.85, headline normal winRate ~1.0 and bossWin 1.0 across the board — no off-curve cushion deficit exists. (4) Named cards verified via cards-index: t1-defense=Guard (OPS 6, cush 0.935), t3-defense-defense-defense=Aegis of Returning Wrath (OPS 14, cush 1.0), t2-counter-earth=Thornwall (OPS 11.7, cush 0.999), t2-defense-earth=Bramble Bulwark (OPS 10, cush 1.0) — all as cited. (5) Static-confirmed bugs do not duplicate this caveat. The proposed_change (no card edit; synthesizer note to judge defense on cushion/defense-vs-defense OPS, not against attacks) is fully C1-C5 compliant. Severity correctly LOW (it is a guardrail against false positives, not a balance defect). Minor accuracy note: the finding quotes prior-audit medians T2 15.57 / T3 15.33; my fresh recompute from card-appearance gives T2 16 / T3 16.5 — slightly different source/rounding but directionally identical and the conclusion is unchanged.",
+      "sim_evidence": "No swap-test run (finding proposes no card change). Direct data recheck: card-appearance OPS by tier x category — T1 attack median 24.17 (n=3) vs defense 6 (n=1); T2 attack 25.42 (n=12) vs defense 7 (n=9); T3 attack 28.92 (n=51) vs defense 8.67 (n=46). Critically, removing defense cards restores T3>T2: T3 median jumps from 16.5 (all, n=120) to 25.42 (non-defense, n=74), while T2 goes 16 (all, n=36) to 18.75 (non-defense, n=27) — proving the pooled-median 'T3 not higher than T2' anomaly is an artifact of T3 carrying 46 race-losing defense cards vs T2's 9. Defense cushion saturation: 19 defense cards with nDecks>=5 span cushion 0.878-1.0, zero below 0.85; e.g. Guard 0.935, Aegis 1.0, Thornwall 0.999, Bramble Bulwark 1.0, Stoneward Reprisal 1.0 — all with normal winRate 1.0 and bossWin 1.0."
+    },
+    "lane": "card-outliers-physical"
+  },
+  {
+    "finding": {
+      "kind": "tier_violation",
+      "target": "t3-fire-fire-water (Quench Lance)",
+      "stage": "boss1 / loop8 normals",
+      "severity": "high",
+      "title": "Quench Lance (T3 fire) under-performs the T2 fire detonator Pyre on every normal — its build-around INT payoff is practically un-feedable",
+      "evidence": "Swap-test spec tests/audit/mage-offcurve-matchups.json (6 repeats). A fire deck anchored by Quench Lance (T3) closes SLOWER than the identical deck anchored by Pyre (T2) on all three normals: vs skeleton TTK 11000ms (T3) vs 8900ms (T2, Pyre); vs werewolf 12000 vs 8900; vs depths_horror 9000 vs 6750 — i.e. the T3 is 24-35% slower and runs LOWER cushion (skeleton 0.802 T3 vs 0.851 T2; werewolf 0.711 vs 0.769). isolated peakOPS: Quench Lance 8.33 vs Pyre 36.43 vs Flame Dart 57.5 (tier-ops-perf median T3 should EXCEED T2). Root cause confirmed in code: cards.json t3-fire-fire-water effects = [dot 2 burn (int per3); aura event_counter {event:'stack_consumed', filter:{stack:'burn', min_amount:10}, threshold 1} -> stat_gain int]. The card itself only applies 2 burn and has NO consume effect; its INT payoff needs ANOTHER card to emit a stack_consumed event of 10+ burn. Per static-confirmed.json (Pyre-keyword burn detonators), the common burn detonators (Cinderlance/Cinder Sprint/Venom Detonation) NEVER emit stack_consumed (the Pyre auto-consume zeroes burn before the explicit consume runs), so only Supernova/Tremor Detonate can ever feed Quench Lance — and burn's per-tick soft-cap 8+floor((n-8)/2) plus chunk-cap make a single 10+ consume rare for a low-INT (~3-4 at loop10) mage. The build-around payoff is effectively dead in most fire decks.",
+      "diagnosis": "T3 charter requires T3 to out-ceiling any T2 of the same element/role (~+15-25% assembled), fixing violations by BUFFING the T3. Quench Lance's assembled ceiling is BELOW Pyre's because (a) its own output is the lowest of any T3 fire card (2 burn) and (b) its scaling hook gates on an event almost nothing in the burn kit emits. It is a textbook under-tier T3 that will go unused.",
+      "proposed_change": "BUFF the T3 (never nerf Pyre). Make Quench Lance a real T3 burn detonator that self-fuels: replace the dead event_counter aura with effects = [{type:'damage', value:4, scale:{stat:'int',per:2,value:1}, condition:{enemy_has_stack:'burn', per_stack:true}}, {type:'dot', value:3, stack:'burn', scale:{stat:'int',per:2,value:1}}] (deal 4(int) per burn consumed via the Pyre path, then re-seed 3 burn). Keep cost 1s+1m and CD 2.4 unchanged (C1 — cost is the lever, tier != bigger cost). Sim of this exact rework restores parity-to-better vs Pyre: skeleton TTK 9000 (vs Pyre 8900), werewolf 10000 (vs 8900), depths_horror 7000 (vs 6750), and it is NOT oppressive (doom_knight cushion still only 0.174, TTK 21700). If the INT-scaling identity is to be preserved instead, at minimum lower the consume threshold (min_amount 6) AND fix the Pyre-path stack_consumed emission so the gate can actually trigger.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "card-outliers-magic"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "t2-air-fire (Firestorm)",
+      "stage": "boss1 / loop8 normals",
+      "severity": "low",
+      "title": "Firestorm's peakOPS 0 is a single-card measurement artifact — in a real burn deck it OUT-performs the Flame Dart baseline; do NOT flag it as weak",
+      "evidence": "card-appearance.json lists t2-air-fire peakOPS 0 (looks dead). But its description 'For 4 seconds, if you play 3 or more cards, apply 10[burn]([int])' is a multi-card-conditional aura; isolated OPS can never satisfy 'play 3 cards in 4s', so 0 is an artifact. In-deck swap test (mage-offcurve-results.json, 6 repeats): swapping Firestorm INTO the lead slot (replacing Flame Dart) IMPROVED the deck — vs skeleton/werewolf/depths_horror TTK fell to 6900/6900/6900ms (baseline Flame Dart deck: 9000/10000/6383) and doom_knight cushion rose to 0.174 from baseline 0.091. nDecks 12, meanNormalWinRate 1.0, meanBossWinRate 0.875 — it is used and winning.",
+      "diagnosis": "Firestorm is a conditional burst aura that the isolated-OPS metric structurally cannot value (the gate needs other cards played). It is healthy in its native fast-cast burn shell. Flagging it as a 0-OPS dead card (as the raw appearance table invites) would be a false positive.",
+      "proposed_change": "No balance change. Methodology note: exclude multi-card-conditional auras (cards_played_within gates) from the 'low peakOPS = weak' screen and judge them only via in-deck swap tests. If any cosmetic improvement is wanted, raise the 1.8s cooldown toward the ~1.4s burn-aura norm (C1 CD lever) so it re-arms with the combo, but the sim shows this is not needed.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "card-outliers-magic"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "t3-agility-air-air (Gale Echo)",
+      "stage": "boss1 / loop8 normals",
+      "severity": "low",
+      "title": "Gale Echo's peakOPS 0 reflects 'deals no damage by design' (slow amplifier), not a broken T3 — it functions in a slow shell",
+      "evidence": "peakOPS 0 (card-appearance.json). Description 'For 12 seconds, every time you apply [slow], apply 1[slow]([int]). Haste 15% for 6s' — a pure slow-amplifier aura that deals zero damage alone, so 0 OPS is expected (C5: slow = PURE control, no damage). In-deck swap test: replacing the lead Sandfury (a 35-OPS slow DAMAGE card) with Gale Echo still wins all normals and actually closes a touch faster (skeleton TTK 16700 vs Sandfury-baseline 19100; werewolf 16700 vs 19100) and at higher cushion (skeleton 0.851 vs 0.802; doom_knight 0.339 vs 0.174) because the extra slow it stacks is converted to damage by Cinder Squall (2 dmg per slow). nDecks 9, winRate 1.0.",
+      "diagnosis": "Gale Echo is an intended no-damage control multiplier; OPS=0 is by design, not an off-curve weakness. Its real value only appears alongside a slow-payoff card (Cinder Squall / Sandfury), which a slow archetype always runs. Not a weak-card flag.",
+      "proposed_change": "No balance change required (it is a working C5-compliant control card). Methodology note: classify slow/stun amplifier auras as 'intended 0-OPS race-losers' alongside heal/armor, and validate them via swap tests, not OPS. Only consider a small CD cut (current 2.4s) if a future audit shows the slow archetype is too slow to assemble; the sim does not currently justify it.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "card-outliers-magic"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "Heal-line magic cards: t2-air-water (Misting Veil, peakOPS 2.57), t3-air-air-water (Squall Aura, 4.5), t2-agility-water (Mist Step, 4.31), t2-defense-water (Vow of the Tide, 4.75), t3-earth-water-water (Brine Bedrock, 7.5), t3-earth-fire-water (Alchemic Drain, 8)",
+      "stage": "all",
+      "severity": "low",
+      "title": "Low-OPS heal/sustain magic cards are intended C3 race-losers, not off-curve-weak — they win with high cushion and are widely used; do NOT false-flag",
+      "evidence": "These cluster at the bottom of the T2/T3 OPS distribution (median T2 ~14.9, T3 ~12.3) purely because OPS measures damage and their value is HP/tempo: Misting Veil 'Heal 3([spi]). Haste 15%. Gain 1 mana. +1 int 6s', Squall Aura 'Heal 9([spi]). Haste 25%. Gain 4 mana', Alchemic Drain 'Apply 3 poison. Heal 6([spi])'. Their sim record is healthy: Misting Veil meanNormalWinRate 1.0 / cushion 0.929 (nDecks 11); Squall Aura 1.0 / 0.912; Alchemic Drain 1.0 / 0.913 (nDecks 39 — heavily played); Brine Bedrock 1.0 / 0.947 (nDecks 16). The heal-sustain mage archetype clears doom_knight at cushion 0.855 and every deeper boss at 0.92-0.98 (archetype-summary). static-confirmed already notes heal carries a hidden global +15%/SPI multiplier on top of the shown ([spi]) tag, so true heal output is UNDERSTATED by the card text, not overstated.",
+      "diagnosis": "C3 explicitly makes armor/heal intentionally race-losing (elite at survival to buy time for a second win condition, no heal->damage conversion). Their low OPS is the design, and the hidden SPI multiplier means they are stronger than their text/OPS implies. Flagging any of these as 'too weak / unused-tier' would be a false positive that violates C3.",
+      "proposed_change": "No balance change. Methodology note: bucket mana/SPI heal cards as intended race-losers (like armor) and evaluate them on cushion + archetype boss clears, never on OPS. The only genuine action here is the static-confirmed TEXT issue (surface or de-double-count the hidden SPI heal multiplier), which is a clarity fix, not a balance lever.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "card-outliers-magic"
+  },
+  {
+    "finding": {
+      "kind": "off_curve_weak",
+      "target": "t1-water (Mend, peakOPS 5.4, CD 2.0) vs t1-fire (Spark) / other T1 magic",
+      "stage": "early",
+      "severity": "low",
+      "title": "Mend's 2.0s cooldown is the slowest of any T1 card and out of step with the snappy-CD floor; a CD cut would rescue it without touching its value",
+      "evidence": "cards-index: t1-water Mend 'Heal 9.' cost 1m, cooldown 2.0 — the longest CD among T1s (Spark 1.2, Quake 1.4, Gust 1.2, Jab/Quickstep 1.2). Per C1 the CD floor is ~1.2s and CD should stay snappy; tier != longer CD. Mend still posts winRate 1.0 / cushion 0.886 because of the hidden SPI heal multiplier, so it is not failing — but as the starter heal it gates the heal archetype's early tempo behind a slow re-cast. The hidden global SPI multiplier (Heal 9 at SPI10 = 22) means raising the printed value is unnecessary; the lever is the CD.",
+      "diagnosis": "Mend is the clearest C1 mismatch in the T1 magic set: a clean single-effect T1 carrying a 2.0s cooldown when its peers sit at 1.2-1.4s. It is mild because the card still wins, but the long CD makes the entry-level heal feel worse than it scales.",
+      "proposed_change": "C1-compliant CD cut: lower Mend's cooldown from 2.0 to ~1.4s (matching Quake / the T1 magic norm) to restore tempo, leaving value (Heal 9 + hidden SPI mult) and cost (1m) unchanged. This rescues a slightly-off T1 by the cost/CD lever, not by inflating output. Low priority given the card already wins.",
+      "confidence": "med"
+    },
+    "verdict": null,
+    "lane": "card-outliers-magic"
+  },
+  {
+    "finding": {
+      "kind": "methodology_caveat",
+      "target": "tier-ops-perf.json (T2 vs T3 OPS distribution, 156 cards)",
+      "stage": "all",
+      "severity": "high",
+      "title": "T3 median OPS (15.33) is still BELOW T2 median (15.57) — the tier charter's 'T3 must out-ceiling T2' is violated at the central tendency",
+      "evidence": "tests/audit/val/analysis/tier-ops-perf.json: T1 median 6 (n7); T2 median 15.57, mean 19.62 (n36); T3 median 15.33, mean 23.26 (n120). T3 median is 0.24 BELOW T2 median. The T3 MEAN only looks higher because of long-tail outliers that static-confirmed.json proves are bugs, not power: Brine Crucible peakOPS 158.13 and Vein Splitter peakOPS 134.38 are both self-satisfied-gate cards (their 'if enemy has [stack]' bonus always fires), plus Razor Cadence 72.75. Strip those three and the T3 central tendency sits at/below T2. The charter (WORKFLOW-BRIEF.md tier charter) says T3's edge must be a higher CEILING when assembled (~+15-25%), never lower; the median says the typical T3 is no better than the typical T2.",
+      "diagnosis": "The OPS-bug outliers mask a real curve problem: most T3 cards do not out-ceiling the analogous T2 on the primary throughput axis. Because the inflated mean comes from confirmed self-gate bugs (which will be nerfed when fixed), the post-fix T3 mean will DROP, widening the gap. The honest measure (median) already shows T3 ≤ T2.",
+      "proposed_change": "Treat the T3 median lift as a tier-wide objective: after the per-card buffs below, re-run the OPS distribution and require T3 median >= T2 median * 1.10. Do NOT achieve this by nerfing T2 (C1/charter). Drive it by cutting cooldowns / removing exhaust on the under-curve T3s (C1: cost is the lever, cd stays snappy ~1.2-2.0s) and by raising per-stack/per-hit ceilings on build-around T3s. Note when interpreting the data that Brine Crucible/Vein Splitter OPS are bug-inflated and must not be used as the T3 'ceiling' benchmark.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "tier-ordering"
+  },
+  {
+    "finding": {
+      "kind": "tier_violation",
+      "target": "t3-fire-fire-fire (Supernova) vs t2-fire-fire (Pyre) / t2-agility-fire (Flame Dart)",
+      "stage": "late / boss",
+      "severity": "high",
+      "title": "Supernova (T3 pure-fire) is weaker AND far more expensive than its T2 fire siblings — the pure-fire ladder goes DOWN at T3",
+      "evidence": "card-appearance.json: Supernova peakOPS 28.57, cost 2s+1m, cd 2.8, EXHAUST true, 17 decks, cushion 0.837, bossWR 0.867. Pyre (T2) peakOPS 36.43, cost 1m, cd 1.4, non-exhaust. Flame Dart (T2 burn) peakOPS 57.5, cost 1m, cd 1.2. So the pure-fire ladder is Spark T1 8.57 -> Pyre T2 36.43 -> Supernova T3 28.57 (DOWN). Supernova is simultaneously the most expensive card class (2s+1m) AND longest-cd (2.8) AND once-per-combat exhaust. Isolated carry sim (tests/audit/val/t3t2-iso-results.json): iso-pyre-T2 won at cushion 0.712 / TTK 11357ms; iso-supernova-T3-current won at cushion 0.545 / TTK 17213ms — the T3 carry is SLOWER and takes more damage than the T2 carry. In a dedicated burn-feed deck (tests/audit/val/t3t2-fix-results.json) fix-supernova-current only reached WR 0.800 (loses 1 in 5).",
+      "diagnosis": "The 5/burn-Pierce-to-all detonator has a high ceiling on paper, but exhaust caps it at a single cast and the 2s+1m / cd2.8 price makes that one cast unaffordable early, so it under-delivers vs a repeatable 1m Pyre. This is a pure tier inversion: the T3 loses to the T2 on cost, cooldown, OPS, and real-deck performance.",
+      "proposed_change": "BUFF the T3 (never nerf Pyre). Per C1, the primary fix is cost+cd: remove exhaust, drop cost from {stamina:2,mana:1} to {mana:1}, and cut cd 2.8 -> ~2.0. Sim-verified: tests/audit/val/t3t2-fix-results.json fix-supernova-buffA (no-exhaust, cd2.0, 1m) flips WR 0.800 -> 1.000 and lifts cushion 0.505 -> 0.648 without raising any value. To restore a clear T3>T2 ceiling, optionally also raise the detonator value from 5 to 6 per burn (effects index 1): fix-supernova-buffB hit cushion 0.693 / TTK 11353 (now matching/beating Pyre's carry profile) and is NOT oppressive (WR caps at 1.0 with a normal cushion). Keep it AoE Pierce so it stays the build-around fire payoff.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "tier-ordering"
+  },
+  {
+    "finding": {
+      "kind": "tier_violation",
+      "target": "t3-air-air-air (Tempest Cadence) vs t2-air-air (Tailwind)",
+      "stage": "late",
+      "severity": "high",
+      "title": "Tempest Cadence (T3 pure-air) has less than HALF Tailwind's OPS and loses on every axis as a carry — over-costed/over-cd'd haste card",
+      "evidence": "card-appearance.json: Tempest Cadence peakOPS 24.17, cost 2m, cd 2.4, only 2 decks (nearly unused). Tailwind (T2) peakOPS 56.67, cost 1m, cd 1.2, 14 decks. T3 OPS is 43% of the T2. Isolated carry sim (tests/audit/val/t3t2-iso-results.json): iso-tailwind-T2 WR 0.600 / cushion 0.275 / dmg 142 / TTK 22783; iso-tempest-T3-current WR 0.600 / cushion 0.204 / dmg 123 / TTK 26767 — the T3 is worse on cushion, damage, and speed at equal win rate. The T3's 30%/10s haste cannot compound because at cd2.4 the card is rarely re-cast, whereas Tailwind's 20%/5s at cd1.2 loops tightly.",
+      "diagnosis": "Tempest's only edge over Tailwind is AoE + bigger single numbers, but the doubled cost (2m) and doubled cd (2.4) strangle the haste engine that makes the air element good, so it under-ceilings its own T2. Classic over-pricing on BOTH levers, which the charter says only genuinely elite cards may do.",
+      "proposed_change": "BUFF the T3 (never nerf Tailwind). Primary lever is cooldown (C1): cut cd 2.4 -> 1.6 so the 30% haste actually loops; cost cut 2m -> 1m is a secondary enabler. Sim-verified in a fuller air deck (tests/audit/val/tempest-results.json): cd1.6 lifts cushion 0.679 -> 0.707 and TTK 12743 -> 11885 (~7% faster); cost-cut on top adds nothing further (cd16 == cd16only), confirming cd is the binding constraint. In the thin carry deck (t3t2-fix-results.json) cost+cd together moved cushion 0.204 -> 0.267 and dmg 123 -> 130. Recommend cd 2.4 -> 1.6 as the core fix, optionally also cost 2m -> 1m; keep the AoE + 30%/10s haste so it remains the T3 air ceiling.",
+      "confidence": "high"
+    },
+    "verdict": null,
+    "lane": "tier-ordering"
+  },
+  {
+    "finding": {
+      "kind": "tier_violation",
+      "target": "t3-water-water-water (Tidesong Aura) vs t2-water-water (Frostbind)",
+      "stage": "late",
+      "severity": "low",
+      "title": "Pure-water T3 Tidesong Aura OPS (9.0) sits below pure-water T2 Frostbind OPS (10.6) — but both are C3 race-losing support, so OPS is the wrong axis",
+      "evidence": "card-appearance.json: Tidesong Aura (T3) peakOPS 9.0, cost 2m, cd 2.4, 7 decks, cushion 0.946; Frostbind (T2) peakOPS 10.6, cost 1m, cd 1.4, 16 decks, cushion 0.926. cards-index: Tidesong is pure sustain (Heal 18([spi]), +2 SPI/combat, +3 mana — note the undocumented global SPI heal multiplier in static-confirmed.json makes its real heal higher than shown). Frostbind is stun+armor control. Both win-rate 1.0 / bossWR 1.0.",
+      "diagnosis": "This is a borderline case, not a clean violation: per C3 (armor/heal/stun are intentionally race-losing, no heal->damage conversion) neither water card is meant to compete on damage OPS, and Tidesong's job (sustain + ramp SPI + refund mana) is genuinely different from Frostbind's (control). The 'T3 must out-ceiling T2' charter is about damage ceiling; for these support cards the relevant axis is survivability, where Tidesong already edges Frostbind (cushion 0.946 vs 0.926). Flagging low so it is not mistaken for a damage inversion.",
+      "proposed_change": "No damage buff (would violate C3). If a tier feel-better is wanted, the C1-compliant lever is cd: cut Tidesong cd 2.4 -> ~1.8 so the heal/ramp cadence outpaces Frostbind's, keeping its support identity. Do NOT add a damage rider or armor->damage conversion. Treat as monitor-only unless the heal/sustain archetype shows weakness elsewhere.",
+      "confidence": "med"
+    },
+    "verdict": null,
+    "lane": "tier-ordering"
+  },
+  {
+    "finding": {
+      "kind": "archetype_weak",
+      "target": "T3 pure-attack burn line (t3-attack-attack-fire Cinder Thrust, t3-fire-fire-fire Supernova) vs T2 t2-agility-fire (Flame Dart)",
+      "stage": "late / boss",
+      "severity": "med",
+      "title": "No clean pure-burn T3 out-ceilings the best T2 burn (Flame Dart 57.5); the entire fire archetype's T3 ceiling is set by bug-inflated cards",
+      "evidence": "card-appearance.json burn cards: best T2 burn Flame Dart peakOPS 57.5 (1m/cd1.2). Highest pure-fire-attack T3s: Cinder Thrust 47.78 (2s/cd1.8), Supernova 28.57. Both BELOW Flame Dart. The only 'burn' T3 above 57.5 is Brine Crucible 158.13 — confirmed in static-confirmed.json as a bleed+burn self-gate bug (nDecks 1), not a clean fire payoff. Boss win rates also sag in the fire line: Supernova bossWR 0.867, Cinder Sprint 0.818, Cinderlance 0.875, Pyre Surge 0.909, Pyre 0.88 — burn underperforms vs bosses generally.",
+      "diagnosis": "Fire's T3 build-around ceiling is illusory: it reads high on mean only because of a self-satisfied-gate bug, while every honest pure-burn T3 is below the strongest T2 burn. So a player upgrading from Flame Dart into a fire T3 gets a worse repeatable throughput card, with extra cost/cd. This is the burn archetype's tier curve being inverted, on top of the Supernova-specific case above.",
+      "proposed_change": "After fixing the Brine Crucible / Vein Splitter / Steaming Plague self-gates (per static-confirmed.json, those are separate bug fixes), establish a true clean-fire T3 ceiling above Flame Dart's 57.5 by buffing the dedicated burn T3 throughput cards via C1 cooldown cuts: e.g. Cinder Thrust cd 1.8 -> 1.5 (raises its repeat OPS toward/above Flame Dart) and Supernova as in the dedicated finding. Verify post-buff that at least one honest pure-burn T3 has peakOPS > 57.5 in a burn-feed deck, without nerfing Flame Dart (C1/charter). Re-sim vs the boss battery since burn bossWR currently trails (0.82-0.91).",
+      "confidence": "med"
+    },
+    "verdict": null,
+    "lane": "tier-ordering"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "matchups": [
+    {
+      "id": "mage-pure-burn-boss1-1__vs__BOSS_doom_knight",
+      "label": "Burn Bank-and-Cash vs Doom Knight vs BOSS doom_knight (boss1)",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 30
+    }
+  ]
+}

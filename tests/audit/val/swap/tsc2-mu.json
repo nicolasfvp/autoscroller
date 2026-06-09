@@ -1,0 +1,76 @@
+{
+  "matchups": [
+    {
+      "id": "tsc_base_tempest__vs__iron_golem",
+      "label": "slow-warrior baseline (Tempest Pike T3 in det slot) vs iron_golem (loop15)",
+      "archetype": "slow",
+      "stage": "loop15",
+      "class": "warrior",
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-air-attack",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 720,
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.1,
+      "isBoss": false,
+      "loopCount": 15,
+      "repeats": 8
+    },
+    {
+      "id": "tsc_cur__vs__iron_golem",
+      "label": "slow-warrior Thunderstrike Catalyst CURRENT (6 int per slow, cd2.0) vs iron_golem (loop15)",
+      "archetype": "slow",
+      "stage": "loop15",
+      "class": "warrior",
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-attack-counter",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 720,
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.1,
+      "isBoss": false,
+      "loopCount": 15,
+      "repeats": 8
+    },
+    {
+      "id": "tsc_buff__vs__iron_golem",
+      "label": "slow-warrior Thunderstrike Catalyst BUFF (6 str per slow, cd1.6) vs iron_golem (loop15)",
+      "archetype": "slow",
+      "stage": "loop15",
+      "class": "warrior",
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-attack-counter",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 720,
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.1,
+      "isBoss": false,
+      "loopCount": 15,
+      "repeats": 8
+    }
+  ]
+}

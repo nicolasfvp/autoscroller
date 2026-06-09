@@ -1,0 +1,40 @@
+{
+  "decks": [
+    {
+      "id": "armorfin-deep-baseline-lk",
+      "label": "Armor finisher deep-boss baseline (boss3 deck) vs lizard_king",
+      "archetype": "armor_finisher",
+      "class": "warrior",
+      "stage": "boss3",
+      "deck": ["t1-defense","t2-agility-defense","t2-defense-earth","t2-counter-earth","t3-counter-defense-defense","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t2-attack-earth","t3-attack-defense-defense","t2-attack-defense","t3-attack-attack-defense","t1-attack"],
+      "vsEnemies": []
+    },
+    {
+      "id": "armorfin-deep-noBodySlam-lk",
+      "label": "Same boss3 deck, Body Slam Vow swapped to plain T1 attack filler vs lizard_king",
+      "archetype": "armor_finisher",
+      "class": "warrior",
+      "stage": "boss3",
+      "deck": ["t1-defense","t2-agility-defense","t2-defense-earth","t2-counter-earth","t3-counter-defense-defense","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t2-attack-earth","t1-attack","t2-attack-defense","t3-attack-attack-defense","t1-attack"],
+      "vsEnemies": []
+    },
+    {
+      "id": "armorfin-deep-baseline-dg",
+      "label": "Armor finisher deep baseline (boss5 deck) vs desert_golem",
+      "archetype": "armor_finisher",
+      "class": "warrior",
+      "stage": "boss5",
+      "deck": ["t1-defense","t2-agility-defense","t2-defense-earth","t2-counter-earth","t3-counter-defense-defense","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t3-attack-defense-defense","t2-attack-earth","t3-attack-attack-defense","t2-attack-defense","t1-attack"],
+      "vsEnemies": []
+    },
+    {
+      "id": "armorfin-deep-noBodySlam-dg",
+      "label": "Same boss5 deck, Body Slam Vow swapped to T1 attack filler vs desert_golem",
+      "archetype": "armor_finisher",
+      "class": "warrior",
+      "stage": "boss5",
+      "deck": ["t1-defense","t2-agility-defense","t2-defense-earth","t2-counter-earth","t3-counter-defense-defense","t1-defense","t3-defense-defense-defense","t3-earth-earth-earth","t1-attack","t2-attack-earth","t3-attack-attack-defense","t2-attack-defense","t1-attack"],
+      "vsEnemies": []
+    }
+  ]
+}

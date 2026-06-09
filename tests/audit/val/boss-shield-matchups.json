@@ -1,0 +1,47 @@
+{
+  "matchups": [
+    {
+      "id": "desert_base_shield__naive",
+      "label": "naive vs desert_golem BASE (shield 10/7s)",
+      "archetype": "boss-reverify", "stage": "boss5", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2900, "relics": [], "isBoss": true,
+      "enemy": "desert_golem", "loopMultiplier": 1.0, "loopCount": 50, "repeats": 6
+    },
+    {
+      "id": "desert_noshield__naive",
+      "label": "naive vs desert_golem SHIELD REMOVED",
+      "archetype": "boss-reverify", "stage": "boss5", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2900, "relics": [], "isBoss": true,
+      "enemy": "desert_golem", "loopMultiplier": 1.0, "loopCount": 50, "repeats": 6,
+      "enemyOverride": { "behaviors": [] }
+    },
+    {
+      "id": "bgolem_base_shield__naive",
+      "label": "naive vs boss_iron_golem BASE (shield 12/7s + enrage)",
+      "archetype": "boss-reverify", "stage": "boss7", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 4400, "relics": [], "isBoss": true,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.0, "loopCount": 70, "repeats": 6
+    },
+    {
+      "id": "bgolem_noshield__naive",
+      "label": "naive vs boss_iron_golem SHIELD REMOVED (enrage only)",
+      "archetype": "boss-reverify", "stage": "boss7", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 4400, "relics": [], "isBoss": true,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.0, "loopCount": 70, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"enrage","hpThreshold":0.35,"attackSpeedMultiplier":1.4} ] }
+    },
+    {
+      "id": "bgolem_shield40__naive",
+      "label": "naive vs boss_iron_golem SHIELD 40/4s (threat threshold?)",
+      "archetype": "boss-reverify", "stage": "boss7", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 4400, "relics": [], "isBoss": true,
+      "enemy": "boss_iron_golem", "loopMultiplier": 1.0, "loopCount": 70, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"shield","interval":4000,"shieldAmount":40},{"type":"enrage","hpThreshold":0.35,"attackSpeedMultiplier":1.4} ] }
+    }
+  ]
+}

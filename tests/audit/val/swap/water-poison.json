@@ -1,0 +1,9 @@
+{
+  "class": "mage",
+  "stage": "boss1",
+  "baseline": ["t3-agility-water-water", "t3-earth-earth-water", "t3-air-fire-water", "t2-earth-water", "t1-water", "t3-earth-fire-water", "t1-water"],
+  "slot": 4,
+  "filler": "t1-water",
+  "candidates": ["t3-water-water-water", "t2-water-water", "t3-agility-water-water"],
+  "repeats": 6
+}

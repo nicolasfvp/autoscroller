@@ -1,0 +1,172 @@
+{
+  "matchups": [
+    {
+      "id": "d1-model560",
+      "class": "warrior",
+      "deck": [
+        "t3-attack-counter-fire",
+        "t3-counter-earth-fire",
+        "t3-attack-defense-fire",
+        "t2-agility-water",
+        "t3-agility-counter-defense",
+        "t3-air-attack-counter",
+        "t3-agility-attack-fire",
+        "t3-fire-fire-fire",
+        "t3-water-water-water"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d3-model560",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-attack-attack",
+        "t1-attack",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t3-counter-fire-fire",
+        "t2-fire-water",
+        "t3-air-attack-water",
+        "t3-agility-agility-counter",
+        "t3-air-attack-water",
+        "t3-agility-air-attack"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d1-real431",
+      "class": "warrior",
+      "deck": [
+        "t3-attack-counter-fire",
+        "t3-counter-earth-fire",
+        "t3-attack-defense-fire",
+        "t2-agility-water",
+        "t3-agility-counter-defense",
+        "t3-air-attack-counter",
+        "t3-agility-attack-fire",
+        "t3-fire-fire-fire",
+        "t3-water-water-water"
+      ],
+      "runXP": 431,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d3-real431",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-attack-attack",
+        "t1-attack",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t3-counter-fire-fire",
+        "t2-fire-water",
+        "t3-air-attack-water",
+        "t3-agility-agility-counter",
+        "t3-air-attack-water",
+        "t3-agility-air-attack"
+      ],
+      "runXP": 431,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d1-xp200",
+      "class": "warrior",
+      "deck": [
+        "t3-attack-counter-fire",
+        "t3-counter-earth-fire",
+        "t3-attack-defense-fire",
+        "t2-agility-water",
+        "t3-agility-counter-defense",
+        "t3-air-attack-counter",
+        "t3-agility-attack-fire",
+        "t3-fire-fire-fire",
+        "t3-water-water-water"
+      ],
+      "runXP": 200,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d3-xp200",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-attack-attack",
+        "t1-attack",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t3-counter-fire-fire",
+        "t2-fire-water",
+        "t3-air-attack-water",
+        "t3-agility-agility-counter",
+        "t3-air-attack-water",
+        "t3-agility-air-attack"
+      ],
+      "runXP": 200,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d1-xp0",
+      "class": "warrior",
+      "deck": [
+        "t3-attack-counter-fire",
+        "t3-counter-earth-fire",
+        "t3-attack-defense-fire",
+        "t2-agility-water",
+        "t3-agility-counter-defense",
+        "t3-air-attack-counter",
+        "t3-agility-attack-fire",
+        "t3-fire-fire-fire",
+        "t3-water-water-water"
+      ],
+      "runXP": 0,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    },
+    {
+      "id": "d3-xp0",
+      "class": "warrior",
+      "deck": [
+        "t2-attack-attack",
+        "t3-attack-attack-attack",
+        "t1-attack",
+        "t2-agility-attack",
+        "t2-agility-counter",
+        "t3-counter-fire-fire",
+        "t2-fire-water",
+        "t3-air-attack-water",
+        "t3-agility-agility-counter",
+        "t3-air-attack-water",
+        "t3-agility-air-attack"
+      ],
+      "runXP": 0,
+      "enemy": "doom_knight",
+      "isBoss": true,
+      "loopMultiplier": 1,
+      "repeats": 5
+    }
+  ]
+}

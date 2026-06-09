@@ -1,0 +1,226 @@
+[
+  {
+    "lane": "harness-correctness",
+    "overall": "solid",
+    "assessments": [
+      {
+        "condition": "makeRun seeds hero at FULL resolved maxHP (1e6 sentinel clamped to resolved max, not base maxHP) — i.e. the prior ~66%-HP bug is fixed",
+        "status": "ok",
+        "detail": "makeRun sets hero.currentHP/currentStamina/currentMana = 1_000_000 while keeping base maxHP/Stamina/Mana on hero.* (warrior 100/50/30, mage 70/30/60). createCombatState computes resolved = resolveHeroStats(run) and seeds heroHP = Math.min(currentHP, resolved.maxHP). Because currentHP is a 1e6 sentinel, the min resolves to the FULL leveled maxHP. I confirmed this at runtime (not just by reading): a probe wiring up makeRun+createCombatState produced heroHP === heroMaxHP === resolved.maxHP for every leveled case — warrior runXP560 -> 157/157 (base 100), runXP2300 -> 219/219, runXP4400 -> 253/253; mage runXP560 -> 127/127 (base 70), etc. Stamina/Mana also seed to full resolved max (warrior sta 50/50, mage mana 60/60). The only case where heroHP equals base is runXP=0 (level 0, no bonus), which is correct.",
+        "evidence": "deck-battle-sim.test.ts:151 currentHP:1_000_000; CombatState.ts:228 heroHP: Math.min(run.hero.currentHP, resolved.maxHP); runtime probe: 'warrior xp=560 :: resolved.maxHP=157 heroHP=157 heroMaxHP=157 ... base=100'.",
+        "impact_on_findings": "If this were wrong (seeding base maxHP), survival/HP-cushion findings would be understated by ~36-60% of maxHP and boss losses would be over-reported. It is correct, so HP-cushion and win-rate findings rest on a rested-hero-at-full-HP benchmark — the intended condition.",
+        "recommended_action": "None. Optionally document in the report that the benchmark is a rested hero entering each fight at full HP (best case); real runs may enter chip-damaged, so reported cushions are an upper bound."
+      },
+      {
+        "condition": "Per-combat hero stats (STR/INT/VIT/DEX/maxHP) are correctly derived from runXP via resolveHeroStats + getInRunLevelBonus + getLevel",
+        "status": "ok",
+        "detail": "Hand-computed and runtime-confirmed for both classes at the 3 requested stages. getLevel(50*1.15^L cumulative): 560->L7, 2300->L14, 4400->L18. getInRunLevelBonus: maxHP=+6/level, VIT=floor(L/2), DEX=floor(L/4), offense axis=floor(L/2) on STR(warrior)/INT(mage); then VIT*5 added to maxHP last. WARRIOR: boss1(560,L7) STR4 VIT3 DEX1 INT0 maxHP=100+42+15=157; boss4(2300,L14) STR8 VIT7 DEX3 maxHP=100+84+35=219; boss7(4400,L18) STR10 VIT9 DEX4 maxHP=100+108+45=253. MAGE: boss1 STR1 VIT3 DEX1 INT3 maxHP=70+42+15=127; boss4 STR1 VIT7 DEX3 INT7 maxHP=189; boss7 STR1 VIT9 DEX4 INT9 maxHP=223. (Warrior base STR is 1 from makeRun line 157; mage offense goes to INT so mage STR stays 1.) Runtime createCombatState produced these exact numbers. Crucially, all 181 decks in decks-full.json carry NO stats profile and NO relics (verified: 0/0/0), so the pure runXP-derived computation is exactly what the sim used — no hidden stat/relic deltas.",
+        "evidence": "HeroStatsResolver.ts:172-205 (constants +6/EVERY2/EVERY4) and :253-261 (in-run fold then VIT*5); XPSystem.ts:29-37 getLevel; runtime: 'warrior xp=2300 maxHP=219 STR=8 VIT=7 DEX=3', 'mage xp=4400 maxHP=223 ... INT=9'; decks-full.json: decks-with-stats=0, decks-with-relics=0.",
+        "impact_on_findings": "Damage-output and survival findings depend on STR/INT scaling and maxHP; both are correct and match the design curve. No correction needed.",
+        "recommended_action": "None for correctness. Minor cosmetic note (see separate assessment) on stage-model approxLevel labels."
+      },
+      {
+        "condition": "Boss enemy scaling equals floor(baseHP*(1+(normalMult-1)*0.5)) — the boss half-rate fix is right and not double-applied",
+        "status": "ok",
+        "detail": "Verified every boss matchup's enemyScaledHP/Damage/Defense in results-full.json against the engine formula. The expander passes loopMultiplier=stage.normalMult (NOT the pre-halved stage.bossMult) with isBoss=true, so scaleEnemyForLoop halves exactly once (loopMult = 1+(mult-1)*0.5, then *bossMultiplier=1.0). All 7 bosses match exactly: doom_knight mult1->HP380 (base380, halfMult1.0); iron_golem mult1.1->HP420 (base400, 1.05); lizard_king mult1.2->407; bog_witch mult1.3->471; desert_golem mult1.4->540; infernal_dragon mult1.5->575; boss_iron_golem mult1.6->611 (base470, 1.30). Damage and defense also match floor(base*halfMult) for all 7. The prompt's spot-checks (doom_knight=380, iron_golem~420, boss_iron_golem=611) are confirmed. No double-application of the half-rate.",
+        "evidence": "expand-validation-matchups.mjs:111 'enemy: stage.boss, loopMultiplier: stage.normalMult, isBoss: true'; DifficultyScaler.ts:62-65 'if (isBoss) loopMult = 1 + (loopMult-1)*0.5; loopMult *= config.bossMultiplier'; difficulty.json bossMultiplier=1.0; results scan: 'OK boss_iron_golem mult=1.6 HP got=611 exp=611 | DMG got=15 exp=15 | DEF got=5 exp=5 | base(470/12/4) bossMult=1.3'. Normal enemies also verified: 37/37 distinct (enemy,mult) combos match floor(base*mult), 0 mismatches.",
+        "impact_on_findings": "If the half-rate were double-applied, deep bosses would be under-scaled (e.g. boss7 would be ~556 not 611) and boss win-rates over-reported. Scaling is correct, so boss-difficulty findings are trustworthy.",
+        "recommended_action": "None."
+      },
+      {
+        "condition": "No matchups have non-empty errors[] or unexpected timeouts in results-full.json",
+        "status": "ok",
+        "detail": "Scanned all 857 results: 0 have non-empty errors[]; 0 have timeouts>0 (neither boss nor normal). Every matchup resolved to a clean win/death within the 180s sim cap (engine self-fails at 5min deadlock, never hit). enemyType is consistent: 0 normals mislabeled boss and 0 bosses mislabeled normal.",
+        "evidence": "results-full.json meta.count=857; scan: 'results with non-empty errors[]: 0', 'results with timeouts>0: 0', 'timeouts on boss matchups: 0 normal: 0'.",
+        "impact_on_findings": "No silent failures or partial matchups polluting averages; every winRate/score aggregates over the full intended repeat count (normals 4, bosses 8). Findings are not contaminated by errored runs.",
+        "recommended_action": "None."
+      },
+      {
+        "condition": "stage-model.json approxLevel annotations match the actual getLevel(runXP) the harness uses",
+        "status": "concern",
+        "detail": "The approxLevel field is off by ~1 at several stages: boss1 runXP560 is labeled approxLevel 6 but getLevel(560)=7 (L7 needs 551 cumulative); boss4 runXP2300 labeled 15 but =14 (L15 needs 2372); boss7 runXP4400 labeled 19 but =18 (L19 needs 4401, so 4400 is one short of L19). This is COSMETIC ONLY: the harness drives hero stats from runXP via getLevel, never from approxLevel — the field is documentation. The actual in-sim stats are correct (verified above). But the annotation could mislead a reader interpreting findings (e.g. thinking boss7 hero is L19 when it is L18, slightly fewer stat points than the label implies).",
+        "evidence": "stage-model.json: boss1 approxLevel 6 / runXP 560; boss4 approxLevel 15 / runXP 2300; boss7 approxLevel 19 / runXP 4400. Computed thresholds: reach L7=551, L14=2019, L15=2372, L18=3783, L19=4401. getLevel: 560->7, 2300->14, 4400->18.",
+        "impact_on_findings": "No impact on the simulated numbers (runXP is the driver). Risk is only in human interpretation of the report if approxLevel is quoted as the hero level. Note that runXP=4400 is literally 1 XP short of L19 — a brittle round number.",
+        "recommended_action": "Correct approxLevel to match getLevel(runXP) in stage-model.json (or relabel as 'approx, off by ~1'), and bump boss7 runXP to >=4401 if L19 is the intended hero strength for that fight."
+      },
+      {
+        "condition": "Stage/loop coverage of the deck library is complete and representative",
+        "status": "concern",
+        "detail": "decks-full.json has 181 decks but the loop25 band has ZERO decks authored (distribution: loop2 6, loop5 12, loop8 13, boss1 38, loop15 27, boss2 23, boss3 22, boss4 15, boss5 9, boss6 9, boss7 7). So no normal-enemy battery is exercised at normalMult=1.2 via the loop25 stage tag (the loop25 NORMAL_BATTERY of werewolf/ancient_tree/baby_dragon is never expanded). Those enemies are still hit at other bands, but the 1.2-band normal data point is absent. Also deck counts thin out at deep stages (boss5/6/7 have only 9/9/7 decks), so deep-endgame findings rest on a smaller sample. This is a coverage/representativeness gap, not an input-correctness bug.",
+        "evidence": "decks-full.json stage distribution: '{...\"loop15\":27,...}' with no loop25 key; expand-validation-matchups.mjs:38 defines loop25 battery but no deck carries stage:'loop25'.",
+        "impact_on_findings": "Findings about the 1.2 normal band and deep-endgame (boss5-7) are thinner / partly missing. Aggregate balance conclusions are fine for early/mid stages; treat deep-stage and loop25-band claims as lower-confidence.",
+        "recommended_action": "Author a few loop25-stage decks (or fold loop25 normals into a neighboring band) and add more boss5-7 decks if deep-endgame conclusions need to be load-bearing in the final report."
+      },
+      {
+        "condition": "Hero enters with currentDefense=0 and defenseMultiplier matching class (no accidental defense buff)",
+        "status": "ok",
+        "detail": "makeRun sets currentDefense:0 and defenseMultiplier from class base (warrior 1.0, mage 0.8); createCombatState resets heroDefense to 0 at combat start regardless. So the hero starts each fight with no armor — the rested-but-unarmored benchmark. defenseMultiplier flows through to heroDefenseMultiplier correctly. No relics means no passive armor/stat injection.",
+        "evidence": "deck-battle-sim.test.ts:122,157-158 (defenseMultiplier base, currentDefense:0); CombatState.ts:240 'heroDefense: 0', :242 heroDefenseMultiplier: run.hero.defenseMultiplier.",
+        "impact_on_findings": "Defensive cards must build their own armor each fight (realistic). No hidden defense inflating survival. Consistent with the full-HP rested benchmark.",
+        "recommended_action": "None."
+      }
+    ]
+  },
+  {
+    "lane": "runxp-realism",
+    "overall": "solid",
+    "assessments": [
+      {
+        "condition": "Stage-model runXP over-states deep-stage hero power (the central confound: if true, 'deep bosses too easy' is an artifact)",
+        "status": "ok",
+        "detail": "Re-derived achievable cumulative runXP from the live engine constants (src/data/difficulty.json: baseLoopLength 15, loopGrowth schedule [3,2,2,1,1] cap 40, basicTileCombatChance 0.18, eliteChance 0.15, bossEveryNLoops 10) and the XP table (normal 10 / elite 30 / boss 80, getLevel base 50 *1.15). A VANILLA player (basic tiles only, no placed combat) earns LESS than the stage-model (ratio model/achievable 1.08-1.30), but a normal ACTIVE player who places ~4 terrain combat tiles per loop (50% spawn each — the core planning mechanic) earns MORE than the model at every deep stage. The stage-model is therefore conservative-to-neutral, not inflated. Direction of error is the OPPOSITE of the confound: a real engaged player is at least as strong, often stronger, than the sim hero.",
+        "evidence": "Cumulative XP and getLevel by loop. Stage-model: L10=560(L7) L20=1150(L10) L30=1700(L12) L40=2300(L14) L50=2900(L16) L60=3600(L17) L70=4400(L18). VANILLA-achievable: L10=431(L5) L20=932(L9) L30=1480(L12) L40=2075(L14) L50=2693(L15) L60=3335(L17) L70=4000(L18) — levels MATCH model at loops 30/60/70, off by 1 at 20/40/50, off by 2 only at loop10. ACTIVE-4-terrain: L10=597(L7) L30=1979(L13) L50=3525(L17) L70=5165(L20) — EXCEEDS model levels at every deep stage.",
+        "impact_on_findings": "The 'deep bosses too easy' finding is NOT an artifact of inflated runXP. Hero power in the sim is conservative; a real player who engages the placement mechanic is even stronger, so deep bosses would be EASIER in the live game, not harder. The finding stands and is if anything understated.",
+        "recommended_action": "Keep the stage-model runXP as the floor. Optionally add an 'engaged-player' high-XP variant (active/aggressive placement) to bound the upper end and confirm bosses are trivial across the whole realistic XP band, not just the conservative floor."
+      },
+      {
+        "condition": "In-run leveling contributes enough hero power that XP-curve realism could swing boss outcomes",
+        "status": "ok",
+        "detail": "Converted runXP to actual hero stats via getInRunLevelBonus + resolveHeroStats (maxHP = base + level*6 + VIT*5 where VIT=floor(level/2); offense STR/INT = floor(level/2)). The in-run curve moves hero maxHP from 157 (loop10) to only 253 (loop70) — ~60% growth across 60 loops — and offense from +3 to +9. This is a SMALL fraction of total hero power, which is dominated by deck/relics/stat-event investments. Even a 2-level swing between achievable estimates changes maxHP by ~17 and offense by ~1, which cannot flip a boss matchup.",
+        "evidence": "WARRIOR maxHP/STR by loop — model vs vanilla vs active4: loop10 157/3 vs 140/2 vs 157/3; loop40 219/7 vs 219/7 vs 225/7; loop70 253/9 vs 253/9 vs 270/10. The whole achievable-XP band collapses to a ~17 HP / ~1 STR spread per stage.",
+        "impact_on_findings": "XP-curve uncertainty has negligible leverage on boss-difficulty conclusions. Conclusions about deep bosses are robust to any plausible re-estimate of runXP.",
+        "recommended_action": "None required. The in-run leveling layer is too weak to be a confound; document that deck quality, not runXP, drives the boss results."
+      },
+      {
+        "condition": "Boss HP/damage in results-full.json matches the engine's intended half-rate scaling (prior double-half bug fixed)",
+        "status": "ok",
+        "detail": "Verified every recorded boss enemyScaledHP against the engine formula scaleEnemyForLoop(isBoss): loopMult = 1 + (normalMult-1)*0.5, then *bossMultiplier(1.0), HP = floor(baseHP*loopMult). All 7 deep bosses match exactly — the expander correctly passes stage.normalMult (not the pre-halved stage.bossMult), so the half-rate is applied ONCE. This independently confirms the half-rate-double-application bug is fixed in the data the findings rest on.",
+        "evidence": "doom_knight 380==380, iron_golem 420==420, lizard_king 407==407, bog_witch 471==471, desert_golem 540==540, infernal_dragon 575==575, boss_iron_golem 611==611 (all OK). Deepest boss (loop70, normalMult 1.6) is only 611 HP / 15 dmg vs a 253-270 HP hero — barely +30% over its 470 base.",
+        "impact_on_findings": "Confirms the boss inputs are correct. The 'too easy' result is driven by the half-rate cap keeping boss HP near base while normal enemies scale at full rate — a genuine balance property, not a setup bug.",
+        "recommended_action": "None. This is correct and the confounding bug is verified absent. (Cross-lane note: whether the half-rate boss scaling itself is desirable is a design question, but it is faithfully reproduced.)"
+      },
+      {
+        "condition": "stage-model approxLevel field is consistent with getLevel(runXP)",
+        "status": "concern",
+        "detail": "The stage-model's documented approxLevel disagrees with getLevel(runXP) by +/-1 at 5 of 12 stages (boss1 stated L6 actual L7; boss3 L13 vs L12; boss4 L15 vs L14; boss6 L18 vs L17; boss7 L19 vs L18). This is purely a documentation/labeling field — the sim harness (makeRun) seeds hero.runXP and derives the real bonus via getInRunLevelBonus(runXP), it never reads approxLevel — so the simulated hero is unaffected. But the mislabel could mislead a reader interpreting the report into thinking the hero is a level higher/lower than it actually is.",
+        "evidence": "stage-model.json vs getLevel: boss1 runXP 560 stated approxLevel 6 but getLevel(560)=7; boss7 runXP 4400 stated 19 but getLevel(4400)=18. Harness uses runXP (deck-battle-sim.test.ts makeRun: hero.runXP = m.runXP) not approxLevel.",
+        "impact_on_findings": "No impact on simulated outcomes (approxLevel is decorative). Minor risk of misinterpretation in the written report only.",
+        "recommended_action": "Recompute approxLevel = getLevel(runXP) in stage-model.json (or drop the field) so documentation matches the curve the sim actually uses."
+      },
+      {
+        "condition": "runXP held FIXED per stage ignores that XP keeps accruing during the loops a boss is fought across",
+        "status": "ok",
+        "detail": "Each boss matchup uses a single point-estimate runXP for its loop band, whereas a live player accrues XP continuously. Because the achievable-XP analysis shows the model sits at the conservative end of the realistic band AND the in-run curve has weak leverage on combat (max ~17 HP per 2-level swing), using a fixed point estimate does not bias boss outcomes. The fixed value is a reasonable central/conservative proxy.",
+        "evidence": "Across the entire vanilla->active4 achievable band the per-stage maxHP spread is <=17 HP and offense spread is <=1, far below what would flip a 611-HP/15-dmg boss against a 253+ HP hero.",
+        "impact_on_findings": "No material effect. Point-estimate runXP is adequate for the difficulty conclusions.",
+        "recommended_action": "None required; if precision is wanted later, sweep runXP across the achievable band per stage rather than a single point."
+      }
+    ]
+  },
+  {
+    "lane": "deck-realism",
+    "overall": "minor_concerns",
+    "assessments": [
+      {
+        "condition": "Resource sustainability — do decks out-spend the +1 stamina/+1 mana per 4.5s regen and the starting pool (warrior 50s/30m, mage 30s/60m), causing stalls that bias findings?",
+        "status": "ok",
+        "detail": "The FIXED-ORDER engine does NOT stall on resource starvation: when a card is unaffordable it is skipped (deckPointer advances) and only a 500ms RETRY_DELAY is armed when ALL cards are unaffordable. Cheap front cards therefore keep firing regardless of pool depletion. I re-simulated fixed-order affordability with the real regen model over 120s for all 181 decks: even the most resource-heavy decks still played 48 cards (median 63), i.e. ~0.4-0.7 cards/sec — never a true stall. Cross-checking the worst out-spenders against results-full.json, they win 100% in 5-9s.",
+        "evidence": "CombatEngine.ts L19-26: REGEN_INTERVAL=4500, STAMINA_REGEN=1, MANA_REGEN=1, RETRY_DELAY=500; L185-189 unaffordable cards are skipped not waited on. results-full.json: 0/857 matchups had any timeout and 0/857 had errors. Worst modeled out-spenders (war-mixed-bruiser-boss6-1, war-pure-physical-boss3-2, deep-endgame-boss7-war-physical) all show avgWR=1.00 at avgTtkMs 5900-9500 playing only 5-7 cards. Long fights (up to 99100ms, 60 cards, 6 reshuffles) still won, proving regen-gated tempo doesn't lose fights.",
+        "impact_on_findings": "None negative — confirms front-loading holds and resource model does not bias archetype/enemy findings. The single caveat is the inverse: fights end so fast that resource sustainability is rarely exercised at all (see deck-cycling concern).",
+        "recommended_action": "No change needed for sustainability. The decks are correctly front-loaded (cheapest cards first) — verified: only 2/181 decks (cover-1-3, cover-1-4) are mildly back-loaded (front avg 2.0 vs back 1.2)."
+      },
+      {
+        "condition": "Deck cycling — does the full deck actually get tested, or do only the front cards fire (making large late-game decks effectively untested)?",
+        "status": "concern",
+        "detail": "Because near-100% win rates come with ~6s kills, the majority of decks never fully cycle. In 67% of matchups (578/857) avgCardsPlayed <= deckSize (deck never completes one pass) and 62% never reshuffle (avgReshuffles < 1). This is STAGE-DEPENDENT and inverted vs. realism: early loop2 decks fully cycle (medCards=15, 3 reshuffles, 0% front-only), but late decks barely scratch the front: loop15 88% front-only, boss5 97%, boss6 92%, boss7 89%, with median 6-8 cards played out of 11-15-card decks and 0 median reshuffles. So findings about LATE-GAME archetypes (loop15-boss7) are really findings about each archetype's opening 6-8 cards, not its full 13-15-card deck. The back ~half of every large deck is dead weight that never affects the recorded outcome.",
+        "evidence": "results-full.json per-stage: loop2 frontOnly=0%/medResh=3; loop8 55%; boss1 58%; loop15 88%/medResh=0; boss2 86%; boss3 88%; boss4 92%; boss5 97%; boss6 92%; boss7 89%. avgCardsPlayed distribution: median 8, p75 11 vs deck sizes that reach 15. Root cause is enemies dying in ~6s (boss7 decks avgTtk ~6000-7000ms) — an enemy-scaling issue outside this lane — but its CONSEQUENCE is that the late large decks are not realistically exercised.",
+        "impact_on_findings": "Late-game archetype rankings and per-card-in-deck conclusions are only valid for the opening cards. Any back-of-deck card (or any claim that a 15-card deck 'works') is essentially unvalidated for loop15-boss7. Comparative archetype findings at late stages may be near-noise because the deciding factor is the front 6 cards, not the archetype's full kit.",
+        "recommended_action": "Treat late-stage (loop15+) per-deck/per-card findings as provisional. To genuinely test full late decks, the enemy HP scaling must be raised until late bosses survive long enough to force 1-2 reshuffles (target ttk >> sum(front cooldowns)); OR explicitly scope late-game findings to 'opening sequence' only. Flag this to the enemy-scaling lane as the upstream cause."
+      },
+      {
+        "condition": "Class fit — warriors mostly stamina, mages mostly mana?",
+        "status": "ok",
+        "detail": "Class fit is strong. Across all 181 decks only 2 had off-resource-dominant TOTALS, both marginal mage detonator decks (mage-detonator-control-boss7-1: 14 stamina vs 12 mana; boss7-2: 14s vs 13m). On inspection these are NOT real mismatches: the front 7 cards of boss7-1 (the only ones that ever fire) cost 4 stamina / 7 mana — correctly mana-dominant — and the apparent stamina excess is entirely in the never-played back t3 hybrids. Sampled warrior decks are 1s-cost physical/armor/counter cards; sampled mage decks are 1m fire/water/earth cards with hybrid 1s1m/2m t3s pushed to the back.",
+        "evidence": "Programmatic scan of cost.stamina vs cost.mana per deck: 2/181 flagged, both mage detonator with deltas of 1-2 points concentrated in back cards. Front-7 resource breakdown of mage-detonator-control-boss7-1 = 4s/7m. Warrior samples (war-pure-physical-loop2-1, war-armor-control-boss4-1) are stamina-only except one trailing 2s1m card; mage samples (pure-burn, pure-poison, mixed-elemental) are mana-led.",
+        "impact_on_findings": "Negligible. Class identity is preserved; no warrior deck is secretly a mana deck or vice versa in its played portion.",
+        "recommended_action": "Optionally reorder the 2 mage detonator decks so any stamina-heavy t3 sits even further back, but this has no practical effect since those cards never fire."
+      },
+      {
+        "condition": "No degenerate single-card-carry decks and no unplayable stalls?",
+        "status": "ok",
+        "detail": "Zero degenerate decks: no deck has any single card id at >=50% of the deck (max duplication is 2x of a cheap card). Distinct-card ratio is high; only 2 decks dip below 60% unique (mage-pure-burn-boss1-2 at 5/9, mage-pure-burn-loop15-2 at 6/11) and both are thematically correct burn-mage fire spam, not degeneracy. All 164 distinct card ids referenced resolve in cards-index.json (0 missing). The 24 cover-* decks are deliberate coverage builds for underused cards, not bias. Null-cost cards (e.g. t1-air) are handled correctly by canAfford (CardResolver.ts L67 'if (!cost) return true') so they never error or block.",
+        "evidence": "Scan: DEGENERATE single-card>=50% = 0/181; LOW DISTINCT (<60%) = 2/181 (both pure-burn, intended). MISSING CARD IDS = none. CardResolver.canAfford L65-78. cover-* decks (24) each have notes naming the specific card(s) they exercise.",
+        "impact_on_findings": "None — deck composition is realistic and non-degenerate, so per-archetype and per-card findings reflect genuine play patterns.",
+        "recommended_action": "No change."
+      },
+      {
+        "condition": "Deck sizes scale with stage (small early, up to 15 late) and stage coverage is complete?",
+        "status": "concern",
+        "detail": "Deck sizes scale correctly with stage: loop2 = 5 cards (min/med/max 5/5/5), loop5 5-7, loop8 8-10, boss1 7-11, loop15 9-13, boss2 8-13, boss3 8-14, boss4 10-15, boss5 12-15, boss6 12-15, boss7 13-15. This matches the realistic 'deck grows over the run' progression. HOWEVER there is a coverage GAP: stage-model.json defines a 'loop25' stage (loopCount 25, runXP 1450, approxLevel 12, normalMult 1.2) but decks-full.json contains ZERO decks tagged loop25 — the deck stages present are loop2,loop5,loop8,boss1,loop15,boss2,boss3,boss4,boss5,boss6,boss7. So the loop25 normal-enemy band is entirely unrepresented in the deck library.",
+        "evidence": "Per-stage deck-size scan (above). Stages present in decks: 'loop2,loop5,loop8,boss1,loop15,boss3,boss2,boss4,boss5,boss6,boss7' — loop25 absent. stage-model.json L64-73 defines loop25 (normalMult 1.2, runXP 1450).",
+        "impact_on_findings": "Minor: the loop25 normal-enemy difficulty band (between boss2 and boss3 progression) has no deck-vs-normal-enemy data, so any claim covering the full progression has a hole there. Boss3 decks (runXP 1700, mult 1.2 via bossMult) partially cover the same power band, so the gap is not catastrophic.",
+        "recommended_action": "Either add ~6-10 decks tagged loop25 (mid-late normal band) to close the gap, or explicitly note in the report that the loop25 normal band is inferred from adjacent boss3/loop15 data rather than directly simulated."
+      },
+      {
+        "condition": "Do any realistic decks produce loss outcomes that could be mistaken for deck problems (vs enemy/balance signals)?",
+        "status": "concern",
+        "detail": "Only 5/857 matchups had any death and these are the most balance-informative results, but two are worth flagging for interpretation: war-pure-physical-loop2-1 (the canonical 5-card loop2 warrior opener) DIES to 'mush' after 49 cards played, and early-starters-loop2-2 dies to 'mush' after 215 cards played. 'mush' is a NORMAL loop2 enemy with 122 baseHP / 0 defense / 3 damage — nearly 2x the HP of a peer loop2 normal (lost_lizard 68 HP). The decks themselves are realistic (THE starter decks), so these losses are genuine enemy-tuning signals (mush is an HP outlier the low-damage starter can't out-DPS within its stamina-regen tempo over many reshuffles), NOT artifacts of unrealistic decks. The other 3 losses are mage/cover decks vs early bosses.",
+        "evidence": "results-full.json losses: war-pure-physical-loop2-1__vs__mush WR=0 deaths=4 cards=49; early-starters-loop2-2__vs__mush WR=0 deaths=4 cards=215; plus 3 boss losses (mage-pure-burn-boss1-2 vs doom_knight, mage-detonator-control-boss3-1 vs lizard_king, cover-2-3 vs iron_golem). enemies.json mush: baseHP 122, baseDefense 0, attack.damage 3 vs lost_lizard baseHP 68.",
+        "impact_on_findings": "Positive for deck-realism (decks are valid), but the report must attribute the mush losses to enemy HP tuning, not to the decks. A 215-card grind-then-die is the one place the resource model genuinely bit, and it correctly surfaced as a real signal.",
+        "recommended_action": "In the findings, label the mush losses as enemy-tuning outliers (mush 122 HP vs peer ~68) rather than deck failures. This validates that the simulator surfaces real balance problems through realistic decks."
+      }
+    ]
+  },
+  {
+    "lane": "coverage-io-integrity",
+    "overall": "minor_concerns",
+    "assessments": [
+      {
+        "condition": "All 164 cards appear in >=1 simulated deck",
+        "status": "ok",
+        "detail": "Every card id in cards-index.json (164) appears in at least one deck in decks-full.json (181 decks, 164 distinct cards used), and every one of those decks was actually simulated. Cross-checking results-full.json: 0 cards are absent from a simulated matchup, 0 orphan card ids (used-but-not-indexed), 0 index-but-unused.",
+        "evidence": "cards-index ids:164; distinct cards used in decks-full:164; cards NEVER in any deck:0; decks authored but NOT simulated:0 (181/181); cards NOT in any simulated matchup:0. overview.json: nCardsUncovered:0, cardsUncovered:[].",
+        "impact_on_findings": "None — raw card coverage claim is sound; no card verdict is based on zero data.",
+        "recommended_action": "None for raw coverage. (See depth-of-coverage concern below for the quality caveat.)"
+      },
+      {
+        "condition": "All 26 enemies (19 normals + 7 bosses) were simulated",
+        "status": "ok",
+        "detail": "enemies-index.json contains 26 enemies (19 type=normal, 7 type=boss). results-full.json simulated all 26 distinct enemy ids; no enemy missed; no simulated enemy id absent from the index. overview.json independently reports nEnemiesCovered:26, enemiesNotCovered:[].",
+        "evidence": "enemies-index count:26; distinct enemies simulated:26; enemies NEVER simulated:0; simulated enemy ids not in index:0. Boss list: doom_knight,iron_golem,lizard_king,bog_witch,desert_golem,infernal_dragon,boss_iron_golem.",
+        "impact_on_findings": "None — full enemy roster was exercised.",
+        "recommended_action": "None."
+      },
+      {
+        "condition": "Aggregator math (enemy-summary.json / card-appearance.json) is accurate vs raw results-full.json rows",
+        "status": "ok",
+        "detail": "Recomputed meanWinRate, minWinRate, meanHpCushionOnWin, deathRate, nMatchups, nLossesMatchups for 3 enemies (mush, lost_lizard, doom_knight) and nDecks, nNormalMatchups, meanNormalWinRate, meanNormalCushion, meanBossWinRate for 4 cards (t1-attack, t1-fire, t3-attack-attack-attack, t1-counter) directly from the 857 raw rows. Every recomputed value matched the published summary to 3 decimals. meanWinRate is an unweighted mean across matchups; verified no enemy is summarized across BOTH boss and normal matchup types (0 such enemies), so the differing 4-vs-8 repeat counts never bias an enemy mean. Cushion correctly averages only over win rows (avgHeroHpPctOnWin != null). 0 results carry errors, 0 timeouts.",
+        "evidence": "mush recomputed {n:6,meanWR:0.667,minWR:0,meanCushion:0.942,deathRate:0.333,nLoss:2} == summary {nMatchups:6,meanWinRate:0.667,minWinRate:0,meanHpCushionOnWin:0.942,deathRate:0.333,nLossesMatchups:2}. doom_knight recomputed meanWR:0.974,meanCushion:0.592 == summary. t1-attack recomputed {nDecks:63,nNormalMatchups:282,meanNormalWinRate:0.993,meanNormalCushion:0.898,meanBossWinRate:1} == summary exactly. enemies appearing as BOTH boss and normal:0.",
+        "impact_on_findings": "None — published aggregates faithfully represent the raw sim rows.",
+        "recommended_action": "None. (Minor: deathRate label is ambiguous — for all-0/1 matchups it equals both by-matchup loss-fraction and by-repeat death-fraction; harmless here but worth documenting.)"
+      },
+      {
+        "condition": "Repeats (4 normal / 8 boss) are adequate to average over RNG",
+        "status": "concern",
+        "detail": "The sim is effectively DETERMINISTIC for win/loss: ALL 857 matchups have winRate of exactly 0 or 1 (734 normal + 123 boss); zero partial winrates anywhere, so RNG never flipped an outcome within any matchup's repeats. Root cause verified in code: (a) NO card effect uses rand() — grep of src/systems/cards/ and CardResolver.ts for rand/Math.random returns nothing; the magic elemMult (SIM_ELEM_RATE) is a deterministic stat-based multiplier, not a roll. (b) The only combat RNG is enemy-side: EnemyAI double-damage (rand()<0.3) requires enemySpecialEffect, and damage variance (0.8+rand()*0.4) requires pattern:'random' — but ALL 26 enemies are pattern:'fixed' with no special-effect, so neither fires. (c) Air-affinity stun (EnemyAffinity.ts: rand()<0.15 normal / 0.30 boss) is live, but the only 2 air enemies (depths_horror, venomous_kobra) won 100% across 77+25 matchups, so stun never mattered. (d) hemlock_vial relic rand()<0.25 only fires if that relic is equipped. Net: repeats add no variance reduction for outcomes — they are redundant but not harmful. The good news: this means findings are NOT RNG-fragile; the bad news is the harness gives a false impression of RNG-averaging, and any genuinely RNG-sensitive content (relic-bearing or future random-pattern enemies) would be under-sampled.",
+        "evidence": "normal rep4: all-or-nothing(wr 0 or 1):734 partial:0; boss rep8: all-or-nothing:123 partial:0. grep rand in src/systems/cards/ -> empty; in CardResolver.ts -> empty. enemy patterns:{fixed:26}. air enemies depths_horror(n=77,meanWR=1.0), venomous_kobra(n=25,meanWR=1.0). SharedRNG falls back to Math.random when setActiveRNG unset (sim never sets it), so runs ARE independent — yet outcomes still never varied.",
+        "impact_on_findings": "Low for current findings (they are deterministic, not fragile). But the report should NOT claim repeats provide statistical robustness against RNG — for this fixed-enemy roster they do not. If any matchup attaches a random-pattern enemy or a proc relic, 4 repeats would be too few.",
+        "recommended_action": "Document that the current roster is deterministic so repeats are a no-op; reallocate the wasted repeat budget toward MORE DECKS per under-sampled enemy. If future content adds random patterns / proc relics, bump repeats to >=20 for those matchups specifically."
+      },
+      {
+        "condition": "Early base normals (loop1 enemies) adequately sampled; the mush 0.667 finding is robust",
+        "status": "concern",
+        "detail": "The 6 firstLoop=1 base normals (lost_lizard, giant_spider, mush, forge_slime, toxic_gooze, scorpion) plus pocket_cat are each tested by only ~6 matchups (all at loop2 stage, mult=1.0), whereas mid/late normals fire_elemental and werewolf get 112 each and skeleton 74 — the heavy sampling went to enemies that win 100% trivially, while the one genuinely hard enemy got the least data. The mush 0.667 (= 4 wins / 6 decks) rests on just 6 decks. The 2 losses are DETERMINISTIC (4/4 deaths each, avgTtk=null, no RNG, no timeout): war-pure-physical-loop2-1 (5x tier-1 ['t1-attack','t1-agility','t1-attack','t1-agility','t1-defense']) and early-starters-loop2-2 (starter-physical-haste ['t1-attack','t1-air','t1-agility','t1-defense','t1-counter']). So 0.667 is a real, reproducible signal that weak 5-card tier-1 warrior openers cannot out-DPS mush's 122 HP / 0-defense before dying — NOT an RNG artifact. But with only 6 decks (and only 3 being warrior-physical), one added or removed deck swings the headline number by ~0.167, making the precise 0.667 value statistically thin even though the underlying 'fragile early warrior opener' finding is genuine.",
+        "evidence": "matchup count per enemy: lost_lizard/giant_spider/mush/forge_slime/toxic_gooze/scorpion all n=6; fire_elemental n=112, werewolf n=112, skeleton n=74. mush losers: both deaths=4/4, deterministic. mush winRateByArchetype: pure_physical/warrior:0.5, starter-physical/warrior:1, starter-physical-haste/warrior:0, starter-elemental/mage:1, starter-burn/mage:1.",
+        "impact_on_findings": "Medium — the QUALITATIVE finding (early tier-1 warrior decks risk death to mush-class loop1 normals) is sound and deterministic. The QUANTITATIVE headline (mush winRate 0.667, ranked 'hardest enemy') is fragile to deck selection because n=6 and the loop2 battery skews warrior-physical-heavy.",
+        "recommended_action": "Add 6-10 more loop2 decks spanning the same archetypes against all 6-7 loop1 normals so each early normal has ~15+ data points; re-derive mush's winRate. Keep the qualitative finding; soften the precise 0.667 number until resampled."
+      },
+      {
+        "condition": "Boss HP/damage/defense scaling in results matches the engine's intended single-half-rate (the prior double-half-rate bug is fixed)",
+        "status": "ok",
+        "detail": "Verified all 7 boss stages: the expander passes stage.normalMult as loopMultiplier with isBoss:true, and scaleEnemyForLoop applies the half-rate once (1+(mult-1)*0.5) then *bossMultiplier(=1, from difficulty.json). Recomputed expected scaled HP/Dmg/Def for every boss and matched results-full.json exactly. stage-model's bossMult column (1.05,1.1,1.15,1.2,1.25,1.3) equals the computed expMult and is documentation-only (not passed to the scaler), so no double-application.",
+        "evidence": "boss2/iron_golem normalMult=1.1 expMult=1.05 -> HP 420(exp 420) Dmg 10 Def 4 OK; boss7/boss_iron_golem normalMult=1.6 expMult=1.30 -> HP 611(exp 611) Dmg 15 Def 5 OK; all 7 stages 'OK'. difficulty.json bossMultiplier:1. expander comment lines 98-103 confirm intentional single-halving.",
+        "impact_on_findings": "None — boss difficulty in-sim equals intended live scaling; boss findings are on solid footing.",
+        "recommended_action": "None."
+      },
+      {
+        "condition": "Depth of coverage: every card meaningfully tested (not just present once vs trivial content)",
+        "status": "concern",
+        "detail": "Raw coverage (every card in >=1 matchup) is satisfied, but depth is thin for many cards: 19 cards appear in EXACTLY 1 deck (some with only 3 normal matchups), 62 cards appear in <=2 decks, and 4 cards (t3-agility-agility-agility, t3-agility-agility-fire, t3-air-defense-fire, t3-counter-earth-water) are NEVER tested against any boss (meanBossWinRate:null) — they only live in loop15/loop25 decks, and stage-model gives loop15/loop25 boss:null, so no boss matchup is generated. Additionally, 2 single-deck cards (t3-earth-earth-fire, t3-agility-earth-fire) have their entire boss verdict (meanBossWinRate:0) decided by a SINGLE boss matchup loss. These per-card means are technically correct but rest on 1-3 data points.",
+        "evidence": "cards in exactly 1 deck:19; cards in <=2 decks:62; cards NEVER tested vs a boss:4 (t3-agility-agility-agility in war-pure-physical-loop15-2@loop15 bossMatchups=0; t3-agility-agility-fire in cover-2-2/cover-2-5@loop15 bossMatchups=0; etc.). single-deck cards with meanBossWinRate=0: t3-earth-earth-fire, t3-agility-earth-fire. stage-model loop15/loop25 boss:null.",
+        "impact_on_findings": "Medium for the THIN cards — any per-card verdict (especially boss-viability) for the 19 one-deck cards and the 4 never-vs-boss cards is low-confidence and should not be reported as a firm balance conclusion. Aggregate/archetype findings are unaffected.",
+        "recommended_action": "Either (a) add boss-stage decks containing the 4 never-vs-boss T3 cards, or (b) flag cards with nDecks<=2 / no-boss-data as 'insufficiently sampled' in card-appearance.json and exclude them from per-card outlier verdicts. Currently the 'covered:true' flag overstates confidence for these."
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "class": "warrior",
+  "stage": "boss1",
+  "baseline": ["t1-attack", "t2-attack-attack", "t1-defense", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+  "slot": 0,
+  "filler": "t1-attack",
+  "candidates": ["t1-counter", "t2-counter-counter", "t2-attack-defense", "t3-attack-counter-counter", "t3-attack-defense-earth"],
+  "enemies": ["skeleton", "fire_elemental", "doom_knight"],
+  "repeats": 8
+}

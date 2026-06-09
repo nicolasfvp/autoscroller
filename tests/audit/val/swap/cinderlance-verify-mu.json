@@ -1,0 +1,864 @@
+{
+ "matchups": [
+  {
+   "id": "early-cinderlance__vs__skeleton",
+   "label": "Cinderlance EARLY slot vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cinderlance__vs__fire_elemental",
+   "label": "Cinderlance EARLY slot vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cinderlance__vs__depths_horror",
+   "label": "Cinderlance EARLY slot vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cinderlance__vs__mutated_salamander",
+   "label": "Cinderlance EARLY slot vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cinderlance__vs__BOSS_doom_knight",
+   "label": "Cinderlance EARLY slot vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cindersprint__vs__skeleton",
+   "label": "Cinder Sprint EARLY slot vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-agility-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cindersprint__vs__fire_elemental",
+   "label": "Cinder Sprint EARLY slot vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-agility-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cindersprint__vs__depths_horror",
+   "label": "Cinder Sprint EARLY slot vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-agility-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cindersprint__vs__mutated_salamander",
+   "label": "Cinder Sprint EARLY slot vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-agility-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cindersprint__vs__BOSS_doom_knight",
+   "label": "Cinder Sprint EARLY slot vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-agility-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-supernova__vs__skeleton",
+   "label": "Supernova EARLY slot vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-fire-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-supernova__vs__fire_elemental",
+   "label": "Supernova EARLY slot vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-fire-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-supernova__vs__depths_horror",
+   "label": "Supernova EARLY slot vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-fire-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-supernova__vs__mutated_salamander",
+   "label": "Supernova EARLY slot vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-fire-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-supernova__vs__BOSS_doom_knight",
+   "label": "Supernova EARLY slot vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-fire-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-pyreT2__vs__skeleton",
+   "label": "Pyre T2 EARLY slot vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t2-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-pyreT2__vs__fire_elemental",
+   "label": "Pyre T2 EARLY slot vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t2-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-pyreT2__vs__depths_horror",
+   "label": "Pyre T2 EARLY slot vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t2-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-pyreT2__vs__mutated_salamander",
+   "label": "Pyre T2 EARLY slot vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t2-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-pyreT2__vs__BOSS_doom_knight",
+   "label": "Pyre T2 EARLY slot vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t2-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6
+  },
+  {
+   "id": "early-cinderlance-BUFF__vs__skeleton",
+   "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8,
+     "effectsPatch": [
+      {},
+      {
+       "value": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-BUFF__vs__fire_elemental",
+   "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8,
+     "effectsPatch": [
+      {},
+      {
+       "value": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-BUFF__vs__depths_horror",
+   "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8,
+     "effectsPatch": [
+      {},
+      {
+       "value": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-BUFF__vs__mutated_salamander",
+   "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8,
+     "effectsPatch": [
+      {},
+      {
+       "value": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-BUFF__vs__BOSS_doom_knight",
+   "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8,
+     "effectsPatch": [
+      {},
+      {
+       "value": 4
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-CDONLY__vs__skeleton",
+   "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight vs skeleton (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "skeleton",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-CDONLY__vs__fire_elemental",
+   "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight vs fire_elemental (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "fire_elemental",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-CDONLY__vs__depths_horror",
+   "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight vs depths_horror (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "depths_horror",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-CDONLY__vs__mutated_salamander",
+   "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight vs mutated_salamander (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "mutated_salamander",
+   "loopMultiplier": 1,
+   "isBoss": false,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8
+    }
+   }
+  },
+  {
+   "id": "early-cinderlance-CDONLY__vs__BOSS_doom_knight",
+   "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight vs BOSS doom_knight (boss1)",
+   "archetype": "det-swap",
+   "stage": "boss1",
+   "class": "mage",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-air-fire",
+    "t3-attack-fire-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-earth-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-agility-fire"
+   ],
+   "relics": [],
+   "runXP": 560,
+   "enemy": "doom_knight",
+   "loopMultiplier": 1,
+   "isBoss": true,
+   "loopCount": 10,
+   "repeats": 6,
+   "cardOverrides": {
+    "t3-attack-fire-fire": {
+     "cooldown": 1.8
+    }
+   }
+  }
+ ]
+}

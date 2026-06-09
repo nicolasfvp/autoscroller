@@ -1,0 +1,4 @@
+{ "class":"mage", "stage":"boss2", "slot":1, "filler":"t1-fire",
+  "baseline":["t1-fire","t1-fire","t2-agility-fire","t2-earth-water","t1-water","t3-earth-earth-water","t2-water-water","t3-agility-water-water","t1-water","t2-fire-fire"],
+  "candidates":["t3-fire-fire-fire","t2-fire-fire","t3-fire-fire-water","t2-fire-water","t3-air-air-air","t2-air-air","t3-water-water-water","t2-water-water","t3-agility-water-water"],
+  "enemies":["fire_elemental","werewolf","iron_golem"], "repeats":6 }

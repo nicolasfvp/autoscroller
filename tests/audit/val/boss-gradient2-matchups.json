@@ -1,0 +1,93 @@
+{
+  "matchups": [
+    {
+      "id": "doom_dmg12__naive",
+      "label": "naive vs doom +100% dmg (12) base HP",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "attack": {"damage":12,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp570_dmg14__naive",
+      "label": "naive vs doom +50% HP (570) +dmg14",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 570, "attack": {"damage":14,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_base__random",
+      "label": "weak-random loop10 vs doom BASE",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t1-defense","t1-agility","t1-counter","t2-agility-defense","t1-attack","t1-defense","t1-agility"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6
+    },
+    {
+      "id": "doom_hp570_dmg14__random",
+      "label": "weak-random loop10 vs doom +50% HP +dmg14 (should FAIL)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t1-defense","t1-agility","t1-counter","t2-agility-defense","t1-attack","t1-defense","t1-agility"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 570, "attack": {"damage":14,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp570_dmg14__optimized",
+      "label": "optimized loop10 vs doom +50% HP +dmg14 (must stay comfy)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack","t3-attack-attack-attack","t2-agility-attack","t1-attack","t3-agility-attack-attack","t2-attack-counter","t1-attack","t3-attack-attack-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 6,
+      "enemyOverride": { "baseHP": 570, "attack": {"damage":14,"pattern":"fixed"} }
+    },
+
+    {
+      "id": "bog_base__naive",
+      "label": "naive vs bog_witch BASE (drain + multi_hit)",
+      "archetype": "boss-reverify", "stage": "boss4", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2300, "relics": [], "isBoss": true,
+      "enemy": "bog_witch", "loopMultiplier": 1.0, "loopCount": 40, "repeats": 6
+    },
+    {
+      "id": "bog_nomulti__naive",
+      "label": "naive vs bog_witch MULTI_HIT REMOVED (drain only)",
+      "archetype": "boss-reverify", "stage": "boss4", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2300, "relics": [], "isBoss": true,
+      "enemy": "bog_witch", "loopMultiplier": 1.0, "loopCount": 40, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"drain","healPercent":15} ] }
+    },
+    {
+      "id": "bog_multi3__naive",
+      "label": "naive vs bog_witch MULTI_HIT x3 @1.0 (real threat?)",
+      "archetype": "boss-reverify", "stage": "boss4", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 2300, "relics": [], "isBoss": true,
+      "enemy": "bog_witch", "loopMultiplier": 1.0, "loopCount": 40, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"multi_hit","hitCount":3,"damageMultiplier":1.0} ] }
+    },
+
+    {
+      "id": "dragon_base__naive",
+      "label": "naive vs infernal_dragon BASE (multi_hit3 + enrage)",
+      "archetype": "boss-reverify", "stage": "boss6", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 3600, "relics": [], "isBoss": true,
+      "enemy": "infernal_dragon", "loopMultiplier": 1.0, "loopCount": 60, "repeats": 6
+    },
+    {
+      "id": "dragon_nomulti__naive",
+      "label": "naive vs infernal_dragon MULTI_HIT REMOVED (enrage only)",
+      "archetype": "boss-reverify", "stage": "boss6", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 3600, "relics": [], "isBoss": true,
+      "enemy": "infernal_dragon", "loopMultiplier": 1.0, "loopCount": 60, "repeats": 6,
+      "enemyOverride": { "behaviors": [ {"type":"enrage","hpThreshold":0.4,"attackSpeedMultiplier":1.4} ] }
+    }
+  ]
+}

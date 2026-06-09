@@ -1,0 +1,25 @@
+{
+  "matchups": [
+    {
+      "id": "CLEAVER_bonusON__vs__doom_knight",
+      "label": "Cleaver enabled deck, rage bonus reachable (thr 5)",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12
+    },
+    {
+      "id": "CLEAVER_bonusOFF__vs__doom_knight",
+      "label": "Cleaver enabled deck, rage bonus made unreachable (thr 999)",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12,
+      "cardOverrides": {
+        "t3-attack-counter-counter": {
+          "effectsPatch": [ {}, { "condition": { "self_stack_atleast": { "stack": "rage", "value": 999 } } } ]
+        }
+      }
+    }
+  ]
+}

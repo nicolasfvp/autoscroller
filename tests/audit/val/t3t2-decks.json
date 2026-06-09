@@ -1,0 +1,38 @@
+{
+  "decks": [
+    {
+      "id": "supernova-baseline",
+      "label": "Burn mage T3 fire — Supernova baseline",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire","t2-earth-fire","t2-air-fire","t3-attack-fire-fire","t3-agility-fire-fire","t3-fire-fire-water","t3-air-fire-fire","t2-fire-water"]
+    },
+    {
+      "id": "supernova-buff-cd",
+      "label": "Burn mage — Supernova CD 1.8 (snappier, no exhaust)",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t1-fire","t2-fire-fire","t3-fire-fire-fire","t2-agility-fire","t2-earth-fire","t2-air-fire","t3-attack-fire-fire","t3-agility-fire-fire","t3-fire-fire-water","t3-air-fire-fire","t2-fire-water"],
+      "cardOverrides": { "t3-fire-fire-fire": { "cooldown": 1.8, "exhaust": false } }
+    },
+    {
+      "id": "tempest-baseline",
+      "label": "Air mage — Tempest Cadence baseline",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t1-air","t3-air-air-air","t2-air-air","t2-agility-air","t1-fire","t2-air-fire","t2-fire-fire","t3-air-fire-fire"]
+    },
+    {
+      "id": "tempest-buff-cd",
+      "label": "Air mage — Tempest Cadence CD 1.6 (restore haste loop)",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t1-air","t3-air-air-air","t2-air-air","t2-agility-air","t1-fire","t2-air-fire","t2-fire-fire","t3-air-fire-fire"],
+      "cardOverrides": { "t3-air-air-air": { "cooldown": 1.6 } }
+    }
+  ]
+}
