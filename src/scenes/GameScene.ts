@@ -334,18 +334,6 @@ export class GameScene extends Scene {
         this.scene.launch(SCENE_KEYS.PAUSE);
       }
     });
-    this.input.keyboard?.on('keydown-D', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION);
-      }
-    });
-    this.input.keyboard?.on('keydown-R', () => {
-      if (!this.scene.isPaused()) {
-        this.scene.pause();
-        this.scene.launch(SCENE_KEYS.RELIC_VIEWER);
-      }
-    });
 
     // Scripted tutorial overlay — only mounts if the director has a step
     // targeting GameScene. Also persists tutorialSeen=true when the
