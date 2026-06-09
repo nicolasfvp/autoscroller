@@ -61,7 +61,7 @@ export class Preloader extends Scene {
     // animation frame on disk. The `_1.png` suffix in `file` auto-derives the
     // `_2.png` path via the regex below. Entries without a `_2` variant (most
     // single-frame portraits) skip the second load to keep the console clean.
-    const staticMonsters: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean }> = [
+    const staticMonsters: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean; frameCount?: number }> = [
       // Cemetery
       { id: 'corpse_eater',         folder: 'cemetery', file: 'corpse eater_1.png',         hasFrame2: true },
       { id: 'pocket_cat',           folder: 'cemetery', file: 'pocket cat.png' },
@@ -100,22 +100,20 @@ export class Preloader extends Scene {
       { id: 'earth_dragon',        folder: 'green_field', file: 'earth_dragon_1.png',       hasFrame2: true },
       // Root
       { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
-      // New bosses (PR #12) — live in `monsters/boss/`. Each ships multiple
-      // frames on disk (bog_witch _1–_4, desert_golem _1–_3, infernal_dragon
-      // _1–_5, iron_golem _1–_2); we expose just the _1/_2 pair to match the
-      // rest of the roster. `boss_iron_golem` is namespaced to avoid clashing
-      // with the regular `iron_golem` enemy at default/.
-      { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true },
-      { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true },
-      { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true },
+      // New bosses — live in `monsters/boss/`. frameCount = total frames on disk.
+      // `boss_iron_golem` namespaced to avoid clashing with `iron_golem` at default/.
+      { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true, frameCount: 4 },
+      { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true, frameCount: 3 },
+      { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true, frameCount: 5 },
       { id: 'boss_iron_golem',      folder: 'boss',     file: 'iron_golem_1.png',           hasFrame2: true },
     ];
     for (const m of staticMonsters) {
       const path = m.folder ? `assets/characters/monsters/${m.folder}/${m.file}` : `assets/characters/monsters/${m.file}`;
       this.load.image(`monster_${m.id}`, path);
-      if (m.hasFrame2) {
-        const path2 = path.replace(/(_1)?\.png$/i, '_2.png');
-        this.load.image(`monster_${m.id}_2`, path2);
+      const totalFrames = m.frameCount ?? (m.hasFrame2 ? 2 : 1);
+      for (let n = 2; n <= totalFrames; n++) {
+        const pathN = path.replace(/(_1)?\.png$/i, `_${n}.png`);
+        this.load.image(`monster_${m.id}_${n}`, pathN);
       }
       // Portrait crop (face-only asset in portraits/ folder)
       this.load.image(`portrait_${m.id}`, `assets/characters/monsters/portraits/${m.id}.png`);
