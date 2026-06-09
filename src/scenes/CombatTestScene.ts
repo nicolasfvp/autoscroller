@@ -57,7 +57,7 @@ const MENU_BTN_Y = 22;
 const PANEL_X    = 10;
 const PANEL_Y    = 50;
 const PANEL_W    = 770;
-const PANEL_H    = 200;
+const PANEL_H    = 240;
 const BTN_H      = 28;
 const BTN_GAP    = 6;
 const ROW_H      = BTN_H + BTN_GAP;
@@ -100,9 +100,26 @@ export class CombatTestScene extends Phaser.Scene {
   private currentEnemyIdx = 0;
   private currentTerrain: Terrain = 'forest';
   private readonly ENEMY_POOL = [
-    'monster_slime', 'monster_werewolf', 'monster_skeleton', 'monster_lava_golem',
-    'monster_vampire', 'monster_toxic_gooze', 'monster_boss_iron_golem',
-    'monster_infernal_dragon', 'monster_bog_witch',
+    // Cemetery
+    'monster_corpse_eater', 'monster_pocket_cat', 'monster_skeleton',
+    'monster_vampire', 'monster_werewolf', 'monster_zombie',
+    // Default
+    'monster_doom_knight',
+    // Desert
+    'monster_baby_dragon', 'monster_mutated_salamander', 'monster_scorpion',
+    // Forest
+    'monster_ancient_tree', 'monster_mush',
+    // Lava
+    'monster_forge_slime', 'monster_lava_golem', 'monster_fire_elemental',
+    // Swamp
+    'monster_depths_horror', 'monster_toxic_gooze', 'monster_venomous_kobra',
+    // Green Field
+    'monster_slime', 'monster_red_slime', 'monster_earth_dragon',
+    // Root
+    'monster_lost_lizard',
+    // Bosses
+    'monster_bog_witch', 'monster_desert_golem',
+    'monster_infernal_dragon', 'monster_boss_iron_golem',
   ];
 
   constructor() { super({ key: 'CombatTestScene' }); }
@@ -471,9 +488,10 @@ export class CombatTestScene extends Phaser.Scene {
     const THUMB_Y0 = CONTENT_Y + THUMB / 2 + 4;
     const utilGroup: Phaser.GameObjects.GameObject[] = [];
 
+    const THUMBS_PER_ROW = 11;
     this.ENEMY_POOL.forEach((key, i) => {
-      const col = i % 10;
-      const row = Math.floor(i / 10);
+      const col = i % THUMBS_PER_ROW;
+      const row = Math.floor(i / THUMBS_PER_ROW);
       const tx = PANEL_X + 16 + col * (THUMB + THUMBG) + THUMB / 2;
       const ty = THUMB_Y0 + row * (THUMB + THUMBG);
 
