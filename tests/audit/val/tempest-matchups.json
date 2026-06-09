@@ -1,0 +1,414 @@
+{
+  "matchups": [
+    {
+      "id": "tempest-full-current__vs__depths_horror",
+      "label": "Air deck w/ Tempest current vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8
+    },
+    {
+      "id": "tempest-full-current__vs__fire_elemental",
+      "label": "Air deck w/ Tempest current vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8
+    },
+    {
+      "id": "tempest-full-current__vs__werewolf",
+      "label": "Air deck w/ Tempest current vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8
+    },
+    {
+      "id": "tempest-full-current__vs__mutated_salamander",
+      "label": "Air deck w/ Tempest current vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8
+    },
+    {
+      "id": "tempest-full-current__vs__iron_golem",
+      "label": "Air deck w/ Tempest current vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 8
+    },
+    {
+      "id": "tempest-full-cd16__vs__depths_horror",
+      "label": "Air deck w/ Tempest cd1.6 + 1m vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16__vs__fire_elemental",
+      "label": "Air deck w/ Tempest cd1.6 + 1m vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16__vs__werewolf",
+      "label": "Air deck w/ Tempest cd1.6 + 1m vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16__vs__mutated_salamander",
+      "label": "Air deck w/ Tempest cd1.6 + 1m vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16__vs__iron_golem",
+      "label": "Air deck w/ Tempest cd1.6 + 1m vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16only__vs__depths_horror",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m) vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16only__vs__fire_elemental",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m) vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16only__vs__werewolf",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m) vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16only__vs__mutated_salamander",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m) vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6
+        }
+      }
+    },
+    {
+      "id": "tempest-full-cd16only__vs__iron_golem",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m) vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t2-air-air",
+        "t2-agility-air",
+        "t1-air",
+        "t2-air-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cooldown": 1.6
+        }
+      }
+    }
+  ]
+}

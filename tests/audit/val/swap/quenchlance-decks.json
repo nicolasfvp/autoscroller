@@ -1,0 +1,88 @@
+{
+  "decks": [
+    {
+      "id": "ql-baseline-flamedart",
+      "label": "burn shell + Flame Dart (T2 baseline) slot1",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "loop8",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "stats": {
+        "int": 3
+      },
+      "vsEnemies": [
+        "mutated_salamander",
+        "fire_elemental",
+        "depths_horror"
+      ],
+      "vsBoss": false
+    },
+    {
+      "id": "ql-quench-current",
+      "label": "burn shell + Quench Lance (current T3) slot1",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "loop8",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "stats": {
+        "int": 3
+      },
+      "vsEnemies": [
+        "mutated_salamander",
+        "fire_elemental",
+        "depths_horror"
+      ],
+      "vsBoss": false
+    },
+    {
+      "id": "ql-quench-buffed",
+      "label": "burn shell + Quench Lance (PROPOSED buff cd1.6/3burn/thr6) slot1",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "loop8",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "stats": {
+        "int": 3
+      },
+      "vsEnemies": [
+        "mutated_salamander",
+        "fire_elemental",
+        "depths_horror"
+      ],
+      "vsBoss": false
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "matchups": [
+    {
+      "id": "CONTROL__vs__werewolf",
+      "label": "CONTROL vs werewolf",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t1-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-air-air-air__vs__werewolf",
+      "label": "CAND_t3-air-air-air vs werewolf",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-air-air__vs__werewolf",
+      "label": "CAND_t2-air-air vs werewolf",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-agility-air__vs__werewolf",
+      "label": "CAND_t2-agility-air vs werewolf",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t2-agility-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "werewolf",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CONTROL__vs__baby_dragon",
+      "label": "CONTROL vs baby_dragon",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t1-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "baby_dragon",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-air-air-air__vs__baby_dragon",
+      "label": "CAND_t3-air-air-air vs baby_dragon",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "baby_dragon",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-air-air__vs__baby_dragon",
+      "label": "CAND_t2-air-air vs baby_dragon",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "baby_dragon",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-agility-air__vs__baby_dragon",
+      "label": "CAND_t2-agility-air vs baby_dragon",
+      "archetype": "swaptest",
+      "stage": "loop25",
+      "class": "mage",
+      "deck": [
+        "t2-agility-air",
+        "t1-air",
+        "t1-fire",
+        "t2-air-fire",
+        "t1-air"
+      ],
+      "runXP": 1450,
+      "relics": [],
+      "isBoss": false,
+      "enemy": "baby_dragon",
+      "loopMultiplier": 1.2,
+      "loopCount": 25,
+      "repeats": 10
+    }
+  ]
+}

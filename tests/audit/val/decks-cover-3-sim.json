@@ -1,0 +1,69 @@
+{
+  "_comment": "Sim-only mirror of decks-cover-3.json mapped onto expander-known stages (early/mid/boss1/late) with runXP/vsEnemies/vsBoss overrides to reproduce the loop15/boss2/boss3 difficulty bands. The authored decks-cover-3.json keeps the schema stage labels.",
+  "decks": [
+    {
+      "id": "cover-3-1",
+      "label": "Agility armor-tempo bulwark (warrior)",
+      "archetype": "armor-tempo",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-agility","t2-agility-agility","t3-agility-agility-defense","t3-agility-agility-earth","t3-agility-air-defense","t2-agility-defense","t3-attack-attack-attack","t2-attack-attack","t1-attack","t3-attack-attack-counter"]
+    },
+    {
+      "id": "cover-3-2",
+      "label": "Agility armor-tempo bulwark (loop15)",
+      "archetype": "armor-tempo",
+      "class": "warrior",
+      "stage": "late",
+      "runXP": 900,
+      "vsBoss": false,
+      "vsEnemies": ["depths_horror","fire_elemental","werewolf"],
+      "deck": ["t1-agility","t2-agility-agility","t3-agility-agility-earth","t3-agility-agility-defense","t3-agility-air-defense","t2-agility-defense","t3-attack-attack-attack","t2-attack-attack","t1-attack"]
+    },
+    {
+      "id": "cover-3-3",
+      "label": "Poison-bruiser armor hybrid (warrior)",
+      "archetype": "poison-armor-bruiser",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack","t2-attack-attack","t3-attack-attack-water","t3-attack-defense-water","t3-defense-earth-fire","t2-attack-defense","t2-defense-defense","t1-defense","t3-attack-attack-counter"]
+    },
+    {
+      "id": "cover-3-4",
+      "label": "Poison-bruiser armor hybrid (boss2)",
+      "archetype": "poison-armor-bruiser",
+      "class": "warrior",
+      "stage": "late",
+      "runXP": 1150,
+      "vsEnemies": [],
+      "deck": ["t1-attack","t2-attack-attack","t3-attack-defense-water","t3-attack-attack-water","t3-defense-earth-fire","t2-attack-defense","t2-defense-defense","t1-defense"]
+    },
+    {
+      "id": "cover-3-5",
+      "label": "Slow-control bulwark (warrior)",
+      "archetype": "slow-control",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-agility","t3-air-counter-fire","t3-air-attack-fire","t3-air-counter-defense","t3-agility-air-defense","t2-agility-defense","t2-attack-attack","t1-attack","t3-attack-attack-counter"]
+    },
+    {
+      "id": "cover-3-6",
+      "label": "Slow-control bulwark (boss3)",
+      "archetype": "slow-control",
+      "class": "warrior",
+      "stage": "late",
+      "runXP": 1700,
+      "vsBoss": false,
+      "vsEnemies": ["lizard_king"],
+      "deck": ["t1-agility","t3-air-counter-fire","t3-air-counter-defense","t3-air-attack-fire","t3-agility-air-defense","t2-agility-defense","t2-attack-attack","t1-attack"]
+    },
+    {
+      "id": "cover-3-7",
+      "label": "Burn-to-bleed detonator (mage)",
+      "archetype": "burn-bleed-detonator",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-fire-fire","t2-agility-fire","t3-air-fire-fire","t3-counter-fire-fire","t3-air-attack-fire","t2-attack-fire","t3-air-fire-fire","t1-fire"]
+    }
+  ]
+}

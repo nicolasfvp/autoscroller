@@ -23,7 +23,6 @@ export interface TileConfig {
   canPlaceManually: boolean;
   tilePointCost: number;
   icon: string;
-  combatChance?: number;
 }
 
 export interface TileSlot {

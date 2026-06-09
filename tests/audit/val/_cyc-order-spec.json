@@ -1,0 +1,109 @@
+{
+  "matchups": [
+    {
+      "id": "opt-normal-order",
+      "label": "optimized normal order",
+      "archetype": "audit",
+      "stage": "boss7",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t1-attack",
+        "t3-attack-attack-counter",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t3-agility-agility-attack",
+        "t3-attack-counter-counter",
+        "t3-attack-defense-earth",
+        "t3-attack-counter-earth",
+        "t3-attack-earth-earth",
+        "t3-agility-attack-attack",
+        "t3-attack-earth-fire",
+        "t3-agility-agility-agility",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "runXP": 4400,
+      "enemy": "boss_iron_golem",
+      "loopMultiplier": 1.6,
+      "isBoss": true,
+      "loopCount": 70,
+      "repeats": 8
+    },
+    {
+      "id": "opt-reversed-order",
+      "label": "optimized REVERSED order",
+      "archetype": "audit",
+      "stage": "boss7",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t2-agility-agility",
+        "t3-agility-agility-agility",
+        "t3-attack-earth-fire",
+        "t3-agility-attack-attack",
+        "t3-attack-earth-earth",
+        "t3-attack-counter-earth",
+        "t3-attack-defense-earth",
+        "t3-attack-counter-counter",
+        "t3-agility-agility-attack",
+        "t2-attack-counter",
+        "t2-agility-attack",
+        "t3-attack-attack-counter",
+        "t1-attack",
+        "t1-agility"
+      ],
+      "runXP": 4400,
+      "enemy": "boss_iron_golem",
+      "loopMultiplier": 1.6,
+      "isBoss": true,
+      "loopCount": 70,
+      "repeats": 8
+    },
+    {
+      "id": "opt-front5-only",
+      "label": "optimized FRONT 5 only",
+      "archetype": "audit",
+      "stage": "boss7",
+      "class": "warrior",
+      "deck": [
+        "t1-agility",
+        "t1-attack",
+        "t3-attack-attack-counter",
+        "t2-agility-attack",
+        "t2-attack-counter"
+      ],
+      "runXP": 4400,
+      "enemy": "boss_iron_golem",
+      "loopMultiplier": 1.6,
+      "isBoss": true,
+      "loopCount": 70,
+      "repeats": 8
+    },
+    {
+      "id": "opt-back10-only",
+      "label": "optimized BACK 10 only",
+      "archetype": "audit",
+      "stage": "boss7",
+      "class": "warrior",
+      "deck": [
+        "t3-agility-agility-attack",
+        "t3-attack-counter-counter",
+        "t3-attack-defense-earth",
+        "t3-attack-counter-earth",
+        "t3-attack-earth-earth",
+        "t3-agility-attack-attack",
+        "t3-attack-earth-fire",
+        "t3-agility-agility-agility",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "runXP": 4400,
+      "enemy": "boss_iron_golem",
+      "loopMultiplier": 1.6,
+      "isBoss": true,
+      "loopCount": 70,
+      "repeats": 8
+    }
+  ]
+}

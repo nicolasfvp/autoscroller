@@ -1,0 +1,28 @@
+{
+  "decks": [
+    {
+      "id": "smoke-war-boss1",
+      "label": "Smoke warrior physical",
+      "archetype": "pure-physical",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack", "t2-agility-attack", "t2-attack-attack", "t2-attack-counter", "t2-attack-defense", "t3-agility-attack-attack", "t2-attack-earth", "t1-defense"]
+    },
+    {
+      "id": "smoke-mage-boss1",
+      "label": "Smoke mage poison",
+      "archetype": "pure-poison",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t2-earth-water", "t1-water", "t3-agility-water-water", "t3-earth-earth-water", "t2-water-water", "t3-air-fire-water", "t1-fire", "t2-fire-fire"]
+    },
+    {
+      "id": "smoke-war-loop2",
+      "label": "Smoke warrior starter",
+      "archetype": "starter",
+      "class": "warrior",
+      "stage": "loop2",
+      "deck": ["t1-attack", "t1-agility", "t1-defense", "t2-attack-attack", "t2-agility-attack"]
+    }
+  ]
+}

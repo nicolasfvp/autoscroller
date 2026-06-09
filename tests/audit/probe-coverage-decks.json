@@ -1,0 +1,52 @@
+{
+  "decks": [
+    {
+      "id": "probe-counterdefwater",
+      "label": "probe",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss7",
+      "quality": "optimized",
+      "deck": [
+        "t3-counter-defense-water",
+        "t1-attack",
+        "t2-attack-counter",
+        "t3-agility-attack-counter",
+        "t2-agility-attack",
+        "t1-defense",
+        "t2-attack-counter",
+        "t3-agility-attack-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t3-counter-defense-water",
+        "t1-attack",
+        "t1-defense",
+        "t2-agility-attack"
+      ]
+    },
+    {
+      "id": "probe-attatkwater",
+      "label": "probe2",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss7",
+      "quality": "optimized",
+      "deck": [
+        "t3-attack-attack-water",
+        "t1-attack",
+        "t2-attack-counter",
+        "t3-agility-attack-counter",
+        "t2-agility-attack",
+        "t3-attack-attack-water",
+        "t1-attack",
+        "t2-attack-counter",
+        "t3-agility-attack-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-attack",
+        "t3-agility-attack-counter",
+        "t2-agility-attack"
+      ]
+    }
+  ]
+}

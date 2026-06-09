@@ -1,0 +1,88 @@
+{
+  "decks": [
+    {
+      "id": "ct-baseline-filler",
+      "label": "Rage/attack warrior, candidate slot = T2 filler (Reckless Strike)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "boss2",
+      "vsEnemies": ["werewolf", "ancient_tree", "fire_elemental"],
+      "vsBoss": true,
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-attack-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t1-attack",
+        "t2-attack-attack",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "ct-current",
+      "label": "Same deck, slot3 = Cleaver's Tax as-shipped (dead downside)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "boss2",
+      "vsEnemies": ["werewolf", "ancient_tree", "fire_elemental"],
+      "vsBoss": true,
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t3-attack-counter-counter",
+        "t1-attack",
+        "t2-attack-counter",
+        "t1-attack",
+        "t2-attack-attack",
+        "t1-attack"
+      ]
+    },
+    {
+      "id": "ct-downside-wired",
+      "label": "Same deck, slot3 = Cleaver's Tax with overload_lockout wired as +4s cd_debt",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "boss2",
+      "vsEnemies": ["werewolf", "ancient_tree", "fire_elemental"],
+      "vsBoss": true,
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t3-attack-counter-counter",
+        "t1-attack",
+        "t2-attack-counter",
+        "t1-attack",
+        "t2-attack-attack",
+        "t1-attack"
+      ],
+      "cardOverrides": {
+        "t3-attack-counter-counter": {
+          "effects": [
+            {
+              "type": "damage",
+              "value": 12,
+              "target": "enemy",
+              "pierce_armor": true,
+              "scale": { "stat": "str", "per": 2, "value": 1 }
+            },
+            {
+              "type": "damage",
+              "value": 20,
+              "target": "enemy",
+              "pierce_armor": true,
+              "scale": { "stat": "str", "per": 2, "value": 2 },
+              "condition": { "self_stack_atleast": { "stack": "rage", "value": 5 } }
+            },
+            {
+              "type": "cd_debt",
+              "value": 4,
+              "target": "self",
+              "condition": { "self_stack_atleast": { "stack": "rage", "value": 5 } }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

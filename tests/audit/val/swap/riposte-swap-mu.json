@@ -1,0 +1,376 @@
+{
+  "matchups": [
+    {
+      "id": "warr_early_jab__vs__lost_lizard",
+      "label": "Early warrior, Jab in slot1 (baseline) vs lost_lizard (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_jab__vs__giant_spider",
+      "label": "Early warrior, Jab in slot1 (baseline) vs giant_spider (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "giant_spider",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_jab__vs__corpse_eater",
+      "label": "Early warrior, Jab in slot1 (baseline) vs corpse_eater (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_jab__vs__pocket_cat",
+      "label": "Early warrior, Jab in slot1 (baseline) vs pocket_cat (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "pocket_cat",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_riposte__vs__lost_lizard",
+      "label": "Early warrior, Riposte swapped into slot1 (current card) vs lost_lizard (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_riposte__vs__giant_spider",
+      "label": "Early warrior, Riposte swapped into slot1 (current card) vs giant_spider (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "giant_spider",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_riposte__vs__corpse_eater",
+      "label": "Early warrior, Riposte swapped into slot1 (current card) vs corpse_eater (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_riposte__vs__pocket_cat",
+      "label": "Early warrior, Riposte swapped into slot1 (current card) vs pocket_cat (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "pocket_cat",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "warr_early_riposte_buff__vs__lost_lizard",
+      "label": "Early warrior, Riposte BUFFED (cd1.2 + DEX scaler) in slot1 vs lost_lizard (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "lost_lizard",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "cardOverrides": {
+        "t1-counter": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "trigger": "on_hit_dealt",
+              "then": {
+                "type": "damage",
+                "value": 3,
+                "target": "enemy",
+                "scale": {
+                  "stat": "dex",
+                  "per": 3,
+                  "value": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "warr_early_riposte_buff__vs__giant_spider",
+      "label": "Early warrior, Riposte BUFFED (cd1.2 + DEX scaler) in slot1 vs giant_spider (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "giant_spider",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "cardOverrides": {
+        "t1-counter": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "trigger": "on_hit_dealt",
+              "then": {
+                "type": "damage",
+                "value": 3,
+                "target": "enemy",
+                "scale": {
+                  "stat": "dex",
+                  "per": 3,
+                  "value": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "warr_early_riposte_buff__vs__corpse_eater",
+      "label": "Early warrior, Riposte BUFFED (cd1.2 + DEX scaler) in slot1 vs corpse_eater (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "cardOverrides": {
+        "t1-counter": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "trigger": "on_hit_dealt",
+              "then": {
+                "type": "damage",
+                "value": 3,
+                "target": "enemy",
+                "scale": {
+                  "stat": "dex",
+                  "per": 3,
+                  "value": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "warr_early_riposte_buff__vs__pocket_cat",
+      "label": "Early warrior, Riposte BUFFED (cd1.2 + DEX scaler) in slot1 vs pocket_cat (loop2)",
+      "archetype": "pure_damage",
+      "stage": "loop2",
+      "class": "warrior",
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "relics": [],
+      "runXP": 120,
+      "enemy": "pocket_cat",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "cardOverrides": {
+        "t1-counter": {
+          "cooldown": 1.2,
+          "effects": [
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "trigger": "on_hit_dealt",
+              "then": {
+                "type": "damage",
+                "value": 3,
+                "target": "enemy",
+                "scale": {
+                  "stat": "dex",
+                  "per": 3,
+                  "value": 1
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

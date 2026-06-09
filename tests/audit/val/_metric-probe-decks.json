@@ -1,0 +1,77 @@
+{
+  "decks": [
+    {
+      "id": "rand-boss5-warrior-0",
+      "label": "Random warrior (boss5)",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss5",
+      "quality": "random",
+      "deck": [
+        "t3-counter-counter-fire",
+        "t3-air-air-attack",
+        "t3-fire-fire-water",
+        "t3-defense-earth-water",
+        "t3-air-air-fire",
+        "t3-agility-air-fire",
+        "t3-air-fire-water",
+        "t3-attack-counter-counter",
+        "t3-defense-defense-earth",
+        "t3-attack-attack-fire",
+        "t3-fire-fire-water",
+        "t3-attack-earth-fire",
+        "t3-agility-counter-water"
+      ],
+      "notes": "Seeded-random class-appropriate deck — the \"bad build\" tier."
+    },
+    {
+      "id": "rand-boss5-warrior-1",
+      "label": "Random warrior (boss5)",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss5",
+      "quality": "random",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t3-attack-water-water",
+        "t3-air-attack-earth",
+        "t3-air-air-earth",
+        "t2-attack-water",
+        "t3-air-water-water",
+        "t3-air-counter-earth",
+        "t3-air-defense-defense",
+        "t3-air-air-earth",
+        "t3-attack-defense-earth",
+        "t3-agility-earth-earth",
+        "t3-attack-attack-defense",
+        "t3-counter-defense-earth"
+      ],
+      "notes": "Seeded-random class-appropriate deck — the \"bad build\" tier."
+    },
+    {
+      "id": "rand-boss6-warrior-2",
+      "label": "Random warrior (boss6)",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss6",
+      "quality": "random",
+      "deck": [
+        "t3-air-fire-water",
+        "t1-defense",
+        "t3-agility-counter-fire",
+        "t3-counter-counter-fire",
+        "t2-counter-fire",
+        "t2-defense-earth",
+        "t2-counter-counter",
+        "t3-counter-earth-earth",
+        "t3-counter-fire-water",
+        "t3-earth-fire-fire",
+        "t3-attack-earth-earth",
+        "t3-counter-earth-water",
+        "t3-air-fire-fire",
+        "t3-agility-counter-earth"
+      ],
+      "notes": "Seeded-random class-appropriate deck — the \"bad build\" tier."
+    }
+  ]
+}

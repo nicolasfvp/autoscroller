@@ -1,0 +1,88 @@
+{
+  "matchups": [
+    {
+      "id": "CONTROL__vs__infernal_dragon",
+      "label": "CONTROL vs infernal_dragon",
+      "archetype": "swaptest",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t1-water"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.5,
+      "loopCount": 60,
+      "repeats": 12
+    },
+    {
+      "id": "CAND_t3-water-water-water__vs__infernal_dragon",
+      "label": "CAND_t3-water-water-water vs infernal_dragon",
+      "archetype": "swaptest",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t3-water-water-water"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.5,
+      "loopCount": 60,
+      "repeats": 12
+    },
+    {
+      "id": "CAND_t2-water-water__vs__infernal_dragon",
+      "label": "CAND_t2-water-water vs infernal_dragon",
+      "archetype": "swaptest",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t2-water-water"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.5,
+      "loopCount": 60,
+      "repeats": 12
+    },
+    {
+      "id": "CAND_t3-agility-water-water__vs__infernal_dragon",
+      "label": "CAND_t3-agility-water-water vs infernal_dragon",
+      "archetype": "swaptest",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t3-agility-water-water"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.5,
+      "loopCount": 60,
+      "repeats": 12
+    }
+  ]
+}

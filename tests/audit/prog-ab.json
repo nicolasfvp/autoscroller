@@ -1,0 +1,110 @@
+{
+  "decks": [
+    {
+      "id": "rand-boss7-warrior-0-L18",
+      "label": "rand-boss7-warrior-0-L18",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": [
+        "t3-counter-defense-fire",
+        "t2-counter-fire",
+        "t3-agility-agility-earth",
+        "t3-counter-earth-fire",
+        "t3-air-defense-fire",
+        "t3-agility-attack-water",
+        "t3-agility-counter-counter",
+        "t1-air",
+        "t3-air-attack-fire",
+        "t3-attack-attack-fire",
+        "t3-agility-agility-fire",
+        "t3-attack-attack-defense",
+        "t3-attack-counter-water",
+        "t2-defense-fire"
+      ],
+      "runXP": 4400,
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+    {
+      "id": "rand-boss7-warrior-0-L7",
+      "label": "rand-boss7-warrior-0-L7",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": [
+        "t3-counter-defense-fire",
+        "t2-counter-fire",
+        "t3-agility-agility-earth",
+        "t3-counter-earth-fire",
+        "t3-air-defense-fire",
+        "t3-agility-attack-water",
+        "t3-agility-counter-counter",
+        "t1-air",
+        "t3-air-attack-fire",
+        "t3-attack-attack-fire",
+        "t3-agility-agility-fire",
+        "t3-attack-attack-defense",
+        "t3-attack-counter-water",
+        "t2-defense-fire"
+      ],
+      "runXP": 560,
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+    {
+      "id": "rand-boss7-warrior-1-L18",
+      "label": "rand-boss7-warrior-1-L18",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": [
+        "t3-agility-counter-earth",
+        "t3-agility-agility-fire",
+        "t3-agility-agility-attack",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-fire",
+        "t3-air-attack-water",
+        "t2-defense-defense",
+        "t3-air-defense-earth",
+        "t3-agility-defense-earth",
+        "t3-attack-attack-fire",
+        "t3-agility-counter-counter",
+        "t1-attack",
+        "t3-counter-earth-earth",
+        "t3-earth-earth-earth",
+        "t2-counter-earth"
+      ],
+      "runXP": 4400,
+      "vsEnemies": [],
+      "vsBoss": true
+    },
+    {
+      "id": "rand-boss7-warrior-1-L7",
+      "label": "rand-boss7-warrior-1-L7",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss7",
+      "deck": [
+        "t3-agility-counter-earth",
+        "t3-agility-agility-fire",
+        "t3-agility-agility-attack",
+        "t3-attack-defense-defense",
+        "t3-defense-defense-fire",
+        "t3-air-attack-water",
+        "t2-defense-defense",
+        "t3-air-defense-earth",
+        "t3-agility-defense-earth",
+        "t3-attack-attack-fire",
+        "t3-agility-counter-counter",
+        "t1-attack",
+        "t3-counter-earth-earth",
+        "t3-earth-earth-earth",
+        "t2-counter-earth"
+      ],
+      "runXP": 560,
+      "vsEnemies": [],
+      "vsBoss": true
+    }
+  ]
+}

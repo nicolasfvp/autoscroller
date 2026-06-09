@@ -1,0 +1,152 @@
+{
+  "matchups": [
+    {
+      "id": "burn-baseline",
+      "label": "burn-baseline vs doom_knight",
+      "archetype": "reverify",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-agility-agility-fire",
+        "t3-air-fire-fire",
+        "t3-attack-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8
+    },
+    {
+      "id": "burn-deton5",
+      "label": "burn-deton5 vs doom_knight",
+      "archetype": "reverify",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-agility-agility-fire",
+        "t3-air-fire-fire",
+        "t3-attack-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-fire-fire": {
+          "effectsPatch": [
+            null,
+            {
+              "value": 5
+            }
+          ]
+        },
+        "t2-fire-fire": {
+          "effectsPatch": [
+            null,
+            {
+              "value": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "burn-deton7",
+      "label": "burn-deton7 vs doom_knight",
+      "archetype": "reverify",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-agility-agility-fire",
+        "t3-air-fire-fire",
+        "t3-attack-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-attack-fire-fire": {
+          "effectsPatch": [
+            null,
+            {
+              "value": 7
+            }
+          ]
+        },
+        "t2-fire-fire": {
+          "effectsPatch": [
+            null,
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "burn-cdcut",
+      "label": "burn-cdcut vs doom_knight",
+      "archetype": "reverify",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-agility-agility-fire",
+        "t3-air-fire-fire",
+        "t3-attack-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t1-fire": {
+          "cooldown": 1
+        },
+        "t2-fire-fire": {
+          "cooldown": 1.2
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "decks": [
+    {
+      "id": "ql2-baseline-flamedart",
+      "label": "burn shell (QL-adjacent-Supernova) + Flame Dart baseline slot1",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "loop8",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "stats": { "int": 3 },
+      "vsEnemies": ["mutated_salamander", "fire_elemental", "depths_horror"],
+      "vsBoss": false
+    },
+    {
+      "id": "ql2-quench-current",
+      "label": "burn shell, Quench Lance right before Supernova (current) slot1",
+      "archetype": "burn",
+      "class": "mage",
+      "stage": "loop8",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "stats": { "int": 3 },
+      "vsEnemies": ["mutated_salamander", "fire_elemental", "depths_horror"],
+      "vsBoss": false
+    }
+  ]
+}

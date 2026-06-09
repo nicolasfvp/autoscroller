@@ -96,10 +96,15 @@ export function applyEnemyAffinityEffect(
     }
 
     case 'earth': {
-      // Crushing weight: stamina drain + enemy armor sprout (also capped).
-      const stam = 2 * m;
+      // Crushing weight: light stamina drain + enemy armor sprout (capped).
+      // Rebalance (2026-06-09): the old 2-stamina/hit drain + 15 armor cap could
+      // SOFT-LOCK thin all-stamina starter decks (stamina-starve them while the
+      // armor floor nullified their small hits over a long fight — e.g. mush vs a
+      // 5-card warrior). Drain reduced to 1/hit (normal) and the NORMAL armor cap
+      // lowered to 10 so low-damage decks can still break through and close.
+      const stam = 1 * m;
       const armor = 1 * m;
-      const cap = isBoss ? 40 : 15;
+      const cap = isBoss ? 40 : 10;
       state.heroStamina = Math.max(0, state.heroStamina - stam);
       if (state.enemyDefense < cap) {
         state.enemyDefense = Math.min(cap, state.enemyDefense + armor);

@@ -1,0 +1,26 @@
+{
+  "decks": [
+    {
+      "id": "mage-pure-burn-boss1-1",
+      "label": "Burn Bank-and-Cash vs Doom Knight",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "notes": "Loop-10 mage (~L6, INT~3). Opens with cheap 1m appliers (Spark, Flame Dart) to bank burn while mana is fresh; free Gust for tempo. Pyre (1m) cashes+rebanks mid-fight against the 380HP boss. Cinder Sprint (1m self-detonator) is the early cheap nuke; the 1s+1m Cinderlance sits last so the small stamina pool has regenerated for the big cash. Magma Vein adds armor cushion vs the 9-dmg hits. Order interleaves so nothing stalls on empty mana back-to-back.",
+      "_lane": "mage-pure-burn",
+      "quality": "mixed"
+    }
+  ]
+}

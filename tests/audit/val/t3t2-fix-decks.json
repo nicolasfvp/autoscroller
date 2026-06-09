@@ -1,0 +1,56 @@
+{
+  "decks": [
+    {
+      "id": "fix-supernova-current",
+      "label": "Supernova current in burn-feed deck",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-fire-fire-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-fire","t2-air-fire"]
+    },
+    {
+      "id": "fix-supernova-buffA",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-fire-fire-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-fire","t2-air-fire"],
+      "cardOverrides": { "t3-fire-fire-fire": { "cooldown": 2.0, "exhaust": false, "cost": {"mana": 1} } }
+    },
+    {
+      "id": "fix-supernova-buffB",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn",
+      "archetype": "pure-burn",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-fire-fire-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-fire","t2-air-fire"],
+      "cardOverrides": { "t3-fire-fire-fire": { "cooldown": 2.0, "exhaust": false, "cost": {"mana": 1}, "effectsPatch": [ {}, {"value": 6} ] } }
+    },
+    {
+      "id": "fix-tempest-current",
+      "label": "Tempest current carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t1-air"]
+    },
+    {
+      "id": "fix-tempest-cost",
+      "label": "Tempest cost-cut 1m carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t1-air"],
+      "cardOverrides": { "t3-air-air-air": { "cost": {"mana": 1} } }
+    },
+    {
+      "id": "fix-tempest-cost-cd",
+      "label": "Tempest cost-cut 1m + cd1.8 carry",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t1-air"],
+      "cardOverrides": { "t3-air-air-air": { "cost": {"mana": 1}, "cooldown": 1.8 } }
+    }
+  ]
+}

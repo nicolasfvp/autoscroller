@@ -1,0 +1,29 @@
+{
+  "matchups": [
+    {
+      "id": "CLEAVER_uncondCdDebt6__vs__doom_knight",
+      "label": "Cleaver + UNCONDITIONAL 6s cd_debt (sanity: does cd_debt slow it?)",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12,
+      "cardOverrides": {
+        "t3-attack-counter-counter": {
+          "effects": [
+            { "type": "damage", "value": 12, "target": "enemy", "pierce_armor": true, "scale": { "stat": "str", "per": 2, "value": 1 } },
+            { "type": "damage", "value": 20, "target": "enemy", "pierce_armor": true, "scale": { "stat": "str", "per": 2, "value": 2 }, "condition": { "self_stack_atleast": { "stack": "rage", "value": 5 } } },
+            { "type": "cd_debt", "value": 6, "target": "self" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "CLEAVER_current__vs__doom_knight",
+      "label": "Cleaver as-shipped (control for sanity)",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12
+    }
+  ]
+}

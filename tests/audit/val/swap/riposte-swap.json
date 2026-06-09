@@ -1,0 +1,61 @@
+{
+  "decks": [
+    {
+      "id": "warr_early_jab",
+      "label": "Early warrior, Jab in slot1 (baseline)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "loop2",
+      "runXP": 120,
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "vsEnemies": ["lost_lizard", "giant_spider", "corpse_eater", "pocket_cat"],
+      "vsBoss": false
+    },
+    {
+      "id": "warr_early_riposte",
+      "label": "Early warrior, Riposte swapped into slot1 (current card)",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "loop2",
+      "runXP": 120,
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "vsEnemies": ["lost_lizard", "giant_spider", "corpse_eater", "pocket_cat"],
+      "vsBoss": false
+    },
+    {
+      "id": "warr_early_riposte_buff",
+      "label": "Early warrior, Riposte BUFFED (cd1.2 + DEX scaler) in slot1",
+      "archetype": "pure_damage",
+      "class": "warrior",
+      "stage": "loop2",
+      "runXP": 120,
+      "deck": [
+        "t1-counter",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-agility",
+        "t1-agility"
+      ],
+      "vsEnemies": ["lost_lizard", "giant_spider", "corpse_eater", "pocket_cat"],
+      "vsBoss": false
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "matchups": [
+    {
+      "id": "base__vs__lizard_king",
+      "label": "baseline boss3-1",
+      "archetype": "detonator-control",
+      "stage": "boss3",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-agility-air-air",
+        "t3-agility-air-water",
+        "t3-counter-fire-water",
+        "t3-air-air-earth"
+      ],
+      "relics": [],
+      "runXP": 1700,
+      "enemy": "lizard_king",
+      "loopMultiplier": 1.2,
+      "isBoss": true,
+      "loopCount": 30,
+      "repeats": 8
+    },
+    {
+      "id": "venom4p__vs__lizard_king",
+      "label": "venom det 2->4 pierce",
+      "archetype": "detonator-control",
+      "stage": "boss3",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-agility-air-air",
+        "t3-agility-air-water",
+        "t3-counter-fire-water",
+        "t3-air-air-earth"
+      ],
+      "relics": [],
+      "runXP": 1700,
+      "enemy": "lizard_king",
+      "loopMultiplier": 1.2,
+      "isBoss": true,
+      "loopCount": 30,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            {
+              "value": 4,
+              "pierce_armor": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "superSnap__vs__lizard_king",
+      "label": "supernova cd2.8->1.8 +nonexhaust",
+      "archetype": "detonator-control",
+      "stage": "boss3",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-agility-air-air",
+        "t3-agility-air-water",
+        "t3-counter-fire-water",
+        "t3-air-air-earth"
+      ],
+      "relics": [],
+      "runXP": 1700,
+      "enemy": "lizard_king",
+      "loopMultiplier": 1.2,
+      "isBoss": true,
+      "loopCount": 30,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 1.8,
+          "exhaust": false
+        }
+      }
+    },
+    {
+      "id": "super6__vs__lizard_king",
+      "label": "supernova value 5->6",
+      "archetype": "detonator-control",
+      "stage": "boss3",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-agility-air-air",
+        "t3-agility-air-water",
+        "t3-counter-fire-water",
+        "t3-air-air-earth"
+      ],
+      "relics": [],
+      "runXP": 1700,
+      "enemy": "lizard_king",
+      "loopMultiplier": 1.2,
+      "isBoss": true,
+      "loopCount": 30,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "effectsPatch": [
+            {
+              "value": 6
+            },
+            {}
+          ]
+        }
+      }
+    },
+    {
+      "id": "combo__vs__lizard_king",
+      "label": "venom4p + supernova nonexhaust",
+      "archetype": "detonator-control",
+      "stage": "boss3",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t3-air-air-fire",
+        "t1-earth",
+        "t3-agility-air-air",
+        "t3-agility-air-water",
+        "t3-counter-fire-water",
+        "t3-air-air-earth"
+      ],
+      "relics": [],
+      "runXP": 1700,
+      "enemy": "lizard_king",
+      "loopMultiplier": 1.2,
+      "isBoss": true,
+      "loopCount": 30,
+      "repeats": 8,
+      "cardOverrides": {
+        "t3-counter-fire-water": {
+          "effectsPatch": [
+            {},
+            {},
+            {
+              "value": 4,
+              "pierce_armor": true
+            }
+          ]
+        },
+        "t3-fire-fire-fire": {
+          "exhaust": false
+        }
+      }
+    }
+  ]
+}

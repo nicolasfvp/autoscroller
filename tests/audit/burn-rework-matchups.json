@@ -1,0 +1,62 @@
+{
+  "matchups": [
+    {
+      "id": "deep-endgame-boss6-mage-burn-v4__vs__infernal_dragon",
+      "label": "deep-endgame-boss6-mage-burn-v4",
+      "archetype": "pure-burn",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-fire-water",
+        "t3-agility-fire-fire",
+        "t3-attack-fire-fire",
+        "t3-air-fire-fire",
+        "t3-fire-water-water",
+        "t3-fire-fire-fire",
+        "t2-earth-fire",
+        "t3-earth-fire-fire",
+        "t1-fire",
+        "t2-air-fire",
+        "t3-fire-fire-water"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.25,
+      "isBoss": true,
+      "loopCount": 60,
+      "repeats": 8
+    },
+    {
+      "id": "deep-endgame-boss6-mage-burn-v5__vs__infernal_dragon",
+      "label": "deep-endgame-boss6-mage-burn-v5",
+      "archetype": "pure-burn",
+      "stage": "boss6",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t3-earth-fire-fire",
+        "t2-fire-water",
+        "t3-agility-fire-fire",
+        "t3-attack-fire-fire",
+        "t3-fire-water-water",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-earth-fire",
+        "t1-fire",
+        "t2-air-fire",
+        "t3-attack-attack-fire"
+      ],
+      "runXP": 3600,
+      "relics": [],
+      "enemy": "infernal_dragon",
+      "loopMultiplier": 1.25,
+      "isBoss": true,
+      "loopCount": 60,
+      "repeats": 8
+    }
+  ]
+}

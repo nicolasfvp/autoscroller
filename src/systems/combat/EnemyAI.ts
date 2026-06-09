@@ -87,8 +87,12 @@ export class EnemyAI {
       this.shieldTimer += deltaMs;
       if (this.shieldTimer >= shield.interval) {
         this.shieldTimer -= shield.interval;
-        state.enemyDefense += shield.shieldAmount;
-        eventBus.emit('combat:boss-behavior', { type: 'shield', value: shield.shieldAmount });
+        // Cap accumulated shield armor so a long fight can't ratchet defense to
+        // infinity and hard-counter direct-damage decks (balance-smell fix).
+        const SHIELD_DEFENSE_CAP = 40;
+        const applied = Math.min(shield.shieldAmount, Math.max(0, SHIELD_DEFENSE_CAP - state.enemyDefense));
+        state.enemyDefense += applied;
+        eventBus.emit('combat:boss-behavior', { type: 'shield', value: applied });
       }
     }
   }

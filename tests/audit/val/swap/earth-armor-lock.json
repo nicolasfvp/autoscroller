@@ -1,0 +1,80 @@
+{
+  "matchups": [
+    {
+      "id": "EARTH_base_pure-physical__vs__mush",
+      "label": "earth baseline (armor ratchet) pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "EARTH_base_haste__vs__mush",
+      "label": "earth baseline (armor ratchet) haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6
+    },
+    {
+      "id": "FIX_firefax_pure-physical__vs__mush",
+      "label": "FIX proxy: resource-tax-only affinity (fire, no armor) pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "enemyOverride": { "affinity": "fire" }
+    },
+    {
+      "id": "FIX_firefax_haste__vs__mush",
+      "label": "FIX proxy: resource-tax-only affinity (fire, no armor) haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "enemyOverride": { "affinity": "fire" }
+    },
+    {
+      "id": "COUNTER_pure-physical__vs__mush",
+      "label": "counter affinity (corpse_eater style, +2 flat bleed) pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "enemyOverride": { "affinity": "counter" }
+    },
+    {
+      "id": "COUNTER_haste__vs__mush",
+      "label": "counter affinity (corpse_eater style, +2 flat bleed) haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 6,
+      "enemyOverride": { "affinity": "counter" }
+    }
+  ]
+}

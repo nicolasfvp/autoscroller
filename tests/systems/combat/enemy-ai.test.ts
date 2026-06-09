@@ -203,7 +203,9 @@ describe('EnemyAI', () => {
       stats = createEmptyCombatStats('boss', 'Boss');
       ai = new EnemyAI(state);
       ai.tick(3000, state, stats); // shield fires at 3000ms
-      expect(state.enemyDefense).toBe(60);
+      // Shield armor is capped at 40 (balance fix: prevents long-fight ratchet
+      // hard-countering direct damage). shieldAmount 60 clamps to the cap.
+      expect(state.enemyDefense).toBe(40);
     });
 
     it('multi_hit splits damage into multiple hits', () => {

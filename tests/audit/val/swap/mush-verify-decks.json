@@ -1,0 +1,37 @@
+{
+  "decks": [
+    {
+      "id": "verify-pure-physical-loop2",
+      "label": "Loop2 Opener pure_physical (the loser)",
+      "archetype": "pure_physical",
+      "class": "warrior",
+      "stage": "loop2",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "vsEnemies": ["mush"],
+      "vsBoss": false
+    },
+    {
+      "id": "verify-haste-loop2",
+      "label": "Loop2 haste starter (the loser)",
+      "archetype": "starter-physical-haste",
+      "class": "warrior",
+      "stage": "loop2",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "vsEnemies": ["mush"],
+      "vsBoss": false
+    },
+    {
+      "id": "verify-starter-physical-loop2-winner",
+      "label": "Loop2 starter w/ T2 finisher (the winner control)",
+      "archetype": "starter-physical",
+      "class": "warrior",
+      "stage": "loop2",
+      "deck": ["t1-attack", "t1-agility", "t1-defense", "t1-counter", "t2-attack-attack"],
+      "runXP": 120,
+      "vsEnemies": ["mush"],
+      "vsBoss": false
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "matchups": [
+    {
+      "id": "burn-A-nodet__vs__BOSS_doom_knight",
+      "label": "dying deck (weak detonators) vs BOSS doom_knight (boss1)",
+      "archetype": "burn-test",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "burn-B-cinderlance__vs__BOSS_doom_knight",
+      "label": "+Cinderlance vs BOSS doom_knight (boss1)",
+      "archetype": "burn-test",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "burn-C-supernova__vs__BOSS_doom_knight",
+      "label": "+Cinderlance+Supernova vs BOSS doom_knight (boss1)",
+      "archetype": "burn-test",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t2-earth-fire",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t3-attack-fire-fire",
+        "t3-fire-fire-fire"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 10
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "decks": [
+    {
+      "id": "burn-loser-base",
+      "label": "Loser deck (boss1-2) baseline",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t2-agility-fire"],
+      "vsEnemies": []
+    },
+    {
+      "id": "burn-loser-detonbuff",
+      "label": "Loser deck + PROPOSED Cinderlance/Venom buff (cards NOT in deck)",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t2-agility-fire"],
+      "vsEnemies": []
+    },
+    {
+      "id": "burn-winner-base",
+      "label": "Winner deck (boss1-1) baseline",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-air","t2-fire-fire","t2-agility-fire","t1-fire","t2-earth-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire"],
+      "vsEnemies": []
+    },
+    {
+      "id": "burn-winner-cinderbuff",
+      "label": "Winner deck + PROPOSED Cinderlance buff",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-air","t2-fire-fire","t2-agility-fire","t1-fire","t2-earth-fire","t3-agility-fire-fire","t2-fire-fire","t3-attack-fire-fire"],
+      "vsEnemies": []
+    },
+    {
+      "id": "burn-loser-pyrebuff",
+      "label": "Loser deck + HONEST fix: Pyre detonate 3->4 (card actually in deck)",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t2-agility-fire"],
+      "vsEnemies": []
+    },
+    {
+      "id": "burn-loser-cindersprintbuff",
+      "label": "Loser deck + Cinder Sprint detonate 4->5 (card in deck, the real T3 detonator)",
+      "archetype": "pure_burn",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t2-agility-fire","t1-air","t2-fire-fire","t3-agility-fire-fire","t2-agility-fire"],
+      "vsEnemies": []
+    }
+  ]
+}

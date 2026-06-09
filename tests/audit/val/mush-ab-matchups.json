@@ -1,0 +1,80 @@
+{
+  "matchups": [
+    {
+      "id": "BASE_pure-physical__vs__mush",
+      "label": "baseline pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8
+    },
+    {
+      "id": "BASE_haste__vs__mush",
+      "label": "baseline haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8
+    },
+    {
+      "id": "NOARMOR_pure-physical__vs__mush",
+      "label": "no-armor-affinity pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8,
+      "enemyOverride": { "affinity": "attack" }
+    },
+    {
+      "id": "NOARMOR_haste__vs__mush",
+      "label": "no-armor-affinity haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8,
+      "enemyOverride": { "affinity": "attack" }
+    },
+    {
+      "id": "LOWHP_pure-physical__vs__mush",
+      "label": "HP 100 pure_physical vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-agility", "t1-attack", "t1-agility", "t1-defense"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8,
+      "enemyOverride": { "baseHP": 100 }
+    },
+    {
+      "id": "LOWHP_haste__vs__mush",
+      "label": "HP 100 haste vs mush",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-air", "t1-agility", "t1-defense", "t1-counter"],
+      "runXP": 120,
+      "enemy": "mush",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 2,
+      "repeats": 8,
+      "enemyOverride": { "baseHP": 100 }
+    }
+  ]
+}

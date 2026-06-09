@@ -1,0 +1,42 @@
+{
+  "matchups": [
+    {
+      "id": "war-phys-vs-depths_horror-CURRENT-95",
+      "label": "Pure-physical warrior vs depths_horror CURRENT 95HP (late mult 1.15)",
+      "archetype": "pure_physical", "class": "warrior", "stage": "late",
+      "deck": ["t1-attack","t1-agility","t2-agility-agility","t2-attack-attack","t2-air-attack","t3-agility-agility-attack","t1-attack","t2-attack-counter","t3-attack-attack-counter"],
+      "runXP": 720, "enemy": "depths_horror", "loopMultiplier": 1.15, "isBoss": false, "loopCount": 8, "repeats": 8
+    },
+    {
+      "id": "war-phys-vs-depths_horror-PROP-120",
+      "label": "Pure-physical warrior vs depths_horror PROPOSED 120HP (late mult 1.15)",
+      "archetype": "pure_physical", "class": "warrior", "stage": "late",
+      "deck": ["t1-attack","t1-agility","t2-agility-agility","t2-attack-attack","t2-air-attack","t3-agility-agility-attack","t1-attack","t2-attack-counter","t3-attack-attack-counter"],
+      "runXP": 720, "enemy": "depths_horror", "loopMultiplier": 1.15, "isBoss": false, "loopCount": 8, "repeats": 8,
+      "enemyOverride": { "baseHP": 120 }
+    },
+    {
+      "id": "war-phys-vs-depths_horror-ALT-110",
+      "label": "Pure-physical warrior vs depths_horror ALT 110HP (late mult 1.15)",
+      "archetype": "pure_physical", "class": "warrior", "stage": "late",
+      "deck": ["t1-attack","t1-agility","t2-agility-agility","t2-attack-attack","t2-air-attack","t3-agility-agility-attack","t1-attack","t2-attack-counter","t3-attack-attack-counter"],
+      "runXP": 720, "enemy": "depths_horror", "loopMultiplier": 1.15, "isBoss": false, "loopCount": 8, "repeats": 8,
+      "enemyOverride": { "baseHP": 110 }
+    },
+    {
+      "id": "mage-poison-vs-depths_horror-CURRENT-95",
+      "label": "Poison mage vs depths_horror CURRENT 95HP (late mult 1.15)",
+      "archetype": "pure_poison", "class": "mage", "stage": "late",
+      "deck": ["t2-earth-water","t3-agility-agility-water","t3-agility-air-water","t3-agility-earth-water","t3-earth-fire-water","t3-agility-water-water","t3-air-fire-water","t3-earth-earth-water","t3-air-earth-water","t2-earth-water"],
+      "runXP": 720, "enemy": "depths_horror", "loopMultiplier": 1.15, "isBoss": false, "loopCount": 8, "repeats": 8
+    },
+    {
+      "id": "mage-poison-vs-depths_horror-PROP-120",
+      "label": "Poison mage vs depths_horror PROPOSED 120HP (late mult 1.15)",
+      "archetype": "pure_poison", "class": "mage", "stage": "late",
+      "deck": ["t2-earth-water","t3-agility-agility-water","t3-agility-air-water","t3-agility-earth-water","t3-earth-fire-water","t3-agility-water-water","t3-air-fire-water","t3-earth-earth-water","t3-air-earth-water","t2-earth-water"],
+      "runXP": 720, "enemy": "depths_horror", "loopMultiplier": 1.15, "isBoss": false, "loopCount": 8, "repeats": 8,
+      "enemyOverride": { "baseHP": 120 }
+    }
+  ]
+}

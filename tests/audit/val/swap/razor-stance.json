@@ -1,0 +1,59 @@
+{
+  "decks": [
+    {
+      "id": "razor-baseline",
+      "label": "bleed mid baseline (Reckless in early slot)",
+      "archetype": "bleed",
+      "class": "warrior",
+      "stage": "loop5",
+      "runXP": 350,
+      "vsEnemies": ["mutated_salamander", "venomous_kobra", "lava_golen", "skeleton", "werewolf"],
+      "vsBoss": false,
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "razor-swap-current",
+      "label": "bleed mid: Reckless -> Razor Stance (CURRENT cd2.0)",
+      "archetype": "bleed",
+      "class": "warrior",
+      "stage": "loop5",
+      "runXP": 350,
+      "vsEnemies": ["mutated_salamander", "venomous_kobra", "lava_golen", "skeleton", "werewolf"],
+      "vsBoss": false,
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility"
+      ]
+    },
+    {
+      "id": "razor-swap-fix14",
+      "label": "bleed mid: Reckless -> Razor Stance (PROPOSED cd1.4)",
+      "archetype": "bleed",
+      "class": "warrior",
+      "stage": "loop5",
+      "runXP": 350,
+      "vsEnemies": ["mutated_salamander", "venomous_kobra", "lava_golen", "skeleton", "werewolf"],
+      "vsBoss": false,
+      "cardOverrides": { "t2-counter-counter": { "cooldown": 1.4 } },
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "matchups": [
+    {
+      "id": "doom_hp470_dmg9__naive",
+      "label": "naive vs doom 470hp/9dmg",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":9,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg10__naive",
+      "label": "naive vs doom 470hp/10dmg",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":10,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg11__naive",
+      "label": "naive vs doom 470hp/11dmg",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t2-attack-attack","t1-defense","t1-agility","t2-agility-attack","t1-attack","t2-attack-attack","t1-defense"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":11,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg10__random",
+      "label": "weak-random vs doom 470hp/10dmg (should mostly FAIL)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t1-defense","t1-agility","t1-counter","t2-agility-defense","t1-attack","t1-defense","t1-agility"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":10,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg11__random",
+      "label": "weak-random vs doom 470hp/11dmg (should FAIL)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack","t1-defense","t1-agility","t1-counter","t2-agility-defense","t1-attack","t1-defense","t1-agility"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":11,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg10__optimized",
+      "label": "optimized vs doom 470hp/10dmg (must stay comfy)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack","t2-agility-attack","t1-attack","t3-agility-attack-attack","t2-air-attack","t1-attack","t2-agility-attack","t3-agility-attack-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":10,"pattern":"fixed"} }
+    },
+    {
+      "id": "doom_hp470_dmg11__optimized",
+      "label": "optimized vs doom 470hp/11dmg (must stay comfy)",
+      "archetype": "boss-reverify", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack","t2-agility-attack","t1-attack","t3-agility-attack-attack","t2-air-attack","t1-attack","t2-agility-attack","t3-agility-attack-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1.0, "loopCount": 10, "repeats": 8,
+      "enemyOverride": { "baseHP": 470, "attack": {"damage":11,"pattern":"fixed"} }
+    }
+  ]
+}

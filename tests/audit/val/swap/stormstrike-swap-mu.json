@@ -1,0 +1,349 @@
+{
+  "matchups": [
+    {
+      "id": "pd_base_jab__vs__mutated_salamander",
+      "label": "baseline Jab vs mutated_salamander",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_cur__vs__mutated_salamander",
+      "label": "Stormstrike current(6) vs mutated_salamander",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_buff8__vs__mutated_salamander",
+      "label": "Stormstrike buff(8) vs mutated_salamander",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {
+              "value": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_storm_haste7__vs__mutated_salamander",
+      "label": "Stormstrike haste 7s vs mutated_salamander",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {},
+            {
+              "ttl_ms": 7000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_base_jab__vs__werewolf",
+      "label": "baseline Jab vs werewolf",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_cur__vs__werewolf",
+      "label": "Stormstrike current(6) vs werewolf",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_buff8__vs__werewolf",
+      "label": "Stormstrike buff(8) vs werewolf",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {
+              "value": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_storm_haste7__vs__werewolf",
+      "label": "Stormstrike haste 7s vs werewolf",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {},
+            {
+              "ttl_ms": 7000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_base_jab__vs__skeleton",
+      "label": "baseline Jab vs skeleton",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_cur__vs__skeleton",
+      "label": "Stormstrike current(6) vs skeleton",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "pd_storm_buff8__vs__skeleton",
+      "label": "Stormstrike buff(8) vs skeleton",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {
+              "value": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_storm_haste7__vs__skeleton",
+      "label": "Stormstrike haste 7s vs skeleton",
+      "archetype": "pure_damage",
+      "stage": "mid",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {},
+            {
+              "ttl_ms": 7000
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

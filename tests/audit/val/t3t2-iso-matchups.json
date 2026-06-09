@@ -1,0 +1,589 @@
+{
+  "matchups": [
+    {
+      "id": "iso-pyre-T2__vs__depths_horror",
+      "label": "ISO fire: Spark feeders + Pyre (T2) vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-pyre-T2__vs__fire_elemental",
+      "label": "ISO fire: Spark feeders + Pyre (T2) vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-pyre-T2__vs__werewolf",
+      "label": "ISO fire: Spark feeders + Pyre (T2) vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-pyre-T2__vs__mutated_salamander",
+      "label": "ISO fire: Spark feeders + Pyre (T2) vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-pyre-T2__vs__iron_golem",
+      "label": "ISO fire: Spark feeders + Pyre (T2) vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-current__vs__depths_horror",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust) vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-current__vs__fire_elemental",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust) vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-current__vs__werewolf",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust) vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-current__vs__mutated_salamander",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust) vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-current__vs__iron_golem",
+      "label": "ISO fire: Spark feeders + Supernova (T3 current: 2s+1m cd2.8 exhaust) vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-buff__vs__depths_horror",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost) vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-buff__vs__fire_elemental",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost) vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-buff__vs__werewolf",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost) vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-buff__vs__mutated_salamander",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost) vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-supernova-T3-buff__vs__iron_golem",
+      "label": "ISO fire: Supernova buffed (cd1.8 no-exhaust, drop stamina cost) vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t1-fire",
+        "t1-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tailwind-T2__vs__depths_horror",
+      "label": "ISO air: Tailwind (T2) carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tailwind-T2__vs__fire_elemental",
+      "label": "ISO air: Tailwind (T2) carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tailwind-T2__vs__werewolf",
+      "label": "ISO air: Tailwind (T2) carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tailwind-T2__vs__mutated_salamander",
+      "label": "ISO air: Tailwind (T2) carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tailwind-T2__vs__iron_golem",
+      "label": "ISO air: Tailwind (T2) carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t2-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-current__vs__depths_horror",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-current__vs__fire_elemental",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-current__vs__werewolf",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-current__vs__mutated_salamander",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-current__vs__iron_golem",
+      "label": "ISO air: Tempest Cadence (T3 current: 2m cd2.4) carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-buff__vs__depths_horror",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-buff__vs__fire_elemental",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-buff__vs__werewolf",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-buff__vs__mutated_salamander",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "iso-tempest-T3-buff__vs__iron_golem",
+      "label": "ISO air: Tempest Cadence buffed (cd1.6) carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    }
+  ]
+}

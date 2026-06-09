@@ -78,6 +78,13 @@ export interface CardEffectCondition {
   devour_succeeded?: boolean;
   /** v4 Vengeance: fires when hero took HP damage within the last N ms. */
   took_damage_within_ms?: number;
+  /** Batch C: when true, the stack gate (enemy_has_stack / self_has_stack /
+   *  enemy_stack_atleast / self_stack_atleast) reads the PRE-CAST snapshot of
+   *  the pool instead of the live value, so a stack this same card applied
+   *  earlier in the cast cannot self-satisfy the gate. Used by Steaming Plague
+   *  and Vein Splitter so "If enemy has [X]" genuinely means pre-existing X.
+   *  Does NOT affect per_stack multipliers (Pyre detonators stay live). */
+  pre_consume?: boolean;
 }
 
 /** Source key extended by v3 redesigns. Runtime parses these to read live
@@ -139,6 +146,12 @@ export interface CardEffect {
   stat?: StatId;
   /** Damage variant: skip enemy defense subtraction. */
   pierce_armor?: boolean;
+  /** Batch C: damage variant that bypasses ALL outgoing multipliers (STR soft
+   *  multiplier, banked Rage, buff/dealt/relic mults) so the hit lands as the
+   *  literal resolved value. Used by Shield Bash ("Deal damage equal to your
+   *  [armor]") so the number truly equals current armor. Pair with pierce_armor
+   *  for an exact 1:1. */
+  literal_damage?: boolean;
   /**
    * Tier-2: multi-hit damage. multi_hit:N means N additional hits beyond the
    * first, so multi_hit:2 = 3 total damage applications. Each hit re-applies
@@ -156,6 +169,13 @@ export interface CardEffect {
   /** v3: name a stack whose pre-consume count this effect's `value` should be
    *  scaled by (multiplicative detonator like Hemotoxin Burst, Crimson Spiral). */
   consume_stack_value?: StackId;
+  /** Partial-consume detonator (poison/bleed): the fraction of the pool this
+   *  effect consumes (e.g. 0.5 = "skim half, leave the rest ticking"). Applies
+   *  to BOTH `consume_stack_value` (damage = value * ceil(snapshot*fraction))
+   *  and `consume_stack` removal (remove ceil(current*fraction)). Omitted =
+   *  legacy consume-ALL behaviour. Keeps the quadratic DoT ramp alive after a
+   *  detonation instead of zeroing it (the "burst AND keep ramping" identity). */
+  consume_fraction?: number;
   /** v3: Overload — after this effect resolves, the card slot adds N ms to its
    *  next cooldown (independent of normal cooldown). */
   overload_lockout_ms?: number;
@@ -174,6 +194,13 @@ export interface CardEffect {
   devour?: { from_deck?: boolean; rarity?: "common" | "uncommon" | "rare" | "epic"; count?: number; exhaust_next?: boolean };
   /** Gate / multiplier: see CardEffectCondition. */
   condition?: CardEffectCondition;
+  /** Batch C: when true on an `aura` effect, instead of pushing a new aura the
+   *  resolver finds an existing aura on the same side with an identical trigger
+   *  and `then` body and ADDS this effect's ttl_ms to its remaining lifetime
+   *  (extends duration) — falling back to a normal push if none matches. Used
+   *  by Razor Stance's Vengeance clause so "+4 seconds" extends the bleed-on-hit
+   *  window rather than arming a second concurrent aura (double bleed). */
+  extend_aura?: boolean;
   /** Aura: lifetime in ms before this effect decays off the target. null = no decay (manual). */
   ttl_ms?: number | null;
   /** v3 aura: periodic tick interval — fires `then` every N ms while alive. */

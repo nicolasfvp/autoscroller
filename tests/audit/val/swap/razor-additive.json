@@ -1,0 +1,199 @@
+{
+  "matchups": [
+    {
+      "id": "filler__mutated_salamander",
+      "label": "FILLER T1jab slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razorcur__mutated_salamander",
+      "label": "RAZOR cd2.0 slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razor14__mutated_salamander",
+      "label": "RAZOR cd1.4 slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "filler__venomous_kobra",
+      "label": "FILLER T1jab slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razorcur__venomous_kobra",
+      "label": "RAZOR cd2.0 slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razor14__venomous_kobra",
+      "label": "RAZOR cd1.4 slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "filler__werewolf",
+      "label": "FILLER T1jab slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razorcur__werewolf",
+      "label": "RAZOR cd2.0 slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "razor14__werewolf",
+      "label": "RAZOR cd1.4 slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-attack",
+        "t2-agility-counter",
+        "t2-agility-attack",
+        "t1-attack",
+        "t2-attack-counter",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    }
+  ]
+}

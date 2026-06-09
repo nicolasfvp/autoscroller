@@ -1,0 +1,132 @@
+{
+  "decks": [
+    {
+      "id": "early-cinderlance",
+      "label": "Cinderlance EARLY slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t3-attack-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ]
+    },
+    {
+      "id": "early-cindersprint",
+      "label": "Cinder Sprint EARLY slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t3-agility-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ]
+    },
+    {
+      "id": "early-supernova",
+      "label": "Supernova EARLY slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ]
+    },
+    {
+      "id": "early-pyreT2",
+      "label": "Pyre T2 EARLY slot vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ]
+    },
+    {
+      "id": "early-cinderlance-BUFF",
+      "label": "Cinderlance PROPOSED BUFF (cd1.8, det 4 pierce) EARLY vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t3-attack-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ],
+      "cardOverrides": {
+        "t3-attack-fire-fire": {
+          "cooldown": 1.8,
+          "effectsPatch": [
+            {},
+            { "value": 4 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "early-cinderlance-CDONLY",
+      "label": "Cinderlance CD-only buff (cd1.8) EARLY vs doom_knight",
+      "archetype": "det-swap",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-air-fire",
+        "t3-attack-fire-fire",
+        "t1-fire",
+        "t2-agility-fire",
+        "t3-earth-fire-fire",
+        "t2-earth-fire",
+        "t3-agility-agility-fire"
+      ],
+      "cardOverrides": {
+        "t3-attack-fire-fire": {
+          "cooldown": 1.8
+        }
+      }
+    }
+  ]
+}

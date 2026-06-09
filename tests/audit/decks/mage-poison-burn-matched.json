@@ -1,0 +1,85 @@
+{
+  "_comment": "Matched naive/optimized pairs — mage poison+burn hybrid. Stages boss1,boss2,boss3,boss5,boss7. Naive = on-theme DoT appliers, NO Bog-Catalyst doubler / NO Pyre-Surge amplifier / NO detonator (stacks cap at 6, overflow wasted, plain order, 1-2 off-theme cards). Optimized = applier + Bog-Catalyst doubler + Pyre-Surge amplifier + Supernova/Drowning/Venom detonators, front-loaded cheap openers, mana-leaning to fit 30-stam mage pool.",
+  "decks": [
+    {
+      "id": "mage-poison-burn-boss1-N",
+      "label": "Boss1 Naive Poison+Burn (no payoff)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-fire-water", "t3-agility-counter-water", "t2-fire-fire", "t1-water", "t3-agility-earth-water", "t2-air-fire"]
+    },
+    {
+      "id": "mage-poison-burn-boss1-O",
+      "label": "Boss1 Optimized Poison+Burn (doubler+detonator)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-earth-water", "t3-agility-counter-water", "t3-earth-earth-water", "t3-air-fire-fire", "t3-agility-fire-fire", "t3-counter-fire-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-poison-burn-boss2-N",
+      "label": "Boss2 Naive Poison+Burn (no payoff)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": ["t1-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-fire-water", "t3-agility-counter-water", "t3-agility-earth-water", "t2-fire-fire", "t1-water", "t2-air-fire", "t3-agility-air-water", "t2-fire-water"]
+    },
+    {
+      "id": "mage-poison-burn-boss2-O",
+      "label": "Boss2 Optimized Poison+Burn (doubler+pierce detonator)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-earth-water", "t3-agility-counter-water", "t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-fire", "t3-attack-water-water", "t3-agility-fire-fire", "t3-counter-fire-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-poison-burn-boss3-N",
+      "label": "Boss3 Naive Poison+Burn (no payoff)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss3",
+      "deck": ["t1-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-fire-water", "t3-agility-counter-water", "t3-agility-earth-water", "t2-fire-fire", "t3-agility-air-water", "t1-water", "t2-air-fire", "t2-fire-water", "t3-agility-fire-water"]
+    },
+    {
+      "id": "mage-poison-burn-boss3-O",
+      "label": "Boss3 Optimized Poison+Burn (full combo)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss3",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-earth-water", "t3-agility-counter-water", "t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-fire", "t3-agility-fire-water", "t3-attack-water-water", "t3-agility-fire-fire", "t3-counter-fire-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-poison-burn-boss5-N",
+      "label": "Boss5 Naive Poison+Burn (no payoff)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss5",
+      "deck": ["t1-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-fire-water", "t3-agility-counter-water", "t3-agility-earth-water", "t2-fire-fire", "t3-agility-air-water", "t1-water", "t2-air-fire", "t2-fire-water", "t3-agility-fire-water", "t3-air-defense-water"]
+    },
+    {
+      "id": "mage-poison-burn-boss5-O",
+      "label": "Boss5 Optimized Poison+Burn (full combo)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss5",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-earth-water", "t3-agility-counter-water", "t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-fire", "t3-agility-fire-water", "t3-attack-water-water", "t3-agility-fire-fire", "t3-counter-fire-water", "t3-air-fire-water", "t2-fire-fire"]
+    },
+    {
+      "id": "mage-poison-burn-boss7-N",
+      "label": "Boss7 Naive Poison+Burn (no payoff)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss7",
+      "deck": ["t1-fire", "t2-earth-water", "t2-agility-fire", "t3-earth-fire-water", "t3-agility-counter-water", "t3-agility-earth-water", "t2-fire-fire", "t3-agility-air-water", "t1-water", "t2-air-fire", "t2-fire-water", "t3-agility-fire-water", "t3-air-defense-water", "t3-defense-water-water"]
+    },
+    {
+      "id": "mage-poison-burn-boss7-O",
+      "label": "Boss7 Optimized Poison+Burn (full combo + pierce)",
+      "archetype": "poison-burn-hybrid",
+      "class": "mage",
+      "stage": "boss7",
+      "deck": ["t1-fire", "t2-agility-fire", "t2-earth-water", "t3-agility-counter-water", "t3-earth-earth-water", "t3-agility-water-water", "t3-air-fire-water", "t3-air-fire-fire", "t3-agility-fire-water", "t3-attack-water-water", "t3-agility-fire-fire", "t3-counter-fire-water", "t3-air-earth-water", "t2-fire-fire"]
+    }
+  ]
+}

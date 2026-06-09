@@ -1,0 +1,59 @@
+{
+  "_comment": "Coverage-gap decks: every assigned uncovered card appears in >=1 coherent realistic deck.",
+  "decks": [
+    {
+      "id": "cover-0-1",
+      "label": "Earth/Fire Brace Bulwark (warrior)",
+      "archetype": "armor-burn-brace",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-defense", "t1-attack", "t2-defense-defense", "t2-attack-earth", "t3-agility-earth-earth", "t3-attack-earth-fire", "t3-counter-earth-fire", "t2-defense-earth", "t3-earth-earth-earth", "t2-attack-attack", "t2-counter-earth"],
+      "notes": "Stonepacer (t3-agility-earth-earth) is the cheap 1s vit/haste opener; Slag Maul (t3-attack-earth-fire) is the big single-target burn-attack win-con; Magmavow (t3-counter-earth-fire) is the Brace armor->16 Pierce+burn payoff. Front-loaded with t1/t2 1s armor so Brace triggers reliably. All stamina (warrior 50 pool)."
+    },
+    {
+      "id": "cover-0-2",
+      "label": "Earth/Fire Bulwark vs loop15",
+      "archetype": "armor-burn-brace",
+      "class": "warrior",
+      "stage": "loop15",
+      "deck": ["t1-defense", "t2-defense-defense", "t2-attack-earth", "t3-agility-earth-earth", "t3-counter-earth-fire", "t3-attack-earth-fire", "t2-defense-earth", "t3-earth-earth-earth", "t1-attack", "t2-attack-attack"],
+      "notes": "Same bulwark core seen at a higher difficulty (1.1 mult) so Magmavow/Slag Maul/Stonepacer get a second data point. Tighter 10-card list to keep stamina economy honest."
+    },
+    {
+      "id": "cover-0-3",
+      "label": "Reactive Bleed/Rage Wall (warrior)",
+      "archetype": "counter-bleed-rage",
+      "class": "warrior",
+      "stage": "boss1",
+      "deck": ["t1-attack", "t2-attack-attack", "t2-agility-counter", "t3-agility-counter-defense", "t2-counter-water", "t3-counter-counter-fire", "t2-counter-counter", "t3-agility-attack-counter", "t2-defense-defense", "t1-defense", "t2-attack-counter"],
+      "notes": "Bramble Step (t3-agility-counter-defense) armor+Brace-bleed wall; Bloodtide Mend (t2-counter-water) self-bleed heal + Vengeance spi sustain; Vengeful Pyre (t3-counter-counter-fire) is the exhaust rage-doubler. Counter/Vengeance triggers fed by taking hits from doom_knight. All stamina (warrior)."
+    },
+    {
+      "id": "cover-0-4",
+      "label": "Reactive Bleed Wall vs loop15",
+      "archetype": "counter-bleed-rage",
+      "class": "warrior",
+      "stage": "loop15",
+      "deck": ["t1-attack", "t2-attack-attack", "t2-agility-counter", "t3-agility-counter-defense", "t2-counter-water", "t2-counter-counter", "t3-agility-attack-counter", "t2-attack-counter", "t2-defense-defense", "t1-defense"],
+      "notes": "Bramble Step + Bloodtide Mend reactive core at 1.1 mult for a second difficulty datapoint. Dropped the exhaust Vengeful Pyre here to keep a leaner sustain-focused list and isolate the bleed/heal cards."
+    },
+    {
+      "id": "cover-0-5",
+      "label": "Elemental Armor-Control Hybrid (mage)",
+      "archetype": "armor-burn-poison-control",
+      "class": "mage",
+      "stage": "boss1",
+      "deck": ["t1-fire", "t1-water", "t2-agility-fire", "t3-defense-defense-fire", "t3-agility-defense-earth", "t3-agility-counter-fire", "t3-agility-attack-water", "t2-fire-fire", "t1-attack", "t3-counter-water-water"],
+      "notes": "Centers the 'both'-resource T3 hybrids: Pyric Bulwark (armor->burn), Quickstone (armor+conditional haste), Searing Razor (burn+dex), Drowner's Dart (poison pierce attack win-con), Tidefoot Bloom (heal->poison engine, paired with t1-water Mend). Each costs only 1s+1m so the 60-mana mage pool plus a little stamina sustains them; cheap t1-fire/t1-water/t2-agility-fire openers front-loaded."
+    },
+    {
+      "id": "cover-0-6",
+      "label": "Elemental Hybrid vs boss2 (iron_golem)",
+      "archetype": "armor-burn-poison-control",
+      "class": "mage",
+      "stage": "boss2",
+      "deck": ["t1-fire", "t1-water", "t2-agility-fire", "t3-agility-attack-water", "t3-defense-defense-fire", "t3-agility-defense-earth", "t3-agility-counter-fire", "t3-counter-water-water", "t2-fire-fire", "t1-attack", "t2-water-water"],
+      "notes": "Same hybrid control core vs iron_golem (1.05 boss mult, defense-affinity armor ratchet) to stress the poison/burn DoT lines (Drowner's Dart, Searing Razor, Tidefoot Bloom) and the armor-haste survival cards (Pyric Bulwark, Quickstone) against a tanky boss at a second difficulty."
+    }
+  ]
+}

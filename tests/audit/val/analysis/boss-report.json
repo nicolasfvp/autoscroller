@@ -1,0 +1,415 @@
+{
+  "doomKnightCheck": {
+    "boss": "doom_knight",
+    "intent": "FIRST boss — should be EASY. Almost all builds (even weak) should win with cushion.",
+    "nDecks": 78,
+    "fracWin": 0.987,
+    "fracAnyLoss": 0.013,
+    "meanCushionOnWin": 0.625,
+    "losers": [
+      {
+        "id": "rand-boss1-mage-0c__vs__BOSS_doom_knight",
+        "archetype": "random-chaotic",
+        "class": "mage",
+        "winRate": 0,
+        "deaths": 4,
+        "timeouts": 0
+      }
+    ],
+    "verdict": "MOSTLY PASS (<=10% loss)"
+  },
+  "bossReport": [
+    {
+      "boss": "doom_knight",
+      "name": "Doom Knight",
+      "nDecks": 78,
+      "meanWinRate": 0.987,
+      "fracDecksFullWin": 0.987,
+      "fracDecksAnyLoss": 0.013,
+      "meanCushionOnWin": 0.625,
+      "worst5": [
+        {
+          "id": "rand-boss1-mage-0c__vs__BOSS_doom_knight",
+          "archetype": "random-chaotic",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss1-warrior-0__vs__BOSS_doom_knight",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 1,
+          "cushion": 0.968,
+          "deaths": 0,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss1-warrior-1__vs__BOSS_doom_knight",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 1,
+          "cushion": 0.745,
+          "deaths": 0,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss1-warrior-2__vs__BOSS_doom_knight",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 1,
+          "cushion": 0.637,
+          "deaths": 0,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss1-warrior-3__vs__BOSS_doom_knight",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 1,
+          "cushion": 0.529,
+          "deaths": 0,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "iron_golem",
+      "name": "Iron Golem",
+      "nDecks": 59,
+      "meanWinRate": 0.814,
+      "fracDecksFullWin": 0.814,
+      "fracDecksAnyLoss": 0.186,
+      "meanCushionOnWin": 0.662,
+      "worst5": [
+        {
+          "id": "rand-boss2-warrior-1__vs__BOSS_iron_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss2-warrior-3__vs__BOSS_iron_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss2-mage-1__vs__BOSS_iron_golem",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss2-mage-0c__vs__BOSS_iron_golem",
+          "archetype": "random-chaotic",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "war-pure-physical-boss2-N__vs__BOSS_iron_golem",
+          "archetype": "pure physical (attack/agility/counter direct damage)",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "lizard_king",
+      "name": "Lizard King",
+      "nDecks": 58,
+      "meanWinRate": 0.914,
+      "fracDecksFullWin": 0.914,
+      "fracDecksAnyLoss": 0.086,
+      "meanCushionOnWin": 0.536,
+      "worst5": [
+        {
+          "id": "rand-boss3-mage-1__vs__BOSS_lizard_king",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "war-slow-stun-physical-boss3-N__vs__BOSS_lizard_king",
+          "archetype": "air/earth slow+stun control + physical",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "mage-pure-burn-boss3-O__vs__BOSS_lizard_king",
+          "archetype": "burn bank-and-cash + detonators",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "mage-pure-burn-boss3-2__vs__BOSS_lizard_king",
+          "archetype": "pure_burn",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "mage-detonator-control-boss3-1__vs__BOSS_lizard_king",
+          "archetype": "detonator-control",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "bog_witch",
+      "name": "Bog Witch",
+      "nDecks": 25,
+      "meanWinRate": 0.84,
+      "fracDecksFullWin": 0.84,
+      "fracDecksAnyLoss": 0.16,
+      "meanCushionOnWin": 0.635,
+      "worst5": [
+        {
+          "id": "rand-boss4-warrior-1__vs__BOSS_bog_witch",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss4-mage-3__vs__BOSS_bog_witch",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 0,
+          "timeouts": 4
+        },
+        {
+          "id": "mage-pure-burn-boss4-1__vs__BOSS_bog_witch",
+          "archetype": "pure_burn",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "mage-pure-burn-boss4-2__vs__BOSS_bog_witch",
+          "archetype": "pure_burn",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss4-warrior-0__vs__BOSS_bog_witch",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 1,
+          "cushion": 0.53,
+          "deaths": 0,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "desert_golem",
+      "name": "Desert Golem",
+      "nDecks": 45,
+      "meanWinRate": 0.844,
+      "fracDecksFullWin": 0.844,
+      "fracDecksAnyLoss": 0.156,
+      "meanCushionOnWin": 0.672,
+      "worst5": [
+        {
+          "id": "rand-boss5-warrior-2__vs__BOSS_desert_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss5-warrior-3__vs__BOSS_desert_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss5-mage-3__vs__BOSS_desert_golem",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "war-pure-physical-boss5-N__vs__BOSS_desert_golem",
+          "archetype": "pure physical (attack/agility/counter direct damage)",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "war-pure-physical-boss5-O__vs__BOSS_desert_golem",
+          "archetype": "pure physical (attack/agility/counter direct damage)",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "infernal_dragon",
+      "name": "Infernal Dragon",
+      "nDecks": 19,
+      "meanWinRate": 0.632,
+      "fracDecksFullWin": 0.632,
+      "fracDecksAnyLoss": 0.368,
+      "meanCushionOnWin": 0.429,
+      "worst5": [
+        {
+          "id": "rand-boss6-warrior-0c__vs__BOSS_infernal_dragon",
+          "archetype": "random-chaotic",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss6-mage-0__vs__BOSS_infernal_dragon",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss6-mage-1__vs__BOSS_infernal_dragon",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss6-mage-3__vs__BOSS_infernal_dragon",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "mage-detonator-control-boss6-2__vs__BOSS_infernal_dragon",
+          "archetype": "detonator-control",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        }
+      ]
+    },
+    {
+      "boss": "boss_iron_golem",
+      "name": "Ancient Iron Golem",
+      "nDecks": 43,
+      "meanWinRate": 0.581,
+      "fracDecksFullWin": 0.581,
+      "fracDecksAnyLoss": 0.419,
+      "meanCushionOnWin": 0.43,
+      "worst5": [
+        {
+          "id": "rand-boss7-warrior-0__vs__BOSS_boss_iron_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss7-warrior-2__vs__BOSS_boss_iron_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss7-warrior-3__vs__BOSS_boss_iron_golem",
+          "archetype": "random",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss7-warrior-0c__vs__BOSS_boss_iron_golem",
+          "archetype": "random-chaotic",
+          "class": "warrior",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        },
+        {
+          "id": "rand-boss7-mage-1__vs__BOSS_boss_iron_golem",
+          "archetype": "random",
+          "class": "mage",
+          "winRate": 0,
+          "cushion": null,
+          "deaths": 4,
+          "timeouts": 0
+        }
+      ]
+    }
+  ]
+}

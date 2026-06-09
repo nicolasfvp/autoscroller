@@ -1,0 +1,814 @@
+{
+  "matchups": [
+    {
+      "id": "fix-supernova-current__vs__depths_horror",
+      "label": "Supernova current in burn-feed deck vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-supernova-current__vs__fire_elemental",
+      "label": "Supernova current in burn-feed deck vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-supernova-current__vs__werewolf",
+      "label": "Supernova current in burn-feed deck vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-supernova-current__vs__mutated_salamander",
+      "label": "Supernova current in burn-feed deck vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-supernova-current__vs__iron_golem",
+      "label": "Supernova current in burn-feed deck vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-supernova-buffA__vs__depths_horror",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffA__vs__fire_elemental",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffA__vs__werewolf",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffA__vs__mutated_salamander",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffA__vs__iron_golem",
+      "label": "Supernova buff A: no-exhaust + cd2.0 + 1m only vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffB__vs__depths_horror",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn vs depths_horror (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          },
+          "effectsPatch": [
+            {},
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffB__vs__fire_elemental",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn vs fire_elemental (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          },
+          "effectsPatch": [
+            {},
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffB__vs__werewolf",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn vs werewolf (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          },
+          "effectsPatch": [
+            {},
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffB__vs__mutated_salamander",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn vs mutated_salamander (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          },
+          "effectsPatch": [
+            {},
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fix-supernova-buffB__vs__iron_golem",
+      "label": "Supernova buff B: no-exhaust + cd2.0 + 1m + value 6/burn vs BOSS iron_golem (late)",
+      "archetype": "pure-burn",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-air-fire"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-fire": {
+          "cooldown": 2,
+          "exhaust": false,
+          "cost": {
+            "mana": 1
+          },
+          "effectsPatch": [
+            {},
+            {
+              "value": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-current__vs__depths_horror",
+      "label": "Tempest current carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-tempest-current__vs__fire_elemental",
+      "label": "Tempest current carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-tempest-current__vs__werewolf",
+      "label": "Tempest current carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-tempest-current__vs__mutated_salamander",
+      "label": "Tempest current carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-tempest-current__vs__iron_golem",
+      "label": "Tempest current carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6
+    },
+    {
+      "id": "fix-tempest-cost__vs__depths_horror",
+      "label": "Tempest cost-cut 1m carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost__vs__fire_elemental",
+      "label": "Tempest cost-cut 1m carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost__vs__werewolf",
+      "label": "Tempest cost-cut 1m carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost__vs__mutated_salamander",
+      "label": "Tempest cost-cut 1m carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost__vs__iron_golem",
+      "label": "Tempest cost-cut 1m carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost-cd__vs__depths_horror",
+      "label": "Tempest cost-cut 1m + cd1.8 carry vs depths_horror (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "depths_horror",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          },
+          "cooldown": 1.8
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost-cd__vs__fire_elemental",
+      "label": "Tempest cost-cut 1m + cd1.8 carry vs fire_elemental (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          },
+          "cooldown": 1.8
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost-cd__vs__werewolf",
+      "label": "Tempest cost-cut 1m + cd1.8 carry vs werewolf (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "werewolf",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          },
+          "cooldown": 1.8
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost-cd__vs__mutated_salamander",
+      "label": "Tempest cost-cut 1m + cd1.8 carry vs mutated_salamander (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1.15,
+      "isBoss": false,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          },
+          "cooldown": 1.8
+        }
+      }
+    },
+    {
+      "id": "fix-tempest-cost-cd__vs__iron_golem",
+      "label": "Tempest cost-cut 1m + cd1.8 carry vs BOSS iron_golem (late)",
+      "archetype": "pure-damage",
+      "stage": "late",
+      "class": "mage",
+      "deck": [
+        "t3-air-air-air",
+        "t1-air",
+        "t1-air"
+      ],
+      "runXP": 720,
+      "relics": [],
+      "enemy": "iron_golem",
+      "loopMultiplier": 1.05,
+      "isBoss": true,
+      "loopCount": 18,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-air-air-air": {
+          "cost": {
+            "mana": 1
+          },
+          "cooldown": 1.8
+        }
+      }
+    }
+  ]
+}

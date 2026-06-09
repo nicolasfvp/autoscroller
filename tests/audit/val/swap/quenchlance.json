@@ -1,0 +1,373 @@
+{
+  "matchups": [
+    {
+      "id": "ql-baseline-flamedart__vs__mutated_salamander",
+      "label": "burn shell + Flame Dart (T2 baseline) slot1 vs mutated_salamander (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-baseline-flamedart__vs__fire_elemental",
+      "label": "burn shell + Flame Dart (T2 baseline) slot1 vs fire_elemental (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-baseline-flamedart__vs__depths_horror",
+      "label": "burn shell + Flame Dart (T2 baseline) slot1 vs depths_horror (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-quench-current__vs__mutated_salamander",
+      "label": "burn shell + Quench Lance (current T3) slot1 vs mutated_salamander (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-quench-current__vs__fire_elemental",
+      "label": "burn shell + Quench Lance (current T3) slot1 vs fire_elemental (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-quench-current__vs__depths_horror",
+      "label": "burn shell + Quench Lance (current T3) slot1 vs depths_horror (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6
+    },
+    {
+      "id": "ql-quench-buffed__vs__mutated_salamander",
+      "label": "burn shell + Quench Lance (PROPOSED buff cd1.6/3burn/thr6) slot1 vs mutated_salamander (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "cooldown": 1.6,
+          "effects": [
+            {
+              "type": "dot",
+              "stack": "burn",
+              "value": 3,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 3,
+                "value": 1
+              }
+            },
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "event_counter": {
+                "event": "stack_consumed",
+                "filter": {
+                  "stack": "burn",
+                  "min_amount": 6
+                },
+                "threshold": 1
+              },
+              "then": {
+                "type": "stat_gain",
+                "stat": "int",
+                "value": 2,
+                "max_per_combat": 4,
+                "target": "self"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ql-quench-buffed__vs__fire_elemental",
+      "label": "burn shell + Quench Lance (PROPOSED buff cd1.6/3burn/thr6) slot1 vs fire_elemental (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "fire_elemental",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "cooldown": 1.6,
+          "effects": [
+            {
+              "type": "dot",
+              "stack": "burn",
+              "value": 3,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 3,
+                "value": 1
+              }
+            },
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "event_counter": {
+                "event": "stack_consumed",
+                "filter": {
+                  "stack": "burn",
+                  "min_amount": 6
+                },
+                "threshold": 1
+              },
+              "then": {
+                "type": "stat_gain",
+                "stat": "int",
+                "value": 2,
+                "max_per_combat": 4,
+                "target": "self"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ql-quench-buffed__vs__depths_horror",
+      "label": "burn shell + Quench Lance (PROPOSED buff cd1.6/3burn/thr6) slot1 vs depths_horror (loop8)",
+      "archetype": "burn",
+      "stage": "loop8",
+      "class": "mage",
+      "deck": [
+        "t3-fire-fire-water",
+        "t1-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t3-fire-fire-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire"
+      ],
+      "relics": [],
+      "stats": {
+        "int": 3
+      },
+      "runXP": 720,
+      "enemy": "depths_horror",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 6,
+      "cardOverrides": {
+        "t3-fire-fire-water": {
+          "cooldown": 1.6,
+          "effects": [
+            {
+              "type": "dot",
+              "stack": "burn",
+              "value": 3,
+              "target": "enemy",
+              "scale": {
+                "stat": "int",
+                "per": 3,
+                "value": 1
+              }
+            },
+            {
+              "type": "aura",
+              "value": 0,
+              "target": "self",
+              "ttl_ms": 6000,
+              "event_counter": {
+                "event": "stack_consumed",
+                "filter": {
+                  "stack": "burn",
+                  "min_amount": 6
+                },
+                "threshold": 1
+              },
+              "then": {
+                "type": "stat_gain",
+                "stat": "int",
+                "value": 2,
+                "max_per_combat": 4,
+                "target": "self"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

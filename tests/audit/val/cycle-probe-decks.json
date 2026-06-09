@@ -1,0 +1,58 @@
+{
+  "decks": [
+    {
+      "id": "frontstrong-backstrong-l50",
+      "label": "front strong / back strong (14)",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss5",
+      "runXP": 2900,
+      "deck": [
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility","t3-attack-attack-attack","t3-agility-agility-attack",
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility"
+      ],
+      "vsEnemies": ["werewolf","ancient_tree","baby_dragon","skeleton","fire_elemental"],
+      "vsBoss": false
+    },
+    {
+      "id": "frontstrong-backjunk-l50",
+      "label": "front strong / back junk (14)",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss5",
+      "runXP": 2900,
+      "deck": [
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility","t3-attack-attack-attack","t3-agility-agility-attack",
+        "t1-counter","t2-counter-counter","t1-counter","t2-counter-counter","t1-counter","t2-counter-counter"
+      ],
+      "vsEnemies": ["werewolf","ancient_tree","baby_dragon","skeleton","fire_elemental"],
+      "vsBoss": false
+    },
+    {
+      "id": "frontstrong-backstrong-l50-BOSS",
+      "label": "front strong / back strong (14) BOSS",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss5",
+      "runXP": 2900,
+      "deck": [
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility","t3-attack-attack-attack","t3-agility-agility-attack",
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility"
+      ],
+      "vsEnemies": []
+    },
+    {
+      "id": "frontstrong-backjunk-l50-BOSS",
+      "label": "front strong / back junk (14) BOSS",
+      "archetype": "probe",
+      "class": "warrior",
+      "stage": "boss5",
+      "runXP": 2900,
+      "deck": [
+        "t3-agility-attack-counter","t3-agility-counter-counter","t2-attack-attack","t3-attack-counter-water","t3-agility-attack-attack","t3-agility-agility-agility","t3-attack-attack-attack","t3-agility-agility-attack",
+        "t1-counter","t2-counter-counter","t1-counter","t2-counter-counter","t1-counter","t2-counter-counter"
+      ],
+      "vsEnemies": []
+    }
+  ]
+}

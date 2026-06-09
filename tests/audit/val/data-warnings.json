@@ -1,0 +1,9 @@
+{
+  "phantomEnemies_referencedButMissing": [
+    "slime",
+    "red_slime",
+    "earth_dragon"
+  ],
+  "unreachableNormals_inRosterButNoTerrain": [],
+  "note": "phantom enemies are referenced by terrain-enemies.json (green_field etc.) but absent from enemies.json — would crash spawn if that terrain is placed."
+}

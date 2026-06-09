@@ -1,0 +1,34 @@
+{
+  "decks": [
+    {
+      "id": "probe-trulyweak-boss7",
+      "label": "TRULY WEAK floor (low-OPS utility, minimal dmg)",
+      "archetype": "trulyweak",
+      "class": "warrior",
+      "stage": "boss7",
+      "quality": "random",
+      "deck": ["t1-water", "t1-earth", "t1-air", "t1-defense", "t1-counter", "t1-fire", "t1-water"],
+      "vsBoss": true
+    },
+    {
+      "id": "probe-random-boss7",
+      "label": "ACTUAL random boss7 warrior",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss7",
+      "quality": "random",
+      "deck": ["t3-counter-defense-fire","t2-counter-fire","t3-agility-agility-earth","t3-counter-earth-fire","t3-air-defense-fire","t3-agility-attack-water","t3-agility-counter-counter","t1-air","t3-air-attack-fire","t3-attack-attack-fire","t3-agility-agility-fire","t3-attack-attack-defense","t3-attack-counter-water","t2-defense-fire"],
+      "vsBoss": true
+    },
+    {
+      "id": "probe-opt-boss7",
+      "label": "ACTUAL optimized boss7 warrior",
+      "archetype": "pure physical (attack/agility/counter direct damage)",
+      "class": "warrior",
+      "stage": "boss7",
+      "quality": "optimized",
+      "deck": ["t1-agility","t1-attack","t3-attack-attack-counter","t2-agility-attack","t2-attack-counter","t3-agility-agility-attack","t3-attack-counter-counter","t3-attack-defense-earth","t3-attack-counter-earth","t3-attack-earth-earth","t3-agility-attack-attack","t3-attack-earth-fire","t3-agility-agility-agility","t2-agility-agility","t1-agility"],
+      "vsBoss": true
+    }
+  ]
+}

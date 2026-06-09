@@ -1,5 +1,5 @@
 {
-  "percentPerBossKill": 0.10,
+  "percentPerBossKill": 0.15,
   "bossMultiplier": 1.0,
   "basicTileCombatChance": 0.18,
   "eliteChance": 0.15,

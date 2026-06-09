@@ -1,0 +1,16 @@
+{
+  "decks": [
+    { "id": "rv-burn-O", "label": "optimized burn", "archetype": "burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-fire","t2-fire-fire","t3-agility-agility-fire","t3-air-fire-fire","t3-attack-fire-fire","t2-agility-fire","t1-fire","t2-fire-fire"] },
+    { "id": "rv-burn-N", "label": "naive burn", "archetype": "burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t2-attack-fire","t2-counter-fire","t1-water","t3-agility-attack-fire","t3-attack-earth-fire","t1-fire","t2-agility-fire","t1-air"] },
+    { "id": "rv-poison-O", "label": "optimized pure poison", "archetype": "poison", "class": "mage", "stage": "boss1",
+      "deck": ["t2-earth-water","t3-agility-air-water","t3-agility-agility-water","t3-agility-water-water","t3-earth-earth-water","t3-air-fire-water","t3-attack-water-water","t3-agility-counter-water","t3-agility-fire-water","t3-agility-earth-water"] },
+    { "id": "rv-poisonburn-O", "label": "optimized poison-burn-hybrid", "archetype": "poison-burn", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t2-earth-water","t3-agility-counter-water","t3-earth-earth-water","t3-air-fire-fire","t3-agility-fire-fire","t3-counter-fire-water","t2-fire-fire"] },
+    { "id": "rv-control-O", "label": "optimized slow-stun-control", "archetype": "control", "class": "mage", "stage": "boss1",
+      "deck": ["t1-earth","t3-air-counter-fire","t3-agility-air-air","t3-air-attack-counter","t3-agility-air-counter","t3-air-air-fire","t2-earth-earth","t2-water-water","t1-earth","t3-air-earth-fire"] },
+    { "id": "rv-detcontrol-O", "label": "optimized detonator-control", "archetype": "detonator-control", "class": "mage", "stage": "boss1",
+      "deck": ["t1-fire","t2-agility-fire","t1-earth","t3-agility-counter-water","t2-earth-water","t3-earth-earth-water","t3-air-earth-water","t3-agility-water-water","t3-air-fire-fire","t3-fire-fire-fire"] }
+  ]
+}

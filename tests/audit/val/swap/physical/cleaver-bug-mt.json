@@ -1,0 +1,45 @@
+{
+  "matchups": [
+    {
+      "id": "CLEAVER_current__vs__doom_knight",
+      "label": "Cleaver's Tax as-shipped (overload dead) vs doom_knight",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12
+    },
+    {
+      "id": "CLEAVER_overloadFixed__vs__doom_knight",
+      "label": "Cleaver's Tax with REAL 4s overload (text honored) vs doom_knight",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t3-attack-counter-counter", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12,
+      "cardOverrides": {
+        "t3-attack-counter-counter": {
+          "effects": [
+            { "type": "damage", "value": 12, "target": "enemy", "pierce_armor": true, "scale": { "stat": "str", "per": 2, "value": 1 } },
+            { "type": "damage", "value": 20, "target": "enemy", "pierce_armor": true, "scale": { "stat": "str", "per": 2, "value": 2 }, "condition": { "self_stack_atleast": { "stack": "rage", "value": 5 } } },
+            { "type": "cd_debt", "value": 4, "target": "self", "condition": { "self_stack_atleast": { "stack": "rage", "value": 5 } } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "CLEAVER_baseOnly_noRage__vs__doom_knight",
+      "label": "Cleaver's Tax base 12 only (no rage enabler) vs doom_knight",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t1-attack", "t1-defense", "t3-attack-counter-counter", "t1-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12
+    },
+    {
+      "id": "T1ATTACK_control__vs__doom_knight",
+      "label": "control: t1-attack in slot 2 vs doom_knight",
+      "archetype": "swaptest", "stage": "boss1", "class": "warrior",
+      "deck": ["t2-attack-attack", "t1-defense", "t1-attack", "t2-attack-attack", "t1-agility", "t1-defense", "t1-attack"],
+      "runXP": 560, "relics": [], "isBoss": true,
+      "enemy": "doom_knight", "loopMultiplier": 1, "loopCount": 10, "repeats": 12
+    }
+  ]
+}

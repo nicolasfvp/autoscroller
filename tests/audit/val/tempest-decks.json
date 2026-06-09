@@ -1,0 +1,30 @@
+{
+  "decks": [
+    {
+      "id": "tempest-full-current",
+      "label": "Air deck w/ Tempest current",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t2-air-air","t2-agility-air","t1-air","t2-air-fire","t1-fire"]
+    },
+    {
+      "id": "tempest-full-cd16",
+      "label": "Air deck w/ Tempest cd1.6 + 1m",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t2-air-air","t2-agility-air","t1-air","t2-air-fire","t1-fire"],
+      "cardOverrides": { "t3-air-air-air": { "cooldown": 1.6, "cost": {"mana": 1} } }
+    },
+    {
+      "id": "tempest-full-cd16only",
+      "label": "Air deck w/ Tempest cd1.6 (keep 2m)",
+      "archetype": "pure-damage",
+      "class": "mage",
+      "stage": "late",
+      "deck": ["t3-air-air-air","t1-air","t2-air-air","t2-agility-air","t1-air","t2-air-fire","t1-fire"],
+      "cardOverrides": { "t3-air-air-air": { "cooldown": 1.6 } }
+    }
+  ]
+}

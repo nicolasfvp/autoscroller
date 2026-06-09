@@ -1,0 +1,85 @@
+{
+  "decks": [
+    {
+      "id": "tsc_base_tempest",
+      "label": "slow-warrior baseline (Tempest Pike T3 in det slot)",
+      "archetype": "slow",
+      "class": "warrior",
+      "stage": "loop15",
+      "runXP": 720,
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-air-attack",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "vsEnemies": [
+        "iron_golem"
+      ],
+      "vsBoss": false
+    },
+    {
+      "id": "tsc_cur",
+      "label": "slow-warrior Thunderstrike Catalyst CURRENT (6 int per slow, cd2.0)",
+      "archetype": "slow",
+      "class": "warrior",
+      "stage": "loop15",
+      "runXP": 720,
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-attack-counter",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "vsEnemies": [
+        "iron_golem"
+      ],
+      "vsBoss": false
+    },
+    {
+      "id": "tsc_buff",
+      "label": "slow-warrior Thunderstrike Catalyst BUFF (6 str per slow, cd1.6)",
+      "archetype": "slow",
+      "class": "warrior",
+      "stage": "loop15",
+      "runXP": 720,
+      "deck": [
+        "t3-air-counter-fire",
+        "t3-air-attack-counter",
+        "t2-agility-water",
+        "t1-attack",
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t1-agility"
+      ],
+      "vsEnemies": [
+        "iron_golem"
+      ],
+      "vsBoss": false,
+      "cardOverrides": {
+        "t3-air-attack-counter": {
+          "cooldown": 1.6,
+          "effectsPatch": [
+            {},
+            {
+              "scale": {
+                "stat": "str",
+                "per": 2,
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

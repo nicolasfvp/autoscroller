@@ -1,0 +1,234 @@
+{
+  "matchups": [
+    {
+      "id": "pd_base_jab__vs__corpse_eater",
+      "label": "base",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 8
+    },
+    {
+      "id": "pd_storm_cur__vs__corpse_eater",
+      "label": "cur",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 8
+    },
+    {
+      "id": "pd_storm_buff8__vs__corpse_eater",
+      "label": "buff8",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 8,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {
+              "value": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_storm_haste7__vs__corpse_eater",
+      "label": "haste7",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 350,
+      "enemy": "corpse_eater",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "loopCount": 8,
+      "repeats": 8,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {},
+            {
+              "ttl_ms": 7000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_base_jab__vs__doom_knight",
+      "label": "base",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t1-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8
+    },
+    {
+      "id": "pd_storm_cur__vs__doom_knight",
+      "label": "cur",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8
+    },
+    {
+      "id": "pd_storm_buff8__vs__doom_knight",
+      "label": "buff8",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {
+              "value": 8
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pd_storm_haste7__vs__doom_knight",
+      "label": "haste7",
+      "archetype": "pure_damage",
+      "stage": "x",
+      "class": "warrior",
+      "deck": [
+        "t2-air-attack",
+        "t1-agility",
+        "t2-attack-attack",
+        "t2-agility-attack",
+        "t2-attack-counter",
+        "t1-counter",
+        "t2-agility-agility",
+        "t3-agility-attack-attack"
+      ],
+      "relics": [],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "loopCount": 10,
+      "repeats": 8,
+      "cardOverrides": {
+        "t2-air-attack": {
+          "effectsPatch": [
+            {},
+            {
+              "ttl_ms": 7000
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

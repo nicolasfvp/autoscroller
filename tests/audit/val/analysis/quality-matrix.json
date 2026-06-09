@@ -1,0 +1,212 @@
+{
+  "1-10": {
+    "random": {
+      "nDecks": 44,
+      "nNormal": 248,
+      "nBoss": 14,
+      "normalWinRate": 0.988,
+      "normalCushion": 0.896,
+      "bossWinRate": 0.929,
+      "bossCushion": 0.684,
+      "pctNoCycle": 0.103
+    },
+    "naive": {
+      "nDecks": 19,
+      "nNormal": 90,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.888,
+      "bossWinRate": 1,
+      "bossCushion": 0.609,
+      "pctNoCycle": 0.369
+    },
+    "optimized": {
+      "nDecks": 19,
+      "nNormal": 90,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.857,
+      "bossWinRate": 1,
+      "bossCushion": 0.616,
+      "pctNoCycle": 0.621
+    },
+    "mixed": {
+      "nDecks": 69,
+      "nNormal": 344,
+      "nBoss": 38,
+      "normalWinRate": 0.994,
+      "normalCushion": 0.883,
+      "bossWinRate": 1,
+      "bossCushion": 0.614,
+      "pctNoCycle": 0.346
+    }
+  },
+  "11-20": {
+    "random": {
+      "nDecks": 18,
+      "nNormal": 70,
+      "nBoss": 10,
+      "normalWinRate": 1,
+      "normalCushion": 0.913,
+      "bossWinRate": 0.6,
+      "bossCushion": 0.823,
+      "pctNoCycle": 0.388
+    },
+    "naive": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.915,
+      "bossWinRate": 0.769,
+      "bossCushion": 0.763,
+      "pctNoCycle": 0.615
+    },
+    "optimized": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.878,
+      "bossWinRate": 0.923,
+      "bossCushion": 0.539,
+      "pctNoCycle": 0.865
+    },
+    "mixed": {
+      "nDecks": 50,
+      "nNormal": 204,
+      "nBoss": 23,
+      "normalWinRate": 1,
+      "normalCushion": 0.897,
+      "bossWinRate": 0.87,
+      "bossCushion": 0.637,
+      "pctNoCycle": 0.762
+    }
+  },
+  "21-40": {
+    "random": {
+      "nDecks": 28,
+      "nNormal": 84,
+      "nBoss": 20,
+      "normalWinRate": 1,
+      "normalCushion": 0.873,
+      "bossWinRate": 0.85,
+      "bossCushion": 0.465,
+      "pctNoCycle": 0.577
+    },
+    "naive": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.892,
+      "bossWinRate": 0.923,
+      "bossCushion": 0.527,
+      "pctNoCycle": 0.538
+    },
+    "optimized": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.853,
+      "bossWinRate": 0.923,
+      "bossCushion": 0.494,
+      "pctNoCycle": 0.865
+    },
+    "mixed": {
+      "nDecks": 37,
+      "nNormal": 111,
+      "nBoss": 37,
+      "normalWinRate": 1,
+      "normalCushion": 0.882,
+      "bossWinRate": 0.892,
+      "bossCushion": 0.654,
+      "pctNoCycle": 0.757
+    }
+  },
+  "41-60": {
+    "random": {
+      "nDecks": 20,
+      "nNormal": 60,
+      "nBoss": 20,
+      "normalWinRate": 1,
+      "normalCushion": 0.842,
+      "bossWinRate": 0.65,
+      "bossCushion": 0.532,
+      "pctNoCycle": 0.563
+    },
+    "naive": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.91,
+      "bossWinRate": 0.769,
+      "bossCushion": 0.69,
+      "pctNoCycle": 0.577
+    },
+    "optimized": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.878,
+      "bossWinRate": 0.923,
+      "bossCushion": 0.622,
+      "pctNoCycle": 0.865
+    },
+    "mixed": {
+      "nDecks": 18,
+      "nNormal": 54,
+      "nBoss": 18,
+      "normalWinRate": 1,
+      "normalCushion": 0.862,
+      "bossWinRate": 0.833,
+      "bossCushion": 0.627,
+      "pctNoCycle": 0.806
+    }
+  },
+  "61-70": {
+    "random": {
+      "nDecks": 10,
+      "nNormal": 30,
+      "nBoss": 10,
+      "normalWinRate": 1,
+      "normalCushion": 0.878,
+      "bossWinRate": 0.3,
+      "bossCushion": 0.219,
+      "pctNoCycle": 0.5
+    },
+    "naive": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.873,
+      "bossWinRate": 0.615,
+      "bossCushion": 0.46,
+      "pctNoCycle": 0.615
+    },
+    "optimized": {
+      "nDecks": 13,
+      "nNormal": 39,
+      "nBoss": 13,
+      "normalWinRate": 1,
+      "normalCushion": 0.829,
+      "bossWinRate": 0.615,
+      "bossCushion": 0.441,
+      "pctNoCycle": 0.846
+    },
+    "mixed": {
+      "nDecks": 7,
+      "nNormal": 21,
+      "nBoss": 7,
+      "normalWinRate": 1,
+      "normalCushion": 0.855,
+      "bossWinRate": 0.857,
+      "bossCushion": 0.482,
+      "pctNoCycle": 0.786
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "Acceptance: reworked consume-half detonators should now WIN where consume-all lost, without over-correcting. Bosses use the NEW baked-in stats (doom_knight dmg6, iron_golem affinity attack).",
+  "matchups": [
+    { "id": "poison-plain-vs-dk", "class": "mage", "stage": "boss1", "runXP": 520, "deck": ["t3-earth-earth-water","t2-earth-water","t3-agility-water-water","t3-air-fire-water","t2-water-water","t3-agility-air-water","t3-earth-fire-water","t1-water","t2-agility-water","t3-agility-earth-water","t2-fire-water"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6 },
+    { "id": "poison-drownlance-vs-dk", "class": "mage", "stage": "boss1", "runXP": 520, "deck": ["t3-earth-earth-water","t3-attack-water-water","t2-earth-water","t3-agility-water-water","t3-air-fire-water","t2-water-water","t3-agility-air-water","t3-earth-fire-water","t1-water","t2-agility-water","t3-agility-earth-water"], "enemy": "doom_knight", "isBoss": true, "loopMultiplier": 1.0, "repeats": 6 },
+    { "id": "poison-plain-vs-iron", "class": "mage", "stage": "late", "runXP": 720, "deck": ["t3-earth-earth-water","t2-earth-water","t3-agility-water-water","t3-air-fire-water","t2-water-water","t3-agility-air-water","t3-earth-fire-water","t1-water","t2-agility-water","t3-agility-earth-water","t2-fire-water"], "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05, "repeats": 6 },
+    { "id": "poison-drownlance-vs-iron", "class": "mage", "stage": "late", "runXP": 720, "deck": ["t3-earth-earth-water","t3-attack-water-water","t2-earth-water","t3-agility-water-water","t3-air-fire-water","t2-water-water","t3-agility-air-water","t3-earth-fire-water","t1-water","t2-agility-water","t3-agility-earth-water"], "enemy": "iron_golem", "isBoss": true, "loopMultiplier": 1.05, "repeats": 6 }
+  ]
+}

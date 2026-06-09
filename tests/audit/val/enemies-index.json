@@ -1,0 +1,517 @@
+[
+  {
+    "id": "lost_lizard",
+    "name": "Lost Lizard",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 68,
+    "baseDefense": 0,
+    "damage": 2,
+    "pattern": "fixed",
+    "attackCooldown": 3500,
+    "affinity": "attack",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "basic"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "corpse_eater",
+    "name": "Corpse Eater",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 100,
+    "baseDefense": 2,
+    "damage": 8,
+    "pattern": "fixed",
+    "attackCooldown": 2032,
+    "affinity": "counter",
+    "behaviors": [],
+    "firstAppearLoop": 5,
+    "terrains": [
+      "graveyard"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "pocket_cat",
+    "name": "Pocket Cat",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 147,
+    "baseDefense": 1,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2215,
+    "affinity": "agility",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "graveyard"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "baby_dragon",
+    "name": "Baby Dragon",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 125,
+    "baseDefense": 1,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2255,
+    "affinity": "fire",
+    "behaviors": [],
+    "firstAppearLoop": 10,
+    "terrains": [
+      "desert"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "mutated_salamander",
+    "name": "Mutated Salamander",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 160,
+    "baseDefense": 0,
+    "damage": 8,
+    "pattern": "fixed",
+    "attackCooldown": 2194,
+    "affinity": "water",
+    "behaviors": [],
+    "firstAppearLoop": 5,
+    "terrains": [
+      "desert"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "ancient_tree",
+    "name": "Ancient Tree",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 101,
+    "baseDefense": 1,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2530,
+    "affinity": "earth",
+    "behaviors": [],
+    "firstAppearLoop": 10,
+    "terrains": [
+      "forest"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "giant_spider_2",
+    "name": "Giant Spider 2",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 108,
+    "baseDefense": 2,
+    "damage": 3,
+    "pattern": "fixed",
+    "attackCooldown": 2945,
+    "affinity": "water",
+    "behaviors": [],
+    "firstAppearLoop": 5,
+    "terrains": [
+      "forest"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "giant_spider",
+    "name": "Giant Spider",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 144,
+    "baseDefense": 0,
+    "damage": 3,
+    "pattern": "fixed",
+    "attackCooldown": 2071,
+    "affinity": "water",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "forest"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "mush",
+    "name": "Mush",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 122,
+    "baseDefense": 0,
+    "damage": 3,
+    "pattern": "fixed",
+    "attackCooldown": 2052,
+    "affinity": "earth",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "forest"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "forge_slime",
+    "name": "Forge Slime",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 131,
+    "baseDefense": 2,
+    "damage": 3,
+    "pattern": "fixed",
+    "attackCooldown": 2786,
+    "affinity": "fire",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "lava"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "lava_golen",
+    "name": "Lava Golem",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 149,
+    "baseDefense": 2,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2097,
+    "affinity": "fire",
+    "behaviors": [],
+    "firstAppearLoop": 5,
+    "terrains": [
+      "lava"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "depths_horror",
+    "name": "Depths Horror",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 95,
+    "baseDefense": 0,
+    "damage": 5,
+    "pattern": "fixed",
+    "attackCooldown": 2332,
+    "affinity": "air",
+    "behaviors": [],
+    "firstAppearLoop": 10,
+    "terrains": [
+      "swamp"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "toxic_gooze",
+    "name": "Toxic Gooze",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 100,
+    "baseDefense": 1,
+    "damage": 5,
+    "pattern": "fixed",
+    "attackCooldown": 2578,
+    "affinity": "water",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "swamp"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "venomous_kobra",
+    "name": "Venomous Kobra",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 140,
+    "baseDefense": 1,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2355,
+    "affinity": "air",
+    "behaviors": [],
+    "firstAppearLoop": 5,
+    "terrains": [
+      "swamp"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "doom_knight",
+    "name": "Doom Knight",
+    "type": "boss",
+    "bossType": "knight",
+    "baseHP": 380,
+    "baseDefense": 3,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2500,
+    "affinity": "counter",
+    "behaviors": [
+      {
+        "type": "enrage",
+        "hpThreshold": 0.5,
+        "attackSpeedMultiplier": 1.4
+      }
+    ],
+    "firstAppearLoop": 10,
+    "terrains": [],
+    "bossRotationIndex": 0
+  },
+  {
+    "id": "iron_golem",
+    "name": "Iron Golem",
+    "type": "boss",
+    "bossType": "tank",
+    "baseHP": 400,
+    "baseDefense": 4,
+    "damage": 10,
+    "pattern": "fixed",
+    "attackCooldown": 2500,
+    "affinity": "attack",
+    "behaviors": [
+      {
+        "type": "shield",
+        "interval": 8000,
+        "shieldAmount": 4
+      }
+    ],
+    "firstAppearLoop": 20,
+    "terrains": [],
+    "bossRotationIndex": 1
+  },
+  {
+    "id": "lizard_king",
+    "name": "Lizard King",
+    "type": "boss",
+    "bossType": "dragon",
+    "baseHP": 370,
+    "baseDefense": 3,
+    "damage": 10,
+    "pattern": "fixed",
+    "attackCooldown": 2500,
+    "affinity": "attack",
+    "behaviors": [
+      {
+        "type": "enrage",
+        "hpThreshold": 0.3,
+        "attackSpeedMultiplier": 1.5
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
+      }
+    ],
+    "firstAppearLoop": 30,
+    "terrains": [],
+    "bossRotationIndex": 2
+  },
+  {
+    "id": "skeleton",
+    "name": "Skeleton",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 117,
+    "baseDefense": 2,
+    "damage": 6,
+    "pattern": "fixed",
+    "attackCooldown": 2600,
+    "affinity": "attack",
+    "behaviors": [],
+    "firstAppearLoop": 10,
+    "terrains": [
+      "graveyard"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "vampire",
+    "name": "Vampire",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 96,
+    "baseDefense": 1,
+    "damage": 7,
+    "pattern": "fixed",
+    "attackCooldown": 2100,
+    "affinity": "agility",
+    "behaviors": [],
+    "firstAppearLoop": 7,
+    "terrains": [
+      "graveyard"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "werewolf",
+    "name": "Werewolf",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 135,
+    "baseDefense": 1,
+    "damage": 7,
+    "pattern": "fixed",
+    "attackCooldown": 2250,
+    "affinity": "agility",
+    "behaviors": [],
+    "firstAppearLoop": 15,
+    "terrains": [
+      "graveyard"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "scorpion",
+    "name": "Sand Scorpion",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 111,
+    "baseDefense": 1,
+    "damage": 5,
+    "pattern": "fixed",
+    "attackCooldown": 2400,
+    "affinity": "agility",
+    "behaviors": [],
+    "firstAppearLoop": 1,
+    "terrains": [
+      "desert"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "fire_elemental",
+    "name": "Fire Elemental",
+    "type": "normal",
+    "bossType": null,
+    "baseHP": 102,
+    "baseDefense": 0,
+    "damage": 8,
+    "pattern": "fixed",
+    "attackCooldown": 2150,
+    "affinity": "fire",
+    "behaviors": [],
+    "firstAppearLoop": 10,
+    "terrains": [
+      "lava"
+    ],
+    "bossRotationIndex": null
+  },
+  {
+    "id": "bog_witch",
+    "name": "Bog Witch",
+    "type": "boss",
+    "bossType": "witch",
+    "baseHP": 410,
+    "baseDefense": 2,
+    "damage": 7,
+    "pattern": "fixed",
+    "attackCooldown": 2300,
+    "affinity": "water",
+    "behaviors": [
+      {
+        "type": "drain",
+        "healPercent": 15
+      },
+      {
+        "type": "multi_hit",
+        "hitCount": 2,
+        "damageMultiplier": 0.6
+      }
+    ],
+    "firstAppearLoop": 40,
+    "terrains": [],
+    "bossRotationIndex": 3
+  },
+  {
+    "id": "desert_golem",
+    "name": "Desert Golem",
+    "type": "boss",
+    "bossType": "tank",
+    "baseHP": 450,
+    "baseDefense": 4,
+    "damage": 10,
+    "pattern": "fixed",
+    "attackCooldown": 2700,
+    "affinity": "earth",
+    "behaviors": [
+      {
+        "type": "shield",
+        "interval": 7000,
+        "shieldAmount": 10
+      }
+    ],
+    "firstAppearLoop": 50,
+    "terrains": [],
+    "bossRotationIndex": 4
+  },
+  {
+    "id": "infernal_dragon",
+    "name": "Infernal Dragon",
+    "type": "boss",
+    "bossType": "dragon",
+    "baseHP": 460,
+    "baseDefense": 3,
+    "damage": 9,
+    "pattern": "fixed",
+    "attackCooldown": 2200,
+    "affinity": "fire",
+    "behaviors": [
+      {
+        "type": "multi_hit",
+        "hitCount": 3,
+        "damageMultiplier": 0.5
+      },
+      {
+        "type": "enrage",
+        "hpThreshold": 0.4,
+        "attackSpeedMultiplier": 1.4
+      }
+    ],
+    "firstAppearLoop": 60,
+    "terrains": [],
+    "bossRotationIndex": 5
+  },
+  {
+    "id": "boss_iron_golem",
+    "name": "Ancient Iron Golem",
+    "type": "boss",
+    "bossType": "tank",
+    "baseHP": 470,
+    "baseDefense": 4,
+    "damage": 12,
+    "pattern": "fixed",
+    "attackCooldown": 2500,
+    "affinity": "defense",
+    "behaviors": [
+      {
+        "type": "shield",
+        "interval": 7000,
+        "shieldAmount": 12
+      },
+      {
+        "type": "enrage",
+        "hpThreshold": 0.35,
+        "attackSpeedMultiplier": 1.4
+      }
+    ],
+    "firstAppearLoop": 70,
+    "terrains": [],
+    "bossRotationIndex": 6
+  }
+]

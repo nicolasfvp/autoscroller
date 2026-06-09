@@ -1,0 +1,88 @@
+{
+  "matchups": [
+    {
+      "id": "CONTROL__vs__doom_knight",
+      "label": "CONTROL vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t1-water"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-water-water-water__vs__doom_knight",
+      "label": "CAND_t3-water-water-water vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t3-water-water-water"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t2-water-water__vs__doom_knight",
+      "label": "CAND_t2-water-water vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t2-water-water"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    },
+    {
+      "id": "CAND_t3-agility-water-water__vs__doom_knight",
+      "label": "CAND_t3-agility-water-water vs doom_knight",
+      "archetype": "swaptest",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t3-earth-fire-water",
+        "t1-fire",
+        "t1-water",
+        "t2-earth-water",
+        "t3-agility-water-water"
+      ],
+      "runXP": 560,
+      "relics": [],
+      "isBoss": true,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "loopCount": 10,
+      "repeats": 10
+    }
+  ]
+}

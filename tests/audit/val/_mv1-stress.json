@@ -1,0 +1,95 @@
+{
+  "matchups": [
+    {
+      "id": "mage-pure-burn-boss1-1__STRESS__doom_knight",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-earth-fire",
+        "t3-agility-fire-fire",
+        "t2-fire-fire",
+        "t3-attack-fire-fire"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "repeats": 20
+    },
+    {
+      "id": "mage-pure-burn-boss1-2__STRESS__doom_knight",
+      "archetype": "pure_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t1-fire",
+        "t2-fire-fire",
+        "t2-agility-fire",
+        "t1-air",
+        "t2-fire-fire",
+        "t3-agility-fire-fire",
+        "t2-agility-fire"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "repeats": 20
+    },
+    {
+      "id": "mage-poison-burn-boss1-2__STRESS__doom_knight",
+      "archetype": "poison_burn",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-fire",
+        "t2-agility-fire",
+        "t2-fire-fire",
+        "t1-fire",
+        "t2-fire-water",
+        "t3-air-fire-fire",
+        "t3-fire-fire-fire",
+        "t1-water",
+        "t1-air",
+        "t3-fire-fire-water"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "repeats": 20
+    },
+    {
+      "id": "mage-slow-stun-control-boss1-O__STRESS__doom_knight",
+      "archetype": "slow-stun-control",
+      "stage": "boss1",
+      "class": "mage",
+      "deck": [
+        "t1-earth",
+        "t3-air-counter-fire",
+        "t3-agility-air-air",
+        "t3-air-attack-counter",
+        "t3-agility-air-counter",
+        "t3-air-air-fire",
+        "t2-earth-earth",
+        "t2-water-water",
+        "t1-earth",
+        "t3-air-earth-fire"
+      ],
+      "runXP": 560,
+      "enemy": "doom_knight",
+      "loopMultiplier": 1,
+      "isBoss": true,
+      "repeats": 20
+    }
+  ]
+}

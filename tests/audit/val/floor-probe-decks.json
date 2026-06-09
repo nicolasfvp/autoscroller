@@ -1,0 +1,52 @@
+{
+  "decks": [
+    {
+      "id": "TRUEFLOOR-warrior-boss3",
+      "label": "TRUE FLOOR warrior (boss3)",
+      "archetype": "true-floor",
+      "class": "warrior",
+      "stage": "boss3",
+      "quality": "floor",
+      "deck": [
+        "t1-counter",
+        "t2-counter-counter",
+        "t3-air-counter-counter",
+        "t3-agility-earth-earth",
+        "t3-counter-water-water",
+        "t2-counter-water",
+        "t2-agility-water",
+        "t3-air-air-earth",
+        "t2-defense-fire",
+        "t2-air-defense",
+        "t3-agility-defense-fire",
+        "t3-agility-air-defense",
+        "t1-counter"
+      ],
+      "notes": "Truly clueless: lowest-OPS castable cards, all defense/utility, exactly ZERO real finisher. What 'random' SHOULD look like as a floor."
+    },
+    {
+      "id": "GENRAND-warrior-boss3",
+      "label": "gen-random style warrior (boss3) - copy of rand-loop25-warrior-1",
+      "archetype": "random",
+      "class": "warrior",
+      "stage": "boss3",
+      "quality": "random",
+      "deck": [
+        "t3-attack-counter-defense","t3-air-attack-defense","t3-counter-defense-fire","t3-agility-counter-fire","t3-agility-attack-earth","t3-attack-fire-fire","t2-counter-counter","t3-counter-counter-defense","t3-counter-water-water","t3-attack-water-water","t3-counter-defense-defense","t2-counter-defense","t3-agility-attack-earth"
+      ],
+      "notes": "Actual gen-random deck reused at boss3 to compare on the same enemy."
+    },
+    {
+      "id": "OPT-warrior-boss3",
+      "label": "optimized warrior (boss3) - copy of war-pure-physical-boss3-O",
+      "archetype": "optimized",
+      "class": "warrior",
+      "stage": "boss3",
+      "quality": "optimized",
+      "deck": [
+        "t1-agility","t1-attack","t3-attack-attack-counter","t2-agility-attack","t2-attack-counter","t3-agility-agility-attack","t3-attack-counter-counter","t3-attack-earth-earth","t3-attack-earth-fire","t3-attack-counter-earth","t3-agility-attack-attack","t3-agility-agility-agility","t2-agility-agility"
+      ],
+      "notes": "Real optimized deck for the same boss3 lizard_king fight."
+    }
+  ]
+}

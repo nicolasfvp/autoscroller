@@ -401,7 +401,7 @@
         "mana": 1
       },
       "costStr": "1m",
-      "cooldown": 1.4,
+      "cooldown": 1.2,
       "exhaust": false,
       "tags": [
         "burn"
@@ -412,7 +412,7 @@
       "baseOPS": 8.57,
       "drainPerSec": 0.71,
       "sustainable": true,
-      "description": "Apply 3[burn]."
+      "description": "Apply 3[burn]. Deal 2."
     },
     {
       "id": "t1-water",
@@ -481,7 +481,7 @@
         "mana": 1
       },
       "costStr": "1m",
-      "cooldown": 2,
+      "cooldown": 1.4,
       "exhaust": false,
       "tags": [
         "slow"
@@ -659,7 +659,7 @@
         "mana": 1
       },
       "costStr": "1m",
-      "cooldown": 2,
+      "cooldown": 1.4,
       "exhaust": false,
       "tags": [
         "stun",
@@ -1435,7 +1435,7 @@
       "baseOPS": 3.08,
       "drainPerSec": 0.77,
       "sustainable": false,
-      "description": "Deal 4([int]). If enemy has [burn]: +4 damage. Heal 4. Gain 1[stam]."
+      "description": "Deal 6([int]). If enemy has [burn]: +4 damage. Heal 4. Gain 1[stam]."
     },
     {
       "id": "t2-air-fire",
@@ -1642,7 +1642,7 @@
         "stamina": 2
       },
       "costStr": "2s",
-      "cooldown": 2.4,
+      "cooldown": 2,
       "exhaust": false,
       "tags": [
         "armor",
@@ -1654,7 +1654,7 @@
       "baseOPS": 7.33,
       "drainPerSec": 0.83,
       "sustainable": false,
-      "description": "Gain 22[armor]([vit]). Brace: Deal 18 Pierce."
+      "description": "Gain 22[armor]([vit]). Deal 6 Pierce, +1 damage per 4[armor] you have."
     },
     {
       "id": "t3-agility-agility-agility",
@@ -1703,7 +1703,7 @@
         "stamina": 2
       },
       "costStr": "2s",
-      "cooldown": 2.4,
+      "cooldown": 1.8,
       "exhaust": false,
       "tags": [
         "damage",
@@ -1715,7 +1715,7 @@
       "baseOPS": 0,
       "drainPerSec": 0.83,
       "sustainable": false,
-      "description": "If you have 8 or more [rage]: Deal 24([str]) Pierce and apply 4[bleed]([dex])."
+      "description": "If you have 5 or more [rage]: Deal 24([str]) Pierce and apply 4[bleed]([dex])."
     },
     {
       "id": "t3-attack-attack-defense",
@@ -2855,11 +2855,10 @@
         "spi"
       ],
       "cost": {
-        "stamina": 2,
-        "mana": 2
+        "stamina": 2
       },
-      "costStr": "2s+2m",
-      "cooldown": 2.4,
+      "costStr": "2s",
+      "cooldown": 2,
       "exhaust": true,
       "tags": [
         "poison",
@@ -2875,7 +2874,7 @@
       "baseOPS": 0,
       "drainPerSec": 1.67,
       "sustainable": false,
-      "description": "Exhaust. Consume all [poison]. Apply 2[poison]([int]). Deal 4 Pierce per [poison] consumed to all enemies."
+      "description": "Exhaust. Consume half [poison]. Apply 2[poison]([int]). Deal 6 Pierce per [poison] consumed to all enemies."
     },
     {
       "id": "t3-attack-attack-fire",
@@ -3058,7 +3057,7 @@
         "mana": 1
       },
       "costStr": "1s+1m",
-      "cooldown": 2.4,
+      "cooldown": 1.6,
       "exhaust": false,
       "tags": [
         "armor",
@@ -3070,7 +3069,7 @@
       "baseOPS": 3.33,
       "drainPerSec": 0.83,
       "sustainable": false,
-      "description": "Gain 10[armor]([vit]). For 12 seconds, every 2 seconds, apply 1[poison]([int])."
+      "description": "Gain 10[armor]([vit]). For 12 seconds, every 2 seconds, apply 2[poison]([int])."
     },
     {
       "id": "t3-air-defense-defense",
@@ -3120,7 +3119,7 @@
         "stamina": 1
       },
       "costStr": "1s",
-      "cooldown": 2.4,
+      "cooldown": 1.6,
       "exhaust": false,
       "tags": [
         "armor",
@@ -3509,7 +3508,7 @@
         "stamina": 2
       },
       "costStr": "2s",
-      "cooldown": 2.4,
+      "cooldown": 1.8,
       "exhaust": false,
       "tags": [
         "damage"
@@ -3520,7 +3519,7 @@
       "baseOPS": 5.83,
       "drainPerSec": 0.83,
       "sustainable": false,
-      "description": "Deal 14([str]). If [armor] is at least 15: Deal 8 Pierce."
+      "description": "Deal 18([str]) Pierce. If [armor] is at least 10: deal 8 more Pierce."
     },
     {
       "id": "t3-agility-attack-fire",
@@ -3738,7 +3737,7 @@
         "stamina": 2
       },
       "costStr": "2s",
-      "cooldown": 2.4,
+      "cooldown": 2,
       "exhaust": false,
       "tags": [
         "damage",
@@ -4135,7 +4134,7 @@
         "mana": 1
       },
       "costStr": "1s+1m",
-      "cooldown": 1.8,
+      "cooldown": 1.6,
       "exhaust": false,
       "tags": [
         "slow",
@@ -4237,7 +4236,7 @@
         "mana": 1
       },
       "costStr": "2s+1m",
-      "cooldown": 2.4,
+      "cooldown": 1.8,
       "exhaust": false,
       "tags": [
         "damage",
@@ -4252,7 +4251,7 @@
       "baseOPS": 1.67,
       "drainPerSec": 1.25,
       "sustainable": false,
-      "description": "Deal 4 Pierce. Consume all [poison] and deal 3 Pierce per [poison] consumed."
+      "description": "Deal 6 Pierce. Consume half [poison] and deal 5 Pierce per [poison] consumed."
     },
     {
       "id": "t3-air-air-attack",

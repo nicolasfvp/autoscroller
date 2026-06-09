@@ -1,0 +1,329 @@
+{
+  "matchups": [
+    {
+      "id": "base__mutated_salamander",
+      "label": "BASELINE Reckless slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "cur__mutated_salamander",
+      "label": "CURRENT Razor cd2.0 slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "fix14__mutated_salamander",
+      "label": "FIX Razor cd1.4 slot0 vs mutated_salamander",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "mutated_salamander",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "base__venomous_kobra",
+      "label": "BASELINE Reckless slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "cur__venomous_kobra",
+      "label": "CURRENT Razor cd2.0 slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "fix14__venomous_kobra",
+      "label": "FIX Razor cd1.4 slot0 vs venomous_kobra",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "venomous_kobra",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "base__lava_golen",
+      "label": "BASELINE Reckless slot0 vs lava_golen",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "cur__lava_golen",
+      "label": "CURRENT Razor cd2.0 slot0 vs lava_golen",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "fix14__lava_golen",
+      "label": "FIX Razor cd1.4 slot0 vs lava_golen",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "lava_golen",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "base__skeleton",
+      "label": "BASELINE Reckless slot0 vs skeleton",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "cur__skeleton",
+      "label": "CURRENT Razor cd2.0 slot0 vs skeleton",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "fix14__skeleton",
+      "label": "FIX Razor cd1.4 slot0 vs skeleton",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "skeleton",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    },
+    {
+      "id": "base__werewolf",
+      "label": "BASELINE Reckless slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-attack-attack",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "cur__werewolf",
+      "label": "CURRENT Razor cd2.0 slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6
+    },
+    {
+      "id": "fix14__werewolf",
+      "label": "FIX Razor cd1.4 slot0 vs werewolf",
+      "class": "warrior",
+      "stage": "loop5",
+      "deck": [
+        "t2-counter-counter",
+        "t2-attack-counter",
+        "t2-agility-counter",
+        "t1-attack",
+        "t2-agility-attack",
+        "t1-agility",
+        "t2-attack-earth"
+      ],
+      "runXP": 350,
+      "enemy": "werewolf",
+      "loopMultiplier": 1,
+      "isBoss": false,
+      "repeats": 6,
+      "cardOverrides": {
+        "t2-counter-counter": {
+          "cooldown": 1.4
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "class": "mage",
+  "stage": "boss3",
+  "slot": 2,
+  "filler": "t1-fire",
+  "baseline": [
+    "t2-agility-fire",
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t1-fire",
+    "t2-attack-fire",
+    "t1-fire",
+    "t2-agility-fire"
+  ],
+  "candidates": [
+    "t3-fire-fire-fire",
+    "t3-fire-fire-water",
+    "t3-attack-fire-fire",
+    "t3-agility-fire-fire",
+    "t3-air-fire-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-agility-fire"
+  ],
+  "enemies": ["werewolf", "baby_dragon", "lizard_king"],
+  "repeats": 8
+}
