@@ -314,15 +314,15 @@ export class CombatTestScene extends Phaser.Scene {
       { label: 'CYCLE ENEMY', color: 0x1a1a1a, action: () => this._cycleEnemy() },
       { label: 'FX FIRE',    color: 0x2a1000, action: () => {
         if (this._fireSprite)  { this._fireSprite.destroy();  this._fireSprite  = null; this._showLabel('fx_fire OFF'); }
-        else { this._fireSprite  = this.effects.statusEffect(HERO_X, HERO_Y + 150, 'fx_fire',  180) ?? null; this._showLabel('fx_fire ON'); }
+        else { this._fireSprite  = this.effects.statusEffect(182.2, 499.1, 'fx_fire',  219) ?? null; this._showLabel('fx_fire ON'); }
       }},
       { label: 'FX BLEED',   color: 0x2a1000, action: () => {
         if (this._bleedSprite) { this._bleedSprite.destroy(); this._bleedSprite = null; this._showLabel('fx_bleed OFF'); }
-        else { this._bleedSprite = this.effects.statusEffect(HERO_X, HERO_Y + 150, 'fx_bleed', 180) ?? null; this._showLabel('fx_bleed ON'); }
+        else { this._bleedSprite = this.effects.statusEffect(188.8, 464.9, 'fx_bleed', 115) ?? null; this._showLabel('fx_bleed ON'); }
       }},
       { label: 'FX STUN',    color: 0x2a1000, action: () => {
         if (this._stunSprite)  { this._stunSprite.destroy();  this._stunSprite  = null; this._showLabel('fx_stun OFF'); }
-        else { this._stunSprite  = this.effects.statusEffect(HERO_X, HERO_Y - 120, 'fx_stun',  160) ?? null; this._showLabel('fx_stun ON'); }
+        else { this._stunSprite  = this.effects.statusEffect(217.1, 300.2, 'fx_stun',   67) ?? null; this._showLabel('fx_stun ON'); }
       }},
       { label: 'FX HEAL',    color: 0x0a2a0a, action: () => {
         this._auraSprite?.destroy(); this._auraSprite = null;

@@ -83,6 +83,15 @@ export class CombatScene extends Scene {
   private enemyIdleTimer: Phaser.Time.TimerEvent | null = null;
   private initData!: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] };
 
+  // Status effect sprites — herói e inimigo separados
+  private _fxHeroFire:   Phaser.GameObjects.Sprite | null = null;
+  private _fxHeroBleed:  Phaser.GameObjects.Sprite | null = null;
+  private _fxHeroStun:   Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyFire:  Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyBleed: Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyStun:  Phaser.GameObjects.Sprite | null = null;
+  private _fxEnemyPoison: Phaser.GameObjects.Sprite | null = null;
+
   // Enemy attack-card queue — right-side mirror of the hero's card queue
   private enemyCardQueue?: EnemyCardQueueDisplay;
 
@@ -611,11 +620,56 @@ export class CombatScene extends Scene {
       const inBackground = typeof document !== 'undefined' && document.hidden;
       const speed = inBackground ? 1 : this.gameSpeed;
       this.engine.tick(delta * speed);
-      if (this.hud) this.hud.update(this.engine.getState(), this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
+      const state = this.engine.getState();
+      if (this.hud) this.hud.update(state, this.engine.getHeroCooldownTimer(), this.engine.getHeroMaxCooldown(), speed, this.engine.getCardPlayCount(), this.engine.getEnemyCooldownTimer(), this.engine.getEnemyMaxCooldown());
+      this._updateStatusFX(state);
       // Feed live effective stats so card headline numbers track status changes
       // (buffs, auras, stat_gain) in real time.
       this.pushLiveStats();
     }
+  }
+
+  private _updateStatusFX(s: ReturnType<CombatEngine['getState']>): void {
+    if (!this.combatEffects) return;
+    const fx = this.combatEffects;
+
+    // --- HERÓI (x≈200) ---
+    if (s.heroBurnStacks > 0 && !this._fxHeroFire)
+      this._fxHeroFire  = fx.statusEffect(182.2, 499.1, 'fx_fire',  219);
+    else if (s.heroBurnStacks === 0 && this._fxHeroFire)
+      { this._fxHeroFire.destroy();  this._fxHeroFire  = null; }
+
+    if (s.heroBleedStacks > 0 && !this._fxHeroBleed)
+      this._fxHeroBleed = fx.statusEffect(188.8, 464.9, 'fx_bleed', 115);
+    else if (s.heroBleedStacks === 0 && this._fxHeroBleed)
+      { this._fxHeroBleed.destroy(); this._fxHeroBleed = null; }
+
+    const heroStunActive = (s.heroStunStacks ?? 0) > 0 || s.heroStunned;
+    if (heroStunActive && !this._fxHeroStun)
+      this._fxHeroStun = fx.statusEffect(217.1, 300.2, 'fx_stun', 67);
+    else if (!heroStunActive && this._fxHeroStun)
+      { this._fxHeroStun.destroy(); this._fxHeroStun = null; }
+
+    // --- INIMIGO (calibrado via debug-layout) ---
+    if (s.burnStacks > 0 && !this._fxEnemyFire)
+      this._fxEnemyFire  = fx.statusEffect(612.5, 636.3, 'fx_fire',  252);
+    else if (s.burnStacks === 0 && this._fxEnemyFire)
+      { this._fxEnemyFire.destroy();  this._fxEnemyFire  = null; }
+
+    if (s.bleedStacks > 0 && !this._fxEnemyBleed)
+      this._fxEnemyBleed = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+    else if (s.bleedStacks === 0 && this._fxEnemyBleed)
+      { this._fxEnemyBleed.destroy(); this._fxEnemyBleed = null; }
+
+    if (s.stunStacks > 0 && !this._fxEnemyStun)
+      this._fxEnemyStun  = fx.statusEffect(612.5, 300.2, 'fx_stun',   67);
+    else if (s.stunStacks === 0 && this._fxEnemyStun)
+      { this._fxEnemyStun.destroy();  this._fxEnemyStun  = null; }
+
+    if (s.poisonStacks > 0 && !this._fxEnemyPoison)
+      this._fxEnemyPoison = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+    else if (s.poisonStacks === 0 && this._fxEnemyPoison)
+      { this._fxEnemyPoison.destroy(); this._fxEnemyPoison = null; }
   }
 
   /** Push the hero's current effective stats to CardDynamic so every visible
@@ -642,6 +696,13 @@ export class CombatScene extends Scene {
     eventBus.off('combat:end', this.onCombatEnd);
     if (this.enemyIdleTimer) { this.enemyIdleTimer.destroy(); this.enemyIdleTimer = null; }
     if (this.enemyCardQueue) { this.enemyCardQueue.destroy(); this.enemyCardQueue = undefined; }
+    this._fxHeroFire?.destroy();    this._fxHeroFire    = null;
+    this._fxHeroBleed?.destroy();   this._fxHeroBleed   = null;
+    this._fxHeroStun?.destroy();    this._fxHeroStun    = null;
+    this._fxEnemyFire?.destroy();   this._fxEnemyFire   = null;
+    this._fxEnemyBleed?.destroy();  this._fxEnemyBleed  = null;
+    this._fxEnemyStun?.destroy();   this._fxEnemyStun   = null;
+    this._fxEnemyPoison?.destroy(); this._fxEnemyPoison = null;
     if (this.hud) this.hud.destroy();
     if (this.cardQueue) this.cardQueue.destroy();
     // Out of combat, card headline numbers fall back to the run's resolved stats.
