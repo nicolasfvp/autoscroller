@@ -149,6 +149,22 @@ A volcanic lava battle arena background in dark pixel art style. The foreground 
 
 ---
 
+## Regras Globais para Sprites de Personagem (Herói)
+
+Aplicar **obrigatoriamente** em todo prompt de geração de sprite do herói (qualquer animação):
+
+1. **Virado para a direita:** o personagem deve estar em three-quarter right view, corpo levemente voltado para a direita — como em um jogo de combat side-scrolling. Nunca de frente ou virado para a esquerda.
+   - Frase a incluir no prompt: `body facing slightly to the right (three-quarter right view, as in a side-scrolling combat game)`
+
+2. **Ground line consistente:** os pés devem sempre estar à mesma distância da borda inferior do canvas, com espaço vazio abaixo deles. Isso garante que todos os frames fiquem alinhados ao mesmo "chão" quando montados em spritesheet.
+   - Frase a incluir no prompt: `The feet must be positioned at a consistent fixed distance from the bottom edge of the canvas, with clear empty space below them`
+   - **Para animações estáticas (idle, channel, defend):** o corpo não se desloca verticalmente entre frames — apenas elementos secundários se movem (capa, cabelo, aura). Usar o script `scripts/_align_frame.py` para corrigir desvios após a geração.
+
+3. **Personagem completo sem cortes:** padding generoso em todos os lados — nenhuma parte do corpo, capa, espada ou pés deve ser cortada.
+   - Frase a incluir no prompt: `The character must be fully visible with generous padding on all sides — no part of the body, cape, or sword tip should be cropped`
+
+---
+
 ## Manual de Arte de Cartas: Guia de Prompt Engineering (Pixel Art Premium)
 
 Este documento estabelece as diretrizes para a geração de artes de cartas no estilo **Pixel Art Premium**, garantindo consistência visual, profundidade e alinhamento com a estética geral do jogo (inspirada em *Sea of Stars* e *Studio Ghibli*).

@@ -162,6 +162,57 @@ você usou API direta num workflow que exige sessão. A solução é trocar para
 
 ---
 
+## Alinhamento de Frames por Pixel de Referência (pé/bota)
+
+Quando frames gerados por IA apresentam deslocamento horizontal ou vertical entre si,
+usar o **primeiro pixel escuro da bota** (ou outro ponto anatômico fixo) como âncora
+para calcular e aplicar o offset de cada frame em relação ao frame 1.
+
+### Quando usar
+
+- Animações estáticas onde o corpo não se move (channel, defend, idle)
+- Qualquer spritesheet onde o personagem "dança" entre frames
+
+### Script
+
+```
+python scripts/_align_by_feet.py
+```
+
+O script detecta automaticamente o topo da bota em cada frame (primeiro pixel
+com RGB < 80 em todos os canais, varrendo de cima para baixo nas últimas 60
+linhas do personagem), calcula `dx` e `dy` em relação ao frame 1, e salva
+os frames corrigidos + um spritesheet montado.
+
+### Parâmetros do algoritmo
+
+- **`bg_threshold=240`** — pixels com R,G,B > 240 são considerados fundo branco
+- **`dark_threshold=80`** — pixels com R,G,B < 80 são considerados bota/contorno escuro
+- **Referência:** primeiro pixel escuro encontrado varrendo de cima para baixo e da esquerda para a direita nas últimas 60 linhas do personagem
+
+### Fluxo completo
+
+```
+Gerar 4 frames individualmente
+      ↓
+Salvar frames em public/ (com alinhamento aproximado pelo centro do bbox)
+      ↓
+python scripts/_align_by_feet.py  ← calcula offset pelo pé e salva frames corrigidos
+      ↓
+Montar spritesheet com os frames corrigidos (já feito pelo script)
+      ↓
+Aplicar good-rmv-background no spritesheet montado
+      ↓
+Substituir spritesheet em public/
+```
+
+### Nota
+
+Se o personagem usa sapatos claros ou o fundo não é branco puro, ajustar
+`bg_threshold` e `dark_threshold` conforme necessário.
+
+---
+
 ## Geração de Spritesheets — fluxo frame a frame
 
 Para gerar um spritesheet de 4 frames com consistência visual:
@@ -188,6 +239,7 @@ Aplicar rmv-background good no spritesheet final
 - **`reference_image` deve ser ≤ 512×512** — imagens grandes geram input tokens absurdos (1500+) e desperdiçam crédito. Se o frame gerado for maior, não usar como referência direta.
 - **Nunca gerar múltiplas variações sem aprovação** — gerar um frame, mostrar, aguardar "continue" ou feedback antes do próximo.
 - **CRÍTICO: Ajustar dimensões do workflow ANTES de gerar** — sempre que gerar um sprite baseado numa imagem de referência, verificar as dimensões da imagem de entrada e **alterar `model.custom_width` e `model.custom_height` no workflow `image-reference-to-image.json`** para que a saída tenha as mesmas dimensões. Isso evita upscaling/downscaling indesejado e garante consistência entre frames.
+- **CRÍTICO: NUNCA incluir "fills the canvas", "fills the entire image", "generous padding" ou qualquer instrução que altere o tamanho/posição do personagem no canvas.** O personagem deve ocupar exatamente o mesmo espaço que na imagem de referência — mesma distância dos pés à borda inferior, mesmo padding lateral, mesma proporção. A pose muda, o enquadramento não.
 
 ### Montar o spritesheet com PowerShell
 

@@ -39,7 +39,10 @@ export class Preloader extends Scene {
     this.load.image('timer_panel', 'assets/ui/timer/timer-panel.png');
     this.load.image('hero_idle2', 'assets/characters/hero/idle/idle_2.png');
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 451, frameHeight: 553 });
+    this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 532, frameHeight: 568 });
+    this.load.spritesheet('hero_channel', 'assets/characters/hero/cast_debuff/cast_debuff_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_battle_stance', 'assets/characters/hero/battle_stance/battle_stance_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_defend', 'assets/characters/hero/defend/defend_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
     this.load.spritesheet('warrior_select', 'assets/characters/hero/selection/spritesheet.png', { frameWidth: 500, frameHeight: 437 });
@@ -188,8 +191,12 @@ export class Preloader extends Scene {
     this.load.image('fog', 'assets/ui/effects/fog.png');
 
     // Combat hit effects — 4-frame spritesheets
-    const FX_W = 444; const FX_H = 887;
+    const FX_W = 443; const FX_H = 887;
     this.load.spritesheet('fx_slash', 'assets/effects/combat/fx_slash.png', { frameWidth: FX_W, frameHeight: FX_H });
+    this.load.spritesheet('fx_shield_fade', 'assets/effects/combat/fx_shield_fade.png', { frameWidth: 1024, frameHeight: 1024 });
+    this.load.spritesheet('fx_aura_heal',   'assets/effects/combat/fx_aura_heal.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
+    this.load.spritesheet('fx_aura_buff',   'assets/effects/combat/fx_aura_buff.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
+    this.load.spritesheet('fx_leaf_fall',   'assets/effects/combat/fx_leaf_fall.png',   { frameWidth: 512, frameHeight: 512, endFrame: 5 });
     this.load.spritesheet('fx_stomp', 'assets/effects/combat/fx_stomp.png', { frameWidth: 1024, frameHeight: 1024 });
     this.load.spritesheet('fx_bite',  'assets/effects/combat/fx_bite.png',  { frameWidth: 1024, frameHeight: 1024 });
     this.load.spritesheet('fx_fire',  'assets/effects/combat/fx_fire.png',  { frameWidth: 1024, frameHeight: 1024 });

@@ -109,7 +109,7 @@ export class CombatScene extends Scene {
       const isFireball = data.cardId.toLowerCase().includes('fireball');
       const sp = getSpritePrefix(getRun().hero.className ?? 'warrior');
       const heroAttackKey = `${sp}_attack`;
-      const heroIdleKey = `${sp}_idle`;
+      const heroIdleKey = this.textures.exists(`${sp}_battle_stance`) ? `${sp}_battle_stance` : `${sp}_idle`;
       if (this.anims.exists(heroAttackKey)) {
         this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
         this.heroSprite.once('animationcomplete', () => { if (this.heroSprite && this.anims.exists(heroIdleKey)) this.heroSprite.play(heroIdleKey); });
@@ -360,13 +360,25 @@ export class CombatScene extends Scene {
       this.pushLiveStats();
 
       const sp = getSpritePrefix(run.hero.className ?? 'warrior');
-      const heroIdleKey = `${sp}_idle`;
+      const heroIdleKey = this.textures.exists(`${sp}_battle_stance`) ? `${sp}_battle_stance` : `${sp}_idle`;
       const heroAttackKey = `${sp}_attack`;
 
       if (this.textures.exists(heroIdleKey)) {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
-        this.heroSprite = this.add.sprite(200, 330, heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? 0.495 : 0.7);
+
+        const IDLE_SCALE = 0.6034;
+        const ORIGIN_X = 200;
+        const ORIGIN_Y = 330;
+        const idleFrameH = this.textures.get(heroIdleKey).get(0).realHeight;
+
+        // Y compensado pela diferença de frameH: mantém pés no mesmo ponto em tela
+        const yForAnim = (key: string) => {
+          const fh = this.textures.exists(key) ? this.textures.get(key).get(0).realHeight : idleFrameH;
+          return ORIGIN_Y + (idleFrameH - fh) / 2 * IDLE_SCALE;
+        };
+
+        this.heroSprite = this.add.sprite(ORIGIN_X, yForAnim(heroIdleKey), heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? IDLE_SCALE : 0.7);
         if (this.textures.exists('hero_shadow')) {
           this.add.image(178, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
         } else {
@@ -384,7 +396,7 @@ export class CombatScene extends Scene {
             this.anims.create({
               key: idleAnimKey,
               frames: this.anims.generateFrameNumbers(heroIdleKey, { start: 0, end: idleFrameCount - 1 }),
-              frameRate: 8,
+              frameRate: 6,
               repeat: -1,
             });
           }
@@ -400,42 +412,73 @@ export class CombatScene extends Scene {
           });
         }
 
-        const playAttackAnimation = () => {
+        // Posição e scale por animação, ajustados via debug-layout
+        const ANIM_OVERRIDES: Record<string, { x: number; y: number; scale: number }> = {
+          hero_attack:  { x: 190.4, y: 301.6, scale: 0.6118 },
+          hero_channel: { x: 199.3, y: 318.8, scale: 0.6529 },
+        };
+
+        const ensureAnim = (key: string, frameRate: number, repeat = 0) => {
+          if (this.anims.exists(key) || !this.textures.exists(key)) return;
+          const count = this.textures.get(key).frameTotal - 1;
+          if (count > 0) this.anims.create({ key, frames: this.anims.generateFrameNumbers(key, { start: 0, end: count - 1 }), frameRate, repeat });
+        };
+
+        const returnToIdle = () => {
+          if (!this.heroSprite) return;
+          if (idleIsSpritesheet) {
+            this.heroSprite.setX(ORIGIN_X);
+            this.heroSprite.setY(ORIGIN_Y);
+            this.heroSprite.setScale(IDLE_SCALE);
+            this.heroSprite.play(`${heroIdleKey}_loop`);
+          } else {
+            this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
+          }
+        };
+
+        const LOOP_ANIMS = new Set([`${sp}_defend`]);
+        const playCardAnimation = (animKey: string, lunge: boolean) => {
           if (!this.heroSprite || isAttacking) return;
           isAttacking = true;
-          if (this.textures.exists(heroAttackKey) && !this.anims.exists(heroAttackKey)) {
-            const attackFrameCount = this.textures.get(heroAttackKey).frameTotal - 1;
-            if (attackFrameCount > 0) {
-              this.anims.create({
-                key: heroAttackKey,
-                frames: this.anims.generateFrameNumbers(heroAttackKey, { start: 0, end: attackFrameCount - 1 }),
-                frameRate: 12,
-                repeat: 0,
+          const shouldLoop = LOOP_ANIMS.has(animKey);
+          ensureAnim(animKey, 12, shouldLoop ? -1 : 0);
+          if (this.anims.exists(animKey)) {
+            const ov = ANIM_OVERRIDES[animKey];
+            this.heroSprite.setX(ov ? ov.x : ORIGIN_X);
+            this.heroSprite.setY(ov ? ov.y : yForAnim(animKey));
+            this.heroSprite.setScale(ov ? ov.scale : IDLE_SCALE);
+            this.heroSprite.play({ key: animKey, timeScale: this.gameSpeed });
+            if (shouldLoop) {
+              // Loop anims don't fire animationcomplete — stop after 1.5s
+              const loopDuration = Math.round(1500 / this.gameSpeed);
+              this.time.delayedCall(loopDuration, () => {
+                isAttacking = false;
+                if (!this.heroSprite) return;
+                this.heroSprite.stop();
+                returnToIdle();
+              });
+            } else {
+              this.heroSprite.once('animationcomplete', () => {
+                isAttacking = false;
+                if (!this.heroSprite) return;
+                returnToIdle();
               });
             }
-          }
-          if (this.anims.exists(heroAttackKey)) {
-            if (idleIsSpritesheet) {
-              this.heroSprite.setX(this.heroSprite.x + 18);
-              this.heroSprite.setY(this.heroSprite.y + 8);
-              this.heroSprite.setScale(this.heroSprite.scaleX * (268 / 278));
-            }
-            this.heroSprite.play({ key: heroAttackKey, timeScale: this.gameSpeed });
-            this.heroSprite.once('animationcomplete', () => {
-              isAttacking = false;
-              if (!this.heroSprite) return;
-              if (idleIsSpritesheet) {
-                this.heroSprite.setX(this.heroSprite.x - 18);
-                this.heroSprite.setY(this.heroSprite.y - 8);
-                this.heroSprite.setScale(0.495);
-                this.heroSprite.play(`${heroIdleKey}_loop`);
-              } else {
-                this.heroSprite.setTexture(idleFrame === 0 ? heroIdleKey : idle2Key);
-              }
-            });
           } else {
             isAttacking = false;
           }
+        };
+
+        const getCardAnimKey = (cardId: string): { key: string; lunge: boolean } => {
+          const def = getCardById(cardId);
+          if (!def) return { key: heroAttackKey, lunge: true };
+          const defendKey = `${sp}_defend`;
+          const channelKey = `${sp}_channel`;
+          const hasDamage = def.effects.some(e => e.type === 'damage');
+          const hasArmor  = def.effects.some(e => e.type === 'armor');
+          if (hasArmor && this.textures.exists(defendKey)) return { key: defendKey, lunge: false };
+          if (!hasDamage && this.textures.exists(channelKey)) return { key: channelKey, lunge: false };
+          return { key: heroAttackKey, lunge: true };
         };
 
         const origOnCardPlayed = this.onCardPlayed;
@@ -451,7 +494,11 @@ export class CombatScene extends Scene {
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText);
           }
-          playAttackAnimation();
+          const { key: animKey, lunge } = getCardAnimKey(data.cardId);
+          playCardAnimation(animKey, lunge);
+          if (animKey === `${sp}_defend` && this.combatEffects) {
+            this.combatEffects.shieldEffect(ORIGIN_X, ORIGIN_Y);
+          }
           if (data.damage > 0) {
             const isFireballInline = data.cardId.toLowerCase().includes('fireball');
             const inlineDelay = isFireballInline ? 0 : Math.round(250 / this.gameSpeed);
