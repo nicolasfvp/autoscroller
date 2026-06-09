@@ -239,7 +239,7 @@ export class CombatTestScene extends Phaser.Scene {
     if (frames.length < 2) return;
     let idx = 0;
     this.enemyIdleTimer = this.time.addEvent({
-      delay: 500, loop: true,
+      delay: Math.round(1000 / 6), loop: true,
       callback: () => {
         if (!(this.enemySprite instanceof Phaser.GameObjects.Image)) return;
         idx = (idx + 1) % frames.length;

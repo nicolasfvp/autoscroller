@@ -547,7 +547,7 @@ export class CombatScene extends Scene {
         if (enemyFrames.length > 1) {
           let frameIdx = 0;
           this.enemyIdleTimer = this.time.addEvent({
-            delay: 500, loop: true,
+            delay: Math.round(1000 / 6), loop: true,
             callback: () => {
               if (this.enemySprite instanceof Phaser.GameObjects.Image) {
                 frameIdx = (frameIdx + 1) % enemyFrames.length;
