@@ -1,0 +1,5328 @@
+{
+  "meta": {
+    "specPath": "C:\\Users\\nicolas.pereira\\OneDrive - Way2 Technology\\Área de Trabalho\\autoscroller\\tests\\audit\\survival-calib-spec.json",
+    "count": 12,
+    "tickMs": 100,
+    "fightCapMs": 120000
+  },
+  "summaries": [
+    {
+      "bossesFaced": {
+        "bog_witch": {
+          "reached": 24,
+          "won": 24,
+          "winRate": 1,
+          "avgHpEnter": 1.727
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss3",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss3-moderate",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 5,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3856,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "bog_witch": {
+          "reached": 24,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 2.046
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss3",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss3-moderate",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "30": 24
+      },
+      "deathEnemyHistogram": {
+        "bog_witch": 24
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 3482,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "bog_witch": {
+          "reached": 24,
+          "won": 24,
+          "winRate": 1,
+          "avgHpEnter": 1.691
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss3",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss3-heavy",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 5,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 4128,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "bog_witch": {
+          "reached": 24,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 1.945
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss3",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss3-heavy",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "30": 24
+      },
+      "deathEnemyHistogram": {
+        "bog_witch": 24
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 3925,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "desert_golem": {
+          "reached": 24,
+          "won": 18,
+          "winRate": 0.75,
+          "avgHpEnter": 1.686
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss4",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss4-moderate",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 0.292,
+      "survivedAllRate": 0.708,
+      "deathLoopHistogram": {
+        "40": 6,
+        "41": 1
+      },
+      "deathEnemyHistogram": {
+        "desert_golem": 6,
+        "corpse_eater": 1
+      },
+      "avgLoopsCleared": 4.46,
+      "avgBossesKilled": 0.75,
+      "avgDamageDealt": 3974,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "desert_golem": {
+          "reached": 23,
+          "won": 21,
+          "winRate": 0.913,
+          "avgHpEnter": 2.133
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss4",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss4-moderate",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 0.208,
+      "survivedAllRate": 0.792,
+      "deathLoopHistogram": {
+        "37": 1,
+        "40": 2,
+        "41": 2
+      },
+      "deathEnemyHistogram": {
+        "lava_golem": 1,
+        "fire_elemental": 2,
+        "desert_golem": 2
+      },
+      "avgLoopsCleared": 4.54,
+      "avgBossesKilled": 0.88,
+      "avgDamageDealt": 3901,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "desert_golem": {
+          "reached": 24,
+          "won": 13,
+          "winRate": 0.542,
+          "avgHpEnter": 1.541
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss4",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss4-heavy",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 0.583,
+      "survivedAllRate": 0.417,
+      "deathLoopHistogram": {
+        "40": 11,
+        "41": 3
+      },
+      "deathEnemyHistogram": {
+        "desert_golem": 11,
+        "mutated_salamander": 1,
+        "vampire": 1,
+        "fire_elemental": 1
+      },
+      "avgLoopsCleared": 3.96,
+      "avgBossesKilled": 0.54,
+      "avgDamageDealt": 4101,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "desert_golem": {
+          "reached": 23,
+          "won": 17,
+          "winRate": 0.739,
+          "avgHpEnter": 2.031
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss4",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss4-heavy",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 0.375,
+      "survivedAllRate": 0.625,
+      "deathLoopHistogram": {
+        "39": 1,
+        "40": 6,
+        "41": 2
+      },
+      "deathEnemyHistogram": {
+        "desert_golem": 6,
+        "mutated_salamander": 2,
+        "venomous_kobra": 1
+      },
+      "avgLoopsCleared": 4.29,
+      "avgBossesKilled": 0.71,
+      "avgDamageDealt": 4452,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "infernal_dragon": {
+          "reached": 24,
+          "won": 16,
+          "winRate": 0.667,
+          "avgHpEnter": 1.773
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss5",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss5-moderate",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 0.375,
+      "survivedAllRate": 0.625,
+      "deathLoopHistogram": {
+        "50": 8,
+        "51": 1
+      },
+      "deathEnemyHistogram": {
+        "lava_golem": 1,
+        "infernal_dragon": 8
+      },
+      "avgLoopsCleared": 4.29,
+      "avgBossesKilled": 0.67,
+      "avgDamageDealt": 4142,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "infernal_dragon": {
+          "reached": 24,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 2.122
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss5",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss5-moderate",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "50": 24
+      },
+      "deathEnemyHistogram": {
+        "infernal_dragon": 24
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 3374,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "infernal_dragon": {
+          "reached": 24,
+          "won": 11,
+          "winRate": 0.458,
+          "avgHpEnter": 1.678
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "survival-calib",
+        "stage": "boss5",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "warr-boss5-heavy",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 0.667,
+      "survivedAllRate": 0.333,
+      "deathLoopHistogram": {
+        "50": 13,
+        "51": 3
+      },
+      "deathEnemyHistogram": {
+        "infernal_dragon": 13,
+        "corpse_eater": 1,
+        "vampire": 1,
+        "mutated_salamander": 1
+      },
+      "avgLoopsCleared": 3.79,
+      "avgBossesKilled": 0.46,
+      "avgDamageDealt": 4437,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "infernal_dragon": {
+          "reached": 24,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 2.125
+        }
+      },
+      "meta": {
+        "class": "mage",
+        "quality": "survival-calib",
+        "stage": "boss5",
+        "archetype": "calib",
+        "variant": "CONTROL",
+        "boss": ""
+      },
+      "id": "mage-boss5-heavy",
+      "class": "mage",
+      "deckSize": 10,
+      "repeats": 24,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":3}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "50": 24
+      },
+      "deathEnemyHistogram": {
+        "infernal_dragon": 24
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 3774,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    }
+  ],
+  "detail": [
+    {
+      "id": "warr-boss3-moderate",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 5,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "bog_witch": 1.73
+        },
+        "bossResult": {
+          "bog_witch": "win"
+        },
+        "totalFights": 27,
+        "totalDamage": 3927
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 3927
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.6
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3856
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.65
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4622
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2857
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4846
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.66
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 4162
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2803
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.66
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3613
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 3742
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4275
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4506
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.76
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4281
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3719
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3460
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 4406
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4462
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3277
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.71
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3591
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4298
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.69
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3713
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3281
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2856
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4612
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.46
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 20,
+          "totalDamage": 3372
+        }
+      ]
+    },
+    {
+      "id": "mage-boss3-moderate",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 30,
+        "deathEnemy": "bog_witch",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "bog_witch": 2.086
+        },
+        "bossResult": {
+          "bog_witch": "loss"
+        },
+        "totalFights": 17,
+        "totalDamage": 3238
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 3238
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3820
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 3520
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.729
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 3035
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.986
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 2729
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.043
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 2815
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3580
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3967
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.043
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 2747
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3640
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.886
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3793
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 3212
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.043
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2982
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 3352
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4363
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 4134
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4071
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 3152
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.986
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 3005
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 24,
+          "totalDamage": 3907
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3594
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.9
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3581
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4321
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 3021
+        }
+      ]
+    },
+    {
+      "id": "warr-boss3-heavy",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 5,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "bog_witch": 1.65
+        },
+        "bossResult": {
+          "bog_witch": "win"
+        },
+        "totalFights": 27,
+        "totalDamage": 4189
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.65
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4189
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.56
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3585
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.56
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 4983
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 3037
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4333
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4162
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 5123
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.59
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 3865
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3874
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.71
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3669
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.7
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2969
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.75
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4250
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3775
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 5271
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.73
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4635
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 3768
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.77
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3252
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4205
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.51
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4064
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.56
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4025
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.64
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4818
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.57
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 4835
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.8
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4853
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.42
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3541
+        }
+      ]
+    },
+    {
+      "id": "mage-boss3-heavy",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 30,
+        "deathEnemy": "bog_witch",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "bog_witch": 2.1
+        },
+        "bossResult": {
+          "bog_witch": "loss"
+        },
+        "totalFights": 26,
+        "totalDamage": 4420
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.1
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4420
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.943
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4479
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.614
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4103
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.729
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3280
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3693
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3490
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.543
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 3013
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3556
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4627
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.043
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 4004
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3715
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4094
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3741
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.4
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3795
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.029
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4366
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4461
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.871
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 28,
+          "totalDamage": 4575
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.043
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 3286
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4236
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4478
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 1.157
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3247
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.014
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4316
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3404
+        },
+        {
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "bog_witch": 2.086
+          },
+          "bossResult": {
+            "bog_witch": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3817
+        }
+      ]
+    },
+    {
+      "id": "warr-boss4-moderate",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 40,
+        "deathEnemy": "desert_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "desert_golem": 1.27
+        },
+        "bossResult": {
+          "desert_golem": "loss"
+        },
+        "totalFights": 23,
+        "totalDamage": 3895
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.27
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3895
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.19
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3422
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.82
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3600
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.8
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 4043
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.65
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2749
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 3884
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.58
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 4666
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.57
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3322
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.72
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 3969
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.32
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 29,
+          "totalDamage": 4028
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.72
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4455
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4706
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3594
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.76
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 3930
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.81
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 4982
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "corpse_eater",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.82
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3523
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.76
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3548
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.7
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4549
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4283
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.8
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4217
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.65
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 24,
+          "totalDamage": 3520
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.73
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3877
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.72
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 4149
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.76
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 4454
+        }
+      ]
+    },
+    {
+      "id": "mage-boss4-moderate",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 37,
+        "deathEnemy": "lava_golem",
+        "deathWasBoss": false,
+        "loopsCleared": 0,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {},
+        "bossResult": {},
+        "totalFights": 3,
+        "totalDamage": 724
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 37,
+          "deathEnemy": "lava_golem",
+          "deathWasBoss": false,
+          "loopsCleared": 0,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 3,
+          "totalDamage": 724
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.186
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3966
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4406
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4219
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.186
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4742
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4423
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "fire_elemental",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3368
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 20,
+          "totalDamage": 3290
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 4899
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.3
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4636
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 5195
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4802
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.1
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3621
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.957
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3463
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.943
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 2333
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 3485
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.071
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4088
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 4136
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "fire_elemental",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.686
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 4187
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.186
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3901
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.3
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3411
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4583
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3440
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 4306
+        }
+      ]
+    },
+    {
+      "id": "warr-boss4-heavy",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 40,
+        "deathEnemy": "desert_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "desert_golem": 1.58
+        },
+        "bossResult": {
+          "desert_golem": "loss"
+        },
+        "totalFights": 20,
+        "totalDamage": 3294
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.58
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3294
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.72
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4920
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.67
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 5362
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 4326
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.83
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4678
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "vampire",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.82
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3779
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.31
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4115
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "fire_elemental",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.68
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 4600
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.88
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 5883
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.57
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 20,
+          "totalDamage": 3241
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.53
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 5476
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.11
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3390
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.15
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 24,
+          "totalDamage": 3919
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.68
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3422
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.57
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 3865
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.68
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3046
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.65
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4110
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.58
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4362
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.55
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 2918
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.71
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 5641
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 0.95
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 4067
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.46
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3050
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 1.63
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3625
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 0.85
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3328
+        }
+      ]
+    },
+    {
+      "id": "mage-boss4-heavy",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 40,
+        "deathEnemy": "desert_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "desert_golem": 1.829
+        },
+        "bossResult": {
+          "desert_golem": "loss"
+        },
+        "totalFights": 16,
+        "totalDamage": 2751
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.829
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2751
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.186
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 4075
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.2
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 5395
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 4854
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.786
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3704
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.3
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4972
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.786
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3451
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.3
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 5177
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.529
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 28,
+          "totalDamage": 4184
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.3
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 4818
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.071
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 5561
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4366
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.486
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 32,
+          "totalDamage": 4918
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4472
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3802
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4552
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 5065
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.243
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 5753
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 4076
+        },
+        {
+          "died": true,
+          "deathLoop": 40,
+          "deathEnemy": "desert_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "desert_golem": 1.114
+          },
+          "bossResult": {
+            "desert_golem": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 3910
+        },
+        {
+          "died": true,
+          "deathLoop": 39,
+          "deathEnemy": "venomous_kobra",
+          "deathWasBoss": false,
+          "loopsCleared": 2,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 3473
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4499
+        },
+        {
+          "died": true,
+          "deathLoop": 41,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.129
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4071
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "desert_golem": 2.186
+          },
+          "bossResult": {
+            "desert_golem": "win"
+          },
+          "totalFights": 28,
+          "totalDamage": 4937
+        }
+      ]
+    },
+    {
+      "id": "warr-boss5-moderate",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 5,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "infernal_dragon": 1.94
+        },
+        "bossResult": {
+          "infernal_dragon": "win"
+        },
+        "totalFights": 29,
+        "totalDamage": 4661
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4661
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.81
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3924
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3944
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 3638
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.93
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 3437
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.83
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 4555
+        },
+        {
+          "died": true,
+          "deathLoop": 51,
+          "deathEnemy": "lava_golem",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.9
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 3505
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3675
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.52
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4082
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.79
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 4269
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.79
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 5932
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.9
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 5305
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.17
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4842
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 4195
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 25,
+          "totalDamage": 4762
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4731
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.71
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3684
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.64
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 2468
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.88
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 24,
+          "totalDamage": 4063
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.9
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 5149
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.39
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4042
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.73
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 4062
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.18
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 3233
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.9
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3258
+        }
+      ]
+    },
+    {
+      "id": "mage-boss5-moderate",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 50,
+        "deathEnemy": "infernal_dragon",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "infernal_dragon": 1.971
+        },
+        "bossResult": {
+          "infernal_dragon": "loss"
+        },
+        "totalFights": 22,
+        "totalDamage": 3355
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.971
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3355
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 0.943
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 2279
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.671
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 30,
+          "totalDamage": 4405
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 2547
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.771
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4309
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.971
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3212
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3514
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3347
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.129
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2972
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3238
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4070
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2683
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 24,
+          "totalDamage": 3590
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3254
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3384
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.343
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3557
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3313
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3310
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 24,
+          "totalDamage": 3816
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.243
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3341
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.343
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3475
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3379
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2950
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.343
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3674
+        }
+      ]
+    },
+    {
+      "id": "warr-boss5-heavy",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 50,
+        "deathEnemy": "infernal_dragon",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "infernal_dragon": 1.65
+        },
+        "bossResult": {
+          "infernal_dragon": "loss"
+        },
+        "totalFights": 23,
+        "totalDamage": 3878
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.65
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3878
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 3963
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.76
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 4118
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.56
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3650
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.08
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 31,
+          "totalDamage": 5571
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.36
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4080
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.68
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 4796
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.63
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 31,
+          "totalDamage": 5240
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 5233
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.62
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 5814
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.34
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 4245
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.89
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 3339
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.74
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 6032
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.73
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3946
+        },
+        {
+          "died": true,
+          "deathLoop": 51,
+          "deathEnemy": "corpse_eater",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.83
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 3458
+        },
+        {
+          "died": true,
+          "deathLoop": 51,
+          "deathEnemy": "vampire",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.88
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 3903
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.88
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4537
+        },
+        {
+          "died": true,
+          "deathLoop": 51,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.81
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 4300
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.94
+          },
+          "bossResult": {
+            "infernal_dragon": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 4677
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.73
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 27,
+          "totalDamage": 4780
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.73
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3867
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.23
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 28,
+          "totalDamage": 4804
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.79
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3546
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.54
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4718
+        }
+      ]
+    },
+    {
+      "id": "mage-boss5-heavy",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 50,
+        "deathEnemy": "infernal_dragon",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "infernal_dragon": 2.343
+        },
+        "bossResult": {
+          "infernal_dragon": "loss"
+        },
+        "totalFights": 29,
+        "totalDamage": 4813
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.343
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 29,
+          "totalDamage": 4813
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.057
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3478
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3812
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.114
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4153
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.971
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 4078
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.886
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3425
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3337
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.343
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2572
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.2
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3564
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2844
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.714
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 29,
+          "totalDamage": 4766
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.957
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3893
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.014
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 3231
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 32,
+          "totalDamage": 4645
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 28,
+          "totalDamage": 4583
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3882
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3452
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 21,
+          "totalDamage": 3634
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.143
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3857
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 1.986
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 23,
+          "totalDamage": 3998
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 4375
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.014
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 3160
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.3
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 3455
+        },
+        {
+          "died": true,
+          "deathLoop": 50,
+          "deathEnemy": "infernal_dragon",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "infernal_dragon": 2.257
+          },
+          "bossResult": {
+            "infernal_dragon": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 3566
+        }
+      ]
+    }
+  ]
+}

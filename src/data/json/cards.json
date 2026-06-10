@@ -3528,7 +3528,7 @@
     {
       "id": "t3-earth-fire-water",
       "name": "Alchemic Drain",
-      "description": "Apply 3[poison]. Heal 6([spi]).",
+      "description": "Apply 4[poison]. Heal 6([spi]).",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3539,7 +3539,7 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 4,
           "target": "enemy",
           "stack": "poison"
         },
@@ -3557,7 +3557,7 @@
       "cost": {
         "mana": 1
       },
-      "cooldown": 2.4,
+      "cooldown": 1.6,
       "targeting": "single",
       "rarity": "uncommon"
     },

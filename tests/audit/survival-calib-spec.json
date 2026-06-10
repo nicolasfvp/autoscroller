@@ -1,0 +1,460 @@
+{
+ "runs": [
+  {
+   "id": "warr-boss3-moderate",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss3",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "warr-boss3-moderate"
+  },
+  {
+   "id": "mage-boss3-moderate",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss3",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "mage-boss3-moderate"
+  },
+  {
+   "id": "warr-boss3-heavy",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss3",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "warr-boss3-heavy"
+  },
+  {
+   "id": "mage-boss3-heavy",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss3",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "mage-boss3-heavy"
+  },
+  {
+   "id": "warr-boss4-moderate",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss4",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "warr-boss4-moderate"
+  },
+  {
+   "id": "mage-boss4-moderate",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss4",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "mage-boss4-moderate"
+  },
+  {
+   "id": "warr-boss4-heavy",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss4",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "warr-boss4-heavy"
+  },
+  {
+   "id": "mage-boss4-heavy",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss4",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "mage-boss4-heavy"
+  },
+  {
+   "id": "warr-boss5-moderate",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss5",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "warr-boss5-moderate"
+  },
+  {
+   "id": "mage-boss5-moderate",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss5",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 24,
+   "seed": "mage-boss5-moderate"
+  },
+  {
+   "id": "warr-boss5-heavy",
+   "class": "warrior",
+   "quality": "survival-calib",
+   "stage": "boss5",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "warr-boss5-heavy"
+  },
+  {
+   "id": "mage-boss5-heavy",
+   "class": "mage",
+   "quality": "survival-calib",
+   "stage": "boss5",
+   "archetype": "calib",
+   "variant": "CONTROL",
+   "boss": "",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "mage-boss5-heavy"
+  }
+ ]
+}

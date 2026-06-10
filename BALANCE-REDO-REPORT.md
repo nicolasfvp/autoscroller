@@ -55,6 +55,10 @@ All untouched bosses/cards are byte-identical across re-runs; full suite green (
 - **Static audit (35 prior findings) re-verified vs live code: 17 already fixed, 18 actionable** → `tests/audit/STATIC-AUDIT-VERIFIED.md`. The actionable set is balance-smells (flagged), the text-clarity fixes above (applied), and deferred-content/dead-code (no action).
 - **Rigorous power pass** (synergy-matched baselines + tier-peer controls + role-aware metrics + adversarial verification) **collapsed the naive "87 dead cards" to a narrow real signal.** No broad tier violations; the "dead" cards were Jab-control + wrong-context + DoT-metric artifacts.
 - **Bleed "under-tuned" → REFUTED (no buffs).** Verified 3 ways: bleed ticks `stacks×perStack` (cap 60/tick) with −1 decay, so the swap metric forfeits the standing pool at kill; a longer-fight probe flips the "weak" cards positive (Vein Splitter −314→+384); the two persistently-weak cards (Crimson Spiral rage-gated, Berserker's Ledger honest self-bleed) work as designed.
+- **Survival cards (heal/armor) → healthy, properly tier-ordered.** Redesigned the test to a calibrated ~40%-death operating point (`boss4-heavy`) so a single defensive card's survival delta is measurable. T3 survival median > T2 for both roles. Vindicated the methodology: the cards the damage-swap called "dead" (Tidesong Aura, Mend, Misting Veil, Aegis, Mountain's Answer) are the **top survival cards**. The "weak survival" entries are offense-hybrids mis-tagged armor/heal — correctly low. (`scripts/gen-survival-*` + `analyze-survival.mjs` → `survival-findings.md`.)
+
+### Applied (the one card-power change to survive the whole rigorous pass)
+- **Alchemic Drain** (T3) was strictly worse than its T2 sibling Mire Bloom (fewer effects at a worse cd) — an inspection-verified T3<T2. Buffed the T3 (poison 3→4, cd 2.4→1.6; Mire Bloom untouched). Verified: survival delta −0.699 → **+0.788** (off the T3<T2 list), poison-damage gap to T2 median −279 → −114, no over-correction. Description regenerated, card-integrity green.
 
 ---
 

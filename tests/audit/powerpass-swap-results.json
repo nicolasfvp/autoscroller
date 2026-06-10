@@ -123,7 +123,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.407
+          "avgHpEnter": 1.4
         }
       },
       "meta": {
@@ -149,7 +149,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2102,
+      "avgDamageDealt": 2104,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -186,7 +186,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2085,
+      "avgDamageDealt": 2082,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -223,7 +223,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2136,
+      "avgDamageDealt": 2135,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -234,7 +234,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.255
+          "avgHpEnter": 1.25
         }
       },
       "meta": {
@@ -260,7 +260,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1841,
+      "avgDamageDealt": 1840,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -297,7 +297,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1811,
+      "avgDamageDealt": 1810,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -308,7 +308,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.398
+          "avgHpEnter": 1.403
         }
       },
       "meta": {
@@ -334,7 +334,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1822,
+      "avgDamageDealt": 1825,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -445,7 +445,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2002,
+      "avgDamageDealt": 2000,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -456,7 +456,7 @@
           "reached": 12,
           "won": 1,
           "winRate": 0.083,
-          "avgHpEnter": 1.318
+          "avgHpEnter": 1.325
         }
       },
       "meta": {
@@ -484,7 +484,7 @@
       },
       "avgLoopsCleared": 3.08,
       "avgBossesKilled": 0.08,
-      "avgDamageDealt": 2134,
+      "avgDamageDealt": 2133,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -495,7 +495,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.272
+          "avgHpEnter": 1.271
         }
       },
       "meta": {
@@ -521,7 +521,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1883,
+      "avgDamageDealt": 1881,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -532,7 +532,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.4
+          "avgHpEnter": 1.399
         }
       },
       "meta": {
@@ -569,7 +569,7 @@
           "reached": 12,
           "won": 0,
           "winRate": 0,
-          "avgHpEnter": 1.414
+          "avgHpEnter": 1.419
         }
       },
       "meta": {
@@ -595,7 +595,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1702,
+      "avgDamageDealt": 1699,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -632,7 +632,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1815,
+      "avgDamageDealt": 1816,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -665,7 +665,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3608,
+      "avgDamageDealt": 3606,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -676,7 +676,7 @@
           "reached": 12,
           "won": 1,
           "winRate": 0.083,
-          "avgHpEnter": 0.76
+          "avgHpEnter": 0.766
         }
       },
       "meta": {
@@ -704,7 +704,7 @@
       },
       "avgLoopsCleared": 3.08,
       "avgBossesKilled": 0.08,
-      "avgDamageDealt": 2650,
+      "avgDamageDealt": 2658,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -737,7 +737,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3903,
+      "avgDamageDealt": 3902,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -748,7 +748,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 1.237
+          "avgHpEnter": 1.238
         }
       },
       "meta": {
@@ -777,7 +777,7 @@
       },
       "avgLoopsCleared": 4.67,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 4258,
+      "avgDamageDealt": 4257,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -816,7 +816,7 @@
       },
       "avgLoopsCleared": 4.42,
       "avgBossesKilled": 0.75,
-      "avgDamageDealt": 3294,
+      "avgDamageDealt": 3288,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -827,7 +827,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 1.295
+          "avgHpEnter": 1.29
         }
       },
       "meta": {
@@ -895,7 +895,7 @@
       },
       "avgLoopsCleared": 3.33,
       "avgBossesKilled": 0.25,
-      "avgDamageDealt": 2790,
+      "avgDamageDealt": 2793,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -906,7 +906,7 @@
           "reached": 12,
           "won": 10,
           "winRate": 0.833,
-          "avgHpEnter": 1.208
+          "avgHpEnter": 1.22
         }
       },
       "meta": {
@@ -929,12 +929,13 @@
         "31": 2
       },
       "deathEnemyHistogram": {
-        "fire_elemental": 2,
-        "bog_witch": 2
+        "venomous_kobra": 1,
+        "bog_witch": 2,
+        "fire_elemental": 1
       },
       "avgLoopsCleared": 4.5,
       "avgBossesKilled": 0.83,
-      "avgDamageDealt": 3425,
+      "avgDamageDealt": 3427,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -945,7 +946,7 @@
           "reached": 12,
           "won": 6,
           "winRate": 0.5,
-          "avgHpEnter": 0.994
+          "avgHpEnter": 0.997
         }
       },
       "meta": {
@@ -975,7 +976,7 @@
       },
       "avgLoopsCleared": 3.75,
       "avgBossesKilled": 0.5,
-      "avgDamageDealt": 2951,
+      "avgDamageDealt": 2956,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1008,7 +1009,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3499,
+      "avgDamageDealt": 3503,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1045,7 +1046,7 @@
       },
       "avgLoopsCleared": 4.83,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3952,
+      "avgDamageDealt": 3942,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1078,7 +1079,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3835,
+      "avgDamageDealt": 3836,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1111,7 +1112,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4782,
+      "avgDamageDealt": 4781,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1120,9 +1121,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 12,
-          "winRate": 1,
-          "avgHpEnter": 1.233
+          "won": 11,
+          "winRate": 0.917,
+          "avgHpEnter": 1.212
         }
       },
       "meta": {
@@ -1138,13 +1139,17 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 0,
-      "survivedAllRate": 1,
-      "deathLoopHistogram": {},
-      "deathEnemyHistogram": {},
-      "avgLoopsCleared": 5,
-      "avgBossesKilled": 1,
-      "avgDamageDealt": 4114,
+      "deathRate": 0.083,
+      "survivedAllRate": 0.917,
+      "deathLoopHistogram": {
+        "30": 1
+      },
+      "deathEnemyHistogram": {
+        "bog_witch": 1
+      },
+      "avgLoopsCleared": 4.83,
+      "avgBossesKilled": 0.92,
+      "avgDamageDealt": 4046,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1155,7 +1160,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.284
+          "avgHpEnter": 1.277
         }
       },
       "meta": {
@@ -1177,7 +1182,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4704,
+      "avgDamageDealt": 4695,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1188,7 +1193,7 @@
           "reached": 12,
           "won": 8,
           "winRate": 0.667,
-          "avgHpEnter": 0.763
+          "avgHpEnter": 0.78
         }
       },
       "meta": {
@@ -1214,7 +1219,7 @@
       },
       "avgLoopsCleared": 4.33,
       "avgBossesKilled": 0.67,
-      "avgDamageDealt": 3864,
+      "avgDamageDealt": 3862,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1225,7 +1230,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.327
+          "avgHpEnter": 1.318
         }
       },
       "meta": {
@@ -1247,7 +1252,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4578,
+      "avgDamageDealt": 4588,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1280,7 +1285,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4563,
+      "avgDamageDealt": 4567,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1291,7 +1296,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.288
+          "avgHpEnter": 1.292
         }
       },
       "meta": {
@@ -1313,7 +1318,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4589,
+      "avgDamageDealt": 4599,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1324,7 +1329,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 0.758
+          "avgHpEnter": 0.759
         }
       },
       "meta": {
@@ -1348,12 +1353,11 @@
       },
       "deathEnemyHistogram": {
         "bog_witch": 1,
-        "scorpion": 1,
-        "lost_lizard": 1
+        "lost_lizard": 2
       },
       "avgLoopsCleared": 4.67,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 4468,
+      "avgDamageDealt": 4454,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1364,7 +1368,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.401
+          "avgHpEnter": 1.407
         }
       },
       "meta": {
@@ -1386,7 +1390,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3886,
+      "avgDamageDealt": 3892,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1419,7 +1423,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4265,
+      "avgDamageDealt": 4262,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1459,7 +1463,7 @@
       },
       "avgLoopsCleared": 4.42,
       "avgBossesKilled": 0.83,
-      "avgDamageDealt": 3989,
+      "avgDamageDealt": 3991,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1496,7 +1500,7 @@
       },
       "avgLoopsCleared": 4.92,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4282,
+      "avgDamageDealt": 4286,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1539,7 +1543,7 @@
       },
       "avgLoopsCleared": 2.58,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2036,
+      "avgDamageDealt": 2033,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1582,7 +1586,7 @@
       },
       "avgLoopsCleared": 2.42,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2140,
+      "avgDamageDealt": 2142,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1626,7 +1630,7 @@
       },
       "avgLoopsCleared": 2.42,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2140,
+      "avgDamageDealt": 2138,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1711,7 +1715,7 @@
       },
       "avgLoopsCleared": 2.25,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1848,
+      "avgDamageDealt": 1849,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1792,7 +1796,7 @@
       },
       "avgLoopsCleared": 2.17,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1695,
+      "avgDamageDealt": 1697,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1836,7 +1840,7 @@
       },
       "avgLoopsCleared": 2.33,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1967,
+      "avgDamageDealt": 1968,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1879,7 +1883,7 @@
       },
       "avgLoopsCleared": 2.08,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1838,
+      "avgDamageDealt": 1837,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1917,7 +1921,7 @@
       },
       "avgLoopsCleared": 1.5,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 1123,
+      "avgDamageDealt": 1128,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -1950,7 +1954,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 5478,
+      "avgDamageDealt": 5461,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2026,7 +2030,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 10987,
+      "avgDamageDealt": 11116,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2063,7 +2067,7 @@
       },
       "avgLoopsCleared": 4.92,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 6107,
+      "avgDamageDealt": 6116,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2102,7 +2106,7 @@
       },
       "avgLoopsCleared": 2.75,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2264,
+      "avgDamageDealt": 2267,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2147,7 +2151,7 @@
       },
       "avgLoopsCleared": 1.33,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 876,
+      "avgDamageDealt": 877,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2195,7 +2199,7 @@
           "reached": 12,
           "won": 9,
           "winRate": 0.75,
-          "avgHpEnter": 1.363
+          "avgHpEnter": 1.364
         }
       },
       "meta": {
@@ -2268,9 +2272,9 @@
       "bossesFaced": {
         "iron_golem": {
           "reached": 12,
-          "won": 12,
-          "winRate": 1,
-          "avgHpEnter": 1.521
+          "won": 11,
+          "winRate": 0.917,
+          "avgHpEnter": 1.506
         }
       },
       "meta": {
@@ -2286,13 +2290,17 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
-      "deathRate": 0,
-      "survivedAllRate": 1,
-      "deathLoopHistogram": {},
-      "deathEnemyHistogram": {},
-      "avgLoopsCleared": 5,
-      "avgBossesKilled": 1,
-      "avgDamageDealt": 3484,
+      "deathRate": 0.083,
+      "survivedAllRate": 0.917,
+      "deathLoopHistogram": {
+        "20": 1
+      },
+      "deathEnemyHistogram": {
+        "iron_golem": 1
+      },
+      "avgLoopsCleared": 4.83,
+      "avgBossesKilled": 0.92,
+      "avgDamageDealt": 3437,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2303,7 +2311,7 @@
           "reached": 12,
           "won": 1,
           "winRate": 0.083,
-          "avgHpEnter": 1.254
+          "avgHpEnter": 1.248
         }
       },
       "meta": {
@@ -2342,7 +2350,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 1.507
+          "avgHpEnter": 1.514
         }
       },
       "meta": {
@@ -2368,7 +2376,7 @@
       },
       "avgLoopsCleared": 4.83,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 2480,
+      "avgDamageDealt": 2484,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2408,7 +2416,7 @@
       },
       "avgLoopsCleared": 4.67,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 2474,
+      "avgDamageDealt": 2473,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2441,7 +2449,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 2642,
+      "avgDamageDealt": 2643,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2452,7 +2460,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 1.465
+          "avgHpEnter": 1.458
         }
       },
       "meta": {
@@ -2478,7 +2486,7 @@
       },
       "avgLoopsCleared": 4.83,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 2637,
+      "avgDamageDealt": 2627,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2524,9 +2532,9 @@
       "bossesFaced": {
         "iron_golem": {
           "reached": 12,
-          "won": 7,
-          "winRate": 0.583,
-          "avgHpEnter": 1.068
+          "won": 6,
+          "winRate": 0.5,
+          "avgHpEnter": 1.064
         }
       },
       "meta": {
@@ -2542,17 +2550,17 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
-      "deathRate": 0.417,
-      "survivedAllRate": 0.583,
+      "deathRate": 0.5,
+      "survivedAllRate": 0.5,
       "deathLoopHistogram": {
-        "20": 5
+        "20": 6
       },
       "deathEnemyHistogram": {
-        "iron_golem": 5
+        "iron_golem": 6
       },
-      "avgLoopsCleared": 4.17,
-      "avgBossesKilled": 0.58,
-      "avgDamageDealt": 2540,
+      "avgLoopsCleared": 4,
+      "avgBossesKilled": 0.5,
+      "avgDamageDealt": 2500,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2591,7 +2599,7 @@
       },
       "avgLoopsCleared": 4.67,
       "avgBossesKilled": 0.92,
-      "avgDamageDealt": 2616,
+      "avgDamageDealt": 2615,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2600,9 +2608,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 11,
-          "winRate": 0.917,
-          "avgHpEnter": 1.944
+          "won": 12,
+          "winRate": 1,
+          "avgHpEnter": 1.942
         }
       },
       "meta": {
@@ -2618,17 +2626,13 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 0.083,
-      "survivedAllRate": 0.917,
-      "deathLoopHistogram": {
-        "30": 1
-      },
-      "deathEnemyHistogram": {
-        "bog_witch": 1
-      },
-      "avgLoopsCleared": 4.83,
-      "avgBossesKilled": 0.92,
-      "avgDamageDealt": 3354,
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 5,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3453,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2661,7 +2665,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3557,
+      "avgDamageDealt": 3540,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2672,7 +2676,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.053
+          "avgHpEnter": 2.07
         }
       },
       "meta": {
@@ -2694,7 +2698,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3278,
+      "avgDamageDealt": 3426,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2703,9 +2707,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 11,
-          "winRate": 0.917,
-          "avgHpEnter": 1.862
+          "won": 12,
+          "winRate": 1,
+          "avgHpEnter": 1.913
         }
       },
       "meta": {
@@ -2724,14 +2728,14 @@
       "deathRate": 0.083,
       "survivedAllRate": 0.917,
       "deathLoopHistogram": {
-        "30": 1
+        "31": 1
       },
       "deathEnemyHistogram": {
-        "bog_witch": 1
+        "werewolf": 1
       },
-      "avgLoopsCleared": 4.83,
-      "avgBossesKilled": 0.92,
-      "avgDamageDealt": 3611,
+      "avgLoopsCleared": 4.92,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3636,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2742,7 +2746,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.045
+          "avgHpEnter": 2.048
         }
       },
       "meta": {
@@ -2764,7 +2768,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3781,
+      "avgDamageDealt": 3851,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2775,7 +2779,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.008
+          "avgHpEnter": 2.05
         }
       },
       "meta": {
@@ -2797,7 +2801,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3471,
+      "avgDamageDealt": 3505,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2808,7 +2812,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.036
+          "avgHpEnter": 2.049
         }
       },
       "meta": {
@@ -2830,7 +2834,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3740,
+      "avgDamageDealt": 3742,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2841,7 +2845,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.873
+          "avgHpEnter": 1.865
         }
       },
       "meta": {
@@ -2867,7 +2871,7 @@
       },
       "avgLoopsCleared": 4.92,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3522,
+      "avgDamageDealt": 3521,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2878,7 +2882,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.998
+          "avgHpEnter": 2.025
         }
       },
       "meta": {
@@ -2900,7 +2904,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3487,
+      "avgDamageDealt": 3464,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2937,7 +2941,7 @@
       },
       "avgLoopsCleared": 4.92,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3548,
+      "avgDamageDealt": 3612,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2946,9 +2950,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 11,
-          "winRate": 0.917,
-          "avgHpEnter": 1.856
+          "won": 12,
+          "winRate": 1,
+          "avgHpEnter": 1.865
         }
       },
       "meta": {
@@ -2964,17 +2968,13 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 0.083,
-      "survivedAllRate": 0.917,
-      "deathLoopHistogram": {
-        "30": 1
-      },
-      "deathEnemyHistogram": {
-        "bog_witch": 1
-      },
-      "avgLoopsCleared": 4.83,
-      "avgBossesKilled": 0.92,
-      "avgDamageDealt": 3272,
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 5,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3308,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -2983,9 +2983,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 5,
-          "winRate": 0.417,
-          "avgHpEnter": 1.353
+          "won": 6,
+          "winRate": 0.5,
+          "avgHpEnter": 1.361
         }
       },
       "meta": {
@@ -3001,21 +3001,21 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 0.833,
-      "survivedAllRate": 0.167,
+      "deathRate": 0.75,
+      "survivedAllRate": 0.25,
       "deathLoopHistogram": {
-        "30": 7,
+        "30": 6,
         "31": 3
       },
       "deathEnemyHistogram": {
-        "depths_horror": 1,
-        "bog_witch": 7,
+        "lost_lizard": 1,
+        "bog_witch": 6,
         "baby_dragon": 1,
         "lava_golem": 1
       },
-      "avgLoopsCleared": 3.58,
-      "avgBossesKilled": 0.42,
-      "avgDamageDealt": 3717,
+      "avgLoopsCleared": 3.75,
+      "avgBossesKilled": 0.5,
+      "avgDamageDealt": 3786,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3026,7 +3026,7 @@
           "reached": 12,
           "won": 8,
           "winRate": 0.667,
-          "avgHpEnter": 1.207
+          "avgHpEnter": 1.214
         }
       },
       "meta": {
@@ -3055,7 +3055,7 @@
       },
       "avgLoopsCleared": 4.08,
       "avgBossesKilled": 0.67,
-      "avgDamageDealt": 3244,
+      "avgDamageDealt": 3254,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3092,7 +3092,7 @@
       },
       "avgLoopsCleared": 4.92,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4220,
+      "avgDamageDealt": 4219,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3142,7 +3142,7 @@
           "reached": 12,
           "won": 11,
           "winRate": 0.917,
-          "avgHpEnter": 1.548
+          "avgHpEnter": 1.552
         }
       },
       "meta": {
@@ -3179,7 +3179,7 @@
           "reached": 12,
           "won": 9,
           "winRate": 0.75,
-          "avgHpEnter": 1.333
+          "avgHpEnter": 1.331
         }
       },
       "meta": {
@@ -3214,9 +3214,9 @@
       "bossesFaced": {
         "bog_witch": {
           "reached": 12,
-          "won": 10,
-          "winRate": 0.833,
-          "avgHpEnter": 1.392
+          "won": 8,
+          "winRate": 0.667,
+          "avgHpEnter": 1.387
         }
       },
       "meta": {
@@ -3232,17 +3232,17 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 0.167,
-      "survivedAllRate": 0.833,
+      "deathRate": 0.333,
+      "survivedAllRate": 0.667,
       "deathLoopHistogram": {
-        "30": 2
+        "30": 4
       },
       "deathEnemyHistogram": {
-        "bog_witch": 2
+        "bog_witch": 4
       },
-      "avgLoopsCleared": 4.67,
-      "avgBossesKilled": 0.83,
-      "avgDamageDealt": 3670,
+      "avgLoopsCleared": 4.33,
+      "avgBossesKilled": 0.67,
+      "avgDamageDealt": 3567,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3253,7 +3253,7 @@
           "reached": 12,
           "won": 3,
           "winRate": 0.25,
-          "avgHpEnter": 1.135
+          "avgHpEnter": 1.112
         }
       },
       "meta": {
@@ -3283,7 +3283,7 @@
       },
       "avgLoopsCleared": 3.25,
       "avgBossesKilled": 0.25,
-      "avgDamageDealt": 2382,
+      "avgDamageDealt": 2368,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3294,7 +3294,7 @@
           "reached": 12,
           "won": 2,
           "winRate": 0.167,
-          "avgHpEnter": 0.798
+          "avgHpEnter": 0.763
         }
       },
       "meta": {
@@ -3323,7 +3323,7 @@
       },
       "avgLoopsCleared": 3.17,
       "avgBossesKilled": 0.17,
-      "avgDamageDealt": 2567,
+      "avgDamageDealt": 2548,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3334,7 +3334,7 @@
           "reached": 12,
           "won": 3,
           "winRate": 0.25,
-          "avgHpEnter": 0.895
+          "avgHpEnter": 0.874
         }
       },
       "meta": {
@@ -3350,21 +3350,20 @@
       "repeats": 12,
       "visitsShop": true,
       "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":2}",
-      "deathRate": 1,
-      "survivedAllRate": 0,
+      "deathRate": 0.917,
+      "survivedAllRate": 0.083,
       "deathLoopHistogram": {
         "30": 9,
-        "31": 3
+        "31": 2
       },
       "deathEnemyHistogram": {
         "bog_witch": 9,
-        "scorpion": 1,
         "vampire": 1,
         "forge_slime": 1
       },
-      "avgLoopsCleared": 3.25,
+      "avgLoopsCleared": 3.33,
       "avgBossesKilled": 0.25,
-      "avgDamageDealt": 2714,
+      "avgDamageDealt": 2738,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3375,7 +3374,7 @@
           "reached": 9,
           "won": 1,
           "winRate": 0.111,
-          "avgHpEnter": 1
+          "avgHpEnter": 1.014
         }
       },
       "meta": {
@@ -3405,7 +3404,7 @@
       },
       "avgLoopsCleared": 3,
       "avgBossesKilled": 0.08,
-      "avgDamageDealt": 2279,
+      "avgDamageDealt": 2283,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3416,7 +3415,7 @@
           "reached": 12,
           "won": 3,
           "winRate": 0.25,
-          "avgHpEnter": 0.923
+          "avgHpEnter": 0.925
         }
       },
       "meta": {
@@ -3444,7 +3443,7 @@
       },
       "avgLoopsCleared": 3.42,
       "avgBossesKilled": 0.25,
-      "avgDamageDealt": 3306,
+      "avgDamageDealt": 3315,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3455,7 +3454,7 @@
           "reached": 12,
           "won": 6,
           "winRate": 0.5,
-          "avgHpEnter": 1.02
+          "avgHpEnter": 1.019
         }
       },
       "meta": {
@@ -3483,7 +3482,7 @@
       },
       "avgLoopsCleared": 3.83,
       "avgBossesKilled": 0.5,
-      "avgDamageDealt": 3548,
+      "avgDamageDealt": 3550,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3523,7 +3522,7 @@
       },
       "avgLoopsCleared": 4.33,
       "avgBossesKilled": 0.75,
-      "avgDamageDealt": 3201,
+      "avgDamageDealt": 3202,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3534,7 +3533,7 @@
           "reached": 12,
           "won": 10,
           "winRate": 0.833,
-          "avgHpEnter": 1.315
+          "avgHpEnter": 1.33
         }
       },
       "meta": {
@@ -3563,7 +3562,7 @@
       },
       "avgLoopsCleared": 4.42,
       "avgBossesKilled": 0.83,
-      "avgDamageDealt": 3688,
+      "avgDamageDealt": 3711,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3574,7 +3573,7 @@
           "reached": 12,
           "won": 6,
           "winRate": 0.5,
-          "avgHpEnter": 1.187
+          "avgHpEnter": 1.194
         }
       },
       "meta": {
@@ -3613,7 +3612,7 @@
           "reached": 12,
           "won": 7,
           "winRate": 0.583,
-          "avgHpEnter": 1.051
+          "avgHpEnter": 1.058
         }
       },
       "meta": {
@@ -3642,7 +3641,7 @@
       },
       "avgLoopsCleared": 4,
       "avgBossesKilled": 0.58,
-      "avgDamageDealt": 3779,
+      "avgDamageDealt": 3786,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3653,7 +3652,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.724
+          "avgHpEnter": 1.733
         }
       },
       "meta": {
@@ -3675,7 +3674,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3900,
+      "avgDamageDealt": 3906,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3719,7 +3718,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.444
+          "avgHpEnter": 1.451
         }
       },
       "meta": {
@@ -3741,7 +3740,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4130,
+      "avgDamageDealt": 4135,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3785,7 +3784,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 1.597
+          "avgHpEnter": 1.602
         }
       },
       "meta": {
@@ -3807,7 +3806,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3920,
+      "avgDamageDealt": 3921,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3873,7 +3872,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4157,
+      "avgDamageDealt": 4160,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3906,7 +3905,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4275,
+      "avgDamageDealt": 4286,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3939,7 +3938,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3711,
+      "avgDamageDealt": 3690,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -3972,7 +3971,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4912,
+      "avgDamageDealt": 4932,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4005,7 +4004,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3727,
+      "avgDamageDealt": 3724,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4038,7 +4037,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4432,
+      "avgDamageDealt": 4440,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4071,7 +4070,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3585,
+      "avgDamageDealt": 3586,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4104,7 +4103,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3456,
+      "avgDamageDealt": 3455,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4170,7 +4169,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3650,
+      "avgDamageDealt": 3649,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4203,7 +4202,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3494,
+      "avgDamageDealt": 3495,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4236,7 +4235,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4373,
+      "avgDamageDealt": 4375,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4269,7 +4268,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4388,
+      "avgDamageDealt": 4395,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4280,7 +4279,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.32
+          "avgHpEnter": 2.316
         }
       },
       "meta": {
@@ -4302,7 +4301,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4648,
+      "avgDamageDealt": 4640,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4368,7 +4367,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4192,
+      "avgDamageDealt": 4194,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4401,7 +4400,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4519,
+      "avgDamageDealt": 4518,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4434,7 +4433,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4627,
+      "avgDamageDealt": 4630,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4467,7 +4466,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4622,
+      "avgDamageDealt": 4621,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4500,7 +4499,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4381,
+      "avgDamageDealt": 4387,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4533,7 +4532,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4511,
+      "avgDamageDealt": 4512,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4566,7 +4565,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4307,
+      "avgDamageDealt": 4304,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4599,7 +4598,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4459,
+      "avgDamageDealt": 4455,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4632,7 +4631,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4146,
+      "avgDamageDealt": 4145,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -4643,7 +4642,7 @@
           "reached": 12,
           "won": 12,
           "winRate": 1,
-          "avgHpEnter": 2.343
+          "avgHpEnter": 2.3
         }
       },
       "meta": {
@@ -4665,7 +4664,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 5,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 4421,
+      "avgDamageDealt": 4493,
       "reachedFirstBossRate": 0,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": null
@@ -5179,7 +5178,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 1249
+          "totalDamage": 1240
         },
         {
           "died": true,
@@ -5354,13 +5353,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.43
+            "iron_golem": 1.35
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 13,
-          "totalDamage": 1776
+          "totalDamage": 1792
         },
         {
           "died": true,
@@ -5376,7 +5375,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 2269
+          "totalDamage": 2266
         },
         {
           "died": true,
@@ -5520,7 +5519,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2084
+          "totalDamage": 2098
         }
       ]
     },
@@ -5540,7 +5539,7 @@
           "iron_golem": "loss"
         },
         "totalFights": 17,
-        "totalDamage": 2121
+        "totalDamage": 2109
       },
       "results": [
         {
@@ -5557,7 +5556,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2121
+          "totalDamage": 2109
         },
         {
           "died": true,
@@ -5637,7 +5636,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1719
+          "totalDamage": 1705
         },
         {
           "died": true,
@@ -5733,7 +5732,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2124
+          "totalDamage": 2112
         }
       ]
     },
@@ -5866,7 +5865,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 2433
+          "totalDamage": 2436
         },
         {
           "died": true,
@@ -5946,7 +5945,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 13,
-          "totalDamage": 1658
+          "totalDamage": 1641
         }
       ]
     },
@@ -5993,13 +5992,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.34
+            "iron_golem": 1.28
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 15,
-          "totalDamage": 1718
+          "totalDamage": 1721
         },
         {
           "died": true,
@@ -6031,7 +6030,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 2247
+          "totalDamage": 2244
         },
         {
           "died": true,
@@ -6063,7 +6062,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1683
+          "totalDamage": 1692
         },
         {
           "died": true,
@@ -6159,7 +6158,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2052
+          "totalDamage": 2032
         }
       ]
     },
@@ -6292,7 +6291,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2065
+          "totalDamage": 2062
         },
         {
           "died": true,
@@ -6579,13 +6578,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.15
+            "iron_golem": 1.21
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2247
+          "totalDamage": 2277
         }
       ]
     },
@@ -7160,7 +7159,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2046
+          "totalDamage": 2023
         },
         {
           "died": true,
@@ -7319,13 +7318,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.31
+            "iron_golem": 1.39
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2354
+          "totalDamage": 2365
         },
         {
           "died": true,
@@ -7389,7 +7388,7 @@
             "iron_golem": "win"
           },
           "totalFights": 34,
-          "totalDamage": 3855
+          "totalDamage": 3835
         },
         {
           "died": true,
@@ -7421,7 +7420,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1918
+          "totalDamage": 1915
         },
         {
           "died": true,
@@ -7548,7 +7547,7 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.06
+            "iron_golem": 0.98
           },
           "bossResult": {
             "iron_golem": "loss"
@@ -7564,13 +7563,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.24
+            "iron_golem": 1.31
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 2715
+          "totalDamage": 2687
         },
         {
           "died": true,
@@ -7670,7 +7669,7 @@
           "iron_golem": "loss"
         },
         "totalFights": 14,
-        "totalDamage": 1715
+        "totalDamage": 1696
       },
       "results": [
         {
@@ -7687,7 +7686,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1715
+          "totalDamage": 1696
         },
         {
           "died": true,
@@ -7761,13 +7760,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.48
+            "iron_golem": 1.47
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2169
+          "totalDamage": 2179
         },
         {
           "died": true,
@@ -7831,7 +7830,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 27,
-          "totalDamage": 2904
+          "totalDamage": 2919
         },
         {
           "died": true,
@@ -7932,7 +7931,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 1803
+          "totalDamage": 1789
         },
         {
           "died": true,
@@ -7996,7 +7995,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2416
+          "totalDamage": 2430
         },
         {
           "died": true,
@@ -8070,13 +8069,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.23
+            "iron_golem": 1.29
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1789
+          "totalDamage": 1759
         }
       ]
     },
@@ -8193,7 +8192,7 @@
             "iron_golem": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2063
+          "totalDamage": 2075
         },
         {
           "died": true,
@@ -8358,7 +8357,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4142
+          "totalDamage": 4134
         },
         {
           "died": false,
@@ -8390,7 +8389,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3511
+          "totalDamage": 3493
         },
         {
           "died": false,
@@ -8502,7 +8501,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4041
+          "totalDamage": 4050
         }
       ]
     },
@@ -8571,7 +8570,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2791
+          "totalDamage": 2794
         },
         {
           "died": true,
@@ -8587,7 +8586,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 26,
-          "totalDamage": 3092
+          "totalDamage": 3066
         },
         {
           "died": true,
@@ -8661,13 +8660,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.58
+            "bog_witch": 0.65
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 2753
+          "totalDamage": 2867
         },
         {
           "died": true,
@@ -8800,7 +8799,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 4624
+          "totalDamage": 4625
         },
         {
           "died": false,
@@ -8816,7 +8815,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3044
+          "totalDamage": 3036
         },
         {
           "died": false,
@@ -9023,13 +9022,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.65
+            "bog_witch": 0.66
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 26,
-          "totalDamage": 4769
+          "totalDamage": 4781
         },
         {
           "died": false,
@@ -9045,7 +9044,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 3315
+          "totalDamage": 3295
         },
         {
           "died": false,
@@ -9109,7 +9108,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 5379
+          "totalDamage": 5372
         },
         {
           "died": false,
@@ -9210,7 +9209,7 @@
             "bog_witch": "win"
           },
           "totalFights": 17,
-          "totalDamage": 2780
+          "totalDamage": 2748
         },
         {
           "died": false,
@@ -9226,7 +9225,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3633
+          "totalDamage": 3603
         },
         {
           "died": false,
@@ -9338,7 +9337,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3741
+          "totalDamage": 3739
         },
         {
           "died": false,
@@ -9449,13 +9448,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.11
+            "bog_witch": 1.05
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4010
+          "totalDamage": 4015
         },
         {
           "died": true,
@@ -9567,7 +9566,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 3606
+          "totalDamage": 3604
         }
       ]
     },
@@ -9620,7 +9619,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 3031
+          "totalDamage": 3052
         },
         {
           "died": true,
@@ -9684,7 +9683,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3487
+          "totalDamage": 3495
         },
         {
           "died": true,
@@ -9838,18 +9837,18 @@
         {
           "died": true,
           "deathLoop": 31,
-          "deathEnemy": "fire_elemental",
+          "deathEnemy": "venomous_kobra",
           "deathWasBoss": false,
           "loopsCleared": 4,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 0.98
+            "bog_witch": 0.92
           },
           "bossResult": {
             "bog_witch": "win"
           },
-          "totalFights": 27,
-          "totalDamage": 3711
+          "totalFights": 26,
+          "totalDamage": 3672
         },
         {
           "died": false,
@@ -9859,13 +9858,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.23
+            "bog_witch": 1.31
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 3008
+          "totalDamage": 3006
         },
         {
           "died": true,
@@ -9923,13 +9922,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.48
+            "bog_witch": 0.55
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 3104
+          "totalDamage": 3191
         },
         {
           "died": true,
@@ -9955,13 +9954,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.34
+            "bog_witch": 1.4
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3358
+          "totalDamage": 3340
         },
         {
           "died": false,
@@ -10046,7 +10045,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2628
+          "totalDamage": 2604
         },
         {
           "died": true,
@@ -10056,13 +10055,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.62
+            "bog_witch": 0.65
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2543
+          "totalDamage": 2660
         },
         {
           "died": true,
@@ -10190,7 +10189,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3105
+          "totalDamage": 3081
         },
         {
           "died": true,
@@ -10226,7 +10225,7 @@
           "bog_witch": "win"
         },
         "totalFights": 23,
-        "totalDamage": 3047
+        "totalDamage": 3062
       },
       "results": [
         {
@@ -10243,7 +10242,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3047
+          "totalDamage": 3062
         },
         {
           "died": false,
@@ -10259,7 +10258,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4086
+          "totalDamage": 4088
         },
         {
           "died": false,
@@ -10275,7 +10274,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3692
+          "totalDamage": 3691
         },
         {
           "died": false,
@@ -10307,7 +10306,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3617
+          "totalDamage": 3636
         },
         {
           "died": false,
@@ -10323,7 +10322,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3476
+          "totalDamage": 3485
         },
         {
           "died": false,
@@ -10439,7 +10438,7 @@
           "bog_witch": "win"
         },
         "totalFights": 27,
-        "totalDamage": 4254
+        "totalDamage": 4219
       },
       "results": [
         {
@@ -10456,7 +10455,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4254
+          "totalDamage": 4219
         },
         {
           "died": false,
@@ -10536,7 +10535,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 4852
+          "totalDamage": 4810
         },
         {
           "died": false,
@@ -10616,7 +10615,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4780
+          "totalDamage": 4778
         },
         {
           "died": false,
@@ -10632,7 +10631,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4273
+          "totalDamage": 4232
         }
       ]
     },
@@ -10652,7 +10651,7 @@
           "bog_witch": "win"
         },
         "totalFights": 31,
-        "totalDamage": 4920
+        "totalDamage": 5037
       },
       "results": [
         {
@@ -10669,7 +10668,7 @@
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4920
+          "totalDamage": 5037
         },
         {
           "died": false,
@@ -10717,7 +10716,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3678
+          "totalDamage": 3676
         },
         {
           "died": false,
@@ -10733,7 +10732,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 3324
+          "totalDamage": 3239
         },
         {
           "died": false,
@@ -10797,7 +10796,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4730
+          "totalDamage": 4712
         },
         {
           "died": false,
@@ -10946,7 +10945,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 5977
+          "totalDamage": 5993
         },
         {
           "died": false,
@@ -10962,7 +10961,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4547
+          "totalDamage": 4545
         },
         {
           "died": false,
@@ -10994,7 +10993,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 3529
+          "totalDamage": 3501
         },
         {
           "died": false,
@@ -11105,29 +11104,29 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.32
+            "bog_witch": 1.25
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4081
+          "totalDamage": 4070
         },
         {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.68
+            "bog_witch": 0.53
           },
           "bossResult": {
-            "bog_witch": "win"
+            "bog_witch": "loss"
           },
-          "totalFights": 20,
-          "totalDamage": 4291
+          "totalFights": 15,
+          "totalDamage": 3271
         },
         {
           "died": false,
@@ -11143,7 +11142,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4465
+          "totalDamage": 4450
         },
         {
           "died": false,
@@ -11169,13 +11168,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.09
+            "bog_witch": 1.06
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4381
+          "totalDamage": 4595
         },
         {
           "died": false,
@@ -11191,7 +11190,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4548
+          "totalDamage": 4565
         },
         {
           "died": false,
@@ -11255,7 +11254,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4681
+          "totalDamage": 4671
         },
         {
           "died": false,
@@ -11271,7 +11270,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4091
+          "totalDamage": 4099
         }
       ]
     },
@@ -11291,7 +11290,7 @@
           "bog_witch": "win"
         },
         "totalFights": 21,
-        "totalDamage": 4312
+        "totalDamage": 4326
       },
       "results": [
         {
@@ -11308,7 +11307,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 4312
+          "totalDamage": 4326
         },
         {
           "died": false,
@@ -11340,7 +11339,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 5464
+          "totalDamage": 5492
         },
         {
           "died": false,
@@ -11372,7 +11371,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4779
+          "totalDamage": 4831
         },
         {
           "died": false,
@@ -11404,7 +11403,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 5317
+          "totalDamage": 5171
         },
         {
           "died": false,
@@ -11420,7 +11419,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 4265
+          "totalDamage": 4319
         },
         {
           "died": false,
@@ -11436,7 +11435,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 5314
+          "totalDamage": 5323
         },
         {
           "died": false,
@@ -11446,13 +11445,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.19
+            "bog_witch": 1.1
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 4457
+          "totalDamage": 4388
         },
         {
           "died": false,
@@ -11484,7 +11483,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4551
+          "totalDamage": 4497
         }
       ]
     },
@@ -11547,13 +11546,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.32
+            "bog_witch": 1.39
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3413
+          "totalDamage": 3427
         },
         {
           "died": true,
@@ -11579,13 +11578,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 0.84
+            "bog_witch": 0.9
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4028
+          "totalDamage": 4030
         },
         {
           "died": false,
@@ -11627,13 +11626,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.33
+            "bog_witch": 1.47
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 17,
-          "totalDamage": 3283
+          "totalDamage": 3241
         },
         {
           "died": false,
@@ -11675,13 +11674,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.53
+            "bog_witch": 0.46
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 3173
+          "totalDamage": 3179
         },
         {
           "died": false,
@@ -11750,7 +11749,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4550
+          "totalDamage": 4734
         },
         {
           "died": false,
@@ -11760,13 +11759,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.21
+            "bog_witch": 1.1
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 5531
+          "totalDamage": 5632
         },
         {
           "died": false,
@@ -11814,7 +11813,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4396
+          "totalDamage": 4357
         },
         {
           "died": false,
@@ -11862,7 +11861,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 4321
+          "totalDamage": 4187
         },
         {
           "died": false,
@@ -11979,7 +11978,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 5101
+          "totalDamage": 5121
         },
         {
           "died": false,
@@ -12011,7 +12010,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4790
+          "totalDamage": 4794
         },
         {
           "died": false,
@@ -12027,7 +12026,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4050
+          "totalDamage": 4065
         },
         {
           "died": false,
@@ -12059,7 +12058,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4136
+          "totalDamage": 4134
         },
         {
           "died": false,
@@ -12107,7 +12106,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4351
+          "totalDamage": 4370
         },
         {
           "died": false,
@@ -12123,7 +12122,7 @@
             "bog_witch": "win"
           },
           "totalFights": 34,
-          "totalDamage": 5573
+          "totalDamage": 5559
         }
       ]
     },
@@ -12170,13 +12169,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.18
+            "bog_witch": 1.22
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 5601
+          "totalDamage": 5785
         },
         {
           "died": false,
@@ -12240,7 +12239,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4670
+          "totalDamage": 4684
         },
         {
           "died": false,
@@ -12256,7 +12255,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4897
+          "totalDamage": 4830
         },
         {
           "died": false,
@@ -12336,7 +12335,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3891
+          "totalDamage": 3877
         }
       ]
     },
@@ -12383,13 +12382,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.1
+            "bog_witch": 1.03
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4468
+          "totalDamage": 4484
         },
         {
           "died": false,
@@ -12399,13 +12398,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 0.63
+            "bog_witch": 0.7
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 5094
+          "totalDamage": 5078
         },
         {
           "died": false,
@@ -12463,13 +12462,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.01
+            "bog_witch": 1.08
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3602
+          "totalDamage": 3582
         },
         {
           "died": false,
@@ -12490,18 +12489,18 @@
         {
           "died": true,
           "deathLoop": 31,
-          "deathEnemy": "scorpion",
+          "deathEnemy": "lost_lizard",
           "deathWasBoss": false,
           "loopsCleared": 4,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 0.56
+            "bog_witch": 0.5
           },
           "bossResult": {
             "bog_witch": "win"
           },
-          "totalFights": 30,
-          "totalDamage": 4910
+          "totalFights": 29,
+          "totalDamage": 4780
         },
         {
           "died": true,
@@ -12533,7 +12532,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4759
+          "totalDamage": 4751
         },
         {
           "died": false,
@@ -12698,7 +12697,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3386
+          "totalDamage": 3435
         },
         {
           "died": false,
@@ -12724,13 +12723,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.2
+            "bog_witch": 1.27
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3556
+          "totalDamage": 3575
         },
         {
           "died": false,
@@ -12782,7 +12781,7 @@
           "bog_witch": "win"
         },
         "totalFights": 28,
-        "totalDamage": 4694
+        "totalDamage": 4630
       },
       "results": [
         {
@@ -12799,7 +12798,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4694
+          "totalDamage": 4630
         },
         {
           "died": false,
@@ -12863,7 +12862,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 3384
+          "totalDamage": 3358
         },
         {
           "died": false,
@@ -12975,7 +12974,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4366
+          "totalDamage": 4411
         }
       ]
     },
@@ -12995,7 +12994,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 4253
+        "totalDamage": 4278
       },
       "results": [
         {
@@ -13012,7 +13011,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4253
+          "totalDamage": 4278
         },
         {
           "died": false,
@@ -13124,7 +13123,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4065
+          "totalDamage": 4059
         },
         {
           "died": false,
@@ -13208,7 +13207,7 @@
           "bog_witch": "win"
         },
         "totalFights": 27,
-        "totalDamage": 4714
+        "totalDamage": 4712
       },
       "results": [
         {
@@ -13225,7 +13224,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4714
+          "totalDamage": 4712
         },
         {
           "died": false,
@@ -13241,7 +13240,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4844
+          "totalDamage": 4846
         },
         {
           "died": false,
@@ -13257,7 +13256,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4402
+          "totalDamage": 4404
         },
         {
           "died": false,
@@ -13337,7 +13336,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 5075
+          "totalDamage": 5167
         },
         {
           "died": false,
@@ -13353,7 +13352,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4728
+          "totalDamage": 4730
         },
         {
           "died": false,
@@ -13401,7 +13400,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 5000
+          "totalDamage": 4953
         }
       ]
     },
@@ -13421,7 +13420,7 @@
           "bog_witch": "loss"
         },
         "totalFights": 17,
-        "totalDamage": 2443
+        "totalDamage": 2423
       },
       "results": [
         {
@@ -13438,7 +13437,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2443
+          "totalDamage": 2423
         },
         {
           "died": true,
@@ -13450,7 +13449,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 13,
-          "totalDamage": 1502
+          "totalDamage": 1506
         },
         {
           "died": true,
@@ -13566,7 +13565,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 27,
-          "totalDamage": 3109
+          "totalDamage": 3105
         },
         {
           "died": true,
@@ -13578,7 +13577,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 10,
-          "totalDamage": 1151
+          "totalDamage": 1155
         },
         {
           "died": true,
@@ -13594,7 +13593,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2551
+          "totalDamage": 2541
         }
       ]
     },
@@ -13610,7 +13609,7 @@
         "hpEnteringBoss": {},
         "bossResult": {},
         "totalFights": 9,
-        "totalDamage": 1067
+        "totalDamage": 1064
       },
       "results": [
         {
@@ -13623,7 +13622,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 9,
-          "totalDamage": 1067
+          "totalDamage": 1064
         },
         {
           "died": true,
@@ -13667,7 +13666,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 10,
-          "totalDamage": 1341
+          "totalDamage": 1339
         },
         {
           "died": true,
@@ -13683,7 +13682,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2508
+          "totalDamage": 2509
         },
         {
           "died": true,
@@ -13715,7 +13714,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2602
+          "totalDamage": 2641
         },
         {
           "died": true,
@@ -13807,7 +13806,7 @@
           "bog_witch": "loss"
         },
         "totalFights": 18,
-        "totalDamage": 2734
+        "totalDamage": 2736
       },
       "results": [
         {
@@ -13824,7 +13823,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2734
+          "totalDamage": 2736
         },
         {
           "died": true,
@@ -13840,7 +13839,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2726
+          "totalDamage": 2721
         },
         {
           "died": true,
@@ -13936,7 +13935,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 10,
-          "totalDamage": 1379
+          "totalDamage": 1364
         },
         {
           "died": true,
@@ -13980,7 +13979,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 2787
+          "totalDamage": 2776
         }
       ]
     },
@@ -14033,7 +14032,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2559
+          "totalDamage": 2551
         },
         {
           "died": true,
@@ -14049,7 +14048,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 1876
+          "totalDamage": 1875
         },
         {
           "died": true,
@@ -14065,7 +14064,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 2121
+          "totalDamage": 2131
         },
         {
           "died": true,
@@ -14125,7 +14124,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 26,
-          "totalDamage": 3403
+          "totalDamage": 3402
         },
         {
           "died": true,
@@ -14201,7 +14200,7 @@
           "bog_witch": "loss"
         },
         "totalFights": 23,
-        "totalDamage": 3362
+        "totalDamage": 3364
       },
       "results": [
         {
@@ -14218,7 +14217,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 3362
+          "totalDamage": 3364
         },
         {
           "died": true,
@@ -14298,7 +14297,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 17,
-          "totalDamage": 2553
+          "totalDamage": 2549
         },
         {
           "died": true,
@@ -14358,7 +14357,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2650
+          "totalDamage": 2664
         },
         {
           "died": true,
@@ -14435,7 +14434,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 13,
-          "totalDamage": 2005
+          "totalDamage": 2001
         },
         {
           "died": true,
@@ -14559,7 +14558,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 25,
-          "totalDamage": 3068
+          "totalDamage": 3079
         },
         {
           "died": true,
@@ -14644,7 +14643,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 1883
+          "totalDamage": 1894
         },
         {
           "died": true,
@@ -14708,7 +14707,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 15,
-          "totalDamage": 1936
+          "totalDamage": 1938
         },
         {
           "died": true,
@@ -14809,7 +14808,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 2898
+          "totalDamage": 2906
         },
         {
           "died": true,
@@ -14861,7 +14860,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 2782
+          "totalDamage": 2780
         },
         {
           "died": true,
@@ -14921,7 +14920,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2228
+          "totalDamage": 2230
         },
         {
           "died": true,
@@ -14937,7 +14936,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 2965
+          "totalDamage": 2964
         },
         {
           "died": true,
@@ -15026,7 +15025,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 11,
-          "totalDamage": 1577
+          "totalDamage": 1586
         },
         {
           "died": true,
@@ -15098,7 +15097,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 21,
-          "totalDamage": 2580
+          "totalDamage": 2571
         },
         {
           "died": true,
@@ -15114,7 +15113,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 25,
-          "totalDamage": 2877
+          "totalDamage": 2873
         },
         {
           "died": true,
@@ -15130,7 +15129,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 3048
+          "totalDamage": 3050
         },
         {
           "died": true,
@@ -15146,7 +15145,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2120
+          "totalDamage": 2114
         }
       ]
     },
@@ -15223,7 +15222,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 6,
-          "totalDamage": 662
+          "totalDamage": 701
         },
         {
           "died": true,
@@ -15259,7 +15258,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 14,
-          "totalDamage": 1574
+          "totalDamage": 1582
         },
         {
           "died": true,
@@ -15271,7 +15270,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 17,
-          "totalDamage": 1970
+          "totalDamage": 1980
         },
         {
           "died": true,
@@ -15360,7 +15359,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 5963
+          "totalDamage": 5833
         },
         {
           "died": false,
@@ -15376,7 +15375,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4964
+          "totalDamage": 4974
         },
         {
           "died": false,
@@ -15408,7 +15407,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 5783
+          "totalDamage": 5805
         },
         {
           "died": false,
@@ -15424,7 +15423,7 @@
             "bog_witch": "win"
           },
           "totalFights": 34,
-          "totalDamage": 7565
+          "totalDamage": 7554
         },
         {
           "died": false,
@@ -15472,7 +15471,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 5777
+          "totalDamage": 5765
         },
         {
           "died": false,
@@ -15520,7 +15519,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 6379
+          "totalDamage": 6288
         }
       ]
     },
@@ -15540,7 +15539,7 @@
           "bog_witch": "loss"
         },
         "totalFights": 17,
-        "totalDamage": 2144
+        "totalDamage": 2151
       },
       "results": [
         {
@@ -15557,7 +15556,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2144
+          "totalDamage": 2151
         },
         {
           "died": true,
@@ -15733,7 +15732,7 @@
           "bog_witch": "win"
         },
         "totalFights": 30,
-        "totalDamage": 13480
+        "totalDamage": 13707
       },
       "results": [
         {
@@ -15750,7 +15749,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 13480
+          "totalDamage": 13707
         },
         {
           "died": false,
@@ -15782,7 +15781,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 13806
+          "totalDamage": 14576
         },
         {
           "died": false,
@@ -15798,7 +15797,7 @@
             "bog_witch": "win"
           },
           "totalFights": 14,
-          "totalDamage": 6425
+          "totalDamage": 6569
         },
         {
           "died": false,
@@ -15814,7 +15813,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 11966
+          "totalDamage": 11994
         },
         {
           "died": false,
@@ -15878,7 +15877,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 9796
+          "totalDamage": 9996
         },
         {
           "died": false,
@@ -15910,7 +15909,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 8963
+          "totalDamage": 9245
         },
         {
           "died": false,
@@ -15926,7 +15925,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 12819
+          "totalDamage": 12721
         }
       ]
     },
@@ -15979,7 +15978,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 5267
+          "totalDamage": 5379
         },
         {
           "died": false,
@@ -16011,7 +16010,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 4301
+          "totalDamage": 4297
         },
         {
           "died": false,
@@ -16027,7 +16026,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 7265
+          "totalDamage": 7255
         },
         {
           "died": false,
@@ -16107,7 +16106,7 @@
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 7268
+          "totalDamage": 7148
         },
         {
           "died": false,
@@ -16123,7 +16122,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 7338
+          "totalDamage": 7478
         },
         {
           "died": false,
@@ -16224,7 +16223,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 3244
+          "totalDamage": 3310
         },
         {
           "died": true,
@@ -16256,7 +16255,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 3377
+          "totalDamage": 3348
         },
         {
           "died": true,
@@ -16477,7 +16476,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 10,
-          "totalDamage": 1361
+          "totalDamage": 1373
         },
         {
           "died": true,
@@ -16489,7 +16488,7 @@
           "hpEnteringBoss": {},
           "bossResult": {},
           "totalFights": 10,
-          "totalDamage": 1166
+          "totalDamage": 1165
         },
         {
           "died": true,
@@ -16598,7 +16597,7 @@
             "iron_golem": "win"
           },
           "totalFights": 16,
-          "totalDamage": 2426
+          "totalDamage": 2424
         },
         {
           "died": false,
@@ -16710,7 +16709,7 @@
             "iron_golem": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3553
+          "totalDamage": 3557
         },
         {
           "died": false,
@@ -16933,7 +16932,7 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "iron_golem": 1.571
+            "iron_golem": 1.586
           },
           "bossResult": {
             "iron_golem": "win"
@@ -17236,20 +17235,20 @@
           "totalDamage": 3462
         },
         {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.114
+            "iron_golem": 1.043
           },
           "bossResult": {
-            "iron_golem": "win"
+            "iron_golem": "loss"
           },
-          "totalFights": 26,
-          "totalDamage": 4221
+          "totalFights": 24,
+          "totalDamage": 3658
         },
         {
           "died": false,
@@ -17259,13 +17258,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "iron_golem": 1.629
+            "iron_golem": 1.514
           },
           "bossResult": {
             "iron_golem": "win"
           },
           "totalFights": 16,
-          "totalDamage": 2818
+          "totalDamage": 2814
         },
         {
           "died": false,
@@ -17520,13 +17519,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.371
+            "iron_golem": 1.3
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 1953
+          "totalDamage": 1947
         },
         {
           "died": true,
@@ -17594,7 +17593,7 @@
           "iron_golem": "win"
         },
         "totalFights": 23,
-        "totalDamage": 2638
+        "totalDamage": 2625
       },
       "results": [
         {
@@ -17611,7 +17610,7 @@
             "iron_golem": "win"
           },
           "totalFights": 23,
-          "totalDamage": 2638
+          "totalDamage": 2625
         },
         {
           "died": false,
@@ -17643,7 +17642,7 @@
             "iron_golem": "win"
           },
           "totalFights": 20,
-          "totalDamage": 2291
+          "totalDamage": 2293
         },
         {
           "died": false,
@@ -17765,13 +17764,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 0.9
+            "iron_golem": 0.986
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2398
+          "totalDamage": 2456
         },
         {
           "died": false,
@@ -17840,7 +17839,7 @@
             "iron_golem": "win"
           },
           "totalFights": 25,
-          "totalDamage": 2839
+          "totalDamage": 2841
         },
         {
           "died": true,
@@ -17856,7 +17855,7 @@
             "iron_golem": "win"
           },
           "totalFights": 22,
-          "totalDamage": 2484
+          "totalDamage": 2488
         },
         {
           "died": false,
@@ -17888,7 +17887,7 @@
             "iron_golem": "win"
           },
           "totalFights": 23,
-          "totalDamage": 2998
+          "totalDamage": 2988
         },
         {
           "died": false,
@@ -18053,7 +18052,7 @@
             "iron_golem": "win"
           },
           "totalFights": 23,
-          "totalDamage": 2914
+          "totalDamage": 2909
         },
         {
           "died": false,
@@ -18149,7 +18148,7 @@
             "iron_golem": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2663
+          "totalDamage": 2677
         },
         {
           "died": false,
@@ -18233,7 +18232,7 @@
           "iron_golem": "win"
         },
         "totalFights": 19,
-        "totalDamage": 2604
+        "totalDamage": 2599
       },
       "results": [
         {
@@ -18250,7 +18249,7 @@
             "iron_golem": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2604
+          "totalDamage": 2599
         },
         {
           "died": false,
@@ -18266,7 +18265,7 @@
             "iron_golem": "win"
           },
           "totalFights": 20,
-          "totalDamage": 2584
+          "totalDamage": 2601
         },
         {
           "died": false,
@@ -18356,13 +18355,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 0.87
+            "iron_golem": 0.79
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 13,
-          "totalDamage": 2003
+          "totalDamage": 1916
         },
         {
           "died": false,
@@ -18378,7 +18377,7 @@
             "iron_golem": "win"
           },
           "totalFights": 16,
-          "totalDamage": 2344
+          "totalDamage": 2313
         },
         {
           "died": false,
@@ -18426,7 +18425,7 @@
             "iron_golem": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2762
+          "totalDamage": 2749
         }
       ]
     },
@@ -18750,29 +18749,29 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 0.55
+            "iron_golem": 0.63
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2140
+          "totalDamage": 2172
         },
         {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 1.1
+            "iron_golem": 1.02
           },
           "bossResult": {
-            "iron_golem": "win"
+            "iron_golem": "loss"
           },
-          "totalFights": 20,
-          "totalDamage": 2768
+          "totalFights": 17,
+          "totalDamage": 2345
         },
         {
           "died": false,
@@ -18798,13 +18797,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "iron_golem": 0.86
+            "iron_golem": 0.81
           },
           "bossResult": {
             "iron_golem": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2444
+          "totalDamage": 2349
         },
         {
           "died": false,
@@ -18872,7 +18871,7 @@
           "iron_golem": "win"
         },
         "totalFights": 23,
-        "totalDamage": 3275
+        "totalDamage": 3267
       },
       "results": [
         {
@@ -18889,7 +18888,7 @@
             "iron_golem": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3275
+          "totalDamage": 3267
         },
         {
           "died": false,
@@ -18905,7 +18904,7 @@
             "iron_golem": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2677
+          "totalDamage": 2674
         },
         {
           "died": false,
@@ -19085,7 +19084,7 @@
           "bog_witch": "win"
         },
         "totalFights": 20,
-        "totalDamage": 3016
+        "totalDamage": 3047
       },
       "results": [
         {
@@ -19102,7 +19101,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3016
+          "totalDamage": 3047
         },
         {
           "died": false,
@@ -19112,29 +19111,29 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.871
+            "bog_witch": 1.957
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4426
+          "totalDamage": 4419
         },
         {
-          "died": true,
-          "deathLoop": 30,
-          "deathEnemy": "bog_witch",
-          "deathWasBoss": true,
-          "loopsCleared": 3,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "bog_witch": 1.429
           },
           "bossResult": {
-            "bog_witch": "loss"
+            "bog_witch": "win"
           },
-          "totalFights": 21,
-          "totalDamage": 3238
+          "totalFights": 30,
+          "totalDamage": 4382
         },
         {
           "died": false,
@@ -19150,7 +19149,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 2717
+          "totalDamage": 2714
         },
         {
           "died": false,
@@ -19166,7 +19165,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2971
+          "totalDamage": 2980
         },
         {
           "died": false,
@@ -19176,13 +19175,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.929
+            "bog_witch": 1.9
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3101
+          "totalDamage": 3126
         },
         {
           "died": false,
@@ -19192,13 +19191,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 2.143
+            "bog_witch": 2.129
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3293
+          "totalDamage": 3313
         },
         {
           "died": false,
@@ -19214,7 +19213,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3155
+          "totalDamage": 3134
         },
         {
           "died": false,
@@ -19230,7 +19229,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3425
+          "totalDamage": 3404
         },
         {
           "died": false,
@@ -19246,7 +19245,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3243
+          "totalDamage": 3263
         },
         {
           "died": false,
@@ -19256,13 +19255,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.914
+            "bog_witch": 1.843
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4136
+          "totalDamage": 4148
         },
         {
           "died": false,
@@ -19278,7 +19277,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3524
+          "totalDamage": 3505
         }
       ]
     },
@@ -19298,7 +19297,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 3318
+        "totalDamage": 3333
       },
       "results": [
         {
@@ -19315,7 +19314,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3318
+          "totalDamage": 3333
         },
         {
           "died": false,
@@ -19331,7 +19330,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3023
+          "totalDamage": 2959
         },
         {
           "died": false,
@@ -19347,7 +19346,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4138
+          "totalDamage": 4097
         },
         {
           "died": false,
@@ -19363,7 +19362,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4087
+          "totalDamage": 4046
         },
         {
           "died": false,
@@ -19379,7 +19378,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4061
+          "totalDamage": 4037
         },
         {
           "died": false,
@@ -19395,7 +19394,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3304
+          "totalDamage": 3352
         },
         {
           "died": false,
@@ -19411,7 +19410,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3585
+          "totalDamage": 3606
         },
         {
           "died": false,
@@ -19427,7 +19426,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 2899
+          "totalDamage": 2879
         },
         {
           "died": false,
@@ -19443,7 +19442,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3073
+          "totalDamage": 3045
         },
         {
           "died": false,
@@ -19459,7 +19458,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3382
+          "totalDamage": 3353
         },
         {
           "died": false,
@@ -19475,7 +19474,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3069
+          "totalDamage": 3048
         },
         {
           "died": false,
@@ -19491,7 +19490,7 @@
             "bog_witch": "win"
           },
           "totalFights": 36,
-          "totalDamage": 4747
+          "totalDamage": 4724
         }
       ]
     },
@@ -19511,7 +19510,7 @@
           "bog_witch": "win"
         },
         "totalFights": 21,
-        "totalDamage": 2998
+        "totalDamage": 3131
       },
       "results": [
         {
@@ -19528,7 +19527,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2998
+          "totalDamage": 3131
         },
         {
           "died": false,
@@ -19544,7 +19543,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 3588
+          "totalDamage": 3797
         },
         {
           "died": false,
@@ -19554,13 +19553,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 2.143
+            "bog_witch": 2.129
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2821
+          "totalDamage": 2939
         },
         {
           "died": false,
@@ -19576,7 +19575,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3377
+          "totalDamage": 3601
         },
         {
           "died": false,
@@ -19592,7 +19591,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3424
+          "totalDamage": 3621
         },
         {
           "died": false,
@@ -19608,7 +19607,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3374
+          "totalDamage": 3474
         },
         {
           "died": false,
@@ -19618,13 +19617,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.843
+            "bog_witch": 1.857
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3456
+          "totalDamage": 3552
         },
         {
           "died": false,
@@ -19640,7 +19639,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3041
+          "totalDamage": 3164
         },
         {
           "died": false,
@@ -19656,7 +19655,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3837
+          "totalDamage": 3991
         },
         {
           "died": false,
@@ -19672,7 +19671,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3042
+          "totalDamage": 3174
         },
         {
           "died": false,
@@ -19688,7 +19687,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 3634
+          "totalDamage": 3821
         },
         {
           "died": false,
@@ -19698,13 +19697,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.357
+            "bog_witch": 1.571
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 2739
+          "totalDamage": 2847
         }
       ]
     },
@@ -19724,7 +19723,7 @@
           "bog_witch": "win"
         },
         "totalFights": 22,
-        "totalDamage": 3226
+        "totalDamage": 3234
       },
       "results": [
         {
@@ -19741,7 +19740,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3226
+          "totalDamage": 3234
         },
         {
           "died": false,
@@ -19757,7 +19756,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4028
+          "totalDamage": 4054
         },
         {
           "died": false,
@@ -19767,13 +19766,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.9
+            "bog_witch": 2
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3229
+          "totalDamage": 3246
         },
         {
           "died": false,
@@ -19789,7 +19788,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3655
+          "totalDamage": 3580
         },
         {
           "died": false,
@@ -19805,7 +19804,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3788
+          "totalDamage": 3750
         },
         {
           "died": false,
@@ -19821,7 +19820,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3445
+          "totalDamage": 3464
         },
         {
           "died": false,
@@ -19837,7 +19836,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3071
+          "totalDamage": 3025
         },
         {
           "died": false,
@@ -19847,13 +19846,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.643
+            "bog_witch": 1.843
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4707
+          "totalDamage": 4683
         },
         {
           "died": false,
@@ -19863,13 +19862,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.757
+            "bog_witch": 1.871
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3186
+          "totalDamage": 3200
         },
         {
           "died": false,
@@ -19885,7 +19884,7 @@
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4541
+          "totalDamage": 4504
         },
         {
           "died": false,
@@ -19901,23 +19900,23 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3631
+          "totalDamage": 3552
         },
         {
           "died": true,
-          "deathLoop": 30,
-          "deathEnemy": "bog_witch",
-          "deathWasBoss": true,
-          "loopsCleared": 3,
-          "bossesKilled": 0,
+          "deathLoop": 31,
+          "deathEnemy": "werewolf",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.214
+            "bog_witch": 1.414
           },
           "bossResult": {
-            "bog_witch": "loss"
+            "bog_witch": "win"
           },
-          "totalFights": 19,
-          "totalDamage": 2830
+          "totalFights": 22,
+          "totalDamage": 3334
         }
       ]
     },
@@ -19937,7 +19936,7 @@
           "bog_witch": "win"
         },
         "totalFights": 22,
-        "totalDamage": 3448
+        "totalDamage": 3441
       },
       "results": [
         {
@@ -19954,7 +19953,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3448
+          "totalDamage": 3441
         },
         {
           "died": false,
@@ -19970,7 +19969,7 @@
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 5025
+          "totalDamage": 5116
         },
         {
           "died": false,
@@ -19986,7 +19985,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3442
+          "totalDamage": 3566
         },
         {
           "died": false,
@@ -20002,7 +20001,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3187
+          "totalDamage": 3216
         },
         {
           "died": false,
@@ -20018,7 +20017,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3202
+          "totalDamage": 3235
         },
         {
           "died": false,
@@ -20034,7 +20033,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 4710
+          "totalDamage": 4838
         },
         {
           "died": false,
@@ -20050,7 +20049,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3560
+          "totalDamage": 3674
         },
         {
           "died": false,
@@ -20066,7 +20065,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3293
+          "totalDamage": 3353
         },
         {
           "died": false,
@@ -20082,7 +20081,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3776
+          "totalDamage": 3798
         },
         {
           "died": false,
@@ -20098,7 +20097,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3366
+          "totalDamage": 3443
         },
         {
           "died": false,
@@ -20108,13 +20107,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.986
+            "bog_witch": 2.014
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4407
+          "totalDamage": 4500
         },
         {
           "died": false,
@@ -20130,7 +20129,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3955
+          "totalDamage": 4034
         }
       ]
     },
@@ -20144,13 +20143,13 @@
         "loopsCleared": 5,
         "bossesKilled": 1,
         "hpEnteringBoss": {
-          "bog_witch": 2.086
+          "bog_witch": 2.143
         },
         "bossResult": {
           "bog_witch": "win"
         },
         "totalFights": 27,
-        "totalDamage": 4064
+        "totalDamage": 4081
       },
       "results": [
         {
@@ -20161,13 +20160,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 2.086
+            "bog_witch": 2.143
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4064
+          "totalDamage": 4081
         },
         {
           "died": false,
@@ -20177,45 +20176,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.643
+            "bog_witch": 1.743
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3316
-        },
-        {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
-          "hpEnteringBoss": {
-            "bog_witch": 2.086
-          },
-          "bossResult": {
-            "bog_witch": "win"
-          },
-          "totalFights": 26,
-          "totalDamage": 3610
-        },
-        {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
-          "hpEnteringBoss": {
-            "bog_witch": 1.971
-          },
-          "bossResult": {
-            "bog_witch": "win"
-          },
-          "totalFights": 27,
-          "totalDamage": 3898
+          "totalDamage": 3274
         },
         {
           "died": false,
@@ -20231,7 +20198,39 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3853
+          "totalDamage": 3604
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 1.971
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 3905
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "bog_witch": 2.143
+          },
+          "bossResult": {
+            "bog_witch": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 3912
         },
         {
           "died": false,
@@ -20247,7 +20246,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3163
+          "totalDamage": 3231
         },
         {
           "died": false,
@@ -20257,13 +20256,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.943
+            "bog_witch": 2.057
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 2873
+          "totalDamage": 2868
         },
         {
           "died": false,
@@ -20279,7 +20278,7 @@
             "bog_witch": "win"
           },
           "totalFights": 15,
-          "totalDamage": 2341
+          "totalDamage": 2356
         },
         {
           "died": false,
@@ -20289,13 +20288,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.857
+            "bog_witch": 2.029
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3483
+          "totalDamage": 3497
         },
         {
           "died": false,
@@ -20311,7 +20310,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3595
+          "totalDamage": 3636
         },
         {
           "died": false,
@@ -20327,7 +20326,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4089
+          "totalDamage": 4207
         },
         {
           "died": false,
@@ -20343,7 +20342,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3372
+          "totalDamage": 3484
         }
       ]
     },
@@ -20363,7 +20362,7 @@
           "bog_witch": "win"
         },
         "totalFights": 20,
-        "totalDamage": 3086
+        "totalDamage": 3090
       },
       "results": [
         {
@@ -20380,7 +20379,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3086
+          "totalDamage": 3090
         },
         {
           "died": false,
@@ -20396,7 +20395,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4253
+          "totalDamage": 4254
         },
         {
           "died": false,
@@ -20412,7 +20411,7 @@
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4509
+          "totalDamage": 4519
         },
         {
           "died": false,
@@ -20428,7 +20427,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3635
+          "totalDamage": 3652
         },
         {
           "died": false,
@@ -20444,7 +20443,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 2999
+          "totalDamage": 2961
         },
         {
           "died": false,
@@ -20460,7 +20459,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3513
+          "totalDamage": 3526
         },
         {
           "died": false,
@@ -20470,13 +20469,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.286
+            "bog_witch": 1.5
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 3918
+          "totalDamage": 3926
         },
         {
           "died": false,
@@ -20492,7 +20491,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4162
+          "totalDamage": 4173
         },
         {
           "died": false,
@@ -20508,7 +20507,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3972
+          "totalDamage": 4006
         },
         {
           "died": false,
@@ -20524,7 +20523,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4010
+          "totalDamage": 4011
         },
         {
           "died": false,
@@ -20540,7 +20539,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3224
+          "totalDamage": 3221
         },
         {
           "died": false,
@@ -20550,13 +20549,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 2.143
+            "bog_witch": 2.086
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3604
+          "totalDamage": 3563
         }
       ]
     },
@@ -20576,7 +20575,7 @@
           "bog_witch": "win"
         },
         "totalFights": 21,
-        "totalDamage": 3079
+        "totalDamage": 3115
       },
       "results": [
         {
@@ -20593,7 +20592,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3079
+          "totalDamage": 3115
         },
         {
           "died": false,
@@ -20609,7 +20608,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3651
+          "totalDamage": 3644
         },
         {
           "died": false,
@@ -20625,7 +20624,7 @@
             "bog_witch": "win"
           },
           "totalFights": 16,
-          "totalDamage": 2508
+          "totalDamage": 2492
         },
         {
           "died": false,
@@ -20641,7 +20640,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3225
+          "totalDamage": 3193
         },
         {
           "died": false,
@@ -20657,7 +20656,7 @@
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4026
+          "totalDamage": 4015
         },
         {
           "died": false,
@@ -20673,7 +20672,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 3298
+          "totalDamage": 3280
         },
         {
           "died": false,
@@ -20689,7 +20688,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 4172
+          "totalDamage": 4184
         },
         {
           "died": false,
@@ -20705,7 +20704,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 3879
+          "totalDamage": 3868
         },
         {
           "died": true,
@@ -20721,7 +20720,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3919
+          "totalDamage": 3947
         },
         {
           "died": false,
@@ -20731,13 +20730,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.6
+            "bog_witch": 1.514
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4067
+          "totalDamage": 4064
         },
         {
           "died": false,
@@ -20753,7 +20752,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3278
+          "totalDamage": 3279
         },
         {
           "died": false,
@@ -20769,7 +20768,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3165
+          "totalDamage": 3168
         }
       ]
     },
@@ -20783,13 +20782,13 @@
         "loopsCleared": 5,
         "bossesKilled": 1,
         "hpEnteringBoss": {
-          "bog_witch": 1.914
+          "bog_witch": 2.043
         },
         "bossResult": {
           "bog_witch": "win"
         },
         "totalFights": 28,
-        "totalDamage": 4127
+        "totalDamage": 4073
       },
       "results": [
         {
@@ -20800,13 +20799,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.914
+            "bog_witch": 2.043
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4127
+          "totalDamage": 4073
         },
         {
           "died": false,
@@ -20822,7 +20821,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3933
+          "totalDamage": 3934
         },
         {
           "died": false,
@@ -20838,7 +20837,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3468
+          "totalDamage": 3451
         },
         {
           "died": false,
@@ -20854,7 +20853,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2778
+          "totalDamage": 2771
         },
         {
           "died": false,
@@ -20870,7 +20869,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3109
+          "totalDamage": 3037
         },
         {
           "died": false,
@@ -20880,13 +20879,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.914
+            "bog_witch": 2.114
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 3934
+          "totalDamage": 3929
         },
         {
           "died": false,
@@ -20902,7 +20901,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3097
+          "totalDamage": 3077
         },
         {
           "died": false,
@@ -20918,7 +20917,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4111
+          "totalDamage": 4097
         },
         {
           "died": false,
@@ -20934,7 +20933,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3277
+          "totalDamage": 3252
         },
         {
           "died": false,
@@ -20950,7 +20949,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4083
+          "totalDamage": 4065
         },
         {
           "died": false,
@@ -20966,7 +20965,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 2840
+          "totalDamage": 2813
         },
         {
           "died": false,
@@ -20982,7 +20981,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3087
+          "totalDamage": 3070
         }
       ]
     },
@@ -21002,7 +21001,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 3701
+        "totalDamage": 3774
       },
       "results": [
         {
@@ -21019,7 +21018,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3701
+          "totalDamage": 3774
         },
         {
           "died": false,
@@ -21035,7 +21034,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3620
+          "totalDamage": 3706
         },
         {
           "died": false,
@@ -21051,7 +21050,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3715
+          "totalDamage": 3800
         },
         {
           "died": false,
@@ -21067,7 +21066,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3521
+          "totalDamage": 3538
         },
         {
           "died": false,
@@ -21083,7 +21082,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3239
+          "totalDamage": 3303
         },
         {
           "died": false,
@@ -21099,7 +21098,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3159
+          "totalDamage": 3228
         },
         {
           "died": true,
@@ -21115,7 +21114,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3654
+          "totalDamage": 3735
         },
         {
           "died": false,
@@ -21131,7 +21130,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3896
+          "totalDamage": 3903
         },
         {
           "died": false,
@@ -21147,7 +21146,7 @@
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4245
+          "totalDamage": 4320
         },
         {
           "died": false,
@@ -21163,7 +21162,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3534
+          "totalDamage": 3614
         },
         {
           "died": false,
@@ -21179,7 +21178,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3234
+          "totalDamage": 3304
         },
         {
           "died": false,
@@ -21195,7 +21194,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3052
+          "totalDamage": 3113
         }
       ]
     },
@@ -21215,7 +21214,7 @@
           "bog_witch": "win"
         },
         "totalFights": 22,
-        "totalDamage": 3110
+        "totalDamage": 3096
       },
       "results": [
         {
@@ -21232,7 +21231,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3110
+          "totalDamage": 3096
         },
         {
           "died": false,
@@ -21242,13 +21241,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.643
+            "bog_witch": 1.571
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4255
+          "totalDamage": 4229
         },
         {
           "died": false,
@@ -21264,7 +21263,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2805
+          "totalDamage": 2789
         },
         {
           "died": false,
@@ -21280,7 +21279,7 @@
             "bog_witch": "win"
           },
           "totalFights": 18,
-          "totalDamage": 2982
+          "totalDamage": 2974
         },
         {
           "died": false,
@@ -21296,7 +21295,7 @@
             "bog_witch": "win"
           },
           "totalFights": 16,
-          "totalDamage": 2598
+          "totalDamage": 2590
         },
         {
           "died": false,
@@ -21312,7 +21311,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3352
+          "totalDamage": 3327
         },
         {
           "died": false,
@@ -21328,7 +21327,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3084
+          "totalDamage": 3081
         },
         {
           "died": false,
@@ -21344,7 +21343,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3510
+          "totalDamage": 3497
         },
         {
           "died": false,
@@ -21360,23 +21359,23 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2921
+          "totalDamage": 2913
         },
         {
-          "died": true,
-          "deathLoop": 30,
-          "deathEnemy": "bog_witch",
-          "deathWasBoss": true,
-          "loopsCleared": 3,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.3
+            "bog_witch": 1.486
           },
           "bossResult": {
-            "bog_witch": "loss"
+            "bog_witch": "win"
           },
-          "totalFights": 17,
-          "totalDamage": 2699
+          "totalFights": 21,
+          "totalDamage": 3265
         },
         {
           "died": false,
@@ -21392,7 +21391,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 3836
+          "totalDamage": 3829
         },
         {
           "died": false,
@@ -21408,7 +21407,7 @@
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4112
+          "totalDamage": 4103
         }
       ]
     },
@@ -21417,7 +21416,7 @@
       "sampleRun": {
         "died": true,
         "deathLoop": 31,
-        "deathEnemy": "depths_horror",
+        "deathEnemy": "lost_lizard",
         "deathWasBoss": false,
         "loopsCleared": 4,
         "bossesKilled": 1,
@@ -21427,14 +21426,14 @@
         "bossResult": {
           "bog_witch": "win"
         },
-        "totalFights": 24,
-        "totalDamage": 4272
+        "totalFights": 26,
+        "totalDamage": 4608
       },
       "results": [
         {
           "died": true,
           "deathLoop": 31,
-          "deathEnemy": "depths_horror",
+          "deathEnemy": "lost_lizard",
           "deathWasBoss": false,
           "loopsCleared": 4,
           "bossesKilled": 1,
@@ -21444,8 +21443,8 @@
           "bossResult": {
             "bog_witch": "win"
           },
-          "totalFights": 24,
-          "totalDamage": 4272
+          "totalFights": 26,
+          "totalDamage": 4608
         },
         {
           "died": true,
@@ -21480,20 +21479,20 @@
           "totalDamage": 4616
         },
         {
-          "died": true,
-          "deathLoop": 30,
-          "deathEnemy": "bog_witch",
-          "deathWasBoss": true,
-          "loopsCleared": 3,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.32
+            "bog_witch": 1.41
           },
           "bossResult": {
-            "bog_witch": "loss"
+            "bog_witch": "win"
           },
-          "totalFights": 21,
-          "totalDamage": 3812
+          "totalFights": 24,
+          "totalDamage": 4305
         },
         {
           "died": true,
@@ -21732,13 +21731,13 @@
           "loopsCleared": 4,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.32
+            "bog_witch": 1.41
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3839
+          "totalDamage": 3903
         },
         {
           "died": false,
@@ -21802,7 +21801,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4306
+          "totalDamage": 4362
         },
         {
           "died": true,
@@ -21834,7 +21833,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 3024
+          "totalDamage": 3025
         }
       ]
     },
@@ -21951,7 +21950,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4316
+          "totalDamage": 4306
         },
         {
           "died": false,
@@ -21999,7 +21998,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3499
+          "totalDamage": 3497
         },
         {
           "died": false,
@@ -22345,7 +22344,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3494
+          "totalDamage": 3478
         },
         {
           "died": false,
@@ -22371,13 +22370,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.54
+            "bog_witch": 1.59
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4152
+          "totalDamage": 4145
         },
         {
           "died": false,
@@ -22409,7 +22408,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4341
+          "totalDamage": 4361
         },
         {
           "died": false,
@@ -22487,13 +22486,13 @@
         "loopsCleared": 3,
         "bossesKilled": 0,
         "hpEnteringBoss": {
-          "bog_witch": 0.39
+          "bog_witch": 0.3
         },
         "bossResult": {
           "bog_witch": "loss"
         },
         "totalFights": 24,
-        "totalDamage": 3882
+        "totalDamage": 3817
       },
       "results": [
         {
@@ -22504,13 +22503,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.39
+            "bog_witch": 0.3
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 3882
+          "totalDamage": 3817
         },
         {
           "died": false,
@@ -22574,7 +22573,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 3230
+          "totalDamage": 3247
         },
         {
           "died": false,
@@ -22590,7 +22589,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3156
+          "totalDamage": 3162
         },
         {
           "died": true,
@@ -22600,13 +22599,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.14
+            "bog_witch": 0.21
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 3037
+          "totalDamage": 3056
         },
         {
           "died": false,
@@ -22622,7 +22621,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3353
+          "totalDamage": 3370
         },
         {
           "died": false,
@@ -22706,7 +22705,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 3876
+        "totalDamage": 3878
       },
       "results": [
         {
@@ -22723,7 +22722,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3876
+          "totalDamage": 3878
         },
         {
           "died": true,
@@ -22758,20 +22757,20 @@
           "totalDamage": 3162
         },
         {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 1.33
+            "bog_witch": 1.27
           },
           "bossResult": {
-            "bog_witch": "win"
+            "bog_witch": "loss"
           },
-          "totalFights": 26,
-          "totalDamage": 4051
+          "totalFights": 23,
+          "totalDamage": 3643
         },
         {
           "died": false,
@@ -22781,13 +22780,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.51
+            "bog_witch": 1.58
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3728
+          "totalDamage": 3727
         },
         {
           "died": false,
@@ -22886,20 +22885,20 @@
           "totalDamage": 4045
         },
         {
-          "died": false,
-          "deathLoop": null,
-          "deathEnemy": null,
-          "deathWasBoss": false,
-          "loopsCleared": 5,
-          "bossesKilled": 1,
+          "died": true,
+          "deathLoop": 30,
+          "deathEnemy": "bog_witch",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 1.35
+            "bog_witch": 1.28
           },
           "bossResult": {
-            "bog_witch": "win"
+            "bog_witch": "loss"
           },
-          "totalFights": 23,
-          "totalDamage": 3715
+          "totalFights": 17,
+          "totalDamage": 2888
         }
       ]
     },
@@ -22913,13 +22912,13 @@
         "loopsCleared": 4,
         "bossesKilled": 1,
         "hpEnteringBoss": {
-          "bog_witch": 1.514
+          "bog_witch": 1.443
         },
         "bossResult": {
           "bog_witch": "win"
         },
         "totalFights": 19,
-        "totalDamage": 2802
+        "totalDamage": 2766
       },
       "results": [
         {
@@ -22930,13 +22929,13 @@
           "loopsCleared": 4,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.514
+            "bog_witch": 1.443
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 2802
+          "totalDamage": 2766
         },
         {
           "died": true,
@@ -23058,13 +23057,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 1.357
+            "bog_witch": 1.229
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 2422
+          "totalDamage": 2285
         },
         {
           "died": true,
@@ -23080,7 +23079,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2205
+          "totalDamage": 2208
         },
         {
           "died": true,
@@ -23090,7 +23089,7 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.729
+            "bog_witch": 0.657
           },
           "bossResult": {
             "bog_witch": "loss"
@@ -23175,13 +23174,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.6
+            "bog_witch": 0.557
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 22,
-          "totalDamage": 2719
+          "totalDamage": 2696
         },
         {
           "died": true,
@@ -23191,13 +23190,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.957
+            "bog_witch": 0.557
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 18,
-          "totalDamage": 2516
+          "totalDamage": 2284
         },
         {
           "died": true,
@@ -23207,13 +23206,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 1.029
+            "bog_witch": 1.057
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 3019
+          "totalDamage": 3016
         },
         {
           "died": true,
@@ -23261,7 +23260,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 20,
-          "totalDamage": 2362
+          "totalDamage": 2390
         },
         {
           "died": true,
@@ -23339,13 +23338,13 @@
         "loopsCleared": 3,
         "bossesKilled": 0,
         "hpEnteringBoss": {
-          "bog_witch": 0.514
+          "bog_witch": 0.486
         },
         "bossResult": {
           "bog_witch": "loss"
         },
         "totalFights": 24,
-        "totalDamage": 2607
+        "totalDamage": 2613
       },
       "results": [
         {
@@ -23356,13 +23355,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.514
+            "bog_witch": 0.486
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 24,
-          "totalDamage": 2607
+          "totalDamage": 2613
         },
         {
           "died": true,
@@ -23420,29 +23419,29 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.814
+            "bog_witch": 0.571
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 19,
-          "totalDamage": 2606
+          "totalDamage": 2418
         },
         {
-          "died": true,
-          "deathLoop": 31,
-          "deathEnemy": "scorpion",
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
           "deathWasBoss": false,
-          "loopsCleared": 4,
+          "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.486
+            "bog_witch": 1.671
           },
           "bossResult": {
             "bog_witch": "win"
           },
-          "totalFights": 22,
-          "totalDamage": 3139
+          "totalFights": 25,
+          "totalDamage": 3615
         },
         {
           "died": true,
@@ -23452,13 +23451,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.243
+            "bog_witch": 0.071
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 26,
-          "totalDamage": 3319
+          "totalDamage": 3312
         },
         {
           "died": true,
@@ -23697,13 +23696,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.914
+            "bog_witch": 1.043
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2175
+          "totalDamage": 2214
         },
         {
           "died": false,
@@ -23798,13 +23797,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 1.05
+            "bog_witch": 0.98
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2722
+          "totalDamage": 2664
         },
         {
           "died": true,
@@ -23814,13 +23813,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.72
+            "bog_witch": 0.81
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 17,
-          "totalDamage": 2885
+          "totalDamage": 3059
         },
         {
           "died": true,
@@ -23968,7 +23967,7 @@
           "bog_witch": "win"
         },
         "totalFights": 21,
-        "totalDamage": 3547
+        "totalDamage": 3545
       },
       "results": [
         {
@@ -23985,7 +23984,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3547
+          "totalDamage": 3545
         },
         {
           "died": true,
@@ -24011,13 +24010,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.18
+            "bog_witch": 1.24
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3686
+          "totalDamage": 3708
         },
         {
           "died": false,
@@ -24049,7 +24048,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3455
+          "totalDamage": 3449
         },
         {
           "died": false,
@@ -24155,13 +24154,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.57
+            "bog_witch": 0.5
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 28,
-          "totalDamage": 4121
+          "totalDamage": 4127
         }
       ]
     },
@@ -24278,7 +24277,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 3123
+          "totalDamage": 3142
         },
         {
           "died": false,
@@ -24310,7 +24309,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 2977
+          "totalDamage": 2970
         },
         {
           "died": true,
@@ -24388,13 +24387,13 @@
         "loopsCleared": 3,
         "bossesKilled": 0,
         "hpEnteringBoss": {
-          "bog_witch": 0.571
+          "bog_witch": 0.743
         },
         "bossResult": {
           "bog_witch": "loss"
         },
         "totalFights": 23,
-        "totalDamage": 3337
+        "totalDamage": 3595
       },
       "results": [
         {
@@ -24405,13 +24404,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.571
+            "bog_witch": 0.743
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 23,
-          "totalDamage": 3337
+          "totalDamage": 3595
         },
         {
           "died": true,
@@ -24571,7 +24570,7 @@
             "bog_witch": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4677
+          "totalDamage": 4689
         },
         {
           "died": false,
@@ -24607,7 +24606,7 @@
           "bog_witch": "loss"
         },
         "totalFights": 14,
-        "totalDamage": 2363
+        "totalDamage": 2402
       },
       "results": [
         {
@@ -24624,7 +24623,7 @@
             "bog_witch": "loss"
           },
           "totalFights": 14,
-          "totalDamage": 2363
+          "totalDamage": 2402
         },
         {
           "died": true,
@@ -24778,13 +24777,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.929
+            "bog_witch": 1.014
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2526
+          "totalDamage": 2521
         },
         {
           "died": false,
@@ -24800,7 +24799,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3863
+          "totalDamage": 3831
         }
       ]
     },
@@ -24863,13 +24862,13 @@
           "loopsCleared": 4,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.157
+            "bog_witch": 1.143
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4476
+          "totalDamage": 4477
         },
         {
           "died": false,
@@ -24885,7 +24884,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3872
+          "totalDamage": 3857
         },
         {
           "died": false,
@@ -24901,7 +24900,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4196
+          "totalDamage": 4181
         },
         {
           "died": true,
@@ -24991,13 +24990,13 @@
           "loopsCleared": 3,
           "bossesKilled": 0,
           "hpEnteringBoss": {
-            "bog_witch": 0.7
+            "bog_witch": 0.8
           },
           "bossResult": {
             "bog_witch": "loss"
           },
           "totalFights": 16,
-          "totalDamage": 2999
+          "totalDamage": 3109
         },
         {
           "died": false,
@@ -25027,13 +25026,13 @@
         "loopsCleared": 5,
         "bossesKilled": 1,
         "hpEnteringBoss": {
-          "bog_witch": 1.643
+          "bog_witch": 1.757
         },
         "bossResult": {
           "bog_witch": "win"
         },
         "totalFights": 20,
-        "totalDamage": 3329
+        "totalDamage": 3403
       },
       "results": [
         {
@@ -25044,13 +25043,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.643
+            "bog_witch": 1.757
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3329
+          "totalDamage": 3403
         },
         {
           "died": false,
@@ -25327,7 +25326,7 @@
             "bog_witch": "win"
           },
           "totalFights": 17,
-          "totalDamage": 3053
+          "totalDamage": 3048
         },
         {
           "died": false,
@@ -25508,7 +25507,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4575
+          "totalDamage": 4554
         },
         {
           "died": false,
@@ -25566,13 +25565,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.42
+            "bog_witch": 1.49
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4238
+          "totalDamage": 4225
         },
         {
           "died": false,
@@ -25582,13 +25581,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.62
+            "bog_witch": 1.55
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4750
+          "totalDamage": 4783
         },
         {
           "died": false,
@@ -25614,13 +25613,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.51
+            "bog_witch": 1.59
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3788
+          "totalDamage": 3878
         },
         {
           "died": false,
@@ -25636,7 +25635,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4632
+          "totalDamage": 4619
         },
         {
           "died": false,
@@ -25652,7 +25651,7 @@
             "bog_witch": "win"
           },
           "totalFights": 37,
-          "totalDamage": 5988
+          "totalDamage": 5973
         }
       ]
     },
@@ -25753,7 +25752,7 @@
             "bog_witch": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4614
+          "totalDamage": 4622
         },
         {
           "died": false,
@@ -25885,7 +25884,7 @@
           "bog_witch": "win"
         },
         "totalFights": 19,
-        "totalDamage": 3188
+        "totalDamage": 3202
       },
       "results": [
         {
@@ -25902,7 +25901,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3188
+          "totalDamage": 3202
         },
         {
           "died": false,
@@ -25918,7 +25917,7 @@
             "bog_witch": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3222
+          "totalDamage": 3228
         },
         {
           "died": false,
@@ -25944,13 +25943,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "bog_witch": 1.61
+            "bog_witch": 1.66
           },
           "bossResult": {
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4307
+          "totalDamage": 4325
         },
         {
           "died": false,
@@ -25998,7 +25997,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4053
+          "totalDamage": 4029
         },
         {
           "died": false,
@@ -26098,7 +26097,7 @@
           "bog_witch": "win"
         },
         "totalFights": 30,
-        "totalDamage": 4988
+        "totalDamage": 4985
       },
       "results": [
         {
@@ -26115,7 +26114,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4988
+          "totalDamage": 4985
         },
         {
           "died": false,
@@ -26311,7 +26310,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 4309
+        "totalDamage": 4312
       },
       "results": [
         {
@@ -26328,7 +26327,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4309
+          "totalDamage": 4312
         },
         {
           "died": false,
@@ -26424,7 +26423,7 @@
             "bog_witch": "win"
           },
           "totalFights": 33,
-          "totalDamage": 5156
+          "totalDamage": 5159
         },
         {
           "died": false,
@@ -26440,7 +26439,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3419
+          "totalDamage": 3439
         },
         {
           "died": false,
@@ -26456,7 +26455,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3545
+          "totalDamage": 3548
         },
         {
           "died": false,
@@ -26589,7 +26588,7 @@
             "bog_witch": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3372
+          "totalDamage": 3366
         },
         {
           "died": false,
@@ -26605,7 +26604,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4762
+          "totalDamage": 4760
         },
         {
           "died": false,
@@ -26621,7 +26620,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3893
+          "totalDamage": 4024
         },
         {
           "died": false,
@@ -26770,7 +26769,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4258
+          "totalDamage": 4111
         },
         {
           "died": false,
@@ -26834,7 +26833,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4241
+          "totalDamage": 4243
         },
         {
           "died": false,
@@ -26882,7 +26881,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4289
+          "totalDamage": 4177
         },
         {
           "died": false,
@@ -26983,7 +26982,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3896
+          "totalDamage": 3946
         },
         {
           "died": false,
@@ -27015,7 +27014,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 5802
+          "totalDamage": 5858
         },
         {
           "died": false,
@@ -27047,7 +27046,7 @@
             "bog_witch": "win"
           },
           "totalFights": 20,
-          "totalDamage": 4199
+          "totalDamage": 4169
         },
         {
           "died": false,
@@ -27063,7 +27062,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4811
+          "totalDamage": 4937
         },
         {
           "died": false,
@@ -27095,7 +27094,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 5596
+          "totalDamage": 5566
         },
         {
           "died": false,
@@ -27111,7 +27110,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4959
+          "totalDamage": 4929
         },
         {
           "died": false,
@@ -27127,7 +27126,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 5279
+          "totalDamage": 5381
         },
         {
           "died": false,
@@ -27163,7 +27162,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 3623
+        "totalDamage": 3585
       },
       "results": [
         {
@@ -27180,7 +27179,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3623
+          "totalDamage": 3585
         },
         {
           "died": false,
@@ -27292,7 +27291,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4365
+          "totalDamage": 4377
         },
         {
           "died": false,
@@ -27308,7 +27307,7 @@
             "bog_witch": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3889
+          "totalDamage": 3830
         },
         {
           "died": false,
@@ -27324,7 +27323,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 3965
+          "totalDamage": 3967
         },
         {
           "died": false,
@@ -27356,7 +27355,7 @@
             "bog_witch": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4308
+          "totalDamage": 4350
         }
       ]
     },
@@ -27376,7 +27375,7 @@
           "bog_witch": "win"
         },
         "totalFights": 24,
-        "totalDamage": 4137
+        "totalDamage": 4143
       },
       "results": [
         {
@@ -27393,7 +27392,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4137
+          "totalDamage": 4143
         },
         {
           "died": false,
@@ -27409,7 +27408,7 @@
             "bog_witch": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4706
+          "totalDamage": 4718
         },
         {
           "died": false,
@@ -27473,7 +27472,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4535
+          "totalDamage": 4539
         },
         {
           "died": false,
@@ -27505,7 +27504,7 @@
             "bog_witch": "win"
           },
           "totalFights": 17,
-          "totalDamage": 3293
+          "totalDamage": 3291
         },
         {
           "died": false,
@@ -27521,7 +27520,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4809
+          "totalDamage": 4807
         },
         {
           "died": false,
@@ -27537,7 +27536,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 5217
+          "totalDamage": 5180
         },
         {
           "died": false,
@@ -27569,7 +27568,7 @@
             "bog_witch": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4845
+          "totalDamage": 4968
         }
       ]
     },
@@ -27670,7 +27669,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4413
+          "totalDamage": 4425
         },
         {
           "died": false,
@@ -27802,7 +27801,7 @@
           "bog_witch": "win"
         },
         "totalFights": 25,
-        "totalDamage": 3360
+        "totalDamage": 3375
       },
       "results": [
         {
@@ -27819,7 +27818,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3360
+          "totalDamage": 3375
         },
         {
           "died": false,
@@ -27851,7 +27850,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3365
+          "totalDamage": 3357
         },
         {
           "died": false,
@@ -27947,7 +27946,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3293
+          "totalDamage": 3278
         },
         {
           "died": false,
@@ -28261,7 +28260,7 @@
             "bog_witch": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3331
+          "totalDamage": 3300
         },
         {
           "died": false,
@@ -28325,7 +28324,7 @@
             "bog_witch": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3485
+          "totalDamage": 3492
         },
         {
           "died": false,
@@ -28389,7 +28388,7 @@
             "bog_witch": "win"
           },
           "totalFights": 25,
-          "totalDamage": 3587
+          "totalDamage": 3614
         },
         {
           "died": false,
@@ -28421,7 +28420,7 @@
             "bog_witch": "win"
           },
           "totalFights": 29,
-          "totalDamage": 3943
+          "totalDamage": 3931
         }
       ]
     },
@@ -28554,7 +28553,7 @@
             "bog_witch": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4028
+          "totalDamage": 4031
         },
         {
           "died": false,
@@ -28654,7 +28653,7 @@
           "infernal_dragon": "win"
         },
         "totalFights": 22,
-        "totalDamage": 3761
+        "totalDamage": 3760
       },
       "results": [
         {
@@ -28671,7 +28670,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3761
+          "totalDamage": 3760
         },
         {
           "died": false,
@@ -28719,7 +28718,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 20,
-          "totalDamage": 3348
+          "totalDamage": 3344
         },
         {
           "died": false,
@@ -28751,7 +28750,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 35,
-          "totalDamage": 5488
+          "totalDamage": 5514
         },
         {
           "died": false,
@@ -28831,7 +28830,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4697
+          "totalDamage": 4696
         },
         {
           "died": false,
@@ -28847,7 +28846,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3900
+          "totalDamage": 3901
         }
       ]
     },
@@ -28900,7 +28899,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4366
+          "totalDamage": 4369
         },
         {
           "died": false,
@@ -28916,7 +28915,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4272
+          "totalDamage": 4314
         },
         {
           "died": false,
@@ -28932,7 +28931,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 31,
-          "totalDamage": 5106
+          "totalDamage": 5159
         },
         {
           "died": false,
@@ -29012,7 +29011,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 32,
-          "totalDamage": 4931
+          "totalDamage": 4927
         },
         {
           "died": false,
@@ -29028,7 +29027,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4920
+          "totalDamage": 4916
         },
         {
           "died": false,
@@ -29145,7 +29144,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4445
+          "totalDamage": 4423
         },
         {
           "died": false,
@@ -29177,7 +29176,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 32,
-          "totalDamage": 5240
+          "totalDamage": 5175
         },
         {
           "died": false,
@@ -29209,7 +29208,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 31,
-          "totalDamage": 5454
+          "totalDamage": 5449
         },
         {
           "died": false,
@@ -29267,13 +29266,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.329
+            "infernal_dragon": 2.271
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4191
+          "totalDamage": 4193
         }
       ]
     },
@@ -29326,7 +29325,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4061
+          "totalDamage": 4064
         },
         {
           "died": false,
@@ -29539,7 +29538,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3702
+          "totalDamage": 3697
         },
         {
           "died": false,
@@ -29571,7 +29570,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4013
+          "totalDamage": 4019
         },
         {
           "died": false,
@@ -29635,7 +29634,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3545
+          "totalDamage": 3537
         },
         {
           "died": false,
@@ -29651,7 +29650,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4573
+          "totalDamage": 4597
         },
         {
           "died": false,
@@ -29719,7 +29718,7 @@
           "infernal_dragon": "win"
         },
         "totalFights": 30,
-        "totalDamage": 5375
+        "totalDamage": 5394
       },
       "results": [
         {
@@ -29736,7 +29735,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 30,
-          "totalDamage": 5375
+          "totalDamage": 5394
         },
         {
           "died": false,
@@ -29832,7 +29831,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3956
+          "totalDamage": 3942
         },
         {
           "died": false,
@@ -29864,7 +29863,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 36,
-          "totalDamage": 5565
+          "totalDamage": 5566
         },
         {
           "died": false,
@@ -29880,7 +29879,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 30,
-          "totalDamage": 4646
+          "totalDamage": 4622
         },
         {
           "died": false,
@@ -29896,7 +29895,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4413
+          "totalDamage": 4418
         },
         {
           "died": false,
@@ -29981,7 +29980,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3889
+          "totalDamage": 3909
         },
         {
           "died": false,
@@ -30013,7 +30012,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4646
+          "totalDamage": 4629
         },
         {
           "died": false,
@@ -30077,7 +30076,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3908
+          "totalDamage": 3900
         },
         {
           "died": false,
@@ -30093,7 +30092,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4137
+          "totalDamage": 4170
         },
         {
           "died": false,
@@ -30210,7 +30209,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 34,
-          "totalDamage": 5502
+          "totalDamage": 5501
         },
         {
           "died": false,
@@ -30242,7 +30241,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 21,
-          "totalDamage": 3649
+          "totalDamage": 3641
         },
         {
           "died": false,
@@ -30258,7 +30257,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 31,
-          "totalDamage": 5250
+          "totalDamage": 5249
         },
         {
           "died": false,
@@ -30338,7 +30337,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 32,
-          "totalDamage": 5159
+          "totalDamage": 5158
         }
       ]
     },
@@ -30391,7 +30390,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4423
+          "totalDamage": 4417
         },
         {
           "died": false,
@@ -30423,7 +30422,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4448
+          "totalDamage": 4430
         },
         {
           "died": false,
@@ -30455,7 +30454,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4302
+          "totalDamage": 4303
         },
         {
           "died": false,
@@ -30487,7 +30486,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4458
+          "totalDamage": 4495
         },
         {
           "died": false,
@@ -30519,7 +30518,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4641
+          "totalDamage": 4668
         },
         {
           "died": false,
@@ -30535,7 +30534,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4079
+          "totalDamage": 4077
         },
         {
           "died": false,
@@ -30551,7 +30550,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3677
+          "totalDamage": 3710
         }
       ]
     },
@@ -30604,7 +30603,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4108
+          "totalDamage": 4109
         },
         {
           "died": false,
@@ -30620,7 +30619,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 34,
-          "totalDamage": 5280
+          "totalDamage": 5279
         },
         {
           "died": false,
@@ -30636,7 +30635,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4600
+          "totalDamage": 4633
         },
         {
           "died": false,
@@ -30652,7 +30651,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 29,
-          "totalDamage": 4757
+          "totalDamage": 4763
         },
         {
           "died": false,
@@ -30668,7 +30667,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 4189
+          "totalDamage": 4191
         },
         {
           "died": false,
@@ -30684,7 +30683,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3601
+          "totalDamage": 3602
         },
         {
           "died": false,
@@ -30700,7 +30699,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4137
+          "totalDamage": 4111
         },
         {
           "died": false,
@@ -30732,7 +30731,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4562
+          "totalDamage": 4531
         },
         {
           "died": false,
@@ -30764,7 +30763,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 33,
-          "totalDamage": 5009
+          "totalDamage": 5037
         }
       ]
     },
@@ -30817,7 +30816,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 19,
-          "totalDamage": 3336
+          "totalDamage": 3335
         },
         {
           "died": false,
@@ -30849,7 +30848,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4155
+          "totalDamage": 4157
         },
         {
           "died": false,
@@ -30913,7 +30912,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4234
+          "totalDamage": 4189
         },
         {
           "died": false,
@@ -30961,7 +30960,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 4381
+          "totalDamage": 4379
         },
         {
           "died": false,
@@ -31030,7 +31029,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3671
+          "totalDamage": 3670
         },
         {
           "died": false,
@@ -31046,7 +31045,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4404
+          "totalDamage": 4400
         },
         {
           "died": false,
@@ -31062,7 +31061,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4873
+          "totalDamage": 4871
         },
         {
           "died": false,
@@ -31078,7 +31077,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 4803
+          "totalDamage": 4804
         },
         {
           "died": false,
@@ -31158,7 +31157,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 23,
-          "totalDamage": 3809
+          "totalDamage": 3770
         },
         {
           "died": false,
@@ -31190,7 +31189,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4158
+          "totalDamage": 4157
         }
       ]
     },
@@ -31275,7 +31274,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4632
+          "totalDamage": 4624
         },
         {
           "died": false,
@@ -31387,7 +31386,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4786
+          "totalDamage": 4787
         },
         {
           "died": false,
@@ -31417,13 +31416,13 @@
         "loopsCleared": 5,
         "bossesKilled": 1,
         "hpEnteringBoss": {
-          "infernal_dragon": 2.343
+          "infernal_dragon": 2.3
         },
         "bossResult": {
           "infernal_dragon": "win"
         },
         "totalFights": 27,
-        "totalDamage": 4562
+        "totalDamage": 4649
       },
       "results": [
         {
@@ -31434,13 +31433,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4562
+          "totalDamage": 4649
         },
         {
           "died": false,
@@ -31450,13 +31449,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 4419
+          "totalDamage": 4507
         },
         {
           "died": false,
@@ -31466,13 +31465,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 33,
-          "totalDamage": 5789
+          "totalDamage": 5887
         },
         {
           "died": false,
@@ -31482,13 +31481,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 28,
-          "totalDamage": 5053
+          "totalDamage": 5109
         },
         {
           "died": false,
@@ -31498,13 +31497,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4233
+          "totalDamage": 4305
         },
         {
           "died": false,
@@ -31520,7 +31519,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 32,
-          "totalDamage": 5043
+          "totalDamage": 5060
         },
         {
           "died": false,
@@ -31530,13 +31529,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 27,
-          "totalDamage": 4588
+          "totalDamage": 4696
         },
         {
           "died": false,
@@ -31552,7 +31551,7 @@
             "infernal_dragon": "win"
           },
           "totalFights": 26,
-          "totalDamage": 3663
+          "totalDamage": 3749
         },
         {
           "died": false,
@@ -31562,13 +31561,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 25,
-          "totalDamage": 4163
+          "totalDamage": 4225
         },
         {
           "died": false,
@@ -31578,13 +31577,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 22,
-          "totalDamage": 3340
+          "totalDamage": 3400
         },
         {
           "died": false,
@@ -31594,13 +31593,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.3
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 24,
-          "totalDamage": 3687
+          "totalDamage": 3709
         },
         {
           "died": false,
@@ -31610,13 +31609,13 @@
           "loopsCleared": 5,
           "bossesKilled": 1,
           "hpEnteringBoss": {
-            "infernal_dragon": 2.343
+            "infernal_dragon": 2.214
           },
           "bossResult": {
             "infernal_dragon": "win"
           },
           "totalFights": 31,
-          "totalDamage": 4516
+          "totalDamage": 4618
         }
       ]
     }

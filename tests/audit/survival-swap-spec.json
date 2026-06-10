@@ -1,0 +1,2208 @@
+{
+ "runs": [
+  {
+   "id": "armor__CONTROL",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "CONTROL",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t1-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-CONTROL"
+  },
+  {
+   "id": "armor__t2-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-defense-defense"
+  },
+  {
+   "id": "armor__t2-agility-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-agility-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-agility-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-agility-defense"
+  },
+  {
+   "id": "armor__t2-agility-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-agility-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-agility-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-agility-earth"
+  },
+  {
+   "id": "armor__t2-attack-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-attack-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-attack-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-attack-earth"
+  },
+  {
+   "id": "armor__t2-counter-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-counter-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-counter-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-counter-defense"
+  },
+  {
+   "id": "armor__t2-counter-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-counter-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-counter-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-counter-earth"
+  },
+  {
+   "id": "armor__t2-defense-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-defense-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-defense-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-defense-fire"
+  },
+  {
+   "id": "armor__t2-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-air-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-air-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-air-defense"
+  },
+  {
+   "id": "armor__t2-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t2-defense-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t2-defense-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-defense-earth"
+  },
+  {
+   "id": "armor__t3-defense-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-defense-defense"
+  },
+  {
+   "id": "armor__t3-attack-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-attack-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-attack-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-attack-defense-defense"
+  },
+  {
+   "id": "armor__t3-agility-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-defense-defense"
+  },
+  {
+   "id": "armor__t3-counter-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-defense-defense"
+  },
+  {
+   "id": "armor__t3-agility-agility-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-agility-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-agility-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-agility-defense"
+  },
+  {
+   "id": "armor__t3-agility-attack-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-attack-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-attack-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-attack-defense"
+  },
+  {
+   "id": "armor__t3-attack-counter-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-attack-counter-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-attack-counter-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-attack-counter-defense"
+  },
+  {
+   "id": "armor__t3-agility-counter-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-counter-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-counter-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-counter-defense"
+  },
+  {
+   "id": "armor__t3-earth-earth-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-earth-earth-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-earth-earth-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-earth-earth-earth"
+  },
+  {
+   "id": "armor__t3-earth-fire-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-earth-fire-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-earth-fire-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-earth-fire-fire"
+  },
+  {
+   "id": "armor__t3-air-air-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-air-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-air-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-air-earth"
+  },
+  {
+   "id": "armor__t3-defense-defense-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-defense-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-defense-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-defense-fire"
+  },
+  {
+   "id": "armor__t3-defense-defense-water",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-defense-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-defense-water",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-defense-water"
+  },
+  {
+   "id": "armor__t3-air-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-defense-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-defense-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-defense-defense"
+  },
+  {
+   "id": "armor__t3-defense-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-defense-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-defense-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-defense-earth"
+  },
+  {
+   "id": "armor__t3-agility-agility-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-agility-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-agility-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-agility-earth"
+  },
+  {
+   "id": "armor__t3-counter-counter-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-counter-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-counter-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-counter-earth"
+  },
+  {
+   "id": "armor__t3-attack-defense-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-attack-defense-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-attack-defense-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-attack-defense-fire"
+  },
+  {
+   "id": "armor__t3-attack-defense-water",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-attack-defense-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-attack-defense-water",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-attack-defense-water"
+  },
+  {
+   "id": "armor__t3-air-attack-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-attack-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-attack-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-attack-defense"
+  },
+  {
+   "id": "armor__t3-agility-defense-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-defense-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-defense-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-defense-fire"
+  },
+  {
+   "id": "armor__t3-agility-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-air-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-air-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-air-defense"
+  },
+  {
+   "id": "armor__t3-agility-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-defense-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-defense-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-defense-earth"
+  },
+  {
+   "id": "armor__t3-counter-defense-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-defense-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-defense-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-defense-fire"
+  },
+  {
+   "id": "armor__t3-counter-defense-water",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-defense-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-defense-water",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-defense-water"
+  },
+  {
+   "id": "armor__t3-air-counter-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-counter-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-counter-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-counter-defense"
+  },
+  {
+   "id": "armor__t3-counter-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-defense-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-defense-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-defense-earth"
+  },
+  {
+   "id": "armor__t3-agility-counter-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-agility-counter-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-agility-counter-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-agility-counter-earth"
+  },
+  {
+   "id": "armor__t3-air-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-air-defense",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-air-defense",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-air-defense"
+  },
+  {
+   "id": "armor__t3-defense-earth-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-earth-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-earth-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-earth-earth"
+  },
+  {
+   "id": "armor__t3-defense-earth-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-earth-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-earth-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-earth-fire"
+  },
+  {
+   "id": "armor__t3-defense-earth-water",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-defense-earth-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-defense-earth-water",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-earth-water"
+  },
+  {
+   "id": "armor__t3-air-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-air-defense-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-air-defense-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-defense-earth"
+  },
+  {
+   "id": "armor__t3-counter-earth-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-earth-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-earth-earth",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-earth-earth"
+  },
+  {
+   "id": "armor__t3-counter-earth-fire",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "armor",
+   "variant": "t3-counter-earth-fire",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-attack",
+    "t3-counter-earth-fire",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t1-defense",
+    "t2-attack-defense",
+    "t2-attack-fire",
+    "t2-counter-earth",
+    "t3-earth-earth-earth",
+    "t2-agility-agility"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-counter-earth-fire"
+  },
+  {
+   "id": "heal__CONTROL",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "CONTROL",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t1-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-CONTROL"
+  },
+  {
+   "id": "heal__t2-defense-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t2-defense-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-defense-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-defense-water"
+  },
+  {
+   "id": "heal__t2-fire-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t2-fire-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-fire-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-fire-water"
+  },
+  {
+   "id": "heal__t2-air-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t2-air-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-air-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-air-water"
+  },
+  {
+   "id": "heal__t2-earth-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t2-earth-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t2-earth-water"
+  },
+  {
+   "id": "heal__t3-water-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-water-water-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-water-water-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-water-water-water"
+  },
+  {
+   "id": "heal__t3-fire-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-fire-water-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-fire-water-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-fire-water-water"
+  },
+  {
+   "id": "heal__t3-air-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-air-water-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-air-water-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-water-water"
+  },
+  {
+   "id": "heal__t3-earth-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-earth-water-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-earth-water-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-earth-water-water"
+  },
+  {
+   "id": "heal__t3-air-air-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-air-air-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-air-air-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-air-water"
+  },
+  {
+   "id": "heal__t3-air-earth-earth",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-air-earth-earth",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-air-earth-earth",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-air-earth-earth"
+  },
+  {
+   "id": "heal__t3-earth-fire-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-earth-fire-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-earth-fire-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-earth-fire-water"
+  },
+  {
+   "id": "heal__t3-defense-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss4",
+   "archetype": "heal",
+   "variant": "t3-defense-water-water",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t3-defense-water-water",
+    "t2-fire-water",
+    "t2-attack-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t2-air-water",
+    "t3-water-water-water",
+    "t2-earth-water"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 3
+   },
+   "repeats": 24,
+   "seed": "surv-t3-defense-water-water"
+  }
+ ]
+}
