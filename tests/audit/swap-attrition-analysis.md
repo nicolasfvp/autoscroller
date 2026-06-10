@@ -1,0 +1,190 @@
+# Per-card swap-test (attrition) — marginal value vs filler control
+
+164 cards across 17 (class,archetype) cells. dDmg = damage delta vs filler in same matched baseline; band=boss2(iron_golem), light planning, 10 reps.
+
+## DEAD / WEAK cards (marginal damage <= filler) — 87
+
+- t2-counter-counter "Razor Stance" T2 [warrior|bleed] cost 1s cd 2 | dDmg -694 dWin 0 (peakOPS 0)
+- t3-counter-counter-counter "Crimson Spiral" T3 [warrior|bleed] cost 2s cd 1.8 | dDmg -584 dWin -0.3 (peakOPS 21.25)
+- t3-attack-attack-attack "Berserker's Ledger" T3 [warrior|bleed] cost 2s cd 2.4 | dDmg -566 dWin -0.2 (peakOPS 52.5)
+- t3-counter-fire-fire "Brine Crucible" T3 [warrior|bleed] cost 1s+1m cd 2.4 | dDmg -531 dWin -0.3 (peakOPS 158.13)
+- t3-agility-attack-counter "Vein Splitter" T3 [warrior|bleed] cost 2s cd 2.4 | dDmg -529 dWin 0 (peakOPS 134.38)
+- t3-agility-counter-counter "Razor Cadence" T3 [warrior|bleed] cost 2s cd 2 | dDmg -505 dWin -0.3 (peakOPS 72.75)
+- t2-attack-fire "Kindle Strike" T2 [warrior|bleed] cost 1s cd 1.5 | dDmg -441 dWin 0.6 (peakOPS 16)
+- t2-counter-water "Bloodtide Mend" T2 [warrior|bleed] cost 1s cd 1.5 | dDmg -437 dWin -0.2 (peakOPS 4)
+- t2-agility-counter "Sidestep & Slash" T2 [warrior|bleed] cost 1s cd 1.2 | dDmg -391 dWin -0.1 (peakOPS 25.42)
+- t3-counter-counter-water "Crimson Cascade" T3 [warrior|bleed] cost 1s+1m cd 2.4 | dDmg -389 dWin -0.3 (peakOPS 13.13)
+- t2-attack-attack "Reckless Strike" T2 [warrior|bleed] cost 1s cd 1.2 | dDmg -383 dWin 0 (peakOPS 55.83)
+- t3-agility-agility-counter "Quicksilver Bleed" T3 [warrior|bleed] cost 1s cd 1.8 | dDmg -379 dWin -0.3 (peakOPS 17.5)
+- t2-counter-fire "Cinderscar" T2 [warrior|bleed] cost 1s cd 1.4 | dDmg -367 dWin 0.2 (peakOPS 14.29)
+- t3-air-air-counter "Stormrage" T3 [warrior|slow] cost 1s+1m cd 2.4 | dDmg -367 dWin 0 (peakOPS 6.67)
+- t3-attack-fire-water "Tremor Detonate" T3 [warrior|poison] cost 2s cd 2.4 | dDmg -292 dWin -0.5 (peakOPS 22.5)
+- t3-earth-fire-water "Alchemic Drain" T3 [mage|poison] cost 1m cd 2.4 | dDmg -284 dWin 0 (peakOPS 8)
+- t3-air-attack-attack "Galekick" T3 [warrior|slow] cost 2s cd 1.6 | dDmg -277 dWin 0 (peakOPS 51.25)
+- t2-attack-counter "Bloodprice Strike" T2 [warrior|rage] cost 1s cd 1.6 | dDmg -236 dWin -0.657 (peakOPS 48.13)
+- t3-air-air-attack "Tempest Pike" T3 [warrior|slow] cost 2s cd 2.2 | dDmg -236 dWin 0 (peakOPS 33.64)
+- t3-earth-fire-fire "Magma Welling" T3 [warrior|burn] cost 2s cd 2.4 | dDmg -229 dWin 0.7 (peakOPS 21.33)
+- t1-air "Gust" T1 [mage|magic] cost free cd 1.2 | dDmg -228 dWin 0.1 (peakOPS null)
+- t3-air-counter-earth "Tectonic Reckoning" T3 [mage|stun] cost 3s+2m cd 2.8 | dDmg -228 dWin 0 (peakOPS 70)
+- t3-air-counter-fire "Static Bleed" T3 [warrior|slow] cost 1s cd 1.8 | dDmg -206 dWin 0 (peakOPS 15)
+- t3-defense-earth-water "Bogplate" T3 [warrior|poison] cost 1s+1m cd 2.4 | dDmg -201 dWin 0.4 (peakOPS 9.67)
+- t3-air-earth-earth "Standing Stone" T3 [mage|armor] cost 2m cd 2.4 | dDmg -198 dWin 0 (peakOPS 8.67)
+- t3-water-water-water "Tidesong Aura" T3 [mage|heal] cost 2m cd 2.4 | dDmg -197 dWin 0 (peakOPS 9)
+- t2-fire-fire "Pyre" T2 [mage|burn] cost 1m cd 1.4 | dDmg -191 dWin 0 (peakOPS 36.43)
+- t3-agility-air-earth "Stormstone Tempo" T3 [warrior|slow] cost 2s cd 2.4 | dDmg -186 dWin 0 (peakOPS 38.75)
+- t1-water "Mend" T1 [mage|heal] cost 1m cd 2 | dDmg -174 dWin 0 (peakOPS 5.4)
+- t3-agility-air-air "Gale Echo" T3 [mage|slow] cost 1s+1m cd 2.4 | dDmg -171 dWin 0.1 (peakOPS 0)
+- t2-counter-earth "Thornwall" T2 [warrior|armor] cost 1s cd 2 | dDmg -160 dWin 0 (peakOPS 11.7)
+- t3-defense-defense-defense "Aegis of Returning Wrath" T3 [warrior|armor] cost 2s cd 2 | dDmg -157 dWin 0 (peakOPS 14)
+- t3-agility-agility-defense "Veil of Steps" T3 [warrior|armor] cost 1s cd 1.6 | dDmg -156 dWin 0 (peakOPS 9.5)
+- t3-attack-attack-earth "Concussive Smash" T3 [warrior|slow] cost 2s cd 2.4 | dDmg -149 dWin 0 (peakOPS 40)
+- t3-defense-water-water "Brineward" T3 [mage|poison] cost 2m cd 2.4 | dDmg -149 dWin 0 (peakOPS 17.17)
+- t3-air-defense-defense "Stormgate" T3 [warrior|armor] cost 2s cd 2.4 | dDmg -148 dWin 0 (peakOPS 8)
+- t2-air-water "Misting Veil" T2 [mage|heal] cost 1m cd 1.4 | dDmg -146 dWin 0 (peakOPS 2.57)
+- t2-air-counter "Hollow Echo" T2 [warrior|pure_damage] cost 1s cd 1.3 | dDmg -141 dWin 0 (peakOPS 24.62)
+- t3-agility-counter-fire "Searing Razor" T3 [warrior|burn] cost 1s+1m cd 2.2 | dDmg -139 dWin 0 (peakOPS 10.91)
+- t3-earth-water-water "Brine Bedrock" T3 [mage|poison] cost 2m cd 2.4 | dDmg -135 dWin 0 (peakOPS 7.5)
+- t3-counter-defense-fire "Ashen Bulwark" T3 [warrior|burn] cost 2s cd 2.4 | dDmg -133 dWin 0.7 (peakOPS 7.33)
+- t3-agility-counter-defense "Bramble Step" T3 [warrior|bleed] cost 1s cd 2.2 | dDmg -131 dWin 0.6 (peakOPS 5.45)
+- t2-agility-earth "Tremor Dash" T2 [warrior|armor] cost 1s cd 1.6 | dDmg -129 dWin 0 (peakOPS 27.37)
+- t1-counter "Riposte" T1 [warrior|pure_damage] cost 1s cd 2 | dDmg -123 dWin 0 (peakOPS 0)
+- t2-attack-earth "Granite Lunge" T2 [warrior|armor] cost 1s cd 1.4 | dDmg -122 dWin 0 (peakOPS 15.57)
+- t3-earth-earth-earth "Mountain's Answer" T3 [warrior|armor] cost 2s cd 2.4 | dDmg -120 dWin 0 (peakOPS 29.67)
+- t3-air-fire-water "Steaming Plague" T3 [mage|poison] cost 1s+1m cd 2.4 | dDmg -117 dWin 0 (peakOPS 45.83)
+- t3-agility-earth-water "Mireglide" T3 [mage|poison] cost 1m cd 2 | dDmg -115 dWin 0 (peakOPS 11.2)
+- t3-agility-defense-earth "Quickstone" T3 [warrior|armor] cost 1s+1m cd 2.4 | dDmg -112 dWin 0 (peakOPS 6.33)
+- t1-defense "Guard" T1 [warrior|armor] cost 1s cd 1.6 | dDmg -111 dWin 0 (peakOPS 6)
+- t1-earth "Quake" T1 [mage|slow] cost 1m cd 1.4 | dDmg -109 dWin -0.1 (peakOPS 4)
+- t2-attack-water "Crimson Tithe" T2 [warrior|rage] cost 1s cd 1.6 | dDmg -104 dWin -0.4 (peakOPS 3.75)
+- t3-air-air-air "Tempest Cadence" T3 [mage|pure_damage] cost 2m cd 2.4 | dDmg -89 dWin -0.2 (peakOPS 24.17)
+- t2-agility-fire "Flame Dart" T2 [mage|burn] cost 1m cd 1.2 | dDmg -83 dWin 0 (peakOPS 57.5)
+- t3-counter-fire-water "Venom Detonation" T3 [mage|poison] cost 1s+1m cd 2.4 | dDmg -81 dWin -0.2 (peakOPS 17.08)
+- t3-counter-defense-earth "Tombplate" T3 [warrior|rage] cost 2s cd 2.4 | dDmg -79 dWin 0.2 (peakOPS 12.67)
+- t3-air-water-water "Misted Cadence" T3 [mage|heal] cost 2m cd 2.4 | dDmg -78 dWin 0 (peakOPS 7)
+- t3-air-attack-water "Galetide" T3 [mage|poison] cost 1s+1m cd 2 | dDmg -78 dWin -0.1 (peakOPS 26)
+- t3-earth-earth-water "Bog Catalyst" T3 [mage|poison] cost 1s+1m cd 2.4 | dDmg -71 dWin -0.1 (peakOPS 45.83)
+- t2-defense-water "Vow of the Tide" T2 [mage|armor] cost 1m cd 1.6 | dDmg -65 dWin 0 (peakOPS 4.75)
+- t2-fire-water "Steam Surge" T2 [mage|burn] cost 1m cd 1.3 | dDmg -63 dWin 0 (peakOPS 19.23)
+- t3-agility-fire-fire "Cinder Sprint" T3 [mage|burn] cost 1m cd 1.6 | dDmg -63 dWin 0 (peakOPS 32.5)
+- t3-air-counter-water "Tempestbleed" T3 [mage|slow] cost 1m cd 1.8 | dDmg -63 dWin -0.4 (peakOPS 14.44)
+- t3-defense-defense-water "Stagnant Bulwark" T3 [warrior|poison] cost 1s+1m cd 1.6 | dDmg -56 dWin 0.5 (peakOPS 6.67)
+- t3-counter-defense-defense "Reforge Vow" T3 [warrior|armor] cost 1s+1m cd 2.4 | dDmg -51 dWin 0 (peakOPS 9)
+- t3-air-air-fire "Cinder Squall" T3 [warrior|slow] cost 1s+1m cd 2.4 | dDmg -50 dWin 0 (peakOPS 19.58)
+- t3-attack-attack-defense "Bulwark Salvo" T3 [warrior|pure_damage] cost 2s cd 2.4 | dDmg -46 dWin 0 (peakOPS 17.5)
+- t3-agility-agility-fire "Twinflame Flicker" T3 [warrior|burn] cost 1s cd 1.6 | dDmg -46 dWin -0.1 (peakOPS 10)
+- t3-air-air-defense "Galeward" T3 [warrior|armor] cost 1s+1m cd 2.4 | dDmg -45 dWin 0 (peakOPS 8.67)
+- t1-agility "Quickstep" T1 [warrior|pure_damage] cost 1s cd 1.2 | dDmg -43 dWin 0 (peakOPS 26.67)
+- t3-defense-earth-earth "Bedrock Bulwark" T3 [warrior|armor] cost 2s cd 2.4 | dDmg -42 dWin 0 (peakOPS 10.33)
+- t3-air-earth-fire "Sandfury" T3 [mage|slow] cost 2m cd 2.4 | dDmg -42 dWin -0.567 (peakOPS 35)
+- t2-agility-air "Gale Cut" T2 [mage|pure_damage] cost 1m cd 1.2 | dDmg -40 dWin -0.3 (peakOPS 37.5)
+- t3-air-counter-counter "Wrath Squall" T3 [warrior|rage] cost 2s cd 2 | dDmg -33 dWin -0.3 (peakOPS 0)
+- t3-agility-fire-water "Boilstep" T3 [mage|poison] cost 1m cd 1.8 | dDmg -31 dWin 0 (peakOPS 45.56)
+- t1-fire "Spark" T1 [mage|burn] cost 1m cd 1.2 | dDmg -24 dWin 0 (peakOPS 8.57)
+- t3-counter-earth-earth "Tombrage" T3 [warrior|rage] cost 2s cd 2.4 | dDmg -24 dWin 0.2 (peakOPS 7.33)
+- t3-agility-air-water "Stormsplash" T3 [mage|poison] cost 1m cd 1.6 | dDmg -22 dWin 0 (peakOPS 27.5)
+- t3-attack-attack-counter "Bloodlash Salvo" T3 [warrior|pure_damage] cost 2s cd 1.8 | dDmg -18 dWin 0 (peakOPS 33.89)
+- t2-air-air "Tailwind" T2 [mage|pure_damage] cost 1m cd 1.2 | dDmg -17 dWin -0.1 (peakOPS 56.67)
+- t3-agility-agility-earth "Footwork Stone" T3 [warrior|armor] cost 1s cd 1.8 | dDmg -15 dWin 0 (peakOPS 9.78)
+- t3-air-fire-fire "Pyre Surge" T3 [warrior|burn] cost 1s+1m cd 2.4 | dDmg -14 dWin -0.2 (peakOPS 13.33)
+- t3-defense-earth-fire "Magmaplate" T3 [warrior|burn] cost 2s cd 2.4 | dDmg -14 dWin 0.7 (peakOPS 8.67)
+- t3-attack-attack-water "Soaking Blade" T3 [warrior|poison] cost 2s cd 2 | dDmg -9 dWin 0.2 (peakOPS 41.5)
+- t3-counter-defense-water "Crimson Regen Mantle" T3 [warrior|armor] cost 1s+1m cd 2.4 | dDmg -6 dWin 0 (peakOPS 6)
+- t3-agility-attack-earth "Quarry Dance" T3 [warrior|pure_damage] cost 2s cd 2 | dDmg -5 dWin 0 (peakOPS 24)
+- t2-air-attack "Stormstrike" T2 [warrior|pure_damage] cost 1s cd 1.4 | dDmg 0 dWin 0 (peakOPS 20.71)
+
+## TIER VIOLATIONS (T3 marginal value < same-cell T2 median) — 52
+
+- t3-air-air-counter "Stormrage" T3 [warrior|slow] dDmg -367 vs T2-median 131 (gap -498) cost 1s+1m cd 2.4
+- t3-defense-defense-defense "Aegis of Returning Wrath" T3 [warrior|armor] dDmg -157 vs T2-median 324.5 (gap -482) cost 2s cd 2
+- t3-agility-agility-defense "Veil of Steps" T3 [warrior|armor] dDmg -156 vs T2-median 324.5 (gap -481) cost 1s cd 1.6
+- t3-air-defense-defense "Stormgate" T3 [warrior|armor] dDmg -148 vs T2-median 324.5 (gap -473) cost 2s cd 2.4
+- t3-earth-earth-earth "Mountain's Answer" T3 [warrior|armor] dDmg -120 vs T2-median 324.5 (gap -445) cost 2s cd 2.4
+- t3-agility-defense-earth "Quickstone" T3 [warrior|armor] dDmg -112 vs T2-median 324.5 (gap -437) cost 1s+1m cd 2.4
+- t3-air-attack-attack "Galekick" T3 [warrior|slow] dDmg -277 vs T2-median 131 (gap -408) cost 2s cd 1.6
+- t3-counter-defense-defense "Reforge Vow" T3 [warrior|armor] dDmg -51 vs T2-median 324.5 (gap -376) cost 1s+1m cd 2.4
+- t3-air-air-defense "Galeward" T3 [warrior|armor] dDmg -45 vs T2-median 324.5 (gap -370) cost 1s+1m cd 2.4
+- t3-air-air-attack "Tempest Pike" T3 [warrior|slow] dDmg -236 vs T2-median 131 (gap -367) cost 2s cd 2.2
+- t3-defense-earth-earth "Bedrock Bulwark" T3 [warrior|armor] dDmg -42 vs T2-median 324.5 (gap -367) cost 2s cd 2.4
+- t3-air-counter-earth "Tectonic Reckoning" T3 [mage|stun] dDmg -228 vs T2-median 124 (gap -352) cost 3s+2m cd 2.8
+- t3-agility-agility-earth "Footwork Stone" T3 [warrior|armor] dDmg -15 vs T2-median 324.5 (gap -340) cost 1s cd 1.8
+- t3-air-counter-fire "Static Bleed" T3 [warrior|slow] dDmg -206 vs T2-median 131 (gap -337) cost 1s cd 1.8
+- t3-counter-defense-water "Crimson Regen Mantle" T3 [warrior|armor] dDmg -6 vs T2-median 324.5 (gap -331) cost 1s+1m cd 2.4
+- t3-agility-air-earth "Stormstone Tempo" T3 [warrior|slow] dDmg -186 vs T2-median 131 (gap -317) cost 2s cd 2.4
+- t3-earth-fire-water "Alchemic Drain" T3 [mage|poison] dDmg -284 vs T2-median 31 (gap -315) cost 1m cd 2.4
+- t3-agility-air-air "Gale Echo" T3 [mage|slow] dDmg -171 vs T2-median 134.5 (gap -306) cost 1s+1m cd 2.4
+- t3-attack-counter-defense "Last Stand Bulwark" T3 [warrior|armor] dDmg 35 vs T2-median 324.5 (gap -290) cost 2s cd 2.4
+- t3-agility-attack-defense "Flowstrike" T3 [warrior|armor] dDmg 39 vs T2-median 324.5 (gap -286) cost 2s cd 2
+- t3-attack-attack-earth "Concussive Smash" T3 [warrior|slow] dDmg -149 vs T2-median 131 (gap -280) cost 2s cd 2.4
+- t3-agility-defense-defense "Phalanx Drift" T3 [warrior|armor] dDmg 74 vs T2-median 324.5 (gap -251) cost 1s cd 2.4
+- t3-air-counter-water "Tempestbleed" T3 [mage|slow] dDmg -63 vs T2-median 134.5 (gap -198) cost 1m cd 1.8
+- t3-air-attack-defense "Stormhilt" T3 [warrior|armor] dDmg 141 vs T2-median 324.5 (gap -184) cost 2s cd 2.2
+- t3-air-air-fire "Cinder Squall" T3 [warrior|slow] dDmg -50 vs T2-median 131 (gap -181) cost 1s+1m cd 2.4
+- t3-defense-water-water "Brineward" T3 [mage|poison] dDmg -149 vs T2-median 31 (gap -180) cost 2m cd 2.4
+- t3-air-earth-fire "Sandfury" T3 [mage|slow] dDmg -42 vs T2-median 134.5 (gap -177) cost 2m cd 2.4
+- t3-counter-counter-counter "Crimson Spiral" T3 [warrior|bleed] dDmg -584 vs T2-median -414 (gap -170) cost 2s cd 1.8
+- t3-earth-water-water "Brine Bedrock" T3 [mage|poison] dDmg -135 vs T2-median 31 (gap -166) cost 2m cd 2.4
+- t3-attack-attack-attack "Berserker's Ledger" T3 [warrior|bleed] dDmg -566 vs T2-median -414 (gap -152) cost 2s cd 2.4
+- t3-air-fire-water "Steaming Plague" T3 [mage|poison] dDmg -117 vs T2-median 31 (gap -148) cost 1s+1m cd 2.4
+- t3-agility-earth-water "Mireglide" T3 [mage|poison] dDmg -115 vs T2-median 31 (gap -146) cost 1m cd 2
+- t3-air-earth-earth "Standing Stone" T3 [mage|armor] dDmg -198 vs T2-median -65 (gap -133) cost 2m cd 2.4
+- t3-agility-air-defense "Galeguard" T3 [warrior|armor] dDmg 206 vs T2-median 324.5 (gap -119) cost 1s cd 2.4
+- t3-counter-fire-fire "Brine Crucible" T3 [warrior|bleed] dDmg -531 vs T2-median -414 (gap -117) cost 1s+1m cd 2.4
+- t3-agility-attack-counter "Vein Splitter" T3 [warrior|bleed] dDmg -529 vs T2-median -414 (gap -115) cost 2s cd 2.4
+- t3-counter-fire-water "Venom Detonation" T3 [mage|poison] dDmg -81 vs T2-median 31 (gap -112) cost 1s+1m cd 2.4
+- t3-air-attack-water "Galetide" T3 [mage|poison] dDmg -78 vs T2-median 31 (gap -109) cost 1s+1m cd 2
+- t3-air-air-earth "Dust Plague" T3 [warrior|slow] dDmg 26 vs T2-median 131 (gap -105) cost 1s+2m cd 2.4
+- t3-earth-earth-water "Bog Catalyst" T3 [mage|poison] dDmg -71 vs T2-median 31 (gap -102) cost 1s+1m cd 2.4
+- t3-agility-counter-counter "Razor Cadence" T3 [warrior|bleed] dDmg -505 vs T2-median -414 (gap -91) cost 2s cd 2
+- t3-air-attack-counter "Thunderstrike Catalyst" T3 [warrior|slow] dDmg 64 vs T2-median 131 (gap -67) cost 2s cd 2
+- t3-agility-fire-water "Boilstep" T3 [mage|poison] dDmg -31 vs T2-median 31 (gap -62) cost 1m cd 1.8
+- t3-air-air-air "Tempest Cadence" T3 [mage|pure_damage] dDmg -89 vs T2-median -28.5 (gap -61) cost 2m cd 2.4
+- t3-attack-attack-defense "Bulwark Salvo" T3 [warrior|pure_damage] dDmg -46 vs T2-median 14 (gap -60) cost 2s cd 2.4
+- t3-agility-air-water "Stormsplash" T3 [mage|poison] dDmg -22 vs T2-median 31 (gap -53) cost 1m cd 1.6
+- t3-water-water-water "Tidesong Aura" T3 [mage|heal] dDmg -197 vs T2-median -146 (gap -51) cost 2m cd 2.4
+- t3-attack-attack-counter "Bloodlash Salvo" T3 [warrior|pure_damage] dDmg -18 vs T2-median 14 (gap -32) cost 2s cd 1.8
+- t3-agility-air-attack "Skywire" T3 [warrior|slow] dDmg 102 vs T2-median 131 (gap -29) cost 2s+1m cd 1.5
+- t3-agility-attack-earth "Quarry Dance" T3 [warrior|pure_damage] dDmg -5 vs T2-median 14 (gap -19) cost 2s cd 2
+- t3-attack-water-water "Drowning Lance" T3 [mage|poison] dDmg 14 vs T2-median 31 (gap -17) cost 2s+1m cd 1.8
+- t3-air-defense-earth "Dustward" T3 [warrior|slow] dDmg 115 vs T2-median 131 (gap -16) cost 1s+1m cd 2.4
+
+## OPPRESSIVE candidates (dWin>=0.40 or dDmg>600) — 19
+
+- t3-attack-defense-defense "Body Slam Vow" T3 [warrior|armor] dDmg 637 dWin 0 cost 1s cd 2.4
+- t3-attack-defense-fire "Forge Strike" T3 [warrior|burn] dDmg 283 dWin 0.6 cost 2s cd 2.4
+- t3-air-counter-defense "Glacial Pact" T3 [warrior|slow] dDmg 223 dWin 0.9 cost 1s+1m cd 2.4
+- t3-fire-water-water "Phoenix Aura" T3 [mage|burn] dDmg 219 dWin 0.9 cost 2m cd 2.4
+- t3-agility-defense-fire "Ember Vault" T3 [warrior|burn] dDmg 180 dWin 0.6 cost 1s+1m cd 2.4
+- t3-agility-air-fire "Galecinder" T3 [warrior|burn] dDmg 127 dWin 0.4 cost 1s+1m cd 1.6
+- t3-air-defense-earth "Dustward" T3 [warrior|slow] dDmg 115 dWin 1 cost 1s+1m cd 2.4
+- t3-defense-defense-earth "Stoneward Reprisal" T3 [warrior|stun] dDmg 107 dWin 0.5 cost 1s cd 1.6
+- t3-attack-defense-water "Mire Cleave" T3 [warrior|poison] dDmg 32 dWin 0.5 cost 1s+1m cd 2.4
+- t3-defense-defense-fire "Pyric Bulwark" T3 [warrior|burn] dDmg 28 dWin 0.4 cost 1s+1m cd 2.4
+- t3-air-air-earth "Dust Plague" T3 [warrior|slow] dDmg 26 dWin 1 cost 1s+2m cd 2.4
+- t3-counter-earth-fire "Magmavow" T3 [warrior|burn] dDmg 20 dWin 0.7 cost 2s cd 2.4
+- t3-defense-earth-fire "Magmaplate" T3 [warrior|burn] dDmg -14 dWin 0.7 cost 2s cd 2.4
+- t3-defense-defense-water "Stagnant Bulwark" T3 [warrior|poison] dDmg -56 dWin 0.5 cost 1s+1m cd 1.6
+- t3-agility-counter-defense "Bramble Step" T3 [warrior|bleed] dDmg -131 dWin 0.6 cost 1s cd 2.2
+- t3-counter-defense-fire "Ashen Bulwark" T3 [warrior|burn] dDmg -133 dWin 0.7 cost 2s cd 2.4
+- t3-defense-earth-water "Bogplate" T3 [warrior|poison] dDmg -201 dWin 0.4 cost 1s+1m cd 2.4
+- t3-earth-fire-fire "Magma Welling" T3 [warrior|burn] dDmg -229 dWin 0.7 cost 2s cd 2.4
+- t2-attack-fire "Kindle Strike" T2 [warrior|bleed] dDmg -441 dWin 0.6 cost 1s cd 1.5
+
+## Cell tier-median marginal damage (T1/T2/T3 should ascend)
+
+- warrior|pure_damage  T1 -43 | T2 14 | T3 126.5
+- warrior|armor        T1 -111 | T2 324.5 | T3 -15   <-- T3<T2!
+- mage|burn            T1 -24 | T2 -63 | T3 219
+- mage|heal            T1 -174 | T2 -146 | T3 -78
+- mage|magic           T1 -228 | T2 -- | T3 --
+- mage|slow            T1 -109 | T2 134.5 | T3 -63   <-- T3<T2!
+- warrior|bleed        T1 -- | T2 -414 | T3 -517   <-- T3<T2!
+- warrior|rage         T1 -- | T2 -104 | T3 7.5
+- mage|stun            T1 -- | T2 124 | T3 -228   <-- T3<T2!
+- mage|pure_damage     T1 -- | T2 -28.5 | T3 -89   <-- T3<T2!
+- warrior|slow         T1 -- | T2 131 | T3 -50   <-- T3<T2!
+- mage|armor           T1 -- | T2 -65 | T3 -86.5   <-- T3<T2!
+- mage|poison          T1 -- | T2 31 | T3 -22   <-- T3<T2!
+- warrior|burn         T1 -- | T2 -- | T3 23
+- warrior|poison       T1 -- | T2 -- | T3 6
+- warrior|stun         T1 -- | T2 -- | T3 107
+- warrior|scaling      T1 -- | T2 -- | T3 101

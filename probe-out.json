@@ -1,0 +1,5 @@
+{ "matchups": [
+  { "id": "b7-leveled", "class": "warrior", "deck": ["t1-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t1-counter"], "runXP": 4400, "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 6 },
+  { "id": "b7-NOlevel", "class": "warrior", "deck": ["t1-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t1-counter"], "runXP": 0, "enemy": "boss_iron_golem", "loopMultiplier": 1.6, "isBoss": true, "loopCount": 70, "repeats": 6 },
+  { "id": "b7-NOlevel-NOscale", "class": "warrior", "deck": ["t1-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t2-attack-attack","t1-attack","t1-defense","t1-counter"], "runXP": 0, "enemy": "boss_iron_golem", "loopMultiplier": 1.0, "isBoss": true, "loopCount": 70, "repeats": 6 }
+] }

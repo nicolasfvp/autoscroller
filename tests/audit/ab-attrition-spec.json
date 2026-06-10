@@ -1,0 +1,6 @@
+{ "matchups": [
+  { "id": "fullHP-doom_knight", "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "runXP": 450, "enemy": "doom_knight", "loopMultiplier": 1.0, "isBoss": true, "repeats": 10 },
+  { "id": "fullHP-mutated_salamander", "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "runXP": 250, "enemy": "mutated_salamander", "loopMultiplier": 1.0, "isBoss": false, "repeats": 10 },
+  { "id": "fullHP-scorpion", "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "runXP": 100, "enemy": "scorpion", "loopMultiplier": 1.0, "isBoss": false, "repeats": 10 },
+  { "id": "fullHP-lost_lizard", "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "runXP": 100, "enemy": "lost_lizard", "loopMultiplier": 1.0, "isBoss": false, "repeats": 10 }
+] }

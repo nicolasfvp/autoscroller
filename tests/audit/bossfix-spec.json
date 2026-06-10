@@ -1,0 +1,1582 @@
+{
+ "runs": [
+  {
+   "id": "boss4__pure_damage-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "pure_damage-warrior",
+   "variant": "base",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4pure_damage-warriorbase"
+  },
+  {
+   "id": "boss4__pure_damage-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "pure_damage-warrior",
+   "variant": "affAttack",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4pure_damage-warrioraffAttack",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss4__pure_damage-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "pure_damage-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4pure_damage-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss4__rage-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "rage-warrior",
+   "variant": "base",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4rage-warriorbase"
+  },
+  {
+   "id": "boss4__rage-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "rage-warrior",
+   "variant": "affAttack",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4rage-warrioraffAttack",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss4__rage-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "rage-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "desert_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4rage-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss4__armor-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "armor-warrior",
+   "variant": "base",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4armor-warriorbase"
+  },
+  {
+   "id": "boss4__armor-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "armor-warrior",
+   "variant": "affAttack",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4armor-warrioraffAttack",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss4__armor-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "armor-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4armor-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss4__poison-mage__base",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "poison-mage",
+   "variant": "base",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4poison-magebase"
+  },
+  {
+   "id": "boss4__poison-mage__affAttack",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "poison-mage",
+   "variant": "affAttack",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4poison-mageaffAttack",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss4__poison-mage__affAttack+sh6",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "poison-mage",
+   "variant": "affAttack+sh6",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4poison-mageaffAttack+sh6",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss4__burn-mage__base",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "burn-mage",
+   "variant": "base",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4burn-magebase"
+  },
+  {
+   "id": "boss4__burn-mage__affAttack",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "burn-mage",
+   "variant": "affAttack",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4burn-mageaffAttack",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss4__burn-mage__affAttack+sh6",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss4",
+   "archetype": "burn-mage",
+   "variant": "affAttack+sh6",
+   "boss": "desert_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 37,
+   "startBossKills": 3,
+   "startRunXP": 2100,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss4burn-mageaffAttack+sh6",
+   "enemyOverrides": {
+    "desert_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__pure_damage-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "pure_damage-warrior",
+   "variant": "base",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6pure_damage-warriorbase"
+  },
+  {
+   "id": "boss6__pure_damage-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "pure_damage-warrior",
+   "variant": "affAttack",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6pure_damage-warrioraffAttack",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss6__pure_damage-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "pure_damage-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6pure_damage-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__pure_damage-warrior__affAttack+sh6+dmg10",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "pure_damage-warrior",
+   "variant": "affAttack+sh6+dmg10",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6pure_damage-warrioraffAttack+sh6+dmg10",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "attackDamage": 10,
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__rage-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "rage-warrior",
+   "variant": "base",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6rage-warriorbase"
+  },
+  {
+   "id": "boss6__rage-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "rage-warrior",
+   "variant": "affAttack",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6rage-warrioraffAttack",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss6__rage-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "rage-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6rage-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__rage-warrior__affAttack+sh6+dmg10",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "rage-warrior",
+   "variant": "affAttack+sh6+dmg10",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-attack-water",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6rage-warrioraffAttack+sh6+dmg10",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "attackDamage": 10,
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__armor-warrior__base",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "armor-warrior",
+   "variant": "base",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6armor-warriorbase"
+  },
+  {
+   "id": "boss6__armor-warrior__affAttack",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "armor-warrior",
+   "variant": "affAttack",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6armor-warrioraffAttack",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss6__armor-warrior__affAttack+sh6",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "armor-warrior",
+   "variant": "affAttack+sh6",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6armor-warrioraffAttack+sh6",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__armor-warrior__affAttack+sh6+dmg10",
+   "class": "warrior",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "armor-warrior",
+   "variant": "affAttack+sh6+dmg10",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6armor-warrioraffAttack+sh6+dmg10",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "attackDamage": 10,
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__poison-mage__base",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "poison-mage",
+   "variant": "base",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6poison-magebase"
+  },
+  {
+   "id": "boss6__poison-mage__affAttack",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "poison-mage",
+   "variant": "affAttack",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6poison-mageaffAttack",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss6__poison-mage__affAttack+sh6",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "poison-mage",
+   "variant": "affAttack+sh6",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6poison-mageaffAttack+sh6",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__poison-mage__affAttack+sh6+dmg10",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "poison-mage",
+   "variant": "affAttack+sh6+dmg10",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6poison-mageaffAttack+sh6+dmg10",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "attackDamage": 10,
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__burn-mage__base",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "burn-mage",
+   "variant": "base",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6burn-magebase"
+  },
+  {
+   "id": "boss6__burn-mage__affAttack",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "burn-mage",
+   "variant": "affAttack",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6burn-mageaffAttack",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack"
+    }
+   }
+  },
+  {
+   "id": "boss6__burn-mage__affAttack+sh6",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "burn-mage",
+   "variant": "affAttack+sh6",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6burn-mageaffAttack+sh6",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "boss6__burn-mage__affAttack+sh6+dmg10",
+   "class": "mage",
+   "quality": "bossfix",
+   "stage": "boss6",
+   "archetype": "burn-mage",
+   "variant": "affAttack+sh6+dmg10",
+   "boss": "boss_iron_golem",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t2-agility-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 57,
+   "startBossKills": 5,
+   "startRunXP": 3300,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 14,
+   "seed": "boss6burn-mageaffAttack+sh6+dmg10",
+   "enemyOverrides": {
+    "boss_iron_golem": {
+     "affinity": "attack",
+     "attackDamage": 10,
+     "behaviorPatch": [
+      {
+       "type": "shield",
+       "shieldAmount": 6
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

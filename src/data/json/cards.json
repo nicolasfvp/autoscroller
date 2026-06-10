@@ -3036,7 +3036,7 @@
     {
       "id": "t3-fire-water-water",
       "name": "Phoenix Aura",
-      "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds, if you have less than 50%[HP], gain 18[armor].",
+      "description": "Heal 15([spi]). Apply 3[burn]([int]). For 12 seconds, the first time you drop below 50%[HP], gain 18[armor].",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3528,7 +3528,7 @@
     {
       "id": "t3-earth-fire-water",
       "name": "Alchemic Drain",
-      "description": "Apply 3[poison]. Heal 6([spi]).",
+      "description": "Apply 4[poison]. Heal 6([spi]).",
       "category": "magic",
       "tier": 3,
       "elements": [
@@ -3539,7 +3539,7 @@
       "effects": [
         {
           "type": "dot",
-          "value": 3,
+          "value": 4,
           "target": "enemy",
           "stack": "poison"
         },
@@ -3557,7 +3557,7 @@
       "cost": {
         "mana": 1
       },
-      "cooldown": 2.4,
+      "cooldown": 1.6,
       "targeting": "single",
       "rarity": "uncommon"
     },
@@ -4331,7 +4331,7 @@
     {
       "id": "t3-counter-counter-earth",
       "name": "Stonewrath",
-      "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 50%[HP], gain 6[rage].",
+      "description": "Gain 12[armor]([vit]). For 15 seconds, the first time you drop below 50%[HP], gain 6[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5015,7 +5015,7 @@
     {
       "id": "t3-agility-defense-earth",
       "name": "Quickstone",
-      "description": "Gain 14[armor]([vit]). For 15 seconds, if you have less than 60%[HP], haste 30% for 6 seconds.",
+      "description": "Gain 14[armor]([vit]). For 15 seconds, the first time you drop below 60%[HP], haste 30% for 6 seconds.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -5244,7 +5244,7 @@
     {
       "id": "t3-counter-defense-earth",
       "name": "Tombplate",
-      "description": "Gain 18[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 10[armor] and 4[rage].",
+      "description": "Gain 18[armor]([vit]). For 15 seconds, the first time you drop below 40%[HP], gain 10[armor] and 4[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -6884,7 +6884,7 @@
     {
       "id": "t3-counter-fire-fire",
       "name": "Brine Crucible",
-      "description": "Consume all [burn] and apply 2[bleed]([dex]) per [burn] consumed, plus 2[bleed]([dex]). Next card delays 3 more seconds.",
+      "description": "Consume all [burn] and apply 2[bleed]([dex]) per [burn] consumed, plus 2[bleed]([dex]). This card delays 3 more seconds next time.",
       "category": "defense",
       "tier": 3,
       "elements": [
@@ -7013,7 +7013,7 @@
     {
       "id": "t3-counter-earth-earth",
       "name": "Tombrage",
-      "description": "Gain 12[armor]([vit]). For 15 seconds, if you have less than 40%[HP], gain 8[rage].",
+      "description": "Gain 12[armor]([vit]). For 15 seconds, the first time you drop below 40%[HP], gain 8[rage].",
       "category": "defense",
       "tier": 3,
       "elements": [

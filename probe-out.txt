@@ -1,0 +1,9 @@
+
+ RUN  v4.1.2 C:/Users/nicolas.pereira/OneDrive - Way2 Technology/Área de Trabalho/autoscroller
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  23:33:44
+   Duration  4.92s (transform 2.70s, setup 0ms, import 3.05s, tests 48ms, environment 0ms)
+

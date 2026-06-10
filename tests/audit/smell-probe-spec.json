@@ -1,0 +1,250 @@
+{
+ "runs": [
+  {
+   "id": "qs__control",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "control",
+   "variant": "control",
+   "boss": "iron_golem",
+   "deck": [
+    "t2-agility-agility",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "qs__control"
+  },
+  {
+   "id": "qs__cur",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "quickstrike-cur",
+   "variant": "quickstrike-cur",
+   "boss": "iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "qs__cur"
+  },
+  {
+   "id": "qs__cost1",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "quickstrike-cost1",
+   "variant": "quickstrike-cost1",
+   "boss": "iron_golem",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "qs__cost1",
+   "cardOverrides": {
+    "t2-agility-attack": {
+     "cost": {
+      "stamina": 1
+     }
+    }
+   }
+  },
+  {
+   "id": "gk__galekick",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "galekick-cur",
+   "variant": "galekick-cur",
+   "boss": "iron_golem",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-attack-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "gk__galekick"
+  },
+  {
+   "id": "gk__tempest",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "tempest-cur",
+   "variant": "tempest-cur",
+   "boss": "iron_golem",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-air-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "gk__tempest"
+  },
+  {
+   "id": "gk__tempest-cd16",
+   "class": "warrior",
+   "quality": "smell",
+   "stage": "boss2",
+   "archetype": "tempest-cd1.6",
+   "variant": "tempest-cd1.6",
+   "boss": "iron_golem",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-air-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 4,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 16,
+   "seed": "gk__tempest-cd16",
+   "cardOverrides": {
+    "t3-air-air-attack": {
+     "cooldown": 1.6
+    }
+   }
+  }
+ ]
+}

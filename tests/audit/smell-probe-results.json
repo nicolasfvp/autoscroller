@@ -1,0 +1,1890 @@
+{
+  "meta": {
+    "specPath": "C:\\Users\\nicolas.pereira\\OneDrive - Way2 Technology\\Área de Trabalho\\autoscroller\\tests\\audit\\smell-probe-spec.json",
+    "count": 6,
+    "tickMs": 100,
+    "fightCapMs": 120000
+  },
+  "summaries": [
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 1.383
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "control",
+        "variant": "control",
+        "boss": "iron_golem"
+      },
+      "id": "qs__control",
+      "class": "warrior",
+      "deckSize": 12,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "20": 16
+      },
+      "deathEnemyHistogram": {
+        "iron_golem": 16
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 2022,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 1.411
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "quickstrike-cur",
+        "variant": "quickstrike-cur",
+        "boss": "iron_golem"
+      },
+      "id": "qs__cur",
+      "class": "warrior",
+      "deckSize": 12,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "20": 16
+      },
+      "deathEnemyHistogram": {
+        "iron_golem": 16
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 2232,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 1.358
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "quickstrike-cost1",
+        "variant": "quickstrike-cost1",
+        "boss": "iron_golem"
+      },
+      "id": "qs__cost1",
+      "class": "warrior",
+      "deckSize": 12,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "20": 16
+      },
+      "deathEnemyHistogram": {
+        "iron_golem": 16
+      },
+      "avgLoopsCleared": 3,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 1995,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 16,
+          "winRate": 1,
+          "avgHpEnter": 1.549
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "galekick-cur",
+        "variant": "galekick-cur",
+        "boss": "iron_golem"
+      },
+      "id": "gk__galekick",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 4,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 2268,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 16,
+          "winRate": 1,
+          "avgHpEnter": 1.535
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "tempest-cur",
+        "variant": "tempest-cur",
+        "boss": "iron_golem"
+      },
+      "id": "gk__tempest",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 4,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 2362,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    },
+    {
+      "bossesFaced": {
+        "iron_golem": {
+          "reached": 16,
+          "won": 16,
+          "winRate": 1,
+          "avgHpEnter": 1.522
+        }
+      },
+      "meta": {
+        "class": "warrior",
+        "quality": "smell",
+        "stage": "boss2",
+        "archetype": "tempest-cd1.6",
+        "variant": "tempest-cd1.6",
+        "boss": "iron_golem"
+      },
+      "id": "gk__tempest-cd16",
+      "class": "warrior",
+      "deckSize": 10,
+      "repeats": 16,
+      "visitsShop": true,
+      "planning": "{\"pool\":[\"desert\",\"graveyard\",\"swamp\",\"lava\",\"forest\"],\"perLoop\":1}",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 4,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 2420,
+      "reachedFirstBossRate": 0,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": null
+    }
+  ],
+  "detail": [
+    {
+      "id": "qs__control",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 20,
+        "deathEnemy": "iron_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "iron_golem": 1.62
+        },
+        "bossResult": {
+          "iron_golem": "loss"
+        },
+        "totalFights": 19,
+        "totalDamage": 2259
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2259
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.39
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2326
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.17
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 1954
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.53
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2395
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 1843
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 0.84
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2287
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.19
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 22,
+          "totalDamage": 2621
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.41
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 13,
+          "totalDamage": 1743
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.5
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 1599
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.3
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2075
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.29
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 1666
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 25,
+          "totalDamage": 2727
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.12
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 1829
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.61
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 12,
+          "totalDamage": 1523
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.31
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2139
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.6
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 11,
+          "totalDamage": 1363
+        }
+      ]
+    },
+    {
+      "id": "qs__cur",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 20,
+        "deathEnemy": "iron_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "iron_golem": 1.24
+        },
+        "bossResult": {
+          "iron_golem": "loss"
+        },
+        "totalFights": 18,
+        "totalDamage": 2183
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.24
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2183
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.21
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2133
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.57
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2372
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.54
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2072
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.6
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 1971
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 1911
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.53
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2316
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.3
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2219
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.42
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2233
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.37
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 26,
+          "totalDamage": 3116
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.39
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2585
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.57
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2246
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.49
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 13,
+          "totalDamage": 1672
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.03
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2275
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.45
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2087
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.25
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2325
+        }
+      ]
+    },
+    {
+      "id": "qs__cost1",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 20,
+        "deathEnemy": "iron_golem",
+        "deathWasBoss": true,
+        "loopsCleared": 3,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {
+          "iron_golem": 1.62
+        },
+        "bossResult": {
+          "iron_golem": "loss"
+        },
+        "totalFights": 15,
+        "totalDamage": 1891
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 1891
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.19
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 10,
+          "totalDamage": 1309
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2070
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.45
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2034
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 0.91
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 13,
+          "totalDamage": 1660
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.5
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 15,
+          "totalDamage": 1940
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 1727
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.13
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 2505
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.57
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 17,
+          "totalDamage": 2051
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.49
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 2067
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 0.34
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 14,
+          "totalDamage": 1749
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.41
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 20,
+          "totalDamage": 2551
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 18,
+          "totalDamage": 2236
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.49
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 11,
+          "totalDamage": 1599
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.35
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 19,
+          "totalDamage": 2539
+        },
+        {
+          "died": true,
+          "deathLoop": 20,
+          "deathEnemy": "iron_golem",
+          "deathWasBoss": true,
+          "loopsCleared": 3,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "iron_golem": 1.42
+          },
+          "bossResult": {
+            "iron_golem": "loss"
+          },
+          "totalFights": 16,
+          "totalDamage": 1985
+        }
+      ]
+    },
+    {
+      "id": "gk__galekick",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 4,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "iron_golem": 1.62
+        },
+        "bossResult": {
+          "iron_golem": "win"
+        },
+        "totalFights": 15,
+        "totalDamage": 2100
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 15,
+          "totalDamage": 2100
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.61
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2416
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 15,
+          "totalDamage": 2050
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.74
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 2697
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.38
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2633
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.53
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2586
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.54
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 2092
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 11,
+          "totalDamage": 1716
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.46
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 12,
+          "totalDamage": 2222
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2441
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.4
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 2181
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.55
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 1996
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.6
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 10,
+          "totalDamage": 1618
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.49
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 2834
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.59
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 13,
+          "totalDamage": 2233
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.49
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2478
+        }
+      ]
+    },
+    {
+      "id": "gk__tempest",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 4,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "iron_golem": 1.37
+        },
+        "bossResult": {
+          "iron_golem": "win"
+        },
+        "totalFights": 18,
+        "totalDamage": 2439
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.37
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2439
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.48
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 1906
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.51
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 16,
+          "totalDamage": 2208
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.59
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 16,
+          "totalDamage": 2214
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 2340
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.39
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 2938
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.66
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2451
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.54
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 22,
+          "totalDamage": 3017
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.51
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 23,
+          "totalDamage": 3092
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 1847
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.56
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 13,
+          "totalDamage": 1802
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.61
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 13,
+          "totalDamage": 1923
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.57
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2284
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.43
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 15,
+          "totalDamage": 2462
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 2476
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.56
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2391
+        }
+      ]
+    },
+    {
+      "id": "gk__tempest-cd16",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 4,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "iron_golem": 1.53
+        },
+        "bossResult": {
+          "iron_golem": "win"
+        },
+        "totalFights": 17,
+        "totalDamage": 2440
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.53
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2440
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.52
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 2083
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.56
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 16,
+          "totalDamage": 2313
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.62
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 13,
+          "totalDamage": 1841
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.36
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2507
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 18,
+          "totalDamage": 2967
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.36
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 19,
+          "totalDamage": 2527
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.43
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 21,
+          "totalDamage": 2991
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.48
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 2245
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 11,
+          "totalDamage": 1693
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.59
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 12,
+          "totalDamage": 1835
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.44
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 14,
+          "totalDamage": 2064
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.61
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 17,
+          "totalDamage": 2585
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 16,
+          "totalDamage": 2451
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.53
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 26,
+          "totalDamage": 3815
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "iron_golem": 1.58
+          },
+          "bossResult": {
+            "iron_golem": "win"
+          },
+          "totalFights": 16,
+          "totalDamage": 2355
+        }
+      ]
+    }
+  ]
+}

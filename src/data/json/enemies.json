@@ -361,7 +361,7 @@
       {
         "type": "shield",
         "interval": 8000,
-        "shieldAmount": 8
+        "shieldAmount": 6
       },
       {
         "type": "multi_hit",
@@ -607,7 +607,7 @@
       {
         "type": "multi_hit",
         "hitCount": 3,
-        "damageMultiplier": 0.5
+        "damageMultiplier": 0.4
       },
       {
         "type": "enrage",
@@ -646,7 +646,7 @@
       {
         "type": "shield",
         "interval": 7000,
-        "shieldAmount": 12
+        "shieldAmount": 6
       },
       {
         "type": "enrage",
@@ -672,6 +672,6 @@
       }
     },
     "color": 7368816,
-    "affinity": "defense"
+    "affinity": "attack"
   }
 ]

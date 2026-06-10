@@ -1,0 +1,297 @@
+{
+  "warrior|pure_damage": {
+    "cls": "warrior",
+    "arch": "pure_damage",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-agility-attack-attack",
+      "t3-agility-agility-agility",
+      "t3-agility-agility-attack",
+      "t2-agility-attack",
+      "t3-attack-earth-earth"
+    ],
+    "filler": "t1-attack",
+    "candidates": 20
+  },
+  "warrior|armor": {
+    "cls": "warrior",
+    "arch": "armor",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-air-attack-defense",
+      "t3-earth-earth-earth",
+      "t2-agility-earth",
+      "t3-agility-attack-defense",
+      "t2-attack-earth"
+    ],
+    "filler": "t1-attack",
+    "candidates": 26
+  },
+  "mage|burn": {
+    "cls": "mage",
+    "arch": "burn",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t2-agility-fire",
+      "t2-fire-fire",
+      "t3-agility-fire-fire",
+      "t3-agility-earth-fire",
+      "t2-fire-water"
+    ],
+    "filler": "t1-fire",
+    "candidates": 11
+  },
+  "mage|heal": {
+    "cls": "mage",
+    "arch": "heal",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t3-water-water-water",
+      "t3-air-water-water",
+      "t3-air-air-water",
+      "t2-air-water"
+    ],
+    "filler": "t1-fire",
+    "candidates": 5
+  },
+  "mage|magic": {
+    "cls": "mage",
+    "arch": "magic",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire"
+    ],
+    "filler": "t1-fire",
+    "candidates": 1
+  },
+  "mage|slow": {
+    "cls": "mage",
+    "arch": "slow",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t3-air-earth-fire",
+      "t2-earth-earth",
+      "t3-air-counter-water",
+      "t2-air-earth",
+      "t3-agility-air-air"
+    ],
+    "filler": "t1-fire",
+    "candidates": 6
+  },
+  "warrior|bleed": {
+    "cls": "warrior",
+    "arch": "bleed",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-counter-fire-fire",
+      "t3-agility-attack-counter",
+      "t3-agility-counter-counter",
+      "t2-attack-attack",
+      "t3-attack-attack-attack"
+    ],
+    "filler": "t1-attack",
+    "candidates": 14
+  },
+  "warrior|rage": {
+    "cls": "warrior",
+    "arch": "rage",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t2-attack-counter",
+      "t2-defense-defense",
+      "t3-counter-defense-earth",
+      "t3-counter-counter-defense",
+      "t3-counter-counter-earth"
+    ],
+    "filler": "t1-attack",
+    "candidates": 9
+  },
+  "mage|stun": {
+    "cls": "mage",
+    "arch": "stun",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t3-air-counter-earth",
+      "t2-water-water",
+      "t2-earth-earth"
+    ],
+    "filler": "t1-fire",
+    "candidates": 2
+  },
+  "mage|pure_damage": {
+    "cls": "mage",
+    "arch": "pure_damage",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t2-air-air",
+      "t2-agility-air",
+      "t3-air-air-air"
+    ],
+    "filler": "t1-fire",
+    "candidates": 3
+  },
+  "warrior|slow": {
+    "cls": "warrior",
+    "arch": "slow",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-agility-air-attack",
+      "t3-air-attack-attack",
+      "t3-attack-attack-earth",
+      "t3-agility-air-earth",
+      "t3-air-air-attack"
+    ],
+    "filler": "t1-attack",
+    "candidates": 14
+  },
+  "mage|armor": {
+    "cls": "mage",
+    "arch": "armor",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t3-earth-earth-fire",
+      "t3-air-earth-earth",
+      "t2-defense-water",
+      "t2-earth-water",
+      "t3-defense-water-water"
+    ],
+    "filler": "t1-fire",
+    "candidates": 3
+  },
+  "mage|poison": {
+    "cls": "mage",
+    "arch": "poison",
+    "baseline": [
+      "t1-fire",
+      "t1-water",
+      "t2-fire-water",
+      "t2-air-earth",
+      "t2-attack-fire",
+      "t3-agility-water-water",
+      "t3-earth-earth-water",
+      "t3-air-fire-water",
+      "t3-agility-fire-water",
+      "t2-earth-water"
+    ],
+    "filler": "t1-fire",
+    "candidates": 20
+  },
+  "warrior|burn": {
+    "cls": "warrior",
+    "arch": "burn",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-attack-attack-fire",
+      "t3-agility-air-fire",
+      "t3-agility-attack-fire",
+      "t3-attack-fire-fire",
+      "t3-attack-earth-fire"
+    ],
+    "filler": "t1-attack",
+    "candidates": 19
+  },
+  "warrior|poison": {
+    "cls": "warrior",
+    "arch": "poison",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-attack-counter-water",
+      "t3-attack-attack-water",
+      "t3-agility-counter-water",
+      "t3-agility-attack-water",
+      "t3-attack-defense-water"
+    ],
+    "filler": "t1-attack",
+    "candidates": 9
+  },
+  "warrior|stun": {
+    "cls": "warrior",
+    "arch": "stun",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-defense-defense-earth",
+      "t3-attack-attack-earth",
+      "t3-air-air-fire",
+      "t3-air-air-earth"
+    ],
+    "filler": "t1-attack",
+    "candidates": 1
+  },
+  "warrior|scaling": {
+    "cls": "warrior",
+    "arch": "scaling",
+    "baseline": [
+      "t1-attack",
+      "t1-defense",
+      "t2-attack-defense",
+      "t2-agility-agility",
+      "t2-attack-fire",
+      "t3-agility-earth-earth",
+      "t3-attack-attack-counter",
+      "t3-agility-agility-counter",
+      "t3-agility-counter-fire",
+      "t3-agility-agility-fire"
+    ],
+    "filler": "t1-attack",
+    "candidates": 1
+  }
+}

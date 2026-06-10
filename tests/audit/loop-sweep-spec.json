@@ -1,0 +1,9 @@
+{
+  "runs": [
+    { "id": "p0-vanilla",  "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "visitsShop": true, "planning": { "terrainTiles": [] }, "loopsToSimulate": 12, "repeats": 40, "seed": "p0" },
+    { "id": "p1-light",    "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "visitsShop": true, "planning": { "terrainTiles": [ {"terrain":"desert","count":1} ] }, "loopsToSimulate": 12, "repeats": 40, "seed": "p1" },
+    { "id": "p2-moderate", "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "visitsShop": true, "planning": { "terrainTiles": [ {"terrain":"desert","count":1}, {"terrain":"forest","count":1} ] }, "loopsToSimulate": 12, "repeats": 40, "seed": "p2" },
+    { "id": "p3-active",   "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "visitsShop": true, "planning": { "terrainTiles": [ {"terrain":"desert","count":1}, {"terrain":"forest","count":1}, {"terrain":"graveyard","count":1} ] }, "loopsToSimulate": 12, "repeats": 40, "seed": "p3" },
+    { "id": "p4-heavy",    "class": "warrior", "deck": ["t1-attack","t1-defense","t2-attack-defense","t2-agility-agility","t2-attack-fire"], "visitsShop": true, "planning": { "terrainTiles": [ {"terrain":"desert","count":1}, {"terrain":"forest","count":1}, {"terrain":"graveyard","count":1}, {"terrain":"swamp","count":1} ] }, "loopsToSimulate": 12, "repeats": 40, "seed": "p4" }
+  ]
+}

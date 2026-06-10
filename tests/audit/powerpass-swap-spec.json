@@ -1,0 +1,4855 @@
+{
+ "runs": [
+  {
+   "id": "cell0__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-agility-agility",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-CONTROL"
+  },
+  {
+   "id": "cell0__t1-agility",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t1-agility",
+   "deck": [
+    "t1-agility",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t1-agility"
+  },
+  {
+   "id": "cell0__t1-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t1-counter",
+   "deck": [
+    "t1-counter",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t1-counter"
+  },
+  {
+   "id": "cell0__t2-agility-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t2-agility-attack",
+   "deck": [
+    "t2-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t2-agility-attack"
+  },
+  {
+   "id": "cell0__t2-air-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t2-air-attack",
+   "deck": [
+    "t2-air-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t2-air-attack"
+  },
+  {
+   "id": "cell0__t2-air-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t2-air-counter",
+   "deck": [
+    "t2-air-counter",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t2-air-counter"
+  },
+  {
+   "id": "cell0__t2-attack-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t2-attack-defense",
+   "deck": [
+    "t2-attack-defense",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t2-attack-defense"
+  },
+  {
+   "id": "cell0__t3-attack-attack-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-attack-defense",
+   "deck": [
+    "t3-attack-attack-defense",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-attack-defense"
+  },
+  {
+   "id": "cell0__t3-agility-attack-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-agility-attack-attack",
+   "deck": [
+    "t3-agility-attack-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-agility-attack-attack"
+  },
+  {
+   "id": "cell0__t3-attack-attack-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-attack-counter",
+   "deck": [
+    "t3-attack-attack-counter",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-attack-counter"
+  },
+  {
+   "id": "cell0__t3-agility-agility-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-agility-agility-attack",
+   "deck": [
+    "t3-agility-agility-attack",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-agility-agility-attack"
+  },
+  {
+   "id": "cell0__t3-attack-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-counter-counter",
+   "deck": [
+    "t3-attack-counter-counter",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-counter-counter"
+  },
+  {
+   "id": "cell0__t3-attack-defense-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-defense-earth",
+   "deck": [
+    "t3-attack-defense-earth",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-defense-earth"
+  },
+  {
+   "id": "cell0__t3-agility-attack-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-agility-attack-earth",
+   "deck": [
+    "t3-agility-attack-earth",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-agility-attack-earth"
+  },
+  {
+   "id": "cell0__t3-attack-counter-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-counter-earth",
+   "deck": [
+    "t3-attack-counter-earth",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-counter-earth"
+  },
+  {
+   "id": "cell0__t3-attack-earth-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-attack-earth-earth",
+   "deck": [
+    "t3-attack-earth-earth",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-attack-earth-earth"
+  },
+  {
+   "id": "cell0__t3-air-attack-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "pure_damage",
+   "variant": "t3-air-attack-earth",
+   "deck": [
+    "t3-air-attack-earth",
+    "t2-agility-agility",
+    "t1-agility",
+    "t2-air-attack",
+    "t2-air-counter",
+    "t3-agility-attack-attack",
+    "t3-agility-agility-attack",
+    "t3-attack-counter-counter",
+    "t3-attack-earth-earth",
+    "t3-attack-counter-earth",
+    "t1-attack",
+    "t2-attack-defense"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp0-t3-air-attack-earth"
+  },
+  {
+   "id": "cell1__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-CONTROL"
+  },
+  {
+   "id": "cell1__t2-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t2-counter-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t2-counter-counter"
+  },
+  {
+   "id": "cell1__t2-agility-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t2-agility-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t2-agility-counter"
+  },
+  {
+   "id": "cell1__t2-attack-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t2-attack-attack",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t2-attack-attack"
+  },
+  {
+   "id": "cell1__t3-agility-attack-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-agility-attack-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-attack-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-agility-attack-counter"
+  },
+  {
+   "id": "cell1__t3-agility-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-agility-counter-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-agility-counter-counter"
+  },
+  {
+   "id": "cell1__t3-counter-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-counter-counter-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-counter-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-counter-counter-counter"
+  },
+  {
+   "id": "cell1__t3-agility-agility-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-agility-agility-counter",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-agility-agility-counter"
+  },
+  {
+   "id": "cell1__t3-attack-attack-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-attack-attack-attack",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-attack-attack-attack",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-attack-attack-attack"
+  },
+  {
+   "id": "cell1__t3-agility-counter-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "bleed",
+   "variant": "t3-agility-counter-defense",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-counter-defense",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp1-t3-agility-counter-defense"
+  },
+  {
+   "id": "cell2__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-attack-attack-counter",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-CONTROL"
+  },
+  {
+   "id": "cell2__t3-counter-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-counter-counter-counter",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-counter-counter-counter",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-counter-counter-counter"
+  },
+  {
+   "id": "cell2__t3-attack-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-attack-counter-counter",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-attack-counter-counter",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-attack-counter-counter"
+  },
+  {
+   "id": "cell2__t3-attack-counter-fire",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-attack-counter-fire",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-attack-counter-fire",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-attack-counter-fire"
+  },
+  {
+   "id": "cell2__t2-counter-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t2-counter-defense",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t2-counter-defense",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t2-counter-defense"
+  },
+  {
+   "id": "cell2__t3-counter-counter-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-counter-counter-defense",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-counter-counter-defense",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-counter-counter-defense"
+  },
+  {
+   "id": "cell2__t3-counter-defense-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-counter-defense-earth",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-counter-defense-earth",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-counter-defense-earth"
+  },
+  {
+   "id": "cell2__t3-counter-counter-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-counter-counter-earth",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-counter-counter-earth",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-counter-counter-earth"
+  },
+  {
+   "id": "cell2__t3-counter-earth-earth",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-counter-earth-earth",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-counter-earth-earth",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-counter-earth-earth"
+  },
+  {
+   "id": "cell2__t3-air-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "rage",
+   "variant": "t3-air-counter-counter",
+   "deck": [
+    "t2-attack-attack",
+    "t2-attack-counter",
+    "t3-air-counter-counter",
+    "t2-defense-defense",
+    "t3-counter-counter-defense",
+    "t2-counter-defense",
+    "t1-attack",
+    "t1-attack",
+    "t2-agility-attack",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp2-t3-air-counter-counter"
+  },
+  {
+   "id": "cell3__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "scaling",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t3-agility-attack-attack",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-attack",
+    "t3-attack-attack-attack",
+    "t2-attack-counter",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp3-CONTROL"
+  },
+  {
+   "id": "cell3__t3-attack-attack-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "scaling",
+   "variant": "t3-attack-attack-counter",
+   "deck": [
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t3-attack-attack-counter",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-attack",
+    "t3-attack-attack-attack",
+    "t2-attack-counter",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp3-t3-attack-attack-counter"
+  },
+  {
+   "id": "cell3__t3-agility-agility-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "scaling",
+   "variant": "t3-agility-agility-counter",
+   "deck": [
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t3-agility-agility-counter",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-attack",
+    "t3-attack-attack-attack",
+    "t2-attack-counter",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp3-t3-agility-agility-counter"
+  },
+  {
+   "id": "cell3__t3-air-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "scaling",
+   "variant": "t3-air-counter-counter",
+   "deck": [
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t3-air-counter-counter",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-attack",
+    "t3-attack-attack-attack",
+    "t2-attack-counter",
+    "t3-agility-attack-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp3-t3-air-counter-counter"
+  },
+  {
+   "id": "cell4__CONTROL",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "CONTROL",
+   "deck": [
+    "t3-agility-defense-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-CONTROL"
+  },
+  {
+   "id": "cell4__t1-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t1-defense",
+   "deck": [
+    "t1-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t1-defense"
+  },
+  {
+   "id": "cell4__t2-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t2-air-defense",
+   "deck": [
+    "t2-air-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t2-air-defense"
+  },
+  {
+   "id": "cell4__t3-air-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-air-defense-defense",
+   "deck": [
+    "t3-air-defense-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-air-defense-defense"
+  },
+  {
+   "id": "cell4__t3-agility-agility-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-agility-agility-defense",
+   "deck": [
+    "t3-agility-agility-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-agility-agility-defense"
+  },
+  {
+   "id": "cell4__t3-agility-agility-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-agility-agility-earth",
+   "deck": [
+    "t3-agility-agility-earth",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-agility-agility-earth"
+  },
+  {
+   "id": "cell4__t3-air-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-air-air-defense",
+   "deck": [
+    "t3-air-air-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-air-air-defense"
+  },
+  {
+   "id": "cell4__t3-agility-air-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-agility-air-defense",
+   "deck": [
+    "t3-agility-air-defense",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-agility-air-defense"
+  },
+  {
+   "id": "cell4__t3-counter-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (pure defensive walls)",
+   "variant": "t3-counter-defense-earth",
+   "deck": [
+    "t3-counter-defense-earth",
+    "t2-defense-defense",
+    "t2-defense-earth",
+    "t2-counter-earth",
+    "t3-defense-earth-earth",
+    "t3-air-air-defense",
+    "t3-counter-defense-earth",
+    "t3-attack-defense-water",
+    "t2-agility-earth",
+    "t2-agility-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp4-t3-counter-defense-earth"
+  },
+  {
+   "id": "cell5__CONTROL",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "CONTROL",
+   "deck": [
+    "t3-agility-defense-defense",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-CONTROL"
+  },
+  {
+   "id": "cell5__t2-attack-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t2-attack-earth",
+   "deck": [
+    "t2-attack-earth",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t2-attack-earth"
+  },
+  {
+   "id": "cell5__t2-defense-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t2-defense-earth",
+   "deck": [
+    "t2-defense-earth",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t2-defense-earth"
+  },
+  {
+   "id": "cell5__t3-attack-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t3-attack-defense-defense",
+   "deck": [
+    "t3-attack-defense-defense",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t3-attack-defense-defense"
+  },
+  {
+   "id": "cell5__t3-defense-defense-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t3-defense-defense-defense",
+   "deck": [
+    "t3-defense-defense-defense",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t3-defense-defense-defense"
+  },
+  {
+   "id": "cell5__t3-earth-earth-earth",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t3-earth-earth-earth",
+   "deck": [
+    "t3-earth-earth-earth",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t3-earth-earth-earth"
+  },
+  {
+   "id": "cell5__t3-attack-counter-defense",
+   "class": "warrior",
+   "quality": "survival",
+   "stage": "boss3",
+   "archetype": "armor (armor-scaling payoffs)",
+   "variant": "t3-attack-counter-defense",
+   "deck": [
+    "t3-attack-counter-defense",
+    "t3-air-air-defense",
+    "t3-agility-defense-defense",
+    "t3-counter-defense-defense",
+    "t1-defense",
+    "t2-defense-defense",
+    "t3-counter-defense-earth",
+    "t2-agility-earth",
+    "t3-attack-defense-water",
+    "t2-counter-earth",
+    "t3-agility-air-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp5-t3-attack-counter-defense"
+  },
+  {
+   "id": "cell6__CONTROL",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "CONTROL",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-agility-air-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-CONTROL"
+  },
+  {
+   "id": "cell6__t3-fire-fire-fire",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-fire-fire-fire",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-fire-fire-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-t3-fire-fire-fire"
+  },
+  {
+   "id": "cell6__t3-agility-fire-fire",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-agility-fire-fire",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-agility-fire-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-t3-agility-fire-fire"
+  },
+  {
+   "id": "cell6__t3-fire-fire-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-fire-fire-water",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-fire-fire-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-t3-fire-fire-water"
+  },
+  {
+   "id": "cell6__t3-counter-fire-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-counter-fire-water",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-counter-fire-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-t3-counter-fire-water"
+  },
+  {
+   "id": "cell6__t3-counter-fire-fire",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-counter-fire-fire",
+   "deck": [
+    "t1-fire",
+    "t1-fire",
+    "t3-counter-fire-fire",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-earth-fire",
+    "t3-agility-air-water",
+    "t3-agility-agility-air",
+    "t3-agility-air-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp6-t3-counter-fire-fire"
+  },
+  {
+   "id": "cell7__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-CONTROL"
+  },
+  {
+   "id": "cell7__t3-fire-fire-fire",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-fire-fire-fire",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-fire-fire-fire",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-t3-fire-fire-fire"
+  },
+  {
+   "id": "cell7__t3-attack-fire-fire",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-attack-fire-fire",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-attack-fire-fire",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-t3-attack-fire-fire"
+  },
+  {
+   "id": "cell7__t3-attack-fire-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-attack-fire-water",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-attack-fire-water",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-t3-attack-fire-water"
+  },
+  {
+   "id": "cell7__t3-counter-fire-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-counter-fire-water",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-counter-fire-water",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-t3-counter-fire-water"
+  },
+  {
+   "id": "cell7__t3-counter-fire-fire",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss2",
+   "archetype": "burn",
+   "variant": "t3-counter-fire-fire",
+   "deck": [
+    "t2-attack-fire",
+    "t2-attack-fire",
+    "t3-counter-fire-fire",
+    "t3-agility-agility-fire",
+    "t3-agility-agility-fire",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t3-attack-earth-fire",
+    "t3-agility-air-fire",
+    "t3-air-fire-fire",
+    "t3-air-fire-fire"
+   ],
+   "startLoop": 17,
+   "startBossKills": 1,
+   "startRunXP": 1000,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 1
+   },
+   "repeats": 12,
+   "seed": "pp7-t3-counter-fire-fire"
+  },
+  {
+   "id": "cell8__CONTROL",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "CONTROL",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-attack-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-CONTROL"
+  },
+  {
+   "id": "cell8__t2-earth-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t2-earth-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t2-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t2-earth-water"
+  },
+  {
+   "id": "cell8__t3-earth-fire-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-earth-fire-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-fire-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-earth-fire-water"
+  },
+  {
+   "id": "cell8__t3-agility-agility-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-agility-agility-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-agility-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-agility-agility-water"
+  },
+  {
+   "id": "cell8__t3-agility-defense-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-agility-defense-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-defense-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-agility-defense-water"
+  },
+  {
+   "id": "cell8__t3-agility-earth-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-agility-earth-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-agility-earth-water"
+  },
+  {
+   "id": "cell8__t3-earth-water-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-earth-water-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-water-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-earth-water-water"
+  },
+  {
+   "id": "cell8__t3-agility-air-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-agility-air-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-air-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-agility-air-water"
+  },
+  {
+   "id": "cell8__t3-agility-water-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-agility-water-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-agility-water-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-agility-water-water"
+  },
+  {
+   "id": "cell8__t3-air-fire-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-air-fire-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-air-fire-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-air-fire-water"
+  },
+  {
+   "id": "cell8__t3-earth-earth-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (mage appliers)",
+   "variant": "t3-earth-earth-water",
+   "deck": [
+    "t1-fire",
+    "t2-earth-water",
+    "t3-earth-earth-water",
+    "t3-air-fire-water",
+    "t3-agility-attack-water",
+    "t3-agility-earth-water",
+    "t3-earth-fire-water",
+    "t3-attack-water-water",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp8-t3-earth-earth-water"
+  },
+  {
+   "id": "cell9__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-attack-earth-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-CONTROL"
+  },
+  {
+   "id": "cell9__t3-agility-counter-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-agility-counter-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-agility-counter-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-agility-counter-water"
+  },
+  {
+   "id": "cell9__t3-attack-attack-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-attack-attack-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-attack-attack-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-attack-attack-water"
+  },
+  {
+   "id": "cell9__t3-attack-counter-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-attack-counter-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-attack-counter-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-attack-counter-water"
+  },
+  {
+   "id": "cell9__t3-attack-defense-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-attack-defense-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-attack-defense-water"
+  },
+  {
+   "id": "cell9__t3-air-attack-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-air-attack-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-air-attack-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-air-attack-water"
+  },
+  {
+   "id": "cell9__t3-agility-attack-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "poison (warrior appliers)",
+   "variant": "t3-agility-attack-water",
+   "deck": [
+    "t2-attack-attack",
+    "t3-attack-attack-water",
+    "t3-agility-attack-water",
+    "t3-attack-earth-water",
+    "t3-air-attack-water",
+    "t3-attack-defense-water",
+    "t3-attack-fire-water",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp9-t3-agility-attack-water"
+  },
+  {
+   "id": "cell10__CONTROL",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (mage / poison+burn)",
+   "variant": "CONTROL",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t3-air-fire-water",
+    "t3-earth-earth-water",
+    "t2-earth-water",
+    "t3-agility-earth-water",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp10-CONTROL"
+  },
+  {
+   "id": "cell10__t3-attack-water-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (mage / poison+burn)",
+   "variant": "t3-attack-water-water",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-attack-water-water",
+    "t3-air-fire-water",
+    "t3-earth-earth-water",
+    "t2-earth-water",
+    "t3-agility-earth-water",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp10-t3-attack-water-water"
+  },
+  {
+   "id": "cell10__t3-counter-fire-water",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (mage / poison+burn)",
+   "variant": "t3-counter-fire-water",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-counter-fire-water",
+    "t3-air-fire-water",
+    "t3-earth-earth-water",
+    "t2-earth-water",
+    "t3-agility-earth-water",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp10-t3-counter-fire-water"
+  },
+  {
+   "id": "cell10__t3-agility-fire-fire",
+   "class": "mage",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (mage / poison+burn)",
+   "variant": "t3-agility-fire-fire",
+   "deck": [
+    "t1-fire",
+    "t2-agility-fire",
+    "t3-agility-fire-fire",
+    "t3-air-fire-water",
+    "t3-earth-earth-water",
+    "t2-earth-water",
+    "t3-agility-earth-water",
+    "t3-agility-fire-fire",
+    "t1-water",
+    "t1-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp10-t3-agility-fire-fire"
+  },
+  {
+   "id": "cell11__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (warrior / poison+bleed+burn)",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-attack-attack",
+    "t2-counter-counter",
+    "t3-attack-fire-water",
+    "t3-attack-attack-water",
+    "t3-attack-counter-water",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp11-CONTROL"
+  },
+  {
+   "id": "cell11__t3-attack-fire-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (warrior / poison+bleed+burn)",
+   "variant": "t3-attack-fire-water",
+   "deck": [
+    "t2-attack-attack",
+    "t2-counter-counter",
+    "t3-attack-fire-water",
+    "t3-attack-attack-water",
+    "t3-attack-counter-water",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp11-t3-attack-fire-water"
+  },
+  {
+   "id": "cell11__t3-air-earth-water",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss3",
+   "archetype": "detonators (warrior / poison+bleed+burn)",
+   "variant": "t3-air-earth-water",
+   "deck": [
+    "t2-attack-attack",
+    "t2-counter-counter",
+    "t3-air-earth-water",
+    "t3-attack-attack-water",
+    "t3-attack-counter-water",
+    "t3-attack-attack-fire",
+    "t3-agility-attack-fire",
+    "t2-agility-attack",
+    "t1-attack",
+    "t1-defense"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp11-t3-air-earth-water"
+  },
+  {
+   "id": "cell12__CONTROL",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "CONTROL",
+   "deck": [
+    "t1-earth",
+    "t1-earth",
+    "t3-air-counter-water",
+    "t3-agility-air-air",
+    "t3-agility-air-counter",
+    "t3-air-air-fire",
+    "t3-air-earth-fire",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t2-water-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp12-CONTROL"
+  },
+  {
+   "id": "cell12__t3-air-earth-fire",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-air-earth-fire",
+   "deck": [
+    "t1-earth",
+    "t1-earth",
+    "t3-air-earth-fire",
+    "t3-agility-air-air",
+    "t3-agility-air-counter",
+    "t3-air-air-fire",
+    "t3-air-earth-fire",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t2-water-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp12-t3-air-earth-fire"
+  },
+  {
+   "id": "cell12__t3-air-air-fire",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-air-air-fire",
+   "deck": [
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-agility-air-counter",
+    "t3-air-air-fire",
+    "t3-air-earth-fire",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t2-water-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp12-t3-air-air-fire"
+  },
+  {
+   "id": "cell12__t3-agility-air-counter",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-agility-air-counter",
+   "deck": [
+    "t1-earth",
+    "t1-earth",
+    "t3-agility-air-counter",
+    "t3-agility-air-air",
+    "t3-agility-air-counter",
+    "t3-air-air-fire",
+    "t3-air-earth-fire",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t2-water-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp12-t3-agility-air-counter"
+  },
+  {
+   "id": "cell12__t3-agility-air-air",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-agility-air-air",
+   "deck": [
+    "t1-earth",
+    "t1-earth",
+    "t3-agility-air-air",
+    "t3-agility-air-air",
+    "t3-agility-air-counter",
+    "t3-air-air-fire",
+    "t3-air-earth-fire",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t2-water-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp12-t3-agility-air-air"
+  },
+  {
+   "id": "cell13__CONTROL",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "CONTROL",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-air-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp13-CONTROL"
+  },
+  {
+   "id": "cell13__t3-air-attack-counter",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-air-attack-counter",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-attack-counter",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp13-t3-air-attack-counter"
+  },
+  {
+   "id": "cell13__t3-agility-air-earth",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-agility-air-earth",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-agility-air-earth",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp13-t3-agility-air-earth"
+  },
+  {
+   "id": "cell13__t3-agility-air-attack",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-agility-air-attack",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-agility-air-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp13-t3-agility-air-attack"
+  },
+  {
+   "id": "cell13__t3-air-attack-attack",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "slow",
+   "variant": "t3-air-attack-attack",
+   "deck": [
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-attack-attack",
+    "t3-air-air-attack",
+    "t3-agility-air-counter",
+    "t3-air-counter-defense",
+    "t3-air-defense-earth",
+    "t3-agility-air-air",
+    "t3-air-air-fire",
+    "t3-attack-attack-earth"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp13-t3-air-attack-attack"
+  },
+  {
+   "id": "cell14__CONTROL",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "CONTROL",
+   "deck": [
+    "t2-water-water",
+    "t2-water-water",
+    "t2-water-water",
+    "t2-air-earth",
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-air-air-earth",
+    "t3-agility-air-air",
+    "t3-air-counter-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp14-CONTROL"
+  },
+  {
+   "id": "cell14__t2-earth-earth",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t2-earth-earth",
+   "deck": [
+    "t2-water-water",
+    "t2-water-water",
+    "t2-earth-earth",
+    "t2-air-earth",
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-air-air-earth",
+    "t3-agility-air-air",
+    "t3-air-counter-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp14-t2-earth-earth"
+  },
+  {
+   "id": "cell14__t2-air-earth",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t2-air-earth",
+   "deck": [
+    "t2-water-water",
+    "t2-water-water",
+    "t2-air-earth",
+    "t2-air-earth",
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-air-air-earth",
+    "t3-agility-air-air",
+    "t3-air-counter-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp14-t2-air-earth"
+  },
+  {
+   "id": "cell14__t3-air-counter-earth",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-air-counter-earth",
+   "deck": [
+    "t2-water-water",
+    "t2-water-water",
+    "t3-air-counter-earth",
+    "t2-air-earth",
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-air-air-earth",
+    "t3-agility-air-air",
+    "t3-air-counter-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp14-t3-air-counter-earth"
+  },
+  {
+   "id": "cell14__t3-air-air-earth",
+   "class": "mage",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-air-air-earth",
+   "deck": [
+    "t2-water-water",
+    "t2-water-water",
+    "t3-air-air-earth",
+    "t2-air-earth",
+    "t1-earth",
+    "t1-earth",
+    "t3-air-air-fire",
+    "t3-air-air-earth",
+    "t3-agility-air-air",
+    "t3-air-counter-water"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp14-t3-air-air-earth"
+  },
+  {
+   "id": "cell15__CONTROL",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "CONTROL",
+   "deck": [
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-defense-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-air-counter-defense",
+    "t3-air-attack-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp15-CONTROL"
+  },
+  {
+   "id": "cell15__t3-agility-air-earth",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-agility-air-earth",
+   "deck": [
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-agility-air-earth",
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-defense-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-air-counter-defense",
+    "t3-air-attack-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp15-t3-agility-air-earth"
+  },
+  {
+   "id": "cell15__t3-air-counter-earth",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-air-counter-earth",
+   "deck": [
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-air-counter-earth",
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-defense-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-air-counter-defense",
+    "t3-air-attack-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp15-t3-air-counter-earth"
+  },
+  {
+   "id": "cell15__t3-defense-defense-earth",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-defense-defense-earth",
+   "deck": [
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-defense-defense-earth",
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-defense-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-air-counter-defense",
+    "t3-air-attack-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp15-t3-defense-defense-earth"
+  },
+  {
+   "id": "cell15__t3-attack-attack-earth",
+   "class": "warrior",
+   "quality": "control",
+   "stage": "boss3",
+   "archetype": "stun",
+   "variant": "t3-attack-attack-earth",
+   "deck": [
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-attack-attack-earth",
+    "t3-air-counter-fire",
+    "t3-air-counter-fire",
+    "t3-air-defense-earth",
+    "t3-air-air-fire",
+    "t3-agility-air-air",
+    "t3-air-counter-defense",
+    "t3-air-attack-attack"
+   ],
+   "startLoop": 27,
+   "startBossKills": 2,
+   "startRunXP": 1550,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp15-t3-attack-attack-earth"
+  },
+  {
+   "id": "cell16__CONTROL",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "CONTROL",
+   "deck": [
+    "t3-air-air-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-CONTROL"
+  },
+  {
+   "id": "cell16__t1-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t1-water",
+   "deck": [
+    "t1-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t1-water"
+  },
+  {
+   "id": "cell16__t2-air-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t2-air-water",
+   "deck": [
+    "t2-air-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t2-air-water"
+  },
+  {
+   "id": "cell16__t2-defense-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t2-defense-water",
+   "deck": [
+    "t2-defense-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t2-defense-water"
+  },
+  {
+   "id": "cell16__t2-fire-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t2-fire-water",
+   "deck": [
+    "t2-fire-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t2-fire-water"
+  },
+  {
+   "id": "cell16__t2-earth-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t2-earth-water",
+   "deck": [
+    "t2-earth-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t2-earth-water"
+  },
+  {
+   "id": "cell16__t3-water-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-water-water-water",
+   "deck": [
+    "t3-water-water-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-water-water-water"
+  },
+  {
+   "id": "cell16__t3-air-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-air-water-water",
+   "deck": [
+    "t3-air-water-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-air-water-water"
+  },
+  {
+   "id": "cell16__t3-fire-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-fire-water-water",
+   "deck": [
+    "t3-fire-water-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-fire-water-water"
+  },
+  {
+   "id": "cell16__t3-earth-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-earth-water-water",
+   "deck": [
+    "t3-earth-water-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-earth-water-water"
+  },
+  {
+   "id": "cell16__t3-defense-water-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-defense-water-water",
+   "deck": [
+    "t3-defense-water-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-defense-water-water"
+  },
+  {
+   "id": "cell16__t3-counter-defense-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-counter-defense-water",
+   "deck": [
+    "t3-counter-defense-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-counter-defense-water"
+  },
+  {
+   "id": "cell16__t3-air-earth-earth",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-air-earth-earth",
+   "deck": [
+    "t3-air-earth-earth",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-air-earth-earth"
+  },
+  {
+   "id": "cell16__t3-earth-fire-water",
+   "class": "mage",
+   "quality": "survival",
+   "stage": "boss5",
+   "archetype": "heal",
+   "variant": "t3-earth-fire-water",
+   "deck": [
+    "t3-earth-fire-water",
+    "t2-agility-fire",
+    "t2-fire-fire",
+    "t2-fire-water",
+    "t2-air-air",
+    "t3-air-air-water",
+    "t2-water-water",
+    "t1-air",
+    "t3-air-water-water",
+    "t1-water",
+    "t2-earth-fire",
+    "t3-fire-water-water"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 12,
+   "seed": "pp16-t3-earth-fire-water"
+  }
+ ]
+}

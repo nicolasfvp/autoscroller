@@ -1,0 +1,532 @@
+[
+ {
+  "family": "pure_damage",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss2",
+  "pressure": "light",
+  "baseline": [
+   "t2-agility-attack",
+   "t2-agility-agility",
+   "t1-agility",
+   "t2-air-attack",
+   "t2-air-counter",
+   "t3-agility-attack-attack",
+   "t3-agility-agility-attack",
+   "t3-attack-counter-counter",
+   "t3-attack-earth-earth",
+   "t3-attack-counter-earth",
+   "t1-attack",
+   "t2-attack-defense"
+  ],
+  "swapSlot": 0,
+  "fillerControl": "t2-agility-agility",
+  "candidates": [
+   "t1-agility",
+   "t1-counter",
+   "t2-agility-attack",
+   "t2-air-attack",
+   "t2-air-counter",
+   "t2-attack-defense",
+   "t3-attack-attack-defense",
+   "t3-agility-attack-attack",
+   "t3-attack-attack-counter",
+   "t3-agility-agility-attack",
+   "t3-attack-counter-counter",
+   "t3-attack-defense-earth",
+   "t3-agility-attack-earth",
+   "t3-attack-counter-earth",
+   "t3-attack-earth-earth",
+   "t3-air-attack-earth"
+  ],
+  "rationale": "Warrior pure_damage is the no-synergy control family: cards just deal damage (some scale off self-armor/Vengeance/haste), so the baseline is a coherent stamina-only beatdown deck spanning T1-T3 that supplies steady offense and a little haste/armor uptime to make armor-conditional pure_damage cards (Shield Bash, Earthcleaver, Mountain's Will, Cliffwind Maul, Quarry Dance) and Vengeance cards (Granitewrath, Hollow Echo) actually fire. swapSlot 0 is an early fixed-order slot. fillerControl is Flurry Step (t2-agility-agility, peakOPS 29.2), a mid-value pure_damage tier-peer rather than the over-efficient Jab, so candidate-vs-control measures relative damage within the family. All ids are stamina-resource warrior cards verified present in cards-index.json; mana/both pure_damage cards (Tailwind, Gale Cut, Citadel Inferno) are excluded from this warrior cell. Metric is damage on a boss2 band with light pressure since this family is pure offense and should be judged on throughput, not survival."
+ },
+ {
+  "family": "bleed",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-counter-counter",
+   "t2-agility-counter",
+   "t1-agility",
+   "t2-agility-attack",
+   "t3-agility-counter-counter",
+   "t3-agility-attack-counter",
+   "t3-agility-agility-counter",
+   "t3-attack-attack-attack",
+   "t3-agility-counter-defense",
+   "t1-attack",
+   "t2-air-counter",
+   "t2-agility-agility"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t2-agility-counter",
+  "candidates": [
+   "t2-counter-counter",
+   "t2-agility-counter",
+   "t2-attack-attack",
+   "t3-agility-attack-counter",
+   "t3-agility-counter-counter",
+   "t3-counter-counter-counter",
+   "t3-agility-agility-counter",
+   "t3-attack-attack-attack",
+   "t3-agility-counter-defense"
+  ],
+  "rationale": "Bleed is a stacking-DoT family whose payoffs are synergy-gated: Vein Splitter (t3-agility-attack-counter) applies MORE bleed when the enemy already has bleed, Quicksilver/Razor Cadence chain stacks, and Crimson Spiral (t3-counter-counter-counter) is rage-gated. So the baseline front-loads bleed APPLIERS so the substrate exists before payoffs land: Razor Stance (t2-counter-counter) is a 10s aura that applies 1 bleed on every hit, Sidestep & Slash (t2-agility-counter) applies 2 bleed, plus fast multi-hit attacks (Quickstep, Quickstrike, Flurry Step) that proc the Razor Stance aura repeatedly to pile bleed stacks. With that substrate, Vein Splitter's 'enemy has bleed -> +1 bleed per hit' and the scaling cards actually fire. swapSlot 2 sits after the early appliers so a candidate placed there meets a bleeding target. fillerControl is Sidestep & Slash (t2-agility-counter, peakOPS 25.4) — a mid-value same-family bleed applier, the honest yardstick, not Jab. Candidates are the warrior stamina-resource bleed cards only (Crimson Cascade t3-counter-counter-water is excluded as it costs 1s+1m=both). Metric is damage on a harder boss3 band with moderate pressure so the DoT ramp has enough combat time to express and so survival cost of self-bleed cards (Reckless Strike, Berserker's Ledger) is felt. All ids verified present in cards-index.json."
+ },
+ {
+  "family": "rage",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-attack-attack",
+   "t2-attack-counter",
+   "t2-attack-water",
+   "t2-defense-defense",
+   "t3-counter-counter-defense",
+   "t2-counter-defense",
+   "t1-attack",
+   "t1-attack",
+   "t2-agility-attack",
+   "t3-agility-attack-attack",
+   "t1-defense"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-attack-attack-counter",
+  "candidates": [
+   "t3-counter-counter-counter",
+   "t3-attack-counter-counter",
+   "t3-attack-counter-fire",
+   "t2-counter-defense",
+   "t3-counter-counter-defense",
+   "t3-counter-defense-earth",
+   "t3-counter-counter-earth",
+   "t3-counter-earth-earth",
+   "t3-air-counter-counter"
+  ],
+  "rationale": "Rage payoffs are dead in isolation: Crimson Spiral / Cleaver's Tax need 5+ rage, Wrath Brand needs any rage, Iron Reckoning scales attacks per rage, and Tombplate/Stonewrath/Tombrage only fire when below an HP threshold. The baseline is a coherent stamina rage-engine that builds the substrate before the swap slot: Reckless Strike (+3 rage), Bloodprice Strike (+2*str rage, also self-damages to push HP down for HP-gated payoffs), Crimson Tithe (+3 rage), Bulwark Vow (Brace +3 rage), and Wrathshell Vow (+6 rage then +1/2s ramp) keep rage well above the 5-stack gate, while Quickstrike/Triple Slash/Jab give Iron Reckoning per-rage attacks to multiply. swapSlot=2 lets at least the early rage builders (slots 0-1: Reckless, Bloodprice) resolve first so a rage-gated card in slot 2 already has stacks. fillerControl = Bloodlash Salvo: a T3 2s attack of equal tier/role that ignores rage entirely, so candidate-vs-control measures intra-family rage value, not 'beats Jab'. boss3 + moderate keeps the deck under enough attrition that the HP-loss rage cards (Tombplate etc.) actually drop below their thresholds and trigger; metric is damage since rage is an offense engine and the payoffs convert stacks into burst."
+ },
+ {
+  "family": "scaling",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-agility-counter",
+   "t2-attack-attack",
+   "t3-agility-attack-counter",
+   "t3-agility-counter-counter",
+   "t2-agility-attack",
+   "t1-attack",
+   "t1-attack",
+   "t3-attack-attack-attack",
+   "t2-attack-counter",
+   "t3-agility-attack-attack",
+   "t1-defense"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-agility-attack-attack",
+  "candidates": [
+   "t3-attack-attack-counter",
+   "t3-agility-agility-counter",
+   "t3-air-counter-counter"
+  ],
+  "rationale": "Warrior scaling cards earn value only over many plays: Bloodlash Salvo gains 4 str per cast (paying off on every later STR attack), Quicksilver Bleed only grants dex when it applies bleed 3+ times in a window, and Wrath Squall grants str/rage each time you lose HP. Tested cold they read as a single weak hit. The baseline is the scaling substrate: a high-tempo STR/DEX attack chain (Quickstrike, Triple Slash, Jab x2, plus the bleed engine Sidestep & Slash, Reckless Strike, Vein Splitter, Razor Cadence, Berserker's Ledger) so (a) gained str/dex immediately amplifies the many follow-up attacks and (b) the dense bleed applications satisfy Quicksilver's 'apply bleed 3+ times' trigger. swapSlot=2 places the candidate after two substrate cards resolve, then the rest of the deck cashes in the stat gain. fillerControl = Triple Slash: a T3 2s pure-damage attack of matched tier with no stat_gain, so the swap isolates 'does the scaling ramp out-earn a flat tier-peer hit over the fight'. boss3 + moderate gives a long enough fight for the per-play ramp to compound and for Wrath Squall's HP-loss trigger to fire; metric is damage since scaling here is an offensive ramp."
+ },
+ {
+  "family": "armor (pure defensive walls)",
+  "class": "warrior",
+  "metric": "survival",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t1-defense",
+   "t2-defense-defense",
+   "t2-defense-earth",
+   "t2-counter-earth",
+   "t3-defense-earth-earth",
+   "t3-air-air-defense",
+   "t3-counter-defense-earth",
+   "t3-attack-defense-water",
+   "t2-agility-earth",
+   "t2-agility-defense"
+  ],
+  "swapSlot": 0,
+  "fillerControl": "t3-agility-defense-defense",
+  "candidates": [
+   "t1-defense",
+   "t2-air-defense",
+   "t3-air-defense-defense",
+   "t3-agility-agility-defense",
+   "t3-agility-agility-earth",
+   "t3-air-air-defense",
+   "t3-agility-air-defense",
+   "t3-counter-defense-earth"
+  ],
+  "rationale": "Pure armor-gain walls (Guard, Cyclone/Stormgate/Veil/Footwork/Galeward/Galeguard haste-wards, Tombplate). Armor only has measurable value when the deck is taking sustained damage, so this is judged by SURVIVAL on boss3 with moderate planning. The baseline is a coherent warrior attrition deck: it stacks armor early (Guard 12, Bulwark Vow, Bedrock 16, Galeward 16, Tombplate 18) so the player rides a wall, AND it carries real damage outlets (Tremor Dash, Thornwall, Mire Cleave, Bramble Bulwark) so the boss can actually be killed before timeout. The candidate is dropped into slot 0 so its armor is on-board for the whole fight. The control is Phalanx Drift (T3, Gain 22 armor + haste, peak 12.33) — a mid-value same-family wall, NOT a basic attack — so the test measures 'is this wall worth its slot vs another wall' rather than 'is it better than Jab', which would always lose for a defensive card. Bedrock Bulwark, Galeward and Tombplate appear in both baseline and candidates intentionally: when swapped in they replace the slot-0 card and are measured against the same Phalanx Drift control on equal footing."
+ },
+ {
+  "family": "armor (armor-scaling payoffs)",
+  "class": "warrior",
+  "metric": "survival",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t3-defense-earth-earth",
+   "t3-air-air-defense",
+   "t3-agility-defense-defense",
+   "t3-counter-defense-defense",
+   "t1-defense",
+   "t2-defense-defense",
+   "t3-counter-defense-earth",
+   "t2-agility-earth",
+   "t3-attack-defense-water",
+   "t2-counter-earth",
+   "t3-agility-air-defense"
+  ],
+  "swapSlot": 0,
+  "fillerControl": "t3-agility-defense-defense",
+  "candidates": [
+   "t2-attack-earth",
+   "t2-defense-earth",
+   "t3-attack-defense-defense",
+   "t3-defense-defense-defense",
+   "t3-earth-earth-earth",
+   "t3-attack-counter-defense"
+  ],
+  "rationale": "These candidates are armor-SCALING hybrids whose offense is gated on a large armor pool: Granite Lunge (+1 dmg per 4 armor), Bramble Bulwark (Pierce gated on >=10 armor), Body Slam Vow (+1 dmg per armor), Aegis of Returning Wrath (Pierce +1 per 4 armor), Mountain's Answer (22 AoE Pierce gated on >=32 armor), Last Stand Bulwark (HP-gated bonus armor+Pierce). Tested in isolation they read as dead because there is no stack to consume — the exact failure mode the brief calls out. The baseline therefore front-loads heavy armor BUILDERS (Bedrock 16, Galeward 16, Phalanx Drift 22, Guard 12, Tombplate 18, Bulwark Vow) plus Reforge Vow which multiplies every armor gain by +50%, so by the time the rest of the deck plays there is a fat armor pool for the scaler to convert into damage, and the >=32-armor / >=10-armor gates can actually trip. Metric is SURVIVAL on boss3 + moderate planning (armor family), but because Reforge Vow and Mire Cleave/Tremor Dash give the deck offense, the scaling payoff's extra damage also shortens the fight and reduces incoming attrition — both surfaces show up in the survival score. Control is Phalanx Drift (mid-value T3 wall, not a scaler and not a basic attack) so each candidate is judged as 'armor-scaler in slot 0 vs a plain wall in slot 0', isolating the synergy payoff. Aegis is in the baseline only as a stacker fallback when other candidates are swapped; when Aegis itself is the candidate it occupies slot 0 against the Phalanx Drift control."
+ },
+ {
+  "family": "burn",
+  "class": "mage",
+  "metric": "damage",
+  "band": "boss2",
+  "pressure": "light",
+  "baseline": [
+   "t1-fire",
+   "t1-fire",
+   "t2-agility-fire",
+   "t2-agility-fire",
+   "t2-fire-fire",
+   "t2-earth-fire",
+   "t3-agility-air-water",
+   "t3-agility-agility-air",
+   "t3-agility-air-fire",
+   "t3-agility-air-fire",
+   "t3-air-fire-fire"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-agility-air-fire",
+  "candidates": [
+   "t3-fire-fire-fire",
+   "t3-agility-fire-fire",
+   "t3-fire-fire-water",
+   "t3-counter-fire-water",
+   "t3-counter-fire-fire"
+  ],
+  "rationale": "Mage-burn substrate deck: many burn APPLIERS (Spark x2 = 3 burn each, Flame Dart x2 = 2 burn + dmg, Pyre = reapply 3, Magma Vein, Stormsplash, Zephyr Cascade, Galecinder x2) plus Pyre Surge (t3-air-fire-fire) which DOUBLES burn and amplifies it, so by the time a candidate fires there is a real burn pool (~10-15 stacks) to consume/scale. All are mana or both, mage-legal. fillerControl is Galecinder (t3-agility-air-fire, ops40), a mid-value tier-3 damage+burn-applier peer in the same family — the honest yardstick, not a basic attack. Candidates are the burn PAYOFFS that the naive test starved: Supernova (consume-all detonator AoE), Cinder Sprint (self-stack + consume detonator), Quench Lance (consume-10+ scaler that needs a big pool), Venom Detonation (poison+burn detonator) and Brine Crucible (consume-all -> bleed converter). Judged by DAMAGE at boss2/light since burn is pure offense and we want the detonation payoff to surface, not attrition."
+ },
+ {
+  "family": "burn",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss2",
+  "pressure": "light",
+  "baseline": [
+   "t2-attack-fire",
+   "t2-attack-fire",
+   "t2-counter-fire",
+   "t3-agility-agility-fire",
+   "t3-agility-agility-fire",
+   "t3-attack-attack-fire",
+   "t3-agility-attack-fire",
+   "t3-attack-earth-fire",
+   "t3-agility-air-fire",
+   "t3-air-fire-fire",
+   "t3-air-fire-fire"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-agility-attack-fire",
+  "candidates": [
+   "t3-fire-fire-fire",
+   "t3-attack-fire-fire",
+   "t3-attack-fire-water",
+   "t3-counter-fire-water",
+   "t3-counter-fire-fire"
+  ],
+  "rationale": "Warrior-burn substrate deck: stamina/both burn APPLIERS — Kindle Strike x2 (3-6 burn each), Cinderscar (2 burn), Twinflame Flicker x2 (4 burn each), Cinder Thrust (2 + dmg), Wickfencer (2 + dmg), Slag Maul (2 + 16 dmg), Galecinder — plus Pyre Surge x2 (t3-air-fire-fire) DOUBLING the burn pool, so a detonator played in slot 2 has a large stack to consume. All stamina or both, warrior-legal. fillerControl is Wickfencer (t3-agility-attack-fire, ops39), a mid-value tier-3 warrior damage+burn peer (not a basic attack) so the comparison measures intra-family value. Candidates are the warrior-legal burn PAYOFFS that look dead outside the combo: Supernova (both-cost consume-all AoE detonator), Cinderlance (8x2 + consume detonator), Tremor Detonate (multi-DoT detonator consuming burn/poison/bleed), Venom Detonation, and Brine Crucible (consume-all burn -> bleed). Wrath Brand was excluded (rage-gated, not burn substrate). DAMAGE metric at boss2/light to expose the detonation spike."
+ },
+ {
+  "family": "poison (mage appliers)",
+  "class": "mage",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t1-fire",
+   "t2-earth-water",
+   "t3-earth-earth-water",
+   "t3-air-fire-water",
+   "t3-agility-attack-water",
+   "t3-agility-earth-water",
+   "t3-earth-fire-water",
+   "t3-attack-water-water",
+   "t1-water",
+   "t1-attack"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-agility-attack-water",
+  "candidates": [
+   "t2-earth-water",
+   "t3-earth-fire-water",
+   "t3-agility-agility-water",
+   "t3-agility-defense-water",
+   "t3-agility-earth-water",
+   "t3-earth-water-water",
+   "t3-agility-air-water",
+   "t3-agility-water-water",
+   "t3-air-fire-water",
+   "t3-earth-earth-water"
+  ],
+  "rationale": "Poison is a DoT-stacking engine: a lone applier looks weak because its value is the running stack, not on-hit numbers. Baseline is a coherent mage poison deck that BUILDS and CONVERTS the substrate: Bog Catalyst (t3-earth-earth-water) doubles existing poison and Steaming Plague (t3-air-fire-water) adds-if-present, so flat appliers (Mire Bloom, Mireglide, Alchemic Drain) and the Drowning Lance detonator (t3-attack-water-water, consumes half poison for Pierce) have real stacks to work with; Spark/Mend/Jab round out tempo and survival. Control is Drowner's Dart (t3-agility-attack-water, OPS 25.63, both-resource), an honest mid-value poison applier and a tier-peer yardstick rather than a basic attack, so each candidate is judged on relative poison contribution inside the combo. Judged by DAMAGE since poison is offense. boss3+moderate so the longer fight lets stacks tick and high-ceiling appliers (Slipvenom Tempo, Bog Catalyst) pay off vs flat ones. All ids verified mana/both = mage-playable."
+ },
+ {
+  "family": "poison (warrior appliers)",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-attack-attack",
+   "t3-attack-attack-water",
+   "t3-attack-counter-water",
+   "t3-attack-earth-water",
+   "t3-air-attack-water",
+   "t3-attack-defense-water",
+   "t3-attack-fire-water",
+   "t2-agility-attack",
+   "t1-attack",
+   "t1-defense"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-attack-earth-water",
+  "candidates": [
+   "t3-agility-counter-water",
+   "t3-attack-attack-water",
+   "t3-attack-counter-water",
+   "t3-attack-defense-water",
+   "t3-air-attack-water",
+   "t3-agility-attack-water"
+  ],
+  "rationale": "Poison spans both classes; the warrior side uses stamina/both poison cards. Baseline is a coherent stamina poison deck: Necrotic Festering (t3-attack-counter-water) and Reckless Strike (t2-attack-attack) seed bleed so poison-per-bleed and bleed synergy fire, multiple flat appliers (Soaking Blade, Galetide, Mire Cleave) keep a running poison stack, and Tremor Detonate (t3-attack-fire-water) consumes all poison/bleed/burn for Pierce so the accumulated substrate converts, meaning a candidate applier's stacks have a payoff card to be spent by. Control is Mirebreaker (t3-attack-earth-water, OPS 25.42, both-resource), a mid-value warrior poison card (flat hit + conditional Pierce if poisoned) and a same-family tier-peer, so we measure each candidate's marginal poison value, not 'beats Jab'. DAMAGE metric (offense). boss3+moderate gives attrition time for DoT to matter. All ids verified stamina/both = warrior-playable."
+ },
+ {
+  "family": "detonators (mage / poison+burn)",
+  "class": "mage",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t1-fire",
+   "t2-agility-fire",
+   "t2-fire-fire",
+   "t3-air-fire-water",
+   "t3-earth-earth-water",
+   "t2-earth-water",
+   "t3-agility-earth-water",
+   "t3-agility-fire-fire",
+   "t1-water",
+   "t1-attack"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-agility-fire-fire",
+  "candidates": [
+   "t3-attack-water-water",
+   "t3-counter-fire-water",
+   "t3-agility-fire-fire"
+  ],
+  "rationale": "Detonators are pure synergy-gated payoffs: they CONSUME poison/burn stacks for big Pierce and read as dead if tested with no stacks present (the original failure mode). Baseline is a mage DoT-applier engine that loads BOTH substrates so a detonator has fuel: burn appliers Spark/Flame Dart/Pyre and poison appliers Steaming Plague/Mire Bloom/Bog Catalyst (doubler)/Mireglide build large stacks before slot 2 fires the detonator. Candidates are the mage-playable (mana/both) detonators: Drowning Lance (poison, both), Venom Detonation (poison+burn, both), Cinder Sprint (burn, mana). Control is Cinder Sprint used as a tier-peer same-role detonator yardstick (it self-applies 3 burn then consumes, so it floors at non-zero even in the control slot) rather than a basic attack, measuring detonator-vs-detonator conversion efficiency on a shared stack pool. DAMAGE metric. boss3+moderate so stacks accumulate enough that consume-half vs consume-all and per-stack multipliers diverge. All ids verified mana/both."
+ },
+ {
+  "family": "detonators (warrior / poison+bleed+burn)",
+  "class": "warrior",
+  "metric": "damage",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-attack-attack",
+   "t2-counter-counter",
+   "t2-attack-fire",
+   "t3-attack-attack-water",
+   "t3-attack-counter-water",
+   "t3-attack-attack-fire",
+   "t3-agility-attack-fire",
+   "t2-agility-attack",
+   "t1-attack",
+   "t1-defense"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-attack-fire-water",
+  "candidates": [
+   "t3-attack-fire-water",
+   "t3-air-earth-water"
+  ],
+  "rationale": "The warrior detonators are stamina-cost and read all three DoTs: Tremor Detonate (t3-attack-fire-water, consumes poison+bleed+burn) and Marsh Squall (t3-air-earth-water, consumes half poison). Tested cold they look dead, so the baseline is a stamina multi-DoT loader: bleed via Razor Stance aura (t2-counter-counter) + Reckless Strike, burn via Kindle Strike/Cinder Thrust/Wickfencer (Kindle also pays off bleed), and poison via Soaking Blade + Necrotic Festering, three stacking substrates accumulating before the slot-2 detonator. Tremor Detonate serves as the tier-peer control (and as a candidate) because it is itself the canonical all-stack consumer and gives a non-Jab same-role yardstick; Marsh Squall is the comparison candidate (poison-only, consume-half). DAMAGE metric. boss3+moderate so DoT stacks build high enough that 'consume all three types' vs 'consume half poison' clearly separate. All ids verified stamina/both = warrior-playable."
+ },
+ {
+  "family": "slow",
+  "class": "mage",
+  "metric": "control",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t1-earth",
+   "t1-earth",
+   "t3-air-counter-water",
+   "t3-agility-air-air",
+   "t3-agility-air-counter",
+   "t3-air-air-fire",
+   "t3-air-earth-fire",
+   "t2-earth-earth",
+   "t2-air-earth",
+   "t2-water-water"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-air-counter-water",
+  "candidates": [
+   "t3-air-earth-fire",
+   "t3-air-air-fire",
+   "t3-agility-air-counter",
+   "t3-agility-air-air"
+  ],
+  "rationale": "Mage slow-control deck. Substrate is built by cheap heavy slow appliers: Quake x2 (4 slow @1m each) plus the slow->stun threshold appliers Cinder Squall (3 slow AoE), Tremor Lock, Bedrock Snare and Frostbind, so by the time a scaler resolves the enemy is carrying a large slow stack and is repeatedly stunned (the actual CONTROL output). Candidates are the slow-GATED payoffs a mage can cast that look dead in isolation: Sandfury (t3-air-earth-fire: +2 Pierce per slow on enemy), Cinder Squall (2 dmg per slow + stun at 5 slow), Static Skirmish (3 Pierce per slow), and Gale Echo (doubles every slow you apply -> super-charges the stack and the stun lock). fillerControl is Tempestbleed (t3-air-counter-water): a tier-3 mid-value slow card that applies only a flat 2 slow with no scaling, so it is the honest same-family yardstick rather than a basic attack. swapSlot 2 keeps Quake's early stack online before the swap card fires."
+ },
+ {
+  "family": "slow",
+  "class": "warrior",
+  "metric": "control",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t3-air-counter-fire",
+   "t3-air-counter-fire",
+   "t3-air-attack-attack",
+   "t3-air-air-attack",
+   "t3-agility-air-counter",
+   "t3-air-counter-defense",
+   "t3-air-defense-earth",
+   "t3-agility-air-air",
+   "t3-air-air-fire",
+   "t3-attack-attack-earth"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-air-air-attack",
+  "candidates": [
+   "t3-air-attack-counter",
+   "t3-agility-air-earth",
+   "t3-agility-air-attack",
+   "t3-air-attack-attack"
+  ],
+  "rationale": "Warrior slow-control deck. Substrate built by stamina/both slow appliers: Static Bleed x2 (4 slow @1s), Galekick (2 slow), Tempest Pike (2 slow), Static Skirmish (3 slow), Glacial Pact (4+3 slow), Dustward (Brace 4 slow), Gale Echo (slow doubler), Cinder Squall (3 slow AoE + stun), and Concussive Smash (3 slow + 2 stun) so a big slow pool and intermittent stun exist for control. Candidates are warrior slow-GATED payoffs that read dead alone: Thunderstrike Catalyst (t3-air-attack-counter: consume all slow, 6 Pierce PER slow -> the detonator that demands a stack), Stormstone Tempo (1 slow/hit + 4 Pierce/hit while stunned, scales off the lock), Skywire and Galekick (slow appliers tested for their control contribution). fillerControl is Tempest Pike (t3-air-air-attack): a tier-peer flat 2x6 damage + flat 2 slow with no scaling clause, the mid-value same-family control. swapSlot 2 lets early Static Bleed seed the stack first."
+ },
+ {
+  "family": "stun",
+  "class": "mage",
+  "metric": "control",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t2-water-water",
+   "t2-water-water",
+   "t2-earth-earth",
+   "t2-air-earth",
+   "t1-earth",
+   "t1-earth",
+   "t3-air-air-fire",
+   "t3-air-air-earth",
+   "t3-agility-air-air",
+   "t3-air-counter-water"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t2-water-water",
+  "candidates": [
+   "t2-earth-earth",
+   "t2-air-earth",
+   "t3-air-counter-earth",
+   "t3-air-air-earth"
+  ],
+  "rationale": "Mage stun-control deck. Substrate: Frostbind x2 apply flat stun directly, while the slow engine (Quake x2, Cinder Squall, Dust Plague, Gale Echo) drives the slow stacks past the 5-slow threshold that auto-converts into stun, so the stun-GATED cards actually trigger. Candidates are stun payoffs that are dead without an existing stun/slow stack: Tremor Lock (t2-earth-earth: only fires its 5 dmg + extra stun + 4 slow IF enemy already stunned), Bedrock Snare (extra stun only IF enemy has >=4 slow), Tectonic Reckoning (t3-air-counter-earth: 3 stun + 50 Pierce AoE, the heavy stun-lock finisher), and Dust Plague (repeating slow->stun aura). fillerControl is Frostbind (t2-water-water): a tier-peer mid-value card that applies flat 1-2 stun with no precondition, so candidates are measured against a real same-family stunner, not a basic attack. swapSlot 2 lets the first Frostbind/Quake establish stun/slow before the gated card resolves."
+ },
+ {
+  "family": "stun",
+  "class": "warrior",
+  "metric": "control",
+  "band": "boss3",
+  "pressure": "moderate",
+  "baseline": [
+   "t3-attack-attack-earth",
+   "t3-attack-attack-earth",
+   "t3-defense-defense-earth",
+   "t3-air-counter-fire",
+   "t3-air-counter-fire",
+   "t3-air-defense-earth",
+   "t3-air-air-fire",
+   "t3-agility-air-air",
+   "t3-air-counter-defense",
+   "t3-air-attack-attack"
+  ],
+  "swapSlot": 2,
+  "fillerControl": "t3-attack-attack-earth",
+  "candidates": [
+   "t3-agility-air-earth",
+   "t3-air-counter-earth",
+   "t3-defense-defense-earth",
+   "t3-attack-attack-earth"
+  ],
+  "rationale": "Warrior stun-control deck. Substrate: Concussive Smash x2 apply flat 2 stun + 3 slow, Stoneward Reprisal applies 2 stun on Brace, and the slow appliers (Static Bleed x2, Dustward, Cinder Squall, Glacial Pact, Gale Echo) push slow past the 5-stack -> stun threshold, so the enemy spends meaningful time stunned for the CONTROL read. Candidates are warrior stun payoffs/scalers that look worthless outside the lock: Stormstone Tempo (t3-agility-air-earth: each of 3 hits deals +4 Pierce ONLY while enemy is stunned -> pure stun-scaler), Tectonic Reckoning (t3-air-counter-earth: 3 stun + 50 Pierce AoE finisher, warrior-castable 'both'), and Stoneward Reprisal (Brace 2 stun + armor). fillerControl is Concussive Smash (t3-attack-attack-earth): a tier-peer mid-value flat stun+damage card with no scaling clause, the honest same-family yardstick. swapSlot 2 keeps an early Concussive Smash seeding the stun before the swapped card lands."
+ },
+ {
+  "family": "heal",
+  "class": "mage",
+  "metric": "survival",
+  "band": "boss5",
+  "pressure": "moderate",
+  "baseline": [
+   "t1-fire",
+   "t2-agility-fire",
+   "t2-fire-fire",
+   "t2-fire-water",
+   "t2-air-air",
+   "t3-air-air-water",
+   "t2-water-water",
+   "t1-air",
+   "t3-air-water-water",
+   "t1-water",
+   "t2-earth-fire",
+   "t3-fire-water-water"
+  ],
+  "swapSlot": 0,
+  "fillerControl": "t3-air-air-water",
+  "candidates": [
+   "t1-water",
+   "t2-air-water",
+   "t2-defense-water",
+   "t2-fire-water",
+   "t2-earth-water",
+   "t3-water-water-water",
+   "t3-air-water-water",
+   "t3-fire-water-water",
+   "t3-earth-water-water",
+   "t3-defense-water-water",
+   "t3-counter-defense-water",
+   "t3-air-earth-earth",
+   "t3-earth-fire-water"
+  ],
+  "rationale": "Mage heal family, judged by SURVIVAL at a hard band (boss5) + moderate planning so the deck takes sustained damage and healing has a real HP deficit to fill (against a glass-cannon deck at an easy band, any heal looks worthless). The baseline is a COHERENT sustain-leaning mage that builds the substrate healing needs — namely a genuine attrition fight the deck can almost-but-not-quite survive: a burn offense core (Spark, Flame Dart, Pyre, Steam Surge, Magma Vein, Tailwind) provides enough mana-fueled damage to pressure a boss5 so the fight isn't a pure timer loss, while Frostbind (stun+armor) and Gust (free haste) plus an existing healer (Phoenix Aura) and a baked-in low-value pure heal (Mend) keep the deck alive long enough that incremental heal matters. All cards are mana/free (mage-legal) except none requiring stamina-only. The swap slot (0, early fixed-order) is where each candidate or the control replaces a slot so we measure RELATIVE survival value within the family. fillerControl is Squall Aura (t3-air-air-water): a TIER-PEER mid-value T3 pure-healer (Heal 9 + haste + mana, peak 4.5) that sits clearly below the strong healers (Tidesong 18, Misted Cadence 14, Brineward 12) and above the trivial T1 Mend — an honest mid yardstick, NOT a basic attack. Candidates span the mage-playable heal cards: pure heals (Mend, Misting Veil, Tidesong Aura, Misted Cadence, Squall Aura), hybrid armor+heal (Vow of the Tide, Phoenix Aura, Standing Stone, Brineward, Crimson Regen Mantle), and DoT+heal hybrids (Steam Surge, Mire Bloom, Brine Bedrock, Alchemic Drain) so each is scored for net survival contribution against the same mid healer in a deck that is actually under pressure. Note [spi]-scaled heals (most T3s) only realize their peak with spirit stacking, which boss5 attrition gives time to accrue; Mend/Vow heal flat and will show as the floor."
+ }
+]

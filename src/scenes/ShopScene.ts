@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
+import { resolvedMaxHP } from '../systems/hero/HeroStatsResolver';
 import { ShopSystem, MIN_DECK_SIZE, type ShopRelic } from '../systems/ShopSystem';
 import { getRelicById, getCardById } from '../data/DataLoader';
 import { relicSynergizesWithDeck } from '../systems/cards/SynergyDetection';
@@ -759,7 +760,9 @@ export class ShopScene extends Scene {
   private applyLoopEndAutoHeal(run: ReturnType<typeof getRun>): void {
     const heartyMeal  = (run.relics ?? []).includes('hearty_meal');
     const pct         = 0.3 * (heartyMeal ? 1.5 : 1.0);
-    run.hero.currentHP = Math.min(run.hero.currentHP + Math.floor(run.hero.maxHP * pct), run.hero.maxHP);
+    // Heal a fraction of BASE maxHP but clamp to the LEVELED max so in-run level
+    // HP is actually fillable (see resolvedMaxHP).
+    run.hero.currentHP = Math.min(run.hero.currentHP + Math.floor(run.hero.maxHP * pct), resolvedMaxHP(run));
     if (heartyMeal) {
       run.hero.currentStamina = Math.min(run.hero.maxStamina, run.hero.currentStamina + 2);
     }
