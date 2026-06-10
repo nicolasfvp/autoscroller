@@ -608,7 +608,9 @@ function stackBoostBody(fx: CardEffect): string {
 
 // cd_debt / devour / debuff / buff / debuff_stat.
 function cdDebtBody(fx: CardEffect): string {
-  return `Next card delays ${fx.value} more seconds`;
+  // cd_debt pushes the extra seconds onto THIS card's next cooldown (see
+  // CardResolver 'cd_debt' case), not the next card played — phrase it accurately.
+  return `This card delays ${fx.value} more seconds next time`;
 }
 function buffBody(fx: CardEffect): string {
   const stat = fx.scale?.stat ? statTok(fx.scale.stat) : '';
@@ -714,7 +716,9 @@ function auraTriggerPhrase(fx: CardEffect): string {
     }
     case 'on_hp_pct_below': {
       const th = fx.threshold ?? 50;
-      return `if you have less than ${th}%[HP]`;
+      // The aura arms once and self-removes on its first sub-threshold trigger
+      // (single-shot), so phrase it as a one-time drop, not a sustained "while".
+      return `the first time you drop below ${th}%[HP]`;
     }
     default: return '';
   }

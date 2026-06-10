@@ -1,0 +1,54 @@
+{
+  "runs": [
+    {
+      "id": "warrior-starter-desert-shop",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "visitsShop": true,
+      "planning": { "terrainTiles": [ { "terrain": "desert", "count": 2 }, { "terrain": "forest", "count": 1 } ] },
+      "loopsToSimulate": 12,
+      "repeats": 40,
+      "seed": "warr-desert"
+    },
+    {
+      "id": "warrior-starter-desert-noshop",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "visitsShop": false,
+      "planning": { "terrainTiles": [ { "terrain": "desert", "count": 2 }, { "terrain": "forest", "count": 1 } ] },
+      "loopsToSimulate": 12,
+      "repeats": 40,
+      "seed": "warr-desert-ns"
+    },
+    {
+      "id": "warrior-starter-vanilla-shop",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "visitsShop": true,
+      "planning": { "terrainTiles": [] },
+      "loopsToSimulate": 12,
+      "repeats": 40,
+      "seed": "warr-vanilla"
+    },
+    {
+      "id": "warrior-starter-vanilla-noshop",
+      "class": "warrior",
+      "deck": ["t1-attack", "t1-defense", "t2-attack-defense", "t2-agility-agility", "t2-attack-fire"],
+      "visitsShop": false,
+      "planning": { "terrainTiles": [] },
+      "loopsToSimulate": 12,
+      "repeats": 40,
+      "seed": "warr-vanilla-ns"
+    },
+    {
+      "id": "mage-starter-desert-shop",
+      "class": "mage",
+      "deck": ["t1-fire", "t1-water", "t2-fire-water", "t2-air-earth", "t2-attack-fire"],
+      "visitsShop": true,
+      "planning": { "terrainTiles": [ { "terrain": "desert", "count": 2 }, { "terrain": "forest", "count": 1 } ] },
+      "loopsToSimulate": 12,
+      "repeats": 40,
+      "seed": "mage-desert"
+    }
+  ]
+}

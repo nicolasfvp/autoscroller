@@ -3,6 +3,7 @@
 // notifications via PendingLoot.
 
 import { hasActiveRun, getRun, type RunState } from '../state/RunState';
+import { resolvedMaxHP } from './hero/HeroStatsResolver';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
 import { addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
@@ -35,7 +36,7 @@ const EVENT_TABLE: EventOption[] = [
     positive: true,
     apply(run) {
       const heal = Math.floor(run.hero.maxHP * 0.2);
-      run.hero.currentHP = Math.min(run.hero.currentHP + heal, run.hero.maxHP);
+      run.hero.currentHP = Math.min(run.hero.currentHP + heal, resolvedMaxHP(run));
       return { notifications: [{ label: `+${heal} HP`, color: '#00ff00' }] };
     },
   },
@@ -147,8 +148,9 @@ const EVENT_TABLE: EventOption[] = [
     weight: 5,
     positive: true,
     apply(run) {
-      const heal = run.hero.maxHP - run.hero.currentHP;
-      run.hero.currentHP = run.hero.maxHP;
+      const cap = resolvedMaxHP(run);
+      const heal = cap - run.hero.currentHP;
+      run.hero.currentHP = cap;
       return {
         notifications: [{ label: `Wandering Healer! +${heal} HP (full restore)`, color: '#aaffaa' }],
       };

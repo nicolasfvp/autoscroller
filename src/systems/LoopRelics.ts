@@ -9,12 +9,15 @@
 // LoopRunner is exercised by isolated tests).
 
 import { hasActiveRun, getRun } from '../state/RunState';
+import { resolvedMaxHP } from './hero/HeroStatsResolver';
 import type { TileSlot } from './TileRegistry';
 
 function clampHero(): void {
   if (!hasActiveRun()) return;
-  const hero = getRun().hero;
-  if (hero.maxHP > 0 && hero.currentHP > hero.maxHP) hero.currentHP = hero.maxHP;
+  const run = getRun();
+  const hero = run.hero;
+  const capHP = resolvedMaxHP(run); // leveled max, not the stale base hero.maxHP
+  if (capHP > 0 && hero.currentHP > capHP) hero.currentHP = capHP;
   if (hero.maxStamina > 0 && hero.currentStamina > hero.maxStamina) hero.currentStamina = hero.maxStamina;
   if (hero.maxMana > 0 && hero.currentMana > hero.maxMana) hero.currentMana = hero.maxMana;
 }
@@ -24,7 +27,7 @@ export function applyTravelBoots(): void {
   if (!hasActiveRun()) return;
   const run = getRun();
   if (!run.relics.includes('travel_boots')) return;
-  run.hero.currentHP = Math.min(run.hero.maxHP, run.hero.currentHP + 1);
+  run.hero.currentHP = Math.min(resolvedMaxHP(run), run.hero.currentHP + 1);
 }
 
 /**
@@ -44,7 +47,7 @@ export function applyTrailblazersBrand(tile: TileSlot): void {
     (tile.type === 'subtile' && !!tile.enemyId) ||
     tile.type === 'boss';
   if (!isCombatTile) return;
-  run.hero.currentHP = Math.min(run.hero.maxHP, run.hero.currentHP + 5);
+  run.hero.currentHP = Math.min(resolvedMaxHP(run), run.hero.currentHP + 5);
   run.hero.currentStamina = Math.min(run.hero.maxStamina, run.hero.currentStamina + 1);
   run.hero.currentMana = Math.min(run.hero.maxMana, run.hero.currentMana + 1);
   run.loop.trailblazerFiredThisLoop = true;
@@ -61,7 +64,7 @@ export function applyLodestonePendant(): void {
   // Always reset the per-loop trailblazer flag on loop boundary.
   run.loop.trailblazerFiredThisLoop = false;
   if (!run.relics.includes('lodestone_pendant')) return;
-  run.hero.currentHP = Math.min(run.hero.maxHP, run.hero.currentHP + 8);
+  run.hero.currentHP = Math.min(resolvedMaxHP(run), run.hero.currentHP + 8);
   run.hero.currentStamina = Math.min(run.hero.maxStamina, run.hero.currentStamina + 1);
   run.hero.currentMana = Math.min(run.hero.maxMana, run.hero.currentMana + 1);
   clampHero();

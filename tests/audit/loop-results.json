@@ -1,0 +1,3314 @@
+{
+  "meta": {
+    "specPath": "C:\\Users\\nicolas.pereira\\OneDrive - Way2 Technology\\Área de Trabalho\\autoscroller\\tests\\audit\\loop-spec.json",
+    "count": 5,
+    "tickMs": 100,
+    "fightCapMs": 120000
+  },
+  "summaries": [
+    {
+      "bossesFaced": {
+        "doom_knight": {
+          "reached": 36,
+          "won": 17,
+          "winRate": 0.472,
+          "avgHpEnter": 0.883
+        }
+      },
+      "meta": {
+        "class": "warrior"
+      },
+      "id": "warrior-starter-desert-shop",
+      "class": "warrior",
+      "deckSize": 5,
+      "repeats": 40,
+      "visitsShop": true,
+      "planning": "[{\"terrain\":\"desert\",\"count\":2},{\"terrain\":\"forest\",\"count\":1}]",
+      "deathRate": 0.7,
+      "survivedAllRate": 0.3,
+      "deathLoopHistogram": {
+        "5": 1,
+        "7": 1,
+        "8": 1,
+        "10": 20,
+        "11": 3,
+        "12": 2
+      },
+      "deathEnemyHistogram": {
+        "doom_knight": 19,
+        "mutated_salamander": 6,
+        "ancient_tree": 1,
+        "baby_dragon": 2
+      },
+      "avgLoopsCleared": 9.82,
+      "avgBossesKilled": 0.42,
+      "avgDamageDealt": 4936,
+      "reachedFirstBossRate": 0.9,
+      "firstBossWinRate": 0.472,
+      "avgHpEnteringFirstBoss": 0.883
+    },
+    {
+      "bossesFaced": {
+        "doom_knight": {
+          "reached": 2,
+          "won": 0,
+          "winRate": 0,
+          "avgHpEnter": 0.16
+        }
+      },
+      "meta": {
+        "class": "warrior"
+      },
+      "id": "warrior-starter-desert-noshop",
+      "class": "warrior",
+      "deckSize": 5,
+      "repeats": 40,
+      "visitsShop": false,
+      "planning": "[{\"terrain\":\"desert\",\"count\":2},{\"terrain\":\"forest\",\"count\":1}]",
+      "deathRate": 1,
+      "survivedAllRate": 0,
+      "deathLoopHistogram": {
+        "5": 8,
+        "6": 10,
+        "7": 7,
+        "8": 7,
+        "9": 4,
+        "10": 4
+      },
+      "deathEnemyHistogram": {
+        "mutated_salamander": 35,
+        "doom_knight": 2,
+        "scorpion": 2,
+        "baby_dragon": 1
+      },
+      "avgLoopsCleared": 6.03,
+      "avgBossesKilled": 0,
+      "avgDamageDealt": 2731,
+      "reachedFirstBossRate": 0.05,
+      "firstBossWinRate": 0,
+      "avgHpEnteringFirstBoss": 0.16
+    },
+    {
+      "bossesFaced": {
+        "doom_knight": {
+          "reached": 40,
+          "won": 40,
+          "winRate": 1,
+          "avgHpEnter": 1.359
+        }
+      },
+      "meta": {
+        "class": "warrior"
+      },
+      "id": "warrior-starter-vanilla-shop",
+      "class": "warrior",
+      "deckSize": 5,
+      "repeats": 40,
+      "visitsShop": true,
+      "planning": "[]",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 12,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3272,
+      "reachedFirstBossRate": 1,
+      "firstBossWinRate": 1,
+      "avgHpEnteringFirstBoss": 1.359
+    },
+    {
+      "bossesFaced": {
+        "doom_knight": {
+          "reached": 40,
+          "won": 40,
+          "winRate": 1,
+          "avgHpEnter": 1
+        }
+      },
+      "meta": {
+        "class": "warrior"
+      },
+      "id": "warrior-starter-vanilla-noshop",
+      "class": "warrior",
+      "deckSize": 5,
+      "repeats": 40,
+      "visitsShop": false,
+      "planning": "[]",
+      "deathRate": 0,
+      "survivedAllRate": 1,
+      "deathLoopHistogram": {},
+      "deathEnemyHistogram": {},
+      "avgLoopsCleared": 12,
+      "avgBossesKilled": 1,
+      "avgDamageDealt": 3506,
+      "reachedFirstBossRate": 1,
+      "firstBossWinRate": 1,
+      "avgHpEnteringFirstBoss": 1
+    },
+    {
+      "bossesFaced": {
+        "doom_knight": {
+          "reached": 38,
+          "won": 33,
+          "winRate": 0.868,
+          "avgHpEnter": 1.526
+        }
+      },
+      "meta": {
+        "class": "mage"
+      },
+      "id": "mage-starter-desert-shop",
+      "class": "mage",
+      "deckSize": 5,
+      "repeats": 40,
+      "visitsShop": true,
+      "planning": "[{\"terrain\":\"desert\",\"count\":2},{\"terrain\":\"forest\",\"count\":1}]",
+      "deathRate": 0.225,
+      "survivedAllRate": 0.775,
+      "deathLoopHistogram": {
+        "5": 1,
+        "8": 1,
+        "10": 5,
+        "11": 2
+      },
+      "deathEnemyHistogram": {
+        "mutated_salamander": 4,
+        "doom_knight": 5
+      },
+      "avgLoopsCleared": 11.2,
+      "avgBossesKilled": 0.82,
+      "avgDamageDealt": 5455,
+      "reachedFirstBossRate": 0.95,
+      "firstBossWinRate": 0.868,
+      "avgHpEnteringFirstBoss": 1.526
+    }
+  ],
+  "detail": [
+    {
+      "id": "warrior-starter-desert-shop",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 12,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "doom_knight": 1.05
+        },
+        "bossResult": {
+          "doom_knight": "win"
+        },
+        "totalFights": 52,
+        "totalDamage": 5566
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.05
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 52,
+          "totalDamage": 5566
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.44
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 46,
+          "totalDamage": 5079
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 2264
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.16
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 57,
+          "totalDamage": 6648
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.07
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 52,
+          "totalDamage": 5720
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.31
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 44,
+          "totalDamage": 4578
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "ancient_tree",
+          "deathWasBoss": false,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 50,
+          "totalDamage": 5372
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 30,
+          "totalDamage": 3325
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.44
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 48,
+          "totalDamage": 5372
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.35
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 46,
+          "totalDamage": 4965
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.78
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 47,
+          "totalDamage": 4990
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.69
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 45,
+          "totalDamage": 4891
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.44
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 40,
+          "totalDamage": 4524
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.81
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 53,
+          "totalDamage": 5534
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.68
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 43,
+          "totalDamage": 4600
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.79
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 45,
+          "totalDamage": 5105
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.51
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 58,
+          "totalDamage": 6033
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.25
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 55,
+          "totalDamage": 6232
+        },
+        {
+          "died": true,
+          "deathLoop": 11,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.05
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 44,
+          "totalDamage": 4692
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.14
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 51,
+          "totalDamage": 5228
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.26
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 49,
+          "totalDamage": 5004
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.81
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 42,
+          "totalDamage": 4748
+        },
+        {
+          "died": true,
+          "deathLoop": 12,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 11,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.14
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5145
+        },
+        {
+          "died": true,
+          "deathLoop": 11,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 0.96
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 42,
+          "totalDamage": 4804
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.75
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 45,
+          "totalDamage": 4964
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.24
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 49,
+          "totalDamage": 4785
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.55
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 45,
+          "totalDamage": 5048
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.55
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 42,
+          "totalDamage": 4488
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.18
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 49,
+          "totalDamage": 5055
+        },
+        {
+          "died": true,
+          "deathLoop": 12,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 11,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.38
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 44,
+          "totalDamage": 4832
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.94
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 51,
+          "totalDamage": 5571
+        },
+        {
+          "died": true,
+          "deathLoop": 11,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.11
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 52,
+          "totalDamage": 5618
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 0.99
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 4884
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.3
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 45,
+          "totalDamage": 5047
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 27,
+          "totalDamage": 2547
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.77
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 40,
+          "totalDamage": 4450
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.15
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 38,
+          "totalDamage": 4109
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.4
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 46,
+          "totalDamage": 4917
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.51
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 57,
+          "totalDamage": 5893
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.85
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 43,
+          "totalDamage": 4830
+        }
+      ]
+    },
+    {
+      "id": "warrior-starter-desert-noshop",
+      "sampleRun": {
+        "died": true,
+        "deathLoop": 8,
+        "deathEnemy": "mutated_salamander",
+        "deathWasBoss": false,
+        "loopsCleared": 7,
+        "bossesKilled": 0,
+        "hpEnteringBoss": {},
+        "bossResult": {},
+        "totalFights": 33,
+        "totalDamage": 3472
+      },
+      "results": [
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 33,
+          "totalDamage": 3472
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 38,
+          "totalDamage": 3523
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 28,
+          "totalDamage": 2652
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 2238
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 20,
+          "totalDamage": 2114
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 23,
+          "totalDamage": 2204
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.09
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 43,
+          "totalDamage": 4264
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 34,
+          "totalDamage": 3284
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 24,
+          "totalDamage": 2403
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 38,
+          "totalDamage": 3696
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 25,
+          "totalDamage": 2477
+        },
+        {
+          "died": true,
+          "deathLoop": 9,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 8,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 37,
+          "totalDamage": 3765
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "scorpion",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 37,
+          "totalDamage": 3538
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 23,
+          "totalDamage": 2216
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 2055
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 25,
+          "totalDamage": 2505
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 29,
+          "totalDamage": 2925
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 17,
+          "totalDamage": 1711
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 17,
+          "totalDamage": 1946
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 13,
+          "totalDamage": 1263
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 18,
+          "totalDamage": 1688
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 2195
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 25,
+          "totalDamage": 2592
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 30,
+          "totalDamage": 2894
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 19,
+          "totalDamage": 1935
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 24,
+          "totalDamage": 2366
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 24,
+          "totalDamage": 2470
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.23
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 44,
+          "totalDamage": 4159
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 27,
+          "totalDamage": 2689
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 24,
+          "totalDamage": 2328
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 39,
+          "totalDamage": 4018
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 25,
+          "totalDamage": 2444
+        },
+        {
+          "died": true,
+          "deathLoop": 9,
+          "deathEnemy": "scorpion",
+          "deathWasBoss": false,
+          "loopsCleared": 8,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 42,
+          "totalDamage": 4074
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 15,
+          "totalDamage": 1626
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 21,
+          "totalDamage": 2086
+        },
+        {
+          "died": true,
+          "deathLoop": 9,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 8,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 38,
+          "totalDamage": 3620
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 35,
+          "totalDamage": 3153
+        },
+        {
+          "died": true,
+          "deathLoop": 6,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 5,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 22,
+          "totalDamage": 2263
+        },
+        {
+          "died": true,
+          "deathLoop": 9,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 8,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 40,
+          "totalDamage": 3953
+        },
+        {
+          "died": true,
+          "deathLoop": 7,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 6,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 25,
+          "totalDamage": 2450
+        }
+      ]
+    },
+    {
+      "id": "warrior-starter-vanilla-shop",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 12,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "doom_knight": 1.34
+        },
+        "bossResult": {
+          "doom_knight": "win"
+        },
+        "totalFights": 35,
+        "totalDamage": 3152
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3152
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 44,
+          "totalDamage": 3898
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3626
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 40,
+          "totalDamage": 3584
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 3102
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.23
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 2532
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 40,
+          "totalDamage": 3684
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3557
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3352
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3501
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3703
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 29,
+          "totalDamage": 2857
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3578
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 2802
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 2908
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3442
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3592
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 3044
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3423
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3002
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 3301
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 42,
+          "totalDamage": 3801
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 27,
+          "totalDamage": 2569
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3308
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 2846
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 3067
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 40,
+          "totalDamage": 3656
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 3117
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 3237
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 2954
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3468
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.23
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 2640
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3164
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 32,
+          "totalDamage": 2869
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 3445
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 44,
+          "totalDamage": 3977
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3145
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 2792
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.34
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3478
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.4
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 41,
+          "totalDamage": 3716
+        }
+      ]
+    },
+    {
+      "id": "warrior-starter-vanilla-noshop",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 12,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "doom_knight": 1
+        },
+        "bossResult": {
+          "doom_knight": "win"
+        },
+        "totalFights": 39,
+        "totalDamage": 3541
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3541
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3303
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3427
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 47,
+          "totalDamage": 4158
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 31,
+          "totalDamage": 2792
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3517
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3329
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 42,
+          "totalDamage": 3812
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3662
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3621
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 45,
+          "totalDamage": 4017
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 3405
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3250
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3409
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3606
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 3444
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3484
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3550
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3619
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 3399
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3334
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 36,
+          "totalDamage": 3294
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3502
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 40,
+          "totalDamage": 3569
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 42,
+          "totalDamage": 3787
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3314
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3370
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 34,
+          "totalDamage": 3043
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3377
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 37,
+          "totalDamage": 3338
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 48,
+          "totalDamage": 4432
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 43,
+          "totalDamage": 3905
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 35,
+          "totalDamage": 3223
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 41,
+          "totalDamage": 3785
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 40,
+          "totalDamage": 3607
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 38,
+          "totalDamage": 3722
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 43,
+          "totalDamage": 3819
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 33,
+          "totalDamage": 2998
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 30,
+          "totalDamage": 2692
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 41,
+          "totalDamage": 3795
+        }
+      ]
+    },
+    {
+      "id": "mage-starter-desert-shop",
+      "sampleRun": {
+        "died": false,
+        "deathLoop": null,
+        "deathEnemy": null,
+        "deathWasBoss": false,
+        "loopsCleared": 12,
+        "bossesKilled": 1,
+        "hpEnteringBoss": {
+          "doom_knight": 1.814
+        },
+        "bossResult": {
+          "doom_knight": "win"
+        },
+        "totalFights": 51,
+        "totalDamage": 5831
+      },
+      "results": [
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 51,
+          "totalDamage": 5831
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.143
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5069
+        },
+        {
+          "died": true,
+          "deathLoop": 11,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.7
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 45,
+          "totalDamage": 5103
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 52,
+          "totalDamage": 5684
+        },
+        {
+          "died": true,
+          "deathLoop": 11,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.329
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 39,
+          "totalDamage": 4861
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.857
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 61,
+          "totalDamage": 6774
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 1.043
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 46,
+          "totalDamage": 5404
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.414
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 53,
+          "totalDamage": 5711
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.157
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 42,
+          "totalDamage": 4638
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.471
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 53,
+          "totalDamage": 5605
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 1.114
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 41,
+          "totalDamage": 4608
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.714
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 58,
+          "totalDamage": 6365
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 1.071
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 41,
+          "totalDamage": 4765
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 53,
+          "totalDamage": 6213
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 56,
+          "totalDamage": 5895
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 54,
+          "totalDamage": 5670
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.614
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 48,
+          "totalDamage": 5151
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.329
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 58,
+          "totalDamage": 6001
+        },
+        {
+          "died": true,
+          "deathLoop": 5,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 4,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 27,
+          "totalDamage": 2963
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.714
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 56,
+          "totalDamage": 5971
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.571
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 45,
+          "totalDamage": 4889
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 0.943
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 43,
+          "totalDamage": 4540
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 53,
+          "totalDamage": 5693
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.629
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 45,
+          "totalDamage": 5295
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 59,
+          "totalDamage": 6798
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.543
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 54,
+          "totalDamage": 6089
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 59,
+          "totalDamage": 6358
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.343
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 50,
+          "totalDamage": 5333
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.629
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5160
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.571
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 50,
+          "totalDamage": 5602
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 53,
+          "totalDamage": 5831
+        },
+        {
+          "died": true,
+          "deathLoop": 10,
+          "deathEnemy": "doom_knight",
+          "deathWasBoss": true,
+          "loopsCleared": 9,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {
+            "doom_knight": 1.057
+          },
+          "bossResult": {
+            "doom_knight": "loss"
+          },
+          "totalFights": 35,
+          "totalDamage": 4014
+        },
+        {
+          "died": true,
+          "deathLoop": 8,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 7,
+          "bossesKilled": 0,
+          "hpEnteringBoss": {},
+          "bossResult": {},
+          "totalFights": 29,
+          "totalDamage": 3338
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5448
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.357
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5780
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.814
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 55,
+          "totalDamage": 6014
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.614
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 50,
+          "totalDamage": 5672
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.729
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 47,
+          "totalDamage": 5079
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.229
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 72,
+          "totalDamage": 7895
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.571
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5092
+        }
+      ]
+    }
+  ]
+}

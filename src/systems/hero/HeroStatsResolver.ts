@@ -274,6 +274,19 @@ export function resolveHeroStats(run: RunState): ResolvedHeroStats {
 }
 
 /**
+ * The hero's current LEVELED maxHP (base + statDeltas + relics + passives +
+ * in-run leveling + VIT*5). Out-of-combat heals MUST clamp to this rather than
+ * the stale `run.hero.maxHP` (which is only the class base and is never updated
+ * by leveling) — otherwise the maxHP gained from in-run levels is unreachable
+ * headroom that a no-heal hero can never fill, silently capping survivability
+ * at base HP. See createCombatState (CombatState.ts) which already starts combat
+ * at min(currentHP, resolvedMax) for the same reason.
+ */
+export function resolvedMaxHP(run: RunState): number {
+  return resolveHeroStats(run).maxHP;
+}
+
+/**
  * Read a per-combat stat from a CombatState-shaped object. CardResolver's
  * scale-effect logic uses this to apply per-combat stat buffs without
  * touching RunState. Kept structural (just the five fields) so tests can

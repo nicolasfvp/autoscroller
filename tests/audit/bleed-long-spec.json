@@ -1,0 +1,404 @@
+{
+ "runs": [
+  {
+   "id": "bleedlong__CONTROL",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "CONTROL",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-CONTROL"
+  },
+  {
+   "id": "bleedlong__t2-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t2-counter-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t2-counter-counter"
+  },
+  {
+   "id": "bleedlong__t2-agility-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t2-agility-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t2-agility-counter"
+  },
+  {
+   "id": "bleedlong__t2-attack-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t2-attack-attack",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t2-attack-attack",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t2-attack-attack"
+  },
+  {
+   "id": "bleedlong__t3-agility-attack-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-agility-attack-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-attack-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-agility-attack-counter"
+  },
+  {
+   "id": "bleedlong__t3-agility-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-agility-counter-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-agility-counter-counter"
+  },
+  {
+   "id": "bleedlong__t3-counter-counter-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-counter-counter-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-counter-counter-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-counter-counter-counter"
+  },
+  {
+   "id": "bleedlong__t3-agility-agility-counter",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-agility-agility-counter",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-agility-counter",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-agility-agility-counter"
+  },
+  {
+   "id": "bleedlong__t3-attack-attack-attack",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-attack-attack-attack",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-attack-attack-attack",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-attack-attack-attack"
+  },
+  {
+   "id": "bleedlong__t3-agility-counter-defense",
+   "class": "warrior",
+   "quality": "damage",
+   "stage": "boss5",
+   "archetype": "bleed-long",
+   "variant": "t3-agility-counter-defense",
+   "boss": "infernal_dragon",
+   "deck": [
+    "t2-counter-counter",
+    "t2-agility-counter",
+    "t3-agility-counter-defense",
+    "t2-agility-attack",
+    "t3-agility-counter-counter",
+    "t3-agility-attack-counter",
+    "t3-agility-agility-counter",
+    "t3-attack-attack-attack",
+    "t3-agility-counter-defense",
+    "t1-attack",
+    "t2-air-counter",
+    "t2-agility-agility"
+   ],
+   "startLoop": 47,
+   "startBossKills": 4,
+   "startRunXP": 2700,
+   "loopsToSimulate": 5,
+   "visitsShop": true,
+   "planning": {
+    "terrainPool": [
+     "desert",
+     "graveyard",
+     "swamp",
+     "lava",
+     "forest"
+    ],
+    "tilesPerLoop": 2
+   },
+   "repeats": 14,
+   "seed": "bl-t3-agility-counter-defense"
+  }
+ ]
+}
