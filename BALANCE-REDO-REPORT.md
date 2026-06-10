@@ -64,7 +64,7 @@ All untouched bosses/cards are byte-identical across re-runs; full suite green (
 
 ## 5. Flagged / not done (your call)
 
-- **Balance smells** (low-priority tuning, not bugs): Quickstrike (cost 2 vs peers' 1), Galekick vs Tempest Pike (cd), Body Slam Vow (armor→damage self-fuel), doom_knight counter affinity, desert_golem earth-drain warrior asymmetry. Documented in `STATIC-AUDIT-VERIFIED.md`.
+- **Balance smells — VERIFIED as non-issues, no changes** (`smell-probe-*`): Quickstrike actually out-damages its 1-stamina peer Flurry Step (the "cost 2" smell doesn't make it weak); Galekick and Tempest Pike perform near-identically in a real slow deck (both win, damage within noise) despite Galekick's on-paper edge; doom_knight is easy post-heal-fix (~99%); Body Slam Vow is low survival (not oppressive). These are paper-stat smells that don't manifest under attrition — changing them would be over-tuning. Documented in `STATIC-AUDIT-VERIFIED.md`.
 - **Survival-card verdicts (heal/armor)**: deferred — the swap-test can't differentiate them without a redesigned high-pressure test (control was either comfortable=no-diff or dying=all-oppressive).
 - **Possible C5 spec-vs-code gap**: bleed application is *uncapped* (`+=`) in code while C5 says "6 stacks, no merge." May be intended (6-cap applies to other statuses) or a divergence — flagged; not touched (C5 is locked).
 - **Tooling note**: the sim's `avgDamageDealt`-at-kill metric under-credits DoT (standing pool forfeit) — any future poison/burn/bleed power call needs a standing-pool-aware metric.
