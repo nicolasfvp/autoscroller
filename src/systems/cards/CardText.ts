@@ -149,33 +149,33 @@ function condFromEffect(fx: CardEffect): CondGate | null {
   // Berserk-style low-HP gate.
   if (c.hero_hp_pct_below !== undefined) {
     return {
-      prefix: `If you have less than ${c.hero_hp_pct_below}%[HP]`,
+      prefix: `If HP below ${c.hero_hp_pct_below}%`,
       key: `hp_below:${c.hero_hp_pct_below}`,
       relative: true,
     };
   }
   if (c.hero_hp_pct_atleast !== undefined) {
     return {
-      prefix: `If you have more than ${c.hero_hp_pct_atleast}%[HP]`,
+      prefix: `If HP above ${c.hero_hp_pct_atleast}%`,
       key: `hp_atleast:${c.hero_hp_pct_atleast}`,
       relative: true,
     };
   }
   if (c.self_armor_atleast !== undefined) {
     return {
-      prefix: `If [armor] is at least ${c.self_armor_atleast}`,
+      prefix: `If you have ${c.self_armor_atleast}+ [armor]`,
       key: `armor:${c.self_armor_atleast}`,
       relative: true,
     };
   }
   if (c.enemy_stunned === true) {
-    return { prefix: 'If enemy is [stun]', key: 'enemy_stunned', relative: true };
+    return { prefix: 'If enemy is stunned', key: 'enemy_stunned', relative: true };
   }
   if (c.enemy_stack_atleast) {
     const v = c.enemy_stack_atleast.value;
     const s = c.enemy_stack_atleast.stack;
     return {
-      prefix: `If enemy has ${v} or more ${stackTok(s)}`,
+      prefix: `If enemy has ${v}+ ${stackTok(s)}`,
       key: `enemy_stack_at:${s}:${v}`,
       relative: true,
     };
@@ -184,7 +184,7 @@ function condFromEffect(fx: CardEffect): CondGate | null {
     const v = c.self_stack_atleast.value;
     const s = c.self_stack_atleast.stack;
     return {
-      prefix: `If you have ${v} or more ${stackTok(s)}`,
+      prefix: `If you have ${v}+ ${stackTok(s)}`,
       key: `self_stack_at:${s}:${v}`,
       relative: true,
     };
@@ -430,13 +430,13 @@ function dotBody(fx: CardEffect, gate: CondGate | null): string {
   const perHit = !!fx.per_hit;
 
   if (fx.target === 'self_dot') {
-    if (relative) return `apply ${v}${stk}${scaler} more to yourself`;
-    return `Apply ${v}${stk}${scaler} to yourself`;
+    if (relative) return `apply ${v} more ${stk}${scaler} to yourself`;
+    return `Apply ${v} ${stk}${scaler} to yourself`;
   }
 
   if (perHit) {
     if (relative) return `each hit applies ${v} more ${stk}${scaler}`;
-    return `each hit applies ${v}${stk}${scaler}`;
+    return `each hit applies ${v} ${stk}${scaler}`;
   }
 
   // Per-stack: "apply 1[bleed] per [burn] consumed/on enemy".
@@ -444,16 +444,16 @@ function dotBody(fx: CardEffect, gate: CondGate | null): string {
   if (c.per_stack && (c.enemy_has_stack || c.self_has_stack)) {
     const src = c.enemy_has_stack ?? c.self_has_stack!;
     const side = c.enemy_has_stack ? 'on enemy' : 'on yourself';
-    return `Apply ${v}${stk}${scaler} per ${stackTok(src)} ${side}`;
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(src)} ${side}`;
   }
   if (fx.consume_stack_value) {
-    return `Apply ${v}${stk}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`;
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`;
   }
 
   // Relative bonus ("apply N more") drops any AoE suffix — the base clause it adds
   // onto already established the "to all enemies" scope.
   if (relative) return `apply ${v} more ${stk}${scaler}`;
-  return `Apply ${v}${stk}${scaler}${aoe}`;
+  return `Apply ${v} ${stk}${scaler}${aoe}`;
 }
 
 // Heal rendering — "Heal N([spi])".
@@ -474,7 +474,7 @@ function armorBody(fx: CardEffect, gate: CondGate | null): string {
   const scaler = scalerSuffix(fx);
   const relative = useRelativePhrasing(fx, gate);
   if (relative) return `gain ${v} more [armor]${scaler}`;
-  return `Gain ${v}[armor]${scaler}`;
+  return `Gain ${v} [armor]${scaler}`;
 }
 
 // Stack (raw apply/grant, not a DoT) rendering.
@@ -498,30 +498,30 @@ function stackBody(fx: CardEffect, gate: CondGate | null): string {
 
   // Cross-stack source ("value 0 + scale.source: self_stack").
   if (v === 0 && fx.scale?.source === 'self_stack' && fx.scale.stack) {
-    return `Apply 1${stk}${scaler} per ${stackTok(fx.scale.stack)} on yourself`;
+    return `Apply 1 ${stk}${scaler} per ${stackTok(fx.scale.stack)} on yourself`;
   }
 
   // Rage gain (target self) — special §11.H Wrathshell Vow places scaler
-  // BEFORE the icon: "Gain 6([str])[rage]". The visual "rage is something
+  // BEFORE the icon: "Gain 6([str]) [rage]". The visual "rage is something
   // you carry" reads better this way.
   if (fx.target === 'self' && fx.stack === 'rage') {
     if (relative) return `gain ${v}${scaler} more ${stk}`;
-    if (v >= 0) return `Gain ${v}${scaler}${stk}`;
-    return `Lose ${Math.abs(v)}${scaler}${stk}`;
+    if (v >= 0) return `Gain ${v}${scaler} ${stk}`;
+    return `Lose ${Math.abs(v)}${scaler} ${stk}`;
   }
 
-  // Per-stack: "Apply N[stack] for each [src] on enemy/yourself".
+  // Per-stack: "Apply N [stack] for each [src] on enemy/yourself".
   const cps = fx.condition ?? {};
   if (cps.per_stack && (cps.enemy_has_stack || cps.self_has_stack)) {
     const src = cps.enemy_has_stack ?? cps.self_has_stack!;
     const side = cps.enemy_has_stack ? 'on enemy' : 'on yourself';
-    return `Apply ${v}${stk}${scaler} per ${stackTok(src)} ${side}`;
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(src)} ${side}`;
   }
 
   const aoe = aoeSuffix(fx);
   // Generic stack application. Scaler glues AFTER the icon.
   if (relative) return `apply ${v} more ${stk}${scaler}${aoe}`;
-  return `Apply ${v}${stk}${scaler}${aoe}`;
+  return `Apply ${v} ${stk}${scaler}${aoe}`;
 }
 
 // Stamina/mana rendering.
@@ -529,8 +529,8 @@ function resourceBody(fx: CardEffect): string {
   const tok = fx.type === 'stamina' ? '[stam]' : '[mana]';
   if (fx.value === 0) return '';
   const scaler = scalerSuffix(fx);
-  if (fx.value < 0) return `Lose ${Math.abs(fx.value)}${tok}${scaler}`;
-  return `Gain ${fx.value}${tok}${scaler}`;
+  if (fx.value < 0) return `Lose ${Math.abs(fx.value)} ${tok}${scaler}`;
+  return `Gain ${fx.value} ${tok}${scaler}`;
 }
 
 // Cross-stack converter rendering. The consumed cost is stated explicitly:
@@ -762,7 +762,7 @@ function formatModifierAura(fx: CardEffect, dur: string, secs: number): string {
     return v === 1 ? `${dur}, double all ${s} gained` : `${dur}, ${s} gains +${pct}%`;
   }
   const sign = v >= 0 ? '+' : '';
-  return `${dur}, ${sign}${v}${statTok(k)}`;
+  return `${dur}, ${sign}${v} ${statTok(k)}`;
 }
 
 function formatEventCounterAura(fx: CardEffect, dur: string): string {
