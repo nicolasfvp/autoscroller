@@ -39,7 +39,7 @@ export class Preloader extends Scene {
     this.load.spritesheet('hero_walk',   'assets/characters/hero/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_attack', 'assets/characters/hero/attack/attack.png', { frameWidth: 532, frameHeight: 568 });
     this.load.spritesheet('hero_channel', 'assets/characters/hero/cast_debuff/cast_debuff_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-    this.load.spritesheet('hero_battle_stance', 'assets/characters/hero/battle_stance/battle_stance_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
+    this.load.spritesheet('hero_battle_stance', 'assets/characters/hero/battle_stance/battle_stance_spritesheet.png', { frameWidth: 512, frameHeight: 556 });
     this.load.spritesheet('hero_defend', 'assets/characters/hero/defend/defend_spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     this.load.spritesheet('hero_chibi_warrior', 'assets/characters/hero/pocket/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
     // Warrior selection preview (2-frame idle, 500x437 per frame)
@@ -47,9 +47,12 @@ export class Preloader extends Scene {
 
     // Mage selection preview (7-frame idle, 386x514 per frame; sheet is 2702x514)
     this.load.spritesheet('mage_select', 'assets/characters/mage/selection/spritesheet.png', { frameWidth: 386, frameHeight: 514 });
-    // Mage combat spritesheets (9-frame idle, 12-frame attack; 640×562 per frame)
-    this.load.spritesheet('mage_idle',   'assets/characters/mage/idle/spritesheet.png',   { frameWidth: 640, frameHeight: 562 });
-    this.load.spritesheet('mage_attack', 'assets/characters/mage/attack/spritesheet.png', { frameWidth: 640, frameHeight: 562 });
+    // Mage combat spritesheets (4-frame idle, 6-frame attack; 768×768 per frame)
+    this.load.spritesheet('mage_idle',         'assets/characters/mage/battle_stance/spritesheet.png',       { frameWidth: 768, frameHeight: 768, endFrame: 3 });
+    this.load.spritesheet('mage_attack',       'assets/characters/mage/attack/spritesheet.png',              { frameWidth: 768, frameHeight: 768, endFrame: 5 });
+    this.load.spritesheet('mage_battle_stance','assets/characters/mage/battle_stance/spritesheet.png',       { frameWidth: 768, frameHeight: 768, endFrame: 3 });
+    this.load.spritesheet('mage_defend',       'assets/characters/mage/defense/spritesheet.png',             { frameWidth: 768, frameHeight: 768, endFrame: 3 });
+    this.load.spritesheet('mage_cast_debuff',  'assets/characters/mage/cast_debuff/spritesheet.png',          { frameWidth: 768, frameHeight: 768, endFrame: 3 });
     // Mage scrolling animation (10-frame run, 512×512 per frame)
     this.load.spritesheet('mage_walk',   'assets/characters/mage/scrolling/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
 
@@ -198,10 +201,10 @@ export class Preloader extends Scene {
     const FX_W = 443; const FX_H = 887;
     this.load.spritesheet('fx_claw',  'assets/effects/combat/fx_claw.png',  { frameWidth: FX_W, frameHeight: FX_H });
     this.load.spritesheet('fx_slash',       'assets/effects/combat/fx_slash.png',       { frameWidth: 512, frameHeight: 512, endFrame: 2 });
-    this.load.spritesheet('fx_slash_fire',  'assets/effects/combat/fx_slash_fire.png',  { frameWidth: 512, frameHeight: 512, endFrame: 2 });
-    this.load.spritesheet('fx_slash_water', 'assets/effects/combat/fx_slash_water.png', { frameWidth: 512, frameHeight: 512, endFrame: 2 });
-    this.load.spritesheet('fx_slash_air',   'assets/effects/combat/fx_slash_air.png',   { frameWidth: 512, frameHeight: 512, endFrame: 2 });
-    this.load.spritesheet('fx_slash_earth', 'assets/effects/combat/fx_slash_earth.png', { frameWidth: 512, frameHeight: 512, endFrame: 2 });
+    this.load.spritesheet('fx_slash_fire',  'assets/effects/combat/fx_slash_fire.png',  { frameWidth: 1024, frameHeight: 1024, endFrame: 3 });
+    this.load.spritesheet('fx_slash_water', 'assets/effects/combat/fx_slash_water.png', { frameWidth: 1024, frameHeight: 1024, endFrame: 3 });
+    this.load.spritesheet('fx_slash_wind',  'assets/effects/combat/fx_slash_wind.png',  { frameWidth: 1024, frameHeight: 1024, endFrame: 3 });
+    this.load.spritesheet('fx_slash_earth', 'assets/effects/combat/fx_slash_earth.png', { frameWidth: 1024, frameHeight: 1024, endFrame: 3 });
     this.load.spritesheet('fx_shield_fade', 'assets/effects/combat/fx_shield_fade.png', { frameWidth: 1024, frameHeight: 1024 });
     this.load.spritesheet('fx_aura_heal',   'assets/effects/combat/fx_aura_heal.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
     this.load.spritesheet('fx_aura_buff',   'assets/effects/combat/fx_aura_buff.png',   { frameWidth: 1024, frameHeight: 1024, endFrame: 5 });
@@ -226,7 +229,7 @@ export class Preloader extends Scene {
     this.load.image('tile_inventory_panel', 'assets/scenes/planning/tile_inventory_panel.png');
     this.load.image('panel_keyword_frame_v2', 'assets/scenes/combat/panel_keyword_frame_v2.png');
     // Keyword intro panels (baked image per keyword)
-    for (const kw of ['brace', 'exhaust', 'haste', 'vengeance']) {
+    for (const kw of ['brace', 'exhaust', 'haste', 'pierce', 'vengeance']) {
       this.load.image(`keyword_${kw}`, `assets/scenes/combat/keyword_${kw}.png`);
     }
     this.load.image('tutorial_text_panel',    'assets/scenes/tutorial/tutorial_text_panel.png');

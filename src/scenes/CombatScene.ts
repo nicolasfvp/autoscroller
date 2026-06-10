@@ -153,7 +153,7 @@ export class CombatScene extends Scene {
     // Hit effect spritesheet over the hero
     if (this.combatEffects) {
       const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_claw';
-      this.combatEffects.enemyAttackEffect(200, 320, fxKey);
+      this.combatEffects.enemyAttackEffect(200, 320, fxKey, true);
     }
     // Visual jump toward the player
     if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
@@ -377,9 +377,10 @@ export class CombatScene extends Scene {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
 
-        const IDLE_SCALE = 0.6034;
+        const isMage = sp === 'mage';
+        const IDLE_SCALE = isMage ? 0.3357 : 0.6034;
         const ORIGIN_X = 200;
-        const ORIGIN_Y = 330;
+        const ORIGIN_Y = isMage ? 315.4 : 338.5;
         const idleFrameH = this.textures.get(heroIdleKey).get(0).realHeight;
 
         // Y compensado pela diferença de frameH: mantém pés no mesmo ponto em tela
@@ -424,8 +425,12 @@ export class CombatScene extends Scene {
 
         // Posição e scale por animação, ajustados via debug-layout
         const ANIM_OVERRIDES: Record<string, { x: number; y: number; scale: number }> = {
-          hero_attack:  { x: 190.4, y: 301.6, scale: 0.6118 },
-          hero_channel: { x: 199.3, y: 318.8, scale: 0.6529 },
+          hero_attack:      { x: 190.4, y: 303.5, scale: 0.6118 },
+          hero_defend:      { x: 200,   y: 323.4, scale: 0.6034 },
+          hero_channel:     { x: 184.8, y: 314.1, scale: 0.6529 },
+          mage_defend:      { x: 187.5, y: 328.5, scale: 0.3092 },
+          mage_attack:      { x: 196.0, y: 343.4, scale: 0.3357 },
+          mage_cast_debuff: { x: 187.5, y: 327.0, scale: 0.3221 },
         };
 
         const ensureAnim = (key: string, frameRate: number, repeat = 0) => {
@@ -655,22 +660,22 @@ export class CombatScene extends Scene {
 
     // --- INIMIGO (calibrado via debug-layout) ---
     if (s.burnStacks > 0 && !this._fxEnemyFire)
-      this._fxEnemyFire  = fx.statusEffect(612.5, 636.3, 'fx_fire',  252);
+      this._fxEnemyFire  = fx.statusEffect(602.6, 542.2, 'fx_fire',  366);
     else if (s.burnStacks === 0 && this._fxEnemyFire)
       { this._fxEnemyFire.destroy();  this._fxEnemyFire  = null; }
 
     if (s.bleedStacks > 0 && !this._fxEnemyBleed)
-      this._fxEnemyBleed = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+      this._fxEnemyBleed = fx.statusEffect(596, 467.1, 'fx_bleed', 161);
     else if (s.bleedStacks === 0 && this._fxEnemyBleed)
       { this._fxEnemyBleed.destroy(); this._fxEnemyBleed = null; }
 
     if (s.stunStacks > 0 && !this._fxEnemyStun)
-      this._fxEnemyStun  = fx.statusEffect(612.5, 300.2, 'fx_stun',   67);
+      this._fxEnemyStun  = fx.statusEffect(591.4, 301.5, 'fx_stun',   90);
     else if (s.stunStacks === 0 && this._fxEnemyStun)
       { this._fxEnemyStun.destroy();  this._fxEnemyStun  = null; }
 
     if (s.poisonStacks > 0 && !this._fxEnemyPoison)
-      this._fxEnemyPoison = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+      this._fxEnemyPoison = fx.statusEffect(596, 467.1, 'fx_bleed', 161);
     else if (s.poisonStacks === 0 && this._fxEnemyPoison)
       { this._fxEnemyPoison.destroy(); this._fxEnemyPoison = null; }
   }

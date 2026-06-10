@@ -181,8 +181,9 @@ export class CombatEffects {
     }
 
     /** Play a 4-frame hit effect spritesheet centered on (x, y).
-     *  key: 'fx_slash' | 'fx_stomp' | 'fx_bite' */
-    enemyAttackEffect(x: number, y: number, key: string): void {
+     *  key: 'fx_slash' | 'fx_claw' | 'fx_stomp' | 'fx_bite'
+     *  flipX: true when the effect hits the hero (assets face right by default) */
+    enemyAttackEffect(x: number, y: number, key: string, flipX = false): void {
         if (!this.scene.textures.exists(key)) return;
         const animKey = `__fx_anim_${key}`;
         if (!this.scene.anims.exists(animKey)) {
@@ -193,18 +194,17 @@ export class CombatEffects {
                 repeat: 0,
             });
         }
-        // Display at 50% of native height so it fits over the hero area without dominating
-        const DISPLAY_H = 220;
+        const DISPLAY_H_MAP: Record<string, number> = {
+            fx_slash_fire: 319,
+        };
+        const DISPLAY_H = DISPLAY_H_MAP[key] ?? 220;
         const src = this.scene.textures.get(key).getSourceImage() as HTMLImageElement;
-        const frameW = src.width / 4;
         const sc = DISPLAY_H / src.height;
-        const sprite = this.scene.add.sprite(x, y, key).setScale(sc).setDepth(20).setAlpha(0.92);
+        const sprite = this.scene.add.sprite(x, y, key).setScale(sc).setFlipX(flipX).setDepth(20).setAlpha(0.92);
         sprite.play(animKey);
         sprite.once('animationcomplete', () => {
             this.scene.tweens.add({ targets: sprite, alpha: 0, duration: 80, onComplete: () => sprite.destroy() });
         });
-        // Unused — keeps TypeScript happy about frameW
-        void frameW;
     }
 
     auraEffect(x: number, y: number, tint: number = 0xffffff, key: string = 'fx_aura_heal'): Phaser.GameObjects.Sprite | null {
@@ -218,8 +218,8 @@ export class CombatEffects {
                 repeat: -1,
             });
         }
-        const sprite = this.scene.add.sprite(x + 2, y + 111, key)
-            .setScale(0.1691, 0.1691 * 0.8)
+        const sprite = this.scene.add.sprite(x - 15.8, y + 100.5, key)
+            .setScale(0.1759, 0.1759 * 0.8)
             .setDepth(9)
             .setAlpha(0.85)
             .setOrigin(0.5, 0.5)
