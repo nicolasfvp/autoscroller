@@ -10,8 +10,8 @@
       "bossesFaced": {
         "doom_knight": {
           "reached": 36,
-          "won": 17,
-          "winRate": 0.472,
+          "won": 27,
+          "winRate": 0.75,
           "avgHpEnter": 0.883
         }
       },
@@ -24,27 +24,27 @@
       "repeats": 40,
       "visitsShop": true,
       "planning": "[{\"terrain\":\"desert\",\"count\":2},{\"terrain\":\"forest\",\"count\":1}]",
-      "deathRate": 0.7,
-      "survivedAllRate": 0.3,
+      "deathRate": 0.525,
+      "survivedAllRate": 0.475,
       "deathLoopHistogram": {
         "5": 1,
         "7": 1,
         "8": 1,
-        "10": 20,
+        "10": 10,
         "11": 3,
-        "12": 2
+        "12": 5
       },
       "deathEnemyHistogram": {
-        "doom_knight": 19,
-        "mutated_salamander": 6,
-        "ancient_tree": 1,
-        "baby_dragon": 2
+        "doom_knight": 9,
+        "mutated_salamander": 7,
+        "ancient_tree": 2,
+        "baby_dragon": 3
       },
-      "avgLoopsCleared": 9.82,
-      "avgBossesKilled": 0.42,
-      "avgDamageDealt": 4936,
+      "avgLoopsCleared": 10.5,
+      "avgBossesKilled": 0.68,
+      "avgDamageDealt": 5236,
       "reachedFirstBossRate": 0.9,
-      "firstBossWinRate": 0.472,
+      "firstBossWinRate": 0.75,
       "avgHpEnteringFirstBoss": 0.883
     },
     {
@@ -83,7 +83,7 @@
       },
       "avgLoopsCleared": 6.03,
       "avgBossesKilled": 0,
-      "avgDamageDealt": 2731,
+      "avgDamageDealt": 2733,
       "reachedFirstBossRate": 0.05,
       "firstBossWinRate": 0,
       "avgHpEnteringFirstBoss": 0.16
@@ -112,7 +112,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 12,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3272,
+      "avgDamageDealt": 3268,
       "reachedFirstBossRate": 1,
       "firstBossWinRate": 1,
       "avgHpEnteringFirstBoss": 1.359
@@ -141,7 +141,7 @@
       "deathEnemyHistogram": {},
       "avgLoopsCleared": 12,
       "avgBossesKilled": 1,
-      "avgDamageDealt": 3506,
+      "avgDamageDealt": 3504,
       "reachedFirstBossRate": 1,
       "firstBossWinRate": 1,
       "avgHpEnteringFirstBoss": 1
@@ -150,8 +150,8 @@
       "bossesFaced": {
         "doom_knight": {
           "reached": 38,
-          "won": 33,
-          "winRate": 0.868,
+          "won": 38,
+          "winRate": 1,
           "avgHpEnter": 1.526
         }
       },
@@ -164,23 +164,20 @@
       "repeats": 40,
       "visitsShop": true,
       "planning": "[{\"terrain\":\"desert\",\"count\":2},{\"terrain\":\"forest\",\"count\":1}]",
-      "deathRate": 0.225,
-      "survivedAllRate": 0.775,
+      "deathRate": 0.05,
+      "survivedAllRate": 0.95,
       "deathLoopHistogram": {
         "5": 1,
-        "8": 1,
-        "10": 5,
-        "11": 2
+        "8": 1
       },
       "deathEnemyHistogram": {
-        "mutated_salamander": 4,
-        "doom_knight": 5
+        "mutated_salamander": 2
       },
-      "avgLoopsCleared": 11.2,
-      "avgBossesKilled": 0.82,
-      "avgDamageDealt": 5455,
+      "avgLoopsCleared": 11.68,
+      "avgBossesKilled": 0.95,
+      "avgDamageDealt": 5639,
       "reachedFirstBossRate": 0.95,
-      "firstBossWinRate": 0.868,
+      "firstBossWinRate": 1,
       "avgHpEnteringFirstBoss": 1.526
     }
   ],
@@ -201,7 +198,7 @@
           "doom_knight": "win"
         },
         "totalFights": 52,
-        "totalDamage": 5566
+        "totalDamage": 5570
       },
       "results": [
         {
@@ -218,7 +215,7 @@
             "doom_knight": "win"
           },
           "totalFights": 52,
-          "totalDamage": 5566
+          "totalDamage": 5570
         },
         {
           "died": true,
@@ -234,7 +231,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 46,
-          "totalDamage": 5079
+          "totalDamage": 5165
         },
         {
           "died": true,
@@ -262,7 +259,7 @@
             "doom_knight": "win"
           },
           "totalFights": 57,
-          "totalDamage": 6648
+          "totalDamage": 6652
         },
         {
           "died": false,
@@ -278,7 +275,7 @@
             "doom_knight": "win"
           },
           "totalFights": 52,
-          "totalDamage": 5720
+          "totalDamage": 5724
         },
         {
           "died": true,
@@ -294,7 +291,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 44,
-          "totalDamage": 4578
+          "totalDamage": 4666
         },
         {
           "died": true,
@@ -334,7 +331,7 @@
             "doom_knight": "win"
           },
           "totalFights": 48,
-          "totalDamage": 5372
+          "totalDamage": 5376
         },
         {
           "died": true,
@@ -350,39 +347,39 @@
             "doom_knight": "loss"
           },
           "totalFights": 46,
-          "totalDamage": 4965
+          "totalDamage": 5055
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.78
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 47,
-          "totalDamage": 4990
+          "totalFights": 57,
+          "totalDamage": 6167
         },
         {
           "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "deathLoop": 12,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 11,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.69
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 45,
-          "totalDamage": 4891
+          "totalFights": 50,
+          "totalDamage": 5581
         },
         {
           "died": true,
@@ -398,55 +395,55 @@
             "doom_knight": "loss"
           },
           "totalFights": 40,
-          "totalDamage": 4524
+          "totalDamage": 4610
         },
         {
           "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "deathLoop": 11,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.81
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 53,
-          "totalDamage": 5534
+          "totalFights": 54,
+          "totalDamage": 5781
         },
         {
           "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "deathLoop": 11,
+          "deathEnemy": "mutated_salamander",
+          "deathWasBoss": false,
+          "loopsCleared": 10,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.68
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 43,
-          "totalDamage": 4600
+          "totalFights": 46,
+          "totalDamage": 5002
         },
         {
           "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "deathLoop": 12,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 11,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.79
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 45,
-          "totalDamage": 5105
+          "totalFights": 58,
+          "totalDamage": 6694
         },
         {
           "died": false,
@@ -462,7 +459,7 @@
             "doom_knight": "win"
           },
           "totalFights": 58,
-          "totalDamage": 6033
+          "totalDamage": 6037
         },
         {
           "died": false,
@@ -478,14 +475,14 @@
             "doom_knight": "win"
           },
           "totalFights": 55,
-          "totalDamage": 6232
+          "totalDamage": 6236
         },
         {
-          "died": true,
-          "deathLoop": 11,
-          "deathEnemy": "baby_dragon",
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
           "deathWasBoss": false,
-          "loopsCleared": 10,
+          "loopsCleared": 12,
           "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.05
@@ -493,8 +490,8 @@
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 44,
-          "totalDamage": 4692
+          "totalFights": 49,
+          "totalDamage": 5309
         },
         {
           "died": false,
@@ -510,7 +507,7 @@
             "doom_knight": "win"
           },
           "totalFights": 51,
-          "totalDamage": 5228
+          "totalDamage": 5232
         },
         {
           "died": true,
@@ -526,39 +523,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 49,
-          "totalDamage": 5004
-        },
-        {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
-          "hpEnteringBoss": {
-            "doom_knight": 0.81
-          },
-          "bossResult": {
-            "doom_knight": "loss"
-          },
-          "totalFights": 42,
-          "totalDamage": 4748
-        },
-        {
-          "died": true,
-          "deathLoop": 12,
-          "deathEnemy": "mutated_salamander",
-          "deathWasBoss": false,
-          "loopsCleared": 11,
-          "bossesKilled": 1,
-          "hpEnteringBoss": {
-            "doom_knight": 1.14
-          },
-          "bossResult": {
-            "doom_knight": "win"
-          },
-          "totalFights": 46,
-          "totalDamage": 5145
+          "totalDamage": 5092
         },
         {
           "died": true,
@@ -568,29 +533,61 @@
           "loopsCleared": 10,
           "bossesKilled": 1,
           "hpEnteringBoss": {
+            "doom_knight": 0.81
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 46,
+          "totalDamage": 5361
+        },
+        {
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
+            "doom_knight": 1.14
+          },
+          "bossResult": {
+            "doom_knight": "win"
+          },
+          "totalFights": 48,
+          "totalDamage": 5520
+        },
+        {
+          "died": true,
+          "deathLoop": 12,
+          "deathEnemy": "baby_dragon",
+          "deathWasBoss": false,
+          "loopsCleared": 11,
+          "bossesKilled": 1,
+          "hpEnteringBoss": {
             "doom_knight": 0.96
           },
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 42,
-          "totalDamage": 4804
+          "totalFights": 46,
+          "totalDamage": 5441
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.75
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 45,
-          "totalDamage": 4964
+          "totalFights": 57,
+          "totalDamage": 6374
         },
         {
           "died": false,
@@ -606,7 +603,7 @@
             "doom_knight": "win"
           },
           "totalFights": 49,
-          "totalDamage": 4785
+          "totalDamage": 4789
         },
         {
           "died": true,
@@ -622,7 +619,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 45,
-          "totalDamage": 5048
+          "totalDamage": 5144
         },
         {
           "died": true,
@@ -638,7 +635,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 42,
-          "totalDamage": 4488
+          "totalDamage": 4584
         },
         {
           "died": false,
@@ -654,12 +651,12 @@
             "doom_knight": "win"
           },
           "totalFights": 49,
-          "totalDamage": 5055
+          "totalDamage": 5059
         },
         {
           "died": true,
           "deathLoop": 12,
-          "deathEnemy": "mutated_salamander",
+          "deathEnemy": "ancient_tree",
           "deathWasBoss": false,
           "loopsCleared": 11,
           "bossesKilled": 1,
@@ -669,31 +666,31 @@
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 44,
-          "totalDamage": 4832
+          "totalFights": 47,
+          "totalDamage": 5132
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.94
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 51,
-          "totalDamage": 5571
+          "totalFights": 57,
+          "totalDamage": 6381
         },
         {
           "died": true,
-          "deathLoop": 11,
-          "deathEnemy": "baby_dragon",
+          "deathLoop": 12,
+          "deathEnemy": "mutated_salamander",
           "deathWasBoss": false,
-          "loopsCleared": 10,
+          "loopsCleared": 11,
           "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.11
@@ -701,8 +698,8 @@
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 52,
-          "totalDamage": 5618
+          "totalFights": 57,
+          "totalDamage": 6296
         },
         {
           "died": false,
@@ -718,7 +715,7 @@
             "doom_knight": "win"
           },
           "totalFights": 46,
-          "totalDamage": 4884
+          "totalDamage": 4888
         },
         {
           "died": false,
@@ -734,7 +731,7 @@
             "doom_knight": "win"
           },
           "totalFights": 45,
-          "totalDamage": 5047
+          "totalDamage": 5051
         },
         {
           "died": true,
@@ -749,20 +746,20 @@
           "totalDamage": 2547
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.77
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 40,
-          "totalDamage": 4450
+          "totalFights": 47,
+          "totalDamage": 5155
         },
         {
           "died": true,
@@ -778,7 +775,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 38,
-          "totalDamage": 4109
+          "totalDamage": 4166
         },
         {
           "died": true,
@@ -794,7 +791,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 46,
-          "totalDamage": 4917
+          "totalDamage": 5039
         },
         {
           "died": false,
@@ -810,23 +807,23 @@
             "doom_knight": "win"
           },
           "totalFights": 57,
-          "totalDamage": 5893
+          "totalDamage": 5897
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.85
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 43,
-          "totalDamage": 4830
+          "totalFights": 50,
+          "totalDamage": 5699
         }
       ]
     },
@@ -931,7 +928,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 43,
-          "totalDamage": 4264
+          "totalDamage": 4266
         },
         {
           "died": true,
@@ -1187,7 +1184,7 @@
             "doom_knight": "loss"
           },
           "totalFights": 44,
-          "totalDamage": 4159
+          "totalDamage": 4235
         },
         {
           "died": true,
@@ -1351,7 +1348,7 @@
           "doom_knight": "win"
         },
         "totalFights": 35,
-        "totalDamage": 3152
+        "totalDamage": 3147
       },
       "results": [
         {
@@ -1368,7 +1365,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3152
+          "totalDamage": 3147
         },
         {
           "died": false,
@@ -1384,7 +1381,7 @@
             "doom_knight": "win"
           },
           "totalFights": 44,
-          "totalDamage": 3898
+          "totalDamage": 3893
         },
         {
           "died": false,
@@ -1400,7 +1397,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3626
+          "totalDamage": 3621
         },
         {
           "died": false,
@@ -1416,7 +1413,7 @@
             "doom_knight": "win"
           },
           "totalFights": 40,
-          "totalDamage": 3584
+          "totalDamage": 3579
         },
         {
           "died": false,
@@ -1432,7 +1429,7 @@
             "doom_knight": "win"
           },
           "totalFights": 33,
-          "totalDamage": 3102
+          "totalDamage": 3097
         },
         {
           "died": false,
@@ -1448,7 +1445,7 @@
             "doom_knight": "win"
           },
           "totalFights": 29,
-          "totalDamage": 2532
+          "totalDamage": 2527
         },
         {
           "died": false,
@@ -1464,7 +1461,7 @@
             "doom_knight": "win"
           },
           "totalFights": 40,
-          "totalDamage": 3684
+          "totalDamage": 3679
         },
         {
           "died": false,
@@ -1480,7 +1477,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3557
+          "totalDamage": 3552
         },
         {
           "died": false,
@@ -1496,7 +1493,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3352
+          "totalDamage": 3347
         },
         {
           "died": false,
@@ -1512,7 +1509,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3501
+          "totalDamage": 3496
         },
         {
           "died": false,
@@ -1528,7 +1525,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3703
+          "totalDamage": 3707
         },
         {
           "died": false,
@@ -1544,7 +1541,7 @@
             "doom_knight": "win"
           },
           "totalFights": 29,
-          "totalDamage": 2857
+          "totalDamage": 2852
         },
         {
           "died": false,
@@ -1560,7 +1557,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3578
+          "totalDamage": 3573
         },
         {
           "died": false,
@@ -1576,7 +1573,7 @@
             "doom_knight": "win"
           },
           "totalFights": 31,
-          "totalDamage": 2802
+          "totalDamage": 2797
         },
         {
           "died": false,
@@ -1592,7 +1589,7 @@
             "doom_knight": "win"
           },
           "totalFights": 30,
-          "totalDamage": 2908
+          "totalDamage": 2903
         },
         {
           "died": false,
@@ -1608,7 +1605,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3442
+          "totalDamage": 3446
         },
         {
           "died": false,
@@ -1624,7 +1621,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3592
+          "totalDamage": 3587
         },
         {
           "died": false,
@@ -1640,7 +1637,7 @@
             "doom_knight": "win"
           },
           "totalFights": 34,
-          "totalDamage": 3044
+          "totalDamage": 3039
         },
         {
           "died": false,
@@ -1656,7 +1653,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3423
+          "totalDamage": 3418
         },
         {
           "died": false,
@@ -1672,7 +1669,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3002
+          "totalDamage": 2997
         },
         {
           "died": false,
@@ -1688,7 +1685,7 @@
             "doom_knight": "win"
           },
           "totalFights": 36,
-          "totalDamage": 3301
+          "totalDamage": 3296
         },
         {
           "died": false,
@@ -1704,7 +1701,7 @@
             "doom_knight": "win"
           },
           "totalFights": 42,
-          "totalDamage": 3801
+          "totalDamage": 3796
         },
         {
           "died": false,
@@ -1720,7 +1717,7 @@
             "doom_knight": "win"
           },
           "totalFights": 27,
-          "totalDamage": 2569
+          "totalDamage": 2564
         },
         {
           "died": false,
@@ -1736,7 +1733,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3308
+          "totalDamage": 3303
         },
         {
           "died": false,
@@ -1752,7 +1749,7 @@
             "doom_knight": "win"
           },
           "totalFights": 33,
-          "totalDamage": 2846
+          "totalDamage": 2841
         },
         {
           "died": false,
@@ -1768,7 +1765,7 @@
             "doom_knight": "win"
           },
           "totalFights": 33,
-          "totalDamage": 3067
+          "totalDamage": 3062
         },
         {
           "died": false,
@@ -1784,7 +1781,7 @@
             "doom_knight": "win"
           },
           "totalFights": 40,
-          "totalDamage": 3656
+          "totalDamage": 3651
         },
         {
           "died": false,
@@ -1800,7 +1797,7 @@
             "doom_knight": "win"
           },
           "totalFights": 34,
-          "totalDamage": 3117
+          "totalDamage": 3112
         },
         {
           "died": false,
@@ -1816,7 +1813,7 @@
             "doom_knight": "win"
           },
           "totalFights": 34,
-          "totalDamage": 3237
+          "totalDamage": 3232
         },
         {
           "died": false,
@@ -1832,7 +1829,7 @@
             "doom_knight": "win"
           },
           "totalFights": 32,
-          "totalDamage": 2954
+          "totalDamage": 2949
         },
         {
           "died": false,
@@ -1848,7 +1845,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3468
+          "totalDamage": 3463
         },
         {
           "died": false,
@@ -1864,7 +1861,7 @@
             "doom_knight": "win"
           },
           "totalFights": 31,
-          "totalDamage": 2640
+          "totalDamage": 2635
         },
         {
           "died": false,
@@ -1880,7 +1877,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3164
+          "totalDamage": 3159
         },
         {
           "died": false,
@@ -1896,7 +1893,7 @@
             "doom_knight": "win"
           },
           "totalFights": 32,
-          "totalDamage": 2869
+          "totalDamage": 2864
         },
         {
           "died": false,
@@ -1912,7 +1909,7 @@
             "doom_knight": "win"
           },
           "totalFights": 36,
-          "totalDamage": 3445
+          "totalDamage": 3440
         },
         {
           "died": false,
@@ -1928,7 +1925,7 @@
             "doom_knight": "win"
           },
           "totalFights": 44,
-          "totalDamage": 3977
+          "totalDamage": 3972
         },
         {
           "died": false,
@@ -1944,7 +1941,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3145
+          "totalDamage": 3140
         },
         {
           "died": false,
@@ -1960,7 +1957,7 @@
             "doom_knight": "win"
           },
           "totalFights": 31,
-          "totalDamage": 2792
+          "totalDamage": 2787
         },
         {
           "died": false,
@@ -1976,7 +1973,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3478
+          "totalDamage": 3473
         },
         {
           "died": false,
@@ -1992,7 +1989,7 @@
             "doom_knight": "win"
           },
           "totalFights": 41,
-          "totalDamage": 3716
+          "totalDamage": 3720
         }
       ]
     },
@@ -2012,7 +2009,7 @@
           "doom_knight": "win"
         },
         "totalFights": 39,
-        "totalDamage": 3541
+        "totalDamage": 3536
       },
       "results": [
         {
@@ -2029,7 +2026,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3541
+          "totalDamage": 3536
         },
         {
           "died": false,
@@ -2045,7 +2042,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3303
+          "totalDamage": 3298
         },
         {
           "died": false,
@@ -2061,7 +2058,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3427
+          "totalDamage": 3422
         },
         {
           "died": false,
@@ -2077,7 +2074,7 @@
             "doom_knight": "win"
           },
           "totalFights": 47,
-          "totalDamage": 4158
+          "totalDamage": 4162
         },
         {
           "died": false,
@@ -2093,7 +2090,7 @@
             "doom_knight": "win"
           },
           "totalFights": 31,
-          "totalDamage": 2792
+          "totalDamage": 2787
         },
         {
           "died": false,
@@ -2109,7 +2106,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3517
+          "totalDamage": 3512
         },
         {
           "died": false,
@@ -2125,7 +2122,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3329
+          "totalDamage": 3324
         },
         {
           "died": false,
@@ -2141,7 +2138,7 @@
             "doom_knight": "win"
           },
           "totalFights": 42,
-          "totalDamage": 3812
+          "totalDamage": 3816
         },
         {
           "died": false,
@@ -2157,7 +2154,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3662
+          "totalDamage": 3666
         },
         {
           "died": false,
@@ -2173,7 +2170,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3621
+          "totalDamage": 3625
         },
         {
           "died": false,
@@ -2189,7 +2186,7 @@
             "doom_knight": "win"
           },
           "totalFights": 45,
-          "totalDamage": 4017
+          "totalDamage": 4012
         },
         {
           "died": false,
@@ -2205,7 +2202,7 @@
             "doom_knight": "win"
           },
           "totalFights": 36,
-          "totalDamage": 3405
+          "totalDamage": 3400
         },
         {
           "died": false,
@@ -2221,7 +2218,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3250
+          "totalDamage": 3245
         },
         {
           "died": false,
@@ -2237,7 +2234,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3409
+          "totalDamage": 3413
         },
         {
           "died": false,
@@ -2253,7 +2250,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3606
+          "totalDamage": 3601
         },
         {
           "died": false,
@@ -2269,7 +2266,7 @@
             "doom_knight": "win"
           },
           "totalFights": 36,
-          "totalDamage": 3444
+          "totalDamage": 3448
         },
         {
           "died": false,
@@ -2285,7 +2282,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3484
+          "totalDamage": 3479
         },
         {
           "died": false,
@@ -2301,7 +2298,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3550
+          "totalDamage": 3545
         },
         {
           "died": false,
@@ -2317,7 +2314,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3619
+          "totalDamage": 3623
         },
         {
           "died": false,
@@ -2333,7 +2330,7 @@
             "doom_knight": "win"
           },
           "totalFights": 39,
-          "totalDamage": 3399
+          "totalDamage": 3394
         },
         {
           "died": false,
@@ -2349,7 +2346,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3334
+          "totalDamage": 3329
         },
         {
           "died": false,
@@ -2365,7 +2362,7 @@
             "doom_knight": "win"
           },
           "totalFights": 36,
-          "totalDamage": 3294
+          "totalDamage": 3289
         },
         {
           "died": false,
@@ -2381,7 +2378,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3502
+          "totalDamage": 3497
         },
         {
           "died": false,
@@ -2397,7 +2394,7 @@
             "doom_knight": "win"
           },
           "totalFights": 40,
-          "totalDamage": 3569
+          "totalDamage": 3564
         },
         {
           "died": false,
@@ -2413,7 +2410,7 @@
             "doom_knight": "win"
           },
           "totalFights": 42,
-          "totalDamage": 3787
+          "totalDamage": 3791
         },
         {
           "died": false,
@@ -2429,7 +2426,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3314
+          "totalDamage": 3309
         },
         {
           "died": false,
@@ -2445,7 +2442,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3370
+          "totalDamage": 3365
         },
         {
           "died": false,
@@ -2461,7 +2458,7 @@
             "doom_knight": "win"
           },
           "totalFights": 34,
-          "totalDamage": 3043
+          "totalDamage": 3038
         },
         {
           "died": false,
@@ -2477,7 +2474,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3377
+          "totalDamage": 3372
         },
         {
           "died": false,
@@ -2493,7 +2490,7 @@
             "doom_knight": "win"
           },
           "totalFights": 37,
-          "totalDamage": 3338
+          "totalDamage": 3333
         },
         {
           "died": false,
@@ -2509,7 +2506,7 @@
             "doom_knight": "win"
           },
           "totalFights": 48,
-          "totalDamage": 4432
+          "totalDamage": 4436
         },
         {
           "died": false,
@@ -2525,7 +2522,7 @@
             "doom_knight": "win"
           },
           "totalFights": 43,
-          "totalDamage": 3905
+          "totalDamage": 3909
         },
         {
           "died": false,
@@ -2541,7 +2538,7 @@
             "doom_knight": "win"
           },
           "totalFights": 35,
-          "totalDamage": 3223
+          "totalDamage": 3218
         },
         {
           "died": false,
@@ -2557,7 +2554,7 @@
             "doom_knight": "win"
           },
           "totalFights": 41,
-          "totalDamage": 3785
+          "totalDamage": 3780
         },
         {
           "died": false,
@@ -2573,7 +2570,7 @@
             "doom_knight": "win"
           },
           "totalFights": 40,
-          "totalDamage": 3607
+          "totalDamage": 3602
         },
         {
           "died": false,
@@ -2589,7 +2586,7 @@
             "doom_knight": "win"
           },
           "totalFights": 38,
-          "totalDamage": 3722
+          "totalDamage": 3726
         },
         {
           "died": false,
@@ -2605,7 +2602,7 @@
             "doom_knight": "win"
           },
           "totalFights": 43,
-          "totalDamage": 3819
+          "totalDamage": 3814
         },
         {
           "died": false,
@@ -2621,7 +2618,7 @@
             "doom_knight": "win"
           },
           "totalFights": 33,
-          "totalDamage": 2998
+          "totalDamage": 2993
         },
         {
           "died": false,
@@ -2637,7 +2634,7 @@
             "doom_knight": "win"
           },
           "totalFights": 30,
-          "totalDamage": 2692
+          "totalDamage": 2687
         },
         {
           "died": false,
@@ -2653,7 +2650,7 @@
             "doom_knight": "win"
           },
           "totalFights": 41,
-          "totalDamage": 3795
+          "totalDamage": 3799
         }
       ]
     },
@@ -2709,11 +2706,11 @@
           "totalDamage": 5069
         },
         {
-          "died": true,
-          "deathLoop": 11,
-          "deathEnemy": "mutated_salamander",
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
           "deathWasBoss": false,
-          "loopsCleared": 10,
+          "loopsCleared": 12,
           "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.7
@@ -2721,8 +2718,8 @@
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 45,
-          "totalDamage": 5103
+          "totalFights": 51,
+          "totalDamage": 5921
         },
         {
           "died": false,
@@ -2741,11 +2738,11 @@
           "totalDamage": 5684
         },
         {
-          "died": true,
-          "deathLoop": 11,
-          "deathEnemy": "mutated_salamander",
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
           "deathWasBoss": false,
-          "loopsCleared": 10,
+          "loopsCleared": 12,
           "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.329
@@ -2753,8 +2750,8 @@
           "bossResult": {
             "doom_knight": "win"
           },
-          "totalFights": 39,
-          "totalDamage": 4861
+          "totalFights": 48,
+          "totalDamage": 5926
         },
         {
           "died": false,
@@ -2773,20 +2770,20 @@
           "totalDamage": 6774
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.043
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 46,
-          "totalDamage": 5404
+          "totalFights": 54,
+          "totalDamage": 6126
         },
         {
           "died": false,
@@ -2837,20 +2834,20 @@
           "totalDamage": 5605
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.114
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 41,
-          "totalDamage": 4608
+          "totalFights": 55,
+          "totalDamage": 6038
         },
         {
           "died": false,
@@ -2869,20 +2866,20 @@
           "totalDamage": 6365
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.071
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 41,
-          "totalDamage": 4765
+          "totalFights": 53,
+          "totalDamage": 6347
         },
         {
           "died": false,
@@ -3009,20 +3006,20 @@
           "totalDamage": 4889
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 0.943
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 43,
-          "totalDamage": 4540
+          "totalFights": 48,
+          "totalDamage": 5156
         },
         {
           "died": false,
@@ -3169,20 +3166,20 @@
           "totalDamage": 5831
         },
         {
-          "died": true,
-          "deathLoop": 10,
-          "deathEnemy": "doom_knight",
-          "deathWasBoss": true,
-          "loopsCleared": 9,
-          "bossesKilled": 0,
+          "died": false,
+          "deathLoop": null,
+          "deathEnemy": null,
+          "deathWasBoss": false,
+          "loopsCleared": 12,
+          "bossesKilled": 1,
           "hpEnteringBoss": {
             "doom_knight": 1.057
           },
           "bossResult": {
-            "doom_knight": "loss"
+            "doom_knight": "win"
           },
-          "totalFights": 35,
-          "totalDamage": 4014
+          "totalFights": 45,
+          "totalDamage": 5124
         },
         {
           "died": true,
