@@ -677,8 +677,12 @@ export class GameScene extends Scene {
         break;
       }
       case 'boss-defeated': {
+        // Feira de Jogos: antes da tela de continue/exit, mostra a tela de
+        // login (FeiraAuthScene) que credita 300 tijolinhos ao jogador. Ela
+        // segue para a BossExitScene ao terminar. GameScene fica pausado o
+        // tempo todo (a BossExitScene o retoma se o jogador escolher "Continue").
         this.scene.pause();
-        this.scene.launch(SCENE_KEYS.BOSS_EXIT, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+        this.scene.launch(SCENE_KEYS.FEIRA_AUTH, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
         break;
       }
       case 'loop-started': {

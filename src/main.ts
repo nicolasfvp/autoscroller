@@ -17,6 +17,7 @@ import { DeathScene } from './scenes/DeathScene'
 import { GameScene } from './scenes/GameScene'
 import { PlanningOverlay } from './scenes/PlanningOverlay'
 import { BossExitScene } from './scenes/BossExitScene'
+import { FeiraAuthScene } from './scenes/FeiraAuthScene'
 import { CityHubScene } from './scenes/CityHubScene'
 import { BuildingPanelScene } from './scenes/BuildingPanelScene'
 import { TavernPanelScene } from './scenes/TavernPanelScene'
@@ -110,6 +111,7 @@ const config: Phaser.Types.Core.GameConfig = {
         DeathScene,
         PlanningOverlay,
         BossExitScene,
+        FeiraAuthScene,
         CityHubScene,
         BuildingPanelScene,
         TavernPanelScene,
