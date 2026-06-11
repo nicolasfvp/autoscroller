@@ -18,17 +18,6 @@
 //     describes per-consumed-stack payoffs in plain prose.
 
 import type { CardDefinition, CardEffect, CardEffectCondition, StackId, StatId } from '../../data/types';
-import type { Locale } from '../../i18n/i18n';
-
-// ── Locale-aware literal helper ───────────────────────────────────────────
-// Set from formatCardDescription(options?.locale) at the start of every format
-// pass and reset to 'en' in its finally block. When 'en', loc() returns the
-// English argument verbatim, so English output is byte-for-byte unchanged by
-// construction. For 'pt-br' it returns the Portuguese argument.
-let ACTIVE_LOCALE: Locale = 'en';
-function loc(en: string, pt: string): string {
-  return ACTIVE_LOCALE === 'pt-br' ? pt : en;
-}
 
 // -- Icon tokens --------------------------------------------------------
 
@@ -134,8 +123,8 @@ function statScaleInline(fx: CardEffect, base: number): string {
 // -- Targeting helpers --------------------------------------------------
 
 function aoeSuffix(fx: CardEffect): string {
-  if (fx.target === 'aoe') return loc(' to all enemies', ' a todos os inimigos');
-  if (fx.target === 'enemy_nearest') return loc(' to the nearest enemy', ' ao inimigo mais próximo');
+  if (fx.target === 'aoe') return ' to all enemies';
+  if (fx.target === 'enemy_nearest') return ' to the nearest enemy';
   return '';
 }
 
@@ -155,38 +144,38 @@ function condFromEffect(fx: CardEffect): CondGate | null {
   if (!c) return null;
   // Vengeance — kept keyword.
   if (c.took_damage_within_ms !== undefined) {
-    return { prefix: loc('Vengeance', 'Vingança'), key: 'vengeance', relative: true };
+    return { prefix: 'Vengeance', key: 'vengeance', relative: true };
   }
   // Berserk-style low-HP gate.
   if (c.hero_hp_pct_below !== undefined) {
     return {
-      prefix: loc(`If you have less than ${c.hero_hp_pct_below}%[HP]`, `Se você tiver menos de ${c.hero_hp_pct_below}%[HP]`),
+      prefix: `If HP below ${c.hero_hp_pct_below}%`,
       key: `hp_below:${c.hero_hp_pct_below}`,
       relative: true,
     };
   }
   if (c.hero_hp_pct_atleast !== undefined) {
     return {
-      prefix: loc(`If you have more than ${c.hero_hp_pct_atleast}%[HP]`, `Se você tiver mais de ${c.hero_hp_pct_atleast}%[HP]`),
+      prefix: `If HP above ${c.hero_hp_pct_atleast}%`,
       key: `hp_atleast:${c.hero_hp_pct_atleast}`,
       relative: true,
     };
   }
   if (c.self_armor_atleast !== undefined) {
     return {
-      prefix: loc(`If [armor] is at least ${c.self_armor_atleast}`, `Se [armor] for ao menos ${c.self_armor_atleast}`),
+      prefix: `If you have ${c.self_armor_atleast}+ [armor]`,
       key: `armor:${c.self_armor_atleast}`,
       relative: true,
     };
   }
   if (c.enemy_stunned === true) {
-    return { prefix: loc('If enemy is [stun]', 'Se o inimigo estiver [stun]'), key: 'enemy_stunned', relative: true };
+    return { prefix: 'If enemy is stunned', key: 'enemy_stunned', relative: true };
   }
   if (c.enemy_stack_atleast) {
     const v = c.enemy_stack_atleast.value;
     const s = c.enemy_stack_atleast.stack;
     return {
-      prefix: loc(`If enemy has ${v} or more ${stackTok(s)}`, `Se o inimigo tiver ${v} ou mais ${stackTok(s)}`),
+      prefix: `If enemy has ${v}+ ${stackTok(s)}`,
       key: `enemy_stack_at:${s}:${v}`,
       relative: true,
     };
@@ -195,7 +184,7 @@ function condFromEffect(fx: CardEffect): CondGate | null {
     const v = c.self_stack_atleast.value;
     const s = c.self_stack_atleast.stack;
     return {
-      prefix: loc(`If you have ${v} or more ${stackTok(s)}`, `Se você tiver ${v} ou mais ${stackTok(s)}`),
+      prefix: `If you have ${v}+ ${stackTok(s)}`,
       key: `self_stack_at:${s}:${v}`,
       relative: true,
     };
@@ -204,7 +193,7 @@ function condFromEffect(fx: CardEffect): CondGate | null {
   if (c.per_stack) return null;
   if (c.enemy_has_stack) {
     return {
-      prefix: loc(`If enemy has ${stackTok(c.enemy_has_stack)}`, `Se o inimigo tiver ${stackTok(c.enemy_has_stack)}`),
+      prefix: `If enemy has ${stackTok(c.enemy_has_stack)}`,
       key: `enemy_has:${c.enemy_has_stack}`,
       // Without scale/pierce, a flat damage bonus reads as "+N damage"; the
       // damage formatter checks `relative` to decide between "+N" and "more".
@@ -213,14 +202,14 @@ function condFromEffect(fx: CardEffect): CondGate | null {
   }
   if (c.self_has_stack) {
     return {
-      prefix: loc(`If you have ${stackTok(c.self_has_stack)}`, `Se você tiver ${stackTok(c.self_has_stack)}`),
+      prefix: `If you have ${stackTok(c.self_has_stack)}`,
       key: `self_has:${c.self_has_stack}`,
       relative: false,
     };
   }
   if (c.devour_succeeded === true) {
     return {
-      prefix: loc('Permanently remove 1 common card from your deck this combat', 'Remova permanentemente 1 carta comum do seu baralho neste combate'),
+      prefix: 'Permanently remove 1 common card from your deck this combat',
       key: 'devour',
       relative: false,
     };
@@ -283,11 +272,11 @@ function multiHitTimes(fx: CardEffect): number {
 
 function timesWord(n: number, scaler: string): string {
   if (n <= 1) return '';
-  if (n === 2) return `${loc(' twice', ' duas vezes')}${scaler ? '' : ''}`;
-  if (n === 3) return loc(' three times', ' três vezes');
-  if (n === 4) return loc(' four times', ' quatro vezes');
-  if (n === 5) return loc(' five times', ' cinco vezes');
-  return loc(` ${n} times`, ` ${n} vezes`);
+  if (n === 2) return ` twice${scaler ? '' : ''}`;
+  if (n === 3) return ' three times';
+  if (n === 4) return ' four times';
+  if (n === 5) return ' five times';
+  return ` ${n} times`;
 }
 
 // Damage rendering (no leading condition prefix).
@@ -303,15 +292,15 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
   // skips your own armor — spelled out in prose ("(Pierce)" is the enemy-facing
   // word and reads as nonsense applied to your own HP loss).
   if (fx.target === 'self') {
-    const pcs = pierce ? loc(', ignoring your [armor]', ', ignorando sua [armor]') : '';
-    return `${loc('Lose', 'Perca')} ${v}[HP]${scaler}${pcs}`;
+    const pcs = pierce ? ', ignoring your [armor]' : '';
+    return `Lose ${v}[HP]${scaler}${pcs}`;
   }
 
   // Per-stack scaling — "Deal N([scale]) [Pierce] per [stack] on enemy".
   const c = fx.condition ?? {};
   if (c.per_stack && (c.enemy_has_stack || c.self_has_stack)) {
     const stk = c.enemy_has_stack ?? c.self_has_stack!;
-    const side = c.enemy_has_stack ? loc('on enemy', 'no inimigo') : loc('on yourself', 'em você');
+    const side = c.enemy_has_stack ? 'on enemy' : 'on yourself';
     // value=0 with scale.value=N means the scale.value is the per-stack
     // damage; promote it into the leading number.
     const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
@@ -324,30 +313,13 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     // enemy's burn to scale, then the engine consumes ALL of it (CardResolver
     // Pyre semantic). Read it consume-first, in the order it happens.
     if (c.enemy_has_stack === 'burn' && c.per_stack) {
-      // "Consume all [burn] and deal N damage/Pierce per [burn] consumed".
-      // pt-br: "com Perfuração" reads as a suffix after the value, so build the
-      // whole "deal N <word> per [burn] consumed" tail per-locale.
-      if (pierce) {
-        return loc(
-          `Consume all [burn] and deal ${lead}${statS} Pierce per [burn] consumed${aoe}`,
-          `Consuma todo [burn] e cause ${lead}${statS} com Perfuração por [burn] consumido${aoe}`,
-        );
-      }
-      return loc(
-        `Consume all [burn] and deal ${lead}${statS} damage per [burn] consumed${aoe}`,
-        `Consuma todo [burn] e cause ${lead}${statS} de dano por [burn] consumido${aoe}`,
-      );
+      const dmgWord = pierce ? 'Pierce' : 'damage';
+      return `Consume all [burn] and deal ${lead}${statS} ${dmgWord} per [burn] consumed${aoe}`;
     }
     if (pierce) {
-      return loc(
-        `Deal ${lead}${statS} Pierce per ${stackTok(stk)} ${side}${aoe}`,
-        `Cause ${lead}${statS} com Perfuração por ${stackTok(stk)} ${side}${aoe}`,
-      );
+      return `Deal ${lead}${statS} Pierce per ${stackTok(stk)} ${side}${aoe}`;
     }
-    return loc(
-      `Deal ${lead}${statS} damage per ${stackTok(stk)} ${side}${aoe}`,
-      `Cause ${lead}${statS} de dano por ${stackTok(stk)} ${side}${aoe}`,
-    );
+    return `Deal ${lead}${statS} damage per ${stackTok(stk)} ${side}${aoe}`;
   }
 
   // consume_stack_value: damage scales by stacks consumed within this cast.
@@ -355,7 +327,7 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
   // the scale.value into the leading number ("Deal 2([str]) Pierce per ...").
   if (fx.consume_stack_value) {
     const stk = fx.consume_stack_value;
-    const target = fx.target === 'aoe' ? loc(' to all enemies', ' a todos os inimigos') : '';
+    const target = fx.target === 'aoe' ? ' to all enemies' : '';
     const lead = v === 0 ? (fx.scale?.value ?? 1) : v;
     // Sentinel base must be the TRUE base (fx.value) so resolved == CardResolver's
     // value + floor(stat/per)*scale.value. For value:0 detonators the printed
@@ -363,19 +335,14 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     // `lead` here would double-count the increment.
     const statS = statScaleInline(fx, fx.value);
     const phrase = consumeValuePhrase(stk);
-    const tail = pierce
-      ? loc(` Pierce per ${stackTok(stk)} ${phrase}`, ` com Perfuração por ${stackTok(stk)} ${phrase}`)
-      : loc(` per ${stackTok(stk)} ${phrase}`, ` por ${stackTok(stk)} ${phrase}`);
+    const tail = pierce ? ` Pierce per ${stackTok(stk)} ${phrase}` : ` per ${stackTok(stk)} ${phrase}`;
     // Fold the consume into the detonator clause when the card spends this stack
     // and lands a separate flat hit — reads consume-first, in the order it happens.
     const foldAmt = detonatorFold.get(stk);
     if (foldAmt !== undefined) {
-      return loc(
-        `Consume ${localizeAmount(foldAmt)} ${stackTok(stk)} and deal ${lead}${statS}${tail}${target}`,
-        `Consuma ${localizeAmount(foldAmt)} ${stackTok(stk)} e cause ${lead}${statS}${tail}${target}`,
-      );
+      return `Consume ${foldAmt} ${stackTok(stk)} and deal ${lead}${statS}${tail}${target}`;
     }
-    return loc(`Deal ${lead}${statS}${tail}${target}`, `Cause ${lead}${statS}${tail}${target}`);
+    return `Deal ${lead}${statS}${tail}${target}`;
   }
 
   // Armor-source damage: "Deal N Pierce per K[armor] you have/consumed".
@@ -386,43 +353,39 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     const per = fx.scale.per ?? 1;
     const inc = fx.scale.value ?? 1;
     const statS = '';
-    const armorRef = spendingArmor ? loc('consumed', 'consumido') : loc('you have', 'que você tem');
+    const armorRef = spendingArmor ? 'consumed' : 'you have';
     // "per [armor]" reads cleaner than "per 1[armor]" — drop the "1" whenever the
     // rate is one bonus per point (a multi-point rate like "per 2[armor]" keeps it).
-    const perWord = loc('per', 'por');
     const perArmor = (per === 1)
-      ? `${perWord} [armor] ${armorRef}`
-      : `${perWord} ${per}[armor] ${armorRef}`;
+      ? `[armor] ${armorRef}`
+      : `${per}[armor] ${armorRef}`;
     if (v === 0) {
       // Batch C: the literal armor hit (Shield Bash) lands a number equal to
       // current armor whether or not it pierces, so keep the clean "equal to
       // your [armor]" wording even though it now carries pierce_armor.
       if (per === 1 && inc === 1 && !spendingArmor) {
-        return loc(`Deal damage equal to your [armor]`, `Cause dano igual à sua [armor]`);
+        return `Deal damage equal to your [armor]`;
       }
       // "Deal 2 Pierce per [armor] consumed" etc.
       if (pierce) {
-        return loc(`Deal ${inc}${statS} Pierce ${perArmor}${aoe}`, `Cause ${inc}${statS} com Perfuração ${perArmor}${aoe}`);
+        return `Deal ${inc}${statS} Pierce per ${perArmor}${aoe}`;
       }
-      return loc(`Deal ${inc}${statS} damage ${perArmor}${aoe}`, `Cause ${inc}${statS} de dano ${perArmor}${aoe}`);
+      return `Deal ${inc}${statS} damage per ${perArmor}${aoe}`;
     }
-    const w = pierce ? loc(' Pierce', ' com Perfuração') : '';
+    const w = pierce ? ' Pierce' : '';
     const t = timesWord(multiHitTimes(fx), '');
-    return loc(
-      `Deal ${v}${w}${t}, +${inc}${statS} damage ${perArmor}${aoe}`,
-      `Cause ${v}${w}${t}, +${inc}${statS} de dano ${perArmor}${aoe}`,
-    );
+    return `Deal ${v}${w}${t}, +${inc}${statS} damage per ${perArmor}${aoe}`;
   }
 
   // Relative phrasing inside a gate — "deal N([str]) more [Pierce]".
   if (relative) {
-    const pcs = pierce ? loc(' Pierce', ' com Perfuração') : '';
+    const pcs = pierce ? ' Pierce' : '';
     // per_hit bonus inside a gate: "each hit deals N([str]) more [Pierce]".
-    if (fx.per_hit) return loc(`each hit deals ${v}${scaler} more${pcs}${aoe}`, `cada acerto causa ${v}${scaler} a mais${pcs}${aoe}`);
+    if (fx.per_hit) return `each hit deals ${v}${scaler} more${pcs}${aoe}`;
     const times = multiHitTimes(fx);
     const t = timesWord(times, scaler);
-    if (times >= 2) return loc(`deal ${v}${scaler}${pcs}${t} more${aoe}`, `cause ${v}${scaler}${pcs}${t} a mais${aoe}`);
-    return loc(`deal ${v}${scaler} more${pcs}${aoe}`, `cause ${v}${scaler} a mais${pcs}${aoe}`);
+    if (times >= 2) return `deal ${v}${scaler}${pcs}${t} more${aoe}`;
+    return `deal ${v}${scaler} more${pcs}${aoe}`;
   }
 
   // Gated damage that is not a relative bonus.
@@ -430,31 +393,31 @@ function damageBody(fx: CardEffect, gate: CondGate | null): string {
     // A per_hit bonus replays on each hit of a preceding multi-hit attack — surface
     // that ("each hit also deals N") instead of reading as one standalone hit.
     if (fx.per_hit) {
-      const pcs = pierce ? loc(' Pierce', ' com Perfuração') : '';
-      return loc(`each hit also deals ${v}${scaler}${pcs}${aoe}`, `cada acerto também causa ${v}${scaler}${pcs}${aoe}`);
+      const pcs = pierce ? ' Pierce' : '';
+      return `each hit also deals ${v}${scaler}${pcs}${aoe}`;
     }
     // No unconditional hit to add onto → the gated hit IS the attack; read it
     // absolute ("Deal N"), never "+N"/"more" implying a phantom base. Capital
     // to match standalone gate/aura bodies (joinBodies lowercases it if it ends
     // up as a non-leading clause).
     if (!baseEffectKeys.has(pierce ? 'damage:pierce' : 'damage')) {
-      const pcs = pierce ? loc(' Pierce', ' com Perfuração') : '';
+      const pcs = pierce ? ' Pierce' : '';
       const t = timesWord(multiHitTimes(fx), scaler);
-      return loc(`Deal ${v}${scaler}${pcs}${t}${aoe}`, `Cause ${v}${scaler}${pcs}${t}${aoe}`);
+      return `Deal ${v}${scaler}${pcs}${t}${aoe}`;
     }
     // Bonus added on top of an existing unconditional hit.
-    if (!fx.scale && !pierce) return loc(`+${v} damage`, `+${v} de dano`);
-    if (!fx.scale && pierce) return loc(`+${v} Pierce`, `+${v} de Perfuração`);
-    return loc(`deal ${v}${scaler}${pierce ? ' Pierce' : ''}${aoe}`, `cause ${v}${scaler}${pierce ? ' com Perfuração' : ''}${aoe}`);
+    if (!fx.scale && !pierce) return `+${v} damage`;
+    if (!fx.scale && pierce) return `+${v} Pierce`;
+    return `deal ${v}${scaler}${pierce ? ' Pierce' : ''}${aoe}`;
   }
 
   // Unconditional damage — "Deal N([str]) [Pierce] [twice/three times] [to all enemies]".
   const times = multiHitTimes(fx);
   const t = timesWord(times, scaler);
   if (pierce) {
-    return loc(`Deal ${v}${scaler} Pierce${t}${aoe}`, `Cause ${v}${scaler} com Perfuração${t}${aoe}`);
+    return `Deal ${v}${scaler} Pierce${t}${aoe}`;
   }
-  return loc(`Deal ${v}${scaler}${t}${aoe}`, `Cause ${v}${scaler}${t}${aoe}`);
+  return `Deal ${v}${scaler}${t}${aoe}`;
   void word;
 }
 
@@ -469,33 +432,30 @@ function dotBody(fx: CardEffect, gate: CondGate | null): string {
   const perHit = !!fx.per_hit;
 
   if (fx.target === 'self_dot') {
-    if (relative) return loc(`apply ${v}${stk}${scaler} more to yourself`, `aplique ${v}${stk}${scaler} a mais em você`);
-    return loc(`Apply ${v}${stk}${scaler} to yourself`, `Aplique ${v}${stk}${scaler} em você`);
+    if (relative) return `apply ${v} more ${stk}${scaler} to yourself`;
+    return `Apply ${v} ${stk}${scaler} to yourself`;
   }
 
   if (perHit) {
-    if (relative) return loc(`each hit applies ${v} more ${stk}${scaler}`, `cada acerto aplica ${v} a mais ${stk}${scaler}`);
-    return loc(`each hit applies ${v}${stk}${scaler}`, `cada acerto aplica ${v}${stk}${scaler}`);
+    if (relative) return `each hit applies ${v} more ${stk}${scaler}`;
+    return `each hit applies ${v} ${stk}${scaler}`;
   }
 
   // Per-stack: "apply 1[bleed] per [burn] consumed/on enemy".
   const c = fx.condition ?? {};
   if (c.per_stack && (c.enemy_has_stack || c.self_has_stack)) {
     const src = c.enemy_has_stack ?? c.self_has_stack!;
-    const side = c.enemy_has_stack ? loc('on enemy', 'no inimigo') : loc('on yourself', 'em você');
-    return loc(`Apply ${v}${stk}${scaler} per ${stackTok(src)} ${side}`, `Aplique ${v}${stk}${scaler} por ${stackTok(src)} ${side}`);
+    const side = c.enemy_has_stack ? 'on enemy' : 'on yourself';
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(src)} ${side}`;
   }
   if (fx.consume_stack_value) {
-    return loc(
-      `Apply ${v}${stk}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`,
-      `Aplique ${v}${stk}${scaler} por ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`,
-    );
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`;
   }
 
   // Relative bonus ("apply N more") drops any AoE suffix — the base clause it adds
   // onto already established the "to all enemies" scope.
-  if (relative) return loc(`apply ${v} more ${stk}${scaler}`, `aplique ${v} a mais ${stk}${scaler}`);
-  return loc(`Apply ${v}${stk}${scaler}${aoe}`, `Aplique ${v}${stk}${scaler}${aoe}`);
+  if (relative) return `apply ${v} more ${stk}${scaler}`;
+  return `Apply ${v} ${stk}${scaler}${aoe}`;
 }
 
 // Heal rendering — "Heal N([spi])".
@@ -504,13 +464,10 @@ function healBody(fx: CardEffect, gate: CondGate | null): string {
   const scaler = scalerSuffix(fx);
   const relative = useRelativePhrasing(fx, gate);
   if (fx.consume_stack_value) {
-    return loc(
-      `Heal ${v}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`,
-      `Cure ${v}${scaler} por ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`,
-    );
+    return `Heal ${v}${scaler} per ${stackTok(fx.consume_stack_value)} ${consumeValuePhrase(fx.consume_stack_value)}`;
   }
-  if (relative) return loc(`heal ${v}${scaler} more`, `cure ${v}${scaler} a mais`);
-  return loc(`Heal ${v}${scaler}`, `Cure ${v}${scaler}`);
+  if (relative) return `heal ${v}${scaler} more`;
+  return `Heal ${v}${scaler}`;
 }
 
 // Armor rendering — "Gain N[armor]([vit])".
@@ -518,8 +475,8 @@ function armorBody(fx: CardEffect, gate: CondGate | null): string {
   const v = fx.value;
   const scaler = scalerSuffix(fx);
   const relative = useRelativePhrasing(fx, gate);
-  if (relative) return loc(`gain ${v} more [armor]${scaler}`, `ganhe ${v} a mais [armor]${scaler}`);
-  return loc(`Gain ${v}[armor]${scaler}`, `Ganhe ${v}[armor]${scaler}`);
+  if (relative) return `gain ${v} more [armor]${scaler}`;
+  return `Gain ${v} [armor]${scaler}`;
 }
 
 // Stack (raw apply/grant, not a DoT) rendering.
@@ -532,46 +489,41 @@ function stackBody(fx: CardEffect, gate: CondGate | null): string {
   // Spread: "for each 2[poison] applied, apply 1[poison] to up to N other enemies".
   if (fx.spread) {
     const pct = Math.round(fx.spread.ratio * 100);
-    const max = fx.spread.max_targets
-      ? loc(` to up to ${fx.spread.max_targets} other enemies`, ` para até ${fx.spread.max_targets} outros inimigos`)
-      : '';
-    return loc(`${pct}% of enemy's ${stk} spreads${max}`, `${pct}% do ${stk} do inimigo se espalha${max}`);
+    const max = fx.spread.max_targets ? ` to up to ${fx.spread.max_targets} other enemies` : '';
+    return `${pct}% of enemy's ${stk} spreads${max}`;
   }
 
   // Ungated consumes are stated by the leading "Consume N [stack]" clause
   // (skipped upstream by isPureConsumeStack). A GATED consume reaches here so
   // it folds into its condition sentence ("...and consume N [rage]").
-  if (fx.consume_stack) return loc(`consume ${consumeAmountFx(fx)} ${stk}`, `consuma ${localizeAmount(consumeAmountFx(fx))} ${stk}`);
+  if (fx.consume_stack) return `consume ${consumeAmountFx(fx)} ${stk}`;
 
   // Cross-stack source ("value 0 + scale.source: self_stack").
   if (v === 0 && fx.scale?.source === 'self_stack' && fx.scale.stack) {
-    return loc(
-      `Apply 1${stk}${scaler} per ${stackTok(fx.scale.stack)} on yourself`,
-      `Aplique 1${stk}${scaler} por ${stackTok(fx.scale.stack)} em você`,
-    );
+    return `Apply 1 ${stk}${scaler} per ${stackTok(fx.scale.stack)} on yourself`;
   }
 
   // Rage gain (target self) — special §11.H Wrathshell Vow places scaler
-  // BEFORE the icon: "Gain 6([str])[rage]". The visual "rage is something
+  // BEFORE the icon: "Gain 6([str]) [rage]". The visual "rage is something
   // you carry" reads better this way.
   if (fx.target === 'self' && fx.stack === 'rage') {
-    if (relative) return loc(`gain ${v}${scaler} more ${stk}`, `ganhe ${v}${scaler} a mais ${stk}`);
-    if (v >= 0) return loc(`Gain ${v}${scaler}${stk}`, `Ganhe ${v}${scaler}${stk}`);
-    return loc(`Lose ${Math.abs(v)}${scaler}${stk}`, `Perca ${Math.abs(v)}${scaler}${stk}`);
+    if (relative) return `gain ${v}${scaler} more ${stk}`;
+    if (v >= 0) return `Gain ${v}${scaler} ${stk}`;
+    return `Lose ${Math.abs(v)}${scaler} ${stk}`;
   }
 
-  // Per-stack: "Apply N[stack] for each [src] on enemy/yourself".
+  // Per-stack: "Apply N [stack] for each [src] on enemy/yourself".
   const cps = fx.condition ?? {};
   if (cps.per_stack && (cps.enemy_has_stack || cps.self_has_stack)) {
     const src = cps.enemy_has_stack ?? cps.self_has_stack!;
-    const side = cps.enemy_has_stack ? loc('on enemy', 'no inimigo') : loc('on yourself', 'em você');
-    return loc(`Apply ${v}${stk}${scaler} per ${stackTok(src)} ${side}`, `Aplique ${v}${stk}${scaler} por ${stackTok(src)} ${side}`);
+    const side = cps.enemy_has_stack ? 'on enemy' : 'on yourself';
+    return `Apply ${v} ${stk}${scaler} per ${stackTok(src)} ${side}`;
   }
 
   const aoe = aoeSuffix(fx);
   // Generic stack application. Scaler glues AFTER the icon.
-  if (relative) return loc(`apply ${v} more ${stk}${scaler}${aoe}`, `aplique ${v} a mais ${stk}${scaler}${aoe}`);
-  return loc(`Apply ${v}${stk}${scaler}${aoe}`, `Aplique ${v}${stk}${scaler}${aoe}`);
+  if (relative) return `apply ${v} more ${stk}${scaler}${aoe}`;
+  return `Apply ${v} ${stk}${scaler}${aoe}`;
 }
 
 // Stamina/mana rendering.
@@ -579,8 +531,8 @@ function resourceBody(fx: CardEffect): string {
   const tok = fx.type === 'stamina' ? '[stam]' : '[mana]';
   if (fx.value === 0) return '';
   const scaler = scalerSuffix(fx);
-  if (fx.value < 0) return loc(`Lose ${Math.abs(fx.value)}${tok}${scaler}`, `Perca ${Math.abs(fx.value)}${tok}${scaler}`);
-  return loc(`Gain ${fx.value}${tok}${scaler}`, `Ganhe ${fx.value}${tok}${scaler}`);
+  if (fx.value < 0) return `Lose ${Math.abs(fx.value)} ${tok}${scaler}`;
+  return `Gain ${fx.value} ${tok}${scaler}`;
 }
 
 // Cross-stack converter rendering. The consumed cost is stated explicitly:
@@ -601,14 +553,11 @@ function convertBody(fx: CardEffect, gate: CondGate | null): string {
   // pure consume with no payoff. Describe it honestly rather than promising a
   // stack that never lands.
   if (fx.target === 'self' && !['rage', 'burn', 'bleed', 'armor'].includes(toStr)) {
-    return loc(
-      `Consume ${amount} ${from} (no ${to} is produced)`,
-      `Consuma ${localizeAmount(amount)} ${from} (nenhum ${to} é produzido)`,
-    );
+    return `Consume ${amount} ${from} (no ${to} is produced)`;
   }
 
   const factor = fx.factor && fx.factor !== 1 ? fx.factor : 1;
-  const cap = fx.cap !== undefined ? loc(` (max ${fx.cap})`, ` (máx. ${fx.cap})`) : '';
+  const cap = fx.cap !== undefined ? ` (max ${fx.cap})` : '';
   // The convert scaler scales the per-consumed FACTOR, so the sentinel must be
   // keyed to the displayed lead number — NOT fx.value (which is the "spend N"
   // amount; 99 == spend-all). Use statScaleInline with that lead.
@@ -619,32 +568,20 @@ function convertBody(fx: CardEffect, gate: CondGate | null): string {
   if (amount === 'all') {
     // Spend-all variant: "Apply N[to] per [from] consumed" (factor scales).
     // Brine fold states the consume inline ("Consume all [from] and apply ...").
-    if (isArmor) {
-      out = loc(
-        `Gain 1${to}${statScaleInline(fx, 1)} per ${from} consumed${cap}`,
-        `Ganhe 1${to}${statScaleInline(fx, 1)} por ${from} consumido${cap}`,
-      );
-    } else if (brineFold) {
-      out = loc(
-        `Consume all ${from} and apply ${factor}${to}${statScaleInline(fx, factor)} per ${from} consumed${cap}`,
-        `Consuma todo ${from} e aplique ${factor}${to}${statScaleInline(fx, factor)} por ${from} consumido${cap}`,
-      );
-    } else {
-      out = loc(
-        `Apply ${factor}${to}${statScaleInline(fx, factor)} per ${from} consumed${cap}`,
-        `Aplique ${factor}${to}${statScaleInline(fx, factor)} por ${from} consumido${cap}`,
-      );
-    }
+    const lead = brineFold && !isArmor ? `Consume all ${from} and apply` : (isArmor ? 'Gain' : 'Apply');
+    out = isArmor
+      ? `Gain 1${to}${statScaleInline(fx, 1)} per ${from} consumed${cap}`
+      : `${lead} ${factor}${to}${statScaleInline(fx, factor)} per ${from} consumed${cap}`;
   } else {
     // Fixed-amount variant — the leading/gate "Consume N [from]" states the cost.
     const N = Number(amount);
     out = isArmor
-      ? loc(`Gain ${N}${to}${statScaleInline(fx, N)}${cap}`, `Ganhe ${N}${to}${statScaleInline(fx, N)}${cap}`)
-      : loc(`Apply ${N * factor}${to}${statScaleInline(fx, N * factor)}`, `Aplique ${N * factor}${to}${statScaleInline(fx, N * factor)}`);
+      ? `Gain ${N}${to}${statScaleInline(fx, N)}${cap}`
+      : `Apply ${N * factor}${to}${statScaleInline(fx, N * factor)}`;
   }
 
   // Gated converts fold the consume cost into the condition sentence.
-  if (gate) return loc(`Consume ${amount} ${from} and ${lcFirst(out)}`, `Consuma ${localizeAmount(amount)} ${from} e ${lcFirst(out)}`);
+  if (gate) return `Consume ${amount} ${from} and ${lcFirst(out)}`;
   return out;
 }
 
@@ -652,9 +589,9 @@ function convertBody(fx: CardEffect, gate: CondGate | null): string {
 function multiplyBody(fx: CardEffect): string {
   const stk = stackTok(fx.stack);
   const factor = fx.factor ?? 2;
-  const onWho = fx.target === 'self' ? loc('on yourself', 'em você') : loc('on enemy', 'no inimigo');
-  if (factor === 2) return loc(`double the ${stk} ${onWho}`, `dobre o ${stk} ${onWho}`);
-  return loc(`multiply ${stk} ${onWho} by ${factor}`, `multiplique o ${stk} ${onWho} por ${factor}`);
+  const onWho = fx.target === 'self' ? 'on yourself' : 'on enemy';
+  if (factor === 2) return `double the ${stk} ${onWho}`;
+  return `multiply ${stk} ${onWho} by ${factor}`;
 }
 
 // Stack_boost rendering. Runtime adds value×(current stacks), i.e. multiplies
@@ -662,18 +599,18 @@ function multiplyBody(fx: CardEffect): string {
 // So value:1 doubles, value:2 triples. Render that, not a misleading "Add N".
 function stackBoostBody(fx: CardEffect): string {
   const stk = stackTok(fx.stack);
-  const onWho = fx.target === 'self' ? loc('on yourself', 'em você') : loc('on enemy', 'no inimigo');
+  const onWho = fx.target === 'self' ? 'on yourself' : 'on enemy';
   const factor = (fx.value ?? 0) + 1;
-  if (factor === 2) return loc(`double the ${stk} ${onWho}`, `dobre o ${stk} ${onWho}`);
-  if (factor === 3) return loc(`triple the ${stk} ${onWho}`, `triplique o ${stk} ${onWho}`);
-  return loc(`multiply the ${stk} ${onWho} by ${factor}`, `multiplique o ${stk} ${onWho} por ${factor}`);
+  if (factor === 2) return `double the ${stk} ${onWho}`;
+  if (factor === 3) return `triple the ${stk} ${onWho}`;
+  return `multiply the ${stk} ${onWho} by ${factor}`;
 }
 
 // cd_debt / devour / debuff / buff / debuff_stat.
 function cdDebtBody(fx: CardEffect): string {
   // cd_debt pushes the extra seconds onto THIS card's next cooldown (see
   // CardResolver 'cd_debt' case), not the next card played — phrase it accurately.
-  return loc(`This card delays ${fx.value} more seconds next time`, `Esta carta atrasa ${fx.value} segundos a mais na próxima vez`);
+  return `This card delays ${fx.value} more seconds next time`;
 }
 function buffBody(fx: CardEffect): string {
   const stat = fx.scale?.stat ? statTok(fx.scale.stat) : '';
@@ -681,8 +618,8 @@ function buffBody(fx: CardEffect): string {
   return `${sign}${fx.value} ${stat}`;
 }
 function debuffStatBody(fx: CardEffect): string {
-  const stat = fx.scale?.stat ? statTok(fx.scale.stat) : loc('a stat', 'um atributo');
-  return loc(`enemy has −${fx.value} ${stat}`, `o inimigo tem −${fx.value} de ${stat}`);
+  const stat = fx.scale?.stat ? statTok(fx.scale.stat) : 'a stat';
+  return `enemy has −${fx.value} ${stat}`;
 }
 
 // Permanent per-combat stat boost — "Gain N[stat] this combat (max M per combat)".
@@ -692,14 +629,14 @@ function statGainBody(fx: CardEffect, gate: CondGate | null): string {
   // cap. When the grant already equals/exceeds the cap it fires once regardless, so
   // the parenthetical is noise — drop it.
   const cap = (fx.max_per_combat !== undefined && Math.abs(fx.value) < fx.max_per_combat)
-    ? loc(` (max ${fx.max_per_combat} per combat)`, ` (máx. ${fx.max_per_combat} por combate)`)
+    ? ` (max ${fx.max_per_combat} per combat)`
     : '';
   const lead = `${fx.value}${st}`;
-  if (useRelativePhrasing(fx, gate)) return loc(`gain ${lead} this combat${cap}`, `ganhe ${lead} neste combate${cap}`);
-  return loc(`Gain ${lead} this combat${cap}`, `Ganhe ${lead} neste combate${cap}`);
+  if (useRelativePhrasing(fx, gate)) return `gain ${lead} this combat${cap}`;
+  return `Gain ${lead} this combat${cap}`;
 }
 function debuffBody(fx: CardEffect): string {
-  return loc(`enemy has −${fx.value} Defense`, `o inimigo tem −${fx.value} de Defesa`);
+  return `enemy has −${fx.value} Defense`;
 }
 
 // -- Aura formatting ----------------------------------------------------
@@ -724,7 +661,7 @@ function effectListBody(then: CardEffect | CardEffect[] | undefined): string {
       return f.gatePrefix ? `${f.gatePrefix}: ${f.body}` : f.body;
     })
     .filter(Boolean)
-    .join(loc(' and ', ' e '));
+    .join(' and ');
 }
 
 // Prose for an event_counter aura's trigger condition. "if you apply [bleed]
@@ -736,23 +673,17 @@ function eventCounterPhrase(ec: NonNullable<CardEffect['event_counter']>): strin
   const each = !!ec.repeat || n <= 1;
   switch (ec.event) {
     case 'armor_gained':
-      return minAmt
-        ? loc(`if you gain at least ${minAmt}[armor]`, `se você ganhar ao menos ${minAmt}[armor]`)
-        : loc('if you gain [armor]', 'se você ganhar [armor]');
+      return minAmt ? `if you gain at least ${minAmt}[armor]` : 'if you gain [armor]';
     case 'card_played':
-      return loc(`if you play ${n} or more cards`, `se você jogar ${n} ou mais cartas`);
+      return `if you play ${n} or more cards`;
     case 'stack_applied':
-      return loc(`if you apply ${stackTok(stack)} ${n}+ times`, `se você aplicar ${stackTok(stack)} ${n}+ vezes`);
+      return `if you apply ${stackTok(stack)} ${n}+ times`;
     case 'stack_consumed':
-      return loc(`if you consume ${minAmt ?? n}+ ${stackTok(stack)}`, `se você consumir ${minAmt ?? n}+ ${stackTok(stack)}`);
+      return `if you consume ${minAmt ?? n}+ ${stackTok(stack)}`;
     case 'hp_lost':
-      return each
-        ? loc('each time you lose [HP]', 'cada vez que você perde [HP]')
-        : loc(`if you lose [HP] ${n}+ times`, `se você perder [HP] ${n}+ vezes`);
+      return each ? 'each time you lose [HP]' : `if you lose [HP] ${n}+ times`;
     case 'heal_received':
-      return each
-        ? loc('each time you heal', 'cada vez que você se cura')
-        : loc(`if you heal ${n}+ times`, `se você se curar ${n}+ vezes`);
+      return each ? 'each time you heal' : `if you heal ${n}+ times`;
     default:
       return '';
   }
@@ -760,34 +691,34 @@ function eventCounterPhrase(ec: NonNullable<CardEffect['event_counter']>): strin
 
 function auraTriggerPhrase(fx: CardEffect): string {
   switch (fx.trigger) {
-    case 'on_hit_dealt':       return loc('every time you hit an enemy', 'toda vez que você acerta um inimigo');
-    case 'on_hit_taken':       return loc('every time you take damage', 'toda vez que você recebe dano');
-    case 'on_self_damage':     return loc('every time you lose [HP]', 'toda vez que você perde [HP]');
-    case 'on_self_dot_tick':   return loc('every time a self DoT ticks', 'toda vez que um efeito contínuo em você atua');
-    case 'on_slow_applied':    return loc('every time you apply [slow]', 'toda vez que você aplica [slow]');
+    case 'on_hit_dealt':       return 'every time you hit an enemy';
+    case 'on_hit_taken':       return 'every time you take damage';
+    case 'on_self_damage':     return 'every time you lose [HP]';
+    case 'on_self_dot_tick':   return 'every time a self DoT ticks';
+    case 'on_slow_applied':    return 'every time you apply [slow]';
     case 'on_armor_gained': {
       const n = fx.min_amount ?? 1;
-      return loc(`every time you gain at least ${n}[armor]`, `toda vez que você ganha ao menos ${n}[armor]`);
+      return `every time you gain at least ${n}[armor]`;
     }
     case 'on_kill_with_stack': {
       const s = stackTok(fx.threshold_stack);
-      return loc(`every time you kill an enemy with ${s}`, `toda vez que você mata um inimigo com ${s}`);
+      return `every time you kill an enemy with ${s}`;
     }
     case 'on_stack_threshold': {
       const s = stackTok(fx.threshold_stack);
       const t = fx.threshold ?? 0;
-      return loc(`if you have ${t} or more ${s}`, `se você tiver ${t} ou mais ${s}`);
+      return `if you have ${t} or more ${s}`;
     }
     case 'on_enemy_stack_threshold': {
       const s = stackTok(fx.threshold_stack);
       const t = fx.threshold ?? 0;
-      return loc(`if enemy has ${t} or more ${s}`, `se o inimigo tiver ${t} ou mais ${s}`);
+      return `if enemy has ${t} or more ${s}`;
     }
     case 'on_hp_pct_below': {
       const th = fx.threshold ?? 50;
       // The aura arms once and self-removes on its first sub-threshold trigger
       // (single-shot), so phrase it as a one-time drop, not a sustained "while".
-      return loc(`the first time you drop below ${th}%[HP]`, `na primeira vez que você fica abaixo de ${th}%[HP]`);
+      return `the first time you drop below ${th}%[HP]`;
     }
     default: return '';
   }
@@ -798,54 +729,46 @@ function formatModifierAura(fx: CardEffect, dur: string, secs: number): string {
   const v = fx.modifier!.value;
   if (k === 'cd_reduction') {
     const pct = Math.round(v * 100);
-    return secs > 0
-      ? loc(`Haste ${pct}% for ${secs} seconds`, `Aceleração ${pct}% por ${secs} segundos`)
-      : loc(`Haste ${pct}%`, `Aceleração ${pct}%`);
+    return secs > 0 ? `Haste ${pct}% for ${secs} seconds` : `Haste ${pct}%`;
   }
   if (k === 'def') {
-    if (fx.target === 'enemy') return loc(`${dur}, enemy has −${Math.abs(v)} Defense`, `${dur}, o inimigo tem −${Math.abs(v)} de Defesa`);
+    if (fx.target === 'enemy') return `${dur}, enemy has −${Math.abs(v)} Defense`;
     const sign = v >= 0 ? '+' : '';
-    return loc(`${dur}, ${sign}${v} Defense`, `${dur}, ${sign}${v} de Defesa`);
+    return `${dur}, ${sign}${v} Defense`;
   }
   if (k === 'damage_taken_pct') {
     const pct = Math.round(Math.abs(v) * 100);
-    const phrase = v < 0
-      ? loc(`take ${pct}% less damage`, `recebe ${pct}% menos dano`)
-      : loc(`take ${pct}% more damage`, `recebe ${pct}% mais dano`);
+    const phrase = v < 0 ? `take ${pct}% less damage` : `take ${pct}% more damage`;
     return secs > 0 ? `${dur}, ${phrase}` : phrase;
   }
   if (k === 'damage_dealt_pct') {
     const pct = Math.round(Math.abs(v) * 100);
-    const phrase = v >= 0
-      ? loc(`deal ${pct}% more damage`, `causa ${pct}% mais dano`)
-      : loc(`deal ${pct}% less damage`, `causa ${pct}% menos dano`);
+    const phrase = v >= 0 ? `deal ${pct}% more damage` : `deal ${pct}% less damage`;
     return `${dur}, ${phrase}`;
   }
-  if (k === 'burn_taken')      return loc(`${dur}, enemy takes +${v} from [burn]`, `${dur}, o inimigo recebe +${v} de [burn]`);
-  if (k === 'armor_bonus_pct') return loc(`${dur}, every [armor] you gain is +${Math.round(v * 100)}%`, `${dur}, cada [armor] que você ganha é +${Math.round(v * 100)}%`);
-  if (k === 'armor_bonus_flat') return loc(`${dur}, every [armor] you gain is +${v}`, `${dur}, cada [armor] que você ganha é +${v}`);
+  if (k === 'burn_taken')      return `${dur}, enemy takes +${v} from [burn]`;
+  if (k === 'armor_bonus_pct') return `${dur}, every [armor] you gain is +${Math.round(v * 100)}%`;
+  if (k === 'armor_bonus_flat') return `${dur}, every [armor] you gain is +${v}`;
   if (k === 'hero_hit_bonus') {
     const stk = fx.modifier!.stack;
     return stk
-      ? loc(`${dur}, every attack deals ${v} more damage per ${stackTok(stk)}`, `${dur}, cada ataque causa ${v} a mais de dano por ${stackTok(stk)}`)
-      : loc(`${dur}, every attack deals ${v} more damage`, `${dur}, cada ataque causa ${v} a mais de dano`);
+      ? `${dur}, every attack deals ${v} more damage per ${stackTok(stk)}`
+      : `${dur}, every attack deals ${v} more damage`;
   }
   if (k === 'ignore_immunity') {
     const s = fx.modifier!.stack ? stackTok(fx.modifier!.stack) : '';
-    return loc(`${dur}, ignore enemy ${s} immunity`, `${dur}, ignore a imunidade a ${s} do inimigo`);
+    return `${dur}, ignore enemy ${s} immunity`;
   }
   if (k === 'fire_damage_taken_pct') {
-    return loc(`${dur}, enemy takes +${Math.round(Math.abs(v) * 100)}% [fire] damage`, `${dur}, o inimigo recebe +${Math.round(Math.abs(v) * 100)}% de dano de [fire]`);
+    return `${dur}, enemy takes +${Math.round(Math.abs(v) * 100)}% [fire] damage`;
   }
   if (k === 'stack_gain_mult') {
     const s = fx.modifier!.stack ? stackTok(fx.modifier!.stack) : '';
     const pct = Math.round(v * 100);
-    return v === 1
-      ? loc(`${dur}, double all ${s} gained`, `${dur}, dobre todo ${s} ganho`)
-      : loc(`${dur}, ${s} gains +${pct}%`, `${dur}, ${s} ganho aumenta +${pct}%`);
+    return v === 1 ? `${dur}, double all ${s} gained` : `${dur}, ${s} gains +${pct}%`;
   }
   const sign = v >= 0 ? '+' : '';
-  return `${dur}, ${sign}${v}${statTok(k)}`;
+  return `${dur}, ${sign}${v} ${statTok(k)}`;
 }
 
 function formatEventCounterAura(fx: CardEffect, dur: string): string {
@@ -858,18 +781,15 @@ function formatEventCounterAura(fx: CardEffect, dur: string): string {
 function formatTickAura(fx: CardEffect, dur: string): string {
   const interval = fx.tick_ms! / 1000;
   const intervalStr = interval === Math.floor(interval) ? `${interval}` : interval.toFixed(1);
-  const unit = interval === 1 ? loc('second', 'segundo') : loc('seconds', 'segundos');
-  return loc(`${dur}, every ${intervalStr} ${unit}, ${lcFirst(effectListBody(fx.then))}`,
-            `${dur}, a cada ${intervalStr} ${unit}, ${lcFirst(effectListBody(fx.then))}`);
+  const unit = interval === 1 ? 'second' : 'seconds';
+  return `${dur}, every ${intervalStr} ${unit}, ${lcFirst(effectListBody(fx.then))}`;
 }
 
 function formatTriggerAura(fx: CardEffect, dur: string): string {
   const trigPhrase = auraTriggerPhrase(fx);
   if (!trigPhrase) return dur || '';
   const body = lcFirst(effectListBody(fx.then));
-  const cd = fx.cooldown_ms
-    ? loc(` No more than once every ${Math.round(fx.cooldown_ms / 1000)} seconds.`, ` No máximo uma vez a cada ${Math.round(fx.cooldown_ms / 1000)} segundos.`)
-    : '';
+  const cd = fx.cooldown_ms ? ` No more than once every ${Math.round(fx.cooldown_ms / 1000)} seconds.` : '';
   const trig = fx.trigger;
   if (trig === 'on_stack_threshold' || trig === 'on_enemy_stack_threshold') {
     return `${trigPhrase}: ${body}${cd}`;
@@ -883,12 +803,12 @@ function formatAura(fx: CardEffect): string {
   const combatLong = fx.ttl_ms === null || (typeof fx.ttl_ms === 'number' && fx.ttl_ms >= 999999);
   const secs = (!combatLong && fx.ttl_ms) ? Math.round((fx.ttl_ms as number) / 1000) : 0;
   let dur: string;
-  if (combatLong)    dur = loc('For the rest of combat', 'Pelo resto do combate');
-  else if (secs > 0) dur = loc(`For ${secs} seconds`, `Por ${secs} segundos`);
+  if (combatLong)    dur = 'For the rest of combat';
+  else if (secs > 0) dur = `For ${secs} seconds`;
   else               dur = '';
   const trig = fx.trigger;
 
-  if (trig === 'on_armor_break')                                            return `${loc('Brace', 'Firmeza')}: ${effectListBody(fx.then)}`;
+  if (trig === 'on_armor_break')                                            return `Brace: ${effectListBody(fx.then)}`;
   if (fx.event_counter)                                                     return formatEventCounterAura(fx, dur);
   if ((!trig || trig === 'passive_armor_scaler') && fx.modifier && !fx.tick_ms) return formatModifierAura(fx, dur, secs);
   if (!trig && fx.tick_ms && fx.then)                                       return formatTickAura(fx, dur);
@@ -938,7 +858,7 @@ function fragmentForEffect(fx: CardEffect): Fragment {
     case 'devour':
       // exhaust_next variant has its own prose; deck-card devour is consumed
       // by the devour_succeeded gate elsewhere and prints nothing here.
-      body = fx.devour?.exhaust_next ? loc('Exhaust the next card in order', 'Esgote a próxima carta na ordem') : '';
+      body = fx.devour?.exhaust_next ? 'Exhaust the next card in order' : '';
       break;
     default:
       body = '';
@@ -946,7 +866,7 @@ function fragmentForEffect(fx: CardEffect): Fragment {
   // Overload self-penalty: append the lockout note to the resolved body.
   if (fx.overload_lockout_ms && body) {
     const s = Math.round(fx.overload_lockout_ms / 1000);
-    body = loc(`${body} and this card delays ${s} more seconds next time`, `${body} e esta carta atrasa ${s} segundos a mais na próxima vez`);
+    body = `${body} and this card delays ${s} more seconds next time`;
   }
   return { gateKey, gatePrefix, body };
 }
@@ -977,9 +897,6 @@ export interface CardDescOptions {
    *  bigger + colored) by default, or as the "(base + inc per [stat])" equation
    *  while `shift` is true. This is what the card face passes. */
   dynamic?: { stats: Record<StatId, number>; shift: boolean };
-  /** Render the description in this locale. Defaults to 'en'. When 'en' (or
-   *  omitted) the output is byte-for-byte identical to the canonical English. */
-  locale?: Locale;
 }
 
 /** Matches a stat-scaler suffix like "([str])" / "([dex])". Used to strip
@@ -1017,7 +934,7 @@ function applyDynamicReplacements(
       const perStr = p > 1 ? `${p} ` : '';
       // base 0 (value:0 detonators) reads as a pure per-stat rate, no "0 +".
       const lhs = b === 0 ? '' : `${b} + `;
-      return `(${lhs}${i} ${loc('per', 'por')} ${perStr}[${stat}])${desc}`;
+      return `(${lhs}${i} per ${perStr}[${stat}])${desc}`;
     }
     const resolved = b + Math.floor(statValue(stats, stat) / p) * i;
     return `[[v:${resolved}:${stat}]]${desc}`;
@@ -1054,30 +971,16 @@ function consumeAmountFx(fx: { value?: number; consume_fraction?: number }): str
  *  truly consumes the pool the snapshot reads; otherwise it just reads the live
  *  count ("on enemy" / "on yourself", per the snapshot side). */
 function consumeValuePhrase(stack: string): string {
-  if (consumedValueStacks.has(stack)) return loc('consumed', 'consumido');
-  return (stack === 'rage' || stack.startsWith('hero_'))
-    ? loc('on yourself', 'em você')
-    : loc('on enemy', 'no inimigo');
-}
-
-/** Localize a consume-amount label ("all" / "half" / "NN%" / "N") for the active
- *  locale. In English it returns the label verbatim. In pt-br: "all" → "todo",
- *  "half" → "metade de", a percent → "NN% de"; a bare numeric count stays as-is
- *  (the icon token reads naturally after a number — "Consuma 2 [bleed]"). */
-function localizeAmount(amount: string): string {
-  if (ACTIVE_LOCALE !== 'pt-br') return amount;
-  if (amount === 'all') return 'todo';
-  if (amount === 'half') return 'metade de';
-  if (amount.endsWith('%')) return `${amount} de`;
-  return amount;
+  if (consumedValueStacks.has(stack)) return 'consumed';
+  return (stack === 'rage' || stack.startsWith('hero_')) ? 'on yourself' : 'on enemy';
 }
 
 /** Joins icon tokens for one consume sentence: "[a]", "[a] and [b]",
  *  "[a], [b] and [c]". */
 function joinTokens(tokens: string[]): string {
   if (tokens.length <= 1) return tokens[0] ?? '';
-  if (tokens.length === 2) return `${tokens[0]}${loc(' and ', ' e ')}${tokens[1]}`;
-  return `${tokens.slice(0, -1).join(', ')}${loc(' and ', ' e ')}${tokens[tokens.length - 1]}`;
+  if (tokens.length === 2) return `${tokens[0]} and ${tokens[1]}`;
+  return `${tokens.slice(0, -1).join(', ')} and ${tokens[tokens.length - 1]}`;
 }
 
 /**
@@ -1122,10 +1025,7 @@ function buildConsumeClauses(card: CardDescPick): string[] {
     add(card.spend_armor === 'all' ? 'all' : String(card.spend_armor), '[armor]');
   }
 
-  return order.map(amount => loc(
-    `Consume ${amount} ${joinTokens(byAmount.get(amount)!)}`,
-    `Consuma ${localizeAmount(amount)} ${joinTokens(byAmount.get(amount)!)}`,
-  ));
+  return order.map(amount => `Consume ${amount} ${joinTokens(byAmount.get(amount)!)}`);
 }
 
 /**
@@ -1161,7 +1061,6 @@ export function formatCardDescription(card: CardDescPick, options?: CardDescOpti
   const dyn = options?.dynamic;
   // Toggle sentinel emission for the synchronous build, then restore.
   dynamicBuild = !!dyn;
-  ACTIVE_LOCALE = options?.locale ?? 'en';
   spendingArmor = card.spend_armor !== undefined;
   baseEffectKeys = collectBaseEffectKeys(card.effects);
   const fxs = card.effects ?? [];
@@ -1218,22 +1117,8 @@ export function formatCardDescription(card: CardDescPick, options?: CardDescOpti
   let out: string;
   try {
     out = buildCardDescription(card);
-    // The dynamic / scaler-strip post-passes are locale-sensitive (the SHIFT
-    // equation localizes "per"), so run them here while ACTIVE_LOCALE is still
-    // set — the finally resets it before this function returns.
-    if (dyn) {
-      out = applyDynamicReplacements(out, dyn.stats, dyn.shift);
-    } else if (options?.showScalers === false) {
-      // Drop the "([stat])" clauses and tidy the spacing they leave behind.
-      out = out
-        .replace(SCALER_SUFFIX_RE, '')
-        .replace(/ {2,}/g, ' ')
-        .replace(/ \./g, '.')
-        .trim();
-    }
   } finally {
     dynamicBuild = false;
-    ACTIVE_LOCALE = 'en';
     spendingArmor = false;
     baseEffectKeys = new Set();
     pyreBurnKeyword = false;
@@ -1242,6 +1127,18 @@ export function formatCardDescription(card: CardDescPick, options?: CardDescOpti
     detonatorFold = new Map();
     multiDetonator = null;
     brineFold = false;
+  }
+
+  if (dyn) {
+    return applyDynamicReplacements(out, dyn.stats, dyn.shift);
+  }
+  if (options?.showScalers === false) {
+    // Drop the "([stat])" clauses and tidy the spacing they leave behind.
+    return out
+      .replace(SCALER_SUFFIX_RE, '')
+      .replace(/ {2,}/g, ' ')
+      .replace(/ \./g, '.')
+      .trim();
   }
   return out;
 }
@@ -1281,17 +1178,9 @@ function multiDetonatorClause(): string {
   const proto = multiDetonator!.proto;
   const lead = proto.value === 0 ? (proto.scale?.value ?? 1) : proto.value;
   const statS = statScaleInline(proto, proto.value);
+  const pierceW = proto.pierce_armor ? ' Pierce' : '';
   const tokens = multiDetonator!.stacks.map((s) => stackTok(s));
-  if (proto.pierce_armor) {
-    return loc(
-      `Consume all ${joinTokens(tokens)} and deal ${lead}${statS} Pierce per stack consumed`,
-      `Consuma todo ${joinTokens(tokens)} e cause ${lead}${statS} com Perfuração por unidade consumida`,
-    );
-  }
-  return loc(
-    `Consume all ${joinTokens(tokens)} and deal ${lead}${statS} per stack consumed`,
-    `Consuma todo ${joinTokens(tokens)} e cause ${lead}${statS} por unidade consumida`,
-  );
+  return `Consume all ${joinTokens(tokens)} and deal ${lead}${statS}${pierceW} per stack consumed`;
 }
 
 // ── Rendering-only effect reorders ────────────────────────────────────────
@@ -1459,9 +1348,8 @@ function buildCardDescription(card: CardDescPick): string {
     // Brine fold: the flat application right after the convert tags onto its clause
     // as ", plus N[stack]" rather than reading "Apply N[stack]" a second time.
     if (brineFold && prevWasBrineConvert && fx.type === 'dot') {
-      const applyRe = ACTIVE_LOCALE === 'pt-br' ? /^Aplique / : /^Apply /;
-      const body = fragmentForEffect(fx).body.replace(applyRe, '');
-      if (frags.length) frags[frags.length - 1].body += loc(`, plus ${body}`, `, mais ${body}`);
+      const body = fragmentForEffect(fx).body.replace(/^Apply /, '');
+      if (frags.length) frags[frags.length - 1].body += `, plus ${body}`;
       prevWasBrineConvert = false;
       continue;
     }
@@ -1506,20 +1394,17 @@ function buildCardDescription(card: CardDescPick): string {
 
   // Sentence-level simplifications: collapse Vengeance duration-extensions, merge
   // same-verb resource gains, merge same-window / duplicate-gate auras, and state a
-  // shared "to all enemies" scope once. These post-passes match English literals
-  // via regex, so they only fire for English; pt-br skips them (output stays
-  // correct, just less merged).
-  const en = ACTIVE_LOCALE === 'en';
-  let finalSentences = en ? applyVengeanceDurationExtension(sentences) : sentences;
-  finalSentences = en ? mergeScaledResourceGains(finalSentences) : finalSentences;
-  finalSentences = en ? mergeAuraSentences(finalSentences) : finalSentences;
-  finalSentences = en ? aoeScopeOnce(finalSentences) : finalSentences;
+  // shared "to all enemies" scope once.
+  let finalSentences = applyVengeanceDurationExtension(sentences);
+  finalSentences = mergeScaledResourceGains(finalSentences);
+  finalSentences = mergeAuraSentences(finalSentences);
+  finalSentences = aoeScopeOnce(finalSentences);
 
   // Card-level keyword prefixes. Exhaust always leads, then the explicit
   // "Consume N [resource]" cost clauses (the card no longer shows cost icons,
   // so every consumed stack / armor must read in prose).
   const leading: string[] = [];
-  if (card.exhaust) leading.push(loc('Exhaust', 'Esgotar'));
+  if (card.exhaust) leading.push('Exhaust');
   leading.push(...buildConsumeClauses(card));
 
   // Capitalize the first letter of each sentence. Most bodies already lead with
@@ -1545,7 +1430,7 @@ function joinBodies(bodies: string[]): string {
   // convention). Subsequent bodies join with " and " and are lowercased.
   const head = bodies[0];
   const tail = bodies.slice(1).map(b => b.length === 0 ? b : (b[0].toLowerCase() + b.slice(1)));
-  return [head, ...tail].join(loc(' and ', ' e '));
+  return [head, ...tail].join(' and ');
 }
 
 // Re-export the predicate so existing call-sites (CombatScene preview text,

@@ -11,7 +11,7 @@
 //     deck for every card on every repaint.
 
 import Phaser from 'phaser';
-import { t, getLocale } from '../i18n/i18n';
+import { t } from '../i18n/i18n';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getAllCards } from '../data/DataLoader';
@@ -385,7 +385,7 @@ export class CardLibraryScene extends Phaser.Scene {
       effects,
       exhaust: card.exhaust,
       spend_armor: card.spend_armor,
-    }, { locale: getLocale() });
+    });
     const cb = cardVisual.getBounds();
     this.detailTip = attachKeywordTooltip(this, container, desc, {
       x: cb.centerX, y: cb.centerY, w: cb.width, h: cb.height,

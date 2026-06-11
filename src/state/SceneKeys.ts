@@ -21,7 +21,6 @@ export const SCENE_KEYS = {
   SHOP_REMOVE_CARD: 'ShopRemoveCardScene',
   FORGE: 'ForgeScene',
   PAUSE: 'PauseScene',
-  SETTINGS: 'SettingsScene',
   CHARACTER_SELECT: 'CharacterSelectScene',
   TUTORIAL: 'TutorialScene',
   COLLECTION: 'CollectionScene',
@@ -60,7 +59,6 @@ export function stopAllRunScenes(scene: Phaser.Scene, exclude?: string): void {
     SCENE_KEYS.DECK_CUSTOMIZATION,
     SCENE_KEYS.RELIC_VIEWER,
     SCENE_KEYS.PAUSE,
-    SCENE_KEYS.SETTINGS,
     SCENE_KEYS.DEATH,
     SCENE_KEYS.LOOP_SUMMARY,
   ];

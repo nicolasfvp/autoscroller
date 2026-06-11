@@ -10,7 +10,6 @@ import { ShopScene } from './scenes/ShopScene'
 import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
-import { SettingsScene } from './scenes/SettingsScene'
 import { DeckCustomizationScene } from './scenes/DeckCustomizationScene'
 import { RelicViewerScene } from './scenes/RelicViewerScene'
 import { CharacterSelectScene } from './scenes/CharacterSelectScene'
@@ -30,7 +29,6 @@ import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 import { DebugOverlayScene } from './scenes/DebugOverlayScene'
 import { CombatTestScene } from './scenes/CombatTestScene'
-import { SCENE_KEYS } from './state/SceneKeys'
 import { initConsoleLogger } from './debug/ConsoleLogger'
 
 // Capture all console output to logs/console.log (dev-only; tree-shaken from
@@ -45,13 +43,7 @@ if (import.meta.env.DEV) {
 // viewport the user has. Downscaling is crisp; upscaling from 800→1440 (the
 // naive FIT) blurs.
 //
-// UI_SCALE is selected by the Graphics Quality setting (SettingsScene). High
-// gives the sharpest result; Balanced cuts pixel fill-rate by ~44%; Performance
-// renders at native 800×600 and lets the browser scale. Because Phaser locks
-// the canvas backing-store size in GameConfig before any async MetaState load
-// can complete, we read the preset from a localStorage mirror (synchronous,
-// available at module-init time). SettingsScene writes both the localStorage
-// mirror and the persisted MetaState so the next reload picks up the change.
+// UI_SCALE is read from localStorage so the quality setting persists across reloads.
 const GAME_W = 800;
 const GAME_H = 600;
 
@@ -112,7 +104,6 @@ const config: Phaser.Types.Core.GameConfig = {
         ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
-        SettingsScene,
         DeckCustomizationScene,
         RelicViewerScene,
         CharacterSelectScene,
@@ -134,32 +125,11 @@ const config: Phaser.Types.Core.GameConfig = {
     ]
 }
 
-// Debug listener — only active in dev builds (Vite tree-shakes this in production)
-if (import.meta.env.DEV) {
-    class DebugListenerScene extends Phaser.Scene {
-        constructor() { super({ key: 'debug-listener', active: true }); }
-        create() {
-            this.input.keyboard?.on('keydown-F2', () => {
-                if (this.scene.isActive(SCENE_KEYS.DEBUG_OVERLAY)) {
-                    this.scene.manager.scenes.forEach(s => {
-                        if (s.scene.key !== 'debug-listener' && s.scene.key !== SCENE_KEYS.DEBUG_OVERLAY && s.scene.isPaused()) {
-                            s.scene.resume();
-                        }
-                    });
-                    this.scene.stop(SCENE_KEYS.DEBUG_OVERLAY);
-                } else {
-                    this.scene.manager.scenes.forEach(s => {
-                        if (s.scene.key !== 'debug-listener' && s.scene.isActive()) {
-                            s.scene.pause();
-                        }
-                    });
-                    this.scene.launch(SCENE_KEYS.DEBUG_OVERLAY);
-                }
-            });
-        }
-    }
-    (config.scene as any[]).push(DebugListenerScene);
-}
+// Debug overlay (F2) shortcut intentionally removed so players can't open the
+// debug screen. The DebugOverlayScene / DebugManager code is kept in the
+// codebase (registered above) — only the keyboard entry point is gone. To
+// re-enable for local debugging, re-add a keydown-F2 listener that toggles
+// the 'DebugOverlayScene' scene (SCENE_KEYS.DEBUG_OVERLAY).
 
 // Patch Phaser.GameObjects.Text to default resolution:2 globally.
 // This makes all this.add.text() calls render their internal canvas at 2×,

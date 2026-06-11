@@ -5,7 +5,6 @@
 import type { RunState } from '../state/RunState';
 import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
-import { t } from '../i18n/i18n';
 
 /**
  * Generate treasure loot and apply it directly to RunState.
@@ -19,7 +18,7 @@ export function generateTreasureLoot(run: RunState): void {
   if (goldAmount > 0) {
     run.economy.gold += goldAmount;
     run.stats.goldEarned += goldAmount;
-    entries.push({ label: t('combatLoot.gold', { finalGold: goldAmount }), color: '#ffd700' });
+    entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700', source: 'treasure' });
   }
 
   // Material drop: 30% chance (diversifies loot beyond gold)
@@ -29,7 +28,7 @@ export function generateTreasureLoot(run: RunState): void {
     const amount = 1 + Math.floor(rand() * 2);
     if (!run.economy.materials) run.economy.materials = {};
     run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
-    entries.push({ label: t('combatLoot.material', { amount, mat }), color: '#e040fb' });
+    entries.push({ label: `+${amount} ${mat}`, color: '#e040fb', source: 'treasure' });
   }
 
   addPendingLoot(entries);

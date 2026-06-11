@@ -79,6 +79,8 @@ export interface LoopState {
    * previous (run as any)._lastBossDefeated cross-scene flag.
    */
   lastBossDefeated?: boolean;
+  /** Set by BossExitScene when the player chose Continue; consumed by GameScene on resume. */
+  bossChoiceContinue?: boolean;
   /** Cumulative boss kills in this run (for run history reporting). */
   bossesDefeated?: number;
   /**

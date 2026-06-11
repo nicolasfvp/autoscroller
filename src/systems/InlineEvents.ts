@@ -178,6 +178,13 @@ export function applyHiddenPathTileBonus(): void {
   run.economy.hiddenPathTilesRemaining = remaining - 1;
 }
 
+/** Tag event notifications so the loop summary lists them under EVENTS.
+ *  HP/STA/MP/slow/pickpocket lines stay informational; the summary only
+ *  surfaces the +loot ones, but tagging all keeps the origin consistent. */
+function tagAsEvent(entries: LootEntry[]): LootEntry[] {
+  return entries.map((e) => ({ ...e, source: 'event' as const }));
+}
+
 /**
  * Resolve a random event inline and apply effects to RunState.
  * Returns combat enemy ID if the event triggers a fight.
@@ -190,13 +197,13 @@ export function resolveInlineEvent(run: RunState): EventResult {
     roll -= option.weight;
     if (roll <= 0) {
       const result = option.apply(run);
-      addPendingLoot(result.notifications);
+      addPendingLoot(tagAsEvent(result.notifications));
       return result;
     }
   }
 
   // Fallback
   const fallback = EVENT_TABLE[0].apply(run);
-  addPendingLoot(fallback.notifications);
+  addPendingLoot(tagAsEvent(fallback.notifications));
   return fallback;
 }

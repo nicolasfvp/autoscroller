@@ -22,9 +22,9 @@ export class RelicViewerScene extends Scene {
     const run = getRun();
     this.parentScene = data?.parentScene ?? SCENE_KEYS.GAME;
 
-    // Painted "reliquary vault" backdrop (Grok-generated). Stacked with the
-    // deck_frame corners + a translucent dim layer so the relic icons and
-    // text still read clearly against the busy art.
+    // Pixel-art "reliquary vault" backdrop (dark-wood + gold, matches the
+    // game's UI identity). Stacked with the deck_frame corners + a translucent
+    // dim layer so the relic icons and text still read clearly against it.
     if (this.textures.exists('bg_relic_vault')) {
       this.add.image(400, 300, 'bg_relic_vault').setDisplaySize(800, 600).setDepth(-2);
     }

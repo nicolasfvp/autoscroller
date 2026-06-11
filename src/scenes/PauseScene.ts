@@ -1,6 +1,4 @@
 ﻿import { Scene } from 'phaser';
-import { t, getLocale } from '../i18n/i18n';
-import { FONTS } from '../ui/StyleConstants';
 import { getRun, clearRun } from '../state/RunState';
 import { saveManager } from '../core/SaveManager';
 import { SCENE_KEYS, REGISTRY_KEYS, stopAllRunScenes } from '../state/SceneKeys';
@@ -34,22 +32,22 @@ export class PauseScene extends Scene {
     });
 
     // Título — y=105, fontSize=42
-    this.add.bitmapText(400, 105, 'game_font_white', t('pause.title'), 42).setOrigin(0.5);
+    this.add.bitmapText(400, 105, 'game_font_white', 'PAUSED', 42).setOrigin(0.5);
 
-    this.makePauseBtn('btn_resume_pause',     t('pause.resume'),     401.6, 171.6, 204, 50, () => this.resume());
-    this.makePauseBtn('btn_view_deck_pause',  t('pause.viewDeck'),   400.5, 236.8, 196, 50, () => {
+    const BTN_W = 210;
+    const BTN_X = 400;
+    const BTN_Y0 = 172;
+    const BTN_GAP = 65;
+    this.makePauseBtn('btn_resume_pause',     BTN_X, BTN_Y0,             BTN_W, 50, () => this.resume());
+    this.makePauseBtn('btn_view_deck_pause',  BTN_X, BTN_Y0 + BTN_GAP,   BTN_W, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.DECK_CUSTOMIZATION, { parentScene: SCENE_KEYS.PAUSE });
     });
-    this.makePauseBtn('btn_tutorial_pause',   t('pause.tutorial'),   400,   300,   196, 50, () => {
+    this.makePauseBtn('btn_tutorial_pause',   BTN_X, BTN_Y0 + BTN_GAP*2, BTN_W, 50, () => {
       this.scene.pause();
       this.scene.launch(SCENE_KEYS.TUTORIAL, { replay: true, parentScene: SCENE_KEYS.PAUSE });
     });
-    this.makePauseBtn('btn_settings_pause',   t('pause.settings'),   400,   365.8, 200, 50, () => {
-      this.scene.pause();
-      this.scene.launch(SCENE_KEYS.SETTINGS);
-    });
-    this.makePauseBtn('btn_abandon_run_pause', t('pause.abandonRun'), 402.6, 432.1, 210, 50, async () => {
+    this.makePauseBtn('btn_abandon_run_pause', BTN_X, BTN_Y0 + BTN_GAP*2 + 130, BTN_W, 50, async () => {
       const mode = (() => { try { return getRun().mode; } catch { return undefined; } })();
       this.registry.set(REGISTRY_KEYS.SAVED_RUN, null);
       stopAllRunScenes(this, SCENE_KEYS.PAUSE);
@@ -61,30 +59,12 @@ export class PauseScene extends Scene {
     this.events.on('shutdown', this.cleanup, this);
   }
 
-  private makePauseBtn(key: string, label: string, x: number, y: number, w: number, h: number, cb: () => void): void {
-    const cont = this.add.container(x, y);
-    let dh = h;
-    if (getLocale() === 'pt-br') {
-      // The baked button art has English text baked in — render a wood-texture
-      // + translated-text button instead so the pause menu reads in pt-BR.
-      if (this.textures.exists('wood_texture')) {
-        cont.add(this.add.image(0, 0, 'wood_texture').setDisplaySize(w, dh));
-      } else {
-        cont.add(this.add.rectangle(0, 0, w, dh, 0x2a1a0a));
-      }
-      cont.add(this.add.rectangle(0, 0, w, dh, 0x000000, 0).setStrokeStyle(2, 0xd4a04a, 0.95));
-      cont.add(this.add.text(0, 0, label, {
-        fontSize: '22px', fontStyle: 'bold', color: '#f0d080',
-        fontFamily: FONTS.body, stroke: '#000000', strokeThickness: 4,
-      }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true));
-    } else {
-      const img = this.add.image(0, 0, key);
-      const sc = w / img.width;
-      img.setScale(sc);
-      dh = img.height * sc;
-      cont.add(img);
-    }
-    cont.setSize(w, dh).setInteractive({ useHandCursor: true });
+  private makePauseBtn(key: string, x: number, y: number, w: number, _h: number, cb: () => void): void {
+    const img = this.add.image(0, 0, key);
+    const sc = w / img.width;
+    img.setScale(sc);
+    const dh = img.height * sc;
+    const cont = this.add.container(x, y, [img]).setSize(w, dh).setInteractive({ useHandCursor: true });
     cont.on('pointerover', () => this.tweens.add({ targets: cont, scale: 1.05, duration: 100 }));
     cont.on('pointerout',  () => this.tweens.add({ targets: cont, scale: 1,    duration: 100 }));
     cont.on('pointerdown', cb);

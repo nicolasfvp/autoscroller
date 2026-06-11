@@ -1,10 +1,9 @@
 import { Scene } from 'phaser';
-import { t, getLocale } from '../i18n/i18n';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS } from '../ui/StyleConstants';
-import { type LootEntry } from '../systems/PendingLoot';
+import { type LootEntry, type LootSource } from '../systems/PendingLoot';
 import { type LoopRunner, type LoopRunState } from '../systems/LoopRunner';
-import { resolveIconKey, ELEMENTS, ALL_ELEMENT_IDS } from '../systems/ElementSystem';
+import { resolveIconKey } from '../systems/ElementSystem';
 
 interface SummaryData {
   loopRunner: LoopRunner;
@@ -20,6 +19,8 @@ interface AggregatedEntry {
   color: string;
   amount: number;
   type: string;
+  /** Origin — event/treasure gains render in their own highlighted block. */
+  source: LootSource;
 }
 
 // Keys are lowercase — lookup normalises via .toLowerCase()
@@ -35,27 +36,27 @@ const LOOT_ICONS: Record<string, string> = {
   'brick':      'icon_brick',
   'scroll':     'mat_scroll',
   'basic tile': 'mat_scroll',
-  'ouro':       'icon_coin',
 };
 
-// Shard loot type ("{name} shard" in EN / "fragmento de {name}" in pt-BR) →
-// element id. Built lazily so it reflects the active locale AND the localized
-// ELEMENTS names (ELEMENTS is localized in Boot, after this module is imported,
-// so building at module-init would capture stale English names in pt-BR).
-let _shardMaps: { ids: Record<string, string>; types: Set<string> } | null = null;
-function shardMaps(): { ids: Record<string, string>; types: Set<string> } {
-  if (_shardMaps) return _shardMaps;
-  const ids: Record<string, string> = {};
-  const types = new Set<string>();
-  for (const id of ALL_ELEMENT_IDS) {
-    const ty = t('combatLoot.shard', { n: 1, name: ELEMENTS[id].name }).replace(/^\+\d+\s+/, '');
-    ids[ty] = id;
-    types.add(ty);
-  }
-  return (_shardMaps = { ids, types });
-}
+// Maps shard loot type → element id, resolved via resolveIconKey at render time
+const SHARD_ELEMENT_IDS: Record<string, string> = {
+  'Attack shard':  'attack',
+  'Defense shard': 'defense',
+  'Agility shard': 'agility',
+  'Counter shard': 'counter',
+  'Fire shard':    'fire',
+  'Water shard':   'water',
+  'Air shard':     'air',
+  'Earth shard':   'earth',
+};
 
 interface RowLayout { iconX: number; textX: number; textNoIconX: number; }
+
+// Shard types go in the right column
+const SHARD_TYPES = new Set([
+  'Attack shard','Defense shard','Agility shard','Counter shard',
+  'Fire shard','Water shard','Air shard','Earth shard',
+]);
 
 const LOOT_PARSE_RE = /^\+(\d+)\s+(.+)$/;
 
@@ -66,23 +67,23 @@ function parseLoot(label: string): { amount: number; type: string } | null {
 }
 
 function aggregateLoot(items: LootEntry[]): AggregatedEntry[] {
-  const map = new Map<string, { color: string; amount: number }>();
+  // Group by (source, type) so event/treasure gains never merge into the
+  // combat tally for the same resource (e.g. treasure gold stays distinct).
+  const map = new Map<string, { color: string; amount: number; type: string; source: LootSource }>();
   const order: string[] = [];
   for (const item of items) {
+    const source = item.source ?? 'combat';
     const parsed = parseLoot(item.label);
-    if (parsed) {
-      if (!map.has(parsed.type)) { map.set(parsed.type, { color: item.color, amount: 0 }); order.push(parsed.type); }
-      map.get(parsed.type)!.amount += parsed.amount;
-    } else if (!map.has(item.label)) {
-      map.set(item.label, { color: item.color, amount: 0 });
-      order.push(item.label);
-    }
+    const type = parsed ? parsed.type : item.label;
+    const key = `${source}::${type}`;
+    if (!map.has(key)) { map.set(key, { color: item.color, amount: 0, type, source }); order.push(key); }
+    if (parsed) map.get(key)!.amount += parsed.amount;
   }
-  return order.map(type => {
-    const e = map.get(type)!;
-    const isStat = type.endsWith('!');
-    const label = e.amount > 0 ? `+${e.amount} ${type}` : type;
-    return { label, color: e.color, amount: e.amount, type: isStat ? type.replace('!','').trim() : type };
+  return order.map(key => {
+    const e = map.get(key)!;
+    const isStat = e.type.endsWith('!');
+    const label = e.amount > 0 ? `+${e.amount} ${e.type}` : e.type;
+    return { label, color: e.color, amount: e.amount, type: isStat ? e.type.replace('!','').trim() : e.type, source: e.source };
   });
 }
 
@@ -103,11 +104,18 @@ export class LoopSummaryScene extends Scene {
     this.tweens.add({ targets: this.children.list[0], alpha: 1, duration: 250 });
 
     const all = aggregateLoot(lootItems);
-    const shardTypes = shardMaps().types;
-    const rewards = all.filter(e => !shardTypes.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
-    const xpEntry  = all.find(e => e.type === 'XP');
-    const shards   = all.filter(e => shardTypes.has(e.type));
-    const stats    = all.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !shardTypes.has(e.type)));
+    const isEventSource = (e: AggregatedEntry) => e.source === 'event' || e.source === 'treasure';
+    // Event/treasure gains get their own highlighted block (only quantified
+    // ones). Descriptive event lines with no parseable amount are dropped here
+    // so they don't leak into the combat REWARDS column — they already showed
+    // as floating notifications during the loop.
+    const eventLoot = all.filter(e => isEventSource(e) && e.amount > 0);
+    const combat = all.filter(e => !isEventSource(e));
+
+    const rewards = combat.filter(e => !SHARD_TYPES.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
+    const xpEntry  = combat.find(e => e.type === 'XP');
+    const shards   = combat.filter(e => SHARD_TYPES.has(e.type));
+    const stats    = combat.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !SHARD_TYPES.has(e.type)));
 
     if (xpEntry) rewards.unshift(xpEntry);
 
@@ -120,12 +128,12 @@ export class LoopSummaryScene extends Scene {
     }
 
     // ── Title (y=88.5 absoluto) ────────────────────────────
-    const title = this.add.bitmapText(cx, 88.5, 'vt323_gold', t('loopSummary.title', { loopCount }), 28)
+    const title = this.add.bitmapText(cx, 88.5, 'vt323_gold', `LOOP  ${loopCount}  COMPLETE`, 28)
       .setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: title, alpha: 1, duration: 300, delay: 140 });
 
     // ── TP row (y=122) ────────────────────────────────────
-    const tpRow = this.add.text(cx, 122, t('loopSummary.tilePoints', { tpEarned }), {
+    const tpRow = this.add.text(cx, 122, `+${tpEarned} Tile Points`, {
       fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5).setAlpha(0);
@@ -152,11 +160,11 @@ export class LoopSummaryScene extends Scene {
     // Posições absolutas direto do debug-layout.json
     // REWARDS: x=300.1 (origin 0), y=192.2, fontSize=23
     // SHARDS:  x=440.5 (origin 0), y=193.9, fontSize=24
-    const hdrRewards = this.add.text(300.1, 192.2, t('loopSummary.rewardsHeader'), {
+    const hdrRewards = this.add.text(300.1, 192.2, 'REWARDS', {
       fontFamily: FF, fontSize: '23px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setAlpha(0);
-    const hdrShards = this.add.text(440.5, 193.9, t('loopSummary.shardsHeader'), {
+    const hdrShards = this.add.text(440.5, 193.9, 'SHARDS', {
       fontFamily: FF, fontSize: '24px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setAlpha(0);
@@ -178,11 +186,36 @@ export class LoopSummaryScene extends Scene {
       if (shards[i])  this.renderIconRow(RIGHT, rowY + i * COL_ROW, shards[i],  ICON_S, FF, delay);
     }
 
+    // Running Y below the two columns; the event block + stats stack under it.
+    let flowY = rowY + maxRows * COL_ROW + 10;
+
+    // ── Events / Treasure (highlighted, full-width single column) ──────────
+    if (eventLoot.length > 0) {
+      this.add.rectangle(cx, flowY, PW - 32, 1, 0xd4a04a, 0.45);
+      const evHdr = this.add.text(cx, flowY + 13, '✦  EVENTS / TREASURE', {
+        fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
+        color: '#ffd27f', stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5).setAlpha(0);
+      const evHdrDelay = 320 + maxRows * 45;
+      this.tweens.add({ targets: evHdr, alpha: 1, duration: 200, delay: evHdrDelay });
+
+      const EV_ROW = 30;
+      let evRowY = flowY + 36;
+      eventLoot.forEach((e, i) => {
+        // Centered icon|label, full width. Reuse renderIconRow with a layout
+        // anchored a little left of centre so the icon+text read as one unit.
+        const layout: RowLayout = { iconX: cx - 78, textX: cx - 58, textNoIconX: cx - 78 };
+        this.renderIconRow(layout, evRowY, e, 24, FF, evHdrDelay + 40 + i * 35);
+        evRowY += EV_ROW;
+      });
+      flowY = evRowY + 10;
+    }
+
     // ── Stats / permanent upgrades ─────────────────────────
     if (stats.length > 0) {
-      const statsY = rowY + maxRows * COL_ROW + 10;
+      const statsY = flowY;
       this.add.rectangle(cx, statsY, PW - 32, 1, 0x886644, 0.35);
-      const statsHdr = this.add.text(cx, statsY + 12, t('loopSummary.statsHeader'), {
+      const statsHdr = this.add.text(cx, statsY + 12, 'STATS', {
         fontFamily: FF, fontSize: '23px', fontStyle: 'bold',
         color: '#ffffff', stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5).setAlpha(0);
@@ -198,8 +231,12 @@ export class LoopSummaryScene extends Scene {
     }
 
     // ── Continue button ──────────────────────────────────
-    const btnDelay = 400 + maxRows * 45;
-    if (getLocale() !== 'pt-br' && this.textures.exists('btn_continue_loop')) {
+    // Wait for the latest-animating block (columns, events, or stats).
+    const btnDelay = Math.max(
+      400 + maxRows * 45,
+      eventLoot.length > 0 ? 360 + maxRows * 45 + 40 + eventLoot.length * 35 : 0,
+    );
+    if (this.textures.exists('btn_continue_loop')) {
       const btnImg = this.add.image(400, 562, 'btn_continue_loop')
         .setScale(114 / 1548)
         .setInteractive({ useHandCursor: true }).setAlpha(0);
@@ -214,7 +251,7 @@ export class LoopSummaryScene extends Scene {
     } else {
       const btnBg = this.add.rectangle(400, 562, 114, 34, 0x0f1f0f)
         .setStrokeStyle(2, 0x44aa44).setInteractive({ useHandCursor: true }).setAlpha(0);
-      const btnText = this.add.text(cx, 562, t('loopSummary.continue'), {
+      const btnText = this.add.text(cx, 562, 'CONTINUE  ▶', {
         fontFamily: FF, fontSize: '15px', fontStyle: 'bold',
         color: '#88ff88', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5).setAlpha(0);
@@ -233,7 +270,7 @@ export class LoopSummaryScene extends Scene {
     item: AggregatedEntry, iconSize: number,
     ff: string, delay: number,
   ): void {
-    const elementId = shardMaps().ids[item.type] ?? item.type.toLowerCase();
+    const elementId = SHARD_ELEMENT_IDS[item.type] ?? item.type.toLowerCase();
     const iconKey = resolveIconKey(this.textures, elementId)
       ?? (LOOT_ICONS[item.type.toLowerCase()] ?? null);
     const resolvedIcon = (iconKey && this.textures.exists(iconKey)) ? iconKey : null;

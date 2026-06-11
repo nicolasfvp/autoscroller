@@ -35,8 +35,6 @@ const DOT_CHUNK_CAP = 60;
 /** After a freeze fully decays, the enemy resists new stun for this long
  *  (diminishing-returns window) so stun can't be perma-chained (D-9). */
 const STUN_IMMUNE_MS = 2500;
-/** Maximum total combat duration (ms) before a deadlock fail-safe defeats the hero */
-const DEADLOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
 export class CombatEngine {
   private state: CombatState;
@@ -55,7 +53,6 @@ export class CombatEngine {
   private dotTickAccumulator = 0;
   /** Last card played — attributes wall-clock DoT ticks to a source for relics. */
   private lastPlayedCardId: string | null = null;
-  /** Total elapsed ms in this combat — used by the deadlock fail-safe. */
   private totalElapsedMs = 0;
 
   constructor(state: CombatState) {
@@ -68,18 +65,10 @@ export class CombatEngine {
   tick(deltaMs: number): void {
     if (this.isFinished) return;
 
-    // Deadlock fail-safe: cap total combat duration. If no side has won
-    // after DEADLOCK_TIMEOUT_MS (e.g. empty deck + immortal enemy, or a
-    // bug producing 0-damage attacks), force a defeat.
     this.totalElapsedMs += deltaMs;
-    // v4 Vengeance: mirror elapsed time on CombatState so condition checks
-    // (took_damage_within_ms) and applyHeroDamage timestamps stay in sync.
+    // Mirror elapsed time on CombatState so Vengeance condition checks
+    // (took_damage_within_ms) stay in sync.
     this.state.combatElapsedMs = this.totalElapsedMs;
-    if (this.totalElapsedMs >= DEADLOCK_TIMEOUT_MS) {
-      this.state.heroHP = 0;
-      this.checkEndConditions();
-      return;
-    }
 
     // Hero cooldown always advances with game-time. The hourglass flip is a
     // purely cosmetic HUD animation (see setHourglassFlipping) — gating this on

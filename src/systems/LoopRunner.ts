@@ -134,18 +134,19 @@ export class LoopRunner {
 
   private onTileEntered(tileIndex: number): void {
     const tile = this.runState.loop.tiles[tileIndex];
-    if (!tile || tile.defeatedThisLoop) return;
+    if (!tile) return;
 
-    // Hidden Path event bonus — runs through the live RunState (the runner's
-    // LoopRunState slice doesn't expose gold/stats directly). See
-    // InlineEvents.applyHiddenPathTileBonus.
+    // Hidden Path event bonus and per-tile relic effects fire on every new tile
+    // crossing, regardless of whether the tile already has an interaction pending.
+    // These must run before the defeatedThisLoop guard so they trigger even on
+    // tiles that are skipped for combat (already cleared this loop pass).
     applyHiddenPathTileBonus();
-
-    // C6 / C7: map-side relic triggers. These helpers reach into the live
-    // RunState (where hero HP/stamina/mana and the relic list actually
-    // live) rather than the LoopRunState slice that this runner owns. See
-    // LoopRelics.ts for the trigger conditions.
     applyTravelBoots();
+
+    if (tile.defeatedThisLoop) return;
+
+    // C6 / C7: map-side relic triggers that depend on tile type (Trailblazer's
+    // Brand only fires on the first undefeated combat tile this loop).
     applyTrailblazersBrand(tile);
 
     // Subtile effects targeting this tile (Wave 6 consumers use this bag).

@@ -11,7 +11,6 @@ import { formatCardDescription } from '../systems/cards/CardText';
 import { getCardById } from '../data/DataLoader';
 import { createCardFace } from './CardFace';
 import { getRun } from '../state/RunState';
-import { t, getLocale } from '../i18n/i18n';
 
 export interface ForgePopupOptions {
   cost: number;
@@ -85,7 +84,8 @@ export function showCardDetail(
   const cy = cam.height / cam.zoom / 2;
 
   const isForge = !!forgeOpts || !!smallCard;
-  const cardScale = isForge ? 0.715 : 1.0;
+  // Combat popup reduced to 80% — Forge/Library keep old size (already compact).
+  const cardScale = isForge ? 0.715 : 0.8;
   const cardY     = cy;
 
   const face = createCardFace(scene, cx, cardY, cardId, {
@@ -101,9 +101,11 @@ export function showCardDetail(
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-  }, { locale: getLocale() });
+  });
+  const popupW = 340 * cardScale;
+  const popupH = 540 * cardScale;
   tip = attachKeywordTooltip(scene, popup, desc, {
-    x: cx, y: cardY, w: 400 * cardScale, h: 640 * cardScale,
+    x: cx, y: cardY, w: popupW, h: popupH,
   });
 
   // ── Forge controls ─────────────────────────────────────────────────────────
@@ -116,7 +118,7 @@ export function showCardDetail(
     }
 
     popup.add(
-      scene.add.text(cx - 65, BANNER_Y, t('cardDetail.forgeCost', { cost: forgeOpts.cost }), {
+      scene.add.text(cx - 65, BANNER_Y, `⚒ ${forgeOpts.cost} Gold`, {
         fontSize: '15px', fontStyle: 'bold', color: '#ffd700',
         fontFamily: 'monospace', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5),

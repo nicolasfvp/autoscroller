@@ -1,29 +1,13 @@
 import cardsJson from '../data/json/cards.json';
 import relicsData from '../data/json/relics.json';
 import enemiesData from '../data/json/enemies.json';
+import compendiumLore from '../data/json/compendiumLore.json';
 import { MetaState } from '../state/MetaState';
 import { DEFAULT_SUBTILES } from './UnlockManager';
-import { getLocale } from '../i18n/i18n';
 
 const cardsData: any[] = (cardsJson as any).cards;
-
-// ── pt-BR Compendium localization ────────────────────────────────────────
-// Card/relic/boss names arrive already localized (DataLoader overlay mutates
-// the JSON singletons in place). Only the tile catalog + unlock hints, built
-// here from literals, need translating.
-const SOURCE_NAMES_PT: Record<string, string> = {
-  forge: 'Forja', library: 'Biblioteca', shrine: 'Santuário', workshop: 'Oficina', tavern: 'Taverna',
-};
-const TILE_NAMES_PT: Record<string, string> = {
-  basic: 'Básico', forest: 'Floresta', event: 'Evento', treasure: 'Tesouro', boss: 'Chefe',
-  graveyard: 'Cemitério', swamp: 'Pântano', desert: 'Deserto', lava: 'Lava',
-};
-const SUBTILE_NAMES_PT: Record<string, string> = {
-  subtile_ambush: 'Emboscada', subtile_bleedtotem: 'Totem de Sangramento',
-  subtile_burnaltar: 'Altar de Queimadura', subtile_camp: 'Acampamento',
-  subtile_magma: 'Fenda de Magma', subtile_manawell: 'Poço de Mana',
-  subtile_resonance: 'Ressonância', subtile_warhorn: 'Trompa de Guerra',
-};
+const bossLore: Record<string, string> = (compendiumLore as any).bosses ?? {};
+const tileLore: Record<string, string> = (compendiumLore as any).tiles ?? {};
 
 export interface CategoryStatus {
   total: number;
@@ -44,14 +28,57 @@ function isUnlocked(item: any, unlockedList: string[]): boolean {
 
 function unlockHint(item: any): string | undefined {
   if (!item.unlockSource) return undefined;
-  const sourceNamesEn: Record<string, string> = {
-    forge: 'Forge', library: 'Library', shrine: 'Shrine', workshop: 'Workshop', tavern: 'Tavern',
+  const sourceNames: Record<string, string> = {
+    forge: 'Forge',
+    library: 'Library',
+    shrine: 'Shrine',
+    workshop: 'Workshop',
+    tavern: 'Tavern',
   };
-  if (getLocale() === 'pt-br') {
-    const src = SOURCE_NAMES_PT[item.unlockSource] || item.unlockSource;
-    return `Desbloqueia na ${src} Nv.${item.unlockTier}`;
-  }
-  return `Unlock via ${sourceNamesEn[item.unlockSource] || item.unlockSource} Lv.${item.unlockTier}`;
+  return `Unlock via ${sourceNames[item.unlockSource] || item.unlockSource} Lv.${item.unlockTier}`;
+}
+
+export interface TileCatalogEntry {
+  id: string;
+  name: string;
+  isUnlocked: boolean;
+  unlockHint?: string;
+}
+
+// Tile catalog mirrors what the Preloader actually ships (public/assets/map/tiles).
+// — Base region tiles: always available.
+// — Special tiles: event/treasure/boss are seeded into runs from the start.
+// — Unlockable region tiles: gated behind the Workshop.
+// — Subtiles: combat amplifier tiles (camps, totems, altars, etc.). Gated
+//   behind the Workshop alongside the region tiles — the player unlocks them
+//   via meta.unlockedTiles before they can be placed.
+// Shared by getCollectionStatus (Tiles tab list) and getItemDetails (tile detail).
+export function buildTileCatalog(metaState: MetaState): TileCatalogEntry[] {
+  const baseTiles = ['basic', 'forest', 'event', 'treasure', 'boss'];
+  const unlockableTiles = ['graveyard', 'swamp', 'desert', 'lava'];
+  const subtileNames: Record<string, string> = {
+    subtile_ambush: 'Ambush',
+    subtile_bleedtotem: 'Bleed Totem',
+    subtile_burnaltar: 'Burn Altar',
+    subtile_camp: 'Camp',
+    subtile_magma: 'Magma Vent',
+    subtile_manawell: 'Mana Well',
+    subtile_resonance: 'Resonance',
+    subtile_warhorn: 'War Horn',
+  };
+  const subtileIds = Object.keys(subtileNames);
+  const allTiles = [...baseTiles, ...unlockableTiles, ...subtileIds];
+  return allTiles.map(id => {
+    const isSubtile = subtileNames[id] !== undefined;
+    return {
+      id,
+      name: isSubtile
+        ? subtileNames[id]
+        : id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      isUnlocked: baseTiles.includes(id) || DEFAULT_SUBTILES.includes(id) || metaState.unlockedTiles.includes(id),
+      unlockHint: ((unlockableTiles.includes(id) || isSubtile) && !DEFAULT_SUBTILES.includes(id)) ? 'Unlock via Workshop' : undefined,
+    };
+  });
 }
 
 export function getCollectionStatus(metaState: MetaState): CollectionStatus {
@@ -77,42 +104,7 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
       isUnlocked: true,
     }));
 
-  // Tile catalog mirrors what the Preloader actually ships (public/assets/map/tiles).
-  // — Base region tiles: always available.
-  // — Special tiles: event/treasure/boss are seeded into runs from the start.
-  // — Unlockable region tiles: gated behind the Workshop.
-  // — Subtiles: combat amplifier tiles (camps, totems, altars, etc.). Gated
-  //   behind the Workshop alongside the region tiles — the player unlocks them
-  //   via meta.unlockedTiles before they can be placed.
-  const baseTiles = ['basic', 'forest', 'event', 'treasure', 'boss'];
-  const unlockableTiles = ['graveyard', 'swamp', 'desert', 'lava'];
-  const subtileNames: Record<string, string> = {
-    subtile_ambush: 'Ambush',
-    subtile_bleedtotem: 'Bleed Totem',
-    subtile_burnaltar: 'Burn Altar',
-    subtile_camp: 'Camp',
-    subtile_magma: 'Magma Vent',
-    subtile_manawell: 'Mana Well',
-    subtile_resonance: 'Resonance',
-    subtile_warhorn: 'War Horn',
-  };
-  const subtileIds = Object.keys(subtileNames);
-  const allTiles = [...baseTiles, ...unlockableTiles, ...subtileIds];
-  const isPt = getLocale() === 'pt-br';
-  const workshopHint = isPt ? 'Desbloqueia na Oficina' : 'Unlock via Workshop';
-  const enTileName = (id: string) => id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const tiles = allTiles.map(id => {
-    const isSubtile = subtileNames[id] !== undefined;
-    const name = isSubtile
-      ? (isPt ? (SUBTILE_NAMES_PT[id] ?? subtileNames[id]) : subtileNames[id])
-      : (isPt ? (TILE_NAMES_PT[id] ?? enTileName(id)) : enTileName(id));
-    return {
-      id,
-      name,
-      isUnlocked: baseTiles.includes(id) || DEFAULT_SUBTILES.includes(id) || metaState.unlockedTiles.includes(id),
-      unlockHint: ((unlockableTiles.includes(id) || isSubtile) && !DEFAULT_SUBTILES.includes(id)) ? workshopHint : undefined,
-    };
-  });
+  const tiles = buildTileCatalog(metaState);
 
   return {
     cards: { total: cards.length, unlocked: cards.filter(c => c.isUnlocked).length, items: cards },
@@ -159,15 +151,35 @@ export function getItemDetails(
       id: enemy.id,
       name: enemy.name,
       isUnlocked: true,
-      // Synthesize a description from enemy stats since enemies.json doesn't
-      // carry one — keeps the detail popup useful for the Bosses tab.
+      // Synthesize a stats description from enemies.json (which carries no
+      // prose) and attach the separate compendium lore blurb when present.
       data: {
         description: `${enemy.type === 'boss' ? 'Boss' : 'Enemy'} — ${enemy.baseHP} HP, ${enemy.attack?.damage ?? 0} ATK`,
+        hp: enemy.baseHP,
+        atk: enemy.attack?.damage ?? 0,
+        defense: enemy.baseDefense ?? 0,
         effect: Array.isArray(enemy.behaviors) && enemy.behaviors.length > 0
           ? enemy.behaviors.map((b: any) => b.type).join(', ')
           : undefined,
+        lore: bossLore[enemy.id],
       },
     };
   }
+
+  // Tiles carry no JSON record of their own — derive from the shared catalog
+  // and attach the compendium description blurb.
+  const tile = buildTileCatalog(metaState).find(t => t.id === itemId);
+  if (tile) {
+    return {
+      id: tile.id,
+      name: tile.name,
+      isUnlocked: tile.isUnlocked,
+      unlockHint: tile.unlockHint,
+      data: {
+        description: tileLore[tile.id] ?? '',
+      },
+    };
+  }
+
   return undefined;
 }

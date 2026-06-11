@@ -13,8 +13,7 @@ import { getCardById } from '../data/DataLoader';
 import { getMetaStateSync } from '../systems/MetaPersistence';
 import { ELEMENTS, resolveIconKey, type ElementId } from '../systems/ElementSystem';
 import { formatCardDescription } from '../systems/cards/CardText';
-import { getLocale } from '../i18n/i18n';
-import { getTokenStyle, renderTokenText } from './IconTokens';
+import { getTokenStyle, stripTokensToPlain } from './IconTokens';
 import { activateCardIconSubtitle } from './CardIconSubtitle';
 import { getRun } from '../state/RunState';
 import { getEffectiveStats, isShiftHeld, subscribeCardDynamic } from './CardDynamic';
@@ -47,7 +46,7 @@ const COLOR = {
 const PAD = 0.03;        // outer padding to leave the border breathing room
 const HEADER_H = 0.13;
 const HEADER_GAP_BELOW = 0.015;
-const ART_H = 0.36;
+const ART_H = 0.47;
 const ART_GAP_BELOW = 0.015;
 const NAME_H = 0.085;
 const NAME_GAP_BELOW = 0.015;
@@ -226,7 +225,7 @@ function renderCardFace(
   drawArt(scene, container, card, artSlot, 'cover', options.artKey);
   drawName(scene, container, card, isUpgraded, nameSlot);
   if (descSlot) {
-    drawDescription(scene, container, card, isUpgraded, descSlot, finalScale);
+    drawDescription(scene, container, card, isUpgraded, descSlot);
     // Full card (with description) → drive the rotating bottom-of-screen icon
     // subtitle. Small in-hand thumbnails (no descSlot) never trigger it.
     activateCardIconSubtitle(scene, card, isUpgraded, container);
@@ -592,7 +591,7 @@ function hasDescription(card: CardDefinition, isUpgraded: boolean): boolean {
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-  }, { locale: getLocale() });
+  });
   return !!desc;
 }
 
@@ -602,50 +601,39 @@ function drawDescription(
   card: CardDefinition,
   isUpgraded: boolean,
   slot: SlotBox,
-  scale: number,
 ): void {
   const effects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
-  // Font sized to fill the panel comfortably — larger at popup scale,
-  // still readable on the small in-hand card.
-  const fontSize = Math.max(9, Math.round(slot.h * 0.17 + scale * 1.5));
+  // fontSize proporcional ao slot físico: slot.h já está escalado pelo scale do
+  // container, então o texto aparece no tamanho visual correto. Coef 0.09 dá
+  // ~15px em popup(h≈172) e ~10px em medium(h≈112). Cap 16 evita excesso.
+  const fontSize = Math.min(20, Math.max(14, Math.round(slot.h * 0.16)));
   const colorHex = `#${COLOR.DESC_TEXT.toString(16).padStart(6, '0')}`;
-  const inset = Math.max(4, slot.w * 0.04);
+  const inset = Math.max(4, slot.w * 0.05);
 
-  let block: Phaser.GameObjects.Container | null = null;
+  let block: Phaser.GameObjects.Text | null = null;
   const build = (): void => {
     if (block) { block.destroy(); block = null; }
-    // Dynamic mode: each scaled number shows RESOLVED (bigger + colored, as a
-    // [[v:N:stat]] token) by default; while SHIFT is held it becomes the
-    // "(base + N per [stat])" equation in place. Stats come from CardDynamic
-    // (live combat stats, else the run's resolved stats).
     const desc = formatCardDescription(
       { effects, exhaust: card.exhaust, spend_armor: card.spend_armor },
-      { dynamic: { stats: getEffectiveStats(), shift: isShiftHeld() }, locale: getLocale() },
+      { dynamic: { stats: getEffectiveStats(), shift: isShiftHeld() } },
     );
     if (!desc) return;
 
-    const text = renderTokenText(scene, slot.x + inset, slot.y + inset, desc, {
+    const plain = stripTokensToPlain(desc);
+    const wrapWidth = slot.w - inset * 2;
+    const text = scene.add.text(slot.cx, slot.cy, plain, {
       fontSize: `${fontSize}px`,
       color: colorHex,
       fontFamily: 'monospace',
-      wrapWidth: slot.w - inset * 2,
+      wordWrap: { width: wrapWidth },
       align: 'center',
-      lineSpacing: 2,
-    });
-    // Vertically center the rendered text inside the slot.
-    const textHeight = (text.getData('tokenTextHeight') as number | undefined) ?? 0;
-    if (textHeight > 0 && textHeight < slot.h) {
-      text.y = slot.cy - textHeight / 2;
-    } else {
-      text.y = slot.y + inset;
-    }
-    text.x = slot.cx - (slot.w - inset * 2) / 2;
+    }).setOrigin(0.5, 0.5);
     parent.add(text);
     block = text;
   };
 
   build();
-  // Rebuild when SHIFT toggles (number <-> equation) or live stats change.
+  // Rebuild when live stats change (Shift toggling is kept for power users).
   const unsub = subscribeCardDynamic(build);
   parent.once('destroy', unsub);
 }

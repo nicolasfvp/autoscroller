@@ -35,18 +35,19 @@ import { getEnemyAttackCards } from '../data/EnemyAttackCards';
 import { EnemyCardQueueDisplay } from '../ui/EnemyCardQueueDisplay';
 
 /** Maps enemy id → hit effect spritesheet key.
- *  Defaults to 'fx_slash' for anything not listed. */
+ *  Defaults to 'fx_claw' for anything not listed. fx_slash = blade, fx_claw = bestial. */
 const ENEMY_ATTACK_FX: Record<string, string> = {
-  // Slash (claws / blades)
-  werewolf:          'fx_slash',
-  ancient_tree:      'fx_slash',
-  corpse_eater:      'fx_slash',
+  // Claw (bestial / natural weapons)
+  werewolf:          'fx_claw',
+  ancient_tree:      'fx_claw',
+  corpse_eater:      'fx_claw',
+  vampire:           'fx_claw',
+  bog_witch:         'fx_claw',
+  void_shade:        'fx_claw',
+  // Slash (bladed weapons)
   skeleton:          'fx_slash',
-  vampire:           'fx_slash',
   doom_knight:       'fx_slash',
-  bog_witch:         'fx_slash',
   blighted_knight:   'fx_slash',
-  void_shade:        'fx_slash',
   // Stomp (heavy / earth impact)
   lava_golem:        'fx_stomp',
   boss_iron_golem:   'fx_stomp',
@@ -112,7 +113,7 @@ export class CombatScene extends Scene {
         effects: cardDef.effects,
         exhaust: cardDef.exhaust,
         spend_armor: cardDef.spend_armor,
-      }, { locale: getLocale() });
+      });
       const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
       keywordIntro.handleCardPlayed(this, fullText, getLocale());
     }
@@ -153,8 +154,8 @@ export class CombatScene extends Scene {
     this.time.delayedCall(300, () => { if (this.heroSprite) this.heroSprite.clearTint(); });
     // Hit effect spritesheet over the hero
     if (this.combatEffects) {
-      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_slash';
-      this.combatEffects.enemyAttackEffect(200, 320, fxKey);
+      const fxKey = ENEMY_ATTACK_FX[this.initData?.enemyId ?? ''] ?? 'fx_claw';
+      this.combatEffects.enemyAttackEffect(200, 320, fxKey, true);
     }
     // Visual jump toward the player
     if ((this.enemySprite instanceof Phaser.GameObjects.Sprite || this.enemySprite instanceof Phaser.GameObjects.Image)) {
@@ -402,9 +403,14 @@ export class CombatScene extends Scene {
         const idleFrameCount = this.textures.get(heroIdleKey).frameTotal - 1;
         const idleIsSpritesheet = idleFrameCount > 1;
 
-        const IDLE_SCALE = 0.6034;
-        const ORIGIN_X = 200;
-        const ORIGIN_Y = 330;
+        const isMage = sp === 'mage';
+        const IDLE_SCALE = isMage ? 0.3357 : 0.6034;
+        const ORIGIN_X = isMage ? 180.9 : 200;
+        const ORIGIN_Y = isMage ? 331.2 : 338.5;
+        const SHADOW_X = isMage ? 183.3 : 178;
+        const SHADOW_Y = isMage ? 445.3 : 440;
+        const SHADOW_W = isMage ? 243 : 220;
+        const SHADOW_H = isMage ? 86 : 50;
         const idleFrameH = this.textures.get(heroIdleKey).get(0).realHeight;
 
         // Y compensado pela diferença de frameH: mantém pés no mesmo ponto em tela
@@ -415,9 +421,9 @@ export class CombatScene extends Scene {
 
         this.heroSprite = this.add.sprite(ORIGIN_X, yForAnim(heroIdleKey), heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? IDLE_SCALE : 0.7);
         if (this.textures.exists('hero_shadow')) {
-          this.add.image(178, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+          this.add.image(SHADOW_X, SHADOW_Y, 'hero_shadow').setDisplaySize(SHADOW_W, SHADOW_H).setAlpha(0.7).setDepth(9);
         } else {
-          this.add.ellipse(200, 450, 160, 28, 0x000000, 0.45).setDepth(9);
+          this.add.ellipse(ORIGIN_X, SHADOW_Y + 10, 160, 28, 0x000000, 0.45).setDepth(9);
         }
 
         const idle2Key = `${sp}_idle2`;
@@ -449,8 +455,12 @@ export class CombatScene extends Scene {
 
         // Posição e scale por animação, ajustados via debug-layout
         const ANIM_OVERRIDES: Record<string, { x: number; y: number; scale: number }> = {
-          hero_attack:  { x: 190.4, y: 301.6, scale: 0.6118 },
-          hero_channel: { x: 199.3, y: 318.8, scale: 0.6529 },
+          hero_attack:      { x: 190.4, y: 303.5, scale: 0.6118 },
+          hero_defend:      { x: 200,   y: 323.4, scale: 0.6034 },
+          hero_channel:     { x: 184.8, y: 314.1, scale: 0.6529 },
+          mage_defend:      { x: 187.5, y: 328.5, scale: 0.3092 },
+          mage_attack:      { x: 196.0, y: 343.4, scale: 0.3357 },
+          mage_cast_debuff: { x: 187.5, y: 327.0, scale: 0.3221 },
         };
 
         const ensureAnim = (key: string, frameRate: number, repeat = 0) => {
@@ -525,7 +535,7 @@ export class CombatScene extends Scene {
               effects: cardDef.effects,
               exhaust: cardDef.exhaust,
               spend_armor: cardDef.spend_armor,
-            }, { locale: getLocale() });
+            });
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
             keywordIntro.handleCardPlayed(this, fullText, getLocale());
           }
@@ -566,15 +576,17 @@ export class CombatScene extends Scene {
         } else {
           this.enemyShadow = this.add.ellipse(600, 430, 160, 28, 0x000000, 0.45).setDepth(9) as unknown as Phaser.GameObjects.Graphics;
         }
-        const key2 = `${this.enemyTextureKey}_2`;
-        if (this.textures.exists(key2)) {
-          let frame = 0;
+        const enemyFrames: string[] = [this.enemyTextureKey];
+        for (let n = 2; this.textures.exists(`${this.enemyTextureKey}_${n}`); n++)
+          enemyFrames.push(`${this.enemyTextureKey}_${n}`);
+        if (enemyFrames.length > 1) {
+          let frameIdx = 0;
           this.enemyIdleTimer = this.time.addEvent({
-            delay: 500, loop: true,
+            delay: Math.round(1000 / 6), loop: true,
             callback: () => {
               if (this.enemySprite instanceof Phaser.GameObjects.Image) {
-                frame = 1 - frame;
-                this.enemySprite.setTexture(frame === 0 ? this.enemyTextureKey : key2);
+                frameIdx = (frameIdx + 1) % enemyFrames.length;
+                this.enemySprite.setTexture(enemyFrames[frameIdx]);
               }
             },
           });
@@ -678,22 +690,22 @@ export class CombatScene extends Scene {
 
     // --- INIMIGO (calibrado via debug-layout) ---
     if (s.burnStacks > 0 && !this._fxEnemyFire)
-      this._fxEnemyFire  = fx.statusEffect(612.5, 636.3, 'fx_fire',  252);
+      this._fxEnemyFire  = fx.statusEffect(602.6, 542.2, 'fx_fire',  366);
     else if (s.burnStacks === 0 && this._fxEnemyFire)
       { this._fxEnemyFire.destroy();  this._fxEnemyFire  = null; }
 
     if (s.bleedStacks > 0 && !this._fxEnemyBleed)
-      this._fxEnemyBleed = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+      this._fxEnemyBleed = fx.statusEffect(596, 467.1, 'fx_bleed', 161);
     else if (s.bleedStacks === 0 && this._fxEnemyBleed)
       { this._fxEnemyBleed.destroy(); this._fxEnemyBleed = null; }
 
     if (s.stunStacks > 0 && !this._fxEnemyStun)
-      this._fxEnemyStun  = fx.statusEffect(612.5, 300.2, 'fx_stun',   67);
+      this._fxEnemyStun  = fx.statusEffect(591.4, 301.5, 'fx_stun',   90);
     else if (s.stunStacks === 0 && this._fxEnemyStun)
       { this._fxEnemyStun.destroy();  this._fxEnemyStun  = null; }
 
     if (s.poisonStacks > 0 && !this._fxEnemyPoison)
-      this._fxEnemyPoison = fx.statusEffect(612.5, 636.3, 'fx_bleed', 115);
+      this._fxEnemyPoison = fx.statusEffect(596, 467.1, 'fx_bleed', 161);
     else if (s.poisonStacks === 0 && this._fxEnemyPoison)
       { this._fxEnemyPoison.destroy(); this._fxEnemyPoison = null; }
   }
