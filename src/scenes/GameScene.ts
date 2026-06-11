@@ -15,7 +15,6 @@ import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
 import { setActiveRNG, rand } from '../systems/SharedRNG';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
-import { loadLightChrome, loaderTarget } from './AssetManifest';
 import { dailyRunBroadcaster } from '../systems/DailyRunBroadcaster';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { DailyTickerPanel } from '../ui/DailyTickerPanel';
@@ -62,14 +61,6 @@ export class GameScene extends Scene {
 
   constructor() {
     super(SCENE_KEYS.GAME);
-  }
-
-  // Reached directly from the menu (Continue / Daily). Ensure the light run
-  // visuals (hero, tiles, landmarks, parallax, HUD panels) are present before
-  // create() so a fast click on a cold cache never shows missing-texture boxes.
-  // Dedupes to a no-op once the background warm (GlobalSound) has loaded them.
-  preload(): void {
-    loadLightChrome(loaderTarget(this.load));
   }
 
   private introPlaying = false;
@@ -331,7 +322,9 @@ export class GameScene extends Scene {
       const nickname = ensureNickname();
       dailyRunBroadcaster.start(run.runId, nickname);
       dailyRunTicker.start();
-      new DailyTickerPanel(this, { selfRunId: run.runId });
+      // Center the ticker at 3/4 of the 600-tall game-space on the right edge
+      // (centerY keeps it anchored there regardless of how many rows appear).
+      new DailyTickerPanel(this, { selfRunId: run.runId, centerY: Math.round(LAYOUT.canvasHeight * 0.75) });
     }
 
     // Keyboard shortcuts: ESC opens Pause, D opens Deck, R opens Relics.
@@ -613,6 +606,12 @@ export class GameScene extends Scene {
           // Use the pre-mutation length captured above so a boss-loop transition
           // (N → N+1 tiles) advances by N, not N+1.
           this.worldOffset += traversedLength * TILE_SIZE;
+          // A boss loop changes the tile count (boss tile pushed/dropped), so
+          // the accumulated offset is no longer a multiple of the new loop
+          // length and the tile pool's modulo mapping falls out of phase —
+          // the hero ends up rendered tiles away from the enemy it fights.
+          // Re-snap the phase so the hero lands on data-index 0 of the new loop.
+          this.alignWorldOffset();
 
           // "Don't stop here for N" auto-skip: PlanningOverlay sets
           // run.skipLoopsRemaining; we consume one each loop, but the planning
@@ -655,6 +654,11 @@ export class GameScene extends Scene {
         //    so we handle the full transition here).
         if (typeof data?.traversedLength === 'number') {
           this.worldOffset += data.traversedLength * TILE_SIZE;
+          // boss-continue both grows the loop and drops the boss tile, so the
+          // loop length changed — re-align the offset's modulo phase (see
+          // alignWorldOffset) before rebuilding the pool, or the hero renders
+          // tiles away from where it actually is.
+          this.alignWorldOffset();
           for (const [, tv] of this.tilePool) tv.destroy();
           this.tilePool.clear();
 
@@ -675,8 +679,12 @@ export class GameScene extends Scene {
         break;
       }
       case 'boss-defeated': {
+        // Feira de Jogos: antes da tela de continue/exit, mostra a tela de
+        // login (FeiraAuthScene) que credita 300 tijolinhos ao jogador. Ela
+        // segue para a BossExitScene ao terminar. GameScene fica pausado o
+        // tempo todo (a BossExitScene o retoma se o jogador escolher "Continue").
         this.scene.pause();
-        this.scene.launch(SCENE_KEYS.BOSS_EXIT, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
+        this.scene.launch(SCENE_KEYS.FEIRA_AUTH, { loopRunner: this.loopRunner, loopRunState: this.loopRunState });
         break;
       }
       case 'loop-started': {
@@ -728,6 +736,29 @@ export class GameScene extends Scene {
       tv.setDepth(10);
       this.tilePool.set(gi, tv);
     }
+  }
+
+  /**
+   * Snap worldOffset UP so the tile pool's modulo mapping lands the hero on
+   * data-index 0 at the start of the new loop.
+   *
+   * updateTilePool maps a global tile index `gi` to a data index via
+   * `gi % loopLength`, and the hero's global index at loop start
+   * (positionInLoop === 0) is `worldOffset / TILE_SIZE`. For the hero to stand
+   * on the tile whose enemy the LoopRunner actually triggers, that origin must
+   * be a multiple of the *current* loop length. Same-length loops keep this
+   * true for free, but a boss loop adds a tile (and boss-continue grows the
+   * loop), leaving the accumulated offset off-phase — which renders the hero a
+   * dozen tiles away from the enemy it's fighting. Rounding UP keeps the hero
+   * moving forward only, and the jump is hidden behind the loop-summary /
+   * planning gap (pool is cleared and rebuilt at that point anyway).
+   */
+  private alignWorldOffset(): void {
+    const length = this.loopRunState.loop.length;
+    if (length <= 0) return;
+    const origin = Math.round(this.worldOffset / TILE_SIZE);
+    const alignedOrigin = Math.ceil(origin / length) * length;
+    this.worldOffset = alignedOrigin * TILE_SIZE;
   }
 
 

@@ -105,8 +105,9 @@ export class Preloader extends Scene {
       { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
       // New bosses — live in `monsters/boss/`. frameCount = total frames on disk.
       // `boss_iron_golem` namespaced to avoid clashing with `iron_golem` at default/.
-      // `iron_golem` reuses the boss sprite since no separate default art exists.
-      { id: 'iron_golem',           folder: 'boss',     file: 'iron_golem_1.png',           hasFrame2: true },
+      // `iron_golem` (Dryas, the iron commander) has its own distinct 3-frame
+      // battle-stance art, left-facing — separate from the ancient colossus boss.
+      { id: 'iron_golem',           folder: 'boss',     file: 'iron_commander_1.png',       hasFrame2: true, frameCount: 3 },
       { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true, frameCount: 4 },
       { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true, frameCount: 3 },
       { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true, frameCount: 5 },

@@ -47,6 +47,11 @@ export interface DailyTickerPanelOptions {
   rightX?: number;
   /** Pixel y for the panel's top-right corner. Defaults to small margin. */
   topY?: number;
+  /** Pixel y the panel's *vertical center* should sit at. Overrides topY when
+   *  set — the panel recenters around this line as its height changes, so it
+   *  stays visually anchored (e.g. canvasHeight*0.75) instead of growing
+   *  downward off-screen from a fixed top. */
+  centerY?: number;
 }
 
 export class DailyTickerPanel {
@@ -74,7 +79,12 @@ export class DailyTickerPanel {
     this.panelY = topY;
     this.useAsset = scene.textures.exists('panel_daily_run');
 
-    this.container = scene.add.container(this.panelX, this.panelY).setDepth(900);
+    // scrollFactor(0) pins the panel to the camera so it stays fixed in the
+    // top-right corner instead of scrolling away with the world map (GameScene
+    // follows the hero, so world-anchored HUD would drift off-screen).
+    this.container = scene.add.container(this.panelX, this.panelY)
+      .setScrollFactor(0)
+      .setDepth(900);
 
     // Pre-allocate row text objects
     for (let i = 0; i < MAX_ROWS; i++) {
@@ -153,6 +163,12 @@ export class DailyTickerPanel {
     const snapshot = dailyRunTicker.getSnapshot().slice(0, MAX_ROWS);
     const rowCount = Math.max(1, snapshot.length);
     const panelH = calcPanelHeight(rowCount);
+
+    // When anchored by center, recenter the container vertically each refresh
+    // so the panel stays centered on `centerY` as its height grows/shrinks.
+    if (this.opts.centerY !== undefined) {
+      this.container.setY(Math.round(this.opts.centerY - panelH / 2));
+    }
 
     this.buildPanel(panelH);
 

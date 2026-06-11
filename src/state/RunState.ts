@@ -14,7 +14,7 @@ import { eventBus } from '../core/EventBus';
 import { clearPendingLoot } from '../systems/PendingLoot';
 import { getStorehouseEffects, getTavernEffects } from '../systems/MetaProgressionSystem';
 import { resetRNG } from '../systems/LootGenerator';
-import { dailySeedString, deriveDailyRunConfig } from '../systems/DailySeed';
+import { dailySeedString, randomDailyRunConfig } from '../systems/DailySeed';
 import { resolveHeroStats } from '../systems/hero/HeroStatsResolver';
 
 // ── State Interfaces ────────────────────────────────────────
@@ -434,7 +434,10 @@ export function createNewRun(
  */
 export function createNewDailyRun(metaState?: MetaState, date: Date = new Date()): RunState {
   const seed = dailySeedString(date);
-  const config = deriveDailyRunConfig(seed);
+  // Class + deck are rolled randomly per run; the map/enemy seed stays the
+  // day's shared seed so every daily races the same course with a varied
+  // loadout (see DailySeed.randomDailyRunConfig).
+  const config = randomDailyRunConfig(seed);
   const run = createNewRun(metaState, 1, config.className, seed, config.starterDeck);
   run.mode = 'daily';
   return run;

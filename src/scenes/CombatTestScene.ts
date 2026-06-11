@@ -160,7 +160,7 @@ export class CombatTestScene extends Phaser.Scene {
     'monster_lost_lizard',
     // Bosses
     'monster_bog_witch', 'monster_desert_golem',
-    'monster_infernal_dragon', 'monster_boss_iron_golem',
+    'monster_infernal_dragon', 'monster_iron_golem', 'monster_boss_iron_golem',
   ];
 
   constructor() { super({ key: 'CombatTestScene' }); }
@@ -296,13 +296,17 @@ export class CombatTestScene extends Phaser.Scene {
     for (let n = 2; this.textures.exists(`${key}_${n}`); n++)
       frames.push(`${key}_${n}`);
     if (frames.length < 2) return;
+    // Ping-pong com 3+ frames (1→2→3→2), igual ao combate real.
+    const order: string[] = frames.length >= 3
+      ? [...frames, ...frames.slice(1, -1).reverse()]
+      : frames;
     let idx = 0;
     this.enemyIdleTimer = this.time.addEvent({
       delay: Math.round(1000 / 6), loop: true,
       callback: () => {
         if (!(this.enemySprite instanceof Phaser.GameObjects.Image)) return;
-        idx = (idx + 1) % frames.length;
-        this.enemySprite.setTexture(frames[idx]);
+        idx = (idx + 1) % order.length;
+        this.enemySprite.setTexture(order[idx]);
       },
     });
   }

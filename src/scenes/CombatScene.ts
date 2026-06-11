@@ -604,14 +604,19 @@ export class CombatScene extends Scene {
         const enemyFrames: string[] = [this.enemyTextureKey];
         for (let n = 2; this.textures.exists(`${this.enemyTextureKey}_${n}`); n++)
           enemyFrames.push(`${this.enemyTextureKey}_${n}`);
-        if (enemyFrames.length > 1) {
+        // Idle playback order. With 3+ frames we ping-pong (e.g. 1→2→3→2)
+        // for a smoother breathing loop; with 2 frames the cycle is just 1→2.
+        const idleOrder: string[] = enemyFrames.length >= 3
+          ? [...enemyFrames, ...enemyFrames.slice(1, -1).reverse()]
+          : enemyFrames;
+        if (idleOrder.length > 1) {
           let frameIdx = 0;
           this.enemyIdleTimer = this.time.addEvent({
             delay: Math.round(1000 / 6), loop: true,
             callback: () => {
               if (this.enemySprite instanceof Phaser.GameObjects.Image) {
-                frameIdx = (frameIdx + 1) % enemyFrames.length;
-                this.enemySprite.setTexture(enemyFrames[frameIdx]);
+                frameIdx = (frameIdx + 1) % idleOrder.length;
+                this.enemySprite.setTexture(idleOrder[frameIdx]);
               }
             },
           });

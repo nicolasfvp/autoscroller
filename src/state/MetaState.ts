@@ -64,7 +64,7 @@ export interface MetaState {
    *  read at game init from localStorage. Default 'balanced'. */
   graphicsQuality: GraphicsQuality;
   /** Active UI language. Durable copy of the `autoscroller:lang` localStorage
-   *  mirror that the i18n engine reads synchronously at boot. Default 'pt-br'. */
+   *  mirror that the i18n engine reads synchronously at boot. Default 'en'. */
   language: Locale;
   version: number;
   /** Discovered forge recipes (element multisets) — meta-persistent. */
@@ -114,7 +114,7 @@ export function createDefaultMetaState(): MetaState {
     autoSave: true,
     cardScale: 1,
     graphicsQuality: 'balanced',
-    language: 'pt-br',
+    language: 'en',
     version: 13,
     forgeRecipes: [],
     seenKeywords: [],
@@ -281,13 +281,13 @@ export function migrateMetaState(raw: any): MetaState {
   }
 
   // v12 -> v13 migration: UI language preference (i18n). Existing players
-  // default to 'pt-br' (the shipped default); they can switch to English from
+  // default to 'en' (the shipped default); they can switch to Portuguese from
   // SettingsScene → Language. The synchronous localStorage mirror
   // (`autoscroller:lang`) is what the engine reads at boot; this durable copy
   // keeps the choice attached to the save.
   if (raw.version === 12) {
     if (raw.language !== 'pt-br' && raw.language !== 'en') {
-      raw.language = 'pt-br';
+      raw.language = 'en';
     }
     raw.version = 13;
   }

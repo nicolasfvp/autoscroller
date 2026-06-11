@@ -17,6 +17,7 @@ import { DeathScene } from './scenes/DeathScene'
 import { GameScene } from './scenes/GameScene'
 import { PlanningOverlay } from './scenes/PlanningOverlay'
 import { BossExitScene } from './scenes/BossExitScene'
+import { FeiraAuthScene } from './scenes/FeiraAuthScene'
 import { CityHubScene } from './scenes/CityHubScene'
 import { BuildingPanelScene } from './scenes/BuildingPanelScene'
 import { TavernPanelScene } from './scenes/TavernPanelScene'
@@ -111,6 +112,7 @@ const config: Phaser.Types.Core.GameConfig = {
         DeathScene,
         PlanningOverlay,
         BossExitScene,
+        FeiraAuthScene,
         CityHubScene,
         BuildingPanelScene,
         TavernPanelScene,
@@ -170,6 +172,27 @@ const _origTextFactory = Phaser.GameObjects.GameObjectFactory.prototype.text as 
 document.fonts.load('16px VT323').catch(() => {});
 
 const game = new Phaser.Game(config);
+
+// ── Anti-tamper para feiras / builds públicos ──────────────────────────────
+// Deterrente (NÃO é segurança real) contra alunos curiosos abrindo o DevTools
+// para inspecionar/editar o jogo em runtime. Só roda em produção para não
+// atrapalhar o desenvolvimento. Bloqueia F12, Ctrl/Cmd+Shift+I/J/C, Ctrl/Cmd+U
+// (ver código-fonte) e o menu de contexto (botão direito → Inspecionar).
+if (import.meta.env.PROD) {
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+        const k = e.key;
+        const ctrl = e.ctrlKey || e.metaKey;
+        const blocked =
+            k === 'F12' ||
+            (ctrl && e.shiftKey && (k === 'I' || k === 'i' || k === 'J' || k === 'j' || k === 'C' || k === 'c')) ||
+            (ctrl && (k === 'U' || k === 'u'));
+        if (blocked) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+}
 
 // Debug overlay toggle via F2
 // Language reconciliation. Boot localizes data using the synchronous

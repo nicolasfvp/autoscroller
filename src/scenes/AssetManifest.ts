@@ -282,7 +282,7 @@ export function loadRelicArt(load: LoadTarget): void {
 }
 
 // ── Tier 3: combat art (monsters, hit effects, battle backgrounds) ────────────
-const STATIC_MONSTERS: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean }> = [
+const STATIC_MONSTERS: Array<{ id: string; folder: string; file: string; hasFrame2?: boolean; frameCount?: number }> = [
   { id: 'corpse_eater', folder: 'cemetery', file: 'corpse eater_1.png', hasFrame2: true },
   { id: 'pocket_cat', folder: 'cemetery', file: 'pocket cat.png' },
   { id: 'skeleton', folder: 'cemetery', file: 'skeleton_1.png', hasFrame2: true },
@@ -308,7 +308,10 @@ const STATIC_MONSTERS: Array<{ id: string; folder: string; file: string; hasFram
   { id: 'bog_witch', folder: 'boss', file: 'bog_witch_1.png', hasFrame2: true },
   { id: 'desert_golem', folder: 'boss', file: 'desert_golem_1.png', hasFrame2: true },
   { id: 'infernal_dragon', folder: 'boss', file: 'infernal_dragon_1.png', hasFrame2: true },
-  { id: 'iron_golem',      folder: 'boss', file: 'iron_golem_1.png', hasFrame2: true },
+  // `iron_golem` (Dryas, the iron commander) now has its own distinct art —
+  // a left-facing battle-stance sprite, separate from the ancient colossus.
+  { id: 'iron_golem',      folder: 'boss', file: 'iron_commander_1.png', hasFrame2: true, frameCount: 3 },
+  // `boss_iron_golem` (Ancient Iron Golem) keeps the original colossus sprite.
   { id: 'boss_iron_golem', folder: 'boss', file: 'iron_golem_1.png', hasFrame2: true },
 ];
 
@@ -324,8 +327,9 @@ export function loadCombatArt(load: LoadTarget): void {
       ? `assets/characters/monsters/${m.folder}/${m.file}`
       : `assets/characters/monsters/${m.file}`;
     image(load, `monster_${m.id}`, path);
-    if (m.hasFrame2) {
-      image(load, `monster_${m.id}_2`, path.replace(/(_1)?\.png$/i, '_2.png'));
+    const totalFrames = m.frameCount ?? (m.hasFrame2 ? 2 : 1);
+    for (let n = 2; n <= totalFrames; n++) {
+      image(load, `monster_${m.id}_${n}`, path.replace(/(_1)?\.png$/i, `_${n}.png`));
     }
     image(load, `portrait_${m.id}`, `assets/characters/monsters/portraits/${m.id}.png`);
   }
