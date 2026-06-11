@@ -101,4 +101,39 @@ describe('computeHeroChips', () => {
     expect(armor?.label).toBe('x2');
     expect(hp?.label).toBe('armed');
   });
+
+  it('leads with effective core-stat chips (readStat) and skips zero axes', () => {
+    const chips = computeHeroChips(makeMinState({
+      heroStrength: 12, heroVitality: 8, heroDexterity: 0, heroIntellect: 0, heroSpirit: 3,
+    }));
+    // STR, VIT, SPI present in order; DEX/INT are 0 → skipped.
+    expect(chips.map(c => c.key)).toEqual(['hero-stat-str', 'hero-stat-vit', 'hero-stat-spi']);
+    expect(chips.map(c => c.label)).toEqual(['12', '8', '3']);
+  });
+
+  it('folds active stat-auras into the stat total (no duplicate aura chip)', () => {
+    const heroAuras: ActiveAura[] = [
+      { remainingMs: 4000, modifier: { kind: 'str', value: 3 } },
+    ];
+    const chips = computeHeroChips(makeMinState({ heroStrength: 10, heroAuras }));
+    expect(chips.find(c => c.key === 'hero-stat-str')?.label).toBe('13'); // 10 base + 3 aura
+    expect(chips.some(c => c.key === 'hero-aura-str')).toBe(false);       // not shown twice
+  });
+
+  it('includes per-combat stat boosts in the stat total', () => {
+    const chips = computeHeroChips(makeMinState({
+      heroIntellect: 5,
+      statBoostsThisCombat: { int: 2 },
+    }));
+    expect(chips.find(c => c.key === 'hero-stat-int')?.label).toBe('7'); // 5 base + 2 boost
+  });
+
+  it('still emits non-stat auras (e.g. cd_reduction) alongside the stat totals', () => {
+    const heroAuras: ActiveAura[] = [
+      { remainingMs: 4000, modifier: { kind: 'cd_reduction', value: 0.25 } },
+    ];
+    const chips = computeHeroChips(makeMinState({ heroStrength: 6, heroAuras }));
+    expect(chips.map(c => c.key)).toContain('hero-stat-str');
+    expect(chips.map(c => c.key)).toContain('hero-aura-cd_reduction');
+  });
 });

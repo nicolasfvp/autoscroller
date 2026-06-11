@@ -4,8 +4,9 @@
 // text objects) lives in CombatHUD.
 
 import type { CombatState } from '../systems/combat/CombatState';
-import type { AuraModifierKind } from '../data/types';
+import type { AuraModifierKind, StatId } from '../data/types';
 import type { ActiveAura } from '../systems/combat/StatusEffects';
+import { readStat } from '../systems/hero/HeroStatsResolver';
 import { getLocale } from '../i18n/i18n';
 
 // pt-BR for the status-chip tooltip names + prose. Hover-only; defaults to
@@ -62,6 +63,17 @@ const MOD_META: Record<AuraModifierKind, { iconKey: string; color: string; name:
   stack_gain_mult:   { iconKey: 'icon_bleed',   color: '#ff4d4d', name: 'Stack ×' },
 };
 
+// The five hero stat axes, in display order. These are shown as always-on
+// "total" chips so the hero status row has persistent content even when no
+// DoT/aura is active — and so the player can read the SAME effective value a
+// card scales off (see readStat). `def` is intentionally absent: armor is its
+// own chip (heroDefense), not a readStat axis.
+const CORE_STAT_ORDER: StatId[] = ['str', 'vit', 'dex', 'int', 'spi'];
+// Aura kinds folded into the stat-total chips above, so the aura loop skips
+// them (otherwise a +2 STR buff would show twice: once in the STR total and
+// again as a standalone "+2" aura chip).
+const CORE_STAT_KINDS = new Set<AuraModifierKind>(['str', 'vit', 'dex', 'int', 'spi']);
+
 interface AggregatedMod {
   kind: AuraModifierKind;
   totalValue: number;
@@ -103,6 +115,24 @@ function formatModValue(kind: AuraModifierKind, value: number): string {
 export function computeHeroChips(state: CombatState): EffectChip[] {
   const chips: EffectChip[] = [];
 
+  // Effective hero stats first (base + active stat-auras + per-combat boosts).
+  // readStat() is the exact value the CardResolver scales damage/effects off,
+  // so the on-screen number can never disagree with a card's resolved value.
+  // Shown whenever > 0; a temporary buff makes the total rise then fall back,
+  // which is the "increase/decrease" feedback the row exists to convey.
+  for (const stat of CORE_STAT_ORDER) {
+    const v = readStat(state, stat);
+    if (!Number.isFinite(v) || v <= 0) continue;
+    const meta = MOD_META[stat];
+    chips.push({
+      key: `hero-stat-${stat}`,
+      iconKey: meta.iconKey,
+      label: `${v}`,
+      color: meta.color,
+      tooltip: `${nm(meta.name)}: ${v}`,
+    });
+  }
+
   const armor = Math.max(0, Math.floor(state.heroDefense ?? 0));
   if (armor > 0) {
     chips.push({
@@ -116,6 +146,7 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
 
   for (const agg of aggregateAuras(state.heroAuras)) {
     if (agg.totalValue === 0) continue;
+    if (CORE_STAT_KINDS.has(agg.kind)) continue; // folded into the stat-total chip above
     const meta = MOD_META[agg.kind];
     chips.push({
       key: `hero-aura-${agg.kind}`,
