@@ -268,6 +268,18 @@ export class CombatEngine {
       this.state.heroStamina = Math.min(this.state.heroMaxStamina, this.state.heroStamina + relicBonus.staminaRefund);
     }
 
+    // Archon Codex: 1/combat, when the hero's Mana hits 0 (e.g. after paying for
+    // a spell), refund 12 Mana and prime the NEXT Magic card to cost 0 and Echo
+    // 1 (consumed in resolveCardPlayedRelicBonus). trigger 'stat_changed' is
+    // never dispatched, so this is detected by ID here on the mana-spend path.
+    if (this.state.activeRelicIds.includes('archon_codex')
+        && this.state.heroMana <= 0
+        && (this.state.relicCounters['archon_used'] ?? 0) === 0) {
+      this.state.relicCounters['archon_used'] = 1;
+      this.state.heroMana = Math.min(this.state.heroMaxMana, this.state.heroMana + 12);
+      this.state.relicCounters['archon_next_magic'] = 1;
+    }
+
     // Update stats
     this.stats.cardsPlayed++;
     this.stats.damageDealt += result.totalDamage;
@@ -369,6 +381,14 @@ export class CombatEngine {
       (effectiveCooldown - cooldownShave) * 1000 * (1 - dexReduction) * (this.state.cooldownMultiplier ?? 1.0) * auraCdFactor * roaringHourglassFactor
         + debtMs,
     );
+
+    // Thin Deck Charm: "+1 card draw at combat start". The fixed-order engine has
+    // no hand to draw into, so each bonus opener is realized as a skipped
+    // cooldown — the next card resolves immediately. Consumed once.
+    if ((this.state.bonusOpeningCards ?? 0) > 0) {
+      this.state.bonusOpeningCards = (this.state.bonusOpeningCards ?? 0) - 1;
+      this.heroCooldownTimer = 0;
+    }
 
     // v3: Echo — consume one charge by repeating the same resolution. The
     // `echoExpiresAt` field is treated as a countdown that decays in tick();
@@ -484,7 +504,15 @@ export class CombatEngine {
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
       eventBus.emit('combat:dot-tick', { stack: 'bleed', damage: dmg, sourceCard: triggeringCardId });
-      state.bleedStacks = Math.max(0, state.bleedStacks - 1);
+      // Crimson Stiletto: bleed stacks do NOT decay on a tick where bleed was
+      // freshly applied since the previous tick (the flag is set in CardResolver
+      // on every enemy-bleed application). Otherwise decay -1 as usual.
+      if (crimsonStiletto && state.bleedAppliedSinceLastTick) {
+        // skip decay this tick
+      } else {
+        state.bleedStacks = Math.max(0, state.bleedStacks - 1);
+      }
+      state.bleedAppliedSinceLastTick = false;
       state.enemyAttackedSinceLastBleedTick = false;
       anyDotTicked = true;
     }
@@ -494,15 +522,21 @@ export class CombatEngine {
     // on autopilot. Stacks are only consumed by Pyre cards (handled in
     // CardResolver post-damage).
     if (state.burnStacks > 0) {
-      // Base: min(stacks, 8). C4 — Cinderkeep keeps its prior formula
-      // (ceil(stacks/4), min 2) since that relic is sold as a burn-tempo
-      // amplifier rather than a raw scaler.
-      // Rebalance: soft cap (was hard min(8)) so deep-fire investment isn't
-      // wasted — flattens above 8 but never flatlines (bank-and-cash burn).
-      // Clamped to the global chunk cap so a huge banked pool can't one-shot
-      // through ticks (it should be detonated instead).
+      // Base: min(stacks, 8). Rebalance: soft cap (was hard min(8)) so deep-fire
+      // investment isn't wasted — flattens above 8 but never flatlines
+      // (bank-and-cash burn). Clamped to the global chunk cap so a huge banked
+      // pool can't one-shot through ticks (it should be detonated instead).
       const base = state.burnStacks <= 8 ? state.burnStacks : 8 + Math.floor((state.burnStacks - 8) / 2);
-      const dmg = Math.min(DOT_CHUNK_CAP, cinderkeep ? Math.max(base, Math.ceil(state.burnStacks / 4)) : base);
+      let burnTick = base;
+      // Cinderkeep: real burn-tempo amplifier — each tick deals a bonus of
+      // ceil(Burn/4) (min 2) ON TOP of the base. (The old `max(base, ceil/4)`
+      // was a no-op because base >= ceil/4 for every stack count.)
+      if (cinderkeep) burnTick += Math.max(2, Math.ceil(state.burnStacks / 4));
+      // Cinder Circlet: burn ticks deal +1 damage per 3 INT.
+      if (state.activeRelicIds.includes('cinder_circlet')) {
+        burnTick += Math.floor(state.heroIntellect / 3);
+      }
+      const dmg = Math.min(DOT_CHUNK_CAP, burnTick);
       state.enemyHP -= dmg;
       this.stats.damageDealt += dmg;
       getRun().stats.damageDealt += dmg;
@@ -537,7 +571,14 @@ export class CombatEngine {
     // never fired the trigger and `dot_tick` relics for warrior/mage builds
     // were effectively dead. Single dispatch matches the "tick once per card
     // play" cadence (INDEX §7 #2) and avoids over-firing for multi-DoT stacks.
-    if (anyDotTicked) {
+    // Bug #1 fix: the hero's self-Bleed/Burn ticks must ALSO fire the dot_tick
+    // dispatch. Previously only ENEMY DoTs set anyDotTicked, so the self-DoT
+    // relics (bloodgorged_heart, linen_wrap, sanguine_pact) never fired on a
+    // pure self-DoT cycle — exactly the builds that equip them. The hero stacks
+    // are still > 0 here (they're decremented just below), so the handlers'
+    // `heroBurnStacks>0 || heroBleedStacks>0` guards see them.
+    const heroSelfDotTicking = state.heroBurnStacks > 0 || state.heroBleedStacks > 0;
+    if (anyDotTicked || heroSelfDotTicking) {
       dispatchTriggerRelics('dot_tick', state.activeRelicIds ?? [], state);
     }
 

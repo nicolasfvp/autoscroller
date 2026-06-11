@@ -69,22 +69,41 @@ describe('Relics C4 — Hemlock Vial (Poison)', () => {
   });
 });
 
-describe('Relics C4 — Stoneheart Sigil (damage floor)', () => {
-  it('reduces every incoming hit by 5 damage', () => {
+describe('Relics C4 — Stoneheart Sigil (armor floor)', () => {
+  it('seeds 5 armor at combat start', () => {
     const state = createCombatState(makeRun(['stoneheart_sigil']), makeEnemy());
-    state.heroDefense = 0;
-    const before = state.heroHP;
-    applyHeroDamage(10, state);
-    // 10 dmg - 5 floor = 5 HP loss.
-    expect(state.heroHP).toBe(before - 5);
+    expect(state.heroDefense).toBe(5);
   });
 
-  it('5 damage or less is fully absorbed', () => {
+  it('mitigates via the seeded 5 armor (10 dmg → 5 HP loss)', () => {
     const state = createCombatState(makeRun(['stoneheart_sigil']), makeEnemy());
-    state.heroDefense = 0;
+    const before = state.heroHP;
+    applyHeroDamage(10, state);
+    // 10 dmg - 5 armor mitigation = 5 HP loss; armor preserved at the floor.
+    expect(state.heroHP).toBe(before - 5);
+    expect(state.heroDefense).toBe(5);
+  });
+
+  it('5 damage or less is fully absorbed by the floor armor', () => {
+    const state = createCombatState(makeRun(['stoneheart_sigil']), makeEnemy());
     const before = state.heroHP;
     applyHeroDamage(4, state);
     expect(state.heroHP).toBe(before);
+    expect(state.heroDefense).toBe(5);
+  });
+
+  it('armor never drops below 5 even on a huge hit', () => {
+    const state = createCombatState(makeRun(['stoneheart_sigil']), makeEnemy());
+    state.heroDefense = 5;
+    applyHeroDamage(999, state);
+    expect(state.heroDefense).toBe(5);
+  });
+
+  it('grants +6 armor when a hit would break the floor', () => {
+    const state = createCombatState(makeRun(['stoneheart_sigil']), makeEnemy());
+    state.heroDefense = 10;
+    applyHeroDamage(8, state); // 10 → 2 would break floor → clamp to 5, +6 = 11
+    expect(state.heroDefense).toBe(11);
   });
 });
 

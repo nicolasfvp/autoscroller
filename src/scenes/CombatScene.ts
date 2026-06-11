@@ -174,6 +174,21 @@ export class CombatScene extends Scene {
     currentRun.hero.currentStamina = finalState.heroStamina;
     currentRun.hero.currentMana = finalState.heroMana;
 
+    // Persist run-level relic state. phoenix_feather is once-per-RUN, so its
+    // "used" flag must survive to the next combat. huntmasters_eye / veterans_
+    // stripe accumulate kill-STR across the run (applied at each combat start).
+    const relicRunState = currentRun.relicRunState ?? (currentRun.relicRunState = {});
+    if (finalState.phoenixUsed) relicRunState.phoenixUsedThisRun = true;
+    if (eventData.result === 'victory') {
+      if (currentRun.relics?.includes('huntmasters_eye')) {
+        relicRunState.huntmasterKills = Math.min(6, (relicRunState.huntmasterKills ?? 0) + 1);
+      }
+      if (currentRun.relics?.includes('veterans_stripe')
+          && (finalState.enemyType === 'elite' || finalState.enemyType === 'boss')) {
+        relicRunState.veteranKills = Math.min(5, (relicRunState.veteranKills ?? 0) + 1);
+      }
+    }
+
     const sp = getSpritePrefix(currentRun.hero.className ?? 'warrior');
     const heroDeathKey = `${sp}_death`;
 

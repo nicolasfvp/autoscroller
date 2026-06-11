@@ -131,6 +131,10 @@ export class EnemyAI {
     if (multiHit && multiHit.hitCount && multiHit.damageMultiplier) {
       let totalDamage = 0;
       const perHitDamage = Math.floor(damage * multiHit.damageMultiplier);
+      // Capture armor BEFORE the whole multi-hit so the aggregated damage_taken
+      // context carries real armorPrevented / armorJustBroke values (the per-hit
+      // calls run with skipRelics=true).
+      const armorBeforeAttack = state.heroDefense;
       for (let i = 0; i < multiHit.hitCount; i++) {
         // Skip per-hit damage_taken relic application; we run it once after
         // the full multi-hit lands. Otherwise iron_will defense compounds
@@ -139,9 +143,18 @@ export class EnemyAI {
         const actualDmg = this.applyDamage(perHitDamage, state, /*skipRelics=*/true);
         totalDamage += actualDmg;
       }
-      // Apply damage_taken relics once for the *attack*, using cumulative damage.
-      if (totalDamage > 0) {
-        applyDamageTakenRelics(state.activeRelicIds ?? [], totalDamage, state);
+      // Apply damage_taken relics once for the *attack* with the AGGREGATE armor
+      // context, so armor-from-prevented (banded_greaves) and brace (battered_
+      // vambrace) relics fire on multi-hit attacks too — previously the number
+      // form coerced armorPrevented:0 / armorJustBroke:false, dropping both.
+      const rawAttack = perHitDamage * multiHit.hitCount;
+      if (rawAttack > 0) {
+        applyDamageTakenRelics(state.activeRelicIds ?? [], {
+          actualDamage: totalDamage,
+          armorPrevented: Math.max(0, armorBeforeAttack - state.heroDefense),
+          armorJustBroke: armorBeforeAttack > 0 && state.heroDefense === 0,
+          rawDamage: rawAttack,
+        }, state);
       }
       stats.damageReceived += totalDamage;
 
@@ -267,6 +280,10 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
   if (state.activeRelicIds.includes('glass_cannon')) {
     damage = Math.floor(damage * 1.5);
   }
+  // War-God's Mantle: "Fortified" — while Armor >= 10, take 25% less damage.
+  if (state.heroDefense >= 10 && state.activeRelicIds.includes('wargods_mantle')) {
+    damage = Math.floor(damage * 0.75);
+  }
   if (damage === 0) return 0;
   // pierceArmor: self-damage cards tagged `(Pierce)` skip armor absorption
   // entirely so the HP cost is paid in full regardless of current armor.
@@ -285,17 +302,26 @@ export function applyHeroDamage(rawDamage: number, state: CombatState, skipRelic
   const multiplier = (state.heroDefenseMultiplier ?? 1) + vitMitigation;
   const effectiveDefense = state.heroDefense * multiplier;
 
-  let remaining = Math.max(0, Math.floor(damage - effectiveDefense));
-  // C4 — Stoneheart Sigil: 5 flat damage-reduction floor (always blocks at least 5).
-  if (state.activeRelicIds.includes('stoneheart_sigil')) {
-    remaining = Math.max(0, remaining - 5);
-  }
+  const remaining = Math.max(0, Math.floor(damage - effectiveDefense));
   // Armor consumed at face value — multiplier only shifts how much damage
   // each point of armor blocks, not how fast armor itself depletes.
   const armorBefore = state.heroDefense;
-  state.heroDefense = Math.max(0, state.heroDefense - damage);
-  const armorPrevented = armorBefore - state.heroDefense;
-  const armorJustBroke = armorBefore > 0 && state.heroDefense === 0;
+  // Stoneheart Sigil: armor never drops below 5 ("floor = 5"). If a hit WOULD
+  // push armor below the floor, clamp at the floor AND grant +6 Armor (the
+  // "gain +6 at start of next turn" clause, applied immediately since this
+  // engine is turnless). armorPrevented is measured against the clamped value
+  // (before the +6) so banded_greaves stays correct and never goes negative.
+  const stoneheart = state.activeRelicIds.includes('stoneheart_sigil');
+  // Effective floor never exceeds the armor we started with — the relic
+  // PRESERVES armor down to 5, it must not CREATE armor from a hit when armor
+  // was already at/below the floor.
+  const armorFloor = stoneheart ? Math.min(5, armorBefore) : 0;
+  const wouldBreakFloor = stoneheart && armorBefore > 5 && (armorBefore - damage) < 5;
+  const afterDepletion = Math.max(armorFloor, armorBefore - damage);
+  const armorPrevented = armorBefore - afterDepletion;
+  const armorJustBroke = armorBefore > 0 && afterDepletion === 0;
+  state.heroDefense = afterDepletion;
+  if (wouldBreakFloor) state.heroDefense += 6;
 
   // on_armor_break: triggered auras armed on the hero fire their `then`
   // payload when armor transitions from >0 to 0.

@@ -37,6 +37,7 @@
     "effectType": "stat_bonus",
     "stat": "maxStamina",
     "value": 4,
+    "combatStart": { "stamina": 2 },
     "icon": "Sf",
     "color": 15770144,
     "classRestriction": "warrior"
@@ -103,7 +104,7 @@
   {
     "id": "wargods_mantle",
     "name": "War-God's Mantle",
-    "description": "All defense cards cost 0 Stamina. While Armor ≥10, Fortified triggers fire permanently.",
+    "description": "All defense cards cost 0 Stamina. While Armor ≥10, you take 25% less damage (Fortified).",
     "rarity": "rare",
     "trigger": "passive",
     "effectType": "cost_reduction",
@@ -153,6 +154,7 @@
     "effectType": "stat_bonus",
     "stat": "maxMana",
     "value": 8,
+    "combatStart": { "mana": 3 },
     "icon": "Al",
     "color": 5731839,
     "classRestriction": "mage"
@@ -296,6 +298,7 @@
     "effectType": "stat_bonus",
     "stat": "maxStamina",
     "value": 6,
+    "combatStart": { "stamina": 2 },
     "icon": "Et",
     "color": 16776960,
     "classRestriction": "neutral"
@@ -309,6 +312,7 @@
     "effectType": "stat_bonus",
     "stat": "maxMana",
     "value": 10,
+    "combatStart": { "mana": 3 },
     "icon": "Ac",
     "color": 9662683,
     "classRestriction": "neutral"
@@ -677,7 +681,7 @@
   {
     "id": "huntmasters_eye",
     "name": "Huntmaster's Eye",
-    "description": "On kill: +1 STR for combat (cap +6).",
+    "description": "On enemy defeat: +1 STR for the rest of the run (cap +6).",
     "rarity": "uncommon",
     "trigger": "enemy_killed",
     "effectType": "str_per_kill",
@@ -725,7 +729,8 @@
     "rarity": "uncommon",
     "trigger": "card_played",
     "effectType": "resource_refund",
-    "value": 1,
+    "value": 5,
+    "stats": { "stamina": 1, "mana": 1 },
     "icon": "Hc",
     "color": 13923917,
     "classRestriction": "neutral"

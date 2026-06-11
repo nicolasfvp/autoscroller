@@ -59,6 +59,16 @@ export interface CombatState {
    * back-compat with test fixtures that build CombatState literals. */
   stunImmuneUntilMs?: number;
   /**
+   * Stormglass Lens: while `combatElapsedMs` is below this timestamp, new stun
+   * applications IGNORE the stun-immunity window (immunity is "stripped" for a
+   * couple of seconds). Optional for back-compat with test fixtures. */
+  stunPierceUntilMs?: number;
+  /**
+   * Thin Deck Charm: count of extra opening cards that resolve back-to-back at
+   * combat start (cooldown skipped). Decremented as each bonus opener fires.
+   * Optional for back-compat with test fixtures. */
+  bonusOpeningCards?: number;
+  /**
    * Per-deck-position upgrade flags for this combat. Length matches
    * `deckOrder`. Index `i` corresponds to `deckOrder[i]`.
    */
@@ -92,8 +102,11 @@ export interface CombatState {
   /** C5 — Sanguine Pact temp STR/INT bonuses applied around resolve. */
   _sanguinePactStrBonus: number;
   _sanguinePactIntBonus: number;
-  /** Whether phoenix_feather has already been used this combat */
+  /** Whether phoenix_feather has already been used. Seeded from the run-level
+   *  flag (phoenix is once-per-RUN) and written back at combat end. */
   phoenixUsed: boolean;
+  /** Whether the_last_banner's once-per-combat death-save has fired. */
+  bannerUsed?: boolean;
 
   // ── Phase 9: per-combat stat axes (seeded from resolveHeroStats(run)) ─
   heroVitality: number;
@@ -129,6 +142,13 @@ export interface CombatState {
    * deals 2 damage instead of 1.
    */
   enemyAttackedSinceLastBleedTick: boolean;
+
+  /**
+   * Crimson Stiletto: set true whenever Bleed is applied to the enemy; consumed
+   * by the next bleed tick. When the relic is held, a tick that sees this flag
+   * skips its -1 decay ("stacks don't decay on the tick they were applied").
+   * Optional for back-compat with test fixtures. */
+  bleedAppliedSinceLastTick?: boolean;
 
   /**
    * Poison slow-decay counter. Poison damage applies every tick but stacks
@@ -262,6 +282,8 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     heroStunned: false,
     heroStunStacks: 0,
     stunImmuneUntilMs: 0,
+    stunPierceUntilMs: 0,
+    bonusOpeningCards: 0,
     upgraded: [...run.deck.upgraded],
     behaviors: (enemy as any).behaviors ?? [],
 
@@ -278,7 +300,10 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     _bloodPactBonus: 0,
     _sanguinePactStrBonus: 0,
     _sanguinePactIntBonus: 0,
-    phoenixUsed: false,
+    // phoenix_feather is once-per-RUN: seed from the persisted run flag so a
+    // second combat can't re-trigger it. Written back in CombatScene.onCombatEnd.
+    phoenixUsed: run.relicRunState?.phoenixUsedThisRun ?? false,
+    bannerUsed: false,
 
     // -- Phase 9: per-combat stat axes seeded from resolveHeroStats(run) --
     heroVitality: 0,
@@ -301,6 +326,7 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
     combatElapsedMs: 0,
     lastHeroDamageMs: null,
     enemyAttackedSinceLastBleedTick: false,
+    bleedAppliedSinceLastTick: false,
     poisonTickParity: 0,
     nextCardCooldownReduction: 0,
     buffMagnitudePerCard: {},
@@ -340,6 +366,20 @@ export function createCombatState(run: RunState, enemy: EnemyDefinition): Combat
   if ((run.relics ?? []).includes('stamina_reservoir')) {
     const carry = Math.min(5, Math.floor((run.hero.currentStamina ?? 0) / 3));
     state.heroStrength += carry;
+  }
+
+  // Huntmaster's Eye / Veteran's Stripe: persistent run-level STR earned from
+  // kills, applied at the start of EACH combat. The kill counters are bumped in
+  // CombatScene.onCombatEnd — the engine ends combat on the single kill, so an
+  // in-combat grant could never benefit the fight that earned it.
+  const relicRunState = run.relicRunState;
+  if (relicRunState) {
+    if ((run.relics ?? []).includes('huntmasters_eye')) {
+      state.heroStrength += Math.min(6, relicRunState.huntmasterKills ?? 0);
+    }
+    if ((run.relics ?? []).includes('veterans_stripe')) {
+      state.heroStrength += Math.min(5, relicRunState.veteranKills ?? 0);
+    }
   }
 
   // Apply combat_start relics (first_strike_amulet, etc.)

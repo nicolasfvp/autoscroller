@@ -95,12 +95,24 @@ export class CardResolver {
     if (!cost) return true;
     // Smoldering Torch: while firstCardCostsZero is armed, the upcoming card is free.
     if (state.firstCardCostsZero) return true;
+    let staminaCost = cost.stamina;
+    let manaCost = cost.mana;
+    // War-God's Mantle: all defense cards cost 0 Stamina.
+    if (staminaCost !== undefined && card.category === 'defense'
+        && state.activeRelicIds.includes('wargods_mantle')) {
+      staminaCost = 0;
+    }
     // Vanguard Cuffs: stamina cost is reduced by 1 (min 0) for the next N cards.
-    const staminaCost = (cost.stamina !== undefined && state.firstNCardsStaminaDiscount > 0)
-      ? Math.max(0, cost.stamina - 1)
-      : cost.stamina;
+    if (staminaCost !== undefined && state.firstNCardsStaminaDiscount > 0) {
+      staminaCost = Math.max(0, staminaCost - 1);
+    }
+    // Steady Compass: cards played in the first 3s of combat cost 50% less.
+    if (state.activeRelicIds.includes('steady_compass') && state.combatElapsedMs < 3000) {
+      if (staminaCost !== undefined) staminaCost = Math.ceil(staminaCost * 0.5);
+      if (manaCost !== undefined) manaCost = Math.ceil(manaCost * 0.5);
+    }
     if (staminaCost !== undefined && state.heroStamina < staminaCost) return false;
-    if (cost.mana !== undefined && state.heroMana < cost.mana) return false;
+    if (manaCost !== undefined && state.heroMana < manaCost) return false;
     if (cost.defense !== undefined && state.heroDefense < cost.defense) return false;
     return true;
   }
@@ -138,9 +150,19 @@ export class CardResolver {
       } else {
         let staminaToPay = effectiveCost.stamina ?? 0;
         let manaToPay = effectiveCost.mana ?? 0;
+        // War-God's Mantle: defense cards cost 0 Stamina.
+        if (staminaToPay > 0 && card?.category === 'defense'
+            && state.activeRelicIds.includes('wargods_mantle')) {
+          staminaToPay = 0;
+        }
         if (state.firstNCardsStaminaDiscount > 0 && staminaToPay > 0) {
           staminaToPay = Math.max(0, staminaToPay - 1);
           state.firstNCardsStaminaDiscount -= 1;
+        }
+        // Steady Compass: first 3s of combat, costs are halved (rounded up).
+        if (state.activeRelicIds.includes('steady_compass') && state.combatElapsedMs < 3000) {
+          if (staminaToPay > 0) staminaToPay = Math.ceil(staminaToPay * 0.5);
+          if (manaToPay > 0) manaToPay = Math.ceil(manaToPay * 0.5);
         }
         // C6 — Ash Eater: pending Pyre-payoff discount on the next card.
         if (state.relicCounters && (state.relicCounters['ash_eater_pending'] ?? 0) > 0) {
@@ -252,8 +274,13 @@ export class CardResolver {
       if (cond.self_has_stack !== undefined) {
         if (gateStack(cond.self_has_stack, 'self') <= 0) return;
         if (cond.per_stack) {
-          // C5 — Berserker Ring: Berserk bonuses (per-Rage-stack self-conditions) double.
-          const berserkerMult = (cond.self_has_stack === 'rage' && state.activeRelicIds.includes('berserker_ring')) ? 2 : 1;
+          // Berserk bonuses (per-Rage-stack self-conditions) double when either
+          // Berserker Ring is held, OR Bloodgorged Heart is held AND Rage >= 10.
+          const berserkDouble = cond.self_has_stack === 'rage' && (
+            state.activeRelicIds.includes('berserker_ring') ||
+            (state.activeRelicIds.includes('bloodgorged_heart') && state.rageStacks >= 10)
+          );
+          const berserkerMult = berserkDouble ? 2 : 1;
           effectiveValue *= readStackCount(state, cond.self_has_stack, 'self') * berserkerMult;
         }
       }
@@ -438,9 +465,12 @@ export class CardResolver {
         // (Empower-style buffs). Combined multiplicatively with buffMult.
         const dealtPct = sumModifier(state.heroAuras, 'damage_dealt_pct');
         const dealtMult = 1 + dealtPct;
-        // C4 — Cinderkeep: Pyre detonations (damage scaling per Burn stack with consume) gain +25%.
+        // Cinderkeep / Cinder Circlet: Pyre detonations (damage scaling per Burn
+        // stack with consume) gain +25%. Both relics grant the same bonus; they
+        // don't stack with each other (a single ×1.25 if either is held).
         const isPyreDetonation = rawEffect?.condition?.enemy_has_stack === 'burn' && rawEffect?.condition?.per_stack === true;
-        const cinderkeepMult = (isPyreDetonation && state.activeRelicIds.includes('cinderkeep')) ? 1.25 : 1.0;
+        const pyreBonusRelic = state.activeRelicIds.includes('cinderkeep') || state.activeRelicIds.includes('cinder_circlet');
+        const cinderkeepMult = (isPyreDetonation && pyreBonusRelic) ? 1.25 : 1.0;
         // C5 — Glass Cannon: +75% damage dealt (paired with +50% damage taken in applyHeroDamage).
         const glassCannonMult = state.activeRelicIds.includes('glass_cannon') ? 1.75 : 1.0;
         // v4: STR is now a soft multiplier (+25% per point above 1) instead of
@@ -498,6 +528,19 @@ export class CardResolver {
         state.heroHP = Math.min(state.heroMaxHP, state.heroHP + totalHeal);
         const healed = state.heroHP - before;
         result.healed += healed;
+        // Tideheart Amulet: on heal, +2 Max Mana for combat (cap +12) and apply
+        // 2 Slow to the enemy. Cap tracked via relicCounters so it survives
+        // multiple heals in one combat.
+        if (healed > 0 && state.activeRelicIds.includes('tideheart_amulet')) {
+          const gainedKey = 'tideheart_maxmana';
+          const gained = state.relicCounters[gainedKey] ?? 0;
+          if (gained < 12) {
+            const add = Math.min(2, 12 - gained);
+            state.heroMaxMana += add;
+            state.relicCounters[gainedKey] = gained + add;
+          }
+          state.slowStacks += 2;
+        }
         // Rebalance phase: emit heal_received for event_counter auras (Tidefoot Bloom).
         if (healed > 0) {
           const payloads = bumpEventCounters(state, 'heal_received', { amount: healed });
@@ -585,9 +628,13 @@ export class CardResolver {
           case 'burn': state.burnStacks += appliedValue; break;
           // Rebalance (D-9): respect the stun DR window — after a freeze ends the
           // enemy briefly resists new stun, so it can't be perma-chained.
-          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0)) state.stunStacks += appliedValue; break;
+          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0) || state.combatElapsedMs < (state.stunPierceUntilMs ?? 0)) state.stunStacks += appliedValue; break;
           case 'slow': state.slowStacks += appliedValue; break;
           case 'rage': state.rageStacks += appliedValue; break;
+        }
+        // Crimson Stiletto: mark fresh enemy bleed so the next tick skips decay.
+        if (which === 'bleed' && target === 'enemy' && appliedValue > 0) {
+          state.bleedAppliedSinceLastTick = true;
         }
         // Rebalance phase: emit stack_applied event for hero auras counting
         // stack-application events (Twinflame Flicker, Quicksilver Bleed).
@@ -595,19 +642,26 @@ export class CardResolver {
           const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount: appliedValue });
           for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
         }
-        // v3: on_slow_applied — Gale Echo's per-apply +1 slow extra.
+        // v3: on_slow_applied — Gale Echo's per-apply +1 slow extra. Stormcaller's
+        // Rod ("Frost Echo triggers fire twice") doubles these slow-echo payloads.
         if (which === 'slow' && resolvedValue > 0 && state.heroAuras && state.heroAuras.length > 0) {
           const payloads = fireRecurringTrigger(state.heroAuras, 'on_slow_applied');
-          for (const p of payloads) applyTriggeredPayload(state, p);
+          const frostEchoTimes = state.activeRelicIds.includes('stormcallers_rod') ? 2 : 1;
+          for (let t = 0; t < frostEchoTimes; t++) {
+            for (const p of payloads) applyTriggeredPayload(state, p);
+          }
         }
         // C5 — Frostbite Charm: on Slow application, deal 2 damage to enemy.
         if (which === 'slow' && resolvedValue > 0 && target === 'enemy'
             && state.activeRelicIds.includes('frostbite_charm')) {
           state.enemyHP -= 2;
         }
-        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun.
+        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun and
+        // strips the enemy's stun-immunity for 2s (so a follow-up stun lands).
         if (which === 'slow' && resolvedValue >= 3 && target === 'enemy'
             && state.activeRelicIds.includes('stormglass_lens')) {
+          state.stunImmuneUntilMs = 0;
+          state.stunPierceUntilMs = state.combatElapsedMs + 2000;
           state.stunStacks += 1;
         }
         // v3: on_enemy_stack_threshold — Cinder Squall / Dust Plague follow-up.
@@ -671,8 +725,12 @@ export class CardResolver {
           case 'poison': state.poisonStacks += v; break;
           case 'bleed': state.bleedStacks += v; break;
           case 'burn': state.burnStacks += v; break;
-          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0)) state.stunStacks += v; break;
+          case 'stun': if (state.combatElapsedMs >= (state.stunImmuneUntilMs ?? 0) || state.combatElapsedMs < (state.stunPierceUntilMs ?? 0)) state.stunStacks += v; break;
           case 'slow': state.slowStacks += v; break;
+        }
+        // Crimson Stiletto: mark fresh enemy bleed so the next tick skips decay.
+        if (which === 'bleed' && target === 'enemy' && v > 0) {
+          state.bleedAppliedSinceLastTick = true;
         }
         // Rebalance phase: emit stack_applied event for event_counter auras.
         if (v > 0) {
@@ -684,9 +742,12 @@ export class CardResolver {
             && state.activeRelicIds.includes('frostbite_charm')) {
           state.enemyHP -= 2;
         }
-        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun.
+        // C5 — Stormglass Lens: applying 3+ Slow at once also applies 1 Stun and
+        // strips the enemy's stun-immunity for 2s (so a follow-up stun lands).
         if (which === 'slow' && resolvedValue >= 3 && target === 'enemy'
             && state.activeRelicIds.includes('stormglass_lens')) {
+          state.stunImmuneUntilMs = 0;
+          state.stunPierceUntilMs = state.combatElapsedMs + 2000;
           state.stunStacks += 1;
         }
         // v3: threshold triggers fire after the stack mutation. Target=self
@@ -982,6 +1043,9 @@ function addStack(state: CombatState, which: StackId, side: 'enemy' | 'self', am
   // Bleed, Cinder Squall, etc. Only positive productions emit (consumption is
   // negative). dot/stack cases do NOT call addStack, so this never double-fires.
   if (mutated && amount > 0) {
+    // Crimson Stiletto: stack-production paths (multiply/boost/convert) that add
+    // enemy bleed also count as a fresh application for the no-decay tick.
+    if (side === 'enemy' && which === 'bleed') state.bleedAppliedSinceLastTick = true;
     const payloads = bumpEventCounters(state, 'stack_applied', { stack: which, amount });
     for (const p of payloads) applyTriggeredPayload(state, p.effect, p.sourceCardId);
     if (side === 'enemy') checkEnemyStackThreshold(state, which);

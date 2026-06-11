@@ -158,6 +158,17 @@ export interface RunState {
   loop: LoopState;
   economy: EconomyState;
   relics: string[];
+  /**
+   * Run-level relic state that must persist across combats within a run
+   * (distinct from per-combat CombatState). phoenix_feather's once-per-run
+   * cooldown and the kill-STR accumulators for huntmasters_eye / veterans_stripe
+   * live here. Optional + backfilled (absent on older saves → treated as zero).
+   */
+  relicRunState?: {
+    phoenixUsedThisRun?: boolean;
+    huntmasterKills?: number;
+    veteranKills?: number;
+  };
   stats: RunStats;
 
   /** Whether hero is currently in combat (for mid-combat save handling) */
@@ -395,6 +406,7 @@ export function createNewRun(
       gatheringBoost: getStorehouseEffects(meta.buildings.storehouse.level).gatheringBoost,
     },
     relics: [],
+    relicRunState: { phoenixUsedThisRun: false, huntmasterKills: 0, veteranKills: 0 },
     isInCombat: false,
     currentScene: 'GameScene',
     stopAtShop: true,
