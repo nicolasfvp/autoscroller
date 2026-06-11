@@ -17,7 +17,7 @@ import {
 import type { LoopRunner, LoopRunState } from '../systems/LoopRunner';
 
 const CX = LAYOUT.centerX;
-const TIJOLINHOS = 300;
+const TIJOLINHOS = 100;
 const BTN_WIDTH = 240;
 
 interface FeiraAuthData {
