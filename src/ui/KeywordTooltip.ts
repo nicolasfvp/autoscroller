@@ -208,6 +208,41 @@ function mountStandalonePanel(
   anchor: AnchorBounds,
 ): Phaser.GameObjects.Container {
   const panel = scene.add.container(0, 0).setDepth(TOOLTIP_DEPTH);
+
+  // If every keyword has a baked PNG, show the images directly — no panel bg,
+  // no "Keywords" title, no text fallback.
+  const bakedKeys = keywords.map((kw) => {
+    const k = `keyword_${kw.keyword.toLowerCase()}`;
+    return scene.textures.exists(k) ? k : null;
+  });
+
+  if (bakedKeys.every((k) => k !== null)) {
+    const BAKED_W = 224;
+    const GAP_PX = 6;
+    const anchorRight = anchor.x + anchor.w / 2;
+    const anchorLeft  = anchor.x - anchor.w / 2;
+    const SIDE_GAP = 12;
+    let panelX: number;
+    if (anchorRight + SIDE_GAP + BAKED_W <= LAYOUT.canvasWidth) {
+      panelX = anchorRight + SIDE_GAP;
+    } else {
+      panelX = Math.max(4, anchorLeft - SIDE_GAP - BAKED_W);
+    }
+    let cursorY = Math.max(4, anchor.y - anchor.h / 2);
+    for (const key of bakedKeys) {
+      const src = scene.textures.get(key!).getSourceImage() as HTMLImageElement;
+      const displayH = BAKED_W * (src.height / src.width);
+      panel.add(
+        scene.add.image(panelX + BAKED_W / 2, cursorY + displayH / 2, key!)
+          .setDisplaySize(BAKED_W, displayH),
+      );
+      cursorY += displayH + GAP_PX;
+    }
+    panel.setAlpha(0);
+    scene.tweens.add({ targets: panel, alpha: 1, duration: 150, ease: 'Sine.easeOut' });
+    return panel;
+  }
+
   const fontFamily = FONTS.body;
 
   const title = scene.add.text(0, 0, 'Keywords', {

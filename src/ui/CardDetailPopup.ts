@@ -84,7 +84,8 @@ export function showCardDetail(
   const cy = cam.height / cam.zoom / 2;
 
   const isForge = !!forgeOpts || !!smallCard;
-  const cardScale = isForge ? 0.715 : 1.0;
+  // Combat popup reduced to 80% — Forge/Library keep old size (already compact).
+  const cardScale = isForge ? 0.715 : 0.8;
   const cardY     = cy;
 
   const face = createCardFace(scene, cx, cardY, cardId, {
@@ -101,8 +102,10 @@ export function showCardDetail(
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
   });
+  const popupW = 340 * cardScale;
+  const popupH = 540 * cardScale;
   tip = attachKeywordTooltip(scene, popup, desc, {
-    x: cx, y: cardY, w: 400 * cardScale, h: 640 * cardScale,
+    x: cx, y: cardY, w: popupW, h: popupH,
   });
 
   // ── Forge controls ─────────────────────────────────────────────────────────
