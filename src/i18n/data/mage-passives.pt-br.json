@@ -1,0 +1,22 @@
+{
+  "mage_arcane_affinity": {
+    "name": "Afinidade Arcana",
+    "description": "+8 de Mana Máxima"
+  },
+  "mage_spell_echo": {
+    "name": "Eco de Magia",
+    "description": "+15% de dano de magia"
+  },
+  "mage_mana_shield": {
+    "name": "Escudo de Mana",
+    "description": "+5 de Mana Máxima, +5 de Vida Máxima"
+  },
+  "mage_overload": {
+    "name": "Sobrecarga",
+    "description": "Recupere 3 de Mana ao reembaralhar o baralho"
+  },
+  "mage_ascendance": {
+    "name": "Ascensão",
+    "description": "+10 de Mana Máxima, +1 de Força"
+  }
+}

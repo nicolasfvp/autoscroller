@@ -12,6 +12,7 @@
 import Phaser from 'phaser';
 import type { CardDefinition, ElementId } from '../data/types';
 import { FONTS } from './StyleConstants';
+import { t as tr } from '../i18n/i18n';
 // Pure helpers re-exported from this module for ergonomic consumer imports
 // (`import { applyFilters, CardFilterBar } from '../ui/CardFilterBar'`).
 // Tests should import directly from the pure module to avoid pulling Phaser
@@ -161,7 +162,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     const label = this.scene.add.text(
       dropX + 8,
       dropY + dropH / 2,
-      `Element: ${this.filters.element}`,
+      tr('filterBar.elementLabel', { element: this.filters.element }),
       { fontSize: '12px', fontStyle: 'bold', color: TEXT, fontFamily: FF },
     ).setOrigin(0, 0.5);
     this.add(label);
@@ -196,7 +197,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
       const check = this.scene.add.text(cx + 9, baseY + 9, '✓', {
         fontSize: '14px', fontStyle: 'bold', color: ACCENT, fontFamily: FF,
       }).setOrigin(0.5);
-      const label = this.scene.add.text(cx + 24, baseY + 9, `T${tier}`, {
+      const label = this.scene.add.text(cx + 24, baseY + 9, tr('filterBar.tierLabel', { tier }), {
         fontSize: '12px', fontStyle: 'bold', color: TEXT, fontFamily: FF,
       }).setOrigin(0, 0.5);
 
@@ -241,7 +242,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
     const label = this.scene.add.text(
       boxX + 8,
       boxY + boxH / 2,
-      `Sort: ${CARD_SORT_LABEL[this.sortMode]}`,
+      tr('filterBar.sortLabel', { mode: CARD_SORT_LABEL[this.sortMode] }),
       { fontSize: '12px', fontStyle: 'bold', color: TEXT, fontFamily: FF },
     ).setOrigin(0, 0.5);
     this.add(label);
@@ -263,7 +264,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
   private cycleSort(): void {
     const idx = CARD_SORT_MODES.indexOf(this.sortMode);
     this.sortMode = CARD_SORT_MODES[(idx + 1) % CARD_SORT_MODES.length];
-    this.sortLabel?.setText(`Sort: ${CARD_SORT_LABEL[this.sortMode]}`);
+    this.sortLabel?.setText(tr('filterBar.sortLabel', { mode: CARD_SORT_LABEL[this.sortMode] }));
     if (this.onSortChange) {
       try {
         this.onSortChange(this.sortMode);
@@ -283,7 +284,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
 
     const el = document.createElement('input');
     el.type = 'text';
-    el.placeholder = 'Search…';
+    el.placeholder = tr('filterBar.searchPlaceholder');
     el.setAttribute('data-card-filter-bar', '1');
     el.style.position = 'absolute';
     el.style.background = '#2a1408';
@@ -410,7 +411,7 @@ export class CardFilterBar extends Phaser.GameObjects.Container {
       row.on('pointerdown', (_p: Phaser.Input.Pointer, _lx: number, _ly: number, ev?: Phaser.Types.Input.EventData) => {
         ev?.stopPropagation?.();
         this.filters.element = opt;
-        this.dropdownLabel.setText(`Element: ${opt}`);
+        this.dropdownLabel.setText(tr('filterBar.elementLabel', { element: opt }));
         this.teardownDropdownPanel();
         this.emitChange();
       });

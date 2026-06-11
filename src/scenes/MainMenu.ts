@@ -17,6 +17,8 @@ import {
   setStoredNickname,
 } from '../systems/DailySeed';
 import { NicknameModal } from '../ui/NicknameModal';
+import { t, getLocale, setLocale, SUPPORTED_LOCALES, LOCALE_SHORT, type Locale } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 
 
 export class MainMenu extends Scene {
@@ -143,29 +145,57 @@ export class MainMenu extends Scene {
 
     this.createImgBtn(LAYOUT.centerX, this.savedRun ? 468 : 432, 'btn_daily_run', () => this.onDailyButtonClicked(), 280);
 
+    this.createLanguageSwitcher();
+
     this.events.on('shutdown', this.cleanup, this);
   }
 
 
-  private createImgBtn(x: number, y: number, key: string, callback: () => void, displayWidth: number = 500) {
-    const btn = this.add.image(x, y, key).setInteractive({ useHandCursor: true });
-    const scale = displayWidth / btn.width;
-    btn.setScale(scale);
+  /**
+   * Compact language switcher in the bottom-left corner. The main-menu CTA
+   * buttons are baked PNG art (English text rendered into the texture) and
+   * can't be re-translated at runtime, so the switcher is a lightweight text
+   * control. Cycling persists the choice and reloads — every scene then
+   * re-renders in the new language and all data-content re-localizes from boot.
+   */
+  private createLanguageSwitcher(): void {
+    const label = (loc: Locale) => `🌐 ${LOCALE_SHORT[loc]}`;
+    const btn = this.add.text(16, LAYOUT.canvasHeight - 24, label(getLocale()), {
+      fontSize: '18px',
+      color: COLORS.accent,
+      fontFamily: FONTS.family,
+      stroke: '#000000',
+      strokeThickness: 4,
+    }).setOrigin(0, 0.5).setDepth(20).setInteractive({ useHandCursor: true });
 
-    btn.on('pointerover', () => {
-      this.tweens.killTweensOf(btn);
-      this.tweens.add({ targets: btn, scale: scale * 1.05, duration: 100 });
-    });
-    btn.on('pointerout', () => {
-      this.tweens.killTweensOf(btn);
-      this.tweens.add({ targets: btn, scale: scale, duration: 100 });
-    });
-    btn.on('pointerdown', () => {
-      this.tweens.killTweensOf(btn);
-      this.tweens.add({ targets: btn, scale: scale * 0.95, duration: 50, yoyo: true });
-      callback();
-    });
-    return btn;
+    btn.on('pointerover', () => btn.setColor(COLORS.accentHover));
+    btn.on('pointerout', () => btn.setColor(COLORS.accent));
+    btn.on('pointerdown', () => { void this.switchLanguage(); });
+  }
+
+  private async switchLanguage(): Promise<void> {
+    const locales = SUPPORTED_LOCALES;
+    const next: Locale = locales[(locales.indexOf(getLocale()) + 1) % locales.length];
+    setLocale(next);
+    try {
+      const meta = await loadMetaState();
+      meta.language = next;
+      await saveMetaState(meta);
+    } catch (err) {
+      console.warn('[MainMenu] saving language failed:', err);
+    }
+    window.location.reload();
+  }
+
+  private createImgBtn(x: number, y: number, key: string, callback: () => void, displayWidth: number = 500) {
+    // The baked button art has English text — in pt-BR render a wood+text
+    // button of the same size instead (via the shared locale-aware helper).
+    const labels: Record<string, string> = {
+      btn_new_game: t('btn.newGame'),
+      btn_continue_run: t('btn.continueRun'),
+      btn_daily_run: t('btn.dailyRun'),
+    };
+    return localizedImageButton(this, x, y, key, labels[key] ?? key, displayWidth, callback);
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -204,21 +234,37 @@ export class MainMenu extends Scene {
     dim.setInteractive();
     this.confirmOverlay.add(dim);
 
-    // ── Painel de aviso (permanente-erase.png) ────────────────────────────────
-    const erasePanel = this.add.image(403.7, 239.7, 'lp_permanent_erase').setScale(0.3199);
-    this.confirmOverlay.add(erasePanel);
+    if (getLocale() === 'pt-br') {
+      // The baked lp_permanent_erase art has English text — render a code-built
+      // panel + translated text/buttons for pt-BR.
+      const panel = this.add.rectangle(CX, 240, 460, 210, 0x1a0e06, 0.97).setStrokeStyle(2, 0xd4a04a, 0.9);
+      this.confirmOverlay.add(panel);
+      this.confirmOverlay.add(this.add.text(CX, 185, t('menu.deleteTitle'), {
+        fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily: FONTS.family,
+        stroke: '#000', strokeThickness: 4, align: 'center',
+      }).setOrigin(0.5));
+      this.confirmOverlay.add(this.add.text(CX, 240, t('menu.deleteBody'), {
+        fontSize: '15px', color: '#e8d9b8', fontFamily: FONTS.family, align: 'center',
+        wordWrap: { width: 410 }, stroke: '#000', strokeThickness: 2,
+      }).setOrigin(0.5));
+      this.confirmOverlay.add(localizedImageButton(this, 314.2, 320, 'lp_delete_run', t('menu.deleteConfirm'), 170, () => { void this.startNewRun(); }, { height: 50, variant: 'danger' }));
+      this.confirmOverlay.add(localizedImageButton(this, 504.7, 320, 'lp_keep', t('btn.keep'), 130, () => this.hideConfirmation(), { height: 50 }));
+    } else {
+      // ── Painel de aviso (permanente-erase.png) ──────────────────────────────
+      const erasePanel = this.add.image(403.7, 239.7, 'lp_permanent_erase').setScale(0.3199);
+      this.confirmOverlay.add(erasePanel);
 
-    // ── Botões ────────────────────────────────────────────────────────────────
-    const makeImgBtn = (x: number, y: number, texKey: string, scale: number, onClick: () => void) => {
-      const img = this.add.image(x, y, texKey).setScale(scale).setInteractive({ useHandCursor: true });
-      img.on('pointerover',  () => img.setTint(0xffffcc));
-      img.on('pointerout',   () => img.clearTint());
-      img.on('pointerdown',  onClick);
-      this.confirmOverlay!.add(img);
-    };
+      const makeImgBtn = (x: number, y: number, texKey: string, scale: number, onClick: () => void) => {
+        const img = this.add.image(x, y, texKey).setScale(scale).setInteractive({ useHandCursor: true });
+        img.on('pointerover',  () => img.setTint(0xffffcc));
+        img.on('pointerout',   () => img.clearTint());
+        img.on('pointerdown',  onClick);
+        this.confirmOverlay!.add(img);
+      };
 
-    makeImgBtn(314.2, 355.1, 'lp_delete_run', 0.3095, () => { void this.startNewRun(); });
-    makeImgBtn(504.7, 354.6, 'lp_keep',       0.3097, () => this.hideConfirmation());
+      makeImgBtn(314.2, 355.1, 'lp_delete_run', 0.3095, () => { void this.startNewRun(); });
+      makeImgBtn(504.7, 354.6, 'lp_keep',       0.3097, () => this.hideConfirmation());
+    }
 
     // Fade-in
     this.confirmOverlay.setAlpha(0);
@@ -261,7 +307,7 @@ export class MainMenu extends Scene {
     const initial = ensureNickname();
     this.nicknameModal = new NicknameModal(this, {
       initialValue: initial,
-      title: this.savedDailyRun ? 'Continue today\'s daily run' : 'Enter your daily nickname',
+      title: this.savedDailyRun ? t('menu.dailyContinue') : t('menu.dailyEnterNickname'),
       onConfirm: (name) => {
         setStoredNickname(name);
         this.nicknameModal = null;

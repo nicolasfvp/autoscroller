@@ -18,6 +18,7 @@
 //   - 'click': overlay shows a "Next →" / "Got it" button.
 
 import { SCENE_KEYS } from '../../state/SceneKeys';
+import { t } from '../../i18n/i18n';
 
 export type TutorialStepAdvance = 'click' | 'event';
 
@@ -253,6 +254,15 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
   },
 ];
 
+/**
+ * Resolve a step's title/body through i18n by its stable id, leaving every
+ * other field untouched. The English literals baked into TUTORIAL_STEPS act as
+ * the fallback if a key is missing (t() degrades to English then the raw key).
+ */
+function localizeStep(step: TutorialStep): TutorialStep {
+  return { ...step, title: t(`tutorial.${step.id}.title`), body: t(`tutorial.${step.id}.body`) };
+}
+
 class TutorialDirectorImpl {
   private active = false;
   private currentIndex = -1;
@@ -282,13 +292,13 @@ class TutorialDirectorImpl {
   getCurrentStep(): TutorialStep | null {
     if (!this.active) return null;
     if (this.currentIndex < 0 || this.currentIndex >= TUTORIAL_STEPS.length) return null;
-    return TUTORIAL_STEPS[this.currentIndex];
+    return localizeStep(TUTORIAL_STEPS[this.currentIndex]);
   }
 
   /** Step relevant to this scene right now, or null. Helper for scene mounts. */
   getStepForScene(sceneKey: string): TutorialStep | null {
     const s = this.getCurrentStep();
-    return s && s.scene === sceneKey ? s : null;
+    return s && s.scene === sceneKey ? localizeStep(s) : null;
   }
 
   /**

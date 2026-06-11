@@ -4,6 +4,7 @@ import { SeededRNG } from '../systems/SeededRNG';
 import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
 import { getTavernEffects } from '../systems/MetaProgressionSystem';
 import { FONTS } from '../ui/StyleConstants';
+import { t } from '../i18n/i18n';
 
 export class TavernPanelScene extends Scene {
   private metaState!: MetaState;
@@ -44,7 +45,7 @@ export class TavernPanelScene extends Scene {
     // ...
 
     // Description
-    this.add.text(400, 165, 'Prepare for your next expedition.', {
+    this.add.text(400, 165, t('tavern.prepareExpedition'), {
       fontSize: '18px',
       fontStyle: 'bold',
       color: '#e6c88a',
@@ -58,7 +59,7 @@ export class TavernPanelScene extends Scene {
     // random seed; the input simply isn't shown until unlocked.
     if (tav.seedInputEnabled) {
       // Seed input label
-      this.add.text(400, 200, 'Seed (optional)', {
+      this.add.text(400, 200, t('tavern.seedOptional'), {
         fontSize: '14px',
         fontStyle: 'bold',
         color: '#e6c88a',
@@ -70,7 +71,7 @@ export class TavernPanelScene extends Scene {
 
       // Seed input using Phaser DOM element (dark brown style)
       const inputElement = this.add.dom(400, 230).createFromHTML(
-        `<input type="text" id="seed-input" placeholder="Enter seed or leave blank"
+        `<input type="text" id="seed-input" placeholder="${t('tavern.seedPlaceholder')}"
           style="width:300px;height:36px;background:#3e2723;color:#e6c88a;border:2px solid #2e1b0f;
           border-radius:4px;padding:0 8px;font-size:16px;font-weight:bold;font-family:${fontFamily};text-align:center;outline:none;"
           />`
@@ -90,13 +91,13 @@ export class TavernPanelScene extends Scene {
         });
       }
     } else {
-      this.add.text(400, 215, '🔒 Custom seeds unlock at Tavern Lv 3', {
+      this.add.text(400, 215, t('tavern.customSeedsLocked'), {
         fontSize: '13px', color: '#9b8a6a', fontFamily,
         stroke: '#2e1b0f', strokeThickness: 1,
       }).setOrigin(0.5);
     }
 
-    const startBtn = this.add.text(400, 270, 'Start Run', {
+    const startBtn = this.add.text(400, 270, t('tavern.startRun'), {
       fontSize: '24px',
       fontStyle: 'bold',
       color: '#e6c88a',
@@ -144,7 +145,7 @@ export class TavernPanelScene extends Scene {
 
     // Run History section — gated behind Tavern Lv 2.
     if (tav.runHistoryVisible) {
-    this.add.text(400, 310, 'Run History:', {
+    this.add.text(400, 310, t('tavern.runHistory'), {
       fontSize: '24px',
       fontStyle: 'bold',
       color: '#e6c88a',
@@ -159,7 +160,7 @@ export class TavernPanelScene extends Scene {
 
     const runHistory = this.metaState.runHistory;
     if (runHistory.length === 0) {
-      this.add.text(400, 370, 'No completed runs yet.', {
+      this.add.text(400, 370, t('tavern.noCompletedRuns'), {
         fontSize: '16px',
         color: '#3e2723', // dark brown
         fontFamily,
@@ -177,7 +178,7 @@ export class TavernPanelScene extends Scene {
         const entry = recentRuns[i];
         const runNumber = runHistory.length - i;
         const isBest = entry === bestRun;
-        const text = `Run #${runNumber}: Loop ${entry.loopsCompleted}, ${entry.exitType}`;
+        const text = t('tavern.runHistoryEntry', { runNumber, loops: entry.loopsCompleted, exitType: entry.exitType });
 
         this.add.text(400, histY, text, {
           fontSize: '14px',
@@ -189,7 +190,7 @@ export class TavernPanelScene extends Scene {
       }
     }
     } else {
-      this.add.text(400, 360, '🔒 Run history unlocks at Tavern Lv 2', {
+      this.add.text(400, 360, t('tavern.runHistoryLocked'), {
         fontSize: '14px', color: '#9b8a6a', fontFamily,
         stroke: '#2e1b0f', strokeThickness: 1,
       }).setOrigin(0.5);

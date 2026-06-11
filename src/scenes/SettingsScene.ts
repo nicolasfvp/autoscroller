@@ -5,13 +5,16 @@ import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { createDefaultMetaState, type MetaState, type GraphicsQuality } from '../state/MetaState';
 import { saveManager } from '../core/SaveManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { t, getLocale, setLocale, SUPPORTED_LOCALES, LOCALE_LABEL, type Locale } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 
 const GFX_QUALITY_ORDER: GraphicsQuality[] = ['performance', 'balanced', 'high'];
-const GFX_QUALITY_LABEL: Record<GraphicsQuality, string> = {
-  high: 'High (2.0x)',
-  balanced: 'Balanced (1.5x)',
-  performance: 'Performance (1.0x)',
-};
+/** Localized graphics-quality label. The "(N.Nx)" supersample factor is kept
+ *  language-neutral; only the descriptor word is translated. */
+function gfxQualityLabel(q: GraphicsQuality): string {
+  const factor = { high: '2.0x', balanced: '1.5x', performance: '1.0x' }[q];
+  return `${t(`settings.gfx.${q}`)} (${factor})`;
+}
 const GFX_QUALITY_STORAGE_KEY = 'autoscroller:gfxQuality';
 
 /**
@@ -74,7 +77,7 @@ export class SettingsScene extends Scene {
     ).setStrokeStyle(2, 0xd4a04a, 0.85).setInteractive();
 
     // Title
-    this.add.text(LAYOUT.centerX, 120, 'Settings', {
+    this.add.text(LAYOUT.centerX, 120, t('settings.title'), {
       ...FONTS.title,
       color: COLORS.accent,
       fontFamily: FONTS.body,
@@ -85,6 +88,7 @@ export class SettingsScene extends Scene {
 
     this.createVolumeSlider();
     this.createMuteToggle();
+    this.createLanguageToggle();
     this.createGameSpeedToggle();
     this.createAutoSaveToggle();
     this.createGraphicsQualityToggle();
@@ -99,7 +103,7 @@ export class SettingsScene extends Scene {
   // ── SFX Volume Slider (y: 200) ──────────────────────────
   private createVolumeSlider(): void {
     // Label
-    this.add.text(200, 192, 'SFX Volume', {
+    this.add.text(200, 192, t('settings.sfxVolume'), {
 
       color: COLORS.textPrimary,
       fontFamily: FONTS.body,
@@ -136,13 +140,45 @@ export class SettingsScene extends Scene {
 
   // ── Mute Toggle (y: 245) ────────────────────────────────
   private createMuteToggle(): void {
-    const label = this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
-    this.muteBtn = createButton(this, LAYOUT.centerX, 245, label, () => {
+    const sfxLabel = (on: boolean) => `${t('settings.sfx')}: ${on ? t('settings.on') : t('settings.off')}`;
+    this.muteBtn = createButton(this, LAYOUT.centerX, 245, sfxLabel(this.sfxEnabled), () => {
       this.sfxEnabled = !this.sfxEnabled;
       AudioManager.setMuted(!this.sfxEnabled);
       this.game.sound.mute = !this.sfxEnabled;
-      this.muteBtn.setText(this.sfxEnabled ? 'SFX: ON' : 'SFX: OFF');
+      this.muteBtn.setText(sfxLabel(this.sfxEnabled));
     }, 'secondary');
+  }
+
+  // ── Language Toggle (y: 272) ────────────────────────────
+  // Cycles through the supported locales. Persists the choice (durable
+  // MetaState copy + synchronous localStorage mirror) and reloads the page so
+  // every scene re-renders in the new language and all data-content is
+  // re-localized from boot — the same reload pattern Graphics Quality uses.
+  private createLanguageToggle(): void {
+    this.add.text(200, 272, t('settings.language'), {
+      color: COLORS.textPrimary,
+      fontFamily: FONTS.body,
+    }).setOrigin(0, 0.5);
+
+    createButton(this, 540, 272, LOCALE_LABEL[getLocale()], () => {
+      void this.switchLanguage();
+    }, 'secondary');
+  }
+
+  private async switchLanguage(): Promise<void> {
+    const locales = SUPPORTED_LOCALES;
+    const idx = locales.indexOf(getLocale());
+    const next: Locale = locales[(idx + 1) % locales.length];
+    // Persist the durable copy before the reload (the synchronous mirror is
+    // written by setLocale and is what the engine reads on next boot).
+    this.metaState.language = next;
+    setLocale(next);
+    try {
+      await saveMetaState(this.metaState);
+    } catch (err) {
+      console.warn('[Settings] saving language failed:', err);
+    }
+    window.location.reload();
   }
 
   /** Push the loaded sfxVolume / sfxEnabled prefs into the real audio path. */
@@ -154,7 +190,7 @@ export class SettingsScene extends Scene {
 
   // ── Game Speed Toggle (y: 300) ──────────────────────────
   private createGameSpeedToggle(): void {
-    this.add.text(200, 292, 'Game Speed', {
+    this.add.text(200, 292, t('settings.gameSpeed'), {
 
       color: COLORS.textPrimary,
       fontFamily: FONTS.body,
@@ -169,16 +205,16 @@ export class SettingsScene extends Scene {
 
   // ── Auto-Save Toggle (y: 350) ──────────────────────────
   private createAutoSaveToggle(): void {
-    this.add.text(200, 342, 'Auto-Save', {
+    this.add.text(200, 342, t('settings.autoSave'), {
 
       color: COLORS.textPrimary,
       fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
-    const label = this.autoSave ? 'ON' : 'OFF';
-    this.autoSaveBtn = createButton(this, 500, 350, label, () => {
+    const onOff = (on: boolean) => (on ? t('settings.on') : t('settings.off'));
+    this.autoSaveBtn = createButton(this, 500, 350, onOff(this.autoSave), () => {
       this.autoSave = !this.autoSave;
-      this.autoSaveBtn.setText(this.autoSave ? 'ON' : 'OFF');
+      this.autoSaveBtn.setText(onOff(this.autoSave));
     }, 'secondary');
   }
 
@@ -189,17 +225,17 @@ export class SettingsScene extends Scene {
   // effect after a reload — we fire that reload from saveAndClose when the
   // value has actually been edited.
   private createGraphicsQualityToggle(): void {
-    this.add.text(200, 382, 'Graphics Quality', {
+    this.add.text(200, 382, t('settings.graphicsQuality'), {
 
       color: COLORS.textPrimary,
       fontFamily: FONTS.body,
     }).setOrigin(0, 0.5);
 
-    this.graphicsQualityBtn = createButton(this, 540, 390, GFX_QUALITY_LABEL[this.graphicsQuality], () => {
+    this.graphicsQualityBtn = createButton(this, 540, 390, gfxQualityLabel(this.graphicsQuality), () => {
       this.cycleGraphicsQuality();
     }, 'secondary');
 
-    this.graphicsQualityNotice = this.add.text(LAYOUT.centerX, 405, 'Restart required to apply', {
+    this.graphicsQualityNotice = this.add.text(LAYOUT.centerX, 405, t('settings.restartRequired'), {
       fontSize: '10px',
       color: '#ffcc66',
       fontStyle: 'italic',
@@ -211,7 +247,7 @@ export class SettingsScene extends Scene {
     const idx = GFX_QUALITY_ORDER.indexOf(this.graphicsQuality);
     const next = GFX_QUALITY_ORDER[(idx + 1) % GFX_QUALITY_ORDER.length];
     this.graphicsQuality = next;
-    this.graphicsQualityBtn.setText(GFX_QUALITY_LABEL[next]);
+    this.graphicsQualityBtn.setText(gfxQualityLabel(next));
     this.graphicsQualityNotice.setVisible(this.graphicsQuality !== this.initialGraphicsQuality);
   }
 
@@ -230,15 +266,15 @@ export class SettingsScene extends Scene {
 
   // ── Delete Run Button (y: 420) ──────────────────────────
   private createDeleteRunButton(): void {
-    const btn = createButton(this, LAYOUT.centerX, 420, 'Delete Current Run', () => {
+    const btn = createButton(this, LAYOUT.centerX, 420, t('settings.deleteRun'), () => {
       this.showConfirmation(
-        'Are you sure? This deletes the current run but keeps meta progress.',
-        'Yes, Delete',
+        t('settings.deleteRunConfirm'),
+        t('settings.yesDelete'),
         async () => {
           await saveManager.clear();
           this.hideConfirmation();
           // Show brief feedback
-          const feedback = this.add.text(LAYOUT.centerX, 420, 'Run Deleted', {
+          const feedback = this.add.text(LAYOUT.centerX, 420, t('settings.runDeleted'), {
             color: COLORS.accent, fontFamily: FONTS.body,
           }).setOrigin(0.5);
           this.time.delayedCall(1500, () => feedback.destroy());
@@ -251,29 +287,29 @@ export class SettingsScene extends Scene {
   // ── Danger Zone separator ─────────────────────────────
   private createDangerZoneSeparator(): void {
     this.add.rectangle(LAYOUT.centerX, 448, 360, 1, 0x4a3020, 0.6);
-    this.add.text(LAYOUT.centerX, 453, '⚠ Danger Zone', {
+    this.add.text(LAYOUT.centerX, 453, `⚠ ${t('settings.dangerZone')}`, {
       fontSize: '9px', color: '#664444', fontFamily: FONTS.body,
     }).setOrigin(0.5, 0);
   }
 
   // ── Reset All Progress Button (y: 470) ─────────────────
   private createResetAllButton(): void {
-    const btn = createButton(this, LAYOUT.centerX, 470, 'Reset All Progress', () => {
+    const btn = createButton(this, LAYOUT.centerX, 470, t('settings.resetAll'), () => {
       this.showConfirmation(
-        'This erases ALL progress. Are you sure?',
-        'Yes',
+        t('settings.resetConfirm1'),
+        t('common.yes'),
         () => {
           this.hideConfirmation();
           // Second confirmation
           this.showConfirmation(
-            'FINAL WARNING: All buildings, unlocks, and materials will be lost.',
-            'Yes, Reset Everything',
+            t('settings.resetConfirm2'),
+            t('settings.yesResetAll'),
             async () => {
               await saveManager.clear();
               await saveMetaState(createDefaultMetaState());
               this.metaState = createDefaultMetaState();
               this.hideConfirmation();
-              const feedback = this.add.text(LAYOUT.centerX, 470, 'All Progress Reset', {
+              const feedback = this.add.text(LAYOUT.centerX, 470, t('settings.allReset'), {
                 color: COLORS.accent, fontFamily: FONTS.body,
               }).setOrigin(0.5);
               this.time.delayedCall(1500, () => feedback.destroy());
@@ -287,12 +323,7 @@ export class SettingsScene extends Scene {
 
   // ── Back Button (y: 540) ───────────────────────────────
   private createBackButton(): void {
-    const backImg = this.add.image(0, 0, 'btn_back_settings').setScale(200 / 1995);
-    const backCont = this.add.container(LAYOUT.centerX, 540, [backImg])
-      .setSize(200, 79).setInteractive({ useHandCursor: true });
-    backCont.on('pointerover', () => this.tweens.add({ targets: backCont, scale: 1.05, duration: 100 }));
-    backCont.on('pointerout',  () => this.tweens.add({ targets: backCont, scale: 1,    duration: 100 }));
-    backCont.on('pointerdown', () => this.saveAndClose());
+    localizedImageButton(this, LAYOUT.centerX, 540, 'btn_back_settings', t('common.back'), 200, () => this.saveAndClose(), { height: 79 });
   }
 
   // ── Confirmation overlay ───────────────────────────────
@@ -312,7 +343,7 @@ export class SettingsScene extends Scene {
     const yesBtn = createButton(this, LAYOUT.centerX - 80, LAYOUT.centerY + 40, confirmLabel, onConfirm, 'secondary');
     this.confirmContainer.add(yesBtn);
 
-    const noBtn = createButton(this, LAYOUT.centerX + 80, LAYOUT.centerY + 40, 'Cancel', () => this.hideConfirmation(), 'secondary');
+    const noBtn = createButton(this, LAYOUT.centerX + 80, LAYOUT.centerY + 40, t('common.cancel'), () => this.hideConfirmation(), 'secondary');
     this.confirmContainer.add(noBtn);
   }
 

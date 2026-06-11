@@ -11,6 +11,7 @@ import { formatCardDescription } from '../systems/cards/CardText';
 import { getCardById } from '../data/DataLoader';
 import { createCardFace } from './CardFace';
 import { getRun } from '../state/RunState';
+import { t, getLocale } from '../i18n/i18n';
 
 export interface ForgePopupOptions {
   cost: number;
@@ -100,7 +101,7 @@ export function showCardDetail(
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-  });
+  }, { locale: getLocale() });
   tip = attachKeywordTooltip(scene, popup, desc, {
     x: cx, y: cardY, w: 400 * cardScale, h: 640 * cardScale,
   });
@@ -115,7 +116,7 @@ export function showCardDetail(
     }
 
     popup.add(
-      scene.add.text(cx - 65, BANNER_Y, `⚒ ${forgeOpts.cost} Gold`, {
+      scene.add.text(cx - 65, BANNER_Y, t('cardDetail.forgeCost', { cost: forgeOpts.cost }), {
         fontSize: '15px', fontStyle: 'bold', color: '#ffd700',
         fontFamily: 'monospace', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5),

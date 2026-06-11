@@ -4,8 +4,45 @@
 
 import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
+import { getLocale } from '../i18n/i18n';
 
 export type WoodButtonVariant = 'normal' | 'primary' | 'danger';
+
+/** pt-BR labels. The pre-rendered button art has English text baked in, so in
+ *  pt-BR we skip the image and render the wood-texture + translated-text path.
+ *  Keyed by the exact English label callers pass. */
+const LABEL_PT: Record<string, string> = {
+  'Resume': 'Continuar',
+  'View Deck': 'Ver Baralho',
+  'Settings': 'Configurações',
+  'Tutorial': 'Tutorial',
+  'Abandon Run': 'Abandonar Jornada',
+  '← Back': '← Voltar',
+  '← Leave': '← Sair',
+  '← Cancel': '← Cancelar',
+  'Close': 'Fechar',
+  'Keep My Run': 'Manter Jornada',
+  'Keep': 'Manter',
+  'Banish': 'Banir',
+  'Return to Menu': 'Voltar ao Menu',
+  'Return to City': 'Voltar à Cidade',
+  'Change Hero': 'Trocar Herói',
+  '▶ Start Run': '▶ Iniciar Jornada',
+  '✕ Cancel': '✕ Cancelar',
+  'Start Game': 'Iniciar Jogo',
+  '→ Visit the Shop': '→ Visitar a Loja',
+  'Delete Current Run': 'Apagar Jornada Atual',
+  'Reset All Progress': 'Apagar Todo o Progresso',
+  'Yes, Delete': 'Sim, Apagar',
+  'New Game': 'Novo Jogo',
+  'Continue Run': 'Continuar Jornada',
+  'Daily Run': 'Desafio Diário',
+};
+
+/** Translate a button label for the active locale (identity in English). */
+function locLabel(label: string): string {
+  return getLocale() === 'pt-br' ? (LABEL_PT[label] ?? label) : label;
+}
 
 /** Maps button label text to the pre-rendered image texture key. */
 const LABEL_TO_KEY: Record<string, string> = {
@@ -72,7 +109,8 @@ export function createImageButton(
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y);
   const imageKey = LABEL_TO_KEY[label];
-  const hasImage = !!imageKey && scene.textures.exists(imageKey);
+  // In pt-BR the baked image has English text — fall back to the wood+text path.
+  const hasImage = getLocale() !== 'pt-br' && !!imageKey && scene.textures.exists(imageKey);
 
   if (hasImage) {
     const img = scene.add.image(0, 0, imageKey);
@@ -86,7 +124,7 @@ export function createImageButton(
     hit.on('pointerdown', () => container.setScale(0.96));
     hit.on('pointerup',   () => { container.setScale(1.05); onClick(); });
   } else {
-    const btn = scene.add.text(0, 0, label, {
+    const btn = scene.add.text(0, 0, locLabel(label), {
       fontSize: '22px', fontStyle: 'bold',
       color: '#f0d080', fontFamily: FONTS.body,
       stroke: '#000000', strokeThickness: 4,
@@ -119,9 +157,10 @@ export function createWoodButton(
   const hit = scene.add.rectangle(0, 0, width, height, 0x000000, 0)
     .setInteractive({ useHandCursor: true });
 
-  // Use pre-rendered image if available for this label
+  // Use pre-rendered image if available for this label. In pt-BR the baked art
+  // carries English text, so fall back to the wood-texture + translated text.
   const imageKey = LABEL_TO_KEY[label];
-  const usePrerendered = !!imageKey && scene.textures.exists(imageKey);
+  const usePrerendered = getLocale() !== 'pt-br' && !!imageKey && scene.textures.exists(imageKey);
 
   let bgImage: Phaser.GameObjects.Image | null = null;
   let bgRect: Phaser.GameObjects.Rectangle | null = null;
@@ -144,7 +183,7 @@ export function createWoodButton(
   }
 
   // Text only shown when no pre-rendered image (image already has text baked in)
-  const text = scene.add.text(0, 0, label, {
+  const text = scene.add.text(0, 0, locLabel(label), {
     fontSize: `${fontSize}px`,
     fontStyle: 'bold',
     color: VARIANT_TEXT[variant],
@@ -184,7 +223,7 @@ export function createWoodButton(
 
   return {
     container,
-    setText: (s: string) => { if (!usePrerendered) text.setText(s); },
+    setText: (s: string) => { if (!usePrerendered) text.setText(locLabel(s)); },
     setVariant: (v: WoodButtonVariant) => {
       variant = v;
       if (!usePrerendered) {

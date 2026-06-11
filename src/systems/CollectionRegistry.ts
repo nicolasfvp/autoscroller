@@ -3,8 +3,27 @@ import relicsData from '../data/json/relics.json';
 import enemiesData from '../data/json/enemies.json';
 import { MetaState } from '../state/MetaState';
 import { DEFAULT_SUBTILES } from './UnlockManager';
+import { getLocale } from '../i18n/i18n';
 
 const cardsData: any[] = (cardsJson as any).cards;
+
+// ── pt-BR Compendium localization ────────────────────────────────────────
+// Card/relic/boss names arrive already localized (DataLoader overlay mutates
+// the JSON singletons in place). Only the tile catalog + unlock hints, built
+// here from literals, need translating.
+const SOURCE_NAMES_PT: Record<string, string> = {
+  forge: 'Forja', library: 'Biblioteca', shrine: 'Santuário', workshop: 'Oficina', tavern: 'Taverna',
+};
+const TILE_NAMES_PT: Record<string, string> = {
+  basic: 'Básico', forest: 'Floresta', event: 'Evento', treasure: 'Tesouro', boss: 'Chefe',
+  graveyard: 'Cemitério', swamp: 'Pântano', desert: 'Deserto', lava: 'Lava',
+};
+const SUBTILE_NAMES_PT: Record<string, string> = {
+  subtile_ambush: 'Emboscada', subtile_bleedtotem: 'Totem de Sangramento',
+  subtile_burnaltar: 'Altar de Queimadura', subtile_camp: 'Acampamento',
+  subtile_magma: 'Fenda de Magma', subtile_manawell: 'Poço de Mana',
+  subtile_resonance: 'Ressonância', subtile_warhorn: 'Trompa de Guerra',
+};
 
 export interface CategoryStatus {
   total: number;
@@ -25,14 +44,14 @@ function isUnlocked(item: any, unlockedList: string[]): boolean {
 
 function unlockHint(item: any): string | undefined {
   if (!item.unlockSource) return undefined;
-  const sourceNames: Record<string, string> = {
-    forge: 'Forge',
-    library: 'Library',
-    shrine: 'Shrine',
-    workshop: 'Workshop',
-    tavern: 'Tavern',
+  const sourceNamesEn: Record<string, string> = {
+    forge: 'Forge', library: 'Library', shrine: 'Shrine', workshop: 'Workshop', tavern: 'Tavern',
   };
-  return `Unlock via ${sourceNames[item.unlockSource] || item.unlockSource} Lv.${item.unlockTier}`;
+  if (getLocale() === 'pt-br') {
+    const src = SOURCE_NAMES_PT[item.unlockSource] || item.unlockSource;
+    return `Desbloqueia na ${src} Nv.${item.unlockTier}`;
+  }
+  return `Unlock via ${sourceNamesEn[item.unlockSource] || item.unlockSource} Lv.${item.unlockTier}`;
 }
 
 export function getCollectionStatus(metaState: MetaState): CollectionStatus {
@@ -79,15 +98,19 @@ export function getCollectionStatus(metaState: MetaState): CollectionStatus {
   };
   const subtileIds = Object.keys(subtileNames);
   const allTiles = [...baseTiles, ...unlockableTiles, ...subtileIds];
+  const isPt = getLocale() === 'pt-br';
+  const workshopHint = isPt ? 'Desbloqueia na Oficina' : 'Unlock via Workshop';
+  const enTileName = (id: string) => id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   const tiles = allTiles.map(id => {
     const isSubtile = subtileNames[id] !== undefined;
+    const name = isSubtile
+      ? (isPt ? (SUBTILE_NAMES_PT[id] ?? subtileNames[id]) : subtileNames[id])
+      : (isPt ? (TILE_NAMES_PT[id] ?? enTileName(id)) : enTileName(id));
     return {
       id,
-      name: isSubtile
-        ? subtileNames[id]
-        : id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      name,
       isUnlocked: baseTiles.includes(id) || DEFAULT_SUBTILES.includes(id) || metaState.unlockedTiles.includes(id),
-      unlockHint: ((unlockableTiles.includes(id) || isSubtile) && !DEFAULT_SUBTILES.includes(id)) ? 'Unlock via Workshop' : undefined,
+      unlockHint: ((unlockableTiles.includes(id) || isSubtile) && !DEFAULT_SUBTILES.includes(id)) ? workshopHint : undefined,
     };
   });
 

@@ -19,7 +19,8 @@
 import Phaser from 'phaser';
 import { LAYOUT, FONTS } from './StyleConstants';
 import { renderTokenText } from './IconTokens';
-import { BRIEF_ICON_DEFINITIONS, collectCardIcons } from './CardIconLegend';
+import { getBriefIconDefinition, collectCardIcons } from './CardIconLegend';
+import { getLocale } from '../i18n/i18n';
 import type { CardDefinition } from '../data/types';
 
 const INITIAL_DELAY_MS = 1000; // "after a second of it on the screen"
@@ -138,7 +139,7 @@ function showIcon(i: number): void {
   s.index = i;
 
   const id = s.icons[i];
-  const brief = BRIEF_ICON_DEFINITIONS[id] ?? '';
+  const brief = getBriefIconDefinition(id, getLocale());
   const root = scene.add.container(0, 0).setDepth(DEPTH).setScrollFactor(0);
 
   // Caption text — the leading "[id]" renders as the colored icon glyph, so the

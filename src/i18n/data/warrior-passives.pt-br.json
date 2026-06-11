@@ -1,0 +1,22 @@
+{
+  "vigor": {
+    "name": "Vigor",
+    "description": "+10 de Vida Máxima"
+  },
+  "endurance": {
+    "name": "Resistência",
+    "description": "+5 de Vigor Máximo"
+  },
+  "iron_body": {
+    "name": "Corpo de Ferro",
+    "description": "+10% de eficiência de defesa"
+  },
+  "battle_rage": {
+    "name": "Fúria de Batalha",
+    "description": "+15% de dano após 2 ataques consecutivos"
+  },
+  "second_wind": {
+    "name": "Segundo Fôlego",
+    "description": "Recupera 5 de Vigor ao reembaralhar o baralho"
+  }
+}

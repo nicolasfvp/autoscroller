@@ -71,7 +71,7 @@ describe('migrateMetaState ↔ wipe flag round-trip (Pitfall 5)', () => {
     // version IMMEDIATELY BEFORE the wipe block (so always 3-5 after chain).
     const v3 = { ...createDefaultMetaState(), version: 3 };
     const migrated = migrateMetaState(v3);
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(migrated._wipedFromVersion).toBeGreaterThanOrEqual(3);
     expect(migrated._wipedFromVersion).toBeLessThanOrEqual(5);
   });
@@ -79,7 +79,7 @@ describe('migrateMetaState ↔ wipe flag round-trip (Pitfall 5)', () => {
   it('migrating a v5 save sets _wipedFromVersion = 5', () => {
     const v5 = { ...createDefaultMetaState(), version: 5 };
     const migrated = migrateMetaState(v5);
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(migrated._wipedFromVersion).toBe(5);
   });
 

@@ -17,6 +17,7 @@
 
 import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
+import { t } from '../i18n/i18n';
 
 const FF = FONTS.family;
 
@@ -469,7 +470,7 @@ export class BookLayout {
   private buildNavigation(): void {
     const navY = BOOK_BOTTOM - 22;
 
-    this.pageIndicator = this.scene.add.text(SPINE_X, navY, 'Page 1 / 1', {
+    this.pageIndicator = this.scene.add.text(SPINE_X, navY, t('book.pageIndicator', { current: 1, total: 1 }), {
       fontSize: '14px',
       fontStyle: 'italic bold',
       color: '#3a2218',
@@ -635,7 +636,7 @@ export class BookLayout {
   }
 
   private updateNavState(): void {
-    this.pageIndicator.setText(`Page ${this.spreadIndex + 1} / ${this.totalSpreads}`);
+    this.pageIndicator.setText(t('book.pageIndicator', { current: this.spreadIndex + 1, total: this.totalSpreads }));
     this.prevArrow.setAlpha(this.spreadIndex > 0 ? 1 : 0.3);
     this.nextArrow.setAlpha(this.spreadIndex < this.totalSpreads - 1 ? 1 : 0.3);
   }

@@ -4,6 +4,7 @@ import { COLORS, FONTS } from '../ui/StyleConstants';
 import { createImageButton } from '../ui/WoodButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { getRelicById } from '../data/DataLoader';
+import { t } from '../i18n/i18n';
 
 /**
  * RelicViewerScene -- overlay for viewing collected relics.
@@ -36,11 +37,11 @@ export class RelicViewerScene extends Scene {
     }
 
     // Title with the gold-banner treatment used by Forge/Shop.
-    this.add.bitmapText(400, 50, 'game_font_gold', 'Your Relics', 30).setOrigin(0.5);
+    this.add.bitmapText(400, 50, 'game_font_gold', t('relicViewer.title'), 30).setOrigin(0.5);
     this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
 
     if (run.relics.length === 0) {
-      this.add.text(400, 280, 'No relics yet.\n\nFind them in the Shop and treasure events!', {
+      this.add.text(400, 280, t('relicViewer.empty'), {
         fontSize: '20px',
         color: '#ffffff',
         fontFamily: FONTS.body,
@@ -49,7 +50,7 @@ export class RelicViewerScene extends Scene {
         strokeThickness: 3,
         wordWrap: { width: 500 },
       }).setOrigin(0.5);
-      createImageButton(this, 400, 370, '→ Visit the Shop', () => this.close(), 240, 56);
+      createImageButton(this, 400, 370, t('relicViewer.visitShop'), () => this.close(), 240, 56);
     } else {
       const COLS = 5;
       const START_X = 200;
@@ -66,8 +67,15 @@ export class RelicViewerScene extends Scene {
         const relDef = getRelicById(relicId);
         const name = relDef?.name ?? relicId.replace(/_/g, ' ');
 
-        const img = this.add.image(x, y, `relic_${relicId}`);
-        img.setDisplaySize(64, 64);
+        // Relic art streams in via the background warm; guard the texture so a
+        // not-yet-loaded relic shows a neutral placeholder tile rather than a
+        // missing-texture box. (RelicViewer is reached deep in a run, so the
+        // warm has almost always delivered it by now.)
+        if (this.textures.exists(`relic_${relicId}`)) {
+          this.add.image(x, y, `relic_${relicId}`).setDisplaySize(64, 64);
+        } else {
+          this.add.rectangle(x, y, 64, 64, 0x2a1a0a).setStrokeStyle(2, 0x9a6030);
+        }
 
         this.add.text(x, y + 42, name, {
           fontSize: '13px',
@@ -91,7 +99,7 @@ export class RelicViewerScene extends Scene {
     }
 
     // Close button
-    createImageButton(this, 400, 520, 'Close', () => this.close(), 200, 52);
+    createImageButton(this, 400, 520, t('relicViewer.close'), () => this.close(), 200, 52);
 
     this.events.on('shutdown', this.cleanup, this);
   }

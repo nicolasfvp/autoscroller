@@ -4,6 +4,7 @@
 
 import type { CombatState } from '../systems/combat/CombatState';
 import { createCardVisual } from './CardVisual';
+import { t } from '../i18n/i18n';
 
 
 const VISIBLE_COUNT = 3;
@@ -146,7 +147,7 @@ export class CardQueueDisplay {
 
   onCardSkipped(_deckPosition: number): void {
     if (this.cardContainers.length === 0) return;
-    const skipText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1] - 90, 'Skipped', {
+    const skipText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1] - 90, t('cardQueue.skipped'), {
       fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 
@@ -159,7 +160,7 @@ export class CardQueueDisplay {
   }
 
   onDeckReshuffled(): void {
-    const resetText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1], 'Deck Reset', {
+    const resetText = this.scene.add.text(SLOTS[0][0], SLOTS[0][1], t('cardQueue.deckReset'), {
       fontSize: '14px', color: '#aaaaaa',
     }).setOrigin(0.5).setDepth(200);
 

@@ -13,6 +13,7 @@ import { getCardById } from '../data/DataLoader';
 import { getMetaStateSync } from '../systems/MetaPersistence';
 import { ELEMENTS, resolveIconKey, type ElementId } from '../systems/ElementSystem';
 import { formatCardDescription } from '../systems/cards/CardText';
+import { getLocale } from '../i18n/i18n';
 import { getTokenStyle, renderTokenText } from './IconTokens';
 import { activateCardIconSubtitle } from './CardIconSubtitle';
 import { getRun } from '../state/RunState';
@@ -591,7 +592,7 @@ function hasDescription(card: CardDefinition, isUpgraded: boolean): boolean {
     effects,
     exhaust: card.exhaust,
     spend_armor: card.spend_armor,
-  });
+  }, { locale: getLocale() });
   return !!desc;
 }
 
@@ -619,7 +620,7 @@ function drawDescription(
     // (live combat stats, else the run's resolved stats).
     const desc = formatCardDescription(
       { effects, exhaust: card.exhaust, spend_armor: card.spend_armor },
-      { dynamic: { stats: getEffectiveStats(), shift: isShiftHeld() } },
+      { dynamic: { stats: getEffectiveStats(), shift: isShiftHeld() }, locale: getLocale() },
     );
     if (!desc) return;
 

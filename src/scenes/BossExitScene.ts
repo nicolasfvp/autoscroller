@@ -7,6 +7,7 @@ import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { t } from '../i18n/i18n';
 
 /**
  * BossExitScene -- boss exit choice overlay with two-panel layout.
@@ -38,7 +39,7 @@ export class BossExitScene extends Scene {
     this.add.rectangle(400, 300, 600, 400, COLORS.panel, LAYOUT.panelAlpha).setInteractive();
 
     // Title
-    this.add.bitmapText(400, 125, 'game_font_gold', 'Boss Defeated!', 32).setOrigin(0.5);
+    this.add.bitmapText(400, 125, 'game_font_gold', t('bossExit.bossDefeated'), 32).setOrigin(0.5);
 
     // Get choice data
     const run = getRun();
@@ -50,11 +51,11 @@ export class BossExitScene extends Scene {
     exitBg.setInteractive({ useHandCursor: true });
     this.exitPanel.add(exitBg);
 
-    this.exitPanel.add(this.add.text(0, -75, 'Exit Run', {
+    this.exitPanel.add(this.add.text(0, -75, t('bossExit.exitRun'), {
       fontSize: '24px', fontStyle: 'bold', color: '#00ff00', fontFamily,
     }).setOrigin(0.5));
 
-    this.exitPanel.add(this.add.text(0, -35, 'Bank all materials\nand XP safely.', {
+    this.exitPanel.add(this.add.text(0, -35, t('bossExit.exitRunDesc'), {
       fontSize: '16px', color: COLORS.textPrimary, fontFamily, align: 'center',
       wordWrap: { width: 200 },
     }).setOrigin(0.5));
@@ -63,12 +64,12 @@ export class BossExitScene extends Scene {
     const materialLines = Object.entries(reward.materials)
       .filter(([, v]) => v > 0)
       .map(([k, v]) => `${k}: ${v}`)
-      .join(', ') || 'None';
+      .join(', ') || t('bossExit.none');
     this.exitPanel.add(this.add.text(0, 20, materialLines, {
       fontSize: '12px', color: '#00ff00', fontFamily, align: 'center',
       wordWrap: { width: 200 },
     }).setOrigin(0.5));
-    this.exitPanel.add(this.add.text(0, 50, `+${reward.xp} XP`, {
+    this.exitPanel.add(this.add.text(0, 50, t('bossExit.xpReward', { xp: reward.xp }), {
       fontSize: '14px', color: '#00ff00', fontFamily, align: 'center',
     }).setOrigin(0.5));
 
@@ -91,16 +92,16 @@ export class BossExitScene extends Scene {
     continueBg.setInteractive({ useHandCursor: true });
     this.continuePanel.add(continueBg);
 
-    this.continuePanel.add(this.add.text(0, -75, 'Continue', {
+    this.continuePanel.add(this.add.text(0, -75, t('bossExit.continue'), {
       fontSize: '24px', fontStyle: 'bold', color: '#ff6600', fontFamily,
     }).setOrigin(0.5));
 
-    this.continuePanel.add(this.add.text(0, -35, 'The loop grows by 3 tiles.\nRisk everything.', {
+    this.continuePanel.add(this.add.text(0, -35, t('bossExit.continueDesc'), {
       fontSize: '16px', color: COLORS.textPrimary, fontFamily, align: 'center',
       wordWrap: { width: 200 },
     }).setOrigin(0.5));
 
-    this.continuePanel.add(this.add.text(0, 30, 'Death means 10%\nmaterials, zero XP.', {
+    this.continuePanel.add(this.add.text(0, 30, t('bossExit.continueRisk'), {
       fontSize: '14px', color: COLORS.danger, fontFamily, align: 'center',
     }).setOrigin(0.5));
 
@@ -119,7 +120,7 @@ export class BossExitScene extends Scene {
 
     // Confirm button — visible but dimmed until a selection is made so the
     // player can see the affordance up-front (UX: no "where do I confirm?").
-    this.confirmBtn = this.add.text(400, 430, 'Confirm', {
+    this.confirmBtn = this.add.text(400, 430, t('bossExit.confirm'), {
       fontSize: '24px', fontStyle: 'bold', color: COLORS.accent, fontFamily,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setAlpha(0.4);
 

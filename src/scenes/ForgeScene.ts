@@ -6,6 +6,8 @@
 // Logic unchanged: ForgeSystem (validateForge / executeForge / discoverRecipe).
 
 import { Scene } from 'phaser';
+import { t } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 import { getRun, setRun } from '../state/RunState';
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
@@ -152,25 +154,17 @@ export class ForgeScene extends Scene {
       this.renderForge();
       this.beamPulse = 0;
       this.events.on('update', this.onUpdate, this);
-      const leaveImg = this.add.image(0, 0, 'btn_forge_leave');
-      leaveImg.setScale(120 / leaveImg.width);
       const LEAVE_X = 75;
       const LEAVE_Y = CANVAS_H - 28;
-      const leaveCont = this.add.container(LEAVE_X, LEAVE_Y, [leaveImg])
-        .setSize(120, 34).setInteractive({ useHandCursor: true });
-      leaveCont.on('pointerover', () => this.tweens.add({ targets: leaveCont, scale: 1.05, duration: 100 }));
-      leaveCont.on('pointerout', () => this.tweens.add({ targets: leaveCont, scale: 1, duration: 100 }));
-      leaveCont.on('pointerdown', () => this.close());
-
-      const recipesImg = this.add.image(0, 0, 'btn_recipes');
-      recipesImg.setScale(130 / recipesImg.width);
-      const recipesH = Math.round(recipesImg.height * (130 / recipesImg.width));
-      const leaveH   = Math.round(leaveImg.height   * (120 / leaveImg.width));
-      const recipesCont = this.add.container(LEAVE_X, LEAVE_Y - leaveH / 2 - recipesH / 2 - 6, [recipesImg])
-        .setSize(130, recipesH).setInteractive({ useHandCursor: true });
-      recipesCont.on('pointerover', () => this.tweens.add({ targets: recipesCont, scale: 1.05, duration: 100 }));
-      recipesCont.on('pointerout', () => this.tweens.add({ targets: recipesCont, scale: 1, duration: 100 }));
-      recipesCont.on('pointerdown', () => this.openRecipeLibrary());
+      const dispH = (k: string, w: number, fallback: number): number => {
+        if (!this.textures.exists(k)) return fallback;
+        const s = this.textures.get(k).getSourceImage() as { width: number; height: number };
+        return s && s.width ? Math.round(w * (s.height / s.width)) : fallback;
+      };
+      const leaveH = dispH('btn_forge_leave', 120, 34);
+      const recipesH = dispH('btn_recipes', 130, 40);
+      localizedImageButton(this, LEAVE_X, LEAVE_Y, 'btn_forge_leave', t('btn.leave'), 120, () => this.close());
+      localizedImageButton(this, LEAVE_X, LEAVE_Y - leaveH / 2 - recipesH / 2 - 6, 'btn_recipes', t('btn.recipes'), 130, () => this.openRecipeLibrary());
       this.buildDwarfNPC();
       TutorialOverlay.mountIfActive(this);
       this.events.on('shutdown', this.cleanup, this);
@@ -247,7 +241,7 @@ export class ForgeScene extends Scene {
     if (this.textures.exists('icon_coin')) {
       gb.add(this.add.image(-GOLD_W / 2 + 18, 0, 'icon_coin').setDisplaySize(18, 18));
     }
-    this.goldText = this.add.text(8, 0, `${getRun().economy.gold} g`, {
+    this.goldText = this.add.text(8, 0, t('forge.goldReadout', { g: getRun().economy.gold }), {
       fontSize: '14px', fontStyle: 'bold', color: GOLD,
       fontFamily: FF, stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5);
@@ -258,7 +252,7 @@ export class ForgeScene extends Scene {
   private renderForge(): void {
     this.dynLayer.removeAll(true);
     const run = getRun();
-    this.goldText.setText(`${run.economy.gold} g`);
+    this.goldText.setText(t('forge.goldReadout', { g: run.economy.gold }));
     const forgeLevel = this.metaState?.buildings.forge.level ?? 0;
     const elementInv = (run.economy.elements ?? {}) as ElementInventory;
     const shardInv   = (run.economy.shards ?? {}) as Record<string, number>;
@@ -452,7 +446,7 @@ export class ForgeScene extends Scene {
         }).setOrigin(0.5),
       );
       this.dynLayer.add(
-        this.add.text(ARC_CX, ARC_CY + 24, 'No matching recipe', {
+        this.add.text(ARC_CX, ARC_CY + 24, t('forge.noMatchingRecipe'), {
           fontSize: '10px', color: RED, fontFamily: FF,
           stroke: '#000', strokeThickness: 2,
         }).setOrigin(0.5),
@@ -480,13 +474,13 @@ export class ForgeScene extends Scene {
     let line: string;
     if (canForge && cost <= 0) {
       // Tier 1 is free — no gold line.
-      line = `Just yer ${this.forgeSlots.length} ${elemNames} shard\nan' it's yours.\nShall I forge it?`;
+      line = t('forge.promptFree', { count: this.forgeSlots.length, elemNames });
     } else if (canForge) {
-      line = `This'll cost ye ${cost} gold\nan' ${this.forgeSlots.length} ${elemNames} shards.\nShall I forge it?`;
+      line = t('forge.promptCost', { cost, count: this.forgeSlots.length, elemNames });
     } else if (validation && !validation.ok) {
       line = forgeReasonDwarf(validation.reason ?? 'invalid', tier, forgeLevel, cost);
     } else {
-      line = `Tier ${tier} is locked, friend.\nUpgrade the forge first!`;
+      line = t('forge.promptTierLocked', { tier });
     }
     // Abre a carta expandida sem backdrop (anão fala ao lado)
     showCardDetail(this, cardId, undefined, undefined, true, true);
@@ -684,13 +678,13 @@ export class ForgeScene extends Scene {
   // ── Forge dwarf NPC ──────────────────────────────────────────────────────────
   private buildDwarfNPC(): void {
     const LINES = [
-      "Toss in yer shards an'\nI'll smith somethin'\nfine for ya!",
-      "What're ye combining\ntoday, adventurer?",
-      "The forge hungers\nfor elements!",
-      "Pick yer shards,\nI'll do the rest.",
-      "Every great blade\nstarts right here.",
-      "Combine wisely,\nwarrior.",
-      "Need somethin'\nforged? Let's go!",
+      t('forge.dwarfIdle1'),
+      t('forge.dwarfIdle2'),
+      t('forge.dwarfIdle3'),
+      t('forge.dwarfIdle4'),
+      t('forge.dwarfIdle5'),
+      t('forge.dwarfIdle6'),
+      t('forge.dwarfIdle7'),
     ];
 
     const NPC_X     = 744.1;
@@ -935,12 +929,12 @@ export class ForgeScene extends Scene {
 
 function forgeReasonDwarf(reason: string, tier: number, _forgeLevel: number, cost: number): string {
   switch (reason) {
-    case 'tier_locked':           return `Tier ${tier} needs\nForge Lv ${FORGE_TIER_UNLOCK[tier as CardTier]}.\nUpgrade first, friend!`;
-    case 'no_card':               return `Hmm... no recipe\nmatches that combo.\nTry somethin' else!`;
-    case 'insufficient_elements': return `Not enough shards\nfor this one.\nGather more!`;
-    case 'insufficient_gold':     return `Need ${cost} gold for\nthis forge. Yer\nwallet's too light!`;
-    case 'deck_full':             return `Yer deck's full!\nBanish a card first\nthen come back.`;
-    default:                      return `Can't forge that\nright now, friend.`;
+    case 'tier_locked':           return t('forge.reasonTierLocked', { tier, lv: FORGE_TIER_UNLOCK[tier as CardTier] });
+    case 'no_card':               return t('forge.reasonNoCard');
+    case 'insufficient_elements': return t('forge.reasonInsufficientElements');
+    case 'insufficient_gold':     return t('forge.reasonInsufficientGold', { cost });
+    case 'deck_full':             return t('forge.reasonDeckFull');
+    default:                      return t('forge.reasonDefault');
   }
 }
 

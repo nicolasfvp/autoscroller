@@ -6,6 +6,20 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import type { AuraModifierKind } from '../data/types';
 import type { ActiveAura } from '../systems/combat/StatusEffects';
+import { getLocale } from '../i18n/i18n';
+
+// pt-BR for the status-chip tooltip names + prose. Hover-only; defaults to
+// English (so the EN-pinning unit tests in the 'en' test env stay valid).
+const NAME_PT: Record<string, string> = {
+  Poison: 'Veneno', Bleed: 'Sangramento', Burn: 'Queimadura', Stun: 'Atordoamento',
+  Slow: 'Lentidão', Rage: 'Fúria', STR: 'FOR', VIT: 'VIT', DEX: 'DES', INT: 'INT',
+  SPI: 'ESP', DEF: 'DEF', Haste: 'Aceleração', 'Vuln Fire': 'Vuln. Fogo',
+  Reforce: 'Reforço', Mitigate: 'Mitigação', Empower: 'Potência', Stance: 'Postura',
+  'Pierce Imm.': 'Imune a Perfuração', 'Stack ×': 'Multiplicador',
+};
+const isPt = () => getLocale() === 'pt-br';
+const nm = (name: string): string => (isPt() ? (NAME_PT[name] ?? name) : name);
+const loc = (en: string, pt: string): string => (isPt() ? pt : en);
 
 export interface EffectChip {
   /** Stable identity (for diff / pool slotting). */
@@ -96,7 +110,7 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_armor',
       label: `${armor}`,
       color: '#9fd6ff',
-      tooltip: `Armor: absorbs ${armor} damage`,
+      tooltip: loc(`Armor: absorbs ${armor} damage`, `Armadura: absorve ${armor} de dano`),
     });
   }
 
@@ -108,7 +122,7 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: meta.iconKey,
       label: `${formatModValue(agg.kind, agg.totalValue)} ${formatSeconds(agg.maxRemainingMs)}`,
       color: meta.color,
-      tooltip: `${meta.name} buff (${formatSeconds(agg.maxRemainingMs)} left)`,
+      tooltip: loc(`${meta.name} buff (${formatSeconds(agg.maxRemainingMs)} left)`, `Bônus de ${nm(meta.name)} (${formatSeconds(agg.maxRemainingMs)} restante)`),
     });
   }
 
@@ -126,7 +140,7 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_defense',
       label: armorBreak > 1 ? `x${armorBreak}` : 'armed',
       color: '#9fd6ff',
-      tooltip: 'Armed: fires when armor breaks',
+      tooltip: loc('Armed: fires when armor breaks', 'Pronto: dispara quando a armadura quebra'),
     });
   }
   if (hpBelow > 0) {
@@ -135,21 +149,21 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_HP',
       label: hpBelow > 1 ? `x${hpBelow}` : 'armed',
       color: '#ff6666',
-      tooltip: 'Armed: fires when HP drops below threshold',
+      tooltip: loc('Armed: fires when HP drops below threshold', 'Pronto: dispara quando a Vida cai abaixo do limite'),
     });
   }
 
   if (state.rageStacks > 0) {
     const m = STACK_META.rage;
-    chips.push({ key: 'hero-rage', iconKey: m.iconKey, label: `${state.rageStacks}`, color: m.color, tooltip: `${m.name}: ${state.rageStacks}` });
+    chips.push({ key: 'hero-rage', iconKey: m.iconKey, label: `${state.rageStacks}`, color: m.color, tooltip: `${nm(m.name)}: ${state.rageStacks}` });
   }
   if (state.heroBurnStacks > 0) {
     const m = STACK_META.burn;
-    chips.push({ key: 'hero-burn', iconKey: m.iconKey, label: `${state.heroBurnStacks}`, color: m.color, tooltip: `Self ${m.name}: ${state.heroBurnStacks}` });
+    chips.push({ key: 'hero-burn', iconKey: m.iconKey, label: `${state.heroBurnStacks}`, color: m.color, tooltip: loc(`Self ${m.name}: ${state.heroBurnStacks}`, `${nm(m.name)} (em você): ${state.heroBurnStacks}`) });
   }
   if (state.heroBleedStacks > 0) {
     const m = STACK_META.bleed;
-    chips.push({ key: 'hero-bleed', iconKey: m.iconKey, label: `${state.heroBleedStacks}`, color: m.color, tooltip: `Self ${m.name}: ${state.heroBleedStacks}` });
+    chips.push({ key: 'hero-bleed', iconKey: m.iconKey, label: `${state.heroBleedStacks}`, color: m.color, tooltip: loc(`Self ${m.name}: ${state.heroBleedStacks}`, `${nm(m.name)} (em você): ${state.heroBleedStacks}`) });
   }
 
   return chips;
@@ -168,7 +182,7 @@ export function computeEnemyChips(state: CombatState): EffectChip[] {
   for (const [k, v] of stackPairs) {
     if (v > 0) {
       const meta = STACK_META[k];
-      chips.push({ key: `enemy-${k}`, iconKey: meta.iconKey, label: `${v}`, color: meta.color, tooltip: `${meta.name}: ${v}` });
+      chips.push({ key: `enemy-${k}`, iconKey: meta.iconKey, label: `${v}`, color: meta.color, tooltip: `${nm(meta.name)}: ${v}` });
     }
   }
 
@@ -180,7 +194,7 @@ export function computeEnemyChips(state: CombatState): EffectChip[] {
       iconKey: meta.iconKey,
       label: `${formatModValue(agg.kind, agg.totalValue)} ${formatSeconds(agg.maxRemainingMs)}`,
       color: meta.color,
-      tooltip: `${meta.name} debuff (${formatSeconds(agg.maxRemainingMs)} left)`,
+      tooltip: loc(`${meta.name} debuff (${formatSeconds(agg.maxRemainingMs)} left)`, `Penalidade de ${nm(meta.name)} (${formatSeconds(agg.maxRemainingMs)} restante)`),
     });
   }
 

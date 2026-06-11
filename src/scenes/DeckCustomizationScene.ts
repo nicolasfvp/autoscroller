@@ -24,6 +24,8 @@ import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
+import { t } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 
 // ── Layout zones ─────────────────────────────────────────────────────────
 const HEADER_BOTTOM = 44;
@@ -140,17 +142,12 @@ export class DeckCustomizationScene extends Scene {
     this.add.rectangle(LAYOUT.centerX, HEADER_BOTTOM / 2, LAYOUT.canvasWidth, HEADER_BOTTOM, 0x14100c, 0.86)
       .setStrokeStyle(1, CHROME.panelStroke);
 
-    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, 'DECK EDITOR', {
+    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, t('deckCustom.title'), {
       fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
       fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    const backImg = this.add.image(0, 0, 'btn_back_settings').setScale(130 / 1995);
-    const backCont = this.add.container(72, LAYOUT.canvasHeight - 28, [backImg])
-      .setSize(130, 51).setInteractive({ useHandCursor: true });
-    backCont.on('pointerover', () => this.tweens.add({ targets: backCont, scale: 1.05, duration: 100 }));
-    backCont.on('pointerout',  () => this.tweens.add({ targets: backCont, scale: 1,    duration: 100 }));
-    backCont.on('pointerdown', () => this.close());
+    localizedImageButton(this, 72, LAYOUT.canvasHeight - 28, 'btn_back_settings', t('common.back'), 130, () => this.close(), { height: 51 });
 
     addGlossaryButton(this, 770, HEADER_BOTTOM / 2);
   }
@@ -408,7 +405,7 @@ export class DeckCustomizationScene extends Scene {
     this.dragCard = this.createDragVisual(cardId, centerX, centerY);
     this.showGhost(deckIndex);
 
-    this.setHint('Drop on any slot to reorder');
+    this.setHint(t('deckCustom.hintDrop'));
   }
 
   private createDragVisual(cardId: string, x: number, y: number): Phaser.GameObjects.Container {
@@ -537,8 +534,8 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private getDefaultHint(): string {
-    if (this.deckOrder.length >= MAX_DECK) return `Deck is full (${MAX_DECK} cards) — remove a card to add new ones.`;
-    return 'Drag deck cards to reorder • Hover any card for the full version';
+    if (this.deckOrder.length >= MAX_DECK) return t('deckCustom.hintFull', { max: MAX_DECK });
+    return t('deckCustom.hintDefault');
   }
 
   private setHint(msg: string): void {

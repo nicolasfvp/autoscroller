@@ -4,6 +4,7 @@
 // in-place to strip the field after reading it once.
 
 import type { MetaState } from '../state/MetaState';
+import { t } from '../i18n/i18n';
 
 /**
  * Read + strip the one-shot `_wipedFromVersion` flag from MetaState.
@@ -28,7 +29,7 @@ export function consumeWipeFlag(meta: MetaState): number | undefined {
  */
 export function formatWelcomeNotice(_wipedFrom?: number): string {
   // Copy is independent of the wiped-from version per UI-SPEC §Copywriting.
-  return 'Welcome. Your previous progress has been reset for Design v2. Choose your hero.';
+  return t('menu.welcomeNotice');
 }
 
 /**
@@ -36,7 +37,7 @@ export function formatWelcomeNotice(_wipedFrom?: number): string {
  * cleared an in-progress RunState that was on an older version (D-07).
  */
 export const SAVE_INCOMPATIBLE_COPY = {
-  title: 'Save incompatible',
-  body: 'Your previous save is from an earlier version of the game. Starting fresh.',
-  cta: 'Continue',
+  title: t('menu.saveIncompatibleTitle'),
+  body: t('menu.saveIncompatibleBody'),
+  cta: t('menu.saveIncompatibleCta'),
 } as const;

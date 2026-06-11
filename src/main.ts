@@ -179,6 +179,31 @@ document.fonts.load('16px VT323').catch(() => {});
 
 const game = new Phaser.Game(config)
 
+// Language reconciliation. Boot localizes data using the synchronous
+// localStorage mirror (default 'pt-br'). Once idb-keyval resolves, adopt the
+// durable MetaState language if it diverges (e.g. mirror was cleared but the
+// save persisted). setLocale rewrites the mirror; re-localize data so any
+// scene that mounts afterward reads the corrected language.
+void (async () => {
+    try {
+        const { loadMetaState } = await import('./systems/MetaPersistence')
+        const { getLocale, setLocale, wasLocaleExplicitlyStored } = await import('./i18n/i18n')
+        const { applyDataLocale } = await import('./i18n/dataLocalize')
+        const meta = await loadMetaState()
+        // Only adopt the durable save copy when the player hasn't made an
+        // explicit choice this device (no localStorage mirror). An explicit
+        // mirror is the synchronous source of truth and must win.
+        if (!wasLocaleExplicitlyStored() &&
+            (meta.language === 'pt-br' || meta.language === 'en') &&
+            meta.language !== getLocale()) {
+            setLocale(meta.language)
+            applyDataLocale(getLocale())
+        }
+    } catch (err) {
+        console.warn('[main] language reconciliation failed:', err)
+    }
+})()
+
 // Responsive scaling — apply UI_SCALE camera zoom to every scene's main camera.
 // The zoom makes 800×600 game-space render into the 1600×1200 backing-store,
 // which FIT then CSS-downscales to viewport. centerOn anchors world (0,0) at

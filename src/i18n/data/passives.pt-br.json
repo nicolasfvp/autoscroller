@@ -1,0 +1,42 @@
+{
+  "passive_attack_up": {
+    "name": "Endurecido em Batalha",
+    "description": "+3 de dano de ataque base"
+  },
+  "passive_defense_up": {
+    "name": "Constituição de Ferro",
+    "description": "+5 de Defesa base"
+  },
+  "passive_regen": {
+    "name": "Fôlego Renovado",
+    "description": "+2 de regeneração de Vigor por turno"
+  },
+  "passive_combo_master": {
+    "name": "Mestre dos Combos",
+    "description": "+25% de bônus de dano por sinergia"
+  },
+  "passive_endurance": {
+    "name": "Resistência",
+    "description": "+20 de Vigor máximo"
+  },
+  "mage_arcane_affinity": {
+    "name": "Afinidade Arcana",
+    "description": "+8 de Mana máxima"
+  },
+  "mage_spell_echo": {
+    "name": "Eco de Feitiço",
+    "description": "+15% de dano de feitiço após 2 ataques consecutivos"
+  },
+  "mage_mana_shield": {
+    "name": "Escudo de Mana",
+    "description": "+5 de Mana máxima"
+  },
+  "mage_overload": {
+    "name": "Sobrecarga",
+    "description": "Recupere 3 de Mana ao reembaralhar o baralho"
+  },
+  "mage_ascendance": {
+    "name": "Ascensão",
+    "description": "+10 de Mana máxima"
+  }
+}

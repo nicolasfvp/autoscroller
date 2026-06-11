@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { type RunState } from '../state/RunState';
 import { FONTS } from './StyleConstants';
+import { t } from '../i18n/i18n';
 // Re-export Phase 9 helpers from a Phaser-free module so tests can import
 // without booting Phaser. The runtime path here still uses them.
 
@@ -92,7 +93,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     }).setOrigin(0, 0.5);
     this.add(this.goldText);
 
-    this.loopText = scene.add.text(LP.LP_X + LP.LP_W / 2, topRowY, 'Loop 1', {
+    this.loopText = scene.add.text(LP.LP_X + LP.LP_W / 2, topRowY, t('loopHud.loop', { count: 1 }), {
       fontFamily: FF, fontSize: '16px', fontStyle: 'bold', color: '#ffffff',
       stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5, 0.5);
@@ -113,7 +114,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const barH = 14;
     this.HP_BAR_W = barW;
 
-    this.add(scene.add.text(innerL, hpY, '♥ HP', {
+    this.add(scene.add.text(innerL, hpY, t('loopHud.hpLabel'), {
       fontFamily: FF, fontSize: '11px', fontStyle: 'bold', color: '#ff5555',
       stroke: '#000', strokeThickness: 2,
     }).setOrigin(0, 0.5));
@@ -145,7 +146,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     }).setOrigin(0, 0.5);
     this.rightPanelContainer.add(tpIcon);
 
-    this.tpText = scene.add.text(LP.RP_X + 42, LP.RP_Y + 26, '0 TP', {
+    this.tpText = scene.add.text(LP.RP_X + 42, LP.RP_Y + 26, t('loopHud.tp', { tp: 0 }), {
       fontFamily: FF, fontSize: '17px', fontStyle: 'bold', color: '#00e5ff',
       stroke: '#000', strokeThickness: 3,
     }).setOrigin(0, 0.5);
@@ -274,7 +275,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     this.add(pgBg);
 
     if (pgKey === 'ui_panel') {
-      this.add(scene.add.text(cx, P.PROG_Y + 32, 'LOOP PROGRESS', {
+      this.add(scene.add.text(cx, P.PROG_Y + 32, t('loopHud.loopProgress'), {
         fontFamily: FF, fontSize: '13px', fontStyle: 'bold',
         color: '#ffcc88', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5, 0.5));
@@ -312,7 +313,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   update(runState: RunState, positionInLoop: number = 0, loopTotalPixels: number = 1): void {
     this.goldText.setText(String(runState.economy.gold));
-    this.loopText.setText(`Loop ${runState.loop.count}`);
+    this.loopText.setText(t('loopHud.loop', { count: runState.loop.count }));
     this.diffBadgeText.setText(`x${runState.loop.difficulty.toFixed(1)}`);
     const progress = loopTotalPixels > 0 ? Math.min(1, positionInLoop / loopTotalPixels) : 0;
     const pct = Math.round(progress * 100);
@@ -330,7 +331,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
     const maxHPForBar = Math.max(1, resolvedMaxHP);
     this.hpBar.width = this.HP_BAR_W * (runState.hero.currentHP / maxHPForBar);
     this.hpText.setText(`${runState.hero.currentHP}/${resolvedMaxHP}`);
-    this.tpText.setText(`${runState.economy.tilePoints} TP`);
+    this.tpText.setText(t('loopHud.tp', { tp: runState.economy.tilePoints }));
     const MAT: Record<string, string> = { wood: '🪵', stone: '🪨', iron: '⚙', crystal: '💎', bone: '🦴', herbs: '🌿', essence: '✨' };
     const mats = Object.entries(runState.economy.materials ?? {}).filter(([, v]) => v > 0);
     this.materialsRow.setText(mats.slice(0, 5).map(([k, v]) => `${MAT[k] ?? k[0]}${v}`).join('  '));
@@ -349,7 +350,7 @@ export class LoopHUD extends Phaser.GameObjects.Container {
 
   private updateShopToggle(enabled: boolean): void {
     this.drawShopToggle(enabled);
-    const label = enabled ? 'Shop ✔' : 'Shop ✘';
+    const label = enabled ? t('loopHud.shopOn') : t('loopHud.shopOff');
     const color = enabled ? '#00ff88' : '#ff4466';
     this.shopToggleText.setText(label).setColor(color);
   }

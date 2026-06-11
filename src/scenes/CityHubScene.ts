@@ -8,6 +8,7 @@ import { playUnlockCelebration } from '../ui/UnlockCelebration';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { SeededRNG } from '../systems/SeededRNG';
 import { createNewRun, setRun, hasActiveRun, getRun } from '../state/RunState';
+import { t, getLocale } from '../i18n/i18n';
 
 const GOLD   = '#e6c88a';
 const STROKE = '#2e1b0f';
@@ -92,7 +93,7 @@ export class CityHubScene extends Scene {
 
 
     // ── Bottom-right: Start Run ───────────────────────────────
-    if (this.textures.exists('btn_start_run_hub')) {
+    if (getLocale() !== 'pt-br' && this.textures.exists('btn_start_run_hub')) {
       const startBtn = this.add.image(801, 567, 'btn_start_run_hub')
         .setScale(119 / this.textures.get('btn_start_run_hub').getSourceImage().width)
         .setOrigin(1, 0.5)
@@ -102,13 +103,25 @@ export class CityHubScene extends Scene {
       startBtn.on('pointerout',  () => startBtn.clearTint());
       startBtn.on('pointerdown', () => this.startRun());
     } else {
-      this.createTextButton(750, 562, 'Start Run', () => this.startRun());
+      this.createTextButton(750, 562, t('city.startRun'), () => this.startRun());
     }
 
     // ── Building buttons ──────────────────────────────────────
     for (const cfg of BUILDINGS) {
       this.createBuildingButton(cfg);
     }
+  }
+
+  // ─── Localized building display label ─────────────────────────
+  private buildingLabel(key: string): string {
+    const map: Record<string, string> = {
+      forge: t('city.buildingForge'),
+      library: t('city.buildingLibrary'),
+      workshop: t('city.buildingWorkshop'),
+      shrine: t('city.buildingOracle'),
+      storehouse: t('city.buildingVault'),
+    };
+    return map[key] ?? (BUILDING_LABEL[key] ?? key.toUpperCase());
   }
 
   // ─── Material inventory — header horizontal no topo ──────────────
@@ -162,7 +175,7 @@ export class CityHubScene extends Scene {
       .setDepth(10);
 
     // Level badge below button
-    addBitmapText(this, x, y + 18, `Lv.${level}`, 12, 'gold')
+    addBitmapText(this, x, y + 18, t('city.levelBadge', { level }), 12, 'gold')
       .setOrigin(0.5, 0).setDepth(10);
 
     btn.on('pointerover', () => btn.setTint(0xffffcc));
@@ -220,10 +233,10 @@ export class CityHubScene extends Scene {
 
     if (isMaxed) {
       yOff += 40;
-      c.add(addBitmapText(this, 0, yOff, BUILDING_LABEL[key] ?? key.toUpperCase(), 20, 'blue')
+      c.add(addBitmapText(this, 0, yOff, this.buildingLabel(key), 20, 'blue')
         .setOrigin(0.5));
       yOff += 30;
-      c.add(addBitmapText(this, 0, yOff, 'Totalmente melhorado', 15, 'white')
+      c.add(addBitmapText(this, 0, yOff, t('city.fullyUpgraded'), 15, 'white')
         .setOrigin(0.5).setTint(0x9bff9b));
     } else {
       // Pre-rendered narrative image
@@ -237,9 +250,9 @@ export class CityHubScene extends Scene {
         yOff += img.displayHeight + 12;
       } else {
         // Fallback: programmatic title + description
-        c.add(addBitmapText(this, 0, yOff, BUILDING_LABEL[key] ?? key.toUpperCase(), 20, 'blue').setOrigin(0.5));
+        c.add(addBitmapText(this, 0, yOff, this.buildingLabel(key), 20, 'blue').setOrigin(0.5));
         yOff += 30;
-        c.add(addBitmapText(this, 0, yOff, `Nivel ${currentLevel} / ${maxLevel}`, 13, 'gold').setOrigin(0.5));
+        c.add(addBitmapText(this, 0, yOff, t('city.levelRange', { currentLevel, maxLevel }), 13, 'gold').setOrigin(0.5));
         yOff += 24;
         c.add(this.add.graphics().lineStyle(1, 0xd4a04a, 0.6).lineBetween(-PW / 2 + 20, yOff, PW / 2 - 20, yOff));
         yOff += 14;
@@ -258,7 +271,7 @@ export class CityHubScene extends Scene {
         lbl.setScale(SECTION_H / lbl.height).setOrigin(0, 0);
         c.add(lbl);
       } else {
-        c.add(addBitmapText(this, panelX + 8, yOff + SECTION_H / 2, 'Requer:', 11, 'blue').setOrigin(0, 0.5));
+        c.add(addBitmapText(this, panelX + 8, yOff + SECTION_H / 2, t('city.requires'), 11, 'blue').setOrigin(0, 0.5));
       }
 
       // Materiais em linha horizontal dentro do painel REQUER
@@ -302,7 +315,7 @@ export class CityHubScene extends Scene {
       } else {
         const btnBg = this.add.rectangle(btnCX, btnCY, 120, 30, canAfford ? 0x4a7c2a : 0x2a2a2a, 0.92)
           .setStrokeStyle(2, canAfford ? 0x88dd44 : 0x555555).setAlpha(btnAlpha);
-        const btnTxt = addBitmapText(this, btnCX, btnCY, 'MELHORAR', 11, 'white')
+        const btnTxt = addBitmapText(this, btnCX, btnCY, t('city.upgrade'), 11, 'white')
           .setOrigin(0.5).setAlpha(btnAlpha).setTint(canAfford ? 0xccffaa : 0x888888);
         c.add([btnBg, btnTxt]);
         if (canAfford) {

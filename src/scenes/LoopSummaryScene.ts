@@ -1,9 +1,10 @@
 import { Scene } from 'phaser';
+import { t, getLocale } from '../i18n/i18n';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS } from '../ui/StyleConstants';
 import { type LootEntry } from '../systems/PendingLoot';
 import { type LoopRunner, type LoopRunState } from '../systems/LoopRunner';
-import { resolveIconKey } from '../systems/ElementSystem';
+import { resolveIconKey, ELEMENTS, ALL_ELEMENT_IDS } from '../systems/ElementSystem';
 
 interface SummaryData {
   loopRunner: LoopRunner;
@@ -34,27 +35,27 @@ const LOOT_ICONS: Record<string, string> = {
   'brick':      'icon_brick',
   'scroll':     'mat_scroll',
   'basic tile': 'mat_scroll',
+  'ouro':       'icon_coin',
 };
 
-// Maps shard loot type → element id, resolved via resolveIconKey at render time
-const SHARD_ELEMENT_IDS: Record<string, string> = {
-  'Attack shard':  'attack',
-  'Defense shard': 'defense',
-  'Agility shard': 'agility',
-  'Counter shard': 'counter',
-  'Fire shard':    'fire',
-  'Water shard':   'water',
-  'Air shard':     'air',
-  'Earth shard':   'earth',
-};
+// Shard loot type ("{name} shard" in EN / "fragmento de {name}" in pt-BR) →
+// element id. Built lazily so it reflects the active locale AND the localized
+// ELEMENTS names (ELEMENTS is localized in Boot, after this module is imported,
+// so building at module-init would capture stale English names in pt-BR).
+let _shardMaps: { ids: Record<string, string>; types: Set<string> } | null = null;
+function shardMaps(): { ids: Record<string, string>; types: Set<string> } {
+  if (_shardMaps) return _shardMaps;
+  const ids: Record<string, string> = {};
+  const types = new Set<string>();
+  for (const id of ALL_ELEMENT_IDS) {
+    const ty = t('combatLoot.shard', { n: 1, name: ELEMENTS[id].name }).replace(/^\+\d+\s+/, '');
+    ids[ty] = id;
+    types.add(ty);
+  }
+  return (_shardMaps = { ids, types });
+}
 
 interface RowLayout { iconX: number; textX: number; textNoIconX: number; }
-
-// Shard types go in the right column
-const SHARD_TYPES = new Set([
-  'Attack shard','Defense shard','Agility shard','Counter shard',
-  'Fire shard','Water shard','Air shard','Earth shard',
-]);
 
 const LOOT_PARSE_RE = /^\+(\d+)\s+(.+)$/;
 
@@ -102,10 +103,11 @@ export class LoopSummaryScene extends Scene {
     this.tweens.add({ targets: this.children.list[0], alpha: 1, duration: 250 });
 
     const all = aggregateLoot(lootItems);
-    const rewards = all.filter(e => !SHARD_TYPES.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
+    const shardTypes = shardMaps().types;
+    const rewards = all.filter(e => !shardTypes.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
     const xpEntry  = all.find(e => e.type === 'XP');
-    const shards   = all.filter(e => SHARD_TYPES.has(e.type));
-    const stats    = all.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !SHARD_TYPES.has(e.type)));
+    const shards   = all.filter(e => shardTypes.has(e.type));
+    const stats    = all.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !shardTypes.has(e.type)));
 
     if (xpEntry) rewards.unshift(xpEntry);
 
@@ -118,12 +120,12 @@ export class LoopSummaryScene extends Scene {
     }
 
     // ── Title (y=88.5 absoluto) ────────────────────────────
-    const title = this.add.bitmapText(cx, 88.5, 'vt323_gold', `LOOP  ${loopCount}  COMPLETE`, 28)
+    const title = this.add.bitmapText(cx, 88.5, 'vt323_gold', t('loopSummary.title', { loopCount }), 28)
       .setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: title, alpha: 1, duration: 300, delay: 140 });
 
     // ── TP row (y=122) ────────────────────────────────────
-    const tpRow = this.add.text(cx, 122, `+${tpEarned} Tile Points`, {
+    const tpRow = this.add.text(cx, 122, t('loopSummary.tilePoints', { tpEarned }), {
       fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 3,
     }).setOrigin(0.5).setAlpha(0);
@@ -150,11 +152,11 @@ export class LoopSummaryScene extends Scene {
     // Posições absolutas direto do debug-layout.json
     // REWARDS: x=300.1 (origin 0), y=192.2, fontSize=23
     // SHARDS:  x=440.5 (origin 0), y=193.9, fontSize=24
-    const hdrRewards = this.add.text(300.1, 192.2, 'REWARDS', {
+    const hdrRewards = this.add.text(300.1, 192.2, t('loopSummary.rewardsHeader'), {
       fontFamily: FF, fontSize: '23px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setAlpha(0);
-    const hdrShards = this.add.text(440.5, 193.9, 'SHARDS', {
+    const hdrShards = this.add.text(440.5, 193.9, t('loopSummary.shardsHeader'), {
       fontFamily: FF, fontSize: '24px', fontStyle: 'bold',
       color: '#ffffff', stroke: '#000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setAlpha(0);
@@ -180,7 +182,7 @@ export class LoopSummaryScene extends Scene {
     if (stats.length > 0) {
       const statsY = rowY + maxRows * COL_ROW + 10;
       this.add.rectangle(cx, statsY, PW - 32, 1, 0x886644, 0.35);
-      const statsHdr = this.add.text(cx, statsY + 12, 'STATS', {
+      const statsHdr = this.add.text(cx, statsY + 12, t('loopSummary.statsHeader'), {
         fontFamily: FF, fontSize: '23px', fontStyle: 'bold',
         color: '#ffffff', stroke: '#000', strokeThickness: 2,
       }).setOrigin(0.5).setAlpha(0);
@@ -197,7 +199,7 @@ export class LoopSummaryScene extends Scene {
 
     // ── Continue button ──────────────────────────────────
     const btnDelay = 400 + maxRows * 45;
-    if (this.textures.exists('btn_continue_loop')) {
+    if (getLocale() !== 'pt-br' && this.textures.exists('btn_continue_loop')) {
       const btnImg = this.add.image(400, 562, 'btn_continue_loop')
         .setScale(114 / 1548)
         .setInteractive({ useHandCursor: true }).setAlpha(0);
@@ -212,7 +214,7 @@ export class LoopSummaryScene extends Scene {
     } else {
       const btnBg = this.add.rectangle(400, 562, 114, 34, 0x0f1f0f)
         .setStrokeStyle(2, 0x44aa44).setInteractive({ useHandCursor: true }).setAlpha(0);
-      const btnText = this.add.text(cx, 562, 'CONTINUE  ▶', {
+      const btnText = this.add.text(cx, 562, t('loopSummary.continue'), {
         fontFamily: FF, fontSize: '15px', fontStyle: 'bold',
         color: '#88ff88', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5).setAlpha(0);
@@ -231,7 +233,7 @@ export class LoopSummaryScene extends Scene {
     item: AggregatedEntry, iconSize: number,
     ff: string, delay: number,
   ): void {
-    const elementId = SHARD_ELEMENT_IDS[item.type] ?? item.type.toLowerCase();
+    const elementId = shardMaps().ids[item.type] ?? item.type.toLowerCase();
     const iconKey = resolveIconKey(this.textures, elementId)
       ?? (LOOT_ICONS[item.type.toLowerCase()] ?? null);
     const resolvedIcon = (iconKey && this.textures.exists(iconKey)) ? iconKey : null;

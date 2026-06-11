@@ -105,3 +105,43 @@ new shard-drop pipeline is wired through `CombatLoot.ts` and works regardless, b
 are gone). The fallback path (drop a random common card) still works for now. A targeted
 sweep of `enemy-drops.json` to re-point each pool to representative Tier 1 / Tier 2
 cards would improve drop diversity per enemy.
+
+---
+
+## 5. Asset weight / compression (follow-up to the startup load-split)
+
+*Flagged: 2026-06-09, by the startup-asset audit. Source: `scripts/probe-startup.mjs`,
+`src/scenes/AssetManifest.ts`.*
+
+The ~30s startup was fixed by splitting `Preloader` into tiers (menu-critical loads up
+front; the rest streams in the background — see `AssetManifest.ts` and the
+`project_startup_asset_loading` memory). That made the menu paint after ~23 assets
+instead of ~750. **It did not change the on-disk asset weight**: `public/assets` is still
+~808MB / 753 files, and the background warmer still has to stream all of it.
+
+The art is grossly over-resolution for the game's 1600×1200 max backing store (game-space
+is 800×600, supersampled ≤2×). Reclaimable weight, highest-leverage first:
+
+| Category | Now | Target | Saved | Notes |
+|---|---|---|---|---|
+| Card art (`assets/cards/*.png`) | 302MB, 178 files @ 1024–1254² | resize → 512² + WebP | **~280MB** | Shown at most ~340 game-px (640 backing). CardFace already guards missing art. |
+| Relics (`assets/relics/*.png`) | 70MB, 79 files @ 1024² | → 128px PNG | **~69MB** | Never shown above 64px (HUD strip = 24px). Highest over-resolution ratio. |
+| Monster portraits | 63MB, 42 files @ 1254² | → 512² | **~52MB** | Covers 250px full-body + 61px HUD uses. |
+| Map tiles/landmarks | 40MB | → 512² WebP | **~33MB** | |
+| Effect sprite-strips | 28MB | → WebP | **~16MB** | `fx_bite` alone is 7.4MB. |
+| Element/forge token icons | 12.8MB @ 1254² | → 256px | **~12MB** | Displayed small. |
+| `audio/wind.wav` | 8MB uncompressed WAV | → 128kbps mp3 | **~7MB** | Only WAV in the project. |
+| Oversized backgrounds | ~20MB | re-export ≤1600px | **~15MB** | `bg_city` 7680×720, `forge_background` 9344×880, `bg_character_selection.jpg` has a corrupt 49970×62608 header. |
+
+**Aggregate: ~490MB reclaimable → public/assets ~808MB → ~320MB**, with no perceptible
+quality loss at the 1600×1200 max backing store.
+
+**How to do it safely:**
+- Phaser loads WebP natively via `this.load.image` — only the file *extensions* in
+  `AssetManifest.ts` change (the keys/paths are all centralized there now).
+- Do it as an offline batch with `sharp` (already a devDependency): resize + re-encode
+  into a parallel folder, eyeball a sample for quality, then swap.
+- This is **purely additive to the load-split** and compounds it: smaller files = faster
+  background warm + smaller per-scene blocking preloads + smaller GPU uploads (less
+  warmer-induced hitching). Sequence it *after* the load-split (already shipped).
+- The corrupt `bg_character_selection.jpg` header should be re-exported regardless.

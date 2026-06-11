@@ -16,6 +16,7 @@ import {
 } from '../systems/ElementSystem';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { t, getLocale } from '../i18n/i18n';
 
 const ELEMENT_SELL_PRICE = 25;
 const ELEMENT_BUY_PRICE  = 50;
@@ -66,14 +67,14 @@ const LEAVE_CX  = 730;
 
 // Shard lore descriptions (Dark Souls style)
 const SHARD_LORE: Record<string, string> = {
-  attack:  'Raw martial focus crystallized in mineral form. Sharpens the edge of every strike dealt.',
-  defense: 'Iron-hard essence of resilience. Fortifies armor and dulls the weight of incoming blows.',
-  agility: 'A shard of pure swiftness. Quickens every action and turns near-misses into full dodges.',
-  counter: 'Retaliation made manifest. Turns the weight of the enemy\'s own strikes back upon them.',
-  fire:    'A crystallized essence of pure fire. Seeps into wounds, burning long after the strike.',
-  water:   'Distilled tide in solid form. Mends flesh and shields the soul from further harm.',
-  air:     'A breath of the high winds frozen in crystal. Multiplies speed beyond mortal limits.',
-  earth:   'Stone-solid resolve bound in shard. Crushes foes beneath an immovable weight.',
+  attack:  t('shop.shardLoreAttack'),
+  defense: t('shop.shardLoreDefense'),
+  agility: t('shop.shardLoreAgility'),
+  counter: t('shop.shardLoreCounter'),
+  fire:    t('shop.shardLoreFire'),
+  water:   t('shop.shardLoreWater'),
+  air:     t('shop.shardLoreAir'),
+  earth:   t('shop.shardLoreEarth'),
 };
 
 type ShopTab = 'relics' | 'shards';
@@ -184,10 +185,10 @@ export class ShopScene extends Scene {
   // ── Header ────────────────────────────────────────────────────────────────
   private buildHeader(): void {
     this._mainLayer.add(
-      this.add.bitmapText(401, 30, 'game_font_gold', 'THE MERCHANT', 24).setOrigin(0.5)
+      this.add.bitmapText(401, 30, 'game_font_gold', t('shop.title'), 24).setOrigin(0.5)
     );
     this._mainLayer.add(
-      this.add.text(401, 53, 'Wares from beyond the loop', {
+      this.add.text(401, 53, t('shop.subtitle'), {
         fontSize: '11px', fontStyle: 'italic', color: '#c8a86a',
         fontFamily: FF, stroke: '#0a0500', strokeThickness: 3,
       }).setOrigin(0.5)
@@ -237,7 +238,7 @@ export class ShopScene extends Scene {
       const tcx    = TAB_CENTERS_X[i];
       const tcy    = PL.y + TAB_H / 2;
       const tx     = tcx - tabW / 2;
-      const label  = id === 'relics' ? 'RELICS' : 'SHARDS';
+      const label  = id === 'relics' ? t('shop.tabRelics') : t('shop.tabShards');
 
       if (this.textures.exists('shop_tab')) {
         // shop-section.png (343×105) at scale 0.5093
@@ -323,7 +324,7 @@ export class ShopScene extends Scene {
       }
 
       this._mainLayer.add(
-        this.add.text(PL.x + 67, iconCY, `${elem.name} Shard`, {
+        this.add.text(PL.x + 67, iconCY, t('shop.shardName', { name: elem.name }), {
           fontSize: '13px', fontStyle: 'bold',
           color: isSelected ? GOLD : WHITE,
           fontFamily: FF, stroke: '#000', strokeThickness: 3,
@@ -331,7 +332,7 @@ export class ShopScene extends Scene {
       );
 
       this._mainLayer.add(
-        this.add.text(PL.x + PL.w - 85, iconCY, `x${owned}`, {
+        this.add.text(PL.x + PL.w - 85, iconCY, t('shop.ownedCount', { n: owned }), {
           fontSize: '12px',
           color: owned > 0 ? GOLD : DIM,
           fontFamily: FF, stroke: '#000', strokeThickness: 2,
@@ -340,7 +341,7 @@ export class ShopScene extends Scene {
 
       const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE;
       this._mainLayer.add(
-        this.add.text(PL.x + PL.w - 35, iconCY, `${ELEMENT_BUY_PRICE} G`, {
+        this.add.text(PL.x + PL.w - 35, iconCY, t('shop.priceGold', { price: ELEMENT_BUY_PRICE }), {
           fontSize: '12px', fontStyle: 'bold',
           color: canBuy ? '#e8c060' : RED,
           fontFamily: FF, stroke: '#000', strokeThickness: 2,
@@ -394,7 +395,7 @@ export class ShopScene extends Scene {
 
     if (relics.length === 0) {
       this._mainLayer.add(
-        this.add.text(PL.x + PL.w / 2, LIST_TOP + 110, 'Sold out.', {
+        this.add.text(PL.x + PL.w / 2, LIST_TOP + 110, t('shop.soldOut'), {
           fontSize: '16px', fontStyle: 'italic', color: DIM, fontFamily: FF,
         }).setOrigin(0.5)
       );
@@ -460,7 +461,7 @@ export class ShopScene extends Scene {
       );
 
       this._mainLayer.add(
-        this.add.text(PL.x + PL.w - 35, iconCY, `${r.price} G`, {
+        this.add.text(PL.x + PL.w - 35, iconCY, t('shop.priceGold', { price: r.price }), {
           fontSize: '12px', fontStyle: 'bold',
           color: ok ? '#e8c060' : RED,
           fontFamily: FF, stroke: '#000', strokeThickness: 2,
@@ -495,7 +496,7 @@ export class ShopScene extends Scene {
     }
 
     this._mainLayer.add(
-      this.add.text(PR_CX, PR_NAME_Y, `${elem.name} Shard`.toUpperCase(), {
+      this.add.text(PR_CX, PR_NAME_Y, t('shop.shardName', { name: elem.name }).toUpperCase(), {
         fontSize: '15px', fontStyle: 'bold', color: GOLD,
         fontFamily: FF, stroke: '#000', strokeThickness: 4,
       }).setOrigin(0.5, 0)
@@ -508,11 +509,11 @@ export class ShopScene extends Scene {
       }).setOrigin(0.5, 0)
     );
 
-    this.addStatRow('Owned', `x${owned}`,           PR_STATS_Y,      owned > 0 ? GOLD : DIM);
-    this.addStatRow('Value', `${ELEMENT_BUY_PRICE} G`, PR_STATS_Y + 18, GOLD);
+    this.addStatRow(t('shop.statOwned'), t('shop.ownedCount', { n: owned }),           PR_STATS_Y,      owned > 0 ? GOLD : DIM);
+    this.addStatRow(t('shop.statValue'), t('shop.priceGold', { price: ELEMENT_BUY_PRICE }), PR_STATS_Y + 18, GOLD);
 
     const canBuy = run.economy.gold >= ELEMENT_BUY_PRICE && this.tutAllows('buy-element');
-    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', canBuy, false, canBuy ? () => {
+    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, t('shop.buyButton'), canBuy, false, canBuy ? () => {
       run.economy.gold -= ELEMENT_BUY_PRICE;
       (run.economy.elements as any)[id] = owned + 1;
       AudioManager.playSFX(this, 'sfx_cashing', 0.6);
@@ -527,7 +528,7 @@ export class ShopScene extends Scene {
     this._mainLayer.add(buyBtn);
 
     if (owned > 0 && this.tutAllows('sell-element')) {
-      const sellBtn = this.makeActionBtn(PR_CX, PR_SELL_Y, `SELL  +${ELEMENT_SELL_PRICE} G`, true, true, () => {
+      const sellBtn = this.makeActionBtn(PR_CX, PR_SELL_Y, t('shop.sellButton', { price: ELEMENT_SELL_PRICE }), true, true, () => {
         (run.economy.elements as any)[id] = owned - 1;
         run.economy.gold += ELEMENT_SELL_PRICE;
         AudioManager.playSFX(this, 'sfx_cashing', 0.6);
@@ -540,7 +541,7 @@ export class ShopScene extends Scene {
   private buildRelicDetail(): void {
     if (!this.cachedRelicRoll?.length) {
       this._mainLayer.add(
-        this.add.text(PR_CX, PR.y + PR.h / 2, 'No relics\navailable', {
+        this.add.text(PR_CX, PR.y + PR.h / 2, t('shop.noRelics'), {
           fontSize: '13px', fontStyle: 'italic', color: DIM,
           fontFamily: FF, align: 'center',
         }).setOrigin(0.5)
@@ -577,10 +578,10 @@ export class ShopScene extends Scene {
       }).setOrigin(0.5, 0)
     );
 
-    this.addStatRow('Price', `${r.price} G`, PR_STATS_Y, ok ? GOLD : RED);
+    this.addStatRow(t('shop.statPrice'), t('shop.priceGold', { price: r.price }), PR_STATS_Y, ok ? GOLD : RED);
 
     const buyable = ok && this.tutAllows('relic');
-    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, '[E]  BUY', buyable, false, buyable ? () => {
+    const buyBtn = this.makeActionBtn(PR_CX, PR_BUY_Y, t('shop.buyButton'), buyable, false, buyable ? () => {
       const run = getRun();
       if (ShopSystem.buyRelic(run, r.relicId, r.price)) {
         this.cachedRelicRoll = (this.cachedRelicRoll ?? []).filter(x => x.relicId !== r.relicId);
@@ -704,8 +705,8 @@ export class ShopScene extends Scene {
       if (!canRemove) seal.setTint(0x444444);
       rg.add(seal);
     }
-    rg.add(this.add.text(0, 0, canRemove ? `${cost} g`
-      : (run.deck.active.length <= MIN_DECK_SIZE ? 'Min deck size' : `Need ${cost} g`), {
+    rg.add(this.add.text(0, 0, canRemove ? t('shop.costGoldLower', { cost })
+      : (run.deck.active.length <= MIN_DECK_SIZE ? t('shop.minDeckSize') : t('shop.needGold', { cost })), {
       fontSize: '11px', fontStyle: 'italic',
       color: canRemove ? '#e8c98c' : RED,
       fontFamily: FF, stroke: '#000', strokeThickness: 2,
@@ -728,7 +729,7 @@ export class ShopScene extends Scene {
       gb.add(gp);
     }
     gb.add(this.add.image(-GOLD_W / 2 + 18, 0, 'icon_coin').setDisplaySize(18, 18));
-    gb.add(this.add.text(0, 0, `${run.economy.gold} g`, {
+    gb.add(this.add.text(0, 0, t('shop.goldAmount', { gold: run.economy.gold }), {
       fontSize: '14px', fontStyle: 'bold', color: GOLD,
       fontFamily: FF, stroke: '#000', strokeThickness: 2,
     }).setOrigin(0.5));
@@ -737,10 +738,20 @@ export class ShopScene extends Scene {
     // Leave button — btn_leave asset (scale to ~148×42)
     const LEAVE_W = 148;
     const lb = this.add.container(LEAVE_CX, FOOTER_Y);
-    if (this.textures.exists('btn_leave')) {
+    if (getLocale() !== 'pt-br' && this.textures.exists('btn_leave')) {
       const li = this.add.image(0, 0, 'btn_leave');
       li.setScale(LEAVE_W / li.width);
       lb.add(li);
+    } else {
+      // Baked art is English — wood-texture + translated text for pt-BR.
+      if (this.textures.exists('wood_texture')) {
+        lb.add(this.add.image(0, 0, 'wood_texture').setDisplaySize(LEAVE_W, 42));
+      }
+      lb.add(this.add.rectangle(0, 0, LEAVE_W, 42, 0x000000, 0).setStrokeStyle(2, 0xd4a04a, 0.95));
+      lb.add(this.add.text(0, 0, t('btn.leave'), {
+        fontSize: '20px', fontStyle: 'bold', color: '#f0d080',
+        fontFamily: FONTS.body, stroke: '#000000', strokeThickness: 4,
+      }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true));
     }
     lb.setInteractive(new Phaser.Geom.Rectangle(-LEAVE_W / 2, -21, LEAVE_W, 42), Phaser.Geom.Rectangle.Contains);
     (lb as any).input.cursor = 'pointer';

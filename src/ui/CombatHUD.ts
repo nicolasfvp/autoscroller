@@ -4,6 +4,7 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import { FONTS } from './StyleConstants';
 import { computeHeroChips, computeEnemyChips, type EffectChip } from './EffectIcons';
+import { getLocale } from '../i18n/i18n';
 
 /**
  * Pure visibility logic for HUD widgets. Extracted so the toggle logic is
@@ -18,7 +19,7 @@ export interface HUDVisibility {
 }
 export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility {
   return {
-    staminaLabel: '⚡ STA',
+    staminaLabel: getLocale() === 'pt-br' ? '⚡ VIG' : '⚡ STA',
   };
 }
 

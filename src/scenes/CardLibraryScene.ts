@@ -11,6 +11,7 @@
 //     deck for every card on every repaint.
 
 import Phaser from 'phaser';
+import { t, getLocale } from '../i18n/i18n';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { getAllCards } from '../data/DataLoader';
@@ -96,7 +97,7 @@ export class CardLibraryScene extends Phaser.Scene {
     this.buildUpgradedSet();
 
     this.book = new BookLayout(this, {
-      title: this.forgeMode ? 'Forge Recipes' : 'Card Library',
+      title: this.forgeMode ? t('cardLib.titleForge') : t('cardLib.titleLibrary'),
       subtitle: this.cardCountText(),
       onClose: () => this.closeLibrary(),
     });
@@ -215,8 +216,12 @@ export class CardLibraryScene extends Phaser.Scene {
   }
 
   private cardCountText(): string {
-    const noun = this.forgeMode ? 'recipes' : 'cards';
-    return `${this.filteredCards.length} / ${this.allCards.length} ${noun}`;
+    const noun = this.forgeMode ? t('cardLib.nounRecipes') : t('cardLib.nounCards');
+    return t('cardLib.cardCount', {
+      shown: this.filteredCards.length,
+      total: this.allCards.length,
+      noun,
+    });
   }
 
   private updateBookContent(): void {
@@ -232,7 +237,7 @@ export class CardLibraryScene extends Phaser.Scene {
       // coords — page containers are positioned at the spine).
       const empty = this.add.text(
         ctx.leftBounds.centerX, ctx.leftBounds.centerY,
-        'No cards match\nthe current filters.',
+        t('cardLib.noResults'),
         {
           fontSize: '16px', color: '#6e4a1a', fontFamily: FF,
           align: 'center', fontStyle: 'italic',
@@ -380,7 +385,7 @@ export class CardLibraryScene extends Phaser.Scene {
       effects,
       exhaust: card.exhaust,
       spend_armor: card.spend_armor,
-    });
+    }, { locale: getLocale() });
     const cb = cardVisual.getBounds();
     this.detailTip = attachKeywordTooltip(this, container, desc, {
       x: cb.centerX, y: cb.centerY, w: cb.width, h: cb.height,
@@ -392,7 +397,7 @@ export class CardLibraryScene extends Phaser.Scene {
       this.addSendToAnvilButton(container, 400, belowY, card);
     } else {
       container.add(this.makeElementNeedOverlay(card, 400, belowY));
-      container.add(this.add.text(400, belowY + 44, 'Not enough shards to forge', {
+      container.add(this.add.text(400, belowY + 44, t('cardLib.notEnoughShards'), {
         fontSize: '13px', fontStyle: 'bold', fontFamily: FF, color: '#ff8866',
         stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5));
@@ -415,7 +420,7 @@ export class CardLibraryScene extends Phaser.Scene {
       bg.lineStyle(2, line, 1); bg.strokeRoundedRect(x - w / 2, y - h / 2, w, h, 8);
     };
     paint(0x3a2218, 0xf5d273);
-    const label = this.add.text(x, y, '⚒  Send to Anvil', {
+    const label = this.add.text(x, y, t('cardLib.sendToAnvil'), {
       fontSize: '18px', fontStyle: 'bold', fontFamily: FF, color: '#ffe9a0',
       stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5);
@@ -505,7 +510,7 @@ export class CardLibraryScene extends Phaser.Scene {
     const check = this.add.text(x + sz / 2, y + sz / 2, '✓', {
       fontSize: '13px', fontStyle: 'bold', color: '#ffd700', fontFamily: FF,
     }).setOrigin(0.5).setDepth(51).setVisible(this.craftableOnly);
-    const label = this.add.text(x + sz + 8, y + sz / 2, 'Craftable only', {
+    const label = this.add.text(x + sz + 8, y + sz / 2, t('cardLib.craftableOnly'), {
       fontSize: '12px', fontStyle: 'bold', color: '#ffffff', fontFamily: FF,
       stroke: '#000000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setDepth(51).setInteractive({ useHandCursor: true });

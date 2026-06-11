@@ -1,6 +1,14 @@
 import { FONTS } from '../ui/StyleConstants';
+import { getLocale } from '../i18n/i18n';
 // Synergy "COMBO!" flash animation at screen center.
 // Auto-destroys all created objects after animation completes.
+
+/** pt-BR labels for the synergy bonus types (SynergyDefinition.bonus.type). */
+const BONUS_TYPE_PT: Record<string, string> = {
+  damage: 'de dano', armor: 'de armadura', heal: 'de cura', stamina: 'de vigor',
+  mana: 'de mana', cost_waive: 'custo grátis', dot: 'de dano contínuo',
+  stat_buff: 'de atributo', cooldown_reduction: 'de recarga',
+};
 
 /**
  * Show a COMBO! flash with bonus text at canvas center.
@@ -43,7 +51,8 @@ export function showSynergyFlash(
   });
 
   // Bonus text below COMBO
-  const bonusLabel = `${displayName} +${bonusValue} ${bonusType}`;
+  const typeLabel = getLocale() === 'pt-br' ? (BONUS_TYPE_PT[bonusType] ?? bonusType) : bonusType;
+  const bonusLabel = `${displayName} +${bonusValue} ${typeLabel}`;
   const bonusText = scene.add.text(400, 160, bonusLabel, {
     fontSize: '20px',
     fontFamily: FONTS.body,

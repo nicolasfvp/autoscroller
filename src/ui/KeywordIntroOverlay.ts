@@ -8,6 +8,7 @@ import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { renderTokenText } from './IconTokens';
 import type { KeywordDef } from './KeywordDefinitions';
+import { t } from '../i18n/i18n';
 
 const OVERLAY_DEPTH = 12000;
 const BACKDROP_ALPHA = 0.62;
@@ -22,10 +23,10 @@ const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
   stat:     '#66ccff',
 };
 
-const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
-  stack:    'New Stack',
-  modifier: 'New Modifier',
-  stat:     'New Stat',
+const CATEGORY_LABEL: Record<KeywordDef['category'], () => string> = {
+  stack:    () => t('keywordIntro.categoryStack'),
+  modifier: () => t('keywordIntro.categoryModifier'),
+  stat:     () => t('keywordIntro.categoryStat'),
 };
 
 export function openKeywordIntroOverlay(
@@ -60,7 +61,7 @@ export function openKeywordIntroOverlay(
   const badge = scene.add.text(
     lX + 18,
     lY + 16,
-    `New ${CATEGORY_LABEL[keyword.category]}`,
+    t('keywordIntro.badge', { label: CATEGORY_LABEL[keyword.category]() }),
     {
       fontSize: '11px',
       fontStyle: 'bold',
@@ -115,7 +116,7 @@ export function openKeywordIntroOverlay(
   const btn = scene.add.text(
     0,
     btnY,
-    'Got it!  (Enter)',
+    t('keywordIntro.gotIt'),
     {
       fontSize: '15px',
       fontStyle: 'bold',

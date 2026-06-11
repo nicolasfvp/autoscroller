@@ -1,5 +1,6 @@
 import { RelicTooltip } from './RelicTooltip';
 import relicsData from '../data/json/relics.json';
+import { t } from '../i18n/i18n';
 
 const RARITY_COLORS: Record<string, number> = {
   common: 0xcccccc,
@@ -36,7 +37,7 @@ export class RelicHudStrip extends Phaser.GameObjects.Container {
       const rarityColor = RARITY_COLORS[rarity] ?? 0xcccccc;
       const name = relicDef?.name ?? id;
       const effect = relicDef?.description ?? '';
-      const source = relicDef?.unlockSource ? `${relicDef.unlockSource} Lv.${relicDef.unlockTier}` : 'Starter';
+      const source = relicDef?.unlockSource ? t('relicStrip.unlockSource', { source: relicDef.unlockSource, tier: relicDef.unlockTier }) : t('relicStrip.starter');
 
       const offsetX = i * (size + gap);
 
@@ -46,11 +47,15 @@ export class RelicHudStrip extends Phaser.GameObjects.Container {
       bg.setInteractive({ useHandCursor: true });
       this.add(bg);
 
-      // Relic Image
-      // Textures are 256x256, target size is ~24x24 so we scale by 24/256 ≈ 0.09375
-      const relicImg = this.scene.add.image(offsetX, 0, `relic_${id}`);
-      relicImg.setDisplaySize(24, 24);
-      this.add(relicImg);
+      // Relic Image. Relic art streams in via the background warm, so guard the
+      // texture: if it hasn't arrived yet, the bordered box + tooltip still work
+      // (no missing-texture box) and the art appears on the next HUD rebuild.
+      if (this.scene.textures.exists(`relic_${id}`)) {
+        // Textures are 256x256, target size is ~24x24 so we scale by 24/256 ≈ 0.09375
+        const relicImg = this.scene.add.image(offsetX, 0, `relic_${id}`);
+        relicImg.setDisplaySize(24, 24);
+        this.add(relicImg);
+      }
 
       // Hover: show tooltip
       bg.on('pointerover', () => {

@@ -2,6 +2,7 @@
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { hasActiveRun, getRun } from '../state/RunState';
+import { t } from '../i18n/i18n';
 
 export class RunTransitionScene extends Scene {
   constructor() {
@@ -49,7 +50,7 @@ export class RunTransitionScene extends Scene {
       });
     }
 
-    const text = this.add.text(W / 2, H / 2 - 20, 'EMBARKING ON EXPEDITION', {
+    const text = this.add.text(W / 2, H / 2 - 20, t('runTransition.embarkingTitle'), {
       fontSize: '32px',
       fontStyle: 'bold',
       color: '#c8a020',
@@ -57,7 +58,7 @@ export class RunTransitionScene extends Scene {
       letterSpacing: 6,
     }).setOrigin(0.5).setDepth(20);
 
-    const subtext = this.add.text(W / 2, H / 2 + 30, 'The world is shifting...', {
+    const subtext = this.add.text(W / 2, H / 2 + 30, t('runTransition.worldShifting'), {
       fontSize: '18px',
       fontStyle: 'italic',
       color: '#998877',
@@ -107,7 +108,7 @@ export class RunTransitionScene extends Scene {
     });
 
     // Show the seed discretely
-    this.add.text(W / 2, H - 20, `World Seed: ${data.seed}`, {
+    this.add.text(W / 2, H - 20, t('runTransition.worldSeed', { seed: data.seed }), {
       fontSize: '11px',
       color: '#2a1a10',
       fontFamily: FONTS.body,

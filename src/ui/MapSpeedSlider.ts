@@ -1,5 +1,6 @@
 ﻿import Phaser from 'phaser';
 import { FONTS } from './StyleConstants';
+import { t } from '../i18n/i18n';
 
 const SNAP_VALUES = [0.5, 1, 1.5, 2, 3] as const;
 const MIN_SPEED = SNAP_VALUES[0];
@@ -31,7 +32,7 @@ export class MapSpeedSlider extends Phaser.GameObjects.Container {
     centerY: number,
     initialSpeed: number,
     onChange: (speed: number) => void,
-    title: string = 'Map Speed',
+    title: string = t('mapSpeed.title'),
     scale: number = 1,
   ) {
     super(scene, 0, 0);

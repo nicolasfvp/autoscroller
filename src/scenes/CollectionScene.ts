@@ -16,6 +16,7 @@ import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../
 import { disableCardFaceInput } from '../ui/CardFace';
 import { BookLayout, type BookRenderContext, type BookPageBounds, type BookTab } from '../ui/BookLayout';
 import { addGlossaryButton } from '../ui/GlossaryButton';
+import { t } from '../i18n/i18n';
 
 const TAB_NAMES = ['Cards', 'Relics', 'Tiles', 'Bosses'] as const;
 type TabName = typeof TAB_NAMES[number];
@@ -58,12 +59,12 @@ export class CollectionScene extends Phaser.Scene {
 
     const tabs: BookTab[] = TAB_NAMES.map((name) => {
       const status = this.collectionStatus[TAB_KEYS[name]];
-      return { key: name, label: name, badge: `${status.unlocked} / ${status.total}` };
+      return { key: name, label: t(`collection.tab${name}`), badge: `${status.unlocked} / ${status.total}` };
     });
 
     this.book = new BookLayout(this, {
-      title: 'Compendium',
-      subtitle: `${percent}% complete`,
+      title: t('collection.title'),
+      subtitle: t('collection.subtitleComplete', { percent }),
       tabs,
       initialTabKey: 'Cards',
       onTabChange: (key) => this.setTabContent(key as TabName),
@@ -314,7 +315,7 @@ export class CollectionScene extends Phaser.Scene {
     // Relic / Tile / Boss locked rendering
     const bg = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(1.5, 0x6e4a1a);
     container.add(bg);
-    const label = this.add.text(x, y - 4, '???', {
+    const label = this.add.text(x, y - 4, t('collection.lockedPlaceholder'), {
       fontSize: tab === 'Bosses' ? '24px' : '14px',
       fontStyle: 'bold',
       color: '#9d7e44',
@@ -373,11 +374,11 @@ export class CollectionScene extends Phaser.Scene {
 
     if (data.category) {
       const stats: string[] = [];
-      stats.push(`Category: ${data.category}`);
-      stats.push(`Cooldown: ${data.cooldown ?? 0}s`);
-      if (data.cost?.stamina) stats.push(`Stamina: ${data.cost.stamina}`);
-      if (data.cost?.mana) stats.push(`Mana: ${data.cost.mana}`);
-      if (data.targeting) stats.push(`Target: ${data.targeting}`);
+      stats.push(t('collection.statCategory', { category: data.category }));
+      stats.push(t('collection.statCooldown', { cooldown: data.cooldown ?? 0 }));
+      if (data.cost?.stamina) stats.push(t('collection.statStamina', { stamina: data.cost.stamina }));
+      if (data.cost?.mana) stats.push(t('collection.statMana', { mana: data.cost.mana }));
+      if (data.targeting) stats.push(t('collection.statTarget', { targeting: data.targeting }));
       container.add(this.add.text(0, yOff, stats.join('  •  '), {
         fontSize: '12px', color: COLORS.textSecondary, fontFamily: FF,
         wordWrap: { width: panelW - 32 }, align: 'center',
@@ -386,14 +387,14 @@ export class CollectionScene extends Phaser.Scene {
     }
 
     if (data.effect) {
-      container.add(this.add.text(0, yOff, `Effect: ${data.effect}`, {
+      container.add(this.add.text(0, yOff, t('collection.statEffect', { effect: data.effect }), {
         fontSize: '13px', color: '#00ccff', fontFamily: FF,
         wordWrap: { width: panelW - 32 }, align: 'center',
       }).setOrigin(0.5, 0));
       yOff += 40;
     }
 
-    container.add(this.add.text(0, panelH / 2 - 24, 'Click anywhere to close', {
+    container.add(this.add.text(0, panelH / 2 - 24, t('collection.clickToClose'), {
       fontSize: '11px', color: COLORS.textSecondary, fontFamily: FF, fontStyle: 'italic',
     }).setOrigin(0.5));
 

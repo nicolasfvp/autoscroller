@@ -2,6 +2,8 @@
 // Class catalog + layout math extracted so unit tests can validate the
 // LOCKED layout dimensions without booting Phaser.
 
+import { t } from '../i18n/i18n';
+
 export interface ClassOption {
   id: string;
   name: string;
@@ -27,25 +29,25 @@ export interface ClassOption {
 export const CLASS_CARDS: ClassOption[] = [
   {
     id: 'warrior',
-    name: 'Warrior',
-    description: 'Balanced melee fighter.\nHigh HP and stamina.',
+    name: t('charSelect.warriorName'),
+    description: t('charSelect.warriorDescription'),
     spriteKey: 'warrior_select',
     spriteScale: 0.46,
     spriteFrameRate: 2,
     fallbackColor: 0x4488ff,
     stats: { hp: 100, stamina: 50, mana: 30 },
-    deckHint: 'Strikes, Defends, Heavy Hit',
+    deckHint: t('charSelect.warriorDeckHint'),
   },
   {
     id: 'mage',
-    name: 'Mage',
-    description: 'Powerful spellcaster.\nHigh mana, low HP.',
+    name: t('charSelect.mageName'),
+    description: t('charSelect.mageDescription'),
     spriteKey: 'mage_select',
     spriteScale: 0.39,
     spriteFrameRate: 10,
     fallbackColor: 0x9944ff,
     stats: { hp: 70, stamina: 30, mana: 60 },
-    deckHint: 'Fireballs, Heals, Mana Drain',
+    deckHint: t('charSelect.mageDeckHint'),
   },
 ];
 
