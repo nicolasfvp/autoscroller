@@ -50,7 +50,9 @@ export function openKeywordIntroOverlay(
   if (scene.textures.exists(bakedKey)) {
     const img = scene.add.image(cx, cy, bakedKey).setInteractive();
     const src = scene.textures.get(bakedKey).getSourceImage() as HTMLImageElement;
-    const displayW = Math.min(src.width, LAYOUT.canvasWidth * 0.9);
+    // Scale the baked keyword card down to 40% of its previous on-screen size
+    // (these popups were filling ~90% of the canvas width — far too large).
+    const displayW = Math.min(src.width, LAYOUT.canvasWidth * 0.9) * 0.4;
     img.setDisplaySize(displayW, displayW * (src.height / src.width));
     overlay.add(img);
 
