@@ -10,7 +10,6 @@ import { ShopScene } from './scenes/ShopScene'
 import { ShopRemoveCardScene } from './scenes/ShopRemoveCardScene'
 import { ForgeScene } from './scenes/ForgeScene'
 import { PauseScene } from './scenes/PauseScene'
-import { SettingsScene } from './scenes/SettingsScene'
 import { DeckCustomizationScene } from './scenes/DeckCustomizationScene'
 import { RelicViewerScene } from './scenes/RelicViewerScene'
 import { CharacterSelectScene } from './scenes/CharacterSelectScene'
@@ -45,13 +44,7 @@ if (import.meta.env.DEV) {
 // viewport the user has. Downscaling is crisp; upscaling from 800→1440 (the
 // naive FIT) blurs.
 //
-// UI_SCALE is selected by the Graphics Quality setting (SettingsScene). High
-// gives the sharpest result; Balanced cuts pixel fill-rate by ~44%; Performance
-// renders at native 800×600 and lets the browser scale. Because Phaser locks
-// the canvas backing-store size in GameConfig before any async MetaState load
-// can complete, we read the preset from a localStorage mirror (synchronous,
-// available at module-init time). SettingsScene writes both the localStorage
-// mirror and the persisted MetaState so the next reload picks up the change.
+// UI_SCALE is read from localStorage so the quality setting persists across reloads.
 const GAME_W = 800;
 const GAME_H = 600;
 
@@ -112,7 +105,6 @@ const config: Phaser.Types.Core.GameConfig = {
         ShopRemoveCardScene,
         ForgeScene,
         PauseScene,
-        SettingsScene,
         DeckCustomizationScene,
         RelicViewerScene,
         CharacterSelectScene,

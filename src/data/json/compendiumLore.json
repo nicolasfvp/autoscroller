@@ -1,0 +1,30 @@
+{
+  "_note": "Compendium flavor text (English). PLACEHOLDER — to be revisited and rewritten once the lore is finalized. Boss blurbs summarize history/MONSTERS_LORE.md; tile lines describe map/combat function.",
+  "bosses": {
+    "doom_knight": "Actaeon, general of Aethos's northern guard and the lone councilor to vote against the Weapon — executed at dawn for it. The Rot raised him months after the Detonation, but unlike the other dead he carried an unfinished mission. He still believes there is time to stop what has already happened, and bears a sealed letter to the king he will only deliver in person.",
+    "iron_golem": "Dryas, commander of Aethos's vanguard, who held that enough force solves any problem and that the highest discipline is never to think, only to execute. The Rot made that discipline absolute. He still marches, strikes, and guards a perimeter around a void dissolved centuries ago — defending nothing with undimmed intensity.",
+    "bog_witch": "Circe, intellectual architect of the Ascension Project, who spent decades studying Dominium's essence from within with terrifying precision. The Rot amplified her knowledge into compulsion. She studies still, but can never rest, synthesize, or conclude — she knows exactly how the Rot works, and can do nothing at all with it.",
+    "desert_golem": "Daedalus, master engineer of Aethos, who raised the Dominium containment chambers as his life's masterwork and swore the right engineering could hold anything. When the Detonation fractured them he was inside; the Rot took him along with their sand and stone. He labors still to keep the structural integrity of something that no longer exists.",
+    "infernal_dragon": "Midas, Aethos's elite general and Phaethon's most trusted hand, loyal far beyond any oath. He armed the device because the king asked it of him, and the Rot made that single act his permanent shape — he became the fire itself. The first memory it took from him was of pulling the trigger.",
+    "boss_iron_golem": "The eldest of the marching dead, its iron worn smooth by centuries of identical drills. Where Dryas still remembers the shape of an order, this hull remembers only motion — it advances, strikes, and reforms its line over ground no army has crossed in an age. To stand before it is to be mistaken for a threat that ended long ago."
+  },
+  "tiles": {
+    "basic": "Open road — a plain stretch of the map where the hero simply keeps moving.",
+    "forest": "Wooded path — standard travel terrain threading the wilds between landmarks.",
+    "event": "A waypoint where chance intervenes: a choice, a stranger, a turn of fortune.",
+    "treasure": "A cache tile — gold, materials, or a relic waiting to be claimed.",
+    "boss": "The end of the stretch, where a guardian of the Rot bars the way forward.",
+    "graveyard": "Ground thick with the recent dead, where the Rot keeps its bone-puppets close at hand.",
+    "swamp": "Drowned lowland of Eldara — slow, sickly ground favored by corrupted slimes.",
+    "desert": "Sun-cracked waste over the collapsed containment chambers, ruled by drifting sand.",
+    "lava": "Scorched basaltic flats near the old fire, where the heat never fully went out.",
+    "subtile_ambush": "Combat amplifier — foes open with a surprise strike before you can react.",
+    "subtile_bleedtotem": "Combat amplifier — a totem that makes wounds bleed, stacking damage over time.",
+    "subtile_burnaltar": "Combat amplifier — an altar that sets the battlefield alight, applying burn.",
+    "subtile_camp": "Combat amplifier — a fortified enemy camp fielding extra reinforcements.",
+    "subtile_magma": "Combat amplifier — magma vents that scorch every combatant each turn.",
+    "subtile_manawell": "Combat amplifier — a well of essence that empowers spellcasting.",
+    "subtile_resonance": "Combat amplifier — resonant ground that intensifies elemental effects.",
+    "subtile_warhorn": "Combat amplifier — a horn that rallies the enemy, raising their attack."
+  }
+}

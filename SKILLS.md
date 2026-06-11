@@ -273,6 +273,72 @@ E atualizar o `frameWidth`/`frameHeight` no Preloader com os valores reais.
 
 ---
 
+## Alinhamento de Sprites pelo Pé (Python + PIL) — scripts avançados
+
+Scripts em `scripts/` para inspecionar e alinhar frames com precisão sub-pixel.
+Todos usam PIL + numpy. Rodar com `python scripts/<nome>.py`.
+
+### `_inspect_feet.py` — Inspecionar posição dos pés por frame
+
+Detecta o pixel mais baixo do personagem (fundo branco como BG) e busca pixels escuros
+(bota/sapato) nas últimas 30 linhas. Útil para diagnosticar onde estão os pés antes de alinhar.
+
+**Saída:** `bottom_row`, topo e sola do pixel escuro com coordenadas e RGB.
+
+**Quando usar:** antes de qualquer alinhamento, para entender a anatomia do frame.
+
+### `_inspect_anchor.py` — Inspecionar âncora da espada/arma
+
+Localiza pixels escuros na zona do topo do personagem (primeiras 150 linhas) e calcula
+a coluna média filtrada por moda (ignora ruído). Serve para encontrar onde a espada está
+em cada frame.
+
+**Saída:** `top`, `bottom`, `espada_x`, `espada_y` por frame.
+
+**Quando usar:** quando o alinhamento precisa ser pela arma, não pelo pé.
+
+### `_align_frame.py` — Alinhar um frame pelo centro horizontal do personagem
+
+Recebe ref, src e out como argumentos de linha de comando. Alinha o centro X do src
+ao centro X da ref. Só desloca horizontalmente (dy=0).
+
+```
+python scripts/_align_frame.py ref.png src.png out.png
+```
+
+### `_align_2frames.py` — Alinhar série de frames pela espada + topo do personagem
+
+Versão sofisticada para frames com fundo transparente (RGBA). Alinha pelo centro X
+da espada (filtrado por moda) e pelo topo do bounding box vertical. Monta spritesheet ao final.
+
+**Parâmetros:** `DARK = 80`, `ALPHA = 128` (configuráveis no topo do script).
+
+---
+
+## Fórmula de Alinhamento de Pés (Phaser)
+
+Para alinhar dois sprites pelo pé na tela do Phaser:
+
+```
+feet_screen_y = sprite_y + (frameH / 2) * scale - foot_margin * scale
+```
+
+- `sprite_y`: posição Y do sprite no Phaser (origin 0.5)
+- `frameH`: altura do frame individual do spritesheet
+- `scale`: escala aplicada no Phaser
+- `foot_margin`: distância em px do centro da imagem até a sola do pé (medir com `_inspect_feet.py`)
+
+**Para igualar dois sprites A e B ao mesmo `feet_screen_y` alvo:**
+```
+sprite_y = target_feet_y - (frameH / 2) * scale + foot_margin * scale
+```
+
+**Exemplo real (warrior vs mage):**
+- warrior: frameH=580, scale=0.6034, foot_margin=107px → feet_y=451.6
+- mage:    frameH=584, scale=0.3357, foot_margin=55px  → feet_y=451.6
+
+---
+
 ## Convenções gerais herdadas (ver CONTEXTO.MD)
 
 - Respostas em português.

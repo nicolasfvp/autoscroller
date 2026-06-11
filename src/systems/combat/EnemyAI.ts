@@ -157,7 +157,7 @@ export class EnemyAI {
         state.heroDefense = Math.max(0, state.heroDefense - 1);
       }
 
-      // Phase 10: element affinity (fires once per multi-hit attack)
+      // Phase 10: element affinity (fires once per multi-hit attack, skip if no damage).
       let mhAffinityFx = null;
       if (state.enemyAffinity) {
         mhAffinityFx = applyEnemyAffinityEffect(state, state.enemyAffinity, state.enemyType === 'boss');
@@ -193,8 +193,8 @@ export class EnemyAI {
       state.enemyHP = Math.min(state.enemyMaxHP, state.enemyHP + healAmount);
     }
 
-    // Phase 10: element affinity secondary effect — fires on every landed
-    // attack. Bosses get a 2x multiplier; effects are capped to prevent runaway.
+    // Phase 10: element affinity secondary effect — fires only when the enemy
+    // deals damage (skip when enemyDamage === 0, e.g. test/debug mode).
     let affinityFx = null;
     if (state.enemyAffinity) {
       affinityFx = applyEnemyAffinityEffect(state, state.enemyAffinity, state.enemyType === 'boss');

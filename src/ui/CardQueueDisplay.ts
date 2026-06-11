@@ -11,10 +11,11 @@ const VISIBLE_COUNT = 3;
 // [centerX, centerY, scale, alpha]
 // Active card is rightmost/largest; queue cascades down-left getting smaller.
 // When played, remaining cards slide RIGHT (left→right flow).
+// Scales reduced 20% from previous (0.60/0.48/0.36 → 0.48/0.38/0.29).
 const SLOTS: [number, number, number, number][] = [
-  [274, 510, 0.60, 1.00],   // 0 — PLAYING (right, large)
-  [164, 528, 0.48, 0.70],   // 1 — NEXT
-  [89,  542, 0.36, 0.35],   // 2 — hint of next
+  [274, 522, 0.48, 1.00],   // 0 — PLAYING (right, large)
+  [177, 537, 0.38, 0.70],   // 1 — NEXT
+  [104, 548, 0.29, 0.35],   // 2 — hint of next
 ];
 const SLOT_INCOMING_X = 120; // same column as slot 2 — cards slide UP into it
 const SLOT_INCOMING_Y = 650; // off-screen bottom

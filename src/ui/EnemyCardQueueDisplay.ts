@@ -23,9 +23,9 @@ const VISIBLE_COUNT = 3;
 // The cascade then mirrors the hero's steps (−110, −75 → +110, +75).
 // Same Y as the hero queue.
 const SLOTS: [number, number, number, number][] = [
-  [566, 510, 0.60, 1.00],   // 0 — NEXT ATTACK (large)
-  [676, 528, 0.48, 0.70],   // 1
-  [751, 542, 0.36, 0.35],   // 2
+  [566, 522, 0.48, 1.00],   // 0 — NEXT ATTACK (large)
+  [663, 537, 0.38, 0.70],   // 1
+  [736, 548, 0.29, 0.35],   // 2
 ];
 const SLOT_INCOMING_X = 720; // off-screen feeder column
 const SLOT_INCOMING_Y = 650; // off-screen bottom

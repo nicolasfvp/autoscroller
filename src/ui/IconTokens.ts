@@ -341,3 +341,19 @@ export function renderTokenText(
 export function colorForToken(token: string, fallback = '#ffffff'): string {
   return getTokenStyle(token)?.color ?? fallback;
 }
+
+/** Replace all `[token]` and `[[v:N:stat]]` markers with their plain-text
+ *  label (e.g. `[burn]` → "BURN", `[[v:5:str]]` → "5"). Used by description
+ *  panels that render plain Phaser Text instead of mixed icon/text layouts. */
+export function stripTokensToPlain(text: string): string {
+  return text
+    .replace(/\[\[v:(-?\d+):[a-z]+\]\]/g, (_m, n) => n)
+    .replace(/(\d)\[([a-zA-Z][a-zA-Z0-9-]*)\]/g, (_m, digit, name) => {
+      const style = getTokenStyle(name);
+      return digit + ' ' + (style ? style.label : name.toUpperCase());
+    })
+    .replace(/\[([a-zA-Z][a-zA-Z0-9-]*)\]/g, (_m, name) => {
+      const style = getTokenStyle(name);
+      return style ? style.label : name.toUpperCase();
+    });
+}
