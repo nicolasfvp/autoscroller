@@ -1,88 +1,55 @@
-import { FONTS } from '../ui/StyleConstants';
-import { t } from '../i18n/i18n';
-﻿import Phaser from 'phaser';
+import Phaser from 'phaser';
 
 const sceneActive = (scene: Phaser.Scene): boolean =>
   !!scene.scene && scene.scene.isActive(scene.scene.key);
 
 /**
- * LoopCelebration -- in-world overlay text for loop completion.
- * Shows "LOOP {N} COMPLETE" and "+{N} Tile Points" with animations.
- * Total duration ~1.5s then calls onComplete callback.
+ * LoopCelebration -- in-world overlay for loop completion.
+ * Uses txt_loop_complete asset + Tile Points text. Total duration ~1.5s.
  */
 export class LoopCelebration {
   private inFlight = false;
 
   play(
     scene: Phaser.Scene,
-    loopNumber: number,
-    tilePointsEarned: number,
+    _loopNumber: number,
+    _tilePointsEarned: number,
     onComplete: () => void
   ): void {
-    if (this.inFlight) {
-      onComplete();
-      return;
-    }
+    if (this.inFlight) { onComplete(); return; }
     this.inFlight = true;
 
-    const fontFamily = FONTS.body;
     const finish = () => {
       this.inFlight = false;
       if (sceneActive(scene)) onComplete();
     };
 
-    // "LOOP N COMPLETE" text
-    const loopText = scene.add.text(400, 280, t('loopCeleb.loopComplete', { loopNumber }), {
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#ffd700',
-      fontFamily,
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setScale(0).setAlpha(1);
+    // "LOOP COMPLETE" asset
+    const loopImg = scene.textures.exists('txt_loop_complete')
+      ? scene.add.image(400, 280, 'txt_loop_complete')
+          .setOrigin(0.5).setScrollFactor(0).setDepth(200).setScale(0.172).setAlpha(0)
+      : null;
 
-    scene.tweens.add({
-      targets: loopText,
-      scaleX: 1.2,
-      scaleY: 1.2,
-      duration: 300,
-      ease: 'Back.easeOut',
-      onComplete: () => {
-        scene.time.delayedCall(800, () => {
-          if (!sceneActive(scene)) return;
-          scene.tweens.add({
-            targets: loopText,
-            alpha: 0,
-            duration: 400,
-            onComplete: () => loopText.destroy(),
-          });
-        });
-      },
-    });
-
-    const tpText = scene.add.text(400, 320, t('loopCeleb.tilePoints', { tilePointsEarned }), {
-      fontSize: '24px',
-      fontStyle: 'bold',
-      color: '#00e5ff',
-      fontFamily,
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(200).setAlpha(0);
-
-    scene.time.delayedCall(200, () => {
-      if (!sceneActive(scene)) return;
+    if (loopImg) {
       scene.tweens.add({
-        targets: tpText,
+        targets: loopImg,
         alpha: 1,
-        duration: 200,
+        duration: 900,
+        ease: 'Sine.easeIn',
         onComplete: () => {
-          if (!sceneActive(scene)) return;
-          scene.tweens.add({
-            targets: tpText,
-            y: tpText.y - 20,
-            alpha: 0,
-            duration: 600,
-            onComplete: () => tpText.destroy(),
+          scene.time.delayedCall(600, () => {
+            if (!sceneActive(scene)) return;
+            scene.tweens.add({
+              targets: loopImg,
+              alpha: 0,
+              duration: 400,
+              onComplete: () => loopImg.destroy(),
+            });
           });
         },
       });
-    });
+    }
+
 
     scene.time.delayedCall(1500, finish);
   }

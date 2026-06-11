@@ -295,6 +295,9 @@ export class Preloader extends Scene {
     this.load.image('loop_chip_panel',    'assets/scenes/game/loop_chip_panel.png');
     this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
+    this.load.image('txt_loop_complete',  'assets/scenes/loop_summary/txt_loop_complete.png');
+    this.load.image('txt_victory',        'assets/scenes/combat/txt_victory.png');
+    this.load.image('txt_defeat',         'assets/scenes/combat/txt_defeat.png');
     this.load.image('boss_exit_option_panel', 'assets/scenes/boss_exit/option-panel.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)

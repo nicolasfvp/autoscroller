@@ -209,27 +209,20 @@ export class CombatScene extends Scene {
       if (this.anims.exists(heroDeathKey)) this.heroSprite.play(heroDeathKey);
     }
 
-    // Texto de resultado — VT323 com animação de typing (janela deslizante de 3 chars).
-    const resultWord = eventData.result === 'victory' ? t('combat.victory') : t('combat.defeat');
-    const displayText = this.add.bitmapText(400, 290, 'vt323_gold', '', 82)
-      .setOrigin(0.5).setDepth(600).setTint(eventData.result === 'victory' ? 0xffd700 : 0xff4444);
-
-    const WINDOW = 3;
-    let charIdx = 0;
-    const typeTimer = this.time.addEvent({
-      delay: 80,
-      repeat: resultWord.length + WINDOW - 2,
-      callback: () => {
-        charIdx++;
-        const start = Math.max(0, charIdx - WINDOW);
-        const end   = Math.min(charIdx, resultWord.length);
-        displayText.setText(resultWord.slice(start, end));
-        if (charIdx >= resultWord.length) {
-          displayText.setText(resultWord);
-          typeTimer.remove();
-        }
-      },
-    });
+    const isVictory = eventData.result === 'victory';
+    const resultAssetKey = isVictory ? 'txt_victory' : 'txt_defeat';
+    let displayText: Phaser.GameObjects.GameObject;
+    if (this.textures.exists(resultAssetKey)) {
+      displayText = this.add.image(400, 185, resultAssetKey)
+        .setOrigin(0.5).setDepth(600).setScale(0.172).setAlpha(0);
+    } else {
+      const word = isVictory ? 'VICTORY' : 'DEFEAT';
+      displayText = this.add.bitmapText(400, 55, 'vt323_gold', word, 82)
+        .setOrigin(0.5).setDepth(600)
+        .setTint(isVictory ? 0xd4821a : 0xff4444)
+        .setAlpha(0);
+    }
+    this.tweens.add({ targets: displayText, alpha: 1, duration: 1200, ease: 'Sine.easeIn' });
 
     this.time.delayedCall(2500, () => {
       if (displayText) displayText.destroy();
@@ -569,12 +562,45 @@ export class CombatScene extends Scene {
       // Source rename in Preloader.ts; render sites here + TileVisual.ts.
       this.enemyTextureKey = `monster_${enemyDef.id}`;
 
+      // Foot-alignment offsets — measured from pixel alpha boundary vs lost_lizard (dy=0)
+      const ENEMY_FOOT_DY: Record<string, number> = {
+        ancient_tree:        -9,
+        baby_dragon:        -14,
+        blue_dragon:        -18,
+        bog_witch:          -10,
+        corpse_eater:        -9,
+        depths_horror:       -8,
+        desert_golem:        -8,
+        doom_knight:        -10,
+        earth_dragon:       -18,
+        fire_elemental:     -13,
+        forge_slime:         13,
+        ice_dragon:         -18,
+        infernal_dragon:     -9,
+        iron_golem:          -3,
+        boss_iron_golem:     -3,
+        lava_golem:         -13,
+        lost_lizard:          0,
+        mummy:              -11,
+        mush:               -10,
+        mutated_salamander:   0,
+        red_slime:          -18,
+        scorpion:            -6,
+        skeleton:            -7,
+        slime:              -18,
+        toxic_gooze:        -12,
+        vampire:            -13,
+        venomous_kobra:      -6,
+        werewolf:           -14,
+      };
+      const enemyBaseY = 340 + (ENEMY_FOOT_DY[enemyDef.id] ?? 0);
+
       if (this.textures.exists(this.enemyTextureKey)) {
-        this.enemySprite = this.add.image(600, 340, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
+        this.enemySprite = this.add.image(600, enemyBaseY, this.enemyTextureKey).setDepth(10).setDisplaySize(250, 250);
         if (this.textures.exists('hero_shadow')) {
-          this.enemyShadow = this.add.image(600, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+          this.enemyShadow = this.add.image(602.6, 447.9, 'hero_shadow').setDisplaySize(248, 87).setAlpha(0.7).setDepth(9);
         } else {
-          this.enemyShadow = this.add.ellipse(600, 430, 160, 28, 0x000000, 0.45).setDepth(9) as unknown as Phaser.GameObjects.Graphics;
+          this.enemyShadow = this.add.ellipse(602.6, 447.9, 248, 87, 0x000000, 0.45).setDepth(9) as unknown as Phaser.GameObjects.Graphics;
         }
         const enemyFrames: string[] = [this.enemyTextureKey];
         for (let n = 2; this.textures.exists(`${this.enemyTextureKey}_${n}`); n++)
@@ -592,7 +618,7 @@ export class CombatScene extends Scene {
           });
         }
       } else {
-        this.enemySprite = this.add.rectangle(600, 350, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
+        this.enemySprite = this.add.rectangle(600, enemyBaseY, 64, 64, enemyDef.color ?? 0xff0000).setDepth(10);
       }
 
       this.hud = new CombatHUD(this, this.enemyTextureKey);
@@ -690,7 +716,7 @@ export class CombatScene extends Scene {
 
     // --- INIMIGO (calibrado via debug-layout) ---
     if (s.burnStacks > 0 && !this._fxEnemyFire)
-      this._fxEnemyFire  = fx.statusEffect(602.6, 542.2, 'fx_fire',  366);
+      this._fxEnemyFire  = fx.statusEffect(605.9, 528.4, 'fx_fire',  292);
     else if (s.burnStacks === 0 && this._fxEnemyFire)
       { this._fxEnemyFire.destroy();  this._fxEnemyFire  = null; }
 

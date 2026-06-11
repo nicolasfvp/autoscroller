@@ -132,7 +132,6 @@ export class CombatHUD {
   private cooldownGraphics!: Phaser.GameObjects.Graphics;
   private cooldownText!:     Phaser.GameObjects.Text;
   private enemyCooldownText!: Phaser.GameObjects.Text;
-  private hourglassFlipAngle   = 0;
   private isFlipping           = false;
   private _hgTopFrame          = 6;  // índice do último frame válido do spritesheet (derivado no build)
   private _lastHgFrame         = 0;  // último frame exibido do hourglass do herói
@@ -381,26 +380,10 @@ export class CombatHUD {
 
   private triggerHourglassFlip(): void {
     if (this._destroyed || !this.hourglassSprite || this.isFlipping) return;
-    this.hourglassSprite.setFrame(this._hgTopFrame); // trava no último frame; só sai dele após o giro
-    this._lastHgFrame = this._hgTopFrame;
-    this.isFlipping = true;
-    this._onFlipChange?.(true);
-    this.hourglassFlipAngle += 360;
-    this.scene.tweens.add({
-      targets: this.hourglassSprite,
-      angle: this.hourglassFlipAngle,
-      duration: 600,
-      ease: 'Cubic.easeInOut',
-      onComplete: () => {
-        if (this._destroyed) return;
-        // O giro terminou: agora sim o frame volta ao primeiro sprite.
-        this.hourglassSprite?.setFrame(0);
-        this._lastHgFrame = 0;
-        this._hgResetHold = 0;
-        this.isFlipping = false;
-        this._onFlipChange?.(false);
-      },
-    });
+    this.hourglassSprite.setFrame(0);
+    this._lastHgFrame = 0;
+    this._hgResetHold = 0;
+    this._onFlipChange?.(false);
   }
 
   showCooldownBurst(cooldownMs: number): void {
