@@ -299,6 +299,9 @@ export class Preloader extends Scene {
     this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
     this.load.image('hud_panel_left',     'assets/scenes/game/hud_panel_left.png');
+    this.load.image('hud_hero_panel',     'assets/scenes/game/hero_panel.png');
+    this.load.image('hud_loop_panel',     'assets/scenes/game/loop-Panel.png');
+    this.load.image('loop_chip_panel',    'assets/scenes/game/loop_chip_panel.png');
     this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
     this.load.image('boss_exit_option_panel', 'assets/scenes/boss_exit/option-panel.png');

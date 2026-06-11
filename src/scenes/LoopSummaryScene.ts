@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS } from '../ui/StyleConstants';
-import { type LootEntry } from '../systems/PendingLoot';
+import { type LootEntry, type LootSource } from '../systems/PendingLoot';
 import { type LoopRunner, type LoopRunState } from '../systems/LoopRunner';
 import { resolveIconKey } from '../systems/ElementSystem';
 
@@ -19,6 +19,8 @@ interface AggregatedEntry {
   color: string;
   amount: number;
   type: string;
+  /** Origin — event/treasure gains render in their own highlighted block. */
+  source: LootSource;
 }
 
 // Keys are lowercase — lookup normalises via .toLowerCase()
@@ -65,23 +67,23 @@ function parseLoot(label: string): { amount: number; type: string } | null {
 }
 
 function aggregateLoot(items: LootEntry[]): AggregatedEntry[] {
-  const map = new Map<string, { color: string; amount: number }>();
+  // Group by (source, type) so event/treasure gains never merge into the
+  // combat tally for the same resource (e.g. treasure gold stays distinct).
+  const map = new Map<string, { color: string; amount: number; type: string; source: LootSource }>();
   const order: string[] = [];
   for (const item of items) {
+    const source = item.source ?? 'combat';
     const parsed = parseLoot(item.label);
-    if (parsed) {
-      if (!map.has(parsed.type)) { map.set(parsed.type, { color: item.color, amount: 0 }); order.push(parsed.type); }
-      map.get(parsed.type)!.amount += parsed.amount;
-    } else if (!map.has(item.label)) {
-      map.set(item.label, { color: item.color, amount: 0 });
-      order.push(item.label);
-    }
+    const type = parsed ? parsed.type : item.label;
+    const key = `${source}::${type}`;
+    if (!map.has(key)) { map.set(key, { color: item.color, amount: 0, type, source }); order.push(key); }
+    if (parsed) map.get(key)!.amount += parsed.amount;
   }
-  return order.map(type => {
-    const e = map.get(type)!;
-    const isStat = type.endsWith('!');
-    const label = e.amount > 0 ? `+${e.amount} ${type}` : type;
-    return { label, color: e.color, amount: e.amount, type: isStat ? type.replace('!','').trim() : type };
+  return order.map(key => {
+    const e = map.get(key)!;
+    const isStat = e.type.endsWith('!');
+    const label = e.amount > 0 ? `+${e.amount} ${e.type}` : e.type;
+    return { label, color: e.color, amount: e.amount, type: isStat ? e.type.replace('!','').trim() : e.type, source: e.source };
   });
 }
 
@@ -102,10 +104,18 @@ export class LoopSummaryScene extends Scene {
     this.tweens.add({ targets: this.children.list[0], alpha: 1, duration: 250 });
 
     const all = aggregateLoot(lootItems);
-    const rewards = all.filter(e => !SHARD_TYPES.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
-    const xpEntry  = all.find(e => e.type === 'XP');
-    const shards   = all.filter(e => SHARD_TYPES.has(e.type));
-    const stats    = all.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !SHARD_TYPES.has(e.type)));
+    const isEventSource = (e: AggregatedEntry) => e.source === 'event' || e.source === 'treasure';
+    // Event/treasure gains get their own highlighted block (only quantified
+    // ones). Descriptive event lines with no parseable amount are dropped here
+    // so they don't leak into the combat REWARDS column — they already showed
+    // as floating notifications during the loop.
+    const eventLoot = all.filter(e => isEventSource(e) && e.amount > 0);
+    const combat = all.filter(e => !isEventSource(e));
+
+    const rewards = combat.filter(e => !SHARD_TYPES.has(e.type) && !e.type.endsWith('!') && e.type !== 'XP');
+    const xpEntry  = combat.find(e => e.type === 'XP');
+    const shards   = combat.filter(e => SHARD_TYPES.has(e.type));
+    const stats    = combat.filter(e => e.type.endsWith('!') || (e.type.includes('Tile') && !SHARD_TYPES.has(e.type)));
 
     if (xpEntry) rewards.unshift(xpEntry);
 
@@ -176,9 +186,34 @@ export class LoopSummaryScene extends Scene {
       if (shards[i])  this.renderIconRow(RIGHT, rowY + i * COL_ROW, shards[i],  ICON_S, FF, delay);
     }
 
+    // Running Y below the two columns; the event block + stats stack under it.
+    let flowY = rowY + maxRows * COL_ROW + 10;
+
+    // ── Events / Treasure (highlighted, full-width single column) ──────────
+    if (eventLoot.length > 0) {
+      this.add.rectangle(cx, flowY, PW - 32, 1, 0xd4a04a, 0.45);
+      const evHdr = this.add.text(cx, flowY + 13, '✦  EVENTS / TREASURE', {
+        fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
+        color: '#ffd27f', stroke: '#000', strokeThickness: 3,
+      }).setOrigin(0.5).setAlpha(0);
+      const evHdrDelay = 320 + maxRows * 45;
+      this.tweens.add({ targets: evHdr, alpha: 1, duration: 200, delay: evHdrDelay });
+
+      const EV_ROW = 30;
+      let evRowY = flowY + 36;
+      eventLoot.forEach((e, i) => {
+        // Centered icon|label, full width. Reuse renderIconRow with a layout
+        // anchored a little left of centre so the icon+text read as one unit.
+        const layout: RowLayout = { iconX: cx - 78, textX: cx - 58, textNoIconX: cx - 78 };
+        this.renderIconRow(layout, evRowY, e, 24, FF, evHdrDelay + 40 + i * 35);
+        evRowY += EV_ROW;
+      });
+      flowY = evRowY + 10;
+    }
+
     // ── Stats / permanent upgrades ─────────────────────────
     if (stats.length > 0) {
-      const statsY = rowY + maxRows * COL_ROW + 10;
+      const statsY = flowY;
       this.add.rectangle(cx, statsY, PW - 32, 1, 0x886644, 0.35);
       const statsHdr = this.add.text(cx, statsY + 12, 'STATS', {
         fontFamily: FF, fontSize: '23px', fontStyle: 'bold',
@@ -196,7 +231,11 @@ export class LoopSummaryScene extends Scene {
     }
 
     // ── Continue button ──────────────────────────────────
-    const btnDelay = 400 + maxRows * 45;
+    // Wait for the latest-animating block (columns, events, or stats).
+    const btnDelay = Math.max(
+      400 + maxRows * 45,
+      eventLoot.length > 0 ? 360 + maxRows * 45 + 40 + eventLoot.length * 35 : 0,
+    );
     if (this.textures.exists('btn_continue_loop')) {
       const btnImg = this.add.image(400, 562, 'btn_continue_loop')
         .setScale(114 / 1548)
