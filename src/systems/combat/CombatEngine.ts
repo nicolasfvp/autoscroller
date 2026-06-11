@@ -47,7 +47,6 @@ export class CombatEngine {
   private deckPointer = 0;
   private isFinished = false;
   private _cardPlayCount = 0;
-  private _hourglassFlipping = false; // true while flip animation plays — pauses hero cooldown
 
   private regenAccumulator = 0;
   /** Rebalance: wall-clock accumulator for DoT ticking (decoupled from card plays). */
@@ -71,8 +70,12 @@ export class CombatEngine {
     // (took_damage_within_ms) stay in sync.
     this.state.combatElapsedMs = this.totalElapsedMs;
 
-    // Decrement hero cooldown only when the hourglass flip animation is not playing.
-    if (!this._hourglassFlipping) this.heroCooldownTimer -= deltaMs;
+    // Hero cooldown always advances with game-time. The hourglass flip is a
+    // purely cosmetic HUD animation (see setHourglassFlipping) — gating this on
+    // it would couple game-time to a fixed REAL-time tween and desync every
+    // time-windowed aura at non-1x speed (Firestorm lost 600ms*speed of its
+    // window per card, so it never reached its 3-card threshold at >=2x).
+    this.heroCooldownTimer -= deltaMs;
     // Determine who reached 0 first using *projected* post-decrement enemy
     // timer. If both are overdue this tick, the more-negative one acts first.
     const projectedEnemyTimer = this.enemyAI.getCooldownTimer() - deltaMs;
@@ -757,8 +760,16 @@ export class CombatEngine {
     return this._cardPlayCount;
   }
 
-  setHourglassFlipping(flipping: boolean): void {
-    this._hourglassFlipping = flipping;
+  /**
+   * The hourglass flip (CombatHUD.triggerHourglassFlip) is a cosmetic animation
+   * driven by a fixed 600ms REAL-time tween. It MUST NOT gate any simulation
+   * timing: doing so couples game-time to wall-clock and breaks at non-1x speed
+   * (time-windowed auras like Firestorm lose 600ms*speed of their window per
+   * card played). Retained as an inert seam so the HUD can notify the engine of
+   * flips without re-coupling combat timing. See tests/audit/firestorm-speed-repro.
+   */
+  setHourglassFlipping(_flipping: boolean): void {
+    // intentionally a no-op — the flip is purely visual.
   }
 
   getHeroMaxCooldown(): number {

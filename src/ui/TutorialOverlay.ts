@@ -14,6 +14,7 @@
 import Phaser from 'phaser';
 import { tutorialDirector, type TutorialStep } from '../systems/tutorial/TutorialDirector';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
+import { t, getLocale } from '../i18n/i18n';
 
 const OVERLAY_DEPTH = 15000;
 const SPOTLIGHT_PAD = 8;
@@ -235,7 +236,7 @@ export class TutorialOverlay {
         : this.bodyText.y + this.bodyText.height + 36;
 
       const btnW = 153;
-      if (this.scene.textures.exists('btn_next')) {
+      if (getLocale() !== 'pt-br' && this.scene.textures.exists('btn_next')) {
         const img = this.scene.add.image(panelCenterX, btnY, 'btn_next')
           .setInteractive({ useHandCursor: true }).setScrollFactor(0);
         const s = btnW / img.width;
@@ -246,7 +247,7 @@ export class TutorialOverlay {
         this.nextBtn = img as unknown as Phaser.GameObjects.Text;
         this.container.add(img);
       } else {
-        this.nextBtn = this.scene.add.text(panelCenterX, btnY, 'Next →', {
+        this.nextBtn = this.scene.add.text(panelCenterX, btnY, t('tutorialOv.next'), {
           fontSize: '15px', fontStyle: 'bold',
           color: COLORS.accent, fontFamily: FONTS.body,
           backgroundColor: '#3a2008',

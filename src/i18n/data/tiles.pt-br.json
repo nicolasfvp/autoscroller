@@ -1,0 +1,9 @@
+{
+  "basic": { "name": "Caminho" },
+  "combat": { "name": "Combate" },
+  "elite": { "name": "Combate de Elite" },
+  "boss": { "name": "Chefe" },
+  "rest": { "name": "Descanso" },
+  "event": { "name": "Evento" },
+  "treasure": { "name": "Tesouro" }
+}

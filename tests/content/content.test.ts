@@ -199,7 +199,7 @@ describe('MetaState', () => {
     expect(state.totalRuns).toBe(0);
     // Beginner-mode redesign: bumped to v9 with seenKeywords for contextual
     // keyword teaching.
-    expect(state.version).toBe(12);
+    expect(state.version).toBe(13);
     expect(state.buildings.forge.level).toBe(0);
     expect(state.buildings.library.level).toBe(0);
     expect(state.buildings.tavern.level).toBe(0);

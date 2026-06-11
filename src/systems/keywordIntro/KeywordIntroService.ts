@@ -19,6 +19,7 @@
 import Phaser from 'phaser';
 import { detectKeywords, type KeywordDef } from '../../ui/KeywordDefinitions';
 import { loadMetaState, saveMetaState } from '../MetaPersistence';
+import { getLocale, type Locale } from '../../i18n/i18n';
 import type { MetaState } from '../../state/MetaState';
 import { openKeywordIntroOverlay } from '../../ui/KeywordIntroOverlay';
 
@@ -57,9 +58,9 @@ class KeywordIntroServiceImpl {
   /** Called by CombatScene on every card played. Detects keywords in the
    *  card's description, filters to unseen, and queues them up for the
    *  overlay. No-op if nothing unseen or the service isn't initialized. */
-  handleCardPlayed(scene: Phaser.Scene, cardDescription: string): void {
+  handleCardPlayed(scene: Phaser.Scene, cardDescription: string, locale: Locale = getLocale()): void {
     if (!this.initialized) return;
-    const kws = detectKeywords(cardDescription);
+    const kws = detectKeywords(cardDescription, locale);
     const unseen = kws.filter((kw) => !this.seen.has(kw.keyword));
     if (unseen.length === 0) return;
 

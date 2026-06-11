@@ -16,6 +16,8 @@
 // entries use them, so consumers that switch on the union don't need a
 // churn change.
 
+import type { Locale } from '../i18n/i18n';
+
 export type KeywordCategory = 'stack' | 'modifier' | 'stat';
 
 export interface KeywordDef {
@@ -133,6 +135,51 @@ export const TOKEN_GLOSSARY: KeywordDef[] = [
   },
 ];
 
+// ── pt-BR translations ──────────────────────────────────────────────────
+// Parallel arrays (SAME order as the English ones above). The English exports
+// are kept verbatim so the EN-pinning tests stay green; pt-BR is served via the
+// locale-aware accessors below. Bracketed [tokens] inside definitions are
+// language-neutral icons and are left as-is.
+export const KEYWORD_DEFINITIONS_PT: KeywordDef[] = [
+  { keyword: 'Firmeza', category: 'modifier', definition: 'Ativa seu bônus quando sua [armor] quebra (cai a 0).' },
+  { keyword: 'Esgotar', category: 'modifier', definition: 'Esta carta só é jogada uma vez por combate.' },
+  { keyword: 'Aceleração', category: 'modifier', definition: 'Reduz o tempo de recarga das suas cartas pela % indicada por alguns segundos.' },
+  { keyword: 'Perfuração', category: 'modifier', definition: 'Dano que ignora a [armor] e atinge a [HP] diretamente.' },
+  { keyword: 'Vingança', category: 'modifier', definition: 'Ativa seu bônus se você perdeu [HP] nos últimos 2 segundos.' },
+];
+
+export const TOKEN_GLOSSARY_PT: KeywordDef[] = [
+  // Stacks (same order as TOKEN_GLOSSARY)
+  { keyword: 'Queimadura', category: 'stack', definition: 'Dano de fogo contínuo no inimigo. A cada turno de combate causa dano igual à quantidade de acúmulos (limitado a cerca de 8/turno). A Queimadura NÃO decai sozinha — permanece até uma carta de Pira/detonador consumi-la. Cartas com Inteligência aplicam mais Queimadura.' },
+  { keyword: 'Sangramento', category: 'stack', definition: 'Dano físico contínuo no inimigo. A cada turno causa 1 por acúmulo — ou 2 por acúmulo se o inimigo atacou desde o último turno — e perde 1 acúmulo. Recompensa lutas rápidas e agressivas. Cartas com Destreza aplicam mais Sangramento.' },
+  { keyword: 'Veneno', category: 'stack', definition: 'Dano contínuo persistente no inimigo. A cada turno causa dano igual à quantidade de acúmulos, e o acúmulo decai lentamente (cerca de 1 a cada dois turnos), durando mais que o Sangramento. Cartas com Inteligência aplicam mais Veneno.' },
+  { keyword: 'Atordoamento', category: 'stack', definition: 'Controle do inimigo. Enquanto houver acúmulos de Atordoamento, o tempo de recarga do ataque do inimigo fica congelado e ele não pode agir. Não causa dano; perde 1 acúmulo por turno. Cartas com Inteligência aplicam mais Atordoamento.' },
+  { keyword: 'Lentidão', category: 'stack', definition: 'Controle leve do inimigo. Desacelera o tempo de recarga do ataque do inimigo (cerca de 8% por acúmulo, limitado a ~50%) e causa um pequeno dano igual à quantidade de acúmulos; perde 1 acúmulo por turno.' },
+  { keyword: 'Fúria', category: 'stack', definition: 'Um acúmulo no próprio herói. Não causa dano sozinho — em vez disso, alimenta efeitos de Berserk e detonadores que escalam com ou gastam sua Fúria atual. Persiste durante toda a luta até que uma carta a consuma.' },
+  { keyword: 'Armadura', category: 'stack', definition: 'Defesa temporária no herói. Absorve o dano recebido antes de chegar à Vida. É gasta conforme você recebe golpes; algumas cartas a gastam ou convertem. Efeitos de Firmeza ativam quando sua Armadura quebra (cai de acima de 0 para 0). Vitalidade aumenta a armadura ganha.' },
+  // Stats (same order as TOKEN_GLOSSARY)
+  { keyword: 'Força', category: 'stat', definition: 'FOR. Um multiplicador de dano global: o dano das cartas é multiplicado por ~1 + (FOR−1) × 0,25 (FOR 1 = base, 4 = +75%, 10 = +225%). Eleva todo ataque que você joga.' },
+  { keyword: 'Destreza', category: 'stat', definition: 'DES. Rege a linha de Agilidade e a escala de Sangramento — cartas com a marca de Destreza aplicam mais Sangramento e convertem/escalam melhor quanto maior for sua Destreza.' },
+  { keyword: 'Inteligência', category: 'stat', definition: 'INT. Alimenta a linha mágica — cartas com a marca de Inteligência aplicam mais Queimadura, Veneno e Atordoamento, e várias magias somam dano fixo por ponto de Inteligência.' },
+  { keyword: 'Vitalidade', category: 'stat', definition: 'VIT. Aumenta sua sobrevivência: eleva a Vida máxima (cerca de +5 por ponto) e aumenta a Armadura que suas cartas de defesa concedem.' },
+  { keyword: 'Espírito', category: 'stat', definition: 'ESP. Amplia a cura recebida — toda cura é aumentada em 15% por ponto de Espírito.' },
+];
+
+/** Locale-aware modifier-keyword list. */
+export function getKeywordDefinitions(locale: Locale = 'en'): KeywordDef[] {
+  return locale === 'pt-br' ? KEYWORD_DEFINITIONS_PT : KEYWORD_DEFINITIONS;
+}
+
+/** Locale-aware token (stack/stat) glossary. */
+export function getTokenGlossary(locale: Locale = 'en'): KeywordDef[] {
+  return locale === 'pt-br' ? TOKEN_GLOSSARY_PT : TOKEN_GLOSSARY;
+}
+
+/** English canonical keyword (lowercased) -> pt-BR token def, paired by index. */
+const PT_TOKEN_BY_EN: Map<string, KeywordDef> = new Map(
+  TOKEN_GLOSSARY.map((d, i) => [d.keyword.toLowerCase(), TOKEN_GLOSSARY_PT[i]]),
+);
+
 /** Bracketed-token / abbreviation aliases -> canonical TOKEN_GLOSSARY keyword. */
 const TOKEN_ALIASES: Record<string, string> = {
   // stat abbreviations
@@ -165,13 +212,15 @@ const TOKEN_INDEX: Map<string, KeywordDef> = new Map(
  * forms (`[burn]`), abbreviations (`str`, `STR`), and full names
  * (`Strength`); case-insensitive. Returns undefined for unknown tokens.
  */
-export function lookupToken(token: string): KeywordDef | undefined {
+export function lookupToken(token: string, locale: Locale = 'en'): KeywordDef | undefined {
   if (!token) return undefined;
   const cleaned = token.trim().replace(/^\[+/, '').replace(/\]+$/, '').trim().toLowerCase();
   if (!cleaned) return undefined;
   const canonical = TOKEN_ALIASES[cleaned];
-  if (canonical) return TOKEN_INDEX.get(canonical.toLowerCase());
-  return TOKEN_INDEX.get(cleaned);
+  const enDef = canonical ? TOKEN_INDEX.get(canonical.toLowerCase()) : TOKEN_INDEX.get(cleaned);
+  if (!enDef) return undefined;
+  if (locale === 'pt-br') return PT_TOKEN_BY_EN.get(enDef.keyword.toLowerCase()) ?? enDef;
+  return enDef;
 }
 
 const CATEGORY_ORDER: Record<KeywordCategory, number> = {
@@ -189,11 +238,11 @@ const CATEGORY_ORDER: Record<KeywordCategory, number> = {
  * Returns each keyword at most once, sorted by category (stack ->
  * modifier -> stat) then alphabetically within category.
  */
-export function detectKeywords(description: string): KeywordDef[] {
+export function detectKeywords(description: string, locale: Locale = 'en'): KeywordDef[] {
   if (!description) return [];
   const seen = new Set<string>();
   const hits: KeywordDef[] = [];
-  for (const def of KEYWORD_DEFINITIONS) {
+  for (const def of getKeywordDefinitions(locale)) {
     if (seen.has(def.keyword)) continue;
     // \b is the standard JS word boundary -- matches the transition
     // between [A-Za-z0-9_] and non-word chars, which correctly excludes

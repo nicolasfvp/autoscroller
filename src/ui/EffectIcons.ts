@@ -4,8 +4,23 @@
 // text objects) lives in CombatHUD.
 
 import type { CombatState } from '../systems/combat/CombatState';
-import type { AuraModifierKind } from '../data/types';
+import type { AuraModifierKind, StatId } from '../data/types';
 import type { ActiveAura } from '../systems/combat/StatusEffects';
+import { readStat } from '../systems/hero/HeroStatsResolver';
+import { getLocale } from '../i18n/i18n';
+
+// pt-BR for the status-chip tooltip names + prose. Hover-only; defaults to
+// English (so the EN-pinning unit tests in the 'en' test env stay valid).
+const NAME_PT: Record<string, string> = {
+  Poison: 'Veneno', Bleed: 'Sangramento', Burn: 'Queimadura', Stun: 'Atordoamento',
+  Slow: 'Lentidão', Rage: 'Fúria', STR: 'FOR', VIT: 'VIT', DEX: 'DES', INT: 'INT',
+  SPI: 'ESP', DEF: 'DEF', Haste: 'Aceleração', 'Vuln Fire': 'Vuln. Fogo',
+  Reforce: 'Reforço', Mitigate: 'Mitigação', Empower: 'Potência', Stance: 'Postura',
+  'Pierce Imm.': 'Imune a Perfuração', 'Stack ×': 'Multiplicador',
+};
+const isPt = () => getLocale() === 'pt-br';
+const nm = (name: string): string => (isPt() ? (NAME_PT[name] ?? name) : name);
+const loc = (en: string, pt: string): string => (isPt() ? pt : en);
 
 export interface EffectChip {
   /** Stable identity (for diff / pool slotting). */
@@ -48,6 +63,17 @@ const MOD_META: Record<AuraModifierKind, { iconKey: string; color: string; name:
   stack_gain_mult:   { iconKey: 'icon_bleed',   color: '#ff4d4d', name: 'Stack ×' },
 };
 
+// The five hero stat axes, in display order. These are shown as always-on
+// "total" chips so the hero status row has persistent content even when no
+// DoT/aura is active — and so the player can read the SAME effective value a
+// card scales off (see readStat). `def` is intentionally absent: armor is its
+// own chip (heroDefense), not a readStat axis.
+const CORE_STAT_ORDER: StatId[] = ['str', 'vit', 'dex', 'int', 'spi'];
+// Aura kinds folded into the stat-total chips above, so the aura loop skips
+// them (otherwise a +2 STR buff would show twice: once in the STR total and
+// again as a standalone "+2" aura chip).
+const CORE_STAT_KINDS = new Set<AuraModifierKind>(['str', 'vit', 'dex', 'int', 'spi']);
+
 interface AggregatedMod {
   kind: AuraModifierKind;
   totalValue: number;
@@ -89,6 +115,24 @@ function formatModValue(kind: AuraModifierKind, value: number): string {
 export function computeHeroChips(state: CombatState): EffectChip[] {
   const chips: EffectChip[] = [];
 
+  // Effective hero stats first (base + active stat-auras + per-combat boosts).
+  // readStat() is the exact value the CardResolver scales damage/effects off,
+  // so the on-screen number can never disagree with a card's resolved value.
+  // Shown whenever > 0; a temporary buff makes the total rise then fall back,
+  // which is the "increase/decrease" feedback the row exists to convey.
+  for (const stat of CORE_STAT_ORDER) {
+    const v = readStat(state, stat);
+    if (!Number.isFinite(v) || v <= 0) continue;
+    const meta = MOD_META[stat];
+    chips.push({
+      key: `hero-stat-${stat}`,
+      iconKey: meta.iconKey,
+      label: `${v}`,
+      color: meta.color,
+      tooltip: `${nm(meta.name)}: ${v}`,
+    });
+  }
+
   const armor = Math.max(0, Math.floor(state.heroDefense ?? 0));
   if (armor > 0) {
     chips.push({
@@ -96,19 +140,20 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_armor',
       label: `${armor}`,
       color: '#9fd6ff',
-      tooltip: `Armor: absorbs ${armor} damage`,
+      tooltip: loc(`Armor: absorbs ${armor} damage`, `Armadura: absorve ${armor} de dano`),
     });
   }
 
   for (const agg of aggregateAuras(state.heroAuras)) {
     if (agg.totalValue === 0) continue;
+    if (CORE_STAT_KINDS.has(agg.kind)) continue; // folded into the stat-total chip above
     const meta = MOD_META[agg.kind];
     chips.push({
       key: `hero-aura-${agg.kind}`,
       iconKey: meta.iconKey,
       label: `${formatModValue(agg.kind, agg.totalValue)} ${formatSeconds(agg.maxRemainingMs)}`,
       color: meta.color,
-      tooltip: `${meta.name} buff (${formatSeconds(agg.maxRemainingMs)} left)`,
+      tooltip: loc(`${meta.name} buff (${formatSeconds(agg.maxRemainingMs)} left)`, `Bônus de ${nm(meta.name)} (${formatSeconds(agg.maxRemainingMs)} restante)`),
     });
   }
 
@@ -126,7 +171,7 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_defense',
       label: armorBreak > 1 ? `x${armorBreak}` : 'armed',
       color: '#9fd6ff',
-      tooltip: 'Armed: fires when armor breaks',
+      tooltip: loc('Armed: fires when armor breaks', 'Pronto: dispara quando a armadura quebra'),
     });
   }
   if (hpBelow > 0) {
@@ -135,21 +180,21 @@ export function computeHeroChips(state: CombatState): EffectChip[] {
       iconKey: 'icon_HP',
       label: hpBelow > 1 ? `x${hpBelow}` : 'armed',
       color: '#ff6666',
-      tooltip: 'Armed: fires when HP drops below threshold',
+      tooltip: loc('Armed: fires when HP drops below threshold', 'Pronto: dispara quando a Vida cai abaixo do limite'),
     });
   }
 
   if (state.rageStacks > 0) {
     const m = STACK_META.rage;
-    chips.push({ key: 'hero-rage', iconKey: m.iconKey, label: `${state.rageStacks}`, color: m.color, tooltip: `${m.name}: ${state.rageStacks}` });
+    chips.push({ key: 'hero-rage', iconKey: m.iconKey, label: `${state.rageStacks}`, color: m.color, tooltip: `${nm(m.name)}: ${state.rageStacks}` });
   }
   if (state.heroBurnStacks > 0) {
     const m = STACK_META.burn;
-    chips.push({ key: 'hero-burn', iconKey: m.iconKey, label: `${state.heroBurnStacks}`, color: m.color, tooltip: `Self ${m.name}: ${state.heroBurnStacks}` });
+    chips.push({ key: 'hero-burn', iconKey: m.iconKey, label: `${state.heroBurnStacks}`, color: m.color, tooltip: loc(`Self ${m.name}: ${state.heroBurnStacks}`, `${nm(m.name)} (em você): ${state.heroBurnStacks}`) });
   }
   if (state.heroBleedStacks > 0) {
     const m = STACK_META.bleed;
-    chips.push({ key: 'hero-bleed', iconKey: m.iconKey, label: `${state.heroBleedStacks}`, color: m.color, tooltip: `Self ${m.name}: ${state.heroBleedStacks}` });
+    chips.push({ key: 'hero-bleed', iconKey: m.iconKey, label: `${state.heroBleedStacks}`, color: m.color, tooltip: loc(`Self ${m.name}: ${state.heroBleedStacks}`, `${nm(m.name)} (em você): ${state.heroBleedStacks}`) });
   }
 
   return chips;
@@ -168,7 +213,7 @@ export function computeEnemyChips(state: CombatState): EffectChip[] {
   for (const [k, v] of stackPairs) {
     if (v > 0) {
       const meta = STACK_META[k];
-      chips.push({ key: `enemy-${k}`, iconKey: meta.iconKey, label: `${v}`, color: meta.color, tooltip: `${meta.name}: ${v}` });
+      chips.push({ key: `enemy-${k}`, iconKey: meta.iconKey, label: `${v}`, color: meta.color, tooltip: `${nm(meta.name)}: ${v}` });
     }
   }
 
@@ -180,7 +225,7 @@ export function computeEnemyChips(state: CombatState): EffectChip[] {
       iconKey: meta.iconKey,
       label: `${formatModValue(agg.kind, agg.totalValue)} ${formatSeconds(agg.maxRemainingMs)}`,
       color: meta.color,
-      tooltip: `${meta.name} debuff (${formatSeconds(agg.maxRemainingMs)} left)`,
+      tooltip: loc(`${meta.name} debuff (${formatSeconds(agg.maxRemainingMs)} left)`, `Penalidade de ${nm(meta.name)} (${formatSeconds(agg.maxRemainingMs)} restante)`),
     });
   }
 

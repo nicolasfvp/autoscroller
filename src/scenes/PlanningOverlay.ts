@@ -6,6 +6,8 @@ import { getRun } from '../state/RunState';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
+import { t } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 
 /**
  * PlanningOverlay -- planning phase UI with miniature loop grid and tile inventory panel.
@@ -131,7 +133,7 @@ export class PlanningOverlay extends Scene {
     }
 
     const deckIcon = this.add.image(dX, ICON_Y, 'deck_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
-    this.add.text(dX, LABEL_Y, 'Deck', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    this.add.text(dX, LABEL_Y, t('planning.deck'), { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
     deckIcon.on('pointerover', () => deckIcon.setTint(0xffdd88));
     deckIcon.on('pointerout',  () => deckIcon.clearTint());
     deckIcon.on('pointerdown', () => {
@@ -140,7 +142,7 @@ export class PlanningOverlay extends Scene {
     });
 
     const relicIcon = this.add.image(rX, ICON_Y, 'relic_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
-    this.add.text(rX, LABEL_Y, 'Relic', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    this.add.text(rX, LABEL_Y, t('planning.relic'), { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
     relicIcon.on('pointerover', () => relicIcon.setTint(0xffdd88));
     relicIcon.on('pointerout',  () => relicIcon.clearTint());
     relicIcon.on('pointerdown', () => {
@@ -149,13 +151,13 @@ export class PlanningOverlay extends Scene {
     });
 
     const shopIcon = this.add.image(sX, ICON_Y, 'shop_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
-    this.add.text(sX, LABEL_Y, 'Shop', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    this.add.text(sX, LABEL_Y, t('planning.shop'), { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
     shopIcon.on('pointerover', () => shopIcon.setTint(0xffdd88));
     shopIcon.on('pointerout',  () => shopIcon.clearTint());
     shopIcon.on('pointerdown', () => this.openSubScene(SCENE_KEYS.SHOP));
 
     const forgeIcon = this.add.image(fX, ICON_Y, 'forge_icon').setDisplaySize(ICON_SIZE, ICON_SIZE).setInteractive({ useHandCursor: true });
-    this.add.text(fX, LABEL_Y, 'Forge', { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
+    this.add.text(fX, LABEL_Y, t('planning.forge'), { fontSize: '10px', color: '#ffffff', fontFamily: serifFont }).setOrigin(0.5);
     forgeIcon.on('pointerover', () => forgeIcon.setTint(0xffdd88));
     forgeIcon.on('pointerout',  () => forgeIcon.clearTint());
     forgeIcon.on('pointerdown', () => this.openSubScene(SCENE_KEYS.FORGE));
@@ -166,14 +168,7 @@ export class PlanningOverlay extends Scene {
     // GameScene's loop-completed handler.
     this.buildSkipLoopsRow(fontFamily);
 
-    // Bottom center: Start Loop image button
-    const startBtn = this.add.image(405, 548, 'btn_start_loop_scene')
-      .setInteractive({ useHandCursor: true });
-    const startScale = 220 / startBtn.width;
-    startBtn.setScale(startScale);
-    startBtn.on('pointerover', () => startBtn.setTint(0xffdd88));
-    startBtn.on('pointerout',  () => startBtn.clearTint());
-
+    // Bottom center: Start Loop button (English baked art; pt-BR text variant).
     const startLoop = () => {
       // Tutorial: 'boss-preview' is the last planning-phase step — Start
       // Loop completes it and hands control to GameScene for the wrap-up.
@@ -196,12 +191,7 @@ export class PlanningOverlay extends Scene {
       });
     };
 
-    startBtn.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button !== 0) return;
-      this.tweens.killTweensOf(startBtn);
-      this.tweens.add({ targets: startBtn, scale: startScale * 0.95, duration: 50, yoyo: true });
-      startLoop();
-    });
+    localizedImageButton(this, 405, 548, 'btn_start_loop_scene', t('btn.startLoop'), 220, startLoop);
 
     this.buildShopForgeButtons(fontFamily);
 
@@ -446,9 +436,9 @@ export class PlanningOverlay extends Scene {
         this.refreshInventory();
       } else {
         const slot = this.loopRunState.loop.tiles[slotIndex];
-        if (slot?.type === 'boss') this.showToast('Boss tile cannot be removed.');
-        else if (slot?.type === 'basic') this.showToast('Slot is already empty.');
-        else this.showToast('Cannot remove that tile.');
+        if (slot?.type === 'boss') this.showToast(t('planning.toastBossCannotRemove'));
+        else if (slot?.type === 'basic') this.showToast(t('planning.toastSlotEmpty'));
+        else this.showToast(t('planning.toastCannotRemoveTile'));
       }
       return;
     }
@@ -462,8 +452,8 @@ export class PlanningOverlay extends Scene {
     // could still burn TP on a wrong tile and softlock the scripted run.
     if (!this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type, this.selectedTileKey)) {
       this.showToast(this.tutorialAllowedTileType() === 'subtile'
-        ? 'Place a subtile in a reserved (cyan) slot.'
-        : 'Place a combat tile from the inventory.');
+        ? t('planning.toastPlaceSubtileReserved')
+        : t('planning.toastPlaceCombatTile'));
       return;
     }
 
@@ -502,17 +492,17 @@ export class PlanningOverlay extends Scene {
     } else {
       const slot = this.loopRunState.loop.tiles[slotIndex];
       if (this.loopRunner.getState() !== 'planning') {
-        this.showToast('Cannot place tiles right now.');
+        this.showToast(t('planning.toastCannotPlaceNow'));
       } else if (!slot) {
-        this.showToast('Invalid slot.');
+        this.showToast(t('planning.toastInvalidSlot'));
       } else if (slot.type === 'boss') {
-        this.showToast('Boss tiles cannot be replaced.');
+        this.showToast(t('planning.toastBossCannotReplace'));
       } else if (slot.type === 'buffer') {
-        this.showToast('Buffer tiles cannot be replaced.');
+        this.showToast(t('planning.toastBufferCannotReplace'));
       } else if (slot.type === 'basic' && slot.reserved) {
-        this.showToast('Reserved slot — place a subtile here.');
+        this.showToast(t('planning.toastReservedNeedsSubtile'));
       } else {
-        this.showToast('This slot already has a tile.');
+        this.showToast(t('planning.toastSlotOccupied'));
       }
     }
   }
@@ -556,8 +546,8 @@ export class PlanningOverlay extends Scene {
 
     // Section labels — fontSize from debug-layout (~16.6px)
     const labelStyle = { fontSize: '16px', color: '#c4a84a', fontFamily, fontStyle: 'italic' };
-    this.inventoryCards.push(this.add.text(247.3, 297.1, 'TILES',     labelStyle).setOrigin(0.5) as any);
-    this.inventoryCards.push(this.add.text(550.8, 297,   'LANDMARKS', labelStyle).setOrigin(0.5) as any);
+    this.inventoryCards.push(this.add.text(247.3, 297.1, t('planning.sectionTiles'),     labelStyle).setOrigin(0.5) as any);
+    this.inventoryCards.push(this.add.text(550.8, 297,   t('planning.sectionLandmarks'), labelStyle).setOrigin(0.5) as any);
 
     // ── LEFT SLOT: all tiles ──────────────────────────────────────────────────
     const TILE_COLS = TILE_XS.length;
@@ -592,7 +582,7 @@ export class PlanningOverlay extends Scene {
       }).setOrigin(0.5);
       container.add(nameText);
 
-      const costText = this.add.text(0, FRAME / 2 + 18, `${tileConfig.tilePointCost} TP`, {
+      const costText = this.add.text(0, FRAME / 2 + 18, t('planning.tilePointCost', { cost: tileConfig.tilePointCost }), {
         fontSize: '10px', color: '#c4a84a', fontFamily, fontStyle: 'bold',
       }).setOrigin(0.5);
       container.add(costText);
@@ -855,13 +845,13 @@ export class PlanningOverlay extends Scene {
     }
 
     // Toggle label in the slot (lower-center of the panel)
-    const label = this.add.text(PX - 18, PY + PH * 0.22 - 3, 'OFF', {
+    const label = this.add.text(PX - 18, PY + PH * 0.22 - 3, t('planning.toggleOff'), {
       fontSize: '15px', fontStyle: 'bold', color: '#aaddff', fontFamily,
       stroke: '#000000', strokeThickness: 3,
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
     const refresh = () => {
-      label.setText(this.removeMode ? 'ON' : 'OFF');
+      label.setText(this.removeMode ? t('planning.toggleOn') : t('planning.toggleOff'));
       label.setColor(this.removeMode ? '#ff4433' : '#aaddff');
     };
 
@@ -1032,7 +1022,7 @@ export class PlanningOverlay extends Scene {
       this.add.rectangle(cx, cy, Math.round(panelW * 1.2), Math.round(panelH * 1.2), 0x0a0a1a, 0.88).setStrokeStyle(1, 0x334455, 1);
     }
 
-    this.add.text(cx, top + 9, `LOOP  #${this.loopRunState.loop.count}`, {
+    this.add.text(cx, top + 9, t('planning.loopCount', { count: this.loopRunState.loop.count }), {
       fontSize: '11px', fontStyle: 'bold', color: '#aaddff', fontFamily,
       stroke: '#000000', strokeThickness: 2,
     }).setOrigin(0.5);
@@ -1052,9 +1042,9 @@ export class PlanningOverlay extends Scene {
     const iconY  = top + 37;
     const labelY = top + 57;
     const items: [string, string, string, string][] = [
-      ['icon_coin',  `${this.loopRunState.economy.gold}`,         '#f0c040', 'Gold' ],
-      ['icon_brick', `${this.loopRunState.economy.tilePoints}`,  '#00e5ff', 'Tile Points'],
-      ['icon_card',  `${run.deck.active.length}`,                '#ffffff', 'Cards'],
+      ['icon_coin',  `${this.loopRunState.economy.gold}`,         '#f0c040', t('planning.gold') ],
+      ['icon_brick', `${this.loopRunState.economy.tilePoints}`,  '#00e5ff', t('planning.tilePoints')],
+      ['icon_card',  `${run.deck.active.length}`,                '#ffffff', t('planning.cards')],
     ];
 
     const cellW = panelW / items.length;
@@ -1139,9 +1129,9 @@ export class PlanningOverlay extends Scene {
     const barH = 9;
 
     const bars: [string, number, number, string][] = [
-      ['HP',  hero.currentHP,       hero.maxHP,       '#cc3333'],
-      ['STA', hero.currentStamina,  hero.maxStamina,  '#cc8833'],
-      ['MP',  hero.currentMana,     hero.maxMana,     '#3355cc'],
+      [t('planning.barHp'),  hero.currentHP,       hero.maxHP,       '#cc3333'],
+      [t('planning.barSta'), hero.currentStamina,  hero.maxStamina,  '#cc8833'],
+      [t('planning.barMp'),  hero.currentMana,     hero.maxMana,     '#3355cc'],
     ];
 
     bars.forEach(([label, cur, max, color], i) => {

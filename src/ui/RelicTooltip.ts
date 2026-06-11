@@ -1,4 +1,5 @@
 import { FONTS } from '../ui/StyleConstants';
+import { t } from '../i18n/i18n';
 ﻿/**
  * RelicTooltip -- hover tooltip showing relic name, effect, and source.
  * Positioned 8px above hovered relic.
@@ -15,8 +16,12 @@ export class RelicTooltip extends Phaser.GameObjects.Container {
 
     const fontFamily = FONTS.body;
 
-    const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame' : 'panel_hover';
+    // Both panel textures load with the light-chrome tier; fall back to a
+    // tinted solid (never the green missing-texture box) if neither is present.
+    const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame'
+      : scene.textures.exists('panel_hover') ? 'panel_hover' : '__WHITE';
     this.bg = scene.add.image(0, 0, tooltipKey).setDisplaySize(180, 96);
+    if (tooltipKey === '__WHITE') this.bg.setTint(0x1a0f04).setAlpha(0.95);
     this.add(this.bg);
 
     this.nameText = scene.add.text(0, -26, '', {
@@ -50,7 +55,7 @@ export class RelicTooltip extends Phaser.GameObjects.Container {
     this.nameText.setText(name);
     this.nameText.setColor(colorHex);
     this.effectText.setText(effect);
-    this.sourceText.setText(`From: ${source}`);
+    this.sourceText.setText(t('relicTip.fromSource', { source }));
 
     // Auto-width based on longest text
     const maxWidth = Math.max(

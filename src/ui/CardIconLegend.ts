@@ -46,6 +46,32 @@ export const BRIEF_ICON_DEFINITIONS: Record<string, string> = {
   // the keyword tooltip/glossary (KeywordDefinitions.KEYWORD_DEFINITIONS).
 };
 
+/** pt-BR brief clauses (read after the icon glyph). Same keys as the English
+ *  map; bracketed [tokens] are language-neutral icons left intact. */
+const BRIEF_ICON_DEFINITIONS_PT: Record<string, string> = {
+  stam: 'é a energia que a maioria das cartas físicas gasta para ser jogada.',
+  mana: 'é a energia que a maioria das cartas mágicas gasta para ser jogada.',
+  burn: 'causa dano de fogo ao longo do tempo e pode ser detonado por algumas cartas. Escala com [int].',
+  bleed: 'causa dano ao longo do tempo, mais forte enquanto o inimigo ataca. Escala com [dex].',
+  poison: 'causa dano contínuo de decaimento lento. Escala com [int].',
+  slow: 'aumenta o tempo de recarga do ataque do inimigo e causa um pouco de dano.',
+  stun: 'congela os ataques do inimigo enquanto houver acúmulos.',
+  rage: 'é um acúmulo que você junta para alimentar efeitos de Berserk e detonadores.',
+  armor: 'absorve o dano recebido antes de chegar à sua [HP].',
+  hp: 'é a sua vida — a jornada acaba se chegar a 0.',
+  str: 'aumenta o dano de todo ataque que você joga.',
+  vit: 'aumenta sua [HP] máxima e a [armor] que suas cartas concedem.',
+  dex: 'reduz o tempo de recarga das cartas e potencializa o [bleed].',
+  int: 'potencializa [burn], [poison], [stun] e o dano de magia.',
+  spi: 'amplia toda a cura que você recebe.',
+};
+
+/** Locale-aware brief clause for an icon id (defaults to English). */
+export function getBriefIconDefinition(id: string, locale: 'pt-br' | 'en' = 'en'): string {
+  if (locale === 'pt-br' && BRIEF_ICON_DEFINITIONS_PT[id] !== undefined) return BRIEF_ICON_DEFINITIONS_PT[id];
+  return BRIEF_ICON_DEFINITIONS[id] ?? '';
+}
+
 /**
  * List, in card reading order, every explainable icon present on `card`:
  *   1. the single primary cost icon (stamina > mana), as drawn in the header's

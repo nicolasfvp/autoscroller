@@ -1,4 +1,5 @@
 import { FONTS } from '../ui/StyleConstants';
+import { t } from '../i18n/i18n';
 ﻿import Phaser from 'phaser';
 
 const inFlightScenes = new WeakSet<Phaser.Scene>();
@@ -24,7 +25,7 @@ export function playUnlockCelebration(
 
   const backdrop = scene.add.rectangle(400, 300, 450, 160, 0x000000, 0.7).setDepth(299);
 
-  const titleText = scene.add.text(400, 270, '\uD83C\uDFC6 New Unlock!', {
+  const titleText = scene.add.text(400, 270, t('unlock.title'), {
     fontSize: '32px',
     fontStyle: 'bold',
     color: '#ffd700',
@@ -42,7 +43,7 @@ export function playUnlockCelebration(
     strokeThickness: 2,
   }).setOrigin(0.5).setDepth(300).setAlpha(0);
 
-  const hintText = scene.add.text(400, 375, 'Check the Collection in CityHub!', {
+  const hintText = scene.add.text(400, 375, t('unlock.hint'), {
     fontSize: '13px',
     color: '#aaaaaa',
     fontFamily,

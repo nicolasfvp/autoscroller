@@ -1,0 +1,322 @@
+{
+  "whetstone_shard": {
+    "name": "Lasca de Amolar",
+    "description": "O primeiro ataque de cada combate causa +6 de dano."
+  },
+  "bronze_pauldron": {
+    "name": "Ombreira de Bronze",
+    "description": "Início do combate: +5 de Armadura e +1 de Fúria."
+  },
+  "stamina_flask": {
+    "name": "Frasco de Vigor",
+    "description": "+4 de Vigor máximo; +2 de Vigor no início do combate."
+  },
+  "battered_vambrace": {
+    "name": "Manopla Surrada",
+    "description": "Ao acionar Firmeza (quebra de armadura): +2 de Fúria e +3 de Armadura no início do próximo turno."
+  },
+  "iron_cestus": {
+    "name": "Cesto de Ferro",
+    "description": "A cada 4ª carta de dano: +50% de dano e aplica 3 de Sangramento."
+  },
+  "banded_greaves": {
+    "name": "Grevas Reforçadas",
+    "description": "Ao sofrer um golpe: ganha Armadura = 25% do dano evitado (limite +12/combate) e +1 de Fúria."
+  },
+  "stamina_reservoir": {
+    "name": "Reservatório de Vigor",
+    "description": "Início do combate: converte cada 3 de Vigor não gasto do combate anterior em +1 de Força neste combate (limite +5)."
+  },
+  "wargods_mantle": {
+    "name": "Manto do Deus da Guerra",
+    "description": "Todas as cartas de defesa custam 0 de Vigor. Enquanto a Armadura ≥10, os gatilhos de Fortificado disparam permanentemente."
+  },
+  "bloodgorged_heart": {
+    "name": "Coração Empapado de Sangue",
+    "description": "Ticks de Auto-Sangramento/Auto-Queimadura curam 1 de Vida e concedem +1 de Fúria. Enquanto a Fúria ≥10, os bônus de Berserk dobram."
+  },
+  "the_last_banner": {
+    "name": "O Último Estandarte",
+    "description": "Início do combate: +12 de Armadura, +5 de Fúria, +5 de Vigor. 1/combate, quando você morreria, sobrevive com 1 de Vida e ganha Fortalecer 50% por 6s."
+  },
+  "aether_lens": {
+    "name": "Lente do Éter",
+    "description": "+8 de Mana máxima; +3 de Mana no início do combate."
+  },
+  "burnt_tome": {
+    "name": "Tomo Queimado",
+    "description": "Cada tick de Queimadura em um inimigo concede +1 de Mana (limite 8/combate)."
+  },
+  "frostbite_charm": {
+    "name": "Amuleto do Frio Cortante",
+    "description": "Ao aplicar Lentidão: o inimigo também sofre 2 de dano."
+  },
+  "ember_wick": {
+    "name": "Pavio em Brasa",
+    "description": "A primeira carta de Fogo de cada combate aplica +2 de Queimadura."
+  },
+  "stormglass_lens": {
+    "name": "Lente de Vidro-Tempestade",
+    "description": "Aplicar 3+ de Lentidão em um único lançamento também aplica 1 de Atordoamento. Remove a imunidade a atordoamento do inimigo por 2s."
+  },
+  "cinder_circlet": {
+    "name": "Diadema de Cinzas",
+    "description": "Ticks de Queimadura causam +1 de dano por 3 de Inteligência. Detonações de Pira ganham +25% de dano."
+  },
+  "mana_veil": {
+    "name": "Véu de Mana",
+    "description": "Ao sofrer um golpe: gasta até 6 de Mana para anular o dano 1:1."
+  },
+  "tempest_resonator": {
+    "name": "Ressoador da Tempestade",
+    "description": "A cada 4ª carta de Magia, reembolsa o custo de mana E Ecoa 1."
+  },
+  "tideheart_amulet": {
+    "name": "Amuleto do Coração da Maré",
+    "description": "Início do combate: +1 de Mana máxima por 10% de Vida faltando. Ao curar: +2 de Mana máxima durante o combate (limite +12). Curas também aplicam 2 de Lentidão ao inimigo mais próximo."
+  },
+  "archon_codex": {
+    "name": "Códice do Arconte",
+    "description": "1/combate: ao chegar a 0 de Mana, reembolsa 12 de Mana e sua próxima carta de Magia custa 0 e Ecoa 1."
+  },
+  "bronze_scale": {
+    "name": "Escama de Bronze",
+    "description": "+15 de Vida máxima."
+  },
+  "energy_tonic": {
+    "name": "Tônico de Energia",
+    "description": "+6 de Vigor máximo; +2 de Vigor no início do combate."
+  },
+  "arcane_crystal": {
+    "name": "Cristal Arcano",
+    "description": "+10 de Mana máxima; +3 de Mana no início do combate."
+  },
+  "whetting_stone": {
+    "name": "Pedra de Amolar",
+    "description": "+1 de Força."
+  },
+  "iron_brace": {
+    "name": "Braçadeira de Ferro",
+    "description": "+1 de Vitalidade."
+  },
+  "quick_boots": {
+    "name": "Botas Ágeis",
+    "description": "+1 de Destreza."
+  },
+  "scholars_quill": {
+    "name": "Pena do Erudito",
+    "description": "+1 de Inteligência."
+  },
+  "soul_locket": {
+    "name": "Medalhão da Alma",
+    "description": "+1 de Espírito."
+  },
+  "vitality_ring": {
+    "name": "Anel de Vitalidade",
+    "description": "+10 de Vida máxima, +4 de Vigor máximo."
+  },
+  "hearty_meal": {
+    "name": "Refeição Reforçada",
+    "description": "Cura de fim de Volta +50% e concede +2 de Vigor."
+  },
+  "lucky_coin": {
+    "name": "Moeda da Sorte",
+    "description": "+2 de Ouro por cada abate."
+  },
+  "travel_boots": {
+    "name": "Botas de Viagem",
+    "description": "Ao entrar em cada tile: cura +1 de Vida."
+  },
+  "beacon_lantern": {
+    "name": "Lanterna-Farol",
+    "description": "Preços de relíquias -10%; +2 relíquias em cada loja."
+  },
+  "smoldering_torch": {
+    "name": "Tocha em Brasa",
+    "description": "A primeira carta de cada combate custa 0."
+  },
+  "iron_tooth": {
+    "name": "Dente de Ferro",
+    "description": "Primeiro ataque de cada combate: +5 de dano e +3 de Armadura."
+  },
+  "vanguard_cuffs": {
+    "name": "Braçadeiras da Vanguarda",
+    "description": "Suas 3 primeiras cartas de cada combate custam -1 de Vigor (mín. 0)."
+  },
+  "charm_of_tides": {
+    "name": "Amuleto das Marés",
+    "description": "Início do combate: +1 de Mana e +1 de Vigor."
+  },
+  "steady_compass": {
+    "name": "Bússola Firme",
+    "description": "Cartas jogadas nos 3 primeiros segundos do combate custam 50% menos."
+  },
+  "linen_wrap": {
+    "name": "Bandagem de Linho",
+    "description": "Ticks de Auto-Sangramento/Auto-Queimadura causam -1 de dano (mín. 0)."
+  },
+  "tarnished_mirror": {
+    "name": "Espelho Embaçado",
+    "description": "Ao sofrer um golpe: 25% de chance de reembolsar 1 de Vigor ou 1 de Mana."
+  },
+  "echoing_chime": {
+    "name": "Sino Ecoante",
+    "description": "A cada 6ª carta jogada: reembolsa 2 de Mana."
+  },
+  "brass_bell": {
+    "name": "Sino de Latão",
+    "description": "Início do combate: o inimigo começa com 3 de Sangramento."
+  },
+  "trailblazers_brand": {
+    "name": "Marca do Desbravador",
+    "description": "Na primeira vez que você entra em um tile de Combate a cada Volta: cura 5 de Vida e +1 de Vigor/+1 de Mana."
+  },
+  "veterans_stripe": {
+    "name": "Galão do Veterano",
+    "description": "+1 de Força por elite ou chefe derrotado nesta Jornada (limite +5)."
+  },
+  "swift_boots": {
+    "name": "Botas Velozes",
+    "description": "Recargas de cartas reduzidas em 12%."
+  },
+  "thin_deck_charm": {
+    "name": "Amuleto do Baralho Enxuto",
+    "description": "Baralho com ≤7 cartas: +35% de dano de carta e +1 compra de carta no início do combate."
+  },
+  "heavy_tome": {
+    "name": "Tomo Pesado",
+    "description": "Baralho com ≥10 cartas: +20% de dano e +4 de Vida máxima por carta excedente acima de 10."
+  },
+  "iron_will": {
+    "name": "Vontade de Ferro",
+    "description": "Ao sofrer um golpe: +3 de Armadura (limite +15/combate)."
+  },
+  "first_strike_amulet": {
+    "name": "Amuleto do Primeiro Golpe",
+    "description": "A primeira carta de cada combate causa ×2.5 de dano."
+  },
+  "gravediggers_tag": {
+    "name": "Placa do Coveiro",
+    "description": "Ao abater: +3 de Ouro e +3 de Vida."
+  },
+  "huntmasters_eye": {
+    "name": "Olho do Mestre-Caçador",
+    "description": "Ao abater: +1 de Força durante o combate (limite +6)."
+  },
+  "librarians_seal": {
+    "name": "Selo do Bibliotecário",
+    "description": "A cada 5ª carta jogada: reembolsa 3 de Mana."
+  },
+  "apothecarys_vial": {
+    "name": "Frasco do Boticário",
+    "description": "Início do combate: ganha uma Barreira única que bloqueia totalmente o próximo golpe."
+  },
+  "harmonics_charm": {
+    "name": "Amuleto Harmônico",
+    "description": "A cada 5ª carta jogada: reembolsa 1 de Vigor E 1 de Mana."
+  },
+  "glasswork_lens": {
+    "name": "Lente de Vitral",
+    "description": "+25% de dano a inimigos acima de 75% de Vida."
+  },
+  "executioners_brand": {
+    "name": "Marca do Carrasco",
+    "description": "+35% de dano a inimigos abaixo de 30% de Vida."
+  },
+  "counterweight_sigil": {
+    "name": "Sigilo do Contrapeso",
+    "description": "Ao sofrer um golpe: sua próxima carta custa 0 (consumido ao jogar)."
+  },
+  "burnished_sigil": {
+    "name": "Sigilo Polido",
+    "description": "A cada 3ª carta de Defesa concede Armadura ×1.5."
+  },
+  "vampiric_fang": {
+    "name": "Presa Vampírica",
+    "description": "Golpes que causam dano curam 1 de Vida (limite 3/s)."
+  },
+  "smoking_censer": {
+    "name": "Turíbulo Fumegante",
+    "description": "Ao acionar Firmeza (quebra de armadura): aplica 4 de Queimadura ao inimigo mais próximo."
+  },
+  "roaring_hourglass": {
+    "name": "Ampulheta Rugidora",
+    "description": "Primeiros 4s de combate: recargas de cartas -50%."
+  },
+  "lodestone_pendant": {
+    "name": "Pingente de Magnetita",
+    "description": "Ao concluir uma Volta: cura 8 de Vida e +1 de Vigor/+1 de Mana."
+  },
+  "cracked_crystal": {
+    "name": "Cristal Rachado",
+    "description": "Início do combate: sofre 6 de dano próprio, ganha +3 de Força e +3 de Inteligência durante o combate."
+  },
+  "whisperwind_sash": {
+    "name": "Faixa do Vento Sussurrante",
+    "description": "A cada 3 cartas jogadas: +1 de Destreza durante o combate (limite +5)."
+  },
+  "ash_eater": {
+    "name": "Devorador de Cinzas",
+    "description": "Na detonação de Pira: +1 de Mana e +1 de Vigor; a próxima carta custa -1 de cada."
+  },
+  "sanguine_pact": {
+    "name": "Pacto Sanguíneo",
+    "description": "+1 de Força e +1 de Inteligência por 20% de Vida máxima faltando (limite +5 cada). Cada tick de Auto-Sangramento/Auto-Queimadura causa 2 de dano ao inimigo mais próximo."
+  },
+  "berserker_ring": {
+    "name": "Anel do Berserker",
+    "description": "+60% de Força, -25% de Vida máxima. Todos os bônus de Berserk dobram."
+  },
+  "phoenix_feather": {
+    "name": "Pena de Fênix",
+    "description": "1/Jornada, quando você morreria: revive com 60% de Vida e ganha Fortalecer 100% por 8s."
+  },
+  "demon_heart": {
+    "name": "Coração de Demônio",
+    "description": "Primeiros 6s de cada combate: cartas causam ×2 de dano. Você sofre 1 de dano próprio por carta durante essa janela."
+  },
+  "stoneheart_sigil": {
+    "name": "Sigilo do Coração de Pedra",
+    "description": "Piso de Armadura = 5 (não pode cair abaixo). Quando a Armadura quebraria, ganha +6 de Armadura no início do próximo turno em vez disso."
+  },
+  "pandoras_embers": {
+    "name": "Brasas de Pandora",
+    "description": "Início do combate: aplica 3 de um acúmulo aleatório que não seja Fúria (Queimadura/Sangramento/Veneno/Lentidão/Atordoamento) ao inimigo da frente. Re-sorteado a cada combate."
+  },
+  "cinderkeep": {
+    "name": "Fortaleza de Cinzas",
+    "description": "Dano de tick de Queimadura = ⌈Queimadura atual / 4⌉ (mín. 2). Detonações de Pira causam +25% de dano."
+  },
+  "crimson_stiletto": {
+    "name": "Estilete Carmesim",
+    "description": "Ticks de Sangramento disparam 2× mais rápido. Acúmulos de Sangramento não decaem mais no mesmo tick em que foram aplicados."
+  },
+  "stormcallers_rod": {
+    "name": "Vara do Invocador de Tempestades",
+    "description": "Limite de Lentidão aumentado de 50% para 80%. Gatilhos de Eco Gélido disparam duas vezes."
+  },
+  "echo_chamber": {
+    "name": "Câmara de Eco",
+    "description": "A cada 5ª carta jogada aciona Eco 1. Cópias ecoadas não custam nada."
+  },
+  "catalyst_core": {
+    "name": "Núcleo Catalisador",
+    "description": "Todos os multiplicadores de Catalisar +1 (×2 → ×3). Efeitos de multiplicar acúmulo ignoram limites."
+  },
+  "soulforge_chalice": {
+    "name": "Cálice da Forja de Almas",
+    "description": "Efeitos de conversão também reaplicam 50% do acúmulo de origem ao inimigo após consumir."
+  },
+  "glass_cannon": {
+    "name": "Canhão de Vidro",
+    "description": "Sofre +50% de dano de todas as fontes; causa +75% de dano com cartas."
+  },
+  "hemlock_vial": {
+    "name": "Frasco de Cicuta",
+    "description": "Acúmulos de Veneno não decaem mais. Cada tick de Veneno tem 25% de chance de aplicar +1 de Veneno."
+  },
+  "constellation_sigil": {
+    "name": "Sigilo da Constelação",
+    "description": "Para cada elemento único no seu baralho, ganha +1 no atributo primário dele (Força/Vitalidade/Destreza/Inteligência/Espírito)."
+  }
+}

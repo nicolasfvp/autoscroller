@@ -3,6 +3,7 @@
 // Zero Phaser dependency.
 
 import type { RunState } from '../state/RunState';
+import { t } from '../i18n/i18n';
 import { addPendingLoot } from './PendingLoot';
 import { rollMaterialDrops, rollTileDrops } from './LootGenerator';
 import { rollShardDrops, addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
@@ -35,12 +36,12 @@ export function generateAndApplyCombatLoot(
   if (finalGold > 0) {
     run.economy.gold += finalGold;
     run.stats.goldEarned += finalGold;
-    entries.push({ label: `+${finalGold} Gold`, color: '#ffd700' });
+    entries.push({ label: t('combatLoot.gold', { finalGold }), color: '#ffd700' });
   }
 
   // XP
   if (xpAmount > 0) {
-    entries.push({ label: `+${xpAmount} XP`, color: '#00ccff' });
+    entries.push({ label: t('combatLoot.xp', { xpAmount }), color: '#00ccff' });
   }
 
   // Storehouse gathering boost is applied once at banking time in
@@ -51,7 +52,7 @@ export function generateAndApplyCombatLoot(
   for (const [mat, amount] of Object.entries(terrainMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
-      entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
+      entries.push({ label: t('combatLoot.material', { amount, mat }), color: '#e040fb' });
     }
   }
 
@@ -60,7 +61,7 @@ export function generateAndApplyCombatLoot(
   for (const [mat, amount] of Object.entries(enemyMats)) {
     if (amount > 0) {
       run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
-      entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
+      entries.push({ label: t('combatLoot.material', { amount, mat }), color: '#e040fb' });
     }
   }
 
@@ -70,7 +71,7 @@ export function generateAndApplyCombatLoot(
     for (const [mat, amount] of Object.entries(bossMats)) {
       if (amount > 0) {
         run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
-        entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
+        entries.push({ label: t('combatLoot.material', { amount, mat }), color: '#e040fb' });
       }
     }
   }
@@ -89,11 +90,11 @@ export function generateAndApplyCombatLoot(
   );
   for (const id of Object.keys(shardDelta) as ElementId[]) {
     const n = shardDelta[id] ?? 0;
-    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name} shard`, color: ELEMENTS[id].color });
+    if (n > 0) entries.push({ label: t('combatLoot.shard', { n, name: ELEMENTS[id].name }), color: ELEMENTS[id].color });
   }
   for (const id of Object.keys(elementsAdded) as ElementId[]) {
     const n = elementsAdded[id] ?? 0;
-    if (n > 0) entries.push({ label: `+${n} ${ELEMENTS[id].name}!`, color: ELEMENTS[id].color });
+    if (n > 0) entries.push({ label: t('combatLoot.element', { n, name: ELEMENTS[id].name }), color: ELEMENTS[id].color });
   }
 
   // Tile drops (rare; 15% chance per terrain combat). Writes to the
@@ -103,7 +104,7 @@ export function generateAndApplyCombatLoot(
   for (const drop of tileDrops) {
     const current = run.economy.tileInventory[drop.tileType] ?? 0;
     run.economy.tileInventory[drop.tileType] = current + drop.count;
-    entries.push({ label: `+${drop.count} ${drop.tileType} tile`, color: '#80ffd0' });
+    entries.push({ label: t('combatLoot.tile', { count: drop.count, tileType: drop.tileType }), color: '#80ffd0' });
   }
 
   // Card drops removed in Phase 10 — enemies award gold + materials + shards only.

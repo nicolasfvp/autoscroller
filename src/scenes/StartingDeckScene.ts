@@ -7,6 +7,8 @@
 // confirm and hand the chosen deck back to CharacterSelectScene.
 
 import { Scene } from 'phaser';
+import { t } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
 import { createCardVisual, STANDARD_CARD_WIDTH } from '../ui/CardVisual';
@@ -74,31 +76,21 @@ export class StartingDeckScene extends Scene {
       this.add.image(400, 300, 'deck_frame').setDisplaySize(792, 596).setDepth(-1);
     }
 
-    const heroName = this.className === 'mage' ? 'Mage' : 'Warrior';
-    this.add.text(400, 26, `Choose a Starting Deck — ${heroName}`, {
+    const heroName = this.className === 'mage' ? t('startDeck.heroMage') : t('startDeck.heroWarrior');
+    this.add.text(400, 26, t('startDeck.title', { heroName }), {
       fontSize: '22px', fontStyle: 'bold', color: GOLD, fontFamily: FF,
       stroke: '#000', strokeThickness: 5,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    this.add.text(400, 54, 'Pick a deck template — each is built around a different playstyle.', {
+    this.add.text(400, 54, t('startDeck.subtitle'), {
       fontSize: '12px', color: DIM, fontFamily: FF,
     }).setOrigin(0.5);
 
-    const cancelImg = this.add.image(0, 0, 'btn_cancel_remove').setScale(92 / 1821);
-    const cancelCont = this.add.container(750, 26, [cancelImg])
-      .setSize(92, 44).setInteractive({ useHandCursor: true });
-    cancelCont.on('pointerover', () => this.tweens.add({ targets: cancelCont, scale: 1.05, duration: 100 }));
-    cancelCont.on('pointerout',  () => this.tweens.add({ targets: cancelCont, scale: 1,    duration: 100 }));
-    cancelCont.on('pointerdown', () => this.cancel());
+    localizedImageButton(this, 750, 26, 'btn_cancel_remove', t('common.cancel'), 92, () => this.cancel(), { height: 44 });
 
     this.renderRows();
 
-    const startImg = this.add.image(0, 0, 'btn_start_run_deck').setScale(240 / 2030);
-    const startCont = this.add.container(400, 560, [startImg])
-      .setSize(240, 92).setInteractive({ useHandCursor: true });
-    startCont.on('pointerover', () => this.tweens.add({ targets: startCont, scale: 1.05, duration: 100 }));
-    startCont.on('pointerout',  () => this.tweens.add({ targets: startCont, scale: 1,    duration: 100 }));
-    startCont.on('pointerdown', () => this.confirm());
+    localizedImageButton(this, 400, 560, 'btn_start_run_deck', t('btn.startRun'), 240, () => this.confirm(), { height: 92 });
 
     this.input.keyboard?.on('keydown-ESC', () => this.cancel());
     this.input.keyboard?.on('keydown-UP', () => this.move(-1));

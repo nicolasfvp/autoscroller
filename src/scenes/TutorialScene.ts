@@ -17,6 +17,7 @@ import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import type { MetaState } from '../state/MetaState';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
+import { t } from '../i18n/i18n';
 
 interface TutorialTopic {
   id: string;
@@ -25,67 +26,37 @@ interface TutorialTopic {
   body: string;
 }
 
-const TOPICS: TutorialTopic[] = [
-  {
-    id: 'combat',
-    label: '⚔ Combat',
-    title: 'Auto-Combat',
-    body:
-      'Your hero plays cards on cooldown — you do not click to attack.\n' +
-      'Cards in the hand fire one at a time from top to bottom.\n' +
-      'Light cards (low cooldown) cycle fast; heavy cards hit harder but recharge slow.\n\n' +
-      'KEYWORDS (Brace, Vengeance, Haste, Pierce, Exhaust) change HOW a card resolves.\n' +
-      'The first time you play a card with a new keyword, the game pauses and\n' +
-      'explains it.\n\n' +
-      'STACKS are the colored tokens an attack piles on a target — Burn, Bleed\n' +
-      'and Poison deal damage every tick; Stun and Slow hold the enemy back;\n' +
-      'Rage powers your own payoffs. STAT-SCALING means a card grows with your\n' +
-      'attributes (STR/DEX/INT/VIT/SPI) — e.g. more STR = more damage.\n' +
-      'These tokens are NOT pop-up taught: open the "?" Glossary any time for\n' +
-      'a full reference of every stack and stat.',
-  },
-  {
-    id: 'deck',
-    label: '📜 Deck',
-    title: 'Your Deck',
-    body:
-      'Before each run, pick a deck TEMPLATE — a 5-card starter tuned for\n' +
-      'a particular playstyle (Iron Wall, Berserker, Pyromancer, …).\n\n' +
-      'Cards play themselves in combat, top to bottom, on cooldown.\n' +
-      'The Deck panel (mid-run, from the loop overlay) lets you REORDER\n' +
-      'cards — new ones you forge or find are added straight to it.',
-  },
-  {
-    id: 'relics',
-    label: '💎 Relics',
-    title: 'Relics',
-    body:
-      'Relics are passive artifacts you BUY in the shop — they are never\n' +
-      'equipped or unequipped, just owned.\n\n' +
-      'Each relic listens for a trigger (you took a hit, an enemy died,\n' +
-      'armor broke, a stack tipped past a threshold, …) and fires a\n' +
-      'bonus effect when it sees that trigger.\n\n' +
-      'In the shop, relics that combo with your deck (≥ 2 cards share a\n' +
-      'keyword) glow gold — those are the higher-value picks for the\n' +
-      'archetype you are running.',
-  },
-  {
-    id: 'loop',
-    label: '🗺 Tiles',
-    title: 'Tiles & Placement',
-    body:
-      'During planning you place tiles on the loop path using Tile Points (TP).\n\n' +
-      '  • Click a tile in the inventory to select it, then click an empty\n' +
-      '    slot on the path to place it.\n' +
-      '  • Each tile costs TP. Your TP balance shows above the inventory.\n' +
-      '  • Combat tiles reserve adjacent slots. Reserved slots only accept\n' +
-      '    SUBTILES (ambush, mana well, war horn, …) that buff the fight.\n' +
-      '  • Remove Mode (toggle button) refunds 50% TP when you click a\n' +
-      '    placed tile — use it to rebuild your plan.\n\n' +
-      'Beat the boss to exit safely with full rewards. Die mid-loop and\n' +
-      'you keep only a fraction of what you earned.',
-  },
-];
+// Built per-scene so the active locale is resolved at render time (the i18n
+// table is read synchronously by t(); a module-level const would freeze the
+// translation at import time and miss runtime language switches).
+function buildTopics(): TutorialTopic[] {
+  return [
+    {
+      id: 'combat',
+      label: t('tutorial.tabCombat'),
+      title: t('tutorial.combatTitle'),
+      body: t('tutorial.combatBody'),
+    },
+    {
+      id: 'deck',
+      label: t('tutorial.tabDeck'),
+      title: t('tutorial.deckTitle'),
+      body: t('tutorial.deckBody'),
+    },
+    {
+      id: 'relics',
+      label: t('tutorial.tabRelics'),
+      title: t('tutorial.relicsTitle'),
+      body: t('tutorial.relicsBody'),
+    },
+    {
+      id: 'loop',
+      label: t('tutorial.tabTiles'),
+      title: t('tutorial.tilesTitle'),
+      body: t('tutorial.tilesBody'),
+    },
+  ];
+}
 
 export class TutorialScene extends Scene {
   private metaState!: MetaState;
@@ -96,6 +67,7 @@ export class TutorialScene extends Scene {
   private bodyText!: Phaser.GameObjects.Text;
   private tabButtons: Phaser.GameObjects.Text[] = [];
   private selectedIndex = 0;
+  private topics: TutorialTopic[] = [];
 
   constructor() {
     super(SCENE_KEYS.TUTORIAL);
@@ -106,6 +78,7 @@ export class TutorialScene extends Scene {
     this.parentSceneKey = data?.parentScene ?? SCENE_KEYS.CITY_HUB;
     this.selectedIndex = 0;
     this.tabButtons = [];
+    this.topics = buildTopics();
 
     // Replay flows always land on the tutorial; only the first-run flow
     // honors the seen flag (so returning players don't get a slideshow on
@@ -130,13 +103,13 @@ export class TutorialScene extends Scene {
     this.cameras.main.setBackgroundColor(COLORS.background);
 
     // Title
-    this.add.text(LAYOUT.centerX, 50, 'Tutorial', {
+    this.add.text(LAYOUT.centerX, 50, t('tutorial.title'), {
       ...FONTS.title,
       color: COLORS.accent,
       fontFamily: FONTS.body,
     }).setOrigin(0.5);
 
-    this.add.text(LAYOUT.centerX, 92, 'Pick a topic — read in any order. The game also pauses to teach each new keyword (Brace, Vengeance, Haste, Pierce, Exhaust); stacks & stats live in the "?" Glossary.', {
+    this.add.text(LAYOUT.centerX, 92, t('tutorial.subtitle'), {
       fontSize: '12px',
       color: COLORS.textSecondary,
       fontFamily: FONTS.body,
@@ -172,14 +145,14 @@ export class TutorialScene extends Scene {
     }).setOrigin(0, 0);
 
     // Done / close button
-    const closeLabel = this.replayMode ? 'Close' : 'Start Game';
+    const closeLabel = this.replayMode ? t('tutorial.close') : t('tutorial.startGame');
     createImageButton(this, LAYOUT.centerX, 540, closeLabel, () => this.completeTutorial(), 240, 56);
 
 
     // Tab-key cycling between topics for keyboard-driven readers.
     this.input.keyboard?.on('keydown-TAB', (ev: KeyboardEvent) => {
       ev.preventDefault();
-      const next = (this.selectedIndex + 1) % TOPICS.length;
+      const next = (this.selectedIndex + 1) % this.topics.length;
       this.selectTab(next);
     });
 
@@ -190,9 +163,9 @@ export class TutorialScene extends Scene {
 
   private renderTabs(): void {
     const baseY = 150;
-    const totalWidth = TOPICS.length * 140;
+    const totalWidth = this.topics.length * 140;
     const startX = (LAYOUT.canvasWidth - totalWidth) / 2;
-    TOPICS.forEach((topic, i) => {
+    this.topics.forEach((topic, i) => {
       const x = startX + i * 140 + 70;
       const btn = this.add.text(x, baseY, topic.label, {
         fontSize: '16px',
@@ -224,7 +197,7 @@ export class TutorialScene extends Scene {
         btn.setBackgroundColor('#2a1a3e');
       }
     });
-    const topic = TOPICS[index];
+    const topic = this.topics[index];
     this.titleText.setText(topic.title);
     this.bodyText.setText(topic.body);
   }

@@ -1,0 +1,65 @@
+{
+  "forge": {
+    "name": "Forja",
+    "description": "Reduz o custo em Ouro para forjar cartas na Forja",
+    "tiers": [
+      "−5% no custo em Ouro da Forja",
+      "−10% no custo em Ouro da Forja",
+      "−15% no custo em Ouro da Forja",
+      "−20% no custo em Ouro da Forja",
+      "−25% no custo em Ouro da Forja",
+      "−30% no custo em Ouro da Forja"
+    ]
+  },
+  "library": {
+    "name": "Biblioteca",
+    "description": "Acelera o XP de classe para desbloquear habilidades passivas mais rápido",
+    "tiers": [
+      "+15% de XP de classe ganho",
+      "+30% de XP de classe ganho",
+      "+45% de XP de classe ganho"
+    ]
+  },
+  "tavern": {
+    "name": "Taverna",
+    "description": "Inicie novas jornadas e ganhe bônus iniciais",
+    "tiers": [
+      "Comece jornadas com +20 de Ouro",
+      "Comece com +50 de Ouro e veja o histórico de jornadas",
+      "Comece com +100 de Ouro e insira sementes personalizadas"
+    ]
+  },
+  "workshop": {
+    "name": "Oficina",
+    "description": "Desbloqueia tiles de terreno e amplificadores de combate de subtile para a volta",
+    "tiers": [
+      "Desbloqueia o Deserto + subtiles de Trompa de Guerra / Emboscada",
+      "Desbloqueia o Pântano + subtiles de Magma / Totem de Sangramento",
+      "Desbloqueia o Cemitério, os Campos de Lava + subtiles de Altar de Queimadura / Ressonância"
+    ]
+  },
+  "shrine": {
+    "name": "Santuário",
+    "description": "Desbloqueia relíquias poderosas no conjunto de saques",
+    "tiers": [
+      "Desbloqueia Vontade de Ferro, Amuleto do Primeiro Golpe, Talismã do Baralho Enxuto, Botas Velozes, Tomo Pesado",
+      "Desbloqueia Anel do Berserker, Canhão de Vidro, Núcleo Catalisador e mais",
+      "Desbloqueia Pena de Fênix, Coração de Demônio, Pacto Sanguíneo e mais",
+      "Desbloqueia as relíquias lendárias: Manto do Deus da Guerra, Códice do Arconte e mais"
+    ]
+  },
+  "storehouse": {
+    "name": "Depósito",
+    "description": "Melhora a coleta de materiais e a retenção ao morrer",
+    "tiers": [
+      "+10% na coleta de materiais",
+      "Retenha 30% dos materiais ao morrer",
+      "+15% na coleta de materiais",
+      "Retenha 35% dos materiais ao morrer",
+      "+20% na coleta e retenha 40% ao morrer",
+      "Retenha 43% dos materiais ao morrer",
+      "+25% na coleta e retenha 47% ao morrer",
+      "Retenha 50% dos materiais ao morrer"
+    ]
+  }
+}

@@ -3,6 +3,7 @@
 // DailyRunTicker. Toggle visibility with the 'T' key.
 
 import Phaser from 'phaser';
+import { t } from '../i18n/i18n';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { utcDateString } from '../systems/DailySeed';
@@ -26,11 +27,11 @@ const STATUS_COLOR: Record<MqttStatus, string> = {
 };
 
 const STATUS_LABEL: Record<MqttStatus, string> = {
-  idle: 'idle',
-  connecting: 'connecting…',
-  reconnecting: 'reconnecting…',
-  connected: 'live',
-  failed: 'offline',
+  idle: t('dailyTicker.statusIdle'),
+  connecting: t('dailyTicker.statusConnecting'),
+  reconnecting: t('dailyTicker.statusReconnecting'),
+  connected: t('dailyTicker.statusLive'),
+  failed: t('dailyTicker.statusOffline'),
 };
 
 export interface DailyTickerPanelOptions {
@@ -67,7 +68,7 @@ export class DailyTickerPanel {
       .setStrokeStyle(1, 0x666666, 0.8);
     this.container.add(this.bg);
 
-    this.headerTxt = scene.add.text(8, 6, `DAILY ${utcDateString()}`, {
+    this.headerTxt = scene.add.text(8, 6, t('dailyTicker.header', { date: utcDateString() }), {
       fontFamily: FONTS.body,
       fontSize: '12px',
       fontStyle: 'bold',
@@ -95,7 +96,7 @@ export class DailyTickerPanel {
       this.container.add(row);
     }
 
-    this.emptyTxt = scene.add.text(PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 'waiting for racers…', {
+    this.emptyTxt = scene.add.text(PANEL_WIDTH / 2, PANEL_HEIGHT / 2, t('dailyTicker.waitingForRacers'), {
       fontFamily: FONTS.body,
       fontSize: '11px',
       color: COLORS.textSecondary,
@@ -167,7 +168,7 @@ export class DailyTickerPanel {
 
 function formatRow(u: DailyRunUpdate, isSelf: boolean): string {
   const prefix = isSelf ? '★ ' : '  ';
-  const name = (u.nickname || 'anon').slice(0, 10).padEnd(10, ' ');
+  const name = (u.nickname || t('dailyTicker.anonName')).slice(0, 10).padEnd(10, ' ');
   const wave = `W${u.wave}`.padStart(3, ' ');
   const hp = u.alive ? `${Math.round(u.hpPct * 100)}%`.padStart(4, ' ') : '  --';
   return `${prefix}${name} ${wave} ${hp}`;

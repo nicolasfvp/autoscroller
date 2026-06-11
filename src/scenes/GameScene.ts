@@ -15,6 +15,7 @@ import { resolveInlineEvent } from '../systems/InlineEvents';
 import { SeededRNG } from '../systems/SeededRNG';
 import { setActiveRNG, rand } from '../systems/SharedRNG';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { loadLightChrome, loaderTarget } from './AssetManifest';
 import { dailyRunBroadcaster } from '../systems/DailyRunBroadcaster';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { DailyTickerPanel } from '../ui/DailyTickerPanel';
@@ -61,6 +62,14 @@ export class GameScene extends Scene {
 
   constructor() {
     super(SCENE_KEYS.GAME);
+  }
+
+  // Reached directly from the menu (Continue / Daily). Ensure the light run
+  // visuals (hero, tiles, landmarks, parallax, HUD panels) are present before
+  // create() so a fast click on a cold cache never shows missing-texture boxes.
+  // Dedupes to a no-op once the background warm (GlobalSound) has loaded them.
+  preload(): void {
+    loadLightChrome(loaderTarget(this.load));
   }
 
   private introPlaying = false;

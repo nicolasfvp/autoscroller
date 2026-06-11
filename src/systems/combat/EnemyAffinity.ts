@@ -26,7 +26,7 @@ export function applyEnemyAffinityEffect(
   affinity: ElementId,
   isBoss: boolean,
 ): AffinityResult | null {
-  const m = isBoss ? 2 : 1;
+  const m = 1;
 
   switch (affinity) {
     case 'attack':
@@ -104,7 +104,7 @@ export function applyEnemyAffinityEffect(
       // lowered to 10 so low-damage decks can still break through and close.
       const stam = 1 * m;
       const armor = 1 * m;
-      const cap = isBoss ? 40 : 10;
+      const cap = isBoss ? 20 : 10;
       state.heroStamina = Math.max(0, state.heroStamina - stam);
       if (state.enemyDefense < cap) {
         state.enemyDefense = Math.min(cap, state.enemyDefense + armor);

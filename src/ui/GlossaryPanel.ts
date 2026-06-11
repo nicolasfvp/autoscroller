@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
-import { KEYWORD_DEFINITIONS, TOKEN_GLOSSARY, type KeywordDef } from './KeywordDefinitions';
+import { getKeywordDefinitions, getTokenGlossary, type KeywordDef } from './KeywordDefinitions';
 import { renderTokenText } from './IconTokens';
 import { keywordIntro } from '../systems/keywordIntro/KeywordIntroService';
+import { t, getLocale } from '../i18n/i18n';
 
 const OVERLAY_DEPTH = 11000;
 const BACKDROP_ALPHA = 0.72;
@@ -22,9 +23,9 @@ const CONTENT_W = PANEL_W - PAD_H * 2;
 const CONTENT_H = PANEL_H - HEADER_H - PAD_V * 2;
 
 const CATEGORY_LABEL: Record<KeywordDef['category'], string> = {
-  stack: 'Stacks',
-  modifier: 'Keywords',
-  stat: 'Stats',
+  stack: t('glossary.categoryStacks'),
+  modifier: t('glossary.categoryKeywords'),
+  stat: t('glossary.categoryStats'),
 };
 
 const CATEGORY_COLOR: Record<KeywordDef['category'], string> = {
@@ -93,7 +94,7 @@ export function openGlossary(scene: Phaser.Scene, onClose?: () => void): Glossar
   overlay.add(panelHit);
 
   // Title — centered
-  const title = scene.add.text(PANEL_X + PANEL_W / 2, PANEL_Y + PAD_V, 'Glossary', {
+  const title = scene.add.text(PANEL_X + PANEL_W / 2, PANEL_Y + PAD_V, t('glossary.title'), {
     fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily: FONTS.body,
   }).setOrigin(0.5, 0);
   overlay.add(title);
@@ -121,10 +122,12 @@ export function openGlossary(scene: Phaser.Scene, onClose?: () => void): Glossar
 
   // Build content
   const seenSet = keywordIntro.getSeenKeywords();
+  const loc = getLocale();
+  const tokenGlossary = getTokenGlossary(loc);
   const grouped: Record<KeywordDef['category'], KeywordDef[]> = {
-    stack:    TOKEN_GLOSSARY.filter((d) => d.category === 'stack'),
-    modifier: KEYWORD_DEFINITIONS.filter((def) => seenSet.has(def.keyword)),
-    stat:     TOKEN_GLOSSARY.filter((d) => d.category === 'stat'),
+    stack:    tokenGlossary.filter((d) => d.category === 'stack'),
+    modifier: getKeywordDefinitions(loc).filter((def) => seenSet.has(def.keyword)),
+    stat:     tokenGlossary.filter((d) => d.category === 'stat'),
   };
 
   let cursorY = CONTENT_Y;
@@ -181,7 +184,7 @@ export function openGlossary(scene: Phaser.Scene, onClose?: () => void): Glossar
   const scrollArrow = scene.add.text(
     PANEL_X + PANEL_W / 2,
     PANEL_Y + PANEL_H - PAD_V - 4,
-    '▼  scroll for more',
+    t('glossary.scrollForMore'),
     { fontSize: '11px', color: '#9a6030', fontFamily: FONTS.body },
   ).setOrigin(0.5, 1).setAlpha(maxScroll > 0 ? 1 : 0);
   overlay.add(scrollArrow);

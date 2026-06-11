@@ -4,7 +4,7 @@
 // rather than calling effect handlers in isolation — the audit found that
 // handler-only tests gave false positives for relics that never actually fired.
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { createCombatState, type CombatState } from '../../../src/systems/combat/CombatState';
 import { CombatEngine } from '../../../src/systems/combat/CombatEngine';
 import {

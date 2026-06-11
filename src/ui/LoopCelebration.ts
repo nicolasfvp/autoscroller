@@ -1,4 +1,5 @@
 import { FONTS } from '../ui/StyleConstants';
+import { t } from '../i18n/i18n';
 ﻿import Phaser from 'phaser';
 
 const sceneActive = (scene: Phaser.Scene): boolean =>
@@ -31,7 +32,7 @@ export class LoopCelebration {
     };
 
     // "LOOP N COMPLETE" text
-    const loopText = scene.add.text(400, 280, `LOOP ${loopNumber} COMPLETE`, {
+    const loopText = scene.add.text(400, 280, t('loopCeleb.loopComplete', { loopNumber }), {
       fontSize: '32px',
       fontStyle: 'bold',
       color: '#ffd700',
@@ -57,7 +58,7 @@ export class LoopCelebration {
       },
     });
 
-    const tpText = scene.add.text(400, 320, `+${tilePointsEarned} Tile Points`, {
+    const tpText = scene.add.text(400, 320, t('loopCeleb.tilePoints', { tilePointsEarned }), {
       fontSize: '24px',
       fontStyle: 'bold',
       color: '#00e5ff',

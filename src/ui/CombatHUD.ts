@@ -4,6 +4,7 @@
 import type { CombatState } from '../systems/combat/CombatState';
 import { FONTS } from './StyleConstants';
 import { computeHeroChips, computeEnemyChips, type EffectChip } from './EffectIcons';
+import { getLocale } from '../i18n/i18n';
 
 /**
  * Pure visibility logic for HUD widgets. Extracted so the toggle logic is
@@ -18,7 +19,7 @@ export interface HUDVisibility {
 }
 export function computeHUDVisibility(_state: HUDVisibilityInput): HUDVisibility {
   return {
-    staminaLabel: '⚡ STA',
+    staminaLabel: getLocale() === 'pt-br' ? '⚡ VIG' : '⚡ STA',
   };
 }
 
@@ -69,7 +70,9 @@ const GHOST_ENEMY_HP = 0xff8800; // HP vermelho → ghost laranja
 const GHOST_ALPHA = 0.80;
 
 // Status-chip row geometry (effect icons row under each panel)
-const CHIP_POOL_SIZE = 10;
+// Sized for the hero row's worst case: 5 stat totals + armor + 2 armed
+// triggers + 3 self-DoTs + a couple of timed auras.
+const CHIP_POOL_SIZE = 16;
 const CHIP_HEIGHT = 36;
 const CHIP_GAP = 4;
 const CHIP_ROW_GAP = 40;
@@ -86,6 +89,11 @@ interface ChipDisplay {
   label: Phaser.GameObjects.Text;
   /** Current tooltip string for this slot (updated each layout pass). */
   tooltip: string;
+  /** Last (key,label) rendered in this slot. Drives the change-pulse: a value
+   *  going up or down briefly pops, but a static value never re-animates, and
+   *  a slot reused for a different chip (row reflow) stays calm. */
+  lastKey?: string;
+  lastLabel?: string;
 }
 
 // Shared hover tooltip geometry.
@@ -480,6 +488,10 @@ export class CombatHUD {
         slot.container.setVisible(false);
         slot.icon.setVisible(false);
         slot.tooltip = '';
+        slot.lastKey = undefined;
+        slot.lastLabel = undefined;
+        this.scene.tweens?.killTweensOf(slot.label);
+        slot.label.setScale(1);
         continue;
       }
       if (this.scene.textures.exists(chip.iconKey)) {
@@ -490,6 +502,23 @@ export class CombatHUD {
       slot.label.setText(chip.label);
       slot.label.setColor(chip.color);
       slot.tooltip = chip.tooltip;
+
+      // Change-pulse: same chip, new value → a brief scale pop (covers both
+      // rises and drops). Different key in this slot means a row reflow shuffled
+      // chips between slots, not a real value change, so it stays calm.
+      const changed = slot.lastKey === chip.key
+        && slot.lastLabel !== undefined && slot.lastLabel !== chip.label;
+      slot.lastKey = chip.key;
+      slot.lastLabel = chip.label;
+      if (changed && !this._destroyed && this.scene.tweens) {
+        this.scene.tweens.killTweensOf(slot.label);
+        slot.label.setScale(1);
+        this.scene.tweens.add({
+          targets: slot.label,
+          scaleX: 1.4, scaleY: 1.4,
+          duration: 120, yoyo: true, ease: 'Quad.easeOut',
+        });
+      }
 
       const hasIcon = slot.icon.visible;
       const iconSlotW = hasIcon ? Math.round(CHIP_HEIGHT * (657 / 254) * CHIP_ICON_SLOT_RATIO) : 0;

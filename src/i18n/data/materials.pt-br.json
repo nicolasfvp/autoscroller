@@ -1,0 +1,11 @@
+{
+  "materials": {
+    "wood": { "name": "Madeira", "description": "Colhida nas florestas" },
+    "stone": { "name": "Pedra", "description": "Extraída de terrenos rochosos" },
+    "iron": { "name": "Ferro", "description": "Fundido a partir de jazidas de minério" },
+    "bone": { "name": "Osso", "description": "Coletado dos mortos-vivos" },
+    "herbs": { "name": "Ervas", "description": "Colhidas em pântanos e brejos" },
+    "crystal": { "name": "Cristal", "description": "Encontrado em regiões vulcânicas" },
+    "essence": { "name": "Essência", "description": "Rara energia mágica de inimigos poderosos" }
+  }
+}

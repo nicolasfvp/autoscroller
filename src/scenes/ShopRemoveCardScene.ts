@@ -6,6 +6,8 @@
 // ShopSystem.removeCard and returns to the parent shop.
 
 import { Scene } from 'phaser';
+import { t } from '../i18n/i18n';
+import { localizedImageButton } from '../ui/LocalizedButton';
 import { getRun } from '../state/RunState';
 import { ShopSystem, MIN_DECK_SIZE } from '../systems/ShopSystem';
 import { AudioManager } from '../systems/AudioManager';
@@ -88,19 +90,14 @@ export class ShopRemoveCardScene extends Scene {
     this.add.rectangle(LAYOUT.centerX, HEADER_BOTTOM / 2, LAYOUT.canvasWidth, HEADER_BOTTOM, 0x14100c, 0.86)
       .setStrokeStyle(1, CHROME.panelStroke);
 
-    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, 'REMOVE A CARD', {
+    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, t('shopRemove.title'), {
       fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
       fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
 
-    const cancelImg = this.add.image(0, 0, 'btn_cancel_remove').setScale(110 / 1821);
-    const cancelCont = this.add.container(70, HEADER_BOTTOM / 2, [cancelImg])
-      .setSize(110, 52).setInteractive({ useHandCursor: true });
-    cancelCont.on('pointerover', () => this.tweens.add({ targets: cancelCont, scale: 1.05, duration: 100 }));
-    cancelCont.on('pointerout',  () => this.tweens.add({ targets: cancelCont, scale: 1,    duration: 100 }));
-    cancelCont.on('pointerdown', () => this.close());
+    localizedImageButton(this, 70, HEADER_BOTTOM / 2, 'btn_cancel_remove', t('common.cancel'), 110, () => this.close(), { height: 52 });
 
-    this.add.text(740, HEADER_BOTTOM / 2, `Cost: ${this.cost}g`, {
+    this.add.text(740, HEADER_BOTTOM / 2, t('shopRemove.cost', { cost: this.cost }), {
       fontSize: '15px', fontStyle: 'bold', color: '#ffe28a',
       fontFamily: FONTS.body, stroke: '#000', strokeThickness: 3,
     }).setOrigin(1, 0.5);
@@ -150,7 +147,7 @@ export class ShopRemoveCardScene extends Scene {
     this.resolveTier(total);
 
     if (total === 0) {
-      this.add.text(LAYOUT.centerX, LAYOUT.centerY, 'Deck is empty.', {
+      this.add.text(LAYOUT.centerX, LAYOUT.centerY, t('shopRemove.deckEmpty'), {
         fontSize: '20px', color: '#998877', fontFamily: FONTS.body,
         fontStyle: 'italic',
       }).setOrigin(0.5);
@@ -194,11 +191,11 @@ export class ShopRemoveCardScene extends Scene {
     const minDeck = run.deck.active.length <= MIN_DECK_SIZE;
     let msg: string;
     if (minDeck) {
-      msg = 'Deck is at the minimum size — cannot remove any more cards.';
+      msg = t('shopRemove.hintMinDeck');
     } else if (!canAfford) {
-      msg = `You need ${this.cost}g to remove a card.`;
+      msg = t('shopRemove.hintNeedGold', { cost: this.cost });
     } else {
-      msg = `Click a card to choose it, then confirm to banish it for ${this.cost}g.`;
+      msg = t('shopRemove.hintClickCard', { cost: this.cost });
     }
     this.add.text(LAYOUT.centerX, HINT_Y, msg, {
       fontSize: '12px', color: '#bba98a', fontFamily: FONTS.body,
@@ -228,7 +225,7 @@ export class ShopRemoveCardScene extends Scene {
       );
     }
 
-    overlay.add(this.add.text(LAYOUT.centerX, 100, 'BANISH THIS CARD?', {
+    overlay.add(this.add.text(LAYOUT.centerX, 100, t('shopRemove.banishConfirm'), {
       fontSize: '24px', fontStyle: 'bold', color: '#ffd0c0',
       fontFamily: FONTS.body, stroke: '#1a0500', strokeThickness: 5,
     }).setOrigin(0.5).setShadow(2, 2, '#000', 4, true, true));
@@ -237,17 +234,12 @@ export class ShopRemoveCardScene extends Scene {
     disableCardFaceInput(preview);
     overlay.add(preview);
 
-    overlay.add(this.add.text(LAYOUT.centerX, 420, `−${this.cost} gold`, {
+    overlay.add(this.add.text(LAYOUT.centerX, 420, t('shopRemove.goldCost', { cost: this.cost }), {
       fontSize: '20px', fontStyle: 'bold', color: '#ff8866',
       fontFamily: FONTS.body, stroke: '#1a0500', strokeThickness: 4,
     }).setOrigin(0.5).setShadow(1, 1, '#000', 3, true, true));
 
-    const banishImg = this.add.image(0, 0, 'btn_banish_remove').setScale(140 / 2103);
-    const banishCont = this.add.container(LAYOUT.centerX - 80, 490, [banishImg])
-      .setSize(140, 50).setInteractive({ useHandCursor: true });
-    banishCont.on('pointerover', () => this.tweens.add({ targets: banishCont, scale: 1.05, duration: 100 }));
-    banishCont.on('pointerout',  () => this.tweens.add({ targets: banishCont, scale: 1,    duration: 100 }));
-    banishCont.on('pointerdown', () => {
+    overlay.add(localizedImageButton(this, LAYOUT.centerX - 80, 490, 'btn_banish_remove', t('btn.banish'), 140, () => {
       const run = getRun();
       const current = run.economy.removalsThisShop ?? 0;
       if (ShopSystem.removeCard(run, deckIndex, current)) {
@@ -257,19 +249,12 @@ export class ShopRemoveCardScene extends Scene {
       overlay.destroy(true);
       this.confirmOverlay = undefined;
       this.close();
-    });
-    overlay.add(banishCont);
+    }, { height: 50 }));
 
-    const keepImg = this.add.image(0, 0, 'btn_keep_remove').setScale(140 / 1774);
-    const keepCont = this.add.container(LAYOUT.centerX + 80, 490, [keepImg])
-      .setSize(140, 70).setInteractive({ useHandCursor: true });
-    keepCont.on('pointerover', () => this.tweens.add({ targets: keepCont, scale: 1.05, duration: 100 }));
-    keepCont.on('pointerout',  () => this.tweens.add({ targets: keepCont, scale: 1,    duration: 100 }));
-    keepCont.on('pointerdown', () => {
+    overlay.add(localizedImageButton(this, LAYOUT.centerX + 80, 490, 'btn_keep_remove', t('btn.keep'), 140, () => {
       overlay.destroy(true);
       this.confirmOverlay = undefined;
-    });
-    overlay.add(keepCont);
+    }, { height: 70 }));
 
     this.confirmOverlay = overlay;
   }

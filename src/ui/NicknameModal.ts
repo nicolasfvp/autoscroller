@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
+import { t } from '../i18n/i18n';
 
 const MAX_LEN = 16;
 const VALID_CHARS = /^[a-zA-Z0-9_\-]$/;
@@ -40,7 +41,7 @@ export class NicknameModal {
       .setStrokeStyle(2, 0xffd700, 0.9);
     this.container.add(panel);
 
-    const title = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 70, opts.title ?? 'Choose your daily nickname', {
+    const title = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 70, opts.title ?? t('nickname.title'), {
       fontFamily: FONTS.body,
       fontSize: '18px',
       fontStyle: 'bold',
@@ -48,7 +49,7 @@ export class NicknameModal {
     }).setOrigin(0.5);
     this.container.add(title);
 
-    const hint = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 42, `Up to ${MAX_LEN} characters. A–Z, 0–9, _ -`, {
+    const hint = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 42, t('nickname.hint', { max: MAX_LEN }), {
       fontFamily: FONTS.body,
       fontSize: '11px',
       color: COLORS.textSecondary,
@@ -83,9 +84,9 @@ export class NicknameModal {
     });
 
     // Confirm + cancel buttons
-    const confirmBtn = makeBtn(scene, LAYOUT.centerX - 90, LAYOUT.centerY + 60, 'START', () => this.confirm());
+    const confirmBtn = makeBtn(scene, LAYOUT.centerX - 90, LAYOUT.centerY + 60, t('nickname.start'), () => this.confirm());
     this.container.add(confirmBtn);
-    const cancelBtn = makeBtn(scene, LAYOUT.centerX + 90, LAYOUT.centerY + 60, 'CANCEL', () => this.cancel());
+    const cancelBtn = makeBtn(scene, LAYOUT.centerX + 90, LAYOUT.centerY + 60, t('nickname.cancel'), () => this.cancel());
     this.container.add(cancelBtn);
 
     // Browser-level keydown so we capture typing reliably; Phaser's keyboard

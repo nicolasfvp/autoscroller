@@ -12,6 +12,8 @@ import {
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
 import { getTemplatesForClass, TUTORIAL_TEMPLATE_ID } from '../data/DeckTemplates';
+import { loadLightChrome, loaderTarget } from './AssetManifest';
+import { t } from '../i18n/i18n';
 
 export class CharacterSelectScene extends Scene {
   private selectedIndex = 0;
@@ -22,6 +24,13 @@ export class CharacterSelectScene extends Scene {
 
   constructor() {
     super(SCENE_KEYS.CHARACTER_SELECT);
+  }
+
+  // Reached from the menu's New Game button. Guarantee the character-select
+  // backdrop, class sprites and shared chrome are loaded before create() even
+  // on a cold cache. No-op once the background warm has them.
+  preload(): void {
+    loadLightChrome(loaderTarget(this.load));
   }
 
   private fadeToScene(sceneKey: string, data?: any): void {
@@ -67,7 +76,7 @@ export class CharacterSelectScene extends Scene {
       flameB.play({ key: 'flame_sel_b', startFrame: 4 });
     }
 
-    this.add.bitmapText(LAYOUT.centerX, 50, 'game_font_white', 'Choose Your Hero', 40).setOrigin(0.5);
+    this.add.bitmapText(LAYOUT.centerX, 50, 'game_font_white', t('charSelect.title'), 40).setOrigin(0.5);
 
     const layout = computeCardLayout(LAYOUT.canvasWidth, CLASSES.length);
     const cardWidth  = layout.cardW;
@@ -249,7 +258,7 @@ export class CharacterSelectScene extends Scene {
       });
 
       container.add(
-        this.add.text(0, DECK_Y, `Deck: ${cls.deckHint}`, {
+        this.add.text(0, DECK_Y, t('charSelect.deckLabel', { hint: cls.deckHint }), {
           fontSize: '15px', color: '#d4a84b',
           stroke: '#000000', strokeThickness: 3,
           fontFamily: 'VT323', resolution: 3,
@@ -277,11 +286,11 @@ export class CharacterSelectScene extends Scene {
         }).setOrigin(0.5, 0),
       );
       const SB = TOP + 68;
-      this.addStatBar(container, 'HP',  cls.stats.hp,      100, 0xff4444, SB);
-      this.addStatBar(container, 'STA', cls.stats.stamina,  60, 0xffaa00, SB + 26);
-      this.addStatBar(container, 'MP',  cls.stats.mana,     60, 0x4488ff, SB + 52);
+      this.addStatBar(container, t('charSelect.statHp'),  cls.stats.hp,      100, 0xff4444, SB);
+      this.addStatBar(container, t('charSelect.statSta'), cls.stats.stamina,  60, 0xffaa00, SB + 26);
+      this.addStatBar(container, t('charSelect.statMp'),  cls.stats.mana,     60, 0x4488ff, SB + 52);
       container.add(
-        this.add.text(0, SB + 80, `Deck: ${cls.deckHint}`, {
+        this.add.text(0, SB + 80, t('charSelect.deckLabel', { hint: cls.deckHint }), {
           fontSize: '12px', color: '#aaaaaa', stroke: '#000000', strokeThickness: 2,
           fontFamily: FONTS.family, align: 'center', wordWrap: { width: w - 20 }, resolution: 3,
         }).setOrigin(0.5, 0),

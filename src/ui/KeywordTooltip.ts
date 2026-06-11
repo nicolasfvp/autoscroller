@@ -18,6 +18,7 @@
 // before attaching).
 
 import Phaser from 'phaser';
+import { t, getLocale } from '../i18n/i18n';
 import { COLORS, FONTS, LAYOUT } from './StyleConstants';
 import { detectKeywords, type KeywordDef } from './KeywordDefinitions';
 import { renderTokenText } from './IconTokens';
@@ -77,7 +78,7 @@ export function attachKeywordHover(
   cardDescription: string,
   anchorBounds: AnchorBounds | (() => AnchorBounds),
 ): KeywordTooltipHandle {
-  const keywords = detectKeywords(cardDescription);
+  const keywords = detectKeywords(cardDescription, getLocale());
   if (keywords.length === 0) {
     return { cancel: () => { /* noop */ } };
   }
@@ -150,7 +151,7 @@ export function scheduleKeywordPanel(
   cardDescription: string,
   getAnchor: () => AnchorBounds,
 ): KeywordTooltipHandle {
-  const keywords = detectKeywords(cardDescription);
+  const keywords = detectKeywords(cardDescription, getLocale());
   if (keywords.length === 0) {
     return { cancel: () => { /* noop */ } };
   }
@@ -181,7 +182,7 @@ export function attachKeywordTooltip(
   cardDescription: string,
   popupBounds: AnchorBounds,
 ): KeywordTooltipHandle {
-  const keywords = detectKeywords(cardDescription);
+  const keywords = detectKeywords(cardDescription, getLocale());
   if (keywords.length === 0) {
     return { cancel: () => { /* noop */ } };
   }
@@ -245,7 +246,7 @@ function mountStandalonePanel(
 
   const fontFamily = FONTS.body;
 
-  const title = scene.add.text(0, 0, 'Keywords', {
+  const title = scene.add.text(0, 0, t('keywordTip.title'), {
     fontSize: `${TITLE_FONT_SIZE}px`,
     fontStyle: 'bold',
     color: COLORS.accent,
@@ -312,9 +313,13 @@ function mountStandalonePanel(
     LAYOUT.canvasHeight - panelHeight - 4,
   ));
 
-  const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame' : 'panel_hover';
+  // Both panel textures load with the light-chrome tier; fall back to a tinted
+  // solid (never the green missing-texture box) if neither is present.
+  const tooltipKey = scene.textures.exists('panel_hover_frame') ? 'panel_hover_frame'
+    : scene.textures.exists('panel_hover') ? 'panel_hover' : '__WHITE';
   const bg = scene.add.image(panelX + PANEL_WIDTH / 2, panelY + panelHeight / 2, tooltipKey)
     .setDisplaySize(PANEL_WIDTH, panelHeight);
+  if (tooltipKey === '__WHITE') bg.setTint(0x1a0f04).setAlpha(0.95);
   panel.add(bg);
 
   let cursorY = panelY + PANEL_PADDING;

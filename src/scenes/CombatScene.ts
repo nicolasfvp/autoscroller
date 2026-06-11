@@ -2,6 +2,7 @@
 // renders via CardQueueDisplay, CombatHUD, and SynergyFlash components.
 
 import { Scene } from 'phaser';
+import { t, getLocale } from '../i18n/i18n';
 import { eventBus, type GameEvents } from '../core/EventBus';
 import { getRun } from '../state/RunState';
 import { getEnemyById, getCardById } from '../data/DataLoader';
@@ -24,6 +25,7 @@ import { generateAndApplyCombatLoot } from '../systems/CombatLoot';
 import { addPendingKill } from '../systems/PendingLoot';
 import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { loadLightChrome, loadCombatArt, loaderTarget } from './AssetManifest';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
 import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
@@ -113,7 +115,7 @@ export class CombatScene extends Scene {
         spend_armor: cardDef.spend_armor,
       });
       const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
-      keywordIntro.handleCardPlayed(this, fullText);
+      keywordIntro.handleCardPlayed(this, fullText, getLocale());
     }
     if (data.damage > 0) {
       const isFireball = data.cardId.toLowerCase().includes('fireball');
@@ -208,7 +210,7 @@ export class CombatScene extends Scene {
     }
 
     // Texto de resultado — VT323 com animação de typing (janela deslizante de 3 chars).
-    const resultWord = eventData.result === 'victory' ? 'VICTORY' : 'DEFEAT';
+    const resultWord = eventData.result === 'victory' ? t('combat.victory') : t('combat.defeat');
     const displayText = this.add.bitmapText(400, 290, 'vt323_gold', '', 82)
       .setOrigin(0.5).setDepth(600).setTint(eventData.result === 'victory' ? 0xffd700 : 0xff4444);
 
@@ -265,6 +267,15 @@ export class CombatScene extends Scene {
 
   constructor() {
     super(SCENE_KEYS.COMBAT);
+  }
+
+  // Ensure the combat HUD chrome and monster/effect/battle-bg art are present
+  // before create() so the enemy sprite is never invisible if combat is reached
+  // before the background warm finished. No-op once warmed.
+  preload(): void {
+    const t = loaderTarget(this.load);
+    loadLightChrome(t);
+    loadCombatArt(t);
   }
 
   init(data: { enemyId: string; isBoss?: boolean; isElite?: boolean; terrain?: string; subtileEffects?: SubtileEffect[] }): void {
@@ -370,7 +381,7 @@ export class CombatScene extends Scene {
       const scaledEnemy = {
         ...enemyDef,
         type: elite ? 'elite' : enemyDef.type,
-        name: elite ? `Elite ${enemyDef.name}` : enemyDef.name,
+        name: elite ? t('combat.eliteEnemyName', { name: enemyDef.name }) : enemyDef.name,
         baseHP: elite ? Math.round(scaled.hp * 1.6) : scaled.hp,
         baseDefense: scaled.defense,
         attack: { ...enemyDef.attack, damage: elite ? Math.round(scaled.damage * 1.3) : scaled.damage },
@@ -526,7 +537,7 @@ export class CombatScene extends Scene {
               spend_armor: cardDef.spend_armor,
             });
             const fullText = `${cardDef.description ?? ''} ${rendered}`.trim();
-            keywordIntro.handleCardPlayed(this, fullText);
+            keywordIntro.handleCardPlayed(this, fullText, getLocale());
           }
           const { key: animKey, lunge } = getCardAnimKey(data.cardId);
           playCardAnimation(animKey, lunge);

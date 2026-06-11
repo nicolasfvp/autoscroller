@@ -5,6 +5,7 @@ import { saveMetaState } from '../systems/MetaPersistence';
 import { playUnlockCelebration } from '../ui/UnlockCelebration';
 import { FONTS } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
+import { t } from '../i18n/i18n';
 
 const BUILDING_COLORS: Record<string, number> = {
   forge: 0xcc3333,
@@ -15,12 +16,12 @@ const BUILDING_COLORS: Record<string, number> = {
   storehouse: 0x8B6914,
 };
 
-const BUILDING_DESCRIPTIONS: Record<string, string> = {
-  forge: 'Unlock new cards for the loot pool.',
-  library: 'Unlock passive skill tiers for the Warrior.',
-  workshop: 'Unlock new tile types for your loops.',
-  shrine: 'Unlock relics from ancient powers.',
-  storehouse: 'Boost gathering rates and retain more on death.',
+const BUILDING_DESCRIPTION_KEYS: Record<string, string> = {
+  forge: 'building.descForge',
+  library: 'building.descLibrary',
+  workshop: 'building.descWorkshop',
+  shrine: 'building.descShrine',
+  storehouse: 'building.descStorehouse',
 };
 
 export class BuildingPanelScene extends Scene {
@@ -91,7 +92,8 @@ export class BuildingPanelScene extends Scene {
     }
 
     // Description
-    this.add.text(descX, descY, BUILDING_DESCRIPTIONS[this.buildingKey] ?? '', {
+    const descKey = BUILDING_DESCRIPTION_KEYS[this.buildingKey];
+    this.add.text(descX, descY, descKey ? t(descKey) : '', {
       fontSize: '16px',
       color: '#e6c88a', // standard yellow
       fontStyle: 'bold',
@@ -102,7 +104,7 @@ export class BuildingPanelScene extends Scene {
     }).setOrigin(0.5);
 
     // Current tier
-    this.add.text(descX, descY + 28, `Level ${currentLevel} / ${maxLevel}`, { // pushed down slightly to account for bold/stroke
+    this.add.text(descX, descY + 28, t('building.level', { currentLevel, maxLevel }), { // pushed down slightly to account for bold/stroke
       fontSize: '16px',
       color: '#e6c88a', 
       fontStyle: 'bold',
@@ -131,7 +133,7 @@ export class BuildingPanelScene extends Scene {
     }
 
     // Upgrade preview section
-    this.add.text(unlocksX, unlocksY, 'Unlocks:', {
+    this.add.text(unlocksX, unlocksY, t('building.unlocks'), {
       fontSize: '22px',
       fontStyle: 'bold',
       color: '#e6c88a', // standard yellow
@@ -156,7 +158,7 @@ export class BuildingPanelScene extends Scene {
 
       // Tier label
       const prefix = isUnlocked ? '\u2713 ' : '';
-      const tierLabel = `${prefix}Tier ${tier.level}:`;
+      const tierLabel = `${prefix}${t('building.tier', { level: tier.level })}`;
       this.add.text(textStartX, itemY, tierLabel, {
         fontSize: '13px',
         color: isUnlocked || isNext ? '#3e2723' : '#888888', // grey if locked
@@ -175,7 +177,7 @@ export class BuildingPanelScene extends Scene {
       if (allItems.length > 0) {
         const itemText = isUnlocked || isNext
           ? allItems.join(' • ')
-          : '???';
+          : t('building.locked');
         this.add.text(textStartX + 65, itemY, itemText, {
           fontSize: '12px',
           fontStyle: 'bold',
@@ -198,7 +200,7 @@ export class BuildingPanelScene extends Scene {
 
     // Upgrade button or "Fully Upgraded"
     if (currentLevel >= maxLevel) {
-      this.add.text(buttonX, buttonY, 'Fully Upgraded', {
+      this.add.text(buttonX, buttonY, t('building.fullyUpgraded'), {
         fontSize: '24px',
         fontStyle: 'bold',
         color: '#e6c88a',
@@ -220,7 +222,7 @@ export class BuildingPanelScene extends Scene {
       const canAfford = missingMats.length === 0;
 
       // Custom Button (No background rectangle, just floating styled text)
-      const btnText = this.add.text(buttonX, buttonY, 'Upgrade Building', {
+      const btnText = this.add.text(buttonX, buttonY, t('building.upgradeButton'), {
         fontSize: '24px',
         fontStyle: 'bold',
         color: '#e6c88a', // Always use the standard gold

@@ -8,6 +8,7 @@ import { addPendingLoot, type LootEntry } from './PendingLoot';
 import { rand } from './SharedRNG';
 import { addShardsAndConvert, type ShardInventory, type ElementInventory } from './ShardSystem';
 import { ELEMENTS, type ElementId } from './ElementSystem';
+import { t } from '../i18n/i18n';
 
 interface EventResult {
   notifications: LootEntry[];
@@ -37,7 +38,7 @@ const EVENT_TABLE: EventOption[] = [
     apply(run) {
       const heal = Math.floor(run.hero.maxHP * 0.2);
       run.hero.currentHP = Math.min(run.hero.currentHP + heal, resolvedMaxHP(run));
-      return { notifications: [{ label: `+${heal} HP`, color: '#00ff00' }] };
+      return { notifications: [{ label: t('events.healHp', { heal }), color: '#00ff00' }] };
     },
   },
   // ── Give gold (15-40, common positive)
@@ -48,7 +49,7 @@ const EVENT_TABLE: EventOption[] = [
       const amount = 15 + Math.floor(rand() * 26);
       run.economy.gold += amount;
       run.stats.goldEarned += amount;
-      return { notifications: [{ label: `+${amount} Gold`, color: '#ffd700' }] };
+      return { notifications: [{ label: t('events.goldGain', { amount }), color: '#ffd700' }] };
     },
   },
   // ── Take damage (low, non-lethal)
@@ -57,7 +58,7 @@ const EVENT_TABLE: EventOption[] = [
     apply(run) {
       const dmg = Math.floor(run.hero.maxHP * 0.08);
       run.hero.currentHP = Math.max(1, run.hero.currentHP - dmg);
-      return { notifications: [{ label: `-${dmg} HP (trap!)`, color: '#ff4444' }] };
+      return { notifications: [{ label: t('events.trapDamage', { dmg }), color: '#ff4444' }] };
     },
   },
   // ── Pickpocket gold
@@ -66,10 +67,10 @@ const EVENT_TABLE: EventOption[] = [
     apply(run) {
       const amount = Math.min(run.economy.gold, 5 + Math.floor(rand() * 16));
       if (amount <= 0) {
-        return { notifications: [{ label: 'Pickpocket! (no gold)', color: '#ff8800' }] };
+        return { notifications: [{ label: t('events.pickpocketNoGold'), color: '#ff8800' }] };
       }
       run.economy.gold -= amount;
-      return { notifications: [{ label: `-${amount} Gold (pickpocket!)`, color: '#ff8800' }] };
+      return { notifications: [{ label: t('events.pickpocketGold', { amount }), color: '#ff8800' }] };
     },
   },
   // ── Slow (temporary speed reduction)
@@ -77,7 +78,7 @@ const EVENT_TABLE: EventOption[] = [
     weight: 9,
     apply() {
       return {
-        notifications: [{ label: 'Slowed! (3s)', color: '#8888ff' }],
+        notifications: [{ label: t('events.slowed'), color: '#8888ff' }],
         slowDurationMs: 3000,
       };
     },
@@ -91,7 +92,7 @@ const EVENT_TABLE: EventOption[] = [
       const manaRestore = Math.floor(run.hero.maxMana * 0.3);
       run.hero.currentStamina = Math.min(run.hero.currentStamina + staRestore, run.hero.maxStamina);
       run.hero.currentMana = Math.min(run.hero.currentMana + manaRestore, run.hero.maxMana);
-      return { notifications: [{ label: `+${staRestore} STA, +${manaRestore} MP`, color: '#00ccff' }] };
+      return { notifications: [{ label: t('events.staminaManaRestore', { staRestore, manaRestore }), color: '#00ccff' }] };
     },
   },
   // ── Element Shrine: +2-4 shards of one random element
@@ -112,7 +113,7 @@ const EVENT_TABLE: EventOption[] = [
       );
       const el = ELEMENTS[elementId];
       return {
-        notifications: [{ label: `Element Shrine! +${amount} ${el.name} shard`, color: el.color }],
+        notifications: [{ label: t('events.elementShrine', { amount, element: el.name }), color: el.color }],
       };
     },
   },
@@ -126,7 +127,7 @@ const EVENT_TABLE: EventOption[] = [
       const enemyId =
         CURSED_TREASURE_EASY_POOL[Math.floor(rand() * CURSED_TREASURE_EASY_POOL.length)];
       return {
-        notifications: [{ label: `Cursed Treasure! +${goldBurst}g, fight follows`, color: '#ffaa00' }],
+        notifications: [{ label: t('events.cursedTreasure', { goldBurst }), color: '#ffaa00' }],
         combatEnemyId: enemyId,
       };
     },
@@ -139,7 +140,7 @@ const EVENT_TABLE: EventOption[] = [
       run.economy.hiddenPathTilesRemaining = 15;
       run.economy.hiddenPathTileGold = 3;
       return {
-        notifications: [{ label: 'Hidden Path! +3g per tile (15 tiles)', color: '#ffd700' }],
+        notifications: [{ label: t('events.hiddenPath'), color: '#ffd700' }],
       };
     },
   },
@@ -152,7 +153,7 @@ const EVENT_TABLE: EventOption[] = [
       const heal = cap - run.hero.currentHP;
       run.hero.currentHP = cap;
       return {
-        notifications: [{ label: `Wandering Healer! +${heal} HP (full restore)`, color: '#aaffaa' }],
+        notifications: [{ label: t('events.wanderingHealer', { heal }), color: '#aaffaa' }],
       };
     },
   },
