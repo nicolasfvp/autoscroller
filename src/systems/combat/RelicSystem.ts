@@ -20,6 +20,10 @@ export interface RelicData {
   once_per?: string;
   icon?: string;
   color?: number;
+  /** Optional current-resource top-up applied at combat start for passive
+   *  relics whose text promises e.g. "+2 Stamina at combat start" on top of a
+   *  Max-stat bonus (stamina_flask, energy_tonic, aether_lens, arcane_crystal). */
+  combatStart?: Partial<Record<'stamina' | 'mana' | 'hp', number>>;
 }
 
 const RELIC_MAP: Map<string, RelicData> = new Map(
@@ -28,6 +32,16 @@ const RELIC_MAP: Map<string, RelicData> = new Map(
 
 export function getRelicData(id: string): RelicData | undefined {
   return RELIC_MAP.get(id);
+}
+
+/**
+ * Grant an "Empower" buff: a time-decaying hero aura that adds a flat outgoing
+ * damage percentage (read in CardResolver via sumModifier(heroAuras,
+ * 'damage_dealt_pct')). pct is a fraction (0.5 = +50%, 1.0 = +100%).
+ */
+function grantEmpower(state: CombatState, pct: number, ms: number): void {
+  if (!state.heroAuras) state.heroAuras = [];
+  state.heroAuras.push({ remainingMs: ms, modifier: { kind: 'damage_dealt_pct', value: pct } });
 }
 
 // ── Passive relics applied at combat start ────────────────────
@@ -40,6 +54,28 @@ export function applyPassiveRelics(relicIds: string[], state: CombatState): void
   for (const id of relicIds) {
     const relic = RELIC_MAP.get(id);
     if (!relic || relic.trigger !== 'passive') continue;
+
+    // Bug #3 fix: combat-start current-resource top-up. The Max-stat portion is
+    // folded into resolveHeroStats; this grants the "+N at combat start" current
+    // pool the relic text also promises (was never encoded before).
+    if (relic.combatStart) {
+      if (relic.combatStart.stamina) {
+        state.heroStamina = Math.min(state.heroMaxStamina, state.heroStamina + relic.combatStart.stamina);
+      }
+      if (relic.combatStart.mana) {
+        state.heroMana = Math.min(state.heroMaxMana, state.heroMana + relic.combatStart.mana);
+      }
+      if (relic.combatStart.hp) {
+        state.heroHP = Math.min(state.heroMaxHP, state.heroHP + relic.combatStart.hp);
+      }
+    }
+
+    // Stoneheart Sigil: seed the armor floor (5) at combat start so the hero
+    // opens with the relic's guaranteed armor. The "never drop below 5" clamp
+    // and the on-would-break +6 grant live in applyHeroDamage (EnemyAI).
+    if (id === 'stoneheart_sigil') {
+      state.heroDefense = Math.max(state.heroDefense, 5);
+    }
 
     switch (relic.effectType) {
       case 'stat_bonus': {
@@ -69,6 +105,15 @@ export function applyPassiveRelics(relicIds: string[], state: CombatState): void
         // Don't double-register: CombatState.create already seeds activeRelicIds
         // from run.relics, so re-pushing here causes multiplier double-application.
         if (!state.activeRelicIds.includes(id)) state.activeRelicIds.push(id);
+        // Thin Deck Charm: "+1 card draw at combat start" when the deck is small.
+        // In the fixed-order engine this is realized as one extra opening card
+        // (the cooldown after the first play is skipped — see CombatEngine).
+        if (id === 'thin_deck_charm' && relic.condition?.startsWith('deck_size_lte_')) {
+          const threshold = parseInt(relic.condition.slice('deck_size_lte_'.length), 10);
+          if (Number.isFinite(threshold) && state.deckOrder.length <= threshold) {
+            state.bonusOpeningCards = (state.bonusOpeningCards ?? 0) + 1;
+          }
+        }
         break;
       }
       // C5 — Constellation Sigil: stat bonuses now layered in resolveHeroStats.
@@ -163,6 +208,19 @@ export function applyOnCombatStartRelics(relicIds: string[], state: CombatState)
   for (const id of relicIds) {
     const relic = RELIC_MAP.get(id);
     if (!relic || relic.trigger !== 'combat_start') continue;
+
+    // Tideheart Amulet: combat start, +1 Max Mana per 10% Max HP missing (and
+    // top up current mana by the same). effectType is 'deferred', so this is
+    // handled by ID. The on-heal / heal-applies-slow clauses live in CardResolver.
+    if (id === 'tideheart_amulet') {
+      const missingPct = 1 - (state.heroHP / Math.max(1, state.heroMaxHP));
+      const bonus = Math.floor(missingPct * 10 + 1e-9);
+      if (bonus > 0) {
+        state.heroMaxMana += bonus;
+        state.heroMana = Math.min(state.heroMaxMana, state.heroMana + bonus);
+      }
+      continue;
+    }
 
     if (relic.effectType === 'first_card_multiplier' && relic.value != null) {
       state.firstCardDamageMultiplier = relic.value;
@@ -287,6 +345,18 @@ export function resolveCardPlayedRelicBonus(
         }
         break;
       }
+      // Harmonics Charm: every Nth card refunds Stamina AND Mana. effectType
+      // 'resource_refund' previously had no case (silent no-op). value = period,
+      // stats.{stamina,mana} = refund amounts.
+      case 'resource_refund': {
+        const period = relic.value ?? 5;
+        const counter = (state.relicCounters[id] = (state.relicCounters[id] ?? 0) + 1);
+        if (counter % period === 0) {
+          state.heroStamina = Math.min(state.heroMaxStamina, state.heroStamina + (relic.stats?.stamina ?? 1));
+          state.heroMana = Math.min(state.heroMaxMana, state.heroMana + (relic.stats?.mana ?? 1));
+        }
+        break;
+      }
       // C2: every-Nth card mana refund (Echoing Chime, Librarian's Seal).
       case 'every_nth_mana_refund': {
         const period = relic.value ?? 5;
@@ -368,18 +438,34 @@ export function resolveCardPlayedRelicBonus(
     }
   }
 
+  // Archon Codex: the primed next Magic card costs 0 Mana and Echoes 1.
+  // Primed by CombatEngine when the hero's Mana hits 0 (see executeCard).
+  if (relicIds.includes('archon_codex') && card.category === 'magic'
+      && (state.relicCounters['archon_next_magic'] ?? 0) > 0) {
+    state.relicCounters['archon_next_magic'] = 0;
+    manaOverride = 0;
+    state.echoCharges += 1;
+    state.echoExpiresAt = state.combatElapsedMs + 5000;
+    state.freeEchoCharges += 1;
+  }
+
   // C5 — Demon Heart: cards deal ×2 damage during the first 6 seconds of combat.
   // The self-damage portion is applied by CombatEngine.executeCard after resolve.
   if (relicIds.includes('demon_heart') && state.combatElapsedMs < 6000) {
     damageMultiplier *= 2;
   }
 
-  // thin_deck_charm: +50% damage if deck has <= 6 cards
+  // thin_deck_charm: conditional card-damage multiplier when deck is small.
+  // Bug fix: parse the threshold from the JSON `condition` (deck_size_lte_N)
+  // instead of hard-coding 6 — the data says deck_size_lte_7 (+35%), so the
+  // old `=== 'deck_size_lte_6'` string compare never matched and the multiplier
+  // never fired. Parsing keeps code and data from drifting again.
   for (const id of relicIds) {
     const relic = RELIC_MAP.get(id);
     if (!relic) continue;
-    if (relic.effectType === 'conditional_damage_mult' && relic.condition === 'deck_size_lte_6') {
-      if (state.deckOrder.length <= 6 && relic.value != null) {
+    if (relic.effectType === 'conditional_damage_mult' && relic.condition?.startsWith('deck_size_lte_')) {
+      const threshold = parseInt(relic.condition.slice('deck_size_lte_'.length), 10);
+      if (Number.isFinite(threshold) && state.deckOrder.length <= threshold && relic.value != null) {
         damageMultiplier *= relic.value;
       }
     }
@@ -465,11 +551,14 @@ export function applyDamageTakenRelics(
         break;
       }
       case 'heal_percent': {
-        // phoenix_feather: revive at 50% HP when HP hits 0, once per combat
+        // phoenix_feather: 1/RUN revive (phoenixUsed is seeded from the run-level
+        // flag in createCombatState and written back at combat end), plus the
+        // Empower 100%/8s buff the text promises.
         if (relic.condition === 'hp_zero' && state.heroHP <= 0 && !state.phoenixUsed) {
           state.heroHP = Math.floor(state.heroMaxHP * ((relic.value ?? 50) / 100));
           state.phoenixUsed = true;
           preventedDeath = true;
+          grantEmpower(state, 1.0, 8000);
         }
         break;
       }
@@ -550,6 +639,17 @@ export function applyDamageTakenRelics(
         break;
       }
     }
+  }
+
+  // The Last Banner: 1/combat, when you would die, survive at 1 HP and gain
+  // Empower 50% for 6s. Its trigger is 'combat_start', so it is NOT iterated in
+  // the damage_taken loop above — handled here by ID. Checked after phoenix so
+  // phoenix (1/run, revives higher) takes priority when both are held.
+  if (relicIds.includes('the_last_banner') && state.heroHP <= 0 && !state.bannerUsed) {
+    state.heroHP = 1;
+    state.bannerUsed = true;
+    preventedDeath = true;
+    grantEmpower(state, 0.5, 6000);
   }
 
   return preventedDeath;
