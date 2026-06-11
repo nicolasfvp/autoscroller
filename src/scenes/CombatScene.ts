@@ -27,7 +27,6 @@ import { AudioManager } from '../systems/AudioManager';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { loadLightChrome, loadCombatArt, loaderTarget } from './AssetManifest';
 import { dailyRunTicker } from '../systems/DailyRunTicker';
-import { DailyTickerPanel } from '../ui/DailyTickerPanel';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 import { tutorialDirector } from '../systems/tutorial/TutorialDirector';
 import { TutorialOverlay } from '../ui/TutorialOverlay';
@@ -649,12 +648,8 @@ export class CombatScene extends Scene {
       eventBus.on('combat:enemy-attack', this.onEnemyAttack);
       eventBus.on('combat:end', this.onCombatEnd);
 
-      // Daily Run ticker overlay — visible during combat too so the player
-      // can see other racers tick up while they're fighting. Panel
-      // self-destructs on scene shutdown via Phaser events.
       if (run.mode === 'daily') {
         dailyRunTicker.start();
-        new DailyTickerPanel(this, { selfRunId: run.runId });
       }
 
       TutorialOverlay.mountIfActive(this);

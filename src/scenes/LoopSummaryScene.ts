@@ -84,7 +84,7 @@ export class LoopSummaryScene extends Scene {
   constructor() { super(SCENE_KEYS.LOOP_SUMMARY); }
 
   create(data: SummaryData): void {
-    const { loopRunner, loopRunState, lootItems, monstersDefeated, tpEarned, loopCount } = data;
+    const { loopRunner, loopRunState, lootItems, monstersDefeated, loopCount } = data;
     const FF = FONTS.family;
 
     // Panel center — all elements are positioned relative to this
@@ -131,13 +131,6 @@ export class LoopSummaryScene extends Scene {
     const title = this.add.bitmapText(CX, ay(79.9), 'vt323_gold', `LOOP  ${loopCount}  COMPLETE`, 28)
       .setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: title, alpha: 1, duration: 1200, delay: 100, ease: 'Sine.easeIn' });
-
-    // ── TP row ────────────────────────────────────────────
-    const tpRow = this.add.text(CX, ay(99.6), `+${tpEarned} Tile Points`, {
-      fontFamily: FF, fontSize: '17px', fontStyle: 'bold',
-      color: '#ffffff', stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5).setAlpha(0);
-    this.tweens.add({ targets: tpRow, alpha: 1, duration: 300, delay: 200 });
 
     // ── Kills ─────────────────────────────────────────────
     const killEntries = Object.entries(monstersDefeated);

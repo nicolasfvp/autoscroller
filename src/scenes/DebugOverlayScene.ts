@@ -343,6 +343,8 @@ export class DebugOverlayScene extends Phaser.Scene {
       DebugManager.resizeSelected(dy > 0 ? -2 : 2);
     });
 
+    this.input.keyboard?.on('keydown-F2', () => this.close());
+
     this.input.keyboard?.on('keydown-Z', (e: KeyboardEvent) => {
       if (e.ctrlKey) { e.preventDefault(); DebugManager.undo(); }
     });

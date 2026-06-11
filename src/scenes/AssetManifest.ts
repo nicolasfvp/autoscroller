@@ -63,15 +63,7 @@ export function loaderTarget(load: Loader): LoadTarget {
 // ── Tier 0: menu-critical (blocks first paint) ────────────────────────────────
 export function loadMenuCritical(load: LoadTarget): void {
   // MainMenu background + buttons (drawn blind by MainMenu.createImgBtn).
-  image(load, 'homepage', 'assets/backgrounds/ui/homepage.jpg');
-  image(load, 'fog', 'assets/ui/effects/fog.png');
-  image(load, 'btn_continue_run', 'assets/ui/buttons/continue-run.png');
-  image(load, 'btn_new_game', 'assets/ui/buttons/new-game.png');
-  image(load, 'btn_daily_run', 'assets/ui/buttons/daily-run.png');
   // Delete-run confirmation overlay (reachable from the menu's New Game button).
-  image(load, 'lp_permanent_erase', 'assets/ui/text/landing-page/permanente-erase.png');
-  image(load, 'lp_delete_run', 'assets/ui/text/landing-page/delete-run.png');
-  image(load, 'lp_keep', 'assets/ui/text/landing-page/keep.png');
 
   // Menu audio (theme + the global click SFX that fires on the first menu tap).
   audio(load, 'theme_song', 'assets/audio/theme-song.mp3');
@@ -142,40 +134,18 @@ export function loadLightChrome(load: LoadTarget): void {
   sheet(load, 'hero_chibi_mage', 'assets/characters/mage/pocket/spritesheet.png', { frameWidth: 256, frameHeight: 256, endFrame: 5 });
 
   // Parallax loop backgrounds.
-  image(load, 'bg_green_field', 'assets/backgrounds/loop/green_field_background.png');
-  image(load, 'bg_sky', 'assets/backgrounds/ui/sky-background.png');
-  image(load, 'bg_desert', 'assets/backgrounds/loop/desert.png');
 
   // Glossary + combat HUD chrome (small, all guarded at use sites).
   image(load, 'glossary_book_icon', 'assets/ui/glossary/book_icon.png');
   image(load, 'glossary_panel_bg', 'assets/ui/glossary/panel_bg.png');
-  image(load, 'timer_panel', 'assets/ui/timer/timer-panel.png');
-  image(load, 'status_panel', 'assets/ui/panels/status_panel.png');
-  image(load, 'combat_hero_panel', 'assets/ui/battle/combat_hero_panel.png');
-  image(load, 'combat_monster_panel', 'assets/ui/battle/combat_monster_panel.png');
-  sheet(load, 'hourglass_timer', 'assets/ui/timer/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
-  image(load, 'combat_chip_panel', 'assets/ui/combat_chip_panel.png');
-  image(load, 'wood_texture', 'assets/ui/panels/wood-texture.png');
-  image(load, 'wood_texture_big', 'assets/ui/panels/wood-texture-big.png');
-  image(load, 'healthbar', 'assets/ui/panels/healthbar.png');
-  image(load, 'deck_relic_table', 'assets/ui/panels/deck-relic-table.png');
 
   // Character-select chrome.
-  image(load, 'bg_character_selection', 'assets/ui/backgrounds/background-character-selection.jpg');
-  sheet(load, 'flame_selection', 'assets/ui/backgrounds/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
-  image(load, 'warrior_status', 'assets/ui/panels/warrior_status.png');
-  image(load, 'mage_status', 'assets/ui/panels/mage_status.png');
 
   // Forge sigils (element glyphs resolved by ElementSystem/IconTokens) + small
   // forge items. The large forge backdrop lives in tier 5 (scene art).
   for (const id of ['attack', 'defense', 'agility', 'counter', 'fire', 'water', 'air', 'earth']) {
     image(load, `forge_sigil_${id}`, `assets/icons/tokens/forge-sigils/${id}.png`);
   }
-  image(load, 'arco_forja', 'assets/buildings/items/arco_forja.png');
-  image(load, 'bigorna', 'assets/buildings/items/bigorna.png');
-  image(load, 'forge_moldure', 'assets/buildings/items/forge_moldure.png');
-  image(load, 'forge_status_banner', 'assets/ui/forge/forge_status_banner.png');
-  image(load, 'icon_table', 'assets/ui/panels/icon-table.png');
 
   // Tutorial + keyword teaching panels (guarded; appear during first run).
   const tutorialSteps = [
@@ -187,19 +157,11 @@ export function loadLightChrome(load: LoadTarget): void {
   for (const s of tutorialSteps) {
     image(load, `tutorial_text_${s}`, `assets/ui/text/tutorial/tutorial_${s}.png`);
   }
-  image(load, 'tutorial_text_panel', 'assets/ui/panels/tutorial_text_panel.png');
-  image(load, 'panel_keyword_frame_v2', 'assets/ui/panels/panel_keyword_frame_v2.png');
-  image(load, 'panel_keyword_frame', 'assets/ui/panels/panel_keyword_frame.png');
   for (const kw of ['brace', 'exhaust', 'haste', 'vengeance']) {
     image(load, `keyword_${kw}`, `assets/ui/text/keyword/keyword_${kw}.png`);
   }
 
   // Planning / tile-selection chrome.
-  image(load, 'tile_selection_board', 'assets/ui/panels/tile-selection-board.png');
-  image(load, 'tile_inventory_panel', 'assets/ui/panels/tile_inventory_panel.png');
-  image(load, 'bg_tile_selection', 'assets/ui/backgrounds/background-tile-selection.png');
-  sheet(load, 'belt_pillar', 'assets/ui/panels/pilar/spritesheet.png', { frameWidth: 512, frameHeight: 512 });
-  image(load, 'tile_frame', 'assets/ui/frames/tile-frame.png');
   image(load, 'card_mold_v2', 'assets/ui/frames/card_mold_v2.png');
   image(load, 'deck_frame', 'assets/ui/frames/deck-frame.png');
   const tileTooltips = ['forest', 'graveyard', 'swamp', 'desert', 'lava', 'event', 'treasure',
@@ -207,59 +169,29 @@ export function loadLightChrome(load: LoadTarget): void {
   for (const t of tileTooltips) {
     image(load, `tile_tooltip_${t}`, `assets/ui/text/tiles/tile_tooltip_${t}.png`);
   }
-  image(load, 'panel_hover', 'assets/ui/panels/panel_hover.png');
-  image(load, 'panel_hover_frame', 'assets/ui/panels/panel_hover_frame.png');
-  image(load, 'panel_card_grid_v2', 'assets/ui/panels/panel_card_grid_v2.png');
 
   // Shop chrome (small panels/buttons; large shop backdrops are tier 5).
-  image(load, 'shop_item_frame', 'assets/ui/frames/shop_item_frame.png');
-  image(load, 'shop_remove_seal', 'assets/ui/panels/shop_remove_seal.png');
-  image(load, 'shop_panel_list', 'assets/ui/shop/big_panel.png');
-  image(load, 'shop_panel_detail', 'assets/ui/shop/asset description.png');
-  image(load, 'shop_tab', 'assets/ui/shop/shop-section.png');
-  image(load, 'shop_row_selected', 'assets/ui/shop/item_selection.png');
-  image(load, 'shop_btn_buy', 'assets/ui/shop/buy-button.png');
-  image(load, 'shop_btn_sell', 'assets/ui/shop/sell-button.png');
-  image(load, 'shop_gold_panel', 'assets/ui/shop/gold_panel.png');
-  image(load, 'banish_confirm_panel', 'assets/ui/panels/banish_confirm_panel.png');
   image(load, 'confirm_panel', 'assets/ui/panels/confirm_panel.png');
 
   // Forge dwarf NPC + wood button skin + settings/keyword frames.
-  image(load, 'panel_wood_button', 'assets/ui/panels/panel_wood_button.png');
   image(load, 'dwarf_talking', 'assets/characters/npc/forge-dwarf/dwarf_talking.png');
   image(load, 'dwarf_hands_on_hips', 'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
-  image(load, 'dwarf_thumbs_up', 'assets/characters/npc/forge-dwarf/dwarf_thumbs_up.png');
 
   // Generic HUD panels.
-  image(load, 'ui_panel', 'assets/ui/panels/panel.png');
   image(load, 'speed_panel', 'assets/ui/panels/speed_panel.png');
-  image(load, 'hud_panel_left', 'assets/ui/panels/hud_panel_left.png');
-  image(load, 'hud_panel_progress', 'assets/ui/panels/hud_panel_progress.png');
-  image(load, 'loop_summary_panel', 'assets/ui/panels/loopcomplete.png');
-  image(load, 'skip_loop_panel', 'assets/ui/panels/skip-loop.png');
-  image(load, 'remove_tiles_panel', 'assets/ui/panels/remove_tiles.png');
 
   // Buttons (all small).
   const buttons = [
     'btn_keep_my_run', 'btn_yes_delete', 'btn_resume', 'btn_view_deck', 'btn_settings', 'btn_tutorial',
-    'btn_forge', 'btn_library', 'btn_workshop', 'btn_oracle', 'btn_vault', 'btn_melhorar', 'btn_start_run_hub',
-    'btn_start_run', 'btn_back', 'btn_leave', 'btn_close', 'btn_cancel', 'btn_return_to_menu', 'btn_change_hero',
-    'btn_start_game', 'btn_visit_shop', 'btn_abandon_run', 'btn_banish', 'btn_keep', 'btn_delete_run',
-    'btn_forge_action', 'btn_dismiss', 'btn_got_it', 'btn_continue_loop', 'btn_forge_leave', 'btn_recipes',
-    'btn_resume_pause', 'btn_view_deck_pause', 'btn_tutorial_pause', 'btn_settings_pause', 'btn_abandon_run_pause',
-    'btn_back_settings', 'btn_cancel_remove', 'btn_banish_remove', 'btn_keep_remove', 'btn_start_run_deck',
-    'btn_reset_progress', 'btn_next',
+    'btn_start_run', 'btn_back', 'btn_close', 'btn_cancel', 'btn_return_to_menu', 'btn_change_hero',
+    'btn_abandon_run', 'btn_banish', 'btn_keep', 'btn_delete_run',
+    'btn_got_it', 'btn_reset_progress', 'btn_next',
+    'btn_keep_my_run', 'btn_yes_delete',
   ];
   for (const b of buttons) {
     image(load, b, `assets/ui/buttons/${b}.png`);
   }
   image(load, 'btn_start_loop', 'assets/ui/buttons/start-loop.png');
-  image(load, 'btn_start_loop_scene', 'assets/ui/buttons/start-loop-loop-scene.png');
-  image(load, 'btn_skip_1', 'assets/ui/buttons/1.png');
-  image(load, 'btn_skip_5', 'assets/ui/buttons/5.png');
-  image(load, 'btn_skip_10', 'assets/ui/buttons/10.png');
-  image(load, 'btn_skip_25', 'assets/ui/buttons/25.png');
-  image(load, 'label_requer', 'assets/ui/labels/label_requer.png');
 
   // Building upgrade text panels (one per level per building).
   const buildingPanels: Array<[string, number]> = [
@@ -272,8 +204,6 @@ export function loadLightChrome(load: LoadTarget): void {
   }
 
   // Material + utility icons (small).
-  image(load, 'shop_icon', 'assets/icons/shop.png');
-  image(load, 'forge_icon', 'assets/icons/forge.png');
   image(load, 'mat_iron', 'assets/icons/iron.png');
   image(load, 'mat_crystal', 'assets/icons/crystal.png');
   image(load, 'mat_scroll', 'assets/icons/scroll.png');
@@ -360,16 +290,11 @@ const STATIC_MONSTERS: Array<{ id: string; folder: string; file: string; hasFram
   { id: 'werewolf', folder: 'cemetery', file: 'werewolf_1.png', hasFrame2: true },
   { id: 'zombie', folder: 'cemetery', file: 'zombie.png' },
   { id: 'doom_knight', folder: 'default', file: 'doom_knight_1.png', hasFrame2: true },
-  { id: 'iron_golem', folder: 'default', file: 'iron golem.png' },
-  { id: 'lizard_king', folder: 'default', file: 'lizard king.png' },
   { id: 'baby_dragon', folder: 'desert', file: 'baby dragon_1.png', hasFrame2: true },
   { id: 'mutated_salamander', folder: 'desert', file: 'mutated_salamander_1.png', hasFrame2: true },
   { id: 'scorpion', folder: 'desert', file: 'scorpion_1.png', hasFrame2: true },
   { id: 'ancient_tree', folder: 'forest', file: 'ancient tree_1.png', hasFrame2: true },
-  { id: 'giant_spider_2', folder: 'forest', file: 'giant spider 2.png' },
-  { id: 'giant_spider', folder: 'forest', file: 'giant spider.png' },
   { id: 'mush', folder: 'forest', file: 'mush_1.png', hasFrame2: true },
-  { id: 'ogre', folder: 'a melhorar', file: 'ogre.png' },
   { id: 'forge_slime', folder: 'lava', file: 'forge_slime_1.png', hasFrame2: true },
   { id: 'lava_golem', folder: 'lava', file: 'lava_golem_1.png', hasFrame2: true },
   { id: 'fire_elemental', folder: 'lava', file: 'fire_elemental_1.png', hasFrame2: true },
@@ -383,6 +308,7 @@ const STATIC_MONSTERS: Array<{ id: string; folder: string; file: string; hasFram
   { id: 'bog_witch', folder: 'boss', file: 'bog_witch_1.png', hasFrame2: true },
   { id: 'desert_golem', folder: 'boss', file: 'desert_golem_1.png', hasFrame2: true },
   { id: 'infernal_dragon', folder: 'boss', file: 'infernal_dragon_1.png', hasFrame2: true },
+  { id: 'iron_golem',      folder: 'boss', file: 'iron_golem_1.png', hasFrame2: true },
   { id: 'boss_iron_golem', folder: 'boss', file: 'iron_golem_1.png', hasFrame2: true },
 ];
 
@@ -410,13 +336,6 @@ export function loadCombatArt(load: LoadTarget): void {
   }
 
   // Battle backgrounds.
-  image(load, 'bg_battle_basic', 'assets/backgrounds/battle/bg_battle_basic.png');
-  image(load, 'bg_battle_forest', 'assets/backgrounds/battle/bg_battle_forest.png');
-  image(load, 'bg_battle_graveyard', 'assets/backgrounds/battle/bg_battle_graveyard.png');
-  image(load, 'bg_battle_swamp', 'assets/backgrounds/battle/bg_battle_swamp.png');
-  image(load, 'bg_battle_lava', 'assets/backgrounds/battle/bg_battle_lava.png');
-  image(load, 'bg_battle_desert', 'assets/backgrounds/battle/bg_battle_desert.png');
-  image(load, 'bg_battle_ruins', 'assets/backgrounds/battle/bg_battle_ruins.png');
 
   // Hit-effect spritesheets (CombatEffects early-returns when absent).
   const FX_W = 443; const FX_H = 887;
@@ -500,19 +419,7 @@ export function loadCardArt(load: LoadTarget): void {
 
 // ── Tier 5: large one-off scene backgrounds (all guarded at use sites) ────────
 export function loadSceneArt(load: LoadTarget): void {
-  sheet(load, 'bg_city', 'assets/backgrounds/ui/bg_city.png', { frameWidth: 1280, frameHeight: 720 });
-  sheet(load, 'forge_background', 'assets/buildings/backgrounds/forge_background.png', { frameWidth: 1168, frameHeight: 880 });
-  image(load, 'forge_frame_01', 'assets/buildings/backgrounds/forge_frame_01.png');
-  sheet(load, 'forge_fire_sheet', 'assets/buildings/backgrounds/forge_fire_sheet.png', { frameWidth: 390, frameHeight: 590 });
-  image(load, 'bg_shop_scene', 'assets/buildings/backgrounds/shop.png');
-  image(load, 'bg_shop_v2', 'assets/ui/backgrounds/bg_shop_v2.png');
-  image(load, 'bg_deck_builder', 'assets/ui/backgrounds/bg_deck_builder.png');
-  image(load, 'bg_deck_editor_v2', 'assets/ui/backgrounds/deck-editor-v2.png');
-  image(load, 'bg_relic_vault', 'assets/ui/backgrounds/bg_relic_vault.png');
-  image(load, 'bg_card_library', 'assets/ui/backgrounds/bg_card_library.png');
   image(load, 'bg_settings_scribe', 'assets/ui/backgrounds/bg_settings_scribe.png');
-  image(load, 'mage_defeat_bg', 'assets/characters/mage/defeat/defeat.jpg');
-  image(load, 'warrior_defeat_bg', 'assets/characters/hero/defeat/defeat.jpg');
   image(load, 'achievements_bg', 'assets/ui/panels/achievments.png');
 }
 

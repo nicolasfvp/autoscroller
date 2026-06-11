@@ -216,12 +216,8 @@ export class CardLibraryScene extends Phaser.Scene {
   }
 
   private cardCountText(): string {
-    const noun = this.forgeMode ? t('cardLib.nounRecipes') : t('cardLib.nounCards');
-    return t('cardLib.cardCount', {
-      shown: this.filteredCards.length,
-      total: this.allCards.length,
-      noun,
-    });
+    const noun = this.forgeMode ? 'recipes' : 'cards';
+    return `${this.filteredCards.length} / ${this.allCards.length} ${noun}`;
   }
 
   private updateBookContent(): void {
@@ -237,7 +233,7 @@ export class CardLibraryScene extends Phaser.Scene {
       // coords — page containers are positioned at the spine).
       const empty = this.add.text(
         ctx.leftBounds.centerX, ctx.leftBounds.centerY,
-        t('cardLib.noResults'),
+        'No cards match\nthe current filters.',
         {
           fontSize: '16px', color: '#6e4a1a', fontFamily: FF,
           align: 'center', fontStyle: 'italic',
