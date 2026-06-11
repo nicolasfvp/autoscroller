@@ -1,6 +1,6 @@
 {
   "meta": {
-    "specPath": "C:\\Users\\nicolas.pereira\\OneDrive - Way2 Technology\\Área de Trabalho\\autoscroller\\tests\\audit\\loop-spec.json",
+    "specPath": "C:\\Users\\heric\\Prog\\autoscroller\\tests\\audit\\loop-spec.json",
     "count": 5,
     "tickMs": 100,
     "fightCapMs": 120000
