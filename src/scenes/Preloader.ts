@@ -167,9 +167,6 @@ export class Preloader extends Scene {
     this.load.image('landmark_subtile_warhorn',   'assets/map/landmarks/landmark_subtile_warhorn.png');
 
     // Building panel backgrounds
-    this.load.spritesheet('forge_background', 'assets/scenes/forge/forge_background.png', {
-      frameWidth: 1168, frameHeight: 880,
-    });
     this.load.image('forge_frame_01', 'assets/scenes/forge/forge_frame_01.png');
     this.load.spritesheet('forge_fire_sheet', 'assets/scenes/forge/forge_fire_sheet.png', {
       frameWidth: 390, frameHeight: 590,
@@ -185,12 +182,10 @@ export class Preloader extends Scene {
     }
 
     // UI Panels & textures
-    this.load.image('status_panel', 'assets/scenes/combat/status_panel.png');
     this.load.image('combat_hero_panel',    'assets/scenes/combat/combat_hero_panel.png');
     this.load.image('combat_monster_panel', 'assets/scenes/combat/combat_monster_panel.png');
     this.load.spritesheet('hourglass_timer', 'assets/scenes/combat/hourglass_timer.png', { frameWidth: 256, frameHeight: 496 });
     this.load.image('combat_chip_panel', 'assets/scenes/combat/combat_chip_panel.png');
-    this.load.image('wood_texture', 'assets/ui/panels/wood-texture.png');
     this.load.image('wood_texture_big', 'assets/scenes/building_panel/wood-texture-big.png');
     this.load.image('bg_character_selection', 'assets/scenes/character_select/background-character-selection.jpg');
     this.load.spritesheet('flame_selection', 'assets/scenes/character_select/flame-spritesheet-selection.png', { frameWidth: 448, frameHeight: 576 });
@@ -257,8 +252,20 @@ export class Preloader extends Scene {
     this.load.image('bg_card_library', 'assets/scenes/card_library/bg_card_library.png');
     this.load.image('book_open',       'assets/scenes/card_library/book_open.png');
     this.load.image('bookmark_tab',    'assets/scenes/card_library/bookmark_tab.png');
-    this.load.image('warrior_status',         'assets/scenes/character_select/warrior_status.png');
-    this.load.image('mage_status',            'assets/scenes/character_select/mage_status.png');
+    // Page stacks for visual depth in the compendium. Four thickness variants —
+    // the active tab picks which side gets which (the book's "open progress").
+    this.load.image('page-stack-small',        'assets/scenes/card_library/page-stack - small.png');
+    this.load.image('page-stack-medium-small', 'assets/scenes/card_library/page-stack - medium-small.png');
+    this.load.image('page-stack-medium-large', 'assets/scenes/card_library/page-stack - medium-large.png');
+    this.load.image('page-stack-large',        'assets/scenes/card_library/page-stack - large.png');
+    this.load.image('page',            'assets/scenes/card_library/page.png');
+    // Central gutter (inner crease where the two facing pages dive into the spine)
+    this.load.image('page-gutter',     'assets/scenes/card_library/page-gutter.png');
+    // Section bookmark banners (text + emblem baked in, one per compendium tab)
+    this.load.image('ribbon_card',     'assets/scenes/card_library/ribbon_card.png');
+    this.load.image('ribbon_relics',   'assets/scenes/card_library/ribbon_relics.png');
+    this.load.image('ribbon_tiles',    'assets/scenes/card_library/ribbon_tiles.png');
+    this.load.image('ribbon_bosses',   'assets/scenes/card_library/ribbon_bosses.png');
     // *_status_panel = painel "rico": a arte é só o fundo e o texto (nome/
     // descrição/deck) é renderizado por cima pelo Phaser em CharacterSelectScene.
     // Tem prioridade sobre *_status (fallback só-imagem) via textures.exists().
@@ -267,7 +274,6 @@ export class Preloader extends Scene {
     // Forge dwarf NPC
     this.load.image('dwarf_talking',          'assets/characters/npc/forge-dwarf/dwarf_talking.png');
     this.load.image('dwarf_hands_on_hips',    'assets/characters/npc/forge-dwarf/dwarf_hands_on_hips.png');
-    this.load.image('panel_keyword_frame',    'assets/scenes/combat/panel_keyword_frame.png');
     this.load.image('panel_hover_frame',      'assets/scenes/combat/panel_hover_frame.png');
     this.load.image('bg_settings_scribe',     'assets/ui/backgrounds/bg_settings_scribe.png');
     this.load.image('deck_relic_table', 'assets/scenes/planning/deck-relic-table.png');
@@ -282,9 +288,11 @@ export class Preloader extends Scene {
     this.load.bitmapFont('vt323_white', 'assets/fonts/vt323_white/vt323_white.png', 'assets/fonts/vt323_white/vt323_white.fnt');
     this.load.bitmapFont('vt323_blue',  'assets/fonts/vt323_blue/vt323_blue.png',   'assets/fonts/vt323_blue/vt323_blue.fnt');
 
-    this.load.image('ui_panel',           'assets/ui/panels/panel.png');
     this.load.image('speed_panel',        'assets/ui/panels/speed_panel.png');
     this.load.image('hud_panel_left',     'assets/scenes/game/hud_panel_left.png');
+    this.load.image('hud_hero_panel',     'assets/scenes/game/hero_panel.png');
+    this.load.image('hud_loop_panel',     'assets/scenes/game/loop-Panel.png');
+    this.load.image('loop_chip_panel',    'assets/scenes/game/loop_chip_panel.png');
     this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
     this.load.image('boss_exit_option_panel', 'assets/scenes/boss_exit/option-panel.png');
@@ -295,7 +303,6 @@ export class Preloader extends Scene {
     for (const t of tileTooltips) {
       this.load.image(`tile_tooltip_${t}`, `assets/scenes/planning/tile_tooltip_${t}.png`);
     }
-    this.load.image('panel_hover', 'assets/ui/panels/panel_hover.png');
 
     // UI Buttons — pre-rendered dark/gold style
     this.load.image('btn_continue_run',    'assets/scenes/main_menu/continue-run.png');
@@ -311,7 +318,6 @@ export class Preloader extends Scene {
     this.load.image('btn_forge',         'assets/scenes/city_hub/btn_forge.png');
     this.load.image('btn_library',       'assets/scenes/city_hub/btn_library.png');
     this.load.image('btn_workshop',      'assets/scenes/city_hub/btn_workshop.png');
-    this.load.image('btn_oracle',        'assets/scenes/city_hub/btn_oracle.png');
     this.load.image('btn_vault',         'assets/scenes/city_hub/btn_vault.png');
     this.load.image('btn_melhorar',          'assets/scenes/city_hub/btn_melhorar.png');
     this.load.image('btn_start_run_hub',     'assets/scenes/city_hub/btn_start_run_hub.png');

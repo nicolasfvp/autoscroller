@@ -18,7 +18,7 @@ export function generateTreasureLoot(run: RunState): void {
   if (goldAmount > 0) {
     run.economy.gold += goldAmount;
     run.stats.goldEarned += goldAmount;
-    entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700' });
+    entries.push({ label: `+${goldAmount} Gold`, color: '#ffd700', source: 'treasure' });
   }
 
   // Material drop: 30% chance (diversifies loot beyond gold)
@@ -28,7 +28,7 @@ export function generateTreasureLoot(run: RunState): void {
     const amount = 1 + Math.floor(rand() * 2);
     if (!run.economy.materials) run.economy.materials = {};
     run.economy.materials[mat] = (run.economy.materials[mat] ?? 0) + amount;
-    entries.push({ label: `+${amount} ${mat}`, color: '#e040fb' });
+    entries.push({ label: `+${amount} ${mat}`, color: '#e040fb', source: 'treasure' });
   }
 
   addPendingLoot(entries);
