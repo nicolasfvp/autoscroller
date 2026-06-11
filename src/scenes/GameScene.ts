@@ -379,6 +379,7 @@ export class GameScene extends Scene {
 
   private syncStateAfterTransition(): void {
     const run = getRun();
+
     this.loopRunState.economy.gold = run.economy.gold;
     this.loopRunState.economy.tilePoints = run.economy.tilePoints;
     for (const [mat, amount] of Object.entries(run.economy.materials ?? {})) {
@@ -388,13 +389,17 @@ export class GameScene extends Scene {
       .filter(([, count]) => count > 0)
       .map(([tileType, count]) => ({ tileType, count }));
 
-    // Loot is accumulated here and shown in LoopSummaryScene at loop end.
-
     for (const [, tv] of this.tilePool) tv.destroy();
     this.tilePool.clear();
 
     if (this.hud) this.hud.update(run);
     this.gameSpeed = run.mapSpeed ?? 1;
+
+    if (run.loop.bossChoiceContinue) {
+      run.loop.bossChoiceContinue = false;
+      this.loopRunner.onBossChoice('continue');
+      return;
+    }
 
     const state = this.loopRunner.getState();
     if (state === 'tile-interaction') {
@@ -635,14 +640,28 @@ export class GameScene extends Scene {
         // Two emitters:
         //  - onLoopCompleted: no traversedLength payload; worldOffset is
         //    advanced by the paired 'loop-completed' callback above.
-        //  - onBossChoice('continue'): includes traversedLength because no
-        //    'loop-completed' fired (boss was defeated mid-loop and tiles
-        //    were grown/spliced before positionInLoop reset to 0). Advance
-        //    worldOffset here so the hero doesn't visually snap backward.
+        //  - onBossChoice('continue'): includes traversedLength. Advance
+        //    worldOffset and open the LoopSummary → Planning flow, same as
+        //    the normal loop-completed path (boss-continue skips loop-completed
+        //    so we handle the full transition here).
         if (typeof data?.traversedLength === 'number') {
           this.worldOffset += data.traversedLength * TILE_SIZE;
           for (const [, tv] of this.tilePool) tv.destroy();
           this.tilePool.clear();
+
+          const diffConfig = getDifficultyConfig();
+          const tpEarned = diffConfig.baseTilePointsPerLoop + Math.floor((data.loopCount ?? 0) * diffConfig.tilePointScalePerLoop);
+          const lootItems = drainPendingLoot();
+          const monstersDefeated = drainPendingKills();
+          this.scene.launch(SCENE_KEYS.LOOP_SUMMARY, {
+            loopRunner: this.loopRunner,
+            loopRunState: this.loopRunState,
+            lootItems,
+            monstersDefeated,
+            tpEarned,
+            loopCount: data.loopCount ?? this.loopRunState.loop.count,
+          });
+          this.scene.sleep();
         }
         break;
       }

@@ -379,8 +379,12 @@ export class CombatScene extends Scene {
 
         const isMage = sp === 'mage';
         const IDLE_SCALE = isMage ? 0.3357 : 0.6034;
-        const ORIGIN_X = 200;
-        const ORIGIN_Y = isMage ? 315.4 : 338.5;
+        const ORIGIN_X = isMage ? 180.9 : 200;
+        const ORIGIN_Y = isMage ? 331.2 : 338.5;
+        const SHADOW_X = isMage ? 183.3 : 178;
+        const SHADOW_Y = isMage ? 445.3 : 440;
+        const SHADOW_W = isMage ? 243 : 220;
+        const SHADOW_H = isMage ? 86 : 50;
         const idleFrameH = this.textures.get(heroIdleKey).get(0).realHeight;
 
         // Y compensado pela diferença de frameH: mantém pés no mesmo ponto em tela
@@ -391,9 +395,9 @@ export class CombatScene extends Scene {
 
         this.heroSprite = this.add.sprite(ORIGIN_X, yForAnim(heroIdleKey), heroIdleKey).setDepth(10).setScale(idleIsSpritesheet ? IDLE_SCALE : 0.7);
         if (this.textures.exists('hero_shadow')) {
-          this.add.image(178, 440, 'hero_shadow').setDisplaySize(220, 50).setAlpha(0.7).setDepth(9);
+          this.add.image(SHADOW_X, SHADOW_Y, 'hero_shadow').setDisplaySize(SHADOW_W, SHADOW_H).setAlpha(0.7).setDepth(9);
         } else {
-          this.add.ellipse(200, 450, 160, 28, 0x000000, 0.45).setDepth(9);
+          this.add.ellipse(ORIGIN_X, SHADOW_Y + 10, 160, 28, 0x000000, 0.45).setDepth(9);
         }
 
         const idle2Key = `${sp}_idle2`;

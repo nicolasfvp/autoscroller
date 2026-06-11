@@ -255,6 +255,8 @@ export class Preloader extends Scene {
     this.load.image('bg_deck_editor_v2', 'assets/scenes/deck_customization/deck-editor-v2.png');
     this.load.image('bg_relic_vault',  'assets/scenes/relic_viewer/bg_relic_vault.png');
     this.load.image('bg_card_library', 'assets/scenes/card_library/bg_card_library.png');
+    this.load.image('book_open',       'assets/scenes/card_library/book_open.png');
+    this.load.image('bookmark_tab',    'assets/scenes/card_library/bookmark_tab.png');
     this.load.image('warrior_status',         'assets/scenes/character_select/warrior_status.png');
     this.load.image('mage_status',            'assets/scenes/character_select/mage_status.png');
     // *_status_panel = painel "rico": a arte é só o fundo e o texto (nome/
@@ -285,6 +287,7 @@ export class Preloader extends Scene {
     this.load.image('hud_panel_left',     'assets/scenes/game/hud_panel_left.png');
     this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
+    this.load.image('boss_exit_option_panel', 'assets/scenes/boss_exit/option-panel.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)
     const tileTooltips = ['forest','graveyard','swamp','desert','lava','event','treasure',
