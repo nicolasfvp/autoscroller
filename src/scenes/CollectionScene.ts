@@ -1,7 +1,15 @@
 // CollectionScene — the player's compendium. Rendered as an open tome with
-// four chapter tabs (Cards / Relics / Tiles / Bosses), paginated card spreads,
-// and a page-flip animation. Chrome is owned by BookLayout; this scene just
-// supplies the per-spread renderer and the detail popup.
+// four chapter tabs (Cards / Relics / Tiles / Bosses).
+//
+// Two layout modes, chosen per tab:
+//   • grid       (Cards)               — a paginated grid spread across both
+//                                         pages; cards keep their own popup.
+//   • listDetail (Relics/Tiles/Bosses) — a paginated list on the LEFT page and
+//                                         the selected entry's detail on the
+//                                         RIGHT page (in-book, no modal). Boss
+//                                         detail plays the monster idle loop.
+// Chrome + page-flip are owned by BookLayout; this scene supplies the per-spread
+// renderer and the detail composition.
 
 import Phaser from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
@@ -10,7 +18,7 @@ import {
   type CollectionStatus, type CategoryStatus,
 } from '../systems/CollectionRegistry';
 import { MetaState } from '../state/MetaState';
-import { COLORS, FONTS, LAYOUT } from '../ui/StyleConstants';
+import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput } from '../ui/CardFace';
@@ -27,7 +35,15 @@ const TAB_KEYS: Record<TabName, keyof CollectionStatus> = {
   Bosses: 'bosses',
 };
 
-// Per-tab grid shape (per page). The spread shows 2× this.
+// Layout strategy per tab.
+const LAYOUT_MODE: Record<TabName, 'grid' | 'listDetail'> = {
+  Cards: 'grid',
+  Relics: 'listDetail',
+  Tiles: 'listDetail',
+  Bosses: 'listDetail',
+};
+
+// Grid mode (Cards): per-page shape; the spread shows 2× this.
 const GRID_SHAPE: Record<TabName, { cols: number; rows: number }> = {
   Cards: { cols: 3, rows: 2 },
   Relics: { cols: 4, rows: 3 },
@@ -35,12 +51,23 @@ const GRID_SHAPE: Record<TabName, { cols: number; rows: number }> = {
   Bosses: { cols: 2, rows: 2 },
 };
 
+// listDetail mode: rows shown on the left page per spread.
+const ROWS_PER_LIST_PAGE = 10;
+
+// Parchment-friendly ink colors (the painted pages are light, so text is dark).
+const INK = '#3a2218';
+const INK_SOFT = '#6e4a1a';
+const INK_TITLE = '#2a1206';
+
 export class CollectionScene extends Phaser.Scene {
   private metaState!: MetaState;
   private collectionStatus!: CollectionStatus;
   private book: BookLayout | null = null;
   private transitioning = false;
-  private detailPopup: Phaser.GameObjects.Container | null = null;
+  // Per-tab current selection (listDetail mode), preserved across flips/tab swaps.
+  private selectedId: Partial<Record<TabName, string>> = {};
+  // Idle-animation timer for the boss detail portrait; cleared on every re-render.
+  private detailIdleTimer: Phaser.Time.TimerEvent | null = null;
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private wheelHandler: ((p: Phaser.Input.Pointer, go: unknown, dx: number, dy: number) => void) | null = null;
 
@@ -103,8 +130,7 @@ export class CollectionScene extends Phaser.Scene {
   }
 
   private teardown(): void {
-    if (this.detailPopup) this.detailPopup.destroy(true);
-    this.detailPopup = null;
+    this.clearDetailIdleTimer();
     this.book?.destroy();
     this.book = null;
     if (this.keydownHandler) {
@@ -124,17 +150,36 @@ export class CollectionScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(sceneKey, data));
   }
 
+  // ── Tab dispatch ──────────────────────────────────────────
+
   private setTabContent(tab: TabName): void {
     if (!this.book) return;
-    const status = this.collectionStatus[TAB_KEYS[tab]];
-    const items = status.items;
-    const shape = GRID_SHAPE[tab];
-    const perPage = shape.cols * shape.rows;
-    const perSpread = perPage * 2;
-    const totalSpreads = Math.max(1, Math.ceil(items.length / perSpread));
+    this.clearDetailIdleTimer();
+    const items = this.collectionStatus[TAB_KEYS[tab]].items;
 
-    this.book.setContent(totalSpreads, (ctx) => this.renderSpread(tab, items, ctx));
+    if (LAYOUT_MODE[tab] === 'grid') {
+      const shape = GRID_SHAPE[tab];
+      const perSpread = shape.cols * shape.rows * 2;
+      const totalSpreads = Math.max(1, Math.ceil(items.length / perSpread));
+      this.book.setContent(totalSpreads, (ctx) => this.renderSpread(tab, items, ctx));
+    } else {
+      const totalSpreads = Math.max(1, Math.ceil(items.length / ROWS_PER_LIST_PAGE));
+      // Default selection = first unlocked entry (fallback: first entry).
+      if (!this.selectedId[tab]) {
+        this.selectedId[tab] = items.find(i => i.isUnlocked)?.id ?? items[0]?.id;
+      }
+      this.book.setContent(totalSpreads, (ctx) => this.renderListDetailSpread(tab, items, ctx));
+    }
   }
+
+  private clearDetailIdleTimer(): void {
+    if (this.detailIdleTimer) {
+      this.detailIdleTimer.remove(false);
+      this.detailIdleTimer = null;
+    }
+  }
+
+  // ── Grid mode (Cards) ─────────────────────────────────────
 
   private renderSpread(
     tab: TabName,
@@ -181,242 +226,395 @@ export class CollectionScene extends Phaser.Scene {
       const y = startY + row * (itemH + gapY);
 
       if (item.isUnlocked) {
-        this.renderUnlocked(tab, item, x, y, itemW, itemH, scale, container);
+        this.renderUnlocked(tab, item, x, y, scale, container);
       } else {
-        this.renderLocked(tab, item, x, y, itemW, itemH, scale, container);
+        this.renderLocked(tab, item, x, y, itemH, scale, container);
       }
     });
   }
 
   private itemDimensions(tab: TabName): { itemW: number; itemH: number; scale: number } {
     switch (tab) {
-      case 'Cards': {
+      case 'Cards':
+      default: {
         const scale = 0.5;
         return { itemW: STANDARD_CARD_WIDTH * scale, itemH: STANDARD_CARD_HEIGHT * scale, scale };
       }
-      case 'Bosses':
-        return { itemW: 130, itemH: 100, scale: 1 };
-      case 'Relics':
-      case 'Tiles':
-      default:
-        return { itemW: 60, itemH: 72, scale: 1 };
     }
   }
 
+  // Grid mode is Cards-only; relics/tiles/bosses use listDetail and open their
+  // detail on the right page instead of a popup.
   private renderUnlocked(
     tab: TabName,
     item: CategoryStatus['items'][number],
-    x: number, y: number, itemW: number, itemH: number, scale: number,
+    x: number, y: number, scale: number,
     container: Phaser.GameObjects.Container,
   ): void {
-    const FF = FONTS.family;
-
-    if (tab === 'Cards') {
-      // CardVisual self-binds pointerdown -> showCardDetail (the shared
-      // popup). We keep that as-is so card detail is uniform across the app.
-      const visual = createCardVisual(this, x, y, item.id, { scale });
-      container.add(visual);
-      return;
-    }
-
-    if (tab === 'Relics' || tab === 'Tiles') {
-      const prefix = tab === 'Relics' ? 'relic_' : 'tile_';
-      const key = `${prefix}${item.id}`;
-      let interactable: Phaser.GameObjects.GameObject;
-      if (this.textures.exists(key)) {
-        const img = this.add.image(x, y, key).setDisplaySize(itemW - 6, itemH - 6);
-        container.add(img);
-        interactable = img;
-      } else {
-        const fallback = this.add.rectangle(x, y, itemW - 6, itemH - 6, 0x3a2218);
-        container.add(fallback);
-        interactable = fallback;
-      }
-      const frame = this.add.rectangle(x, y, itemW, itemH).setStrokeStyle(2, 0xc89a3c);
-      container.add(frame);
-      const name = this.add.text(x, y + itemH / 2 + 3, item.name, {
-        fontSize: '9px',
-        fontStyle: 'bold',
-        color: '#3a2218',
-        fontFamily: FF,
-        align: 'center',
-        wordWrap: { width: itemW + 6 },
-      }).setOrigin(0.5, 0);
-      container.add(name);
-      (interactable as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle)
-        .setInteractive({ useHandCursor: true });
-      interactable.on('pointerdown', () => this.showDetailPopup(item.id));
-      return;
-    }
-
-    // Bosses — render the monster portrait if available, fallback to a
-    // colored plaque if the texture didn't load.
-    const monsterKey = `monster_${item.id}`;
-    const portraitH = itemH - 24; // reserve bottom strip for the name plate
-    let interactable: Phaser.GameObjects.GameObject;
-    if (this.textures.exists(monsterKey)) {
-      const portrait = this.add.image(x, y - 6, monsterKey)
-        .setDisplaySize(itemW - 12, portraitH);
-      container.add(portrait);
-      interactable = portrait;
-    } else {
-      const fallback = this.add.rectangle(x, y - 6, itemW - 12, portraitH, 0x4a1a1a);
-      container.add(fallback);
-      interactable = fallback;
-    }
-    const frame = this.add.rectangle(x, y, itemW, itemH).setStrokeStyle(2, 0xc89a3c);
-    container.add(frame);
-    // Name plate at the bottom — dark band so the title stays legible over
-    // whatever the portrait shows.
-    const plate = this.add.rectangle(x, y + itemH / 2 - 10, itemW - 4, 18, 0x1a0a04, 0.85);
-    container.add(plate);
-    const name = this.add.text(x, y + itemH / 2 - 10, item.name, {
-      fontSize: '11px',
-      fontStyle: 'bold',
-      color: '#f5d273',
-      fontFamily: FF,
-      align: 'center',
-      wordWrap: { width: itemW - 6 },
-    }).setOrigin(0.5);
-    container.add(name);
-    (interactable as Phaser.GameObjects.Image | Phaser.GameObjects.Rectangle)
-      .setInteractive({ useHandCursor: true });
-    interactable.on('pointerdown', () => this.showDetailPopup(item.id));
+    if (tab !== 'Cards') return;
+    // CardVisual self-binds pointerdown -> showCardDetail (the shared popup).
+    const visual = createCardVisual(this, x, y, item.id, { scale });
+    container.add(visual);
   }
 
   private renderLocked(
     tab: TabName,
     item: CategoryStatus['items'][number],
-    x: number, y: number, itemW: number, itemH: number, scale: number,
+    x: number, y: number, itemH: number, scale: number,
     container: Phaser.GameObjects.Container,
   ): void {
+    if (tab !== 'Cards') return;
     const FF = FONTS.family;
-
-    if (tab === 'Cards') {
-      const visual = createCardVisual(this, x, y, item.id, { scale });
-      visual.setAlpha(0.35);
-      disableCardFaceInput(visual);
-      container.add(visual);
-      const lock = this.add.text(x, y, '🔒', {
-        fontSize: '22px', fontFamily: FF, color: '#ffffff',
-      }).setOrigin(0.5);
-      container.add(lock);
-      if (item.unlockHint) {
-        const hint = this.add.text(x, y + itemH / 2 + 6, item.unlockHint, {
-          fontSize: '9px', color: '#6e4a1a', fontFamily: FF,
-          wordWrap: { width: itemW + 6 }, align: 'center',
-        }).setOrigin(0.5, 0);
-        container.add(hint);
-      }
-      return;
-    }
-
-    // Relic / Tile / Boss locked rendering
-    const bg = this.add.rectangle(x, y, itemW, itemH, 0x2a1a10).setStrokeStyle(1.5, 0x6e4a1a);
-    container.add(bg);
-    const label = this.add.text(x, y - 4, '???', {
-      fontSize: tab === 'Bosses' ? '24px' : '14px',
-      fontStyle: 'bold',
-      color: '#9d7e44',
-      fontFamily: FF,
+    const visual = createCardVisual(this, x, y, item.id, { scale });
+    visual.setAlpha(0.35);
+    disableCardFaceInput(visual);
+    container.add(visual);
+    const lock = this.add.text(x, y, '🔒', {
+      fontSize: '22px', fontFamily: FF, color: '#ffffff',
     }).setOrigin(0.5);
-    container.add(label);
+    container.add(lock);
     if (item.unlockHint) {
-      const hint = this.add.text(x, y + itemH / 2 - 12, item.unlockHint, {
-        fontSize: '8px', color: '#6e4a1a', fontFamily: FF,
-        wordWrap: { width: itemW - 6 }, align: 'center',
-      }).setOrigin(0.5);
+      const hint = this.add.text(x, y + itemH / 2 + 6, item.unlockHint, {
+        fontSize: '9px', color: INK_SOFT, fontFamily: FF,
+        wordWrap: { width: STANDARD_CARD_WIDTH * scale + 6 }, align: 'center',
+      }).setOrigin(0.5, 0);
       container.add(hint);
     }
   }
 
-  // ── Detail popup ──────────────────────────────────────────
+  // ── listDetail mode (Relics / Tiles / Bosses) ─────────────
 
-  private showDetailPopup(itemId: string): void {
-    this.closeDetailPopup();
+  private renderListDetailSpread(
+    tab: TabName,
+    items: CategoryStatus['items'],
+    ctx: BookRenderContext,
+  ): void {
+    // Always reset the idle timer first — repaint() destroyed the old portrait.
+    this.clearDetailIdleTimer();
 
-    const details = getItemDetails(itemId, this.metaState);
-    if (!details) return;
+    const selId = this.selectedId[tab] ?? items.find(i => i.isUnlocked)?.id ?? items[0]?.id;
+    if (selId && !this.selectedId[tab]) this.selectedId[tab] = selId;
 
-    const FF = FONTS.family;
-    const container = this.add.container(400, 300).setDepth(500);
-
-    const overlay = this.add.rectangle(0, 0, 800, 600, 0x000000, 0.6).setInteractive();
-    overlay.on('pointerdown', () => this.closeDetailPopup());
-    container.add(overlay);
-
-    const panelW = 360;
-    const panelH = 300;
-    const panel = this.add.rectangle(0, 0, panelW, panelH, 0x1a0e08, 0.96)
-      .setStrokeStyle(2, 0xc89a3c);
-    container.add(panel);
-    // Inner gold frame
-    const inner = this.add.rectangle(0, 0, panelW - 16, panelH - 16)
-      .setStrokeStyle(1, 0xf5d273);
-    container.add(inner);
-
-    container.add(this.add.text(0, -panelH / 2 + 24, details.name, {
-      fontSize: '22px', fontStyle: 'bold', color: COLORS.accent, fontFamily: FF,
-      stroke: '#000', strokeThickness: 3,
-    }).setOrigin(0.5));
-
-    let yOff = -panelH / 2 + 60;
-    const data = details.data;
-
-    if (data.description) {
-      container.add(this.add.text(0, yOff, data.description, {
-        fontSize: '14px', color: COLORS.textPrimary, fontFamily: FF,
-        wordWrap: { width: panelW - 32 }, align: 'center', lineSpacing: 3,
-      }).setOrigin(0.5, 0));
-      yOff += 60;
-    }
-
-    if (data.category) {
-      const stats: string[] = [];
-      stats.push(`Category: ${data.category}`);
-      stats.push(`Cooldown: ${data.cooldown ?? 0}s`);
-      if (data.cost?.stamina) stats.push(`Stamina: ${data.cost.stamina}`);
-      if (data.cost?.mana) stats.push(`Mana: ${data.cost.mana}`);
-      if (data.targeting) stats.push(`Target: ${data.targeting}`);
-      container.add(this.add.text(0, yOff, stats.join('  •  '), {
-        fontSize: '12px', color: COLORS.textSecondary, fontFamily: FF,
-        wordWrap: { width: panelW - 32 }, align: 'center',
-      }).setOrigin(0.5, 0));
-      yOff += 40;
-    }
-
-    if (data.effect) {
-      container.add(this.add.text(0, yOff, `Effect: ${data.effect}`, {
-        fontSize: '13px', color: '#00ccff', fontFamily: FF,
-        wordWrap: { width: panelW - 32 }, align: 'center',
-      }).setOrigin(0.5, 0));
-      yOff += 40;
-    }
-
-    container.add(this.add.text(0, panelH / 2 - 24, 'Click anywhere to close', {
-      fontSize: '11px', color: COLORS.textSecondary, fontFamily: FF, fontStyle: 'italic',
-    }).setOrigin(0.5));
-
-    container.setScale(0.85);
-    container.setAlpha(0);
-    this.tweens.add({
-      targets: container,
-      scaleX: 1, scaleY: 1, alpha: 1,
-      duration: 200, ease: 'Back.easeOut',
-    });
-
-    this.detailPopup = container;
+    this.renderList(tab, items, ctx);
+    if (selId) this.renderDetail(tab, selId, ctx.rightPage, ctx.rightBounds);
   }
 
-  private closeDetailPopup(): void {
-    if (!this.detailPopup) return;
-    const popup = this.detailPopup;
-    this.detailPopup = null;
-    this.tweens.add({
-      targets: popup,
-      alpha: 0, scaleX: 0.9, scaleY: 0.9,
-      duration: 150,
-      onComplete: () => popup.destroy(true),
+  private renderList(
+    tab: TabName,
+    items: CategoryStatus['items'],
+    ctx: BookRenderContext,
+  ): void {
+    const bounds = ctx.leftBounds;
+    const start = ctx.spreadIndex * ROWS_PER_LIST_PAGE;
+    const slice = items.slice(start, start + ROWS_PER_LIST_PAGE);
+    const rowH = bounds.innerH / ROWS_PER_LIST_PAGE;
+
+    slice.forEach((item, i) => {
+      const y = bounds.innerY + rowH / 2 + i * rowH;
+      this.renderListRow(tab, item, ctx.leftPage, bounds, y, rowH);
     });
+  }
+
+  private renderListRow(
+    tab: TabName,
+    item: CategoryStatus['items'][number],
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+    y: number,
+    rowH: number,
+  ): void {
+    const FF = FONTS.family;
+    const isSel = this.selectedId[tab] === item.id;
+
+    const rowBg = this.add.rectangle(bounds.centerX, y, bounds.innerW, rowH - 4, 0xc89a3c, isSel ? 0.35 : 0.0001);
+    if (isSel) rowBg.setStrokeStyle(1.5, 0x8a6420, 0.9);
+    rowBg.setInteractive({ useHandCursor: true });
+    rowBg.on('pointerover', () => { if (this.selectedId[tab] !== item.id) rowBg.setFillStyle(0xc89a3c, 0.15); });
+    rowBg.on('pointerout', () => { if (this.selectedId[tab] !== item.id) rowBg.setFillStyle(0xc89a3c, 0.0001); });
+    rowBg.on('pointerdown', () => this.selectRow(tab, item.id));
+    container.add(rowBg);
+
+    const thumb = Math.min(rowH - 8, 30);
+    const thumbX = bounds.innerX + thumb / 2;
+    const key = this.thumbKey(tab, item.id);
+    if (item.isUnlocked && this.textures.exists(key)) {
+      this.addFittedImage(container, key, thumbX, y, thumb, thumb);
+    } else {
+      const box = this.add.rectangle(thumbX, y, thumb, thumb, 0x2a1a10).setStrokeStyle(1, 0x6e4a1a);
+      container.add(box);
+      const mark = this.add.text(thumbX, y, item.isUnlocked ? '•' : '?', {
+        fontSize: '12px', fontStyle: 'bold', color: '#9d7e44', fontFamily: FF,
+      }).setOrigin(0.5);
+      container.add(mark);
+    }
+
+    const nameX = bounds.innerX + thumb + 8;
+    const name = this.add.text(nameX, y, item.isUnlocked ? item.name : '???', {
+      fontSize: '12px', fontStyle: 'bold',
+      color: item.isUnlocked ? INK : INK_SOFT,
+      fontFamily: FF,
+      wordWrap: { width: bounds.innerW - thumb - 16 },
+    }).setOrigin(0, 0.5);
+    container.add(name);
+  }
+
+  private thumbKey(tab: TabName, id: string): string {
+    if (tab === 'Relics') return `relic_${id}`;
+    if (tab === 'Tiles') return `tile_${id}`;
+    return `monster_${id}`; // Bosses
+  }
+
+  /** Change the selection and re-render the current spread in place (no flip). */
+  private selectRow(tab: TabName, id: string): void {
+    if (this.selectedId[tab] === id) return;
+    this.selectedId[tab] = id;
+    this.book?.setSpreadIndex(this.book.getSpreadIndex());
+  }
+
+  // ── Detail compositions (right page) ──────────────────────
+
+  private renderDetail(
+    tab: TabName,
+    id: string,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    const details = getItemDetails(id, this.metaState);
+    if (!details) return;
+    if (tab === 'Relics') this.renderRelicDetail(details, container, bounds);
+    else if (tab === 'Bosses') this.renderBossDetail(details, container, bounds);
+    else if (tab === 'Tiles') this.renderTileDetail(details, container, bounds);
+  }
+
+  private renderLockedDetail(
+    details: ReturnType<typeof getItemDetails>,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    if (!details) return;
+    const FF = FONTS.family;
+    const cx = bounds.centerX;
+    const box = this.add.rectangle(cx, bounds.innerY + 130, 150, 170, 0x2a1a10, 0.9)
+      .setStrokeStyle(2, 0x6e4a1a);
+    container.add(box);
+    container.add(this.add.text(cx, bounds.innerY + 130, '???', {
+      fontSize: '44px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+    }).setOrigin(0.5));
+    container.add(this.add.text(cx, bounds.innerY + 250, 'Locked', {
+      fontSize: '16px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+    }).setOrigin(0.5));
+    if (details.unlockHint) {
+      container.add(this.add.text(cx, bounds.innerY + 278, details.unlockHint, {
+        fontSize: '12px', color: INK_SOFT, fontFamily: FF, align: 'center',
+        wordWrap: { width: bounds.innerW },
+      }).setOrigin(0.5, 0));
+    }
+  }
+
+  private renderRelicDetail(
+    details: NonNullable<ReturnType<typeof getItemDetails>>,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    if (!details.isUnlocked) { this.renderLockedDetail(details, container, bounds); return; }
+    const FF = FONTS.family;
+    const cx = bounds.centerX;
+    const data = details.data ?? {};
+    let cy = bounds.innerY + 6;
+
+    const iconBox = 108;
+    if (!this.addFittedImage(container, `relic_${details.id}`, cx, cy + iconBox / 2, iconBox, iconBox)) {
+      const fb = this.add.rectangle(cx, cy + iconBox / 2, iconBox, iconBox, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
+      container.add(fb);
+    }
+    cy += iconBox + 12;
+
+    const name = this.add.text(cx, cy, details.name, {
+      fontSize: '18px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: bounds.innerW },
+    }).setOrigin(0.5, 0);
+    container.add(name);
+    cy += name.height + 6;
+
+    const meta = [data.rarity, data.trigger].filter(Boolean)
+      .map((s: any) => String(s).replace(/_/g, ' ').toUpperCase()).join('   •   ');
+    if (meta) {
+      const m = this.add.text(cx, cy, meta, {
+        fontSize: '11px', fontStyle: 'bold', color: this.rarityColor(data.rarity), fontFamily: FF,
+        align: 'center', wordWrap: { width: bounds.innerW },
+      }).setOrigin(0.5, 0);
+      container.add(m);
+      cy += m.height + 8;
+    }
+
+    if (data.description) {
+      const d = this.add.text(cx, cy, String(data.description), {
+        fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
+        wordWrap: { width: bounds.innerW }, lineSpacing: 3,
+      }).setOrigin(0.5, 0);
+      container.add(d);
+      cy += d.height + 10;
+    }
+
+    if (data.stats && typeof data.stats === 'object') {
+      const lines = Object.entries(data.stats)
+        .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`);
+      if (lines.length) {
+        const st = this.add.text(cx, cy, lines.join('\n'), {
+          fontSize: '12px', color: INK_SOFT, fontFamily: FF, align: 'center', lineSpacing: 2,
+        }).setOrigin(0.5, 0);
+        container.add(st);
+        cy += st.height + 6;
+      }
+    }
+  }
+
+  private renderBossDetail(
+    details: NonNullable<ReturnType<typeof getItemDetails>>,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    const FF = FONTS.family;
+    const cx = bounds.centerX;
+    const data = details.data ?? {};
+    let cy = bounds.innerY + 4;
+
+    const box = 150;
+    const portrait = this.addFittedImage(container, `monster_${details.id}`, cx, cy + box / 2, box, box);
+    if (!portrait) {
+      const fb = this.add.rectangle(cx, cy + box / 2, box, box, 0x4a1a1a).setStrokeStyle(2, 0xc89a3c);
+      container.add(fb);
+    }
+    cy += box + 8;
+
+    // Idle loop: cycle monster_<id>, monster_<id>_2, … at 6 fps when multi-frame.
+    const frames = this.bossIdleFrames(details.id);
+    if (portrait && frames.length > 1) {
+      let fi = 0;
+      this.detailIdleTimer = this.time.addEvent({
+        delay: Math.round(1000 / 6),
+        loop: true,
+        callback: () => {
+          if (!portrait.active) return;
+          fi = (fi + 1) % frames.length;
+          portrait.setTexture(frames[fi]);
+        },
+      });
+    }
+
+    const name = this.add.text(cx, cy, details.name, {
+      fontSize: '20px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: bounds.innerW },
+    }).setOrigin(0.5, 0);
+    container.add(name);
+    cy += name.height + 8;
+
+    const statLine = `HP ${data.hp ?? '?'}    ATK ${data.atk ?? '?'}    DEF ${data.defense ?? 0}`;
+    const stats = this.add.text(cx, cy, statLine, {
+      fontSize: '13px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+    }).setOrigin(0.5, 0);
+    container.add(stats);
+    cy += stats.height + 6;
+
+    if (data.effect) {
+      const eff = this.add.text(cx, cy, `Behaviors: ${data.effect}`, {
+        fontSize: '11px', fontStyle: 'italic', color: INK_SOFT, fontFamily: FF,
+        align: 'center', wordWrap: { width: bounds.innerW },
+      }).setOrigin(0.5, 0);
+      container.add(eff);
+      cy += eff.height + 10;
+    }
+
+    if (data.lore) {
+      const lore = this.add.text(cx, cy, String(data.lore), {
+        fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
+        wordWrap: { width: bounds.innerW }, lineSpacing: 4,
+      }).setOrigin(0.5, 0);
+      container.add(lore);
+    }
+  }
+
+  private renderTileDetail(
+    details: NonNullable<ReturnType<typeof getItemDetails>>,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    const FF = FONTS.family;
+    const cx = bounds.centerX;
+    const data = details.data ?? {};
+    let cy = bounds.innerY + 8;
+
+    const box = 112;
+    const art = this.addFittedImage(container, `tile_${details.id}`, cx, cy + box / 2, box, box);
+    if (art && !details.isUnlocked) art.setAlpha(0.35);
+    if (!art) {
+      const fb = this.add.rectangle(cx, cy + box / 2, box, box, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
+      container.add(fb);
+    }
+    cy += box + 12;
+
+    const name = this.add.text(cx, cy, details.name, {
+      fontSize: '18px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: bounds.innerW },
+    }).setOrigin(0.5, 0);
+    container.add(name);
+    cy += name.height + 8;
+
+    const statusText = details.isUnlocked ? 'Unlocked' : (details.unlockHint ?? 'Locked');
+    const status = this.add.text(cx, cy, statusText, {
+      fontSize: '12px', fontStyle: 'bold',
+      color: details.isUnlocked ? '#2e6e2e' : INK_SOFT, fontFamily: FF,
+      align: 'center', wordWrap: { width: bounds.innerW },
+    }).setOrigin(0.5, 0);
+    container.add(status);
+    cy += status.height + 10;
+
+    if (data.description) {
+      const d = this.add.text(cx, cy, String(data.description), {
+        fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
+        wordWrap: { width: bounds.innerW }, lineSpacing: 3,
+      }).setOrigin(0.5, 0);
+      container.add(d);
+    }
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+
+  /** Add an image scaled to fit a box while preserving aspect ratio. Returns
+   *  null (adding nothing) when the texture isn't loaded. */
+  private addFittedImage(
+    container: Phaser.GameObjects.Container,
+    key: string, x: number, y: number, boxW: number, boxH: number,
+  ): Phaser.GameObjects.Image | null {
+    if (!this.textures.exists(key)) return null;
+    const src = this.textures.get(key).getSourceImage() as { width: number; height: number };
+    const scale = Math.min(boxW / src.width, boxH / src.height);
+    const img = this.add.image(x, y, key).setScale(scale);
+    container.add(img);
+    return img;
+  }
+
+  /** Ordered idle frames for a boss: monster_<id>, monster_<id>_2, … while they
+   *  exist. Single-frame bosses return one entry (rendered static). */
+  private bossIdleFrames(id: string): string[] {
+    const frames: string[] = [];
+    if (this.textures.exists(`monster_${id}`)) frames.push(`monster_${id}`);
+    for (let n = 2; n < 12; n++) {
+      const k = `monster_${id}_${n}`;
+      if (this.textures.exists(k)) frames.push(k);
+      else break;
+    }
+    return frames;
+  }
+
+  private rarityColor(rarity?: string): string {
+    switch ((rarity ?? '').toLowerCase()) {
+      case 'common': return '#5a4a32';
+      case 'uncommon': return '#2e6e2e';
+      case 'rare': return '#2e5a8e';
+      case 'epic': return '#7a3e9e';
+      case 'legendary': return '#a8761e';
+      default: return INK_SOFT;
+    }
   }
 }
