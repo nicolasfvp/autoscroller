@@ -17,7 +17,7 @@ import {
   setStoredNickname,
 } from '../systems/DailySeed';
 import { NicknameModal } from '../ui/NicknameModal';
-import { t, getLocale, setLocale, SUPPORTED_LOCALES, LOCALE_SHORT, type Locale } from '../i18n/i18n';
+import { t, getLocale } from '../i18n/i18n';
 import { localizedImageButton } from '../ui/LocalizedButton';
 
 

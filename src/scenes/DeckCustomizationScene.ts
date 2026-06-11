@@ -16,7 +16,7 @@
 
 import { Scene } from 'phaser';
 import { getRun } from '../state/RunState';
-import { FONTS, LAYOUT, COLORS } from '../ui/StyleConstants';
+import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { disableCardFaceInput, createCardFace } from '../ui/CardFace';
@@ -139,14 +139,6 @@ export class DeckCustomizationScene extends Scene {
   }
 
   private buildHeader(): void {
-    this.add.rectangle(LAYOUT.centerX, HEADER_BOTTOM / 2, LAYOUT.canvasWidth, HEADER_BOTTOM, 0x14100c, 0.86)
-      .setStrokeStyle(1, CHROME.panelStroke);
-
-    this.add.text(LAYOUT.centerX, HEADER_BOTTOM / 2, t('deckCustom.title'), {
-      fontSize: '22px', fontStyle: 'bold', color: COLORS.accent,
-      fontFamily: FONTS.body, stroke: '#000', strokeThickness: 4,
-    }).setOrigin(0.5).setShadow(2, 2, '#000', 3, true, true);
-
     localizedImageButton(this, 72, LAYOUT.canvasHeight - 28, 'btn_back_settings', t('common.back'), 130, () => this.close(), { height: 51 });
 
     addGlossaryButton(this, 770, HEADER_BOTTOM / 2);

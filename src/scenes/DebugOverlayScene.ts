@@ -3,11 +3,12 @@ import { SCENE_KEYS } from '../state/SceneKeys';
 import { DebugManager } from '../debug/DebugManager';
 import { createNewRun, setRun, hasActiveRun, clearRun, getRun } from '../state/RunState';
 import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
+import { LoopRunner } from '../systems/LoopRunner';
 
 const PW  = 202;  // Panel width
 const PH  = 600;  // Panel height
-const FONT    = { fontFamily: 'monospace', fontSize: '10px' };
-const FONT_SM = { fontFamily: 'monospace', fontSize: '9px' };
+const FONT    = { fontFamily: 'VT323', fontSize: '10px' };
+const FONT_SM = { fontFamily: 'VT323', fontSize: '9px' };
 
 const C_TITLE = '#ffff44';
 const C_DIM   = '#888888';
@@ -43,24 +44,61 @@ const RUN_REQUIRED = new Set<string>([
   SCENE_KEYS.TAVERN_PANEL,
 ]);
 
+// Exigem parâmetros no create/init — navegar via debug usa mocks (mockParamsFor).
+const PARAMS_REQUIRED = new Set<string>([
+  SCENE_KEYS.LIBRARY,
+  SCENE_KEYS.COMBAT,
+  SCENE_KEYS.PLANNING,
+  SCENE_KEYS.BOSS_EXIT,
+  SCENE_KEYS.LOOP_SUMMARY,
+  SCENE_KEYS.RUN_TRANSITION,
+  SCENE_KEYS.STARTING_DECK,
+]);
+
+function mockLoopRunner(): LoopRunner {
+  return new LoopRunner(() => {});
+}
+
+function mockLoopRunState() {
+  return {
+    loop:  { tiles: [], currentIndex: 0, plannedTiles: [] },
+    economy: { gold: 0, materials: {}, tileInventory: {}, shards: {}, elements: {} },
+    tileInventory: [],
+  };
+}
+
+function mockParamsFor(key: string): Record<string, unknown> {
+  const loopRunner = mockLoopRunner();
+  const loopRunState = mockLoopRunState();
+
+  switch (key) {
+    case SCENE_KEYS.LIBRARY:
+      return { parentKey: SCENE_KEYS.CITY_HUB, forgeMode: false };
+    case SCENE_KEYS.COMBAT:
+      return { enemyId: 'skeleton', isBoss: false, isElite: false, terrain: 'forest' };
+    case SCENE_KEYS.PLANNING:
+      return { loopRunner, loopRunState };
+    case SCENE_KEYS.BOSS_EXIT:
+      return { loopRunner, loopRunState };
+    case SCENE_KEYS.LOOP_SUMMARY:
+      return { loopRunner, loopRunState, lootItems: [], monstersDefeated: {}, tpEarned: 0, loopCount: 1 };
+    case SCENE_KEYS.RUN_TRANSITION:
+      return { seed: 'debug-seed', manualSeed: false };
+    case SCENE_KEYS.STARTING_DECK:
+      return { className: 'warrior', onConfirm: () => {} };
+    default:
+      return { parentScene: SCENE_KEYS.CITY_HUB };
+  }
+}
+
 const UNSAFE_SCENES = new Set<string>([
-  // Sistema / infraestrutura
+  // Sistema / infraestrutura — nunca navegar diretamente
   SCENE_KEYS.BOOT,
   SCENE_KEYS.PRELOADER,
   SCENE_KEYS.GLOBAL_SOUND,
   SCENE_KEYS.SPEED_PANEL,
   SCENE_KEYS.DEBUG_OVERLAY,
-  SCENE_KEYS.LIBRARY,
   'debug-listener',
-  // Sub-cenas que exigem parâmetros obrigatórios no create/init
-  SCENE_KEYS.BUILDING_PANEL,
-  SCENE_KEYS.TAVERN_PANEL,
-  SCENE_KEYS.BOSS_EXIT,
-  SCENE_KEYS.PLANNING,
-  SCENE_KEYS.LOOP_SUMMARY,
-  SCENE_KEYS.RUN_TRANSITION,
-  SCENE_KEYS.STARTING_DECK,
-  SCENE_KEYS.COMBAT,
 ]);
 
 export class DebugOverlayScene extends Phaser.Scene {
@@ -132,11 +170,12 @@ export class DebugOverlayScene extends Phaser.Scene {
     // Scene list — sem label, item height 10px
     const sceneKeys = Object.values(SCENE_KEYS).filter(k => !UNSAFE_SCENES.has(k));
     sceneKeys.forEach(key => {
-      const isCurrent = key === this.currentSceneKey;
-      const needsRun  = RUN_REQUIRED.has(key);
-      const prefix    = isCurrent ? '▶ ' : needsRun ? '! ' : '  ';
-      const baseColor = isCurrent ? C_TITLE : needsRun ? '#ff8844' : C_DIM;
-      const hoverColor = needsRun ? '#ffaa66' : C_HL;
+      const isCurrent   = key === this.currentSceneKey;
+      const needsRun    = RUN_REQUIRED.has(key);
+      const needsParams = PARAMS_REQUIRED.has(key);
+      const prefix    = isCurrent ? '▶ ' : needsParams ? '? ' : needsRun ? '! ' : '  ';
+      const baseColor = isCurrent ? C_TITLE : needsParams ? '#8888ff' : needsRun ? '#ff8844' : C_DIM;
+      const hoverColor = needsParams ? '#aaaaff' : needsRun ? '#ffaa66' : C_HL;
       const btn = this._track(this.add.text(tx, y, prefix + key, {
         ...FONT_SM, color: baseColor,
       }).setScrollFactor(0).setInteractive({ useHandCursor: true }));
@@ -401,7 +440,7 @@ export class DebugOverlayScene extends Phaser.Scene {
   }
 
   private navigateTo(key: string): void {
-    if (RUN_REQUIRED.has(key) && !hasActiveRun()) {
+    if ((RUN_REQUIRED.has(key) || PARAMS_REQUIRED.has(key)) && !hasActiveRun()) {
       setRun(createNewRun());
       this.saveStatus.setText('run criada!');
     }
@@ -410,7 +449,8 @@ export class DebugOverlayScene extends Phaser.Scene {
     }
     this.game.events.off('debug:update', undefined, this);
     this.stopAllScenes();
-    this.scene.start(key, { parentScene: SCENE_KEYS.CITY_HUB });
+    const params = PARAMS_REQUIRED.has(key) ? mockParamsFor(key) : { parentScene: SCENE_KEYS.CITY_HUB };
+    this.scene.start(key, params);
   }
 
   private stopAllScenes(): void {
@@ -552,11 +592,11 @@ export class DebugOverlayScene extends Phaser.Scene {
 
     // ── Cabeçalho ──
     this._trackM(this.add.text(MX, MY - MH / 2 + 14, 'INSERIR ASSET', {
-      fontFamily: 'monospace', fontSize: '13px', color: '#111111', fontStyle: 'bold',
+      fontFamily: 'VT323', fontSize: '13px', color: '#111111', fontStyle: 'bold',
     }).setScrollFactor(0).setDepth(9003).setOrigin(0.5));
 
     const closeBtn = this._trackM(this.add.text(MX + MW / 2 - 8, MY - MH / 2 + 6, '✕', {
-      fontFamily: 'monospace', fontSize: '14px', color: '#cc0000',
+      fontFamily: 'VT323', fontSize: '14px', color: '#cc0000',
     }).setScrollFactor(0).setDepth(9003).setOrigin(1, 0).setInteractive({ useHandCursor: true }));
     closeBtn.on('pointerdown', () => this._clearModal());
 
@@ -568,7 +608,7 @@ export class DebugOverlayScene extends Phaser.Scene {
       .setScrollFactor(0).setDepth(9002).setStrokeStyle(1, 0x999999)
       .setInteractive({ useHandCursor: true }));
     const searchTxt = this._trackM(this.add.text(listLeft + 6, MY - MH / 2 + 23, '🔍 filtrar...', {
-      fontFamily: 'monospace', fontSize: '9px', color: '#888888',
+      fontFamily: 'VT323', fontSize: '9px', color: '#888888',
     }).setScrollFactor(0).setDepth(9003));
     void searchBg;
 
@@ -617,7 +657,7 @@ export class DebugOverlayScene extends Phaser.Scene {
     };
 
     const dimLabel = this._trackM(this.add.text(prevCX, MY + MH / 2 - 58, '', {
-      fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+      fontFamily: 'VT323', fontSize: '9px', color: '#555555',
     }).setScrollFactor(0).setDepth(9003).setOrigin(0.5));
 
     // Botão Inserir, fixo no rodapé do preview
@@ -625,7 +665,7 @@ export class DebugOverlayScene extends Phaser.Scene {
     const insertBg = this._trackM(this.add.rectangle(prevCX, insertY, PREV_W - 20, 26, 0x226622)
       .setScrollFactor(0).setDepth(9003).setInteractive({ useHandCursor: true }));
     const insertTxt = this._trackM(this.add.text(prevCX, insertY, '✓ Inserir na cena', {
-      fontFamily: 'monospace', fontSize: '11px', color: '#ffffff', fontStyle: 'bold',
+      fontFamily: 'VT323', fontSize: '11px', color: '#ffffff', fontStyle: 'bold',
     }).setScrollFactor(0).setDepth(9004).setOrigin(0.5));
     void insertTxt;
     insertBg.on('pointerover', () => insertBg.setFillStyle(0x338833));
@@ -655,7 +695,7 @@ export class DebugOverlayScene extends Phaser.Scene {
         const bgColor    = isSelected ? '#2255aa' : (i % 2 === 0 ? '#f0f0f0' : '#e8e8e8');
         const fgColor    = isSelected ? '#ffffff' : '#1a1a1a';
         const item = this.add.text(listLeft + 4, iy, key, {
-          fontFamily: 'monospace', fontSize: '10px', color: fgColor,
+          fontFamily: 'VT323', fontSize: '10px', color: fgColor,
           backgroundColor: bgColor,
           padding: { x: 3, y: 2 },
           fixedWidth: LIST_W - 8,
@@ -675,13 +715,13 @@ export class DebugOverlayScene extends Phaser.Scene {
       // Indicadores de scroll
       if (scrollOffset > 0) {
         const up = this.add.text(listCX, listTopY - 12, '▲', {
-          fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+          fontFamily: 'VT323', fontSize: '9px', color: '#555555',
         }).setScrollFactor(0).setDepth(9004).setOrigin(0.5);
         itemObjs.push(up); this._modalObjects.push(up);
       }
       if (scrollOffset + maxVisible < filtered.length) {
         const dn = this.add.text(listCX, listTopY + maxVisible * ITEM_H + 2, '▼', {
-          fontFamily: 'monospace', fontSize: '9px', color: '#555555',
+          fontFamily: 'VT323', fontSize: '9px', color: '#555555',
         }).setScrollFactor(0).setDepth(9004).setOrigin(0.5, 0);
         itemObjs.push(dn); this._modalObjects.push(dn);
       }

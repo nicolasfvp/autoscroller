@@ -94,7 +94,7 @@ export class SpeedPanelScene extends Scene {
     this.container.add(btnBg);
 
     this.btnLabel = this.add.text(BTN_X + BTN_W / 2, BTN_Y + BTN_H / 2, '☰', {
-      fontFamily: 'Inter, system-ui, sans-serif',
+      fontFamily: 'VT323',
       fontSize: '12px',
       color: '#ccaa88',
     }).setOrigin(0.5).setScrollFactor(0).setDepth(1002);

@@ -178,7 +178,7 @@ export function renderTokenText(
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y);
   const fontSize = options.fontSize ?? '13px';
-  const fontFamily = options.fontFamily ?? 'monospace';
+  const fontFamily = options.fontFamily ?? 'VT323';
   const fontStyle = options.fontStyle;
   const baseColor = options.color ?? '#bbbbcc';
   const stroke = options.stroke;

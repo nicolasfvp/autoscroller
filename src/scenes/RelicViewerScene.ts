@@ -32,10 +32,6 @@ export class RelicViewerScene extends Scene {
       400, 300, 800, 600,
       0x14101e, this.textures.exists('bg_relic_vault') ? 0.55 : 0.96,
     ).setInteractive();
-    if (this.textures.exists('deck_frame')) {
-      this.add.image(400, 300, 'deck_frame').setDisplaySize(792, 596).setDepth(-1);
-    }
-
     // Title with the gold-banner treatment used by Forge/Shop.
     this.add.bitmapText(400, 50, 'game_font_gold', t('relicViewer.title'), 30).setOrigin(0.5);
     this.add.rectangle(400, 80, 480, 2, 0xd4a04a, 0.7);
@@ -50,7 +46,7 @@ export class RelicViewerScene extends Scene {
         strokeThickness: 3,
         wordWrap: { width: 500 },
       }).setOrigin(0.5);
-      createImageButton(this, 400, 370, t('relicViewer.visitShop'), () => this.close(), 240, 56);
+      createImageButton(this, 400, 370, t('relicViewer.visitShop'), () => this.close(), 120, 28);
     } else {
       const COLS = 5;
       const START_X = 200;
@@ -99,7 +95,7 @@ export class RelicViewerScene extends Scene {
     }
 
     // Close button
-    createImageButton(this, 400, 520, t('relicViewer.close'), () => this.close(), 200, 52);
+    createImageButton(this, 400, 520, t('relicViewer.close'), () => this.close(), 100, 26);
 
     this.events.on('shutdown', this.cleanup, this);
   }

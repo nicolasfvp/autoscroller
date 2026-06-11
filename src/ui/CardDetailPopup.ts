@@ -120,14 +120,14 @@ export function showCardDetail(
     popup.add(
       scene.add.text(cx - 65, BANNER_Y, `⚒ ${forgeOpts.cost} Gold`, {
         fontSize: '15px', fontStyle: 'bold', color: '#ffd700',
-        fontFamily: 'monospace', stroke: '#000', strokeThickness: 3,
+        fontFamily: 'VT323', stroke: '#000', strokeThickness: 3,
       }).setOrigin(0.5),
     );
 
     popup.add(
       scene.add.text(cx + 60, BANNER_Y, forgeOpts.statusText, {
         fontSize: '13px', fontStyle: 'bold', color: forgeOpts.statusColor,
-        fontFamily: 'monospace', stroke: '#000', strokeThickness: 3,
+        fontFamily: 'VT323', stroke: '#000', strokeThickness: 3,
         wordWrap: { width: 110 },
       }).setOrigin(0.5),
     );

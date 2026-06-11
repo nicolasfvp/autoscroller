@@ -11,14 +11,12 @@
 //     deck for every card on every repaint.
 
 import Phaser from 'phaser';
-import { t } from '../i18n/i18n';
 import { SCENE_KEYS } from '../state/SceneKeys';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
-import { getAllCards } from '../data/DataLoader';
-import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { getAllCards, getCardById } from '../data/DataLoader';
+import { STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
 import { createCardFace, disableCardFaceInput } from '../ui/CardFace';
-import { attachKeywordTooltip, type KeywordTooltipHandle } from '../ui/KeywordTooltip';
-import { formatCardDescription } from '../systems/cards/CardText';
+import type { KeywordTooltipHandle } from '../ui/KeywordTooltip';
 import { getRun } from '../state/RunState';
 import {
   CardFilterBar,
@@ -35,10 +33,9 @@ import { ELEMENTS, elementCounts, resolveIconKey, type ElementId } from '../syst
 
 const FF = FONTS.family;
 const COLS = 3;
-const ROWS = 2;
-const PER_PAGE = COLS * ROWS;
-const PER_SPREAD = PER_PAGE * 2;
-const CARD_SCALE = 0.5;
+const ROWS = 3;
+const PER_SPREAD = COLS * ROWS; // only left page; right page shows detail
+const CARD_SCALE = 0.46;
 const CARD_W = STANDARD_CARD_WIDTH * CARD_SCALE;
 const CARD_H = STANDARD_CARD_HEIGHT * CARD_SCALE;
 
@@ -62,6 +59,7 @@ export class CardLibraryScene extends Phaser.Scene {
   private currentFilters: CardFilters | null = null;
   private sortMode: CardSortMode = 'tier';
   private upgradedIds: Set<string> = new Set();
+  private selectedCardId: string | null = null;
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private wheelHandler: ((p: Phaser.Input.Pointer, go: unknown, dx: number, dy: number) => void) | null = null;
   private detailContainer: Phaser.GameObjects.Container | null = null;
@@ -97,15 +95,12 @@ export class CardLibraryScene extends Phaser.Scene {
     this.buildUpgradedSet();
 
     this.book = new BookLayout(this, {
-      title: this.forgeMode ? t('cardLib.titleForge') : t('cardLib.titleLibrary'),
-      subtitle: this.cardCountText(),
       onClose: () => this.closeLibrary(),
     });
 
-    // Filter bar sits in the empty gap above the book's chrome (no tabs in
-    // the Library overlay, so this region is free). 720 wide × 44 tall.
+    // Filter bar replaces the title/subtitle — sits at the very top with padding.
     this.filterBar = new CardFilterBar(
-      this, 40, 78, 720,
+      this, 40, 12, 720,
       (f) => this.onFiltersChanged(f),
       (mode) => this.onSortChanged(mode),
     );
@@ -141,25 +136,6 @@ export class CardLibraryScene extends Phaser.Scene {
   }
 
   // ── Lifecycle ─────────────────────────────────────────────
-
-  private showCardDetail(cardId: string): void {
-    if (this.detailContainer) this.detailContainer.destroy(true);
-    this.detailContainer = this.add.container(0, 0).setDepth(200);
-    const dim = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.80).setInteractive();
-    const card = createCardVisual(this, 400, 285, cardId, { scale: 1.2 });
-    const close = () => { this.detailContainer?.destroy(true); this.detailContainer = null; };
-    dim.on('pointerdown', close);
-    this.registerDetailEsc(close);
-    this.detailContainer.add([dim, card]);
-  }
-
-  /** Register an ESC-to-close handler for a detail view, replacing any prior
-   *  one so pending once() listeners can't accumulate across opens. */
-  private registerDetailEsc(close: () => void): void {
-    if (this.escHandler) this.input.keyboard?.off('keydown-ESC', this.escHandler);
-    this.escHandler = close;
-    this.input.keyboard?.once('keydown-ESC', close);
-  }
 
   private teardown(): void {
     if (this.escHandler) { this.input.keyboard?.off('keydown-ESC', this.escHandler); this.escHandler = null; }
@@ -229,41 +205,42 @@ export class CardLibraryScene extends Phaser.Scene {
 
   private renderSpread(ctx: BookRenderContext): void {
     if (this.filteredCards.length === 0) {
-      // Place a "no results" message centered on the left page (container-local
-      // coords — page containers are positioned at the spine).
       const empty = this.add.text(
         ctx.leftBounds.centerX, ctx.leftBounds.centerY,
         'No cards match\nthe current filters.',
-        {
-          fontSize: '16px', color: '#6e4a1a', fontFamily: FF,
-          align: 'center', fontStyle: 'italic',
-        },
+        { fontSize: '16px', color: '#6e4a1a', fontFamily: FF, align: 'center', fontStyle: 'italic' },
       ).setOrigin(0.5);
       ctx.leftPage.add(empty);
       return;
     }
 
     const start = ctx.spreadIndex * PER_SPREAD;
-    const leftCards = this.filteredCards.slice(start, start + PER_PAGE);
-    const rightCards = this.filteredCards.slice(start + PER_PAGE, start + PER_SPREAD);
-    this.renderPage(leftCards, ctx.leftPage, ctx.leftBounds);
-    this.renderPage(rightCards, ctx.rightPage, ctx.rightBounds);
+    const pageCards = this.filteredCards.slice(start, start + PER_SPREAD);
+
+    // Auto-select first card on this spread if nothing selected yet.
+    if (!this.selectedCardId && pageCards.length > 0) {
+      this.selectedCardId = pageCards[0].id;
+    }
+
+    this.renderLeftGrid(pageCards, ctx);
+    if (this.selectedCardId) {
+      this.renderCardDetail(this.selectedCardId, ctx.rightPage, ctx.rightBounds);
+    }
   }
 
-  private renderPage(
+  private renderLeftGrid(
     cards: CardDefinition[],
-    container: Phaser.GameObjects.Container,
-    bounds: BookPageBounds,
+    ctx: BookRenderContext,
   ): void {
-    if (cards.length === 0) return;
-    const fitGapX = COLS > 1 ? (bounds.innerW - COLS * CARD_W) / (COLS - 1) : 0;
-    const fitGapY = ROWS > 1 ? (bounds.innerH - ROWS * CARD_H) / (ROWS - 1) : 0;
-    const gapX = Math.max(8, Math.min(fitGapX, CARD_W * 0.45));
-    const gapY = Math.max(12, Math.min(fitGapY, CARD_H * 0.45));
-    const effW = COLS * CARD_W + (COLS - 1) * gapX;
-    const effH = ROWS * CARD_H + (ROWS - 1) * gapY;
-    const startX = bounds.centerX - effW / 2 + CARD_W / 2;
-    const startY = bounds.centerY - effH / 2 + CARD_H / 2;
+    const container = ctx.leftPage;
+    const bounds = ctx.leftBounds;
+    // Same layout as CollectionScene renderCardsGrid: fixed 10px gaps, +15/+5 offsets
+    const gapX = 10;
+    const gapY = 10;
+    const totalW = COLS * CARD_W + (COLS - 1) * gapX;
+    const totalH = ROWS * CARD_H + (ROWS - 1) * gapY;
+    const startX = bounds.centerX - totalW / 2 + CARD_W / 2 + 15;
+    const startY = bounds.centerY - totalH / 2 + CARD_H / 2 + 5;
 
     cards.forEach((card, idx) => {
       const col = idx % COLS;
@@ -271,29 +248,64 @@ export class CardLibraryScene extends Phaser.Scene {
       const x = startX + col * (CARD_W + gapX);
       const y = startY + row * (CARD_H + gapY);
 
-      if (this.forgeMode) {
-        this.renderForgeCard(card, x, y, container);
-        return;
-      }
-
-      const visual = createCardVisual(this, x, y, card.id, {
+      const isSel = this.selectedCardId === card.id;
+      const visual = createCardFace(this, x, y, card.id, {
+        baseSize: 'small',
         scale: CARD_SCALE,
+        hover: false,
         upgraded: this.upgradedIds.has(card.id),
       });
+      if (this.forgeMode && !this.canCraft(card)) visual.setAlpha(0.4);
       container.add(visual);
+
+      if (isSel) {
+        const selBorder = this.add.rectangle(x, y, CARD_W + 4, CARD_H + 4, 0xc89a3c, 0)
+          .setStrokeStyle(2.5, 0xf0c060, 1);
+        ctx.leftPage.add(selBorder);
+        selBorder.setDepth(-1);
+      }
 
       if (card.locked === true) {
         visual.setAlpha(0.4);
         disableCardFaceInput(visual);
-        const lock = this.add.text(x, y, '🔒', {
-          fontSize: '22px', fontFamily: FF, color: '#ffffff',
-        }).setOrigin(0.5);
-        container.add(lock);
       } else {
         visual.setInteractive({ useHandCursor: true });
-        visual.on('pointerdown', () => this.showCardDetail(card.id));
+        visual.on('pointerdown', () => this.selectCard(card.id));
       }
     });
+  }
+
+  private selectCard(cardId: string): void {
+    if (this.selectedCardId === cardId) return;
+    this.selectedCardId = cardId;
+    this.book?.setSpreadIndex(this.book.getSpreadIndex());
+  }
+
+  private renderCardDetail(
+    cardId: string,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    const cardX = bounds.centerX - 30;
+    const cardY = -3.3;
+    const face = createCardFace(this, cardX, cardY, cardId, {
+      baseSize: { w: 214, h: 339 },
+      hover: false,
+      upgraded: this.upgradedIds.has(cardId),
+    });
+    disableCardFaceInput(face);
+    container.add(face);
+
+    const card = getCardById(cardId);
+    if (card && this.forgeMode) {
+      const craftable = this.canCraft(card);
+      const BTN_Y = 215;
+      if (craftable) {
+        this.addSendToAnvilButton(container, cardX, BTN_Y, card);
+      } else {
+        container.add(this.makeElementNeedOverlay(card, cardX, BTN_Y));
+      }
+    }
   }
 
   // ── Forge mode ────────────────────────────────────────────
@@ -318,122 +330,26 @@ export class CardLibraryScene extends Phaser.Scene {
     }
   }
 
-  /** Render one card in forge mode: uncraftable recipes render faded. Clicking
-   *  any card opens the forge-aware detail view (where the "send to anvil"
-   *  button — or the have/need breakdown — lives). */
-  private renderForgeCard(
-    card: CardDefinition,
-    x: number,
-    y: number,
-    container: Phaser.GameObjects.Container,
-  ): void {
-    const visual = createCardVisual(this, x, y, card.id, {
-      scale: CARD_SCALE,
-      upgraded: this.upgradedIds.has(card.id),
-    });
-    container.add(visual);
-    // Replace the default popup with our forge-aware detail view.
-    disableCardFaceInput(visual);
-    visual.setInteractive({ useHandCursor: true });
-    visual.on('pointerdown', () => this.showForgeCardDetail(card));
-    if (!this.canCraft(card)) visual.setAlpha(0.4);
-  }
 
-  /** Expanded ("clicked") card view for forge mode. Shows the full card (popup
-   *  layout, with its description panel) plus a "Send to Anvil" button when
-   *  craftable, or the elements the hero has (have/need) with a hint when not. */
-  private showForgeCardDetail(card: CardDefinition): void {
-    if (this.detailTip) { this.detailTip.cancel(); this.detailTip = null; }
-    if (this.detailContainer) this.detailContainer.destroy(true);
-    const container = this.add.container(0, 0).setDepth(200);
-    this.detailContainer = container;
-
-    const close = () => {
-      if (this.detailTip) { this.detailTip.cancel(); this.detailTip = null; }
-      if (this.detailContainer === container) this.detailContainer = null;
-      container.destroy(true);
-    };
-
-    const dim = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.82).setInteractive();
-    dim.on('pointerdown', close);
-    this.registerDetailEsc(close);
-    container.add(dim);
-
-    const craftable = this.canCraft(card);
-    const isUpgraded = this.upgradedIds.has(card.id);
-
-    // Full card face (popup layout → includes the description panel). The
-    // user's cardScale multiplier is folded in by createCardFace; 0.64 keeps
-    // the card + the action below it within the 800×600 overlay at max scale.
-    const cardVisual = createCardFace(this, 400, 240, card.id, {
-      baseSize: 'popup',
-      hover: false,
-      scale: 0.64,
-      upgraded: isUpgraded,
-    });
-    disableCardFaceInput(cardVisual);
-    if (!craftable) cardVisual.setAlpha(0.55);
-    container.add(cardVisual);
-
-    // Lateral keyword glossary, for parity with the standard card detail popup.
-    const effects = (isUpgraded && card.upgraded?.effects) ? card.upgraded.effects : card.effects;
-    const desc = formatCardDescription({
-      effects,
-      exhaust: card.exhaust,
-      spend_armor: card.spend_armor,
-    });
-    const cb = cardVisual.getBounds();
-    this.detailTip = attachKeywordTooltip(this, container, desc, {
-      x: cb.centerX, y: cb.centerY, w: cb.width, h: cb.height,
-    });
-
-    const belowY = Math.min(540, cb.bottom + 30);
-
-    if (craftable) {
-      this.addSendToAnvilButton(container, 400, belowY, card);
-    } else {
-      container.add(this.makeElementNeedOverlay(card, 400, belowY));
-      container.add(this.add.text(400, belowY + 44, t('cardLib.notEnoughShards'), {
-        fontSize: '13px', fontStyle: 'bold', fontFamily: FF, color: '#ff8866',
-        stroke: '#000000', strokeThickness: 3,
-      }).setOrigin(0.5));
-    }
-  }
-
-  /** Build the "Send to Anvil" action button into the detail view. */
+  /** Build the "Send to Anvil" action button using the same btn_forge_action asset as ForgeScene. */
   private addSendToAnvilButton(
     parent: Phaser.GameObjects.Container,
     x: number,
     y: number,
     card: CardDefinition,
   ): void {
-    const w = 214;
-    const h = 46;
-    const bg = this.add.graphics();
-    const paint = (fill: number, line: number) => {
-      bg.clear();
-      bg.fillStyle(fill, 1); bg.fillRoundedRect(x - w / 2, y - h / 2, w, h, 8);
-      bg.lineStyle(2, line, 1); bg.strokeRoundedRect(x - w / 2, y - h / 2, w, h, 8);
-    };
-    paint(0x3a2218, 0xf5d273);
-    const label = this.add.text(x, y, t('cardLib.sendToAnvil'), {
-      fontSize: '18px', fontStyle: 'bold', fontFamily: FF, color: '#ffe9a0',
-      stroke: '#000000', strokeThickness: 3,
-    }).setOrigin(0.5);
-    const hit = this.add.rectangle(x, y, w, h, 0x000000, 0).setInteractive({ useHandCursor: true });
-    parent.add([bg, label, hit]);
-
-    hit.on('pointerover', () => { paint(0x4a2c18, 0xffe9a0); label.setColor('#ffffff'); });
-    hit.on('pointerout',  () => { paint(0x3a2218, 0xf5d273); label.setColor('#ffe9a0'); });
-    // pointerdown + stopPropagation (not pointerup) so the action fires before
-    // the full-screen dim's own pointerdown-to-close can intercept it.
-    hit.on('pointerdown', (_p: Phaser.Input.Pointer, _lx: number, _ly: number, ev?: Phaser.Types.Input.EventData) => {
-      ev?.stopPropagation?.();
+    const img = this.add.image(x, y, 'btn_forge_action').setScale(0.038)
+      .setInteractive({ useHandCursor: true });
+    img.on('pointerover', () => img.setTint(0xffffcc));
+    img.on('pointerout',  () => img.clearTint());
+    img.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+      ptr.event.stopPropagation();
       this.forgeCardToAnvil(card);
     });
+    parent.add(img);
   }
 
-  /** Queue the card's recipe on the forge anvil and return to the forge. */
+  /** Load the card's recipe onto the forge anvil and return to the forge. */
   private forgeCardToAnvil(card: CardDefinition): void {
     const elements = (card.elements ?? []) as ElementId[];
     if (elements.length < 1) return;
@@ -506,7 +422,7 @@ export class CardLibraryScene extends Phaser.Scene {
     const check = this.add.text(x + sz / 2, y + sz / 2, '✓', {
       fontSize: '13px', fontStyle: 'bold', color: '#ffd700', fontFamily: FF,
     }).setOrigin(0.5).setDepth(51).setVisible(this.craftableOnly);
-    const label = this.add.text(x + sz + 8, y + sz / 2, t('cardLib.craftableOnly'), {
+    const label = this.add.text(x + sz + 8, y + sz / 2, 'Craftable only', {
       fontSize: '12px', fontStyle: 'bold', color: '#ffffff', fontFamily: FF,
       stroke: '#000000', strokeThickness: 2,
     }).setOrigin(0, 0.5).setDepth(51).setInteractive({ useHandCursor: true });

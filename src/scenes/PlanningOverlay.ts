@@ -71,7 +71,7 @@ export class PlanningOverlay extends Scene {
     this.tileVisuals = [];
     this.inventoryCards = [];
 
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = 'VT323';
 
     // Background - two full-res images scroll horizontally in a seamless loop.
     // The 2560×1440 source is scaled so height=600; display width ≈ 1067px.
@@ -125,7 +125,7 @@ export class PlanningOverlay extends Scene {
     const ICON_SIZE = 37;
     const ICON_Y = 55;
     const LABEL_Y = 79;
-    const serifFont = 'Georgia, "Times New Roman", serif';
+    const serifFont = 'VT323';
     const [dX, rX, sX, fX] = [56, 107, 159, 210];
 
     if (this.textures.exists('deck_relic_table')) {
@@ -518,7 +518,7 @@ export class PlanningOverlay extends Scene {
   }
 
   private refreshInventory(): void {
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = 'VT323';
 
     if (this.selectedTileKey && !this.tutorialAllowsPlacing(getTileConfig(this.selectedTileKey).type, this.selectedTileKey)) {
       this.selectedTileKey = null;
@@ -984,7 +984,7 @@ export class PlanningOverlay extends Scene {
     }
 
     // Fallback: programmatic text tooltip
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = 'VT323';
     const label = this.add.text(0, 0, text, {
       fontSize: '12px', color: '#ffffff', fontFamily,
       wordWrap: { width: 220 }, align: 'center',
@@ -1030,7 +1030,7 @@ export class PlanningOverlay extends Scene {
     this.add.rectangle(cx, top + 17, panelW - 14, 1, 0x334455, 0.8);
 
     // Three icon + value + label groups — uniform font matches the rest of the app
-    const serifFont = 'Georgia, "Times New Roman", serif';
+    const serifFont = 'VT323';
     const ICON_H    = 21;
     const GAP       = 4;  // gap between icon and value text
     // Natural aspect ratio per icon (source W / source H)
@@ -1254,7 +1254,7 @@ export class PlanningOverlay extends Scene {
   }
 
   private showToast(message: string): void {
-    const fontFamily = 'Georgia, "Times New Roman", serif';
+    const fontFamily = 'VT323';
     const toast = this.add.text(400, 560, message, {
       fontSize: '14px', color: '#ff0000', fontFamily,
     }).setOrigin(0.5);
