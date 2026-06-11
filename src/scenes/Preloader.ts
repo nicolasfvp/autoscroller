@@ -105,6 +105,9 @@ export class Preloader extends Scene {
       { id: 'lost_lizard',          folder: '',         file: 'lost_lizard_1.png',          hasFrame2: true },
       // New bosses — live in `monsters/boss/`. frameCount = total frames on disk.
       // `boss_iron_golem` namespaced to avoid clashing with `iron_golem` at default/.
+      // `iron_golem` (Dryas, the iron commander) has its own distinct 3-frame
+      // battle-stance art, left-facing — separate from the ancient colossus boss.
+      { id: 'iron_golem',           folder: 'boss',     file: 'iron_commander_1.png',       hasFrame2: true, frameCount: 3 },
       { id: 'bog_witch',            folder: 'boss',     file: 'bog_witch_1.png',            hasFrame2: true, frameCount: 4 },
       { id: 'desert_golem',         folder: 'boss',     file: 'desert_golem_1.png',         hasFrame2: true, frameCount: 3 },
       { id: 'infernal_dragon',      folder: 'boss',     file: 'infernal_dragon_1.png',      hasFrame2: true, frameCount: 5 },
@@ -295,6 +298,11 @@ export class Preloader extends Scene {
     this.load.image('loop_chip_panel',    'assets/scenes/game/loop_chip_panel.png');
     this.load.image('hud_panel_progress', 'assets/scenes/game/hud_panel_progress.png');
     this.load.image('loop_summary_panel', 'assets/scenes/loop_summary/loopcomplete.png');
+    this.load.image('txt_loop_complete',  'assets/scenes/loop_summary/txt_loop_complete.png');
+    this.load.image('txt_victory',        'assets/scenes/combat/txt_victory.png');
+    this.load.image('txt_defeat',         'assets/scenes/combat/txt_defeat.png');
+    this.load.image('panel_daily_run',    'assets/ui/panels/panel_daily_run.png');
+    this.load.image('txt_daily_run_desc', 'assets/ui/panels/txt_daily_run_desc.png');
     this.load.image('boss_exit_option_panel', 'assets/scenes/boss_exit/option-panel.png');
 
     // Tile tooltip panels (styled dark/gold panels with baked title + description)

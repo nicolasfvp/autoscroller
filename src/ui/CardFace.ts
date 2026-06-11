@@ -458,7 +458,7 @@ function drawCooldown(
     scene.add.text(slot.cx, slot.cy, label, {
       fontSize: `${fontSize}px`,
       fontStyle: 'bold',
-      fontFamily: 'monospace',
+      fontFamily: 'VT323',
       color: '#f5e7c1',
       stroke: '#000000',
       strokeThickness: Math.max(1, fontSize * 0.12),
@@ -539,7 +539,7 @@ function drawName(
     scene.add.text(slot.cx, slot.cy, displayName, {
       fontSize: `${fontSize}px`,
       fontStyle: 'bold',
-      fontFamily: 'monospace',
+      fontFamily: 'VT323',
       color: colorHex,
       align: 'center',
     }).setOrigin(0.5, 0.55),  // 0.55 nudges baseline down so descenders fit
@@ -624,7 +624,7 @@ function drawDescription(
     const text = scene.add.text(slot.cx, slot.cy, plain, {
       fontSize: `${fontSize}px`,
       color: colorHex,
-      fontFamily: 'monospace',
+      fontFamily: 'VT323',
       wordWrap: { width: wrapWidth },
       align: 'center',
     }).setOrigin(0.5, 0.5);
@@ -662,7 +662,7 @@ function drawCostCell(
       scene.add.text(slot.cx, slot.cy, fallbackLabel, {
         fontSize: `${Math.round(iconSize * 0.4)}px`,
         fontStyle: 'bold',
-        fontFamily: 'monospace',
+        fontFamily: 'VT323',
         color,
         stroke: '#000000',
         strokeThickness: 3,
@@ -680,7 +680,7 @@ function drawCostCell(
       scene.add.text(qx, qy, qty, {
         fontSize: `${qFont}px`,
         fontStyle: 'bold',
-        fontFamily: 'monospace',
+        fontFamily: 'VT323',
         color: '#ffffff',
         stroke: '#000000',
         strokeThickness: 3,

@@ -89,11 +89,13 @@ interface ChipDisplay {
   label: Phaser.GameObjects.Text;
   /** Current tooltip string for this slot (updated each layout pass). */
   tooltip: string;
-  /** Last (key,label) rendered in this slot. Drives the change-pulse: a value
+  /** Last (key,signature) rendered in this slot. Drives the change-pulse: a value
    *  going up or down briefly pops, but a static value never re-animates, and
-   *  a slot reused for a different chip (row reflow) stays calm. */
+   *  a slot reused for a different chip (row reflow) stays calm. The signature
+   *  excludes the live countdown ("4.0s") so a ticking buff timer doesn't
+   *  retrigger the pop every frame — only the magnitude ("+20%") does. */
   lastKey?: string;
-  lastLabel?: string;
+  lastSig?: string;
 }
 
 // Shared hover tooltip geometry.
@@ -132,7 +134,6 @@ export class CombatHUD {
   private cooldownGraphics!: Phaser.GameObjects.Graphics;
   private cooldownText!:     Phaser.GameObjects.Text;
   private enemyCooldownText!: Phaser.GameObjects.Text;
-  private hourglassFlipAngle   = 0;
   private isFlipping           = false;
   private _hgTopFrame          = 6;  // índice do último frame válido do spritesheet (derivado no build)
   private _lastHgFrame         = 0;  // último frame exibido do hourglass do herói
@@ -381,26 +382,10 @@ export class CombatHUD {
 
   private triggerHourglassFlip(): void {
     if (this._destroyed || !this.hourglassSprite || this.isFlipping) return;
-    this.hourglassSprite.setFrame(this._hgTopFrame); // trava no último frame; só sai dele após o giro
-    this._lastHgFrame = this._hgTopFrame;
-    this.isFlipping = true;
-    this._onFlipChange?.(true);
-    this.hourglassFlipAngle += 360;
-    this.scene.tweens.add({
-      targets: this.hourglassSprite,
-      angle: this.hourglassFlipAngle,
-      duration: 600,
-      ease: 'Cubic.easeInOut',
-      onComplete: () => {
-        if (this._destroyed) return;
-        // O giro terminou: agora sim o frame volta ao primeiro sprite.
-        this.hourglassSprite?.setFrame(0);
-        this._lastHgFrame = 0;
-        this._hgResetHold = 0;
-        this.isFlipping = false;
-        this._onFlipChange?.(false);
-      },
-    });
+    this.hourglassSprite.setFrame(0);
+    this._lastHgFrame = 0;
+    this._hgResetHold = 0;
+    this._onFlipChange?.(false);
   }
 
   showCooldownBurst(cooldownMs: number): void {
@@ -489,7 +474,7 @@ export class CombatHUD {
         slot.icon.setVisible(false);
         slot.tooltip = '';
         slot.lastKey = undefined;
-        slot.lastLabel = undefined;
+        slot.lastSig = undefined;
         this.scene.tweens?.killTweensOf(slot.label);
         slot.label.setScale(1);
         continue;
@@ -506,10 +491,16 @@ export class CombatHUD {
       // Change-pulse: same chip, new value → a brief scale pop (covers both
       // rises and drops). Different key in this slot means a row reflow shuffled
       // chips between slots, not a real value change, so it stays calm.
+      //
+      // The signature strips the trailing live countdown ("+20% 4.0s" → "+20%")
+      // so a ticking buff timer doesn't retrigger the pop every frame (which
+      // looked like the chip "exploding" in a constant oscillation). Only a
+      // change in magnitude pulses.
+      const sig = chip.label.replace(/\s*\d+(?:\.\d+)?s$/, '');
       const changed = slot.lastKey === chip.key
-        && slot.lastLabel !== undefined && slot.lastLabel !== chip.label;
+        && slot.lastSig !== undefined && slot.lastSig !== sig;
       slot.lastKey = chip.key;
-      slot.lastLabel = chip.label;
+      slot.lastSig = sig;
       if (changed && !this._destroyed && this.scene.tweens) {
         this.scene.tweens.killTweensOf(slot.label);
         slot.label.setScale(1);

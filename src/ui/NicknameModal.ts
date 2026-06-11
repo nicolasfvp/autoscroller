@@ -35,40 +35,48 @@ export class NicknameModal {
       .setInteractive(); // swallow clicks
     this.container.add(dim);
 
-    const panelW = 420;
-    const panelH = 200;
-    const panel = scene.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, panelW, panelH, 0x1a1a2e, 0.95)
-      .setStrokeStyle(2, 0xffd700, 0.9);
-    this.container.add(panel);
+    const panelScaleX = 0.24;        // largura original ~338px
+    const panelScaleY = 0.192;       // altura −20% ~203px
+    const panelW = Math.round(1408 * panelScaleX);
+    const panelH = Math.round(1056 * panelScaleY);
+    const panelCY = LAYOUT.centerY + 20;
 
-    const title = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 70, opts.title ?? t('nickname.title'), {
-      fontFamily: FONTS.body,
-      fontSize: '18px',
-      fontStyle: 'bold',
-      color: COLORS.accent,
-    }).setOrigin(0.5);
-    this.container.add(title);
+    // Background panel — scaleX mantém largura, scaleY reduz altura −20%
+    if (scene.textures.exists('panel_daily_run')) {
+      const panelImg = scene.add.image(LAYOUT.centerX, panelCY, 'panel_daily_run').setOrigin(0.5).setScale(panelScaleX, panelScaleY);
+      this.container.add(panelImg);
+    } else {
+      const panel = scene.add.rectangle(LAYOUT.centerX, panelCY, panelW, panelH, 0x1a1a2e, 0.95)
+        .setStrokeStyle(2, 0xffd700, 0.9);
+      this.container.add(panel);
+    }
 
-    const hint = scene.add.text(LAYOUT.centerX, LAYOUT.centerY - 42, t('nickname.hint', { max: MAX_LEN }), {
+    // Daily Run description banner — gap aumentado para não ficar colado
+    if (scene.textures.exists('txt_daily_run_desc')) {
+      const descImg = scene.add.image(LAYOUT.centerX, panelCY - panelH / 2 - 46, 'txt_daily_run_desc').setOrigin(0.5).setScale(0.19);
+      this.container.add(descImg);
+    }
+
+    const hint = scene.add.text(LAYOUT.centerX, panelCY - 60, t('nickname.hint', { max: MAX_LEN }), {
       fontFamily: FONTS.body,
-      fontSize: '11px',
+      fontSize: '16px',
       color: COLORS.textSecondary,
     }).setOrigin(0.5);
     this.container.add(hint);
 
     // Input box bg
-    const inputBg = scene.add.rectangle(LAYOUT.centerX, LAYOUT.centerY, 320, 36, 0x000000, 0.6)
+    const inputBg = scene.add.rectangle(LAYOUT.centerX, panelCY - 10, 300, 34, 0x000000, 0.6)
       .setStrokeStyle(1, 0xffd700, 0.7);
     this.container.add(inputBg);
 
-    this.inputText = scene.add.text(LAYOUT.centerX - 150, LAYOUT.centerY, this.value, {
+    this.inputText = scene.add.text(LAYOUT.centerX - 140, panelCY - 10, this.value, {
       fontFamily: FONTS.body,
       fontSize: '18px',
       color: COLORS.textPrimary,
     }).setOrigin(0, 0.5);
     this.container.add(this.inputText);
 
-    this.caretText = scene.add.text(0, LAYOUT.centerY, '|', {
+    this.caretText = scene.add.text(0, panelCY - 10, '|', {
       fontFamily: FONTS.body,
       fontSize: '18px',
       color: COLORS.textPrimary,
@@ -84,9 +92,9 @@ export class NicknameModal {
     });
 
     // Confirm + cancel buttons
-    const confirmBtn = makeBtn(scene, LAYOUT.centerX - 90, LAYOUT.centerY + 60, t('nickname.start'), () => this.confirm());
+    const confirmBtn = makeBtn(scene, LAYOUT.centerX - 80, panelCY + 45, t('nickname.start'), () => this.confirm());
     this.container.add(confirmBtn);
-    const cancelBtn = makeBtn(scene, LAYOUT.centerX + 90, LAYOUT.centerY + 60, t('nickname.cancel'), () => this.cancel());
+    const cancelBtn = makeBtn(scene, LAYOUT.centerX + 80, panelCY + 45, t('nickname.cancel'), () => this.cancel());
     this.container.add(cancelBtn);
 
     // Browser-level keydown so we capture typing reliably; Phaser's keyboard

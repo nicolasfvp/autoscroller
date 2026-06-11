@@ -17,7 +17,7 @@ import {
   setStoredNickname,
 } from '../systems/DailySeed';
 import { NicknameModal } from '../ui/NicknameModal';
-import { t, getLocale, setLocale, SUPPORTED_LOCALES, LOCALE_SHORT, type Locale } from '../i18n/i18n';
+import { t, getLocale } from '../i18n/i18n';
 import { localizedImageButton } from '../ui/LocalizedButton';
 
 
@@ -145,47 +145,9 @@ export class MainMenu extends Scene {
 
     this.createImgBtn(LAYOUT.centerX, this.savedRun ? 468 : 432, 'btn_daily_run', () => this.onDailyButtonClicked(), 280);
 
-    this.createLanguageSwitcher();
-
     this.events.on('shutdown', this.cleanup, this);
   }
 
-
-  /**
-   * Compact language switcher in the bottom-left corner. The main-menu CTA
-   * buttons are baked PNG art (English text rendered into the texture) and
-   * can't be re-translated at runtime, so the switcher is a lightweight text
-   * control. Cycling persists the choice and reloads — every scene then
-   * re-renders in the new language and all data-content re-localizes from boot.
-   */
-  private createLanguageSwitcher(): void {
-    const label = (loc: Locale) => `🌐 ${LOCALE_SHORT[loc]}`;
-    const btn = this.add.text(16, LAYOUT.canvasHeight - 24, label(getLocale()), {
-      fontSize: '18px',
-      color: COLORS.accent,
-      fontFamily: FONTS.family,
-      stroke: '#000000',
-      strokeThickness: 4,
-    }).setOrigin(0, 0.5).setDepth(20).setInteractive({ useHandCursor: true });
-
-    btn.on('pointerover', () => btn.setColor(COLORS.accentHover));
-    btn.on('pointerout', () => btn.setColor(COLORS.accent));
-    btn.on('pointerdown', () => { void this.switchLanguage(); });
-  }
-
-  private async switchLanguage(): Promise<void> {
-    const locales = SUPPORTED_LOCALES;
-    const next: Locale = locales[(locales.indexOf(getLocale()) + 1) % locales.length];
-    setLocale(next);
-    try {
-      const meta = await loadMetaState();
-      meta.language = next;
-      await saveMetaState(meta);
-    } catch (err) {
-      console.warn('[MainMenu] saving language failed:', err);
-    }
-    window.location.reload();
-  }
 
   private createImgBtn(x: number, y: number, key: string, callback: () => void, displayWidth: number = 500) {
     // The baked button art has English text — in pt-BR render a wood+text

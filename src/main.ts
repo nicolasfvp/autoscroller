@@ -30,6 +30,7 @@ import { CardLibraryScene } from './scenes/CardLibraryScene'
 import { SpeedPanelScene } from './scenes/SpeedPanelScene'
 import { DebugOverlayScene } from './scenes/DebugOverlayScene'
 import { CombatTestScene } from './scenes/CombatTestScene'
+import { SCENE_KEYS } from './state/SceneKeys'
 import { initConsoleLogger } from './debug/ConsoleLogger'
 
 // Capture all console output to logs/console.log (dev-only; tree-shaken from
@@ -127,11 +128,32 @@ const config: Phaser.Types.Core.GameConfig = {
     ]
 }
 
-// Debug overlay (F2) shortcut intentionally removed so players can't open the
-// debug screen. The DebugOverlayScene / DebugManager code is kept in the
-// codebase (registered above) — only the keyboard entry point is gone. To
-// re-enable for local debugging, re-add a keydown-F2 listener that toggles
-// the 'DebugOverlayScene' scene (SCENE_KEYS.DEBUG_OVERLAY).
+// Debug listener — cena sempre ativa que captura F2 via sistema de input do Phaser
+if (import.meta.env.DEV) {
+    class DebugListenerScene extends Phaser.Scene {
+        constructor() { super({ key: 'debug-listener', active: true }); }
+        create() {
+            this.input.keyboard?.on('keydown-F2', () => {
+                if (this.scene.isActive(SCENE_KEYS.DEBUG_OVERLAY)) {
+                    this.scene.manager.scenes.forEach(s => {
+                        if (s.scene.key !== 'debug-listener' && s.scene.key !== SCENE_KEYS.DEBUG_OVERLAY && s.scene.isPaused()) {
+                            s.scene.resume();
+                        }
+                    });
+                    this.scene.stop(SCENE_KEYS.DEBUG_OVERLAY);
+                } else {
+                    this.scene.manager.scenes.forEach(s => {
+                        if (s.scene.key !== 'debug-listener' && s.scene.isActive()) {
+                            s.scene.pause();
+                        }
+                    });
+                    this.scene.launch(SCENE_KEYS.DEBUG_OVERLAY);
+                }
+            });
+        }
+    }
+    (config.scene as any[]).push(DebugListenerScene);
+}
 
 // Patch Phaser.GameObjects.Text to default resolution:2 globally.
 // This makes all this.add.text() calls render their internal canvas at 2×,
@@ -149,8 +171,30 @@ const _origTextFactory = Phaser.GameObjects.GameObjectFactory.prototype.text as 
 // Pre-load VT323 so canvas text renders immediately on first frame
 document.fonts.load('16px VT323').catch(() => {});
 
-const game = new Phaser.Game(config)
+const game = new Phaser.Game(config);
 
+// ── Anti-tamper para feiras / builds públicos ──────────────────────────────
+// Deterrente (NÃO é segurança real) contra alunos curiosos abrindo o DevTools
+// para inspecionar/editar o jogo em runtime. Só roda em produção para não
+// atrapalhar o desenvolvimento. Bloqueia F12, Ctrl/Cmd+Shift+I/J/C, Ctrl/Cmd+U
+// (ver código-fonte) e o menu de contexto (botão direito → Inspecionar).
+if (import.meta.env.PROD) {
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+        const k = e.key;
+        const ctrl = e.ctrlKey || e.metaKey;
+        const blocked =
+            k === 'F12' ||
+            (ctrl && e.shiftKey && (k === 'I' || k === 'i' || k === 'J' || k === 'j' || k === 'C' || k === 'c')) ||
+            (ctrl && (k === 'U' || k === 'u'));
+        if (blocked) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }, true);
+}
+
+// Debug overlay toggle via F2
 // Language reconciliation. Boot localizes data using the synchronous
 // localStorage mirror (default 'pt-br'). Once idb-keyval resolves, adopt the
 // durable MetaState language if it diverges (e.g. mirror was cleared but the

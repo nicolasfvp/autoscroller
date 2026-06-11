@@ -19,7 +19,7 @@ import ptStrings from './strings/pt-br.json';
 
 export type Locale = 'pt-br' | 'en';
 export const SUPPORTED_LOCALES: readonly Locale[] = ['pt-br', 'en'] as const;
-export const DEFAULT_LOCALE: Locale = 'pt-br';
+export const DEFAULT_LOCALE: Locale = 'en';
 
 /** Human-facing label for each locale (shown in the language switcher). */
 export const LOCALE_LABEL: Record<Locale, string> = {
@@ -56,24 +56,33 @@ function readStoredLocale(): Locale | null {
   }
 }
 
-/** Initial locale when nothing is stored. The browser ships pt-BR (the
- *  product default). Test runners (vitest/node) fall back to English so the
- *  large body of existing English-copy assertions stays valid without
+/** True under a test runner (vitest/node). The LOCALE LOCK is relaxed here so
+ *  the existing pt-BR test suite can still call setLocale('pt-br'); the lock
+ *  only applies in the shipped browser build. */
+function isTestEnv(): boolean {
+  try {
+    return typeof process !== 'undefined' &&
+      (!!process.env?.VITEST || process.env?.NODE_ENV === 'test');
+  } catch {
+    return false;
+  }
+}
+
+/** Initial locale when nothing is stored. Test runners fall back to English so
+ *  the large body of existing English-copy assertions stays valid without
  *  per-test locale setup; pt-BR-specific tests call setLocale('pt-br'). */
 function initialLocale(): Locale {
-  try {
-    if (typeof process !== 'undefined' &&
-        (process.env?.VITEST || process.env?.NODE_ENV === 'test')) {
-      return 'en';
-    }
-  } catch {
-    /* `process` not defined in the browser bundle — fall through */
-  }
+  if (isTestEnv()) return 'en';
   return DEFAULT_LOCALE;
 }
 
 const storedAtInit = readStoredLocale();
-let current: Locale = storedAtInit ?? initialLocale();
+// LOCALE LOCK (see setLocale): in the shipped build, force English at boot
+// regardless of any stored mirror ('pt-br') from earlier saves. Tests keep the
+// normal resolution so pt-BR assertions still work. Remove to re-enable i18n.
+let current: Locale = isTestEnv()
+  ? (storedAtInit ?? initialLocale())
+  : 'en';
 
 /** True when an explicit locale was present in the localStorage mirror at boot
  *  (i.e. the player has chosen a language before). The reconciliation in
@@ -97,6 +106,11 @@ export function getLocale(): Locale {
  * engine stays free of the async persistence dependency).
  */
 export function setLocale(locale: Locale): void {
+  // LOCALE LOCK: the shipped game is forced to English for public/fair builds.
+  // Any attempt to switch to another locale (e.g. a stale 'pt-br' save copy or
+  // the Settings switcher) is ignored. Tests are exempt so the pt-BR suite can
+  // still exercise translations. To re-enable multi-language, remove this guard.
+  if (locale !== 'en' && !isTestEnv()) return;
   if (!isLocale(locale) || locale === current) return;
   current = locale;
   try {

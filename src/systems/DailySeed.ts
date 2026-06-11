@@ -38,12 +38,10 @@ export interface DailyRunConfig {
   seed: string;
 }
 
-/**
- * Pure, deterministic: same seed → same class + deck. Used by the daily-run
- * entrypoint and the ticker (so other players' classes match what we show).
- */
-export function deriveDailyRunConfig(seed: string): DailyRunConfig {
-  const rng = new SeededRNG(`${seed}-config`);
+/** Shared class+deck picker. The map/enemy `seed` is carried through unchanged
+ *  so callers control the daily map identity independently of the RNG used to
+ *  pick class/deck. */
+function buildConfig(rng: SeededRNG, seed: string): DailyRunConfig {
   const classIds = Object.keys(CLASS_REGISTRY).sort(); // stable order
   const className = rng.pick(classIds);
   // Shuffle a copy of the t1 pool and take the first N. Sorted source keeps
@@ -52,6 +50,25 @@ export function deriveDailyRunConfig(seed: string): DailyRunConfig {
   rng.shuffle(pool);
   const starterDeck = pool.slice(0, STARTER_DECK_SIZE);
   return { className, starterDeck, seed };
+}
+
+/**
+ * Pure, deterministic: same seed → same class + deck. Kept for the ticker and
+ * any consumer that needs the canonical per-day config.
+ */
+export function deriveDailyRunConfig(seed: string): DailyRunConfig {
+  return buildConfig(new SeededRNG(`${seed}-config`), seed);
+}
+
+/**
+ * Class + deck are randomized per run (fresh entropy each call), but the
+ * returned `seed` still points at the day's map/enemy seed so every daily
+ * shares the same course — only the loadout varies. Used by the daily-run
+ * entrypoint so each attempt rolls a new class/deck.
+ */
+export function randomDailyRunConfig(seed: string): DailyRunConfig {
+  const entropy = `${seed}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  return buildConfig(new SeededRNG(entropy), seed);
 }
 
 /** Picks "anon-XXXX" (4 base36 chars). */

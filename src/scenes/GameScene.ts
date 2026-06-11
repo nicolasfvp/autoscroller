@@ -322,7 +322,9 @@ export class GameScene extends Scene {
       const nickname = ensureNickname();
       dailyRunBroadcaster.start(run.runId, nickname);
       dailyRunTicker.start();
-      new DailyTickerPanel(this, { selfRunId: run.runId });
+      // Center the ticker at 3/4 of the 600-tall game-space on the right edge
+      // (centerY keeps it anchored there regardless of how many rows appear).
+      new DailyTickerPanel(this, { selfRunId: run.runId, centerY: Math.round(LAYOUT.canvasHeight * 0.75) });
     }
 
     // Keyboard shortcuts: ESC opens Pause, D opens Deck, R opens Relics.
