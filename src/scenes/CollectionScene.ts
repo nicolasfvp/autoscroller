@@ -14,14 +14,16 @@
 import Phaser from 'phaser';
 import { loadMetaState } from '../systems/MetaPersistence';
 import {
-  getCollectionStatus, getCompletionPercent, getItemDetails,
+  getCollectionStatus, getItemDetails,
   type CollectionStatus, type CategoryStatus,
 } from '../systems/CollectionRegistry';
 import { MetaState } from '../state/MetaState';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS } from '../state/SceneKeys';
-import { createCardVisual, STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
-import { disableCardFaceInput } from '../ui/CardFace';
+import { STANDARD_CARD_WIDTH, STANDARD_CARD_HEIGHT } from '../ui/CardVisual';
+import { createCardFace } from '../ui/CardFace';
+import { getCardById } from '../data/DataLoader';
+import { formatCardDescription } from '../systems/cards/CardText';
 import { BookLayout, type BookRenderContext, type BookPageBounds, type BookTab } from '../ui/BookLayout';
 import { addGlossaryButton } from '../ui/GlossaryButton';
 
@@ -35,29 +37,20 @@ const TAB_KEYS: Record<TabName, keyof CollectionStatus> = {
   Bosses: 'bosses',
 };
 
-// Layout strategy per tab.
-const LAYOUT_MODE: Record<TabName, 'grid' | 'listDetail'> = {
-  Cards: 'grid',
-  Relics: 'listDetail',
-  Tiles: 'listDetail',
-  Bosses: 'listDetail',
-};
 
-// Grid mode (Cards): per-page shape; the spread shows 2× this.
-const GRID_SHAPE: Record<TabName, { cols: number; rows: number }> = {
-  Cards: { cols: 3, rows: 2 },
-  Relics: { cols: 4, rows: 3 },
-  Tiles: { cols: 4, rows: 3 },
-  Bosses: { cols: 2, rows: 2 },
-};
-
-// listDetail mode: rows shown on the left page per spread.
-const ROWS_PER_LIST_PAGE = 10;
+// Grid layout for listDetail tabs (left page).
+const LIST_GRID_COLS = 3;
+const LIST_GRID_ROWS_BOSSES = 3;  // 9 slots — fits 7+ bosses
+const LIST_GRID_ROWS_OTHER  = 4;  // 12 slots — fits relics/tiles
+const LIST_GRID_ROWS_CARDS  = 3;  // 9 slots per page (3×3 mini card grid)
+const LIST_GRID_PER_PAGE_BOSSES = LIST_GRID_COLS * LIST_GRID_ROWS_BOSSES;
+const LIST_GRID_PER_PAGE_OTHER  = LIST_GRID_COLS * LIST_GRID_ROWS_OTHER;
+const LIST_GRID_PER_PAGE_CARDS  = LIST_GRID_COLS * LIST_GRID_ROWS_CARDS;
 
 // Parchment-friendly ink colors (the painted pages are light, so text is dark).
-const INK = '#3a2218';
-const INK_SOFT = '#6e4a1a';
-const INK_TITLE = '#2a1206';
+const INK = '#1a0e08';
+const INK_SOFT = '#3a2218';
+const INK_TITLE = '#0d0604';
 
 export class CollectionScene extends Phaser.Scene {
   private metaState!: MetaState;
@@ -81,7 +74,6 @@ export class CollectionScene extends Phaser.Scene {
 
     this.metaState = await loadMetaState();
     this.collectionStatus = getCollectionStatus(this.metaState);
-    const percent = getCompletionPercent(this.metaState);
 
     const tabs: BookTab[] = TAB_NAMES.map((name) => {
       const status = this.collectionStatus[TAB_KEYS[name]];
@@ -89,8 +81,6 @@ export class CollectionScene extends Phaser.Scene {
     });
 
     this.book = new BookLayout(this, {
-      title: 'Compendium',
-      subtitle: `${percent}% complete`,
       tabs,
       initialTabKey: 'Cards',
       onTabChange: (key) => this.setTabContent(key as TabName),
@@ -157,14 +147,11 @@ export class CollectionScene extends Phaser.Scene {
     this.clearDetailIdleTimer();
     const items = this.collectionStatus[TAB_KEYS[tab]].items;
 
-    if (LAYOUT_MODE[tab] === 'grid') {
-      const shape = GRID_SHAPE[tab];
-      const perSpread = shape.cols * shape.rows * 2;
-      const totalSpreads = Math.max(1, Math.ceil(items.length / perSpread));
-      this.book.setContent(totalSpreads, (ctx) => this.renderSpread(tab, items, ctx));
-    } else {
-      const totalSpreads = Math.max(1, Math.ceil(items.length / ROWS_PER_LIST_PAGE));
-      // Default selection = first unlocked entry (fallback: first entry).
+    {
+      const perPage = tab === 'Cards'
+        ? LIST_GRID_PER_PAGE_CARDS
+        : tab === 'Bosses' ? LIST_GRID_PER_PAGE_BOSSES : LIST_GRID_PER_PAGE_OTHER;
+      const totalSpreads = Math.max(1, Math.ceil(items.length / perPage));
       if (!this.selectedId[tab]) {
         this.selectedId[tab] = items.find(i => i.isUnlocked)?.id ?? items[0]?.id;
       }
@@ -179,110 +166,7 @@ export class CollectionScene extends Phaser.Scene {
     }
   }
 
-  // ── Grid mode (Cards) ─────────────────────────────────────
-
-  private renderSpread(
-    tab: TabName,
-    items: CategoryStatus['items'],
-    ctx: BookRenderContext,
-  ): void {
-    const { cols, rows } = GRID_SHAPE[tab];
-    const perPage = cols * rows;
-    const spreadStart = ctx.spreadIndex * perPage * 2;
-
-    const leftItems = items.slice(spreadStart, spreadStart + perPage);
-    const rightItems = items.slice(spreadStart + perPage, spreadStart + perPage * 2);
-
-    this.renderPageItems(tab, leftItems, ctx.leftPage, ctx.leftBounds);
-    this.renderPageItems(tab, rightItems, ctx.rightPage, ctx.rightBounds);
-  }
-
-  private renderPageItems(
-    tab: TabName,
-    items: CategoryStatus['items'],
-    container: Phaser.GameObjects.Container,
-    bounds: BookPageBounds,
-  ): void {
-    if (items.length === 0) return;
-    const { cols, rows } = GRID_SHAPE[tab];
-    const { itemW, itemH, scale } = this.itemDimensions(tab);
-
-    // Fit-to-page: pick gap so the grid fills (without exceeding) the inner
-    // bounds, then clamp to a sensible cap so a 1-item page doesn't sprawl.
-    const fitGapX = cols > 1 ? (bounds.innerW - cols * itemW) / (cols - 1) : 0;
-    const fitGapY = rows > 1 ? (bounds.innerH - rows * itemH) / (rows - 1) : 0;
-    const gapX = Math.max(8, Math.min(fitGapX, itemW * 0.45));
-    const gapY = Math.max(12, Math.min(fitGapY, itemH * 0.45));
-    const effW = cols * itemW + (cols - 1) * gapX;
-    const effH = rows * itemH + (rows - 1) * gapY;
-    const startX = bounds.centerX - effW / 2 + itemW / 2;
-    const startY = bounds.centerY - effH / 2 + itemH / 2;
-
-    items.forEach((item, idx) => {
-      if (idx >= cols * rows) return;
-      const col = idx % cols;
-      const row = Math.floor(idx / cols);
-      const x = startX + col * (itemW + gapX);
-      const y = startY + row * (itemH + gapY);
-
-      if (item.isUnlocked) {
-        this.renderUnlocked(tab, item, x, y, scale, container);
-      } else {
-        this.renderLocked(tab, item, x, y, itemH, scale, container);
-      }
-    });
-  }
-
-  private itemDimensions(tab: TabName): { itemW: number; itemH: number; scale: number } {
-    switch (tab) {
-      case 'Cards':
-      default: {
-        const scale = 0.5;
-        return { itemW: STANDARD_CARD_WIDTH * scale, itemH: STANDARD_CARD_HEIGHT * scale, scale };
-      }
-    }
-  }
-
-  // Grid mode is Cards-only; relics/tiles/bosses use listDetail and open their
-  // detail on the right page instead of a popup.
-  private renderUnlocked(
-    tab: TabName,
-    item: CategoryStatus['items'][number],
-    x: number, y: number, scale: number,
-    container: Phaser.GameObjects.Container,
-  ): void {
-    if (tab !== 'Cards') return;
-    // CardVisual self-binds pointerdown -> showCardDetail (the shared popup).
-    const visual = createCardVisual(this, x, y, item.id, { scale });
-    container.add(visual);
-  }
-
-  private renderLocked(
-    tab: TabName,
-    item: CategoryStatus['items'][number],
-    x: number, y: number, itemH: number, scale: number,
-    container: Phaser.GameObjects.Container,
-  ): void {
-    if (tab !== 'Cards') return;
-    const FF = FONTS.family;
-    const visual = createCardVisual(this, x, y, item.id, { scale });
-    visual.setAlpha(0.35);
-    disableCardFaceInput(visual);
-    container.add(visual);
-    const lock = this.add.text(x, y, '🔒', {
-      fontSize: '22px', fontFamily: FF, color: '#ffffff',
-    }).setOrigin(0.5);
-    container.add(lock);
-    if (item.unlockHint) {
-      const hint = this.add.text(x, y + itemH / 2 + 6, item.unlockHint, {
-        fontSize: '9px', color: INK_SOFT, fontFamily: FF,
-        wordWrap: { width: STANDARD_CARD_WIDTH * scale + 6 }, align: 'center',
-      }).setOrigin(0.5, 0);
-      container.add(hint);
-    }
-  }
-
-  // ── listDetail mode (Relics / Tiles / Bosses) ─────────────
+  // ── listDetail mode (Cards / Relics / Tiles / Bosses) ───────
 
   private renderListDetailSpread(
     tab: TabName,
@@ -304,58 +188,117 @@ export class CollectionScene extends Phaser.Scene {
     items: CategoryStatus['items'],
     ctx: BookRenderContext,
   ): void {
+    this.renderListGrid(tab, items, ctx);
+  }
+
+  private renderListGrid(
+    tab: TabName,
+    items: CategoryStatus['items'],
+    ctx: BookRenderContext,
+  ): void {
+    if (tab === 'Cards') { this.renderCardsGrid(items, ctx); return; }
+
+    const FF = FONTS.family;
     const bounds = ctx.leftBounds;
-    const start = ctx.spreadIndex * ROWS_PER_LIST_PAGE;
-    const slice = items.slice(start, start + ROWS_PER_LIST_PAGE);
-    const rowH = bounds.innerH / ROWS_PER_LIST_PAGE;
+    const rows = tab === 'Bosses' ? LIST_GRID_ROWS_BOSSES : LIST_GRID_ROWS_OTHER;
+    const perPage = LIST_GRID_COLS * rows;
+    const start = ctx.spreadIndex * perPage;
+    const slice = items.slice(start, start + perPage);
+
+    const colGap = tab === 'Relics' ? 4 : 0;
+    const usableCellW = (bounds.innerW - colGap * (LIST_GRID_COLS - 1)) / LIST_GRID_COLS;
+    const cellH = bounds.innerH / rows;
+    const iconSize = Math.min(usableCellW, cellH) * 0.58 * 1.3;
+    const nameFontSize = tab === 'Relics' ? Math.round(15 * 0.7) : 15;
+    const cardH = iconSize + nameFontSize + 14;
+    const offsetY = tab === 'Bosses' ? 40 : 25;
 
     slice.forEach((item, i) => {
-      const y = bounds.innerY + rowH / 2 + i * rowH;
-      this.renderListRow(tab, item, ctx.leftPage, bounds, y, rowH);
+      const col = i % LIST_GRID_COLS;
+      const row = Math.floor(i / LIST_GRID_COLS);
+      const cx = bounds.innerX + col * (usableCellW + colGap) + usableCellW / 2;
+      const cy = bounds.innerY + row * cellH + offsetY;
+      const isSel = this.selectedId[tab] === item.id;
+
+      const bg = this.add.rectangle(cx, cy + cardH / 2, usableCellW - 4, cardH, 0xc89a3c, isSel ? 0.35 : 0.0001);
+      if (isSel) bg.setStrokeStyle(1.5, 0x8a6420, 0.9);
+      bg.setInteractive({ useHandCursor: true });
+      bg.on('pointerover', () => { if (this.selectedId[tab] !== item.id) bg.setFillStyle(0xc89a3c, 0.15); });
+      bg.on('pointerout',  () => { if (this.selectedId[tab] !== item.id) bg.setFillStyle(0xc89a3c, 0.0001); });
+      bg.on('pointerdown', () => this.selectRow(tab, item.id));
+      ctx.leftPage.add(bg);
+
+      const iconY = cy + iconSize / 2 + 4;
+      const key = this.thumbKey(tab, item.id);
+      if (item.isUnlocked && this.textures.exists(key)) {
+        this.addFittedImage(ctx.leftPage, key, cx, iconY, iconSize, iconSize);
+      } else {
+        const fb = this.add.rectangle(cx, iconY, iconSize, iconSize, 0x2a1a10).setStrokeStyle(1, 0x6e4a1a);
+        ctx.leftPage.add(fb);
+        ctx.leftPage.add(this.add.text(cx, iconY, item.isUnlocked ? '•' : '?', {
+          fontSize: '18px', color: '#9d7e44', fontFamily: FF,
+        }).setOrigin(0.5));
+      }
+
+      const nameY = cy + iconSize + 8;
+      const displayName = item.isUnlocked ? item.name : '???';
+      ctx.leftPage.add(this.add.text(cx, nameY, displayName, {
+        fontSize: `${nameFontSize}px`,
+        color: item.isUnlocked ? INK : INK_SOFT,
+        fontFamily: FF,
+        align: 'center',
+        wordWrap: tab === 'Relics' ? undefined : { width: usableCellW - 4 },
+        fixedWidth: tab === 'Relics' ? usableCellW - 4 : 0,
+      }).setOrigin(0.5, 0));
     });
   }
 
-  private renderListRow(
-    tab: TabName,
-    item: CategoryStatus['items'][number],
-    container: Phaser.GameObjects.Container,
-    bounds: BookPageBounds,
-    y: number,
-    rowH: number,
+  private renderCardsGrid(
+    items: CategoryStatus['items'],
+    ctx: BookRenderContext,
   ): void {
-    const FF = FONTS.family;
-    const isSel = this.selectedId[tab] === item.id;
+    const bounds = ctx.leftBounds;
+    const cols = LIST_GRID_COLS;
+    const rows = LIST_GRID_ROWS_CARDS;
+    const perPage = LIST_GRID_PER_PAGE_CARDS;
+    const start = ctx.spreadIndex * perPage;
+    const slice = items.slice(start, start + perPage);
 
-    const rowBg = this.add.rectangle(bounds.centerX, y, bounds.innerW, rowH - 4, 0xc89a3c, isSel ? 0.35 : 0.0001);
-    if (isSel) rowBg.setStrokeStyle(1.5, 0x8a6420, 0.9);
-    rowBg.setInteractive({ useHandCursor: true });
-    rowBg.on('pointerover', () => { if (this.selectedId[tab] !== item.id) rowBg.setFillStyle(0xc89a3c, 0.15); });
-    rowBg.on('pointerout', () => { if (this.selectedId[tab] !== item.id) rowBg.setFillStyle(0xc89a3c, 0.0001); });
-    rowBg.on('pointerdown', () => this.selectRow(tab, item.id));
-    container.add(rowBg);
+    const cardScale = 0.46;
+    const cardW = STANDARD_CARD_WIDTH * cardScale;
+    const cardH = STANDARD_CARD_HEIGHT * cardScale;
+    const gapX = 10;
+    const gapY = 10;
+    const totalW = cols * cardW + (cols - 1) * gapX;
+    const totalH = rows * cardH + (rows - 1) * gapY;
+    const startX = bounds.centerX - totalW / 2 + cardW / 2 + 15;
+    const startY = bounds.centerY - totalH / 2 + cardH / 2 + 5;
 
-    const thumb = Math.min(rowH - 8, 30);
-    const thumbX = bounds.innerX + thumb / 2;
-    const key = this.thumbKey(tab, item.id);
-    if (item.isUnlocked && this.textures.exists(key)) {
-      this.addFittedImage(container, key, thumbX, y, thumb, thumb);
-    } else {
-      const box = this.add.rectangle(thumbX, y, thumb, thumb, 0x2a1a10).setStrokeStyle(1, 0x6e4a1a);
-      container.add(box);
-      const mark = this.add.text(thumbX, y, item.isUnlocked ? '•' : '?', {
-        fontSize: '12px', fontStyle: 'bold', color: '#9d7e44', fontFamily: FF,
-      }).setOrigin(0.5);
-      container.add(mark);
-    }
+    slice.forEach((item, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const cx = startX + col * (cardW + gapX);
+      const cy = startY + row * (cardH + gapY);
+      const isSel = this.selectedId['Cards'] === item.id;
 
-    const nameX = bounds.innerX + thumb + 8;
-    const name = this.add.text(nameX, y, item.isUnlocked ? item.name : '???', {
-      fontSize: '12px', fontStyle: 'bold',
-      color: item.isUnlocked ? INK : INK_SOFT,
-      fontFamily: FF,
-      wordWrap: { width: bounds.innerW - thumb - 16 },
-    }).setOrigin(0, 0.5);
-    container.add(name);
+      const visual = createCardFace(this, cx, cy, item.id, {
+        baseSize: 'small', scale: cardScale, hover: false,
+      });
+      if (!item.isUnlocked) {
+        visual.setAlpha(0.4);
+      } else {
+        visual.setInteractive({ useHandCursor: true });
+        visual.on('pointerdown', () => this.selectRow('Cards', item.id));
+      }
+      ctx.leftPage.add(visual);
+
+      if (isSel) {
+        const selBorder = this.add.rectangle(cx, cy, cardW + 4, cardH + 4, 0xc89a3c, 0)
+          .setStrokeStyle(2.5, 0xf0c060, 1);
+        ctx.leftPage.add(selBorder);
+        selBorder.setDepth(-1);
+      }
+    });
   }
 
   private thumbKey(tab: TabName, id: string): string {
@@ -379,11 +322,50 @@ export class CollectionScene extends Phaser.Scene {
     container: Phaser.GameObjects.Container,
     bounds: BookPageBounds,
   ): void {
+    if (tab === 'Cards') { this.renderCardDetail(id, container, bounds); return; }
     const details = getItemDetails(id, this.metaState);
     if (!details) return;
     if (tab === 'Relics') this.renderRelicDetail(details, container, bounds);
     else if (tab === 'Bosses') this.renderBossDetail(details, container, bounds);
     else if (tab === 'Tiles') this.renderTileDetail(details, container, bounds);
+  }
+
+  private renderCardDetail(
+    cardId: string,
+    container: Phaser.GameObjects.Container,
+    bounds: BookPageBounds,
+  ): void {
+    const FF = FONTS.family;
+
+    // Card centered on page. desc text x=185.5 (from debug JSON) confirms
+    // bounds.centerX is the correct horizontal anchor for this page.
+    // Card y: desc text is at y=178.5 (top of text block); card bottom = desc top
+    // → cardY = 178.5 - 339/2 = 9.0  (center of card)
+    const cardX = bounds.centerX - 30;
+    const cardY = -3.3;            // from debug JSON y=-3.3 of the card mold
+    const face = createCardFace(this, cardX, cardY, cardId, {
+      baseSize: { w: 214, h: 339 },
+      hover: false,
+    });
+    container.add(face);
+
+    // desc text: x=185.5, y=178.5, fontSize=13, wrapWidth=207 (from debug JSON)
+    const card = getCardById(cardId);
+    if (card) {
+      const effects = card.effects ?? [];
+      const descText = formatCardDescription({ effects, exhaust: card.exhaust, spend_armor: card.spend_armor });
+      if (descText) {
+        container.add(this.add.text(bounds.centerX - 30, 178.5, descText, {
+          fontSize: '13px', color: '#d4c8a8', fontFamily: FF,
+          align: 'center', wordWrap: { width: 207 }, lineSpacing: 2,
+        }).setOrigin(0.5, 0));
+      }
+    }
+
+    const cardItem = this.collectionStatus.cards.items.find(i => i.id === cardId);
+    if (cardItem && !cardItem.isUnlocked) {
+      face.setAlpha(0.4);
+    }
   }
 
   private renderLockedDetail(
@@ -398,10 +380,10 @@ export class CollectionScene extends Phaser.Scene {
       .setStrokeStyle(2, 0x6e4a1a);
     container.add(box);
     container.add(this.add.text(cx, bounds.innerY + 130, '???', {
-      fontSize: '44px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+      fontSize: '44px', color: INK_SOFT, fontFamily: FF,
     }).setOrigin(0.5));
     container.add(this.add.text(cx, bounds.innerY + 250, 'Locked', {
-      fontSize: '16px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+      fontSize: '16px', color: INK_SOFT, fontFamily: FF,
     }).setOrigin(0.5));
     if (details.unlockHint) {
       container.add(this.add.text(cx, bounds.innerY + 278, details.unlockHint, {
@@ -418,76 +400,54 @@ export class CollectionScene extends Phaser.Scene {
   ): void {
     if (!details.isUnlocked) { this.renderLockedDetail(details, container, bounds); return; }
     const FF = FONTS.family;
-    const cx = bounds.centerX;
     const data = details.data ?? {};
-    let cy = bounds.innerY + 6;
 
-    const iconBox = 108;
-    if (!this.addFittedImage(container, `relic_${details.id}`, cx, cy + iconBox / 2, iconBox, iconBox)) {
-      const fb = this.add.rectangle(cx, cy + iconBox / 2, iconBox, iconBox, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
+    // Icon: x=144, y=-59.9, displaySize=143×143 (from debug overlay)
+    if (!this.addFittedImage(container, `relic_${details.id}`, 144, -59.9, 143, 143)) {
+      const fb = this.add.rectangle(144, -59.9, 143, 143, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
       container.add(fb);
     }
-    cy += iconBox + 12;
 
-    const name = this.add.text(cx, cy, details.name, {
-      fontSize: '18px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
-      align: 'center', wordWrap: { width: bounds.innerW },
-    }).setOrigin(0.5, 0);
-    container.add(name);
-    cy += name.height + 6;
+    // Name: x=144, y=19.9, wrapWidth=235
+    container.add(this.add.text(144, 19.9, details.name, {
+      fontSize: '18px', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: 235 },
+    }).setOrigin(0.5, 0));
 
+    // Meta (rarity • trigger): x=144.7, y=49.9, wrapWidth=235
     const meta = [data.rarity, data.trigger].filter(Boolean)
       .map((s: any) => String(s).replace(/_/g, ' ').toUpperCase()).join('   •   ');
     if (meta) {
-      const m = this.add.text(cx, cy, meta, {
-        fontSize: '11px', fontStyle: 'bold', color: this.rarityColor(data.rarity), fontFamily: FF,
-        align: 'center', wordWrap: { width: bounds.innerW },
-      }).setOrigin(0.5, 0);
-      container.add(m);
-      cy += m.height + 8;
+      container.add(this.add.text(144.7, 49.9, meta, {
+        fontSize: '11px', color: this.rarityColor(data.rarity), fontFamily: FF,
+        align: 'center', wordWrap: { width: 235 },
+      }).setOrigin(0.5, 0));
     }
 
+    // Description: x=144.7, y=76.5, wrapWidth=255
     if (data.description) {
-      const d = this.add.text(cx, cy, String(data.description), {
+      container.add(this.add.text(144.7, 76.5, String(data.description), {
         fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
-        wordWrap: { width: bounds.innerW }, lineSpacing: 3,
-      }).setOrigin(0.5, 0);
-      container.add(d);
-      cy += d.height + 10;
-    }
-
-    if (data.stats && typeof data.stats === 'object') {
-      const lines = Object.entries(data.stats)
-        .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`);
-      if (lines.length) {
-        const st = this.add.text(cx, cy, lines.join('\n'), {
-          fontSize: '12px', color: INK_SOFT, fontFamily: FF, align: 'center', lineSpacing: 2,
-        }).setOrigin(0.5, 0);
-        container.add(st);
-        cy += st.height + 6;
-      }
+        wordWrap: { width: 255 }, lineSpacing: 3,
+      }).setOrigin(0.5, 0));
     }
   }
 
   private renderBossDetail(
     details: NonNullable<ReturnType<typeof getItemDetails>>,
     container: Phaser.GameObjects.Container,
-    bounds: BookPageBounds,
+    _bounds: BookPageBounds,
   ): void {
     const FF = FONTS.family;
-    const cx = bounds.centerX;
     const data = details.data ?? {};
-    let cy = bounds.innerY + 4;
 
-    const box = 150;
-    const portrait = this.addFittedImage(container, `monster_${details.id}`, cx, cy + box / 2, box, box);
+    const box = 176;
+    const portrait = this.addFittedImage(container, `monster_${details.id}`, 146.6, -95.5, box, box);
     if (!portrait) {
-      const fb = this.add.rectangle(cx, cy + box / 2, box, box, 0x4a1a1a).setStrokeStyle(2, 0xc89a3c);
+      const fb = this.add.rectangle(146.6, -95.5, box, box, 0x4a1a1a).setStrokeStyle(2, 0xc89a3c);
       container.add(fb);
     }
-    cy += box + 8;
 
-    // Idle loop: cycle monster_<id>, monster_<id>_2, … at 6 fps when multi-frame.
     const frames = this.bossIdleFrames(details.id);
     if (portrait && frames.length > 1) {
       let fi = 0;
@@ -502,33 +462,23 @@ export class CollectionScene extends Phaser.Scene {
       });
     }
 
-    const name = this.add.text(cx, cy, details.name, {
-      fontSize: '20px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
-      align: 'center', wordWrap: { width: bounds.innerW },
+    const name = this.add.text(151.3, -16.5, details.name, {
+      fontSize: '20px', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: 235 },
     }).setOrigin(0.5, 0);
     container.add(name);
-    cy += name.height + 8;
 
     const statLine = `HP ${data.hp ?? '?'}    ATK ${data.atk ?? '?'}    DEF ${data.defense ?? 0}`;
-    const stats = this.add.text(cx, cy, statLine, {
-      fontSize: '13px', fontStyle: 'bold', color: INK_SOFT, fontFamily: FF,
+    const stats = this.add.text(149.3, 6.5, statLine, {
+      fontSize: '13px', color: INK_SOFT, fontFamily: FF,
+      wordWrap: { width: 144 },
     }).setOrigin(0.5, 0);
     container.add(stats);
-    cy += stats.height + 6;
-
-    if (data.effect) {
-      const eff = this.add.text(cx, cy, `Behaviors: ${data.effect}`, {
-        fontSize: '11px', fontStyle: 'italic', color: INK_SOFT, fontFamily: FF,
-        align: 'center', wordWrap: { width: bounds.innerW },
-      }).setOrigin(0.5, 0);
-      container.add(eff);
-      cy += eff.height + 10;
-    }
 
     if (data.lore) {
-      const lore = this.add.text(cx, cy, String(data.lore), {
+      const lore = this.add.text(149.3, 32.8, String(data.lore), {
         fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
-        wordWrap: { width: bounds.innerW }, lineSpacing: 4,
+        wordWrap: { width: 295 }, lineSpacing: 4,
       }).setOrigin(0.5, 0);
       container.add(lore);
     }
@@ -537,44 +487,39 @@ export class CollectionScene extends Phaser.Scene {
   private renderTileDetail(
     details: NonNullable<ReturnType<typeof getItemDetails>>,
     container: Phaser.GameObjects.Container,
-    bounds: BookPageBounds,
+    _bounds: BookPageBounds,
   ): void {
     const FF = FONTS.family;
-    const cx = bounds.centerX;
     const data = details.data ?? {};
-    let cy = bounds.innerY + 8;
 
-    const box = 112;
-    const art = this.addFittedImage(container, `tile_${details.id}`, cx, cy + box / 2, box, box);
+    // Icon: same coordinates as relic detail (debug overlay)
+    const art = this.addFittedImage(container, `tile_${details.id}`, 144, -59.9, 143, 143);
     if (art && !details.isUnlocked) art.setAlpha(0.35);
     if (!art) {
-      const fb = this.add.rectangle(cx, cy + box / 2, box, box, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
+      const fb = this.add.rectangle(144, -59.9, 143, 143, 0x3a2218).setStrokeStyle(2, 0xc89a3c);
       container.add(fb);
     }
-    cy += box + 12;
 
-    const name = this.add.text(cx, cy, details.name, {
-      fontSize: '18px', fontStyle: 'bold', color: INK_TITLE, fontFamily: FF,
-      align: 'center', wordWrap: { width: bounds.innerW },
-    }).setOrigin(0.5, 0);
-    container.add(name);
-    cy += name.height + 8;
+    // Name: x=144, y=19.9
+    container.add(this.add.text(144, 19.9, details.name, {
+      fontSize: '18px', color: INK_TITLE, fontFamily: FF,
+      align: 'center', wordWrap: { width: 235 },
+    }).setOrigin(0.5, 0));
 
+    // Status (Unlocked / hint): x=144.7, y=49.9
     const statusText = details.isUnlocked ? 'Unlocked' : (details.unlockHint ?? 'Locked');
-    const status = this.add.text(cx, cy, statusText, {
-      fontSize: '12px', fontStyle: 'bold',
+    container.add(this.add.text(144.7, 49.9, statusText, {
+      fontSize: '11px',
       color: details.isUnlocked ? '#2e6e2e' : INK_SOFT, fontFamily: FF,
-      align: 'center', wordWrap: { width: bounds.innerW },
-    }).setOrigin(0.5, 0);
-    container.add(status);
-    cy += status.height + 10;
+      align: 'center', wordWrap: { width: 235 },
+    }).setOrigin(0.5, 0));
 
+    // Description/lore: x=144.7, y=76.5, wrapWidth=255
     if (data.description) {
-      const d = this.add.text(cx, cy, String(data.description), {
+      container.add(this.add.text(144.7, 76.5, String(data.description), {
         fontSize: '13px', color: INK, fontFamily: FF, align: 'center',
-        wordWrap: { width: bounds.innerW }, lineSpacing: 3,
-      }).setOrigin(0.5, 0);
-      container.add(d);
+        wordWrap: { width: 255 }, lineSpacing: 3,
+      }).setOrigin(0.5, 0));
     }
   }
 

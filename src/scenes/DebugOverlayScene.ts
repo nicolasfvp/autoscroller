@@ -535,8 +535,11 @@ export class DebugOverlayScene extends Phaser.Scene {
     dim.on('pointerdown', () => this._clearModal());
 
     // ── Painel branco principal ──
+    // Interativo para consumir cliques dentro do modal: sem isso, clicar em
+    // qualquer área vazia do painel vaza para o `dim` atrás e fecha o modal.
+    // Só o `dim` (fora) e o ✕ fecham.
     this._trackM(this.add.rectangle(MX, MY, MW, MH, 0xf5f5f5, 1)
-      .setScrollFactor(0).setDepth(9001));
+      .setScrollFactor(0).setDepth(9001).setInteractive());
     this._trackM(this.add.rectangle(MX, MY, MW, MH, 0x000000, 0)
       .setScrollFactor(0).setDepth(9001).setStrokeStyle(2, 0x333333));
 
@@ -555,9 +558,13 @@ export class DebugOverlayScene extends Phaser.Scene {
     }).setScrollFactor(0).setDepth(9003).setOrigin(1, 0).setInteractive({ useHandCursor: true }));
     closeBtn.on('pointerdown', () => this._clearModal());
 
-    // Campo de filtro no cabeçalho
+    // Campo de filtro no cabeçalho. setInteractive() para que o clique seja
+    // consumido aqui e NÃO vaze para o `dim` atrás (que fecharia o modal).
+    // A filtragem em si é por teclado (ver handler abaixo) — clicar só evita o
+    // fechamento acidental.
     const searchBg = this._trackM(this.add.rectangle(listCX, MY - MH / 2 + 30, LIST_W - 8, 16, 0xffffff)
-      .setScrollFactor(0).setDepth(9002).setStrokeStyle(1, 0x999999));
+      .setScrollFactor(0).setDepth(9002).setStrokeStyle(1, 0x999999)
+      .setInteractive({ useHandCursor: true }));
     const searchTxt = this._trackM(this.add.text(listLeft + 6, MY - MH / 2 + 23, '🔍 filtrar...', {
       fontFamily: 'monospace', fontSize: '9px', color: '#888888',
     }).setScrollFactor(0).setDepth(9003));

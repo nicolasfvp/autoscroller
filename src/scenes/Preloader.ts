@@ -257,6 +257,20 @@ export class Preloader extends Scene {
     this.load.image('bg_card_library', 'assets/scenes/card_library/bg_card_library.png');
     this.load.image('book_open',       'assets/scenes/card_library/book_open.png');
     this.load.image('bookmark_tab',    'assets/scenes/card_library/bookmark_tab.png');
+    // Page stacks for visual depth in the compendium. Four thickness variants —
+    // the active tab picks which side gets which (the book's "open progress").
+    this.load.image('page-stack-small',        'assets/scenes/card_library/page-stack - small.png');
+    this.load.image('page-stack-medium-small', 'assets/scenes/card_library/page-stack - medium-small.png');
+    this.load.image('page-stack-medium-large', 'assets/scenes/card_library/page-stack - medium-large.png');
+    this.load.image('page-stack-large',        'assets/scenes/card_library/page-stack - large.png');
+    this.load.image('page',            'assets/scenes/card_library/page.png');
+    // Central gutter (inner crease where the two facing pages dive into the spine)
+    this.load.image('page-gutter',     'assets/scenes/card_library/page-gutter.png');
+    // Section bookmark banners (text + emblem baked in, one per compendium tab)
+    this.load.image('ribbon_card',     'assets/scenes/card_library/ribbon_card.png');
+    this.load.image('ribbon_relics',   'assets/scenes/card_library/ribbon_relics.png');
+    this.load.image('ribbon_tiles',    'assets/scenes/card_library/ribbon_tiles.png');
+    this.load.image('ribbon_bosses',   'assets/scenes/card_library/ribbon_bosses.png');
     this.load.image('warrior_status',         'assets/scenes/character_select/warrior_status.png');
     this.load.image('mage_status',            'assets/scenes/character_select/mage_status.png');
     // *_status_panel = painel "rico": a arte é só o fundo e o texto (nome/
