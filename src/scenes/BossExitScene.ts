@@ -7,6 +7,7 @@ import { loadMetaState, saveMetaState } from '../systems/MetaPersistence';
 import { saveManager } from '../core/SaveManager';
 import { FONTS, LAYOUT } from '../ui/StyleConstants';
 import { SCENE_KEYS, stopAllRunScenes } from '../state/SceneKeys';
+import { creditTijolinhos } from '../integrations/FeiraDeJogos';
 
 const W = 800;
 const H = 600;
@@ -42,6 +43,10 @@ export class BossExitScene extends Scene {
     this.cameras.main.fadeIn(LAYOUT.fadeDuration, 0, 0, 0);
 
     this.loopRunner = data.loopRunner;
+
+    // Feira de Jogos: passar de um boss credita 300 tijolinhos ao jogador.
+    // Esta cena só é lançada pelo evento 'boss-defeated', então roda 1x por boss.
+    creditTijolinhos(300);
 
     const run = getRun();
     const choiceData = getBossExitChoiceData(run);
