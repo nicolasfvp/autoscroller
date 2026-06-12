@@ -7,7 +7,7 @@
 
 import mqtt, { MqttClient as RawClient, IClientPublishOptions } from 'mqtt';
 
-const PRIMARY_BROKER = 'wss://broker.hivemq.com:8884/mqtt';
+const PRIMARY_BROKER = 'wss://feira-de-jogos.dev.br/mqtt';
 const FALLBACK_BROKER = 'wss://test.mosquitto.org:8081/mqtt';
 const FALLBACK_TIMEOUT_MS = 5_000;
 
